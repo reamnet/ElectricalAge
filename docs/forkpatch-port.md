@@ -232,8 +232,10 @@ through a configuration tag is rejected. Moving the actual bank retains its paid
 energy. The separate utility transformer/meter/recloser devices and UPS enclosures
 are still pending; this checkpoint imports their shared fuse/cell items only.
 
-The source off-grid circuit regressions and 13 native equipment cases are being
-validated. Generated recipes/assets and a passing build are not yet claimed.
+All 17 adapted source off-grid circuit regressions pass on the native LU solver,
+including service headroom, parallel-bank energy balance, night isolation, cold/hot
+protection and electrical-rate-independent thermal energy. The 13 native equipment
+cases and generated recipe/asset checks remain in progress.
 
 ## Inventory
 

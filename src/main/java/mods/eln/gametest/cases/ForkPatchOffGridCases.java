@@ -36,9 +36,10 @@ public final class ForkPatchOffGridCases {
             descriptor=(OffGridDescriptor)Eln.transparentNodeItem.getDescriptor(8192+type.ordinal());
             at=ctx.at(3,1,1);
             if(type.getWall()) {
-                for(int y=0;y<2;y++)ctx.level().setBlockAndUpdate(at.above(y).south(),Blocks.STONE.defaultBlockState());
+                Direction front=new Direction[]{Direction.XN,Direction.XP,Direction.ZN,Direction.ZP}[type.ordinal()-4];
+                for(int y=0;y<2;y++)ctx.level().setBlockAndUpdate(at.above(y).relative(front.getInverse().toEnumFacing()),Blocks.STONE.defaultBlockState());
                 var player=FakePlayerFactory.getMinecraft(ctx.level());
-                TransparentNode node=((TransparentNodeItem)descriptor.parentItem).placeAt(descriptor.newItemStack(),player,ctx.level(),at,Direction.ZP);
+                TransparentNode node=((TransparentNodeItem)descriptor.parentItem).placeAt(descriptor.newItemStack(),player,ctx.level(),at,front);
                 if(node==null)throw new IllegalStateException("Wall battery placement failed");
                 element=(OffGridElement)node.element;
             } else element=(OffGridElement)ctx.placeTransparent(8192+type.ordinal(),at);
@@ -67,6 +68,8 @@ public final class ForkPatchOffGridCases {
             try {
                 if(type.getBank()) {
                     var bank=element.getBank();
+                    var side=element.front.left();
+                    ctx.check("battery: live cable port matches positive terminal",element.getElectricalLoad(side,side.getLRDUGoingTo(descriptor.connectionPlane(element.front)))==bank.getPositive(),"");
                     ctx.check("battery: actual load spends stored energy",load.getP()>400 && bank.getState().getEnergy()<bank.getState().getCapacity()*.5,bank.getStatus());
                     ctx.check("battery: upper ghost exists",ctx.level().getBlockState(at.above()).is(Eln.ghostBlock),"");
                     var shape=ctx.level().getBlockState(at.above()).getShape(ctx.level(),at.above());
@@ -85,6 +88,18 @@ public final class ForkPatchOffGridCases {
                     ctx.checkValue("AC charger: control packet changes charge rating",ac.getChargeAmps(),50);
                     if(type==OffGridType.INVERTER)ctx.check("inverter: bypass supplies real load",ac.getBypass().getClosed() && load.getP()>990,ac.getStatus());
                 } else if(type==OffGridType.MPPT) {
+                    String[] cells={"UPS AGM Battery Cell","UPS LiFePO4 Battery Cell","UPS Industrial Battery Module"};
+                    double[] capacity={960000,3600000,14400000};
+                    for(int i=0;i<cells.length;i++) {
+                        var item=Eln.findItemStack(cells[i],1);
+                        var cell=(mods.eln.transparentnode.ups.UpsLargeCell)mods.eln.generic.GenericItemUsingDamageDescriptor.getDescriptor(item);
+                        ctx.checkValue("cell: crafted empty "+cells[i],cell.getEnergy(item),0);
+                        ctx.checkValue("cell: actual capacity "+cells[i],cell.getEnergyMax(item),capacity[i]);
+                        cell.setEnergy(item,Double.MAX_VALUE);
+                        ctx.checkValue("cell: stored charge stays within rating "+cells[i],cell.getEnergy(item),capacity[i]);
+                        cell.setEnergy(item,Double.NaN);
+                        ctx.checkValue("cell: invalid charge cannot create energy "+cells[i],cell.getEnergy(item),0);
+                    }
                     var solar=element.getSolar();
                     ctx.check("battery MPPT: paid PV charges DC bus",solar.getOutputWatts()>1000 && solar.getPvWatts()>solar.getOutputWatts(),solar.getStatus()+" / "+solar.getDiagnostic());
                     ctx.check("battery MPPT: drop cannot duplicate DC-link energy",element.getItemStackNBT().getDoubleOr("solarJoules",-1)==0,"");
@@ -113,7 +128,7 @@ public final class ForkPatchOffGridCases {
                     int vertices=frame.batches().values().stream().mapToInt(GlFrame.Batch::vertices).sum();
                     ctx.check("offgrid: native enclosure and live display geometry",vertices>200,"vertices="+vertices);
                 } finally { GlFrame.close(); }
-            } catch(IOException e) { throw new RuntimeException(e); }
+            }
             finally { for(Component c:fixtures) { Eln.simulator.removeElectricalComponent(c);c.breakConnection(); } }
         }
     }

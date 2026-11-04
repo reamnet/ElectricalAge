@@ -145,10 +145,10 @@ class ForkPatchOffGridTest {
         root.addComponent(VoltageSource("badCharger",bank.bank!!.positive,bank.bank!!.negative).apply { u=70.0 })
         repeat(5) { root.step();bank.bank!!.account(.05) }
         assertEquals(0.0,bank.bank!!.state.energy);assertFalse(bank.bank!!.source.enabled)
-        val box=element(OffGridType.COMBINER);val r=RootSystem(.05,1);val p=box.protection!!
-        box.electricalLoadList.forEach(r::addState);box.electricalComponentList.forEach(r::addComponent)
-        r.addComponent(VoltageSource("pvFault",p.first,p.negative).apply { u=120.0 });r.addComponent(Resistor(p.output,p.negative).apply { r=1.0 })
-        repeat(20) { r.step();p.step(.05) }
+        val box=element(OffGridType.COMBINER);val dcRoot=RootSystem(.05,1);val p=box.protection!!
+        box.electricalLoadList.forEach(dcRoot::addState);box.electricalComponentList.forEach(dcRoot::addComponent)
+        dcRoot.addComponent(VoltageSource("pvFault",p.first,p.negative).apply { u=120.0 });dcRoot.addComponent(Resistor(p.output,p.negative).apply { r=1.0 })
+        repeat(20) { dcRoot.step();p.step(.05) }
         assertTrue(p.fuses[0].blown);assertFalse(p.contacts[0].closed)
         p.fault="";p.enabled=false;p.update();p.enabled=true;p.update();assertFalse(p.contacts[0].closed)
     }
@@ -181,6 +181,21 @@ class ForkPatchOffGridTest {
     @Test fun solarFirstDoesNotMistakeTheUncomputedStartupBusForAnEmptyBattery() {
         val c=Circuit();val before=c.bank.state.energy;c.ac.mode=IslandMode.SELF_USE;c.run(100)
         assertTrue(c.ac.outputWatts>990);assertEquals(0.0,c.ac.gridWatts);assertTrue(c.bank.state.energy<before)
+    }
+    @Test fun batteryLossesDepositPhysicalJoulesAtEitherElectricalSampleRate() {
+        for(samples in listOf(1,50)) {
+            val pack=element(OffGridType.BANK16);val bank=pack.bank!!
+            bank.state.transfer(bank.state.capacity*.5)
+            val root=RootSystem(.05,samples)
+            pack.electricalLoadList.forEach(root::addState);pack.electricalComponentList.forEach(root::addComponent)
+            val load=Resistor(bank.positive,bank.negative).setR(5.0);root.addComponent(load);root.addProcess(bank.controller)
+            val before=bank.state.energy;var useful=0.0
+            repeat(100) { root.step();bank.account(.05);useful+=load.p*.05 }
+            val spent=before-bank.state.energy
+            assertTrue(bank.thermal.EnergyTemp>0.0)
+            assertEquals(spent-useful,bank.thermal.EnergyTemp,.001)
+            assertEquals(0.0,bank.thermal.PcTemp)
+        }
     }
     @Test fun lifepoColdChargeAndOvertemperatureProtectionUseAbsoluteCellTemperature() {
         val c=Circuit(OffGridType.AC_CHARGER,0.0);c.bank.thermal.Tc= -30.0;c.run(80)
