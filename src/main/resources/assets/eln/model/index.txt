@@ -112,6 +112,8 @@ smallsolarpannel/smallsolarpannel.obj
 smallsolarpannelrot/smallsolarpannelrot.obj
 smallwaterwheel/smallwaterwheel.obj
 smelter/smelter.obj
+solarhybrid/solarhybrid.obj
+solarmppt/solarmppt.obj
 solarpanel2x2/solarpanel2x2.obj
 solarpanel2x3/bigsolarpanel.obj
 solarpanel2x3/bigsolarpanelrot.obj
@@ -151,6 +153,8 @@ voltagesensor/voltagesensor.obj
 voltagesource/voltagesource.obj
 vumeter/vumeter.obj
 wallclock/wallclock.obj
+wallhybrid/wallhybrid.obj
+wallmppt/wallmppt.obj
 windturbinemini/windturbinemini.obj
 wirelesssignalrepeater/wirelesssignalrepeater.obj
 wirelesssignalrx/wirelesssignalrx.obj

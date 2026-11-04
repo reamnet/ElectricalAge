@@ -35,6 +35,7 @@ public final class ElnGameTests {
         java.util.List<TestCase> l = new java.util.ArrayList<>(List.of(new SimTickCase(), new ForkPatchConverterCase(), new KotlinRuntimeCase(), new GoldenCase(), new GoldenRecipesCase(), new GoldenSlotsCase(), new PublishRenderCase(), new GuiPacketCase(), new MachineMenuCase(), new MenusOpenCase(), new AutoMinerSpinCase(), new ItemDrawCase(), new XRayCase()));
         l.addAll(mods.eln.gametest.cases.Batch1Cases.cases());
         l.addAll(mods.eln.gametest.cases.SolarCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchSolarControllerCases.cases());
         mods.eln.gametest.cases.Wp9aCases.addTo(l);
         mods.eln.gametest.cases.Wp9bCases.addTo(l);
         mods.eln.gametest.cases.Wp9cCases.addTo(l);

@@ -77,6 +77,7 @@ public final class ElnDeviceRegistry {
         // resistors (96): Wp9aContent.registerPassiveComponent, with the rest of that group
         registerBattery(16);
         registerSolarPanel(48);
+        registerForkPatchSolar();
         registerLampSocket(64);
         registerLampSupply(65);
         registerLampItem(4);
@@ -468,6 +469,19 @@ public final class ElnDeviceRegistry {
     }
 
     /** From 1.12 Wp10bContent. */
+    /** Source 3.0.77 identities, unused in the destination's existing registry. */
+    private static void registerForkPatchSolar() {
+        int base = 124 << 6;
+        transparentNodeItem.addDescriptor(base + 8, new mods.eln.transparentnode.renewable.RenewableDescriptor(
+            TR_NAME(Type.NONE, "MPPT Solar Controller"), mods.eln.transparentnode.renewable.RenewableKind.MPPT, false));
+        transparentNodeItem.addDescriptor(base + 9, new mods.eln.transparentnode.renewable.RenewableDescriptor(
+            TR_NAME(Type.NONE, "Hybrid Solar Inverter"), mods.eln.transparentnode.renewable.RenewableKind.HYBRID, false));
+        transparentNodeItem.addDescriptor(base + 15, new mods.eln.transparentnode.renewable.RenewableDescriptor(
+            TR_NAME(Type.NONE, "Wall-mounted MPPT Solar Controller"), mods.eln.transparentnode.renewable.RenewableKind.MPPT, true));
+        transparentNodeItem.addDescriptor(base + 16, new mods.eln.transparentnode.renewable.RenewableDescriptor(
+            TR_NAME(Type.NONE, "Wall-mounted Hybrid Solar Inverter"), mods.eln.transparentnode.renewable.RenewableKind.HYBRID, true));
+    }
+
     public static void registerSolarPanel(int id) {
         int subId, completId;
         GhostGroup ghostGroup;

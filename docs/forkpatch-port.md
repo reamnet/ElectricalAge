@@ -178,6 +178,26 @@ port accuracy still require their own adaptation and regressions before those
 remaining controllers can be considered complete. Unsupported singular floating
 ports are rejected rather than silently grounded.
 
+### In progress: MPPT and hybrid cabinets
+
+The floor and wall MPPT/hybrid adapters now register their original source identities
+7944, 7945, 7951 and 7952, which were unused in the destination. The incoming
+harvest/DC-link accounting, output priorities, grid-following export, saved settings
+and item energy reset are adapted to native node lists and NBT APIs. Electrical
+[accounting/export regressions](forkpatch-port/solar-controller-tests.json) pass;
+native placed-block, save and publication checks are pending.
+
+Source cabinet geometry and live seven-segment panels record through the existing
+26.3 facade. Menus use native ElnScreen controls and element packets. Inventory icons
+are reproducible from the imported geometry with `tools/port/solar_icons.py`.
+Source terrain-body batching and configuration-tool integration remain pending;
+those APIs are not available in this destination foundation yet.
+
+Model-index generation now includes the existing native generated CAD catalog,
+not just shipped OBJ files; all 158 existing entries are retained alongside the
+four solar cabinets. Shared `eln:` material resources retain their namespace,
+while legacy Windows texture paths still use the native filename fallback.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

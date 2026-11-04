@@ -65,6 +65,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeElectricalFurnace", ElnRecipes::recipeElectricalFurnace);
         run("recipeAutoMiner", ElnRecipes::recipeAutoMiner);
         run("recipeSolarPanel", ElnRecipes::recipeSolarPanel);
+        run("recipeForkPatchSolar", ElnRecipes::recipeForkPatchSolar);
         run("recipeThermalDissipatorPassiveAndActive", ElnRecipes::recipeThermalDissipatorPassiveAndActive);
         run("recipeElectricalAntenna", ElnRecipes::recipeElectricalAntenna);
         run("recipeEggIncubator", ElnRecipes::recipeEggIncubator);
@@ -1076,6 +1077,17 @@ public final class ElnRecipes extends ElnRecipesBase {
             'A', findItemStack("Analogic Regulator"),
             'C', findItemStack("Medium Voltage Cable"),
             'M', findItemStack("Advanced Electrical Motor"));
+    }
+
+    public static void recipeForkPatchSolar() {
+        addRecipe(findItemStack("MPPT Solar Controller"), "IPI", "RCR", "IPI",
+            'I', findItemStack("Iron Plate"), 'P', Items.COMPARATOR, 'R', Items.REDSTONE,
+            'C', findItemStack("Small Solar Panel"));
+        addRecipe(findItemStack("Hybrid Solar Inverter"), "PPP", "MCM", "CRC",
+            'P', findItemStack("Iron Plate"), 'M', findItemStack("MPPT Solar Controller"),
+            'C', findItemStack("Copper Cable"), 'R', Items.REDSTONE);
+        addShapelessRecipe(findItemStack("Wall-mounted MPPT Solar Controller"), findItemStack("MPPT Solar Controller"), findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Wall-mounted Hybrid Solar Inverter"), findItemStack("Hybrid Solar Inverter"), findItemStack("Iron Plate"));
     }
 
     public static void recipeSolarPanel() {

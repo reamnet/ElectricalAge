@@ -2110,5 +2110,29 @@
   "display": "Capacitor Bank",
   "kind": "transparent_node",
   "name": "capacitor_bank"
+ },
+ "eln:transparent_node@7944": {
+  "descriptor": "RenewableDescriptor",
+  "display": "MPPT Solar Controller",
+  "kind": "transparent_node",
+  "name": "mppt_solar_controller"
+ },
+ "eln:transparent_node@7945": {
+  "descriptor": "RenewableDescriptor",
+  "display": "Hybrid Solar Inverter",
+  "kind": "transparent_node",
+  "name": "hybrid_solar_inverter"
+ },
+ "eln:transparent_node@7951": {
+  "descriptor": "RenewableDescriptor",
+  "display": "Wall-mounted MPPT Solar Controller",
+  "kind": "transparent_node",
+  "name": "wall_mounted_mppt_solar_controller"
+ },
+ "eln:transparent_node@7952": {
+  "descriptor": "RenewableDescriptor",
+  "display": "Wall-mounted Hybrid Solar Inverter",
+  "kind": "transparent_node",
+  "name": "wall_mounted_hybrid_solar_inverter"
  }
 }

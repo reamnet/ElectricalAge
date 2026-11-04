@@ -1,0 +1,8 @@
+{
+  "tests": 5,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "scope": "Production MPPT/hybrid energy accounting on native LU: export, net local consumption, grid-loss/voltage/night/disable, current limits, hybrid priorities, finite saved energy",
+  "nativeBlockChecks": "pending"
+}

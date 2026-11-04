@@ -137,5 +137,68 @@
     "mode": "adapted",
     "status": "compiled-and-focused-regressions-passed",
     "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarPower.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarPower.kt",
+    "sourceSha256": "7c25a20f9c5ab29c511e9be0d5d37d91419ebfd7e381bcf8b857ea1a3c44ed5b",
+    "mode": "adapted",
+    "status": "compiled; five electrical accounting/export regressions passed; native block checks pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarElement.kt",
+    "sourceSha256": "6e17f6261e0d40f19afe95dfe4b221ce2a07d9b7fc9a597168bc52e152e1ce9f",
+    "mode": "adapted",
+    "status": "compiled; five electrical accounting/export regressions passed; native block checks pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/PowerCabinetDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/node/transparent/PowerCabinetDescriptor.kt",
+    "sourceSha256": "4fbb3e4c6534fdb10089c2cd4b9b5fb29b80b236e98a8d4f76b11b271bd98f8a",
+    "mode": "adapted",
+    "status": "compiled; five electrical accounting/export regressions passed; native block checks pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/client/power/ControlPanelDisplay.kt",
+    "target": "src/main/kotlin/mods/eln/client/power/ControlPanelDisplay.kt",
+    "sourceSha256": "4e446dceee718fa370e46950b489d9d3e69b525d9372b426bd1104db5272a358",
+    "mode": "adapted",
+    "status": "compiled; five electrical accounting/export regressions passed; native block checks pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/client/power/PowerPanelDisplay.kt",
+    "target": "src/main/kotlin/mods/eln/client/power/PowerPanelDisplay.kt",
+    "sourceSha256": "86607d9d725d0d16f8a965f747bc16841ec57e7455dc45fec630f959da6f7922",
+    "mode": "adapted",
+    "status": "compiled; five electrical accounting/export regressions passed; native block checks pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarFrontPanel.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarFrontPanel.kt",
+    "sourceSha256": "f2e9827469aae61af7dd0e4f73c3e4742bb43a3e8340430ea35ca68dd3cf0624",
+    "mode": "adapted",
+    "status": "compiled; five electrical accounting/export regressions passed; native block checks pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarDisplay.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "adapted",
+    "status": "compiled; five electrical accounting/export regressions passed; native block checks pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableDescriptor.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "adapted",
+    "status": "compiled; five electrical accounting/export regressions passed; native block checks pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableRender.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "adapted",
+    "status": "compiled; five electrical accounting/export regressions passed; native block checks pending"
   }
 ]
