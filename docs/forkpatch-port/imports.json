@@ -402,69 +402,69 @@
     "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsBatteryBank.kt",
     "sourceSha256": "562ff4094bb8e017037ce223302e710bac04b8cb5f4e99a7f3b3e680699c582b",
     "mode": "adapted",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsChargeControl.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsChargeControl.kt",
     "sourceSha256": "08aa2105c4c9b04a156a26067a2d9ed7928cbf3bed1076fcf90930c3120010b2",
     "mode": "verbatim",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsPowerUnit.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsPowerUnit.kt",
     "sourceSha256": "92c0588d402f6e57b5b0f9ca6cb646b1aa28299ffe931599d4cfbbeb02e3a90c",
     "mode": "adapted",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsElement.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsElement.kt",
     "sourceSha256": "c0efc002a2f4bf73c6e90c1070b55e1a1a638d591cf69eb8b9a996c1d1f56af2",
     "mode": "adapted",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsDescriptor.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsDescriptor.kt",
     "sourceSha256": "603b6bedf0004ab9f32ca8afbcfdefd2b2e0045b81040aaebafebddf853cdfcb",
     "mode": "adapted",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsClient.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsDisplay.kt",
     "sourceSha256": "cde7b30cb6108325d4a43ffc6cf62018c3cd48294721d936470bfe2cf1a67b38",
     "mode": "adapted",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsClient.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsRender.kt",
     "sourceSha256": "cde7b30cb6108325d4a43ffc6cf62018c3cd48294721d936470bfe2cf1a67b38",
     "mode": "adapted",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsClient.kt",
     "target": "src/main/java/mods/eln/transparentnode/ups/UpsScreen.java",
     "sourceSha256": "cde7b30cb6108325d4a43ffc6cf62018c3cd48294721d936470bfe2cf1a67b38",
     "mode": "native-menu-replacement",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   },
   {
     "source": "src/test/kotlin/mods/eln/transparentnode/ups/UpsTest.kt",
     "target": "src/test/kotlin/mods/eln/transparentnode/ups/ForkPatchUpsTest.kt",
     "sourceSha256": "d4b3c6e0fa95a80524d2dde0bb75777830ddca14037bf312ccbe7bba0583c950",
     "mode": "adapted-production-controllers-with-metered-energy-fixtures",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   },
   {
     "source": "src/test/kotlin/mods/eln/transparentnode/ups/UpsStandbyTest.kt",
     "target": "src/test/kotlin/mods/eln/transparentnode/ups/ForkPatchUpsStandbyTest.kt",
     "sourceSha256": "fbc4e0db45194e51fd65fa8c2ef40f8a1340014b2719a2b4b3b26f2ca2fbd398",
     "mode": "adapted-production-controllers-with-metered-energy-fixtures",
-    "status": "UPS checkpoint: validation in progress"
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
   }
 ]

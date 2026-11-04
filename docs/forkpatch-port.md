@@ -292,7 +292,7 @@ Reports: [controller tests](forkpatch-port/standby-circuit-tests.json),
 [datagen](forkpatch-port/standby-datagen.json), and
 [destination regressions](forkpatch-port/standby-checkpoint-validation.json).
 
-### UPS rack checkpoint (validation in progress)
+### Code checkpoint: floor and wall UPS racks
 
 The floor Programmable UPS (7947) and wall Programmable UPS (7953) now have
 native production adapters, source cabinet models and live status displays. Both
@@ -310,10 +310,28 @@ Electronics losses enter the native thermal system as physical joules per step.
 The recipe uses the destination's existing DC-DC Converter for the source's
 Variable DC-DC Converter ingredient, preserving the native device and ID.
 
-Focused circuit, actual item/menu and native world tests are being run. This
-checkpoint does not yet claim passing validation. The compact four-cell plug-in
-UPS remains pending with the appliance cord/socket layer; it is not registered as
-a partially functional device. Interactive client graphics/audio checks are pending.
+All 16 focused UPS electrical/controller regressions pass. All 40 selected native
+world cases pass, including nine new UPS cases: floor outage/restore, an empty
+unloaded rack, all four wall orientations, real battery inventory/menu transfers,
+and generator stop/restart and empty-bank startup. Checks cover exact cell-energy
+preservation (absolute 1e-6 J tolerance), slot filters, legacy extraction, cached
+energy flush on clear, shift-click, native item capabilities, recorded display
+geometry, packets and node persistence. Datagen passes for two recipes and
+advancements, two blockstates/item definitions, four item models and four English
+names. All 393 previous registry identities and 176 geometry models are retained.
+The destination suite passes 391 tests with 3 optional preview skips
+and no failures (`:test -PfluidCases=20`); the default 200-case fluid corpus was not run.
+
+The compact four-cell plug-in UPS remains pending with the appliance cord/socket
+layer; it is not registered as a partially functional device. Interactive client
+graphics/audio checks are pending. The UPS keeps the native thermal convention:
+`Tc` is temperature rise above its 20 C reference, so the source 90 K rise cutoff
+corresponds to 110 C absolute in this adapter.
+
+Reports: [circuit tests](forkpatch-port/ups-circuit-tests.json),
+[native cases](forkpatch-port/ups-native-tests.json), and
+[datagen](forkpatch-port/ups-datagen.json), and
+[destination regressions](forkpatch-port/ups-checkpoint-validation.json).
 
 ## Inventory
 
