@@ -1,5 +1,7 @@
 # Source can/bushing submeshes, centered for native item display.
+mtllib fixture.mtl
 o Transformer
+usemtl fixture
 v 0.070000 -0.900000 0.000000
 v 0.126576 -0.900000 0.284428
 v 0.070000 -0.900000 0.290000
@@ -388,6 +390,7 @@ f 69 131 70
 f 130 68 70
 f 130 70 131
 o TransformerPin
+usemtl fixture
 v 0.070000 0.185000 0.000000
 v 0.087221 0.185000 0.041575
 v 0.070000 0.185000 0.045000

@@ -17,17 +17,20 @@ for line in (args.source / 'src/main/resources/assets/eln/model/distributionpole
         vertices.append(tuple(map(float, words[1:4])))
     elif words[0] == 'f' and part in ('Transformer', 'TransformerPin'):
         groups.setdefault(part, []).append([int(x.split('/')[0]) - 1 for x in words[1:]])
-output = ['# Source can/bushing submeshes, centered for native item display.']
+output = ['# Source can/bushing submeshes, centered for native item display.', 'mtllib fixture.mtl']
 offset = 0
 for part, faces in groups.items():
-    output.append('o ' + part)
+    output.extend(['o ' + part, 'usemtl fixture'])
     used = sorted({i for face in faces for i in face})
     mapping = {old: offset + i + 1 for i, old in enumerate(used)}
     for i in used:
         x, y, z = vertices[i]
         output.append(f'v {x+.4:.6f} {y-5.35:.6f} {z:.6f}')
     for face in faces:
-        output.append('f ' + ' '.join(str(mapping[i]) for i in face))
+        for i in range(1, len(face) - 1):
+            output.append('f ' + ' '.join(str(mapping[j]) for j in (face[0], face[i], face[i + 1])))
     offset += len(used)
 assert set(groups) == {'Transformer', 'TransformerPin'}
 (ROOT / 'src/main/resources/assets/eln/model/poletransformer/poletransformer.obj').write_text('\n'.join(output) + '\n')
+
+(ROOT / 'src/main/resources/assets/eln/model/poletransformer/fixture.mtl').write_text('newmtl fixture\nKd 1 1 1\nKa 1 1 1\nd 1\n')
