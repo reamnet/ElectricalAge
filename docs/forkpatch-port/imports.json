@@ -89,5 +89,53 @@
     "sourceSha256": "e5c658d618dfd66dcca40ff15649c8a04a9a401e66b9341c6f802b09515d6012",
     "mode": "verbatim",
     "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/mna/component/SwitchableVoltageSource.kt",
+    "target": "src/main/kotlin/mods/eln/sim/mna/component/SwitchableVoltageSource.kt",
+    "sourceSha256": "d9d4cf9888bc3fbd305a4f63a4eb6bc265f736546f6b28ef63a2fa96f745bb99",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/ConverterNetwork.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/ConverterNetwork.kt",
+    "sourceSha256": "9df06f353635ef94aba16aaf681ef8a53f97da90ab5e6bf0fc5439f598473477",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/RegulatedPowerProcess.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/RegulatedPowerProcess.kt",
+    "sourceSha256": "f06e2e2d5b3045cf258fe8eefb9fa06fbaa4f55951f0ab547796826ba4d3e8b1",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/SafeTransformerProcess.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/SafeTransformerProcess.kt",
+    "sourceSha256": "cc92ffc90431bb2f975a386fa5d93f27ce4303ffe29e93cf4c7f1738dea0f869",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/ConverterConvergence.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/ConverterConvergence.kt",
+    "sourceSha256": "27ee4aa05a0926e13bd3d8148794581a7c61e50ee899eb4df27d443f3588fe09",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/LocalCommandJacobian.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/LocalCommandJacobian.kt",
+    "sourceSha256": "c0d519f12d434c74d9766ff06a8ce04975c0cfe8e0d1ad8a2aed5d2c4b0901fb",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
   }
 ]

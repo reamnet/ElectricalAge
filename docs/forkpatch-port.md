@@ -134,6 +134,40 @@ fluid code or the assertion. All 15 CAD tests and all three native solar tests a
 passed. This is multi-configuration verification, not a passing full default fluid
 corpus or validation of the still-pending equipment adapters.
 
+### Code checkpoint: coupled converter runtime
+
+The 3.0.77 regulated controller, reversible safe transformer, retry policy and
+bounded connected-group convergence loop now run against the native 26.3 LU
+solver. Source branches explicitly open when disabled. Port probes exclude their
+own command before projection and preserve commands, masks, pending values and
+physical history. A separate scratch constraint handles an unloaded, otherwise
+singular ground-referenced port without adding leakage or enabling its source.
+Unbalanced injected current remains an invalid port.
+
+The root solver validates candidate power/current/voltage before one physical
+flush. Retry clocks advance once per physical step. Delay history now commits in
+that flush, so repeated trial solves cannot advance it. Converter port networks
+are assembled without private/size partition proxies; unrelated legacy networks
+retain the native decomposition and solver. Process groups are cached until their
+membership changes; the existing 50 legacy sweeps do not multiply the exact
+controller loop.
+
+The registered transformer's isolated mode now uses the safe reversible controller;
+its existing non-isolated model, inventory, ratios, IDs, menus and save flag remain
+in use. Inventory changes reset the controller's numerical retry timer.
+
+[66 focused regressions](forkpatch-port/converter-focused-tests.json) passed for
+the runtime foundation: parallel current sharing across public/private boundaries,
+overload/supply recovery, zero/invalid controls, forward/reverse ratio and energy
+balance, once-per-step commits, unloaded ports and probe/history preservation.
+Native block checks and broader destination validation are recorded separately.
+
+This checkpoint does not register the new MPPT/hybrid cabinets. Fully floating
+differential islands, the source double-double/gauge solver and stiff high-voltage
+port accuracy still require their own adaptation and regressions before those
+remaining controllers can be considered complete. Unsupported singular floating
+ports are rejected rather than silently grounded.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,
