@@ -15,6 +15,7 @@ class PoleFuseDescriptor(name: String,val amps: Double,val spent: Boolean=false)
 }
 class PoleTransformerDescriptor(name: String,val watts: Int): GenericItemUsingDamageDescriptor(name,"poletransformer") {
     override fun hasItemDraw()=true
+    override fun itemDrawParent()="eln:item/device_obj"
     override fun drawItem(stack: ItemStack,entity: Boolean)=PoleTransformerItemVisual.draw(watts)
     override fun addInformation(stack: ItemStack?,player: Player?,list: MutableList<Any?>,advanced: Boolean) {
         list.add(tr("Physical pole transformer: %1$ kW",watts/1000));list.add(tr("12.47 kV nominal primary; install in the transformer slot"))
