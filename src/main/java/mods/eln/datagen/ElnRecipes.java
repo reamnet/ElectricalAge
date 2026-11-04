@@ -1084,7 +1084,7 @@ public final class ElnRecipes extends ElnRecipesBase {
     public static void recipeForkPatchStandby() {
         addRecipe(findItemStack("Automatic Transfer Switch"),"IPI","RCR","IPI",'I',findItemStack("Iron Plate"),'P',Items.COMPARATOR,'R',Items.REDSTONE,'C',findItemStack("Copper Cable"));
         addShapelessRecipe(findItemStack("Wall-mounted Automatic Transfer Switch"),findItemStack("Automatic Transfer Switch"),findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Standby Gasoline Generator"),"PPP","BGB","CRC",'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'G',findItemStack("240V Fuel Generator"),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        addRecipe(findItemStack("Standby Gasoline Generator"),"PPP","BGB","CRC",'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'G',findItemStack("200V Fuel Generator"),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
         // Native survival upgrade paths conserve the source tiers' installed engine capacity.
         var tiers=mods.eln.transparentnode.standby.GeneratorTier.values();
         for(int i=1;i<tiers.length;i++) {

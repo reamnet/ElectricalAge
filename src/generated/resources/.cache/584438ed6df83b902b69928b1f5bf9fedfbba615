@@ -1,4 +1,4 @@
-// 26.3	2026-11-04T16:56:51.599387939	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-04T19:16:50.976238062	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
 e9b18790f61c5e60d17f49af5cad947638ed8e2b data/eln/advancement/recipes/misc/10a_diode.json
@@ -102,6 +102,7 @@ deef8d780422f077177f1d8075d975640f319ae2 data/eln/advancement/recipes/misc/analo
 8adbb5fbd9a464b1637d56c80bac249461b0b459 data/eln/advancement/recipes/misc/and_chip.json
 9d88219c37e884c57072d6522173a6259b65b7ac data/eln/advancement/recipes/misc/animal_filter.json
 e397443c98e6b42bdb11364d1b6ce472b87c0a04 data/eln/advancement/recipes/misc/auto_miner.json
+8956fc4b0f3d9d0ee79590bbe4cb0cc02226a092 data/eln/advancement/recipes/misc/automatic_transfer_switch.json
 9923be029e64dd1fabfd662d1f17778ee17721f6 data/eln/advancement/recipes/misc/average_electrical_drill.json
 95c342338728eb6fd711b224aeb60ab9c76f2ca1 data/eln/advancement/recipes/misc/average_ferromagnetic_core.json
 f289486095d89988f698c37c5d367dc83b161c16 data/eln/advancement/recipes/misc/big_fuel_burner.json
@@ -157,6 +158,8 @@ a278a8ffc954fedd4f7dc050c32d8aba50d42142 data/eln/advancement/recipes/misc/elect
 38383b7a61375d6dc63982937c944d537c1cb537 data/eln/advancement/recipes/misc/electrical_weather_sensor.json
 c95c5929d0b1534b30262ea3827c5f15d75bb044 data/eln/advancement/recipes/misc/energy_meter.json
 e09f2b8bf38f6e72748fec44315b25bcf864bccc data/eln/advancement/recipes/misc/experimental_transporter.json
+52748fd272895fedc48c5836c905d52c517c5e79 data/eln/advancement/recipes/misc/extra_large_standby_gasoline_generator.json
+c489587306fb77c3b4c1d28fb1b411fe5862b610 data/eln/advancement/recipes/misc/extreme_standby_gasoline_generator.json
 e6626b81782dcf21944212f0e22b7ebca4a2ce5b data/eln/advancement/recipes/misc/fast_electrical_drill.json
 7cc5812c49b47ab69555098d564e91a30828e9d7 data/eln/advancement/recipes/misc/field_bus_cable.json
 a7ff3268fc3ae3ad11defa593f5a837359306cab data/eln/advancement/recipes/misc/flare_stack.json
@@ -195,6 +198,7 @@ ff770d82fed48e779e22e4fd14615d03adb00d06 data/eln/advancement/recipes/misc/joint
 32b3c166b438a27868bd920fddcaf86fe9cb6dd9 data/eln/advancement/recipes/misc/lamp_socket_b_projector.json
 7e78cc35fd761625e94b932f241f2759655eefdd data/eln/advancement/recipes/misc/lamp_supply.json
 e1474de512f11c17eefe20ef125d348a17f44813 data/eln/advancement/recipes/misc/large_rheostat.json
+137626f9f8bf9e6e56e22027e740ecaca997f437 data/eln/advancement/recipes/misc/large_standby_gasoline_generator.json
 742545bf4ff2aa3b041ee56578a9a0ff484773dd data/eln/advancement/recipes/misc/lead_fuse_for_high_voltage_cables.json
 788fa1526657c4577d742ec3a18e6285e899164c data/eln/advancement/recipes/misc/lead_fuse_for_low_voltage_cables.json
 da0b62134f24b081c0fe23415fa59f1077af0142 data/eln/advancement/recipes/misc/lead_fuse_for_medium_voltage_cables.json
@@ -225,6 +229,7 @@ ab4a82c69f420dae28984c5d5a63affa0b65de68 data/eln/advancement/recipes/misc/lp_st
 1e82e13d694c4fa428bf5f0ce06a2ac3162bbdfd data/eln/advancement/recipes/misc/medium_fuel_burner.json
 66138fd5612381d71a0b5f1f9c2758dc922ad210 data/eln/advancement/recipes/misc/medium_power_receiver_antenna.json
 9cf49818e1d6c611c9fe7966b7a6d725bfa6e762 data/eln/advancement/recipes/misc/medium_power_transmitter_antenna.json
+c6cfbc14fab7d31db43be7cd8b0772b371a445f0 data/eln/advancement/recipes/misc/medium_standby_gasoline_generator.json
 1c75f94ce791b4ab416fc9afe31ea1407b98c2d5 data/eln/advancement/recipes/misc/medium_voltage_cable.json
 6721ab576c3e255d8d4d1949cdaada1c3bb9d286 data/eln/advancement/recipes/misc/medium_voltage_relay.json
 a27e31349b09577ad4c188f22d768cc06e79fa07 data/eln/advancement/recipes/misc/medium_voltage_switch.json
@@ -318,6 +323,7 @@ c59077f0aed77894b4afd0b67547f7ff68c33066 data/eln/advancement/recipes/misc/small
 fe7580a5cab94e3b2a53fc81c07fc52050eb51e3 data/eln/advancement/recipes/misc/smelting_tungsten_ore.json
 d745c0a06786c255ec7cf4ebac2a0bd8da10121b data/eln/advancement/recipes/misc/solar_tracker.json
 91ecd892a2a111989dbc8ae5cd7292830389e96f data/eln/advancement/recipes/misc/standard_alarm.json
+b7e85d11917337f73315c634c58119771bd3c8e6 data/eln/advancement/recipes/misc/standby_gasoline_generator.json
 35aadf92ce0cd908191a2b23fa5db29821d21129 data/eln/advancement/recipes/misc/steam_condenser.json
 febda46518aac7a1a3b44f912d4bf97add471642 data/eln/advancement/recipes/misc/steam_injection_wellhead.json
 3b3894bb499e10bccea06d0524264277edaa9371 data/eln/advancement/recipes/misc/steam_oven.json
@@ -358,6 +364,7 @@ a40fcd7d279708a277391dd6108470ef7b5bb454 data/eln/advancement/recipes/misc/volta
 f1a2376059a68048f4a3344057c141cdfd14d4b7 data/eln/advancement/recipes/misc/voltage_oriented_battery.json
 8f38fc973bac41aafdb3acd07ce6fa0cdd086133 data/eln/advancement/recipes/misc/voltage_probe.json
 bf6f0a1b124a820ae6421b3f6af5543f50ecb116 data/eln/advancement/recipes/misc/voltage_to_redstone_converter.json
+e7eaf79354b5c47ba7a926004a315c7b5b332f9c data/eln/advancement/recipes/misc/wall_mounted_automatic_transfer_switch.json
 f47b2c16d3aff37b8460e39245249fda40531f50 data/eln/advancement/recipes/misc/wall_mounted_hybrid_solar_inverter.json
 d0603e241f2719f195a0cfb63fab42351aba2f7c data/eln/advancement/recipes/misc/wall_mounted_mppt_solar_controller.json
 5b4fba0cf4d8239e3cbce33bed6955b18b51f1be data/eln/advancement/recipes/misc/water_turbine.json
@@ -495,6 +502,7 @@ f8bb79bdca45cf72f71e9c34109d2cd1f0ea3f7c data/eln/recipe/analog_watch.json
 f08a17f8c96555319fad60d61b2788c122fbf087 data/eln/recipe/and_chip.json
 805798fa44f9f1beb943bfdbbcaf390d5e5a0861 data/eln/recipe/animal_filter.json
 e1b3870485515b24146953a51d534596cf57c58d data/eln/recipe/auto_miner.json
+e06a8b286866aad23751495565a94926aad2f8b4 data/eln/recipe/automatic_transfer_switch.json
 035486821d9fa0d6a29ddf339b77c7a9c7034581 data/eln/recipe/average_electrical_drill.json
 6780dccc16e12e4195e173b9be3a0394a5c8222e data/eln/recipe/average_ferromagnetic_core.json
 9602844551f3d1dc111c860b342998dcc2d5e4e2 data/eln/recipe/big_fuel_burner.json
@@ -550,6 +558,8 @@ c611bc5041d2328ae1ef25e0e0db2858897e737d data/eln/recipe/electrical_probe_chip.j
 9ab60bed5336cddef50785cb434218fb6e524fda data/eln/recipe/electrical_weather_sensor.json
 fcad7ac7974a4a1f34a82d16fc8438ba71b5b019 data/eln/recipe/energy_meter.json
 c2715733a822da5ec8a2af7742a673d2fdd1699e data/eln/recipe/experimental_transporter.json
+518836055b462dd52d20c8642d58d209ea05902d data/eln/recipe/extra_large_standby_gasoline_generator.json
+bd50930da857ef199e662908e257fd731183e9f8 data/eln/recipe/extreme_standby_gasoline_generator.json
 578f4c90700882a789008dc7d51958f37b2cd362 data/eln/recipe/fast_electrical_drill.json
 c69701fc0715e23ae06919546a43dbd77b2991b2 data/eln/recipe/field_bus_cable.json
 cb117cca2d60183ceb605b7c516744be0b07ec15 data/eln/recipe/flare_stack.json
@@ -588,6 +598,7 @@ d7f8bdad98b05b6430a6362df244cd3a333ca6a5 data/eln/recipe/lamp_socket_a.json
 b90ec63e04d89ed1c2d7121a7a74ae912a6cc9f5 data/eln/recipe/lamp_socket_b_projector.json
 31b32598f2a28b91bcfd9dfec823966fb62504df data/eln/recipe/lamp_supply.json
 f85c8f50ce0422ca92a56a52d510ab5341f9ccb7 data/eln/recipe/large_rheostat.json
+330e8a111fa7bf7de32091f7b93fda44334b4bbf data/eln/recipe/large_standby_gasoline_generator.json
 9e0d47a2d07c01983d5db65e954b56a8b520a021 data/eln/recipe/lead_fuse_for_high_voltage_cables.json
 1771a52b5cf577c86e55ab70326eebc653251f72 data/eln/recipe/lead_fuse_for_low_voltage_cables.json
 28c6a853cdc46b49074336f99ac747ad9e32a758 data/eln/recipe/lead_fuse_for_medium_voltage_cables.json
@@ -618,6 +629,7 @@ e5563e26e89b0f375d849f941cbd8e2827d35aaa data/eln/recipe/magenta_brush.json
 b6418d27c73561055188f90cc889cccf24063fa8 data/eln/recipe/medium_fuel_burner.json
 5c1b4d6392b77b416634a23d5285b8b82c33bd66 data/eln/recipe/medium_power_receiver_antenna.json
 e1573474fb9c89def650e1530e4eda654752e046 data/eln/recipe/medium_power_transmitter_antenna.json
+d241b43d22321e1dc49a61a53e25ae058ca4f789 data/eln/recipe/medium_standby_gasoline_generator.json
 1be3dbd842ea55e9462c2fa7d41fd69bee0d1685 data/eln/recipe/medium_voltage_cable.json
 f7c4f3be00d786839b6407f2bf638026f0cf199e data/eln/recipe/medium_voltage_relay.json
 52e43c527876f47e66605d1fb97a03efbc5df18e data/eln/recipe/medium_voltage_switch.json
@@ -711,6 +723,7 @@ f8d98570968cecc459a14f0cd820a44af3560cf9 data/eln/recipe/smelting_tungsten_dust.
 7021b95b0c11d5bc733cc073169c93ec0ff815c5 data/eln/recipe/smelting_tungsten_ore.json
 5bfee752b7a7f8c89009a59ae6e95f13ce11aacc data/eln/recipe/solar_tracker.json
 4ab93d287ce3eeee14c2bf3bb7c860f4ebacbd27 data/eln/recipe/standard_alarm.json
+2f40bddf8890ebca5947a80dca4ffa3e82c9f8ad data/eln/recipe/standby_gasoline_generator.json
 c4a92d71ecc73f59ecdd4e92dba9ace4eaf4260b data/eln/recipe/steam_condenser.json
 de6b0d86f1b6a83a630f6f99c80a28f8adcf17e5 data/eln/recipe/steam_injection_wellhead.json
 ad38d8978faeb5e64094fb9e2d5f61f950b2a9c1 data/eln/recipe/steam_oven.json
@@ -751,6 +764,7 @@ ce06b5890adb743b4cada0c09ea95ab820aff89a data/eln/recipe/voltage_controlled_sine
 bcdf2586ebaa97d9afcb494bbf7070b497d0aa22 data/eln/recipe/voltage_oriented_battery.json
 4a4a90f78f6315de72286dcf8f136ffa842ce05d data/eln/recipe/voltage_probe.json
 75586b79b852a84f56f1eb41fa2bcfd4fc615fb3 data/eln/recipe/voltage_to_redstone_converter.json
+64821eb1ff82c259c9ce8236b0c40f163e734269 data/eln/recipe/wall_mounted_automatic_transfer_switch.json
 ee25b424184f89566f1fbc582aeb39569da6fba3 data/eln/recipe/wall_mounted_hybrid_solar_inverter.json
 655adfb11b9a89a42e6a6648445468ded01d9b53 data/eln/recipe/wall_mounted_mppt_solar_controller.json
 2eef55cb3770ba6e558dcb7b2078bdec640bcbf2 data/eln/recipe/water_turbine.json

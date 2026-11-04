@@ -273,9 +273,13 @@ generators and fluid network implementation remain unchanged.
 
 Larger source tiers lacked survival recipes; native upgrades combine two of the
 previous tier (three for the extreme tier), preserving their installed capacity.
-All seven entries have geometry-derived inventory icons. Native fuel/capability,
-multiblock, transfer, reset, save and display checks are being added; no passing
-checkpoint or interactive client validation is claimed yet.
+All seven entries have geometry-derived inventory icons. All 19 adapted electrical/controller/link regressions pass with a metered fuel
+budget; native fluid/capability, multiblock, transfer, reset, save and display
+checks are running separately. Native datagen passes for seven recipes and
+advancements, seven blockstates/items, 14 item models and 14 English names.
+The original 26.3 200 V fuel generator supplies the small standby recipe
+(the source called it 240 V), preserving the existing device and ID.
+Interactive client validation remains pending.
 
 ## Inventory
 
