@@ -89,4 +89,16 @@ class ForkPatchPadTransformerTest {
         val copy=Circuit();copy.u.read(saved);assertEquals(7,copy.u.protection.reason);assertFalse(copy.u.tap.enabled)
         copy.u.setEnabled(false);copy.u.setEnabled(true);assertFalse(copy.u.tap.enabled)
     }
+    @Test fun passivePadCanReturnSecondaryGenerationToThePrimaryWithoutInventingPower() {
+        val states=ArrayList<State>();val parts=ArrayList<Component>();val processes=ArrayList<IProcess>()
+        val u=PadTransformerUnit(states,parts,processes);u.install(50000,200.0)
+        val root=RootSystem(.05,1);states.forEach(root::addState);parts.forEach(root::addComponent)
+        val generator=VoltageSource("secondary generation",u.output,null).setU(240.0)
+        val gridLoad=Resistor(u.input,null).setR(12470.0*12470/30000)
+        root.addComponent(generator);root.addComponent(gridLoad)
+        repeat(100) { root.step();processes.forEach { p->p.process(.05) } }
+        assertTrue(u.tap.current<0);assertFalse(u.protection.tripped);assertTrue(gridLoad.p>29000)
+        assertEquals(generator.p,gridLoad.p+parts.filterIsInstance<Resistor>().sumOf { it.p },1e-5)
+    }
+
 }

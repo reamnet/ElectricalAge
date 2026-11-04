@@ -73,7 +73,7 @@ class PadTransformerUnit(loads: MutableList<State>,components: MutableList<Compo
     fun read(t: CompoundTag) {
         applySettings(doubleArrayOf(t.getDoubleOr("industrialSetting0",12470.0),t.getDoubleOr("industrialSetting1",240.0)))
         enabled=t.getBooleanOr("industrialEnabled",true);protection.tripped=t.getBooleanOr("industrialTrip",false);protection.reason=t.getIntOr("industrialTripReason",0).coerceIn(0,7)
-        protection.elapsed=t.getDoubleOr("industrialTripTime",0.0).takeIf { it.isFinite() }?.coerceIn(0.0,2.0) ?: 0.0
+        protection.elapsed=t.getDoubleOr("industrialTripTime",0.0).takeIf { it.isFinite() }?.coerceIn(0.0,60.0) ?: 0.0
         protection.pendingReason=t.getIntOr("industrialPendingReason",0).coerceIn(0,7);configure()
     }
     fun packet(id: Byte,s: DataInputStream): Boolean=try {
