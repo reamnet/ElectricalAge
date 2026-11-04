@@ -162,6 +162,16 @@ overload/supply recovery, zero/invalid controls, forward/reverse ratio and energ
 balance, once-per-step commits, unloaded ports and probe/history preservation.
 Native block checks and broader destination validation are recorded separately.
 
+The [broader converter checkpoint](forkpatch-port/converter-validation.json) passes
+331 main tests (334 selected, with three optional image-preview tests skipped),
+all 15 CAD tests and four native transformer cases. The fluid corpus uses
+`-PfluidCases=20`, not the default 200. The native cases include both loaded and
+unloaded isolated transformers, their GUI isolation toggle, inventory completeness
+and saved-state round trips. A fifth native test verifies the regulated converter
+on normal server ticks at 120 V with 144 W of balanced output. Those round trips
+exposed and fixed the base loader
+reading component state before the saved isolated circuit had been selected.
+
 This checkpoint does not register the new MPPT/hybrid cabinets. Fully floating
 differential islands, the source double-double/gauge solver and stiff high-voltage
 port accuracy still require their own adaptation and regressions before those
