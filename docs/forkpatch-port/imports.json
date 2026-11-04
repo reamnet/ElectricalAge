@@ -599,5 +599,12 @@
     "sourceSha256": "6371a6fe592882ccb76d1e692b7cdfea1d6368ea1437b7343c3bab4ec792b849",
     "mode": "adapted-production-circuit-tests",
     "status": "pad-circuit-and-native-passed; datagen-and-destination-regressions-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/distributionpole/distributionpole.obj",
+    "target": "src/main/resources/assets/eln/model/poletransformer/poletransformer.obj",
+    "sourceSha256": "130cb6a3ffb2635ac3a1f365f6681bfaee067cac076fbe95bd7ffe735355ec53",
+    "mode": "extracted-and-recentered-Transformer-and-TransformerPin-submeshes; reproducible with tools/port/pole_transformer_mesh.py",
+    "status": "pad-circuit-and-native-passed; datagen-and-destination-regressions-pending"
   }
 ]

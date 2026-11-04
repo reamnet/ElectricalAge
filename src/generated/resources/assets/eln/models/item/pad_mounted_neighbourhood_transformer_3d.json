@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_transparent",
+  "textures": {
+    "particle": "eln:item/pad_mounted_neighbourhood_transformer"
+  }
+}

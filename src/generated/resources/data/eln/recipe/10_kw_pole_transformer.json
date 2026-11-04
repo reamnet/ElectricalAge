@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "I": "eln:iron_plate",
+    "T": "eln:dc_dc_converter"
+  },
+  "pattern": [
+    "ICI",
+    "CTC",
+    "ICI"
+  ],
+  "result": {
+    "id": "eln:10_kw_pole_transformer"
+  }
+}
