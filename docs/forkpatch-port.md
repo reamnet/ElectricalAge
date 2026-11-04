@@ -79,9 +79,9 @@ RHS values with a complete scratch solve. It does not replace the destination's
 LU physical solve, diode re-solves or cached interconnection resistances. The later converter checkpoint covers the coupled runtime; complete floating-gauge
 and stiff high-voltage accuracy work remains pending.
 
-ATS/UPS, protective-relay, load-shedding and vehicle kernels still await their
-production cabinets/entities and menus. Solar and off-grid adapters are described
-in the later checkpoints below.
+UPS, protective-relay, load-shedding and vehicle kernels still await their
+production cabinets/entities and menus. Solar, off-grid and ATS/standby adapters
+are described in the later checkpoints below.
 
 ### Code checkpoint: registered solar blocks
 
@@ -255,7 +255,7 @@ A one-pole disconnect registers only its actual contact and terminals. Carrying
 over the unused second open pole made the native matrix singular; it is removed
 in this adapter, with open/reclose behavior covered by a dedicated regression.
 
-## Standby and ATS checkpoint (validation in progress)
+## Standby and ATS checkpoint
 
 Seven source identities are now registered: floor/wall ATS cabinets and all five
 standby gasoline generator tiers (10, 20, 40, 80 and 240 kW). Native screens and
@@ -274,12 +274,23 @@ generators and fluid network implementation remain unchanged.
 Larger source tiers lacked survival recipes; native upgrades combine two of the
 previous tier (three for the extreme tier), preserving their installed capacity.
 All seven entries have geometry-derived inventory icons. All 19 adapted electrical/controller/link regressions pass with a metered fuel
-budget; native fluid/capability, multiblock, transfer, reset, save and display
-checks are running separately. Native datagen passes for seven recipes and
+budget. All 31 selected native cases pass, including ten new standby cases
+and the previous 21 solar/off-grid/converter/transformer cases. Checks cover
+real bucket transactions, pipe capabilities, fuel components and fractional-reserve
+codecs, all generator multiblocks, floor/wall ATS transfers, linked fault reset,
+recorded live display geometry and native node save/load. Fuel-ledger and reset
+checks use an absolute 1e-7 J tolerance. The full destination suite passes
+375 tests with three optional preview skips and no failures (`-PfluidCases=20`). Native datagen passes for seven recipes and
 advancements, seven blockstates/items, 14 item models and 14 English names.
 The original 26.3 200 V fuel generator supplies the small standby recipe
 (the source called it 240 V), preserving the existing device and ID.
-Interactive client validation remains pending.
+Interactive client validation and the default 200-case fluid run are not claimed.
+The source mixed-voltage pole-feeder case awaits the utility equipment port.
+
+Reports: [controller tests](forkpatch-port/standby-circuit-tests.json),
+[native cases](forkpatch-port/standby-native-tests.json),
+[datagen](forkpatch-port/standby-datagen.json), and
+[destination regressions](forkpatch-port/standby-checkpoint-validation.json).
 
 ## Inventory
 
