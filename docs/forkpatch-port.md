@@ -76,11 +76,12 @@ The incoming checked terminal-voltage probe uses a cached transposed response fr
 the destination's LU factors. It samples RHS callbacks once per read, preserves
 physical/pending state, invalidates rows on a matrix rebuild and checks exceptional
 RHS values with a complete scratch solve. It does not replace the destination's
-LU physical solve, diode re-solves or cached interconnection resistances. Full
-ForkPatch floating-gauge/converter integration is a subsequent adapter step.
+LU physical solve, diode re-solves or cached interconnection resistances. The later converter checkpoint covers the coupled runtime; complete floating-gauge
+and stiff high-voltage accuracy work remains pending.
 
-The controller kernels do not yet register their corresponding cabinets, menus
-or vehicles. Those production adapters remain part of the full scope above.
+ATS/UPS, protective-relay, load-shedding and vehicle kernels still await their
+production cabinets/entities and menus. Solar and off-grid adapters are described
+in the later checkpoints below.
 
 ### Code checkpoint: registered solar blocks
 
@@ -210,7 +211,7 @@ not just shipped OBJ files; all 158 existing entries are retained alongside the
 four solar cabinets. Shared `eln:` material resources retain their namespace,
 while legacy Windows texture paths still use the native filename fallback.
 
-## Off-grid equipment checkpoint (validation in progress)
+## Off-grid equipment checkpoint
 
 The next checkpoint adapts all eight 16/32/48/64 kWh floor and wall LiFePO4
 banks, the off-grid inverter charger, standalone AC charger, battery MPPT,
@@ -232,11 +233,27 @@ through a configuration tag is rejected. Moving the actual bank retains its paid
 energy. The separate utility transformer/meter/recloser devices and UPS enclosures
 are still pending; this checkpoint imports their shared fuse/cell items only.
 
-All 17 adapted source off-grid circuit regressions pass on the native LU solver,
+All 18 adapted source off-grid circuit regressions pass on the native LU solver,
 including service headroom, parallel-bank energy balance, night isolation, cold/hot
 protection and electrical-rate-independent thermal energy. Native datagen also passes: 29 recipes and advancements, 30 item definitions,
 13 blockstates, 43 item models and 43 English names. All 356 previous registry
-identities are retained. The 13 native equipment cases remain in progress.
+identities are retained. The full destination test selection passes 356 tests,
+with three optional preview skips and no failures (`-PfluidCases=20`; the default
+200-case fluid corpus is not claimed). All 21 native tests pass: the 13 new
+equipment cases plus eight existing converter, transformer and solar cases.
+Wall batteries cover all four orientations. Paid fuse/cell contracts, live displays,
+recorded enclosure geometry, thin upper ghost collision, moved battery energy,
+configuration whitelisting and node save/load round trips pass.
+
+Reports: [circuit tests](forkpatch-port/offgrid-circuit-tests.json),
+[native cases](forkpatch-port/offgrid-native-tests.json),
+[datagen](forkpatch-port/offgrid-datagen.json), and
+[destination regressions](forkpatch-port/offgrid-checkpoint-validation.json).
+An interactive client GPU screenshot and the full 200-case fluid run are not claimed.
+
+A one-pole disconnect registers only its actual contact and terminals. Carrying
+over the unused second open pole made the native matrix singular; it is removed
+in this adapter, with open/reclose behavior covered by a dedicated regression.
 
 ## Inventory
 
