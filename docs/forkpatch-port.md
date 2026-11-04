@@ -333,6 +333,28 @@ Reports: [circuit tests](forkpatch-port/ups-circuit-tests.json),
 [datagen](forkpatch-port/ups-datagen.json), and
 [destination regressions](forkpatch-port/ups-checkpoint-validation.json).
 
+### Relay and load-shedding checkpoint (validation in progress)
+
+The source Protective Relay Cabinet (8066) and Automatic Load Shedding Controller
+(8070) now have native production adapters, source enclosure/panel geometry and
+native menus. Only those two industrial kinds are registered in this checkpoint;
+the shared kind metadata does not imply implementations of the seven other devices.
+The relay retains paired forward/return contacts, voltage/current/differential
+limits, physical-time delayed latching and a wired trip input. Enabling a tripped
+relay never resets its protection. The shedder measures all four actual branches,
+sheds P4 first, restores P1 first, remembers disconnected demand and checks voltage
+and spare capacity before retrying. Settings, relay state and remembered demand
+persist with source NBT keys. Packet parsing applies only complete validated settings.
+
+The native solver gets local high-resistance terminal references for disconnected
+circuits. Healthy contacts are assigned only their desired state, avoiding the
+source's open/reclose sequence and unnecessary LU invalidations. Timers advance
+once after each accepted physical solve, never in nonlinear retry loops.
+Menus expose the six settings, live measurements, branch priorities, delay timers
+and explicit trip/reset/retry controls. Source assets are adapted to the native
+recorded GL facade. Focused circuit checks and native world validation are pending.
+Interactive client validation and the other industrial devices remain pending.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

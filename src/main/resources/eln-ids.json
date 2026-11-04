@@ -2285,6 +2285,18 @@
   "kind": "transparent_node",
   "name": "extreme_standby_gasoline_generator"
  },
+ "eln:transparent_node@8066": {
+  "descriptor": "IndustrialDescriptor",
+  "display": "Protective Relay Cabinet",
+  "kind": "transparent_node",
+  "name": "protective_relay_cabinet"
+ },
+ "eln:transparent_node@8070": {
+  "descriptor": "IndustrialDescriptor",
+  "display": "Automatic Load Shedding Controller",
+  "kind": "transparent_node",
+  "name": "automatic_load_shedding_controller"
+ },
  "eln:transparent_node@8192": {
   "descriptor": "OffGridDescriptor",
   "display": "16 kWh LiFePO4 Battery Cabinet",

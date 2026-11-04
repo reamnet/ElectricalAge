@@ -176,3 +176,5 @@ wirelesssignalrepeater/wirelesssignalrepeater.obj
 wirelesssignalrx/wirelesssignalrx.obj
 wirelesssignaltx/wirelesssignaltx.obj
 xrayscanner/xrayscanner.obj
+industrial_relay/industrial_relay.obj
+industrial_shedder/industrial_shedder.obj

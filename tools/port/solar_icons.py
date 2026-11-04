@@ -54,6 +54,8 @@ def cabinet(model, item):
 
 if __name__ == "__main__":
     for model, item in [
+        ("industrial_relay", "protective_relay_cabinet"),
+        ("industrial_shedder", "automatic_load_shedding_controller"),
         ("solarmppt", "mppt_solar_controller"),
         ("solarhybrid", "hybrid_solar_inverter"),
         ("wallmppt", "wall_mounted_mppt_solar_controller"),

@@ -1083,6 +1083,8 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeForkPatchUps() {
+        addRecipe(findItemStack("Protective Relay Cabinet"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.REPEATER,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Automatic Load Shedding Controller"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.OBSERVER,'M',findItemStack("Machine Block"));
         addRecipe(findItemStack("Programmable UPS"),"CVC","MFM","CVC",'C',findItemStack("Copper Cable"),'V',findItemStack("DC-DC Converter"),'M',findItemStack("Machine Block"),'F',findItemStack("Optimal Ferromagnetic Core"));
         addShapelessRecipe(findItemStack("Wall-mounted Programmable UPS"),findItemStack("Programmable UPS"),findItemStack("Iron Plate"));
     }

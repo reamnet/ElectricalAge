@@ -79,6 +79,8 @@ public final class ElnDeviceRegistry {
         registerSolarPanel(48);
         registerForkPatchSolar();
         registerForkPatchStandby();
+        for(var kind: java.util.List.of(mods.eln.transparentnode.industrial.IndustrialKind.RELAY,mods.eln.transparentnode.industrial.IndustrialKind.SHEDDER))
+            transparentNodeItem.addDescriptor((126<<6)+kind.ordinal(),new mods.eln.transparentnode.industrial.IndustrialDescriptor(kind));
         transparentNodeItem.addDescriptor((124<<6)+11,new mods.eln.transparentnode.ups.UpsDescriptor(TR_NAME(Type.NONE,"Programmable UPS"),false,false));
         transparentNodeItem.addDescriptor((124<<6)+17,new mods.eln.transparentnode.ups.UpsDescriptor(TR_NAME(Type.NONE,"Wall-mounted Programmable UPS"),true,false));
         mods.eln.transparentnode.offgrid.OffGridDevices.INSTANCE.register();
