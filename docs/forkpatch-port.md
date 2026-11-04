@@ -63,6 +63,29 @@ Only features with compiled production adapters and relevant passing regressions
 should be marked migrated. Copying unused files into a staging directory does not
 count as an implementation.
 
+### Code checkpoint: simulation and controller foundations
+
+The first incoming production sources are the 3.0.77 converter algebra, control
+mappings, insulation model, protective relay/load-shed state machines, ATS transfer
+logic/contact, UPS alarm, LiFePO4 saved-energy state and vehicle physics helpers.
+Their original paths and hashes are in [the import ledger](forkpatch-port/imports.json).
+The source solar I-V/Norton process and current-source component are adapted to the
+destination method names and 26.3 NBT reads.
+
+The incoming checked terminal-voltage probe uses a cached transposed response from
+the destination's LU factors. It samples RHS callbacks once per read, preserves
+physical/pending state, invalidates rows on a matrix rebuild and checks exceptional
+RHS values with a complete scratch solve. It does not replace the destination's
+LU physical solve, diode re-solves or cached interconnection resistances. Full
+ForkPatch floating-gauge/converter integration is a subsequent adapter step.
+
+These controller kernels do not yet register their corresponding cabinets, menus
+or vehicles. The solar process needs to replace the destination panel adapter
+before the changed I-V model becomes available on registered solar blocks.
+The incoming production Java/Kotlin sources compile against the pinned 26.3
+toolchain. Focused MNA, controller and solar regressions are running at this
+checkpoint; passing totals will be recorded after they finish.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

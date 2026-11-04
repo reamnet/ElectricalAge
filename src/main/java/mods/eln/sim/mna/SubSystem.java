@@ -50,6 +50,16 @@ public class SubSystem {
 
     double[] XtempData;
 
+    // ForkPatch checked terminal probes, adapted to this port's existing LU solver.
+    // Responses belong to a stamped matrix. RHS callbacks remain fresh on every
+    // read so capacitors, delays and custom components cannot reuse stale history.
+    private final it.unimi.dsi.fastutil.longs.Long2ObjectMap<double[]> differentialRows =
+        new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<>();
+    private long differentialProbeBuilds;
+    private double probeSafeRhsLimit;
+
+    public long getDifferentialProbeBuilds() { return differentialProbeBuilds; }
+
     /** Diode switches of this SubSystem (ResistorSwitch.isDiode), collected by generateMatrix. */
     ArrayList<ResistorSwitch> diodes = new ArrayList<ResistorSwitch>();
     /** Re-solves per step allowed for diode switching (one flip per diode is the normal case). */
@@ -130,6 +140,8 @@ public class SubSystem {
     //double[][] getDataRef()
 
     public void generateMatrix() {
+        differentialRows.clear();
+        probeSafeRhsLimit = 0.0;
         stateCount = states.size();
 
         Profiler p = new Profiler();
@@ -308,6 +320,97 @@ public class SubSystem {
         }
         invDiag = new double[n];
         for (int i = 0; i < n; i++) invDiag[i] = 1 / lu[i][i];
+        // An absolute triangular-solve envelope proves all variables and partial
+        // sums finite for ordinary probe RHS values. Extreme inputs use the full
+        // checked solve below. Include a margin for rounding in the bound itself.
+        double[] envelope = new double[n];
+        double largest = 1.0;
+        for (int i = 0; i < n; i++) {
+            double bound = 1.0;
+            for (int k = 0; k < i; k++) bound += Math.abs(lu[i][k]) * envelope[k];
+            envelope[i] = bound;
+            largest = Math.max(largest, bound);
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            double bound = envelope[i];
+            for (int k = i + 1; k < n; k++) bound += Math.abs(lu[i][k]) * envelope[k];
+            largest = Math.max(largest, bound);
+            envelope[i] = bound * Math.abs(invDiag[i]);
+            largest = Math.max(largest, envelope[i]);
+        }
+        probeSafeRhsLimit = Double.isFinite(largest) ? Double.MAX_VALUE / largest / 8.0 : 0.0;
+    }
+
+    /** Noncommitting terminal difference for the incoming Norton solar model.
+     * A transposed LU solve builds one response row per pair and matrix, then each
+     * read samples callbacks once and projects only that row. Existing physical
+     * LU solves, diode switching and interconnection resistance caching stay intact.
+     */
+    public double solveVoltageDifferenceChecked(State a, State b) {
+        if (!matrixValid) generateMatrix();
+        if (singularMatrix || a == null || b == null || a.getSubSystem() != this || b.getSubSystem() != this)
+            return Double.NaN;
+        java.util.Arrays.fill(Idata, 0.0);
+        for (ISubSystemProcessI process : processI) process.simProcessI(this);
+        double maximum = 0.0;
+        for (double value : Idata) {
+            if (!Double.isFinite(value)) return Double.NaN;
+            maximum = Math.max(maximum, Math.abs(value));
+        }
+        if (maximum < probeSafeRhsLimit) {
+            long key = ((long) a.getId() << 32) | (b.getId() & 0xffffffffL);
+            double[] row = differentialRows.get(key);
+            if (row == null) {
+                row = differentialResponse(a.getId(), b.getId());
+                differentialRows.put(key, row);
+                differentialProbeBuilds++;
+            }
+            double sum = 0.0, correction = 0.0;
+            for (int i = 0; i < stateCount; i++) {
+                if (Idata[i] == 0.0 || row[i] == 0.0) continue;
+                double product = row[i] * Idata[i];
+                double next = sum + product;
+                correction += Math.abs(sum) >= Math.abs(product) ? (sum - next) + product : (product - next) + sum;
+                correction += Math.fma(row[i], Idata[i], -product);
+                sum = next;
+            }
+            double value = sum + correction;
+            if (Double.isFinite(value)) return value;
+        }
+        // Keep XtempData and all physical state untouched, including on failure.
+        double[] trial = new double[stateCount];
+        for (int i = 0; i < stateCount; i++) {
+            double value = Idata[perm[i]];
+            for (int k = 0; k < i; k++) value -= lu[i][k] * trial[k];
+            trial[i] = value;
+        }
+        for (int i = stateCount - 1; i >= 0; i--) {
+            double value = trial[i];
+            for (int k = i + 1; k < stateCount; k++) value -= lu[i][k] * trial[k];
+            trial[i] = value * invDiag[i];
+        }
+        for (double value : trial) if (!Double.isFinite(value)) return Double.NaN;
+        double value = trial[a.getId()] - trial[b.getId()];
+        return Double.isFinite(value) ? value : Double.NaN;
+    }
+
+    private double[] differentialResponse(int positive, int negative) {
+        // A = P^T L U, hence A^T y = e_positive - e_negative is solved with
+        // U^T, L^T, then the inverse permutation. No reciprocal-matrix assumption.
+        double[] work = new double[stateCount];
+        for (int i = 0; i < stateCount; i++) {
+            double value = (i == positive ? 1.0 : 0.0) - (i == negative ? 1.0 : 0.0);
+            for (int k = 0; k < i; k++) value -= lu[k][i] * work[k];
+            work[i] = value * invDiag[i];
+        }
+        for (int i = stateCount - 1; i >= 0; i--) {
+            double value = work[i];
+            for (int k = i + 1; k < stateCount; k++) value -= lu[k][i] * work[k];
+            work[i] = value;
+        }
+        double[] row = new double[stateCount];
+        for (int i = 0; i < stateCount; i++) row[perm[i]] = work[i];
+        return row;
     }
 
     /** This step's solution for a state of this SubSystem (before stepFlush); ground (null) = 0. */
