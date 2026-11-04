@@ -131,7 +131,7 @@ public final class ForkPatchStandbyCases {
             ats=(AtsElement)ctx.placeTransparent((124<<6)+6,ctx.at(3,1,3));
             generator=(StandbyGeneratorElement)ctx.placeTransparent((124<<6)+7,ctx.at(7,1,6));
             ((StandbyTank)generator.getUnit().getFuel()).getTank().fill(new FluidStack(Oil.Cut.GASOLINE.source.get(),20000),true);
-            for(var e:List.of(ats,generator))e.networkUnserialize(ctx.stream(s->{s.writeByte(81);s.writeUTF("native reset");}));
+            for(var e:List.of(ats,generator))e.networkUnserialize(ctx.stream(s->{s.writeByte(81);s.writeUTF(id());}));
             parts.add(new Resistor(generator.getUnit().getOutput(),ats.getUnit().getBackup()).setR(.01));
             load=new Resistor(ats.getUnit().getOutput(),null).setR(240*240/20000.0);parts.add(load);connect();
             clock=seconds->{

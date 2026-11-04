@@ -382,5 +382,19 @@
     "sourceSha256": "b75f558ec0547c961310750d4d456bc79eba4b4b42258ad3834207817819f3c8",
     "mode": "extracted-native-adapter",
     "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/standby/StandbyTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/standby/ForkPatchStandbyTest.kt",
+    "sourceSha256": "123e02b28c4bad581756854dc805cffa43876406084e346dc7ffa8e65dba68ce",
+    "mode": "adapted-production-controllers-with-metered-fuel-fixtures",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupClient.kt",
+    "target": "src/main/java/mods/eln/transparentnode/standby/BackupScreen.java",
+    "sourceSha256": "b75f558ec0547c961310750d4d456bc79eba4b4b42258ad3834207817819f3c8",
+    "mode": "native-menu-replacement",
+    "status": "standby-checkpoint-validation-pending"
   }
 ]
