@@ -200,5 +200,110 @@
     "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
     "mode": "adapted",
     "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/LifepoBank.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/LifepoBank.kt",
+    "sourceSha256": "370d10d1e95172b22a5eded47efffe40878063f02b753043204a89314fe35e3e",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/InverterCharger.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/InverterCharger.kt",
+    "sourceSha256": "a3eff3ceb2fa788d8b4308f86d433d49a053f3ea05dff95e2e8b51aa8738bff2",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/DcProtection.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/DcProtection.kt",
+    "sourceSha256": "d67c2742d5ce0cb47d12465b9700c8fbcdcecf10bd3e385d8b99f4af583bbaa6",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/CabinetTemperature.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/CabinetTemperature.kt",
+    "sourceSha256": "98b157d996991af773062ea2bf3b2ec57bae4e6b2bacb4931b5d4d12ab786c0c",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridElement.kt",
+    "sourceSha256": "cf48d0b583d641564f8ae9fe61f6138d193f3dd1b43854ecebd7bdd6ad78668a",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDisplay.kt",
+    "sourceSha256": "61364f91e3c72f5ee74dab1dcfb9a091df46ac2fe4726b6790d3a87a7984b3f9",
+    "mode": "extracted-native-render-menu-adapter",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDescriptor.kt",
+    "sourceSha256": "61364f91e3c72f5ee74dab1dcfb9a091df46ac2fe4726b6790d3a87a7984b3f9",
+    "mode": "extracted-native-render-menu-adapter",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridRender.kt",
+    "sourceSha256": "61364f91e3c72f5ee74dab1dcfb9a091df46ac2fe4726b6790d3a87a7984b3f9",
+    "mode": "extracted-native-render-menu-adapter",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridType.kt",
+    "sourceSha256": "07f718961607c8f120c8df982231da5575665608a2136439035980360cd48833",
+    "mode": "adapted-native-registry",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt",
+    "sourceSha256": "07f718961607c8f120c8df982231da5575665608a2136439035980360cd48833",
+    "mode": "adapted-native-registry",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityProtection.kt",
+    "target": "src/main/kotlin/mods/eln/utility/CutoutFuse.kt",
+    "sourceSha256": "87140dab360e424d8e12ae9ee99a7bb81b7b00b66fc05b96ec4e4ed38e37740e",
+    "mode": "extracted-fuse-only-native-item-codec",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleHardware.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleHardware.kt",
+    "sourceSha256": "363d9bedf4e2d87c0f75ac623506b05fd57cfcbb3c2eb61029595002ba69b3f9",
+    "mode": "extracted-fuse-items-only",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityItems.kt",
+    "target": "src/main/kotlin/mods/eln/utility/UtilityItems.kt",
+    "sourceSha256": "517a52dc98180f86b84ea89d37ce041de2c369f4916a0fcd4badc215a24e8027",
+    "mode": "extracted-basic-fuse-link-only",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsLargeCell.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsLargeCell.kt",
+    "sourceSha256": "57a3f1d9bb71a44172978e8a28cc76a8c06c2e7cb35995ee4849a1829bb0cd8e",
+    "mode": "adapted-native-battery-contract",
+    "status": "offgrid-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/offgrid/OffGridTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/offgrid/ForkPatchOffGridTest.kt",
+    "sourceSha256": "d9b8532f4b12bbc0c45f132bb7c5178dbb93a40297f2e0e68faee59efd4027a7",
+    "mode": "adapted-production-list-fixtures",
+    "status": "offgrid-checkpoint-validation-pending"
   }
 ]

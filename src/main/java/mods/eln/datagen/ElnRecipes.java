@@ -66,6 +66,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeAutoMiner", ElnRecipes::recipeAutoMiner);
         run("recipeSolarPanel", ElnRecipes::recipeSolarPanel);
         run("recipeForkPatchSolar", ElnRecipes::recipeForkPatchSolar);
+        run("recipeForkPatchOffgrid", ElnRecipes::recipeForkPatchOffgrid);
         run("recipeThermalDissipatorPassiveAndActive", ElnRecipes::recipeThermalDissipatorPassiveAndActive);
         run("recipeElectricalAntenna", ElnRecipes::recipeElectricalAntenna);
         run("recipeEggIncubator", ElnRecipes::recipeEggIncubator);
@@ -1077,6 +1078,30 @@ public final class ElnRecipes extends ElnRecipesBase {
             'A', findItemStack("Analogic Regulator"),
             'C', findItemStack("Medium Voltage Cable"),
             'M', findItemStack("Advanced Electrical Motor"));
+    }
+
+    public static void recipeForkPatchOffgrid() {
+        addRecipe(findItemStack("UPS AGM Battery Cell"),"PPP","LBL","PPP",'P',findItemStack("Iron Plate"),'L',"ingotLead",'B',findItemStack("Portable Battery"));
+        addRecipe(findItemStack("UPS LiFePO4 Battery Cell"),"CCC","GBG","CCC",'C',findItemStack("Copper Ingot"),'G',Items.GOLD_INGOT,'B',findItemStack("UPS AGM Battery Cell"));
+        addRecipe(findItemStack("UPS Industrial Battery Module"),"PPP","BBB","PPP",'P',findItemStack("Iron Plate"),'B',findItemStack("UPS LiFePO4 Battery Cell"));
+        addRecipe(findItemStack("16 kWh LiFePO4 Cell Stack"),"IBI","BCB","IBI",'I',findItemStack("Iron Plate"),'B',findItemStack("UPS Industrial Battery Module"),'C',findItemStack("Copper Cable"));
+        for(var t:mods.eln.transparentnode.offgrid.OffGridType.values()) {
+            if(t.getBank()) {
+                String[] pattern=switch(t.getKwh()) { case 16 -> new String[]{" I ","CSC","IMI"}; case 32 -> new String[]{"SIS","CMC","III"}; case 48 -> new String[]{"SIS","CMC","ISI"}; default -> new String[]{"SIS","CMC","SIS"}; };
+                addRecipe(findItemStack(t.getTitle()),pattern[0],pattern[1],pattern[2],'I',t.getWall()?Items.IRON_CHAIN:findItemStack("Iron Plate"),'S',findItemStack("16 kWh LiFePO4 Cell Stack"),'C',findItemStack("Copper Cable"),'M',findItemStack("Machine Block"));
+            } else {
+                Object core=switch(t) { case MPPT -> findItemStack("MPPT Solar Controller"); case INVERTER -> findItemStack("Hybrid Solar Inverter"); case COMBINER -> findItemStack("30 A Pole Fuse"); default -> Items.REPEATER; };
+                addRecipe(findItemStack(t.getTitle()),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.COMPARATOR,'W',findItemStack("Copper Cable"),'C',core,'M',findItemStack("Machine Block"));
+            }
+        }
+        addRecipe(findItemStack("Pole Fuse Link",3)," C "," P "," C ",'C',findItemStack("Copper Cable"),'P',findItemStack("Iron Plate"));
+        var names=mods.eln.utility.PoleHardware.INSTANCE.getFuseNames();
+        for(int i=0;i<names.size();i++) {
+            var parts=new java.util.ArrayList<Object>();parts.add(findItemStack("Pole Fuse Link"));
+            for(int j=0;j<1+i/3;j++)parts.add(Items.COPPER_INGOT);
+            for(int j=0;j<i%3;j++)parts.add(Items.IRON_NUGGET);
+            addShapelessRecipe(findItemStack(names.get(i)),parts.toArray());
+        }
     }
 
     public static void recipeForkPatchSolar() {

@@ -210,6 +210,31 @@ not just shipped OBJ files; all 158 existing entries are retained alongside the
 four solar cabinets. Shared `eln:` material resources retain their namespace,
 while legacy Windows texture paths still use the native filename fallback.
 
+## Off-grid equipment checkpoint (validation in progress)
+
+The next checkpoint adapts all eight 16/32/48/64 kWh floor and wall LiFePO4
+banks, the off-grid inverter charger, standalone AC charger, battery MPPT,
+fused PV combiner and manual DC disconnect. Source IDs 8192–8204 are retained;
+new paid cell modules, cell stacks and fuse cartridges use their source IDs.
+None of these entries replaces an existing destination identity.
+
+Native 26.3 thermal loads use a fixed 20 C reference. BMS temperature limits
+read that absolute scale; biome ambient remains the native cooling target.
+Electrical-rate losses deposit joules with `moveEnergyTo`, so slow thermal
+integration cannot multiply charging heat. Charger bypass headroom uses the
+existing checked differential LU probe. These choices preserve native behavior
+where copying the source implementation would be incorrect.
+
+Models record through the native rendering facade and screens use native menus.
+Upper ghost collision matches each thin wall cabinet or floor battery enclosure.
+Configuration methods preserve settings only; copying stored battery energy
+through a configuration tag is rejected. Moving the actual bank retains its paid
+energy. The separate utility transformer/meter/recloser devices and UPS enclosures
+are still pending; this checkpoint imports their shared fuse/cell items only.
+
+The source off-grid circuit regressions and 13 native equipment cases are being
+validated. Generated recipes/assets and a passing build are not yet claimed.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

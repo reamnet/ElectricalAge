@@ -11,6 +11,7 @@ final class ClientScreens {
     }
 
     static void registerAll() {
+        ElnScreens.register(mods.eln.transparentnode.offgrid.OffGridDescriptor.class, mods.eln.transparentnode.offgrid.OffGridScreen::new);
         ElnScreens.register(mods.eln.transparentnode.renewable.RenewableDescriptor.class, mods.eln.transparentnode.renewable.SolarScreen::new);
         // screen layouts (assets/eln/gui/<name>.json)
         layout("transparentnode.electricalfurnace.ElectricalFurnaceDescriptor", "electrical_furnace");

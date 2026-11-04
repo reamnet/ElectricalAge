@@ -31,6 +31,16 @@ public class GhostBlock extends Block {
     public static final int tFloor = 1;
     public static final int tLadder = 2;
 
+    public static final int tBatteryFloor = 7;
+    public static int wallServiceMeta(Direction front) {
+        return switch (front) { case XN -> 3; case XP -> 4; case ZN -> 5; case ZP -> 6;
+            default -> throw new IllegalArgumentException("A wall cabinet needs a horizontal front"); };
+    }
+    private static final VoxelShape[] CABINETS = {
+        Shapes.box(.67,0,.04,1,1,.96), Shapes.box(0,0,.04,.33,1,.96),
+        Shapes.box(.04,0,.67,.96,1,1), Shapes.box(.04,0,0,.96,1,.33),
+        Shapes.box(.06,0,.08,.94,1,.92)
+    };
     private static final VoxelShape FLOOR = Block.box(0, 0, 0, 16, 1, 16);
 
     public GhostBlock(Properties properties) {
@@ -45,7 +55,9 @@ public class GhostBlock extends Block {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(BlockMeta.META)) {
+        int meta = state.getValue(BlockMeta.META);
+        if (meta >= 3 && meta <= tBatteryFloor) return CABINETS[meta - 3];
+        switch (meta) {
             case tFloor:
                 return FLOOR;
             case tLadder:

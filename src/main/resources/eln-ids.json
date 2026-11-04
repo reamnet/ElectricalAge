@@ -503,6 +503,12 @@
   "kind": "shared_item",
   "name": "small_200v_tungsten_heating_corp"
  },
+ "eln:shared_item@7495": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "16 kWh LiFePO4 Cell Stack",
+  "kind": "shared_item",
+  "name": "16_kwh_lifepo4_cell_stack"
+ },
  "eln:shared_item@75": {
   "descriptor": "HeatingCorpElement",
   "display": "200V Tungsten Heating Corp",
@@ -761,6 +767,84 @@
   "kind": "shared_item",
   "name": "casing"
  },
+ "eln:shared_item@7876": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Pole Fuse Link",
+  "kind": "shared_item",
+  "name": "pole_fuse_link"
+ },
+ "eln:shared_item@7884": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "1 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "1_a_pole_fuse"
+ },
+ "eln:shared_item@7885": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "2 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "2_a_pole_fuse"
+ },
+ "eln:shared_item@7886": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "3 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "3_a_pole_fuse"
+ },
+ "eln:shared_item@7887": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "5 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "5_a_pole_fuse"
+ },
+ "eln:shared_item@7888": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "8 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "8_a_pole_fuse"
+ },
+ "eln:shared_item@7889": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "10 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "10_a_pole_fuse"
+ },
+ "eln:shared_item@7890": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "20 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "20_a_pole_fuse"
+ },
+ "eln:shared_item@7891": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "30 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "30_a_pole_fuse"
+ },
+ "eln:shared_item@7892": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "50 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "50_a_pole_fuse"
+ },
+ "eln:shared_item@7893": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "100 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "100_a_pole_fuse"
+ },
+ "eln:shared_item@7894": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "200 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "200_a_pole_fuse"
+ },
+ "eln:shared_item@7895": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "Blown Pole Fuse",
+  "kind": "shared_item",
+  "name": "blown_pole_fuse"
+ },
  "eln:shared_item@8": {
   "descriptor": "GenericItemUsingDamageDescriptorWithComment",
   "display": "Coal Dust",
@@ -850,6 +934,24 @@
   "display": "Portable Battery Pack",
   "kind": "shared_item_stack_one",
   "name": "portable_battery_pack"
+ },
+ "eln:shared_item_stack_one@7810": {
+  "descriptor": "UpsLargeCell",
+  "display": "UPS AGM Battery Cell",
+  "kind": "shared_item_stack_one",
+  "name": "ups_agm_battery_cell"
+ },
+ "eln:shared_item_stack_one@7811": {
+  "descriptor": "UpsLargeCell",
+  "display": "UPS LiFePO4 Battery Cell",
+  "kind": "shared_item_stack_one",
+  "name": "ups_lifepo4_battery_cell"
+ },
+ "eln:shared_item_stack_one@7812": {
+  "descriptor": "UpsLargeCell",
+  "display": "UPS Industrial Battery Module",
+  "kind": "shared_item_stack_one",
+  "name": "ups_industrial_battery_module"
  },
  "eln:shared_item_stack_one@7824": {
   "descriptor": "BatteryItem",
@@ -1901,36 +2003,6 @@
   "kind": "transparent_node",
   "name": "high_power_receiver_antenna"
  },
- "eln:transparent_node@6183": {
-  "descriptor": "LargeRheostatDescriptor",
-  "display": "Large Rheostat",
-  "kind": "transparent_node",
-  "name": "large_rheostat"
- },
- "eln:transparent_node@7876": {
-  "descriptor": "ElectricalPoleDescriptor",
-  "display": "Utility Pole",
-  "kind": "transparent_node",
-  "name": "utility_pole"
- },
- "eln:transparent_node@7877": {
-  "descriptor": "ElectricalPoleDescriptor",
-  "display": "Utility Pole w/DC-DC Converter",
-  "kind": "transparent_node",
-  "name": "utility_pole_w_dc_dc_converter"
- },
- "eln:transparent_node@80": {
-  "descriptor": "PowerInductorDescriptor",
-  "display": "Power inductor",
-  "kind": "transparent_node",
-  "name": "power_inductor_block"
- },
- "eln:transparent_node@84": {
-  "descriptor": "PowerCapacitorDescriptor",
-  "display": "Power capacitor",
-  "kind": "transparent_node",
-  "name": "power_capacitor_block"
- },
  "eln:transparent_node@5120": {
   "descriptor": "OilSeparatorDescriptor",
   "display": "50V Tar Sand Separator",
@@ -2111,6 +2183,24 @@
   "kind": "transparent_node",
   "name": "capacitor_bank"
  },
+ "eln:transparent_node@6183": {
+  "descriptor": "LargeRheostatDescriptor",
+  "display": "Large Rheostat",
+  "kind": "transparent_node",
+  "name": "large_rheostat"
+ },
+ "eln:transparent_node@7876": {
+  "descriptor": "ElectricalPoleDescriptor",
+  "display": "Utility Pole",
+  "kind": "transparent_node",
+  "name": "utility_pole"
+ },
+ "eln:transparent_node@7877": {
+  "descriptor": "ElectricalPoleDescriptor",
+  "display": "Utility Pole w/DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "utility_pole_w_dc_dc_converter"
+ },
  "eln:transparent_node@7944": {
   "descriptor": "RenewableDescriptor",
   "display": "MPPT Solar Controller",
@@ -2134,5 +2224,95 @@
   "display": "Wall-mounted Hybrid Solar Inverter",
   "kind": "transparent_node",
   "name": "wall_mounted_hybrid_solar_inverter"
+ },
+ "eln:transparent_node@80": {
+  "descriptor": "PowerInductorDescriptor",
+  "display": "Power inductor",
+  "kind": "transparent_node",
+  "name": "power_inductor_block"
+ },
+ "eln:transparent_node@8192": {
+  "descriptor": "OffGridDescriptor",
+  "display": "16 kWh LiFePO4 Battery Cabinet",
+  "kind": "transparent_node",
+  "name": "16_kwh_lifepo4_battery_cabinet"
+ },
+ "eln:transparent_node@8193": {
+  "descriptor": "OffGridDescriptor",
+  "display": "32 kWh LiFePO4 Battery Cabinet",
+  "kind": "transparent_node",
+  "name": "32_kwh_lifepo4_battery_cabinet"
+ },
+ "eln:transparent_node@8194": {
+  "descriptor": "OffGridDescriptor",
+  "display": "48 kWh LiFePO4 Battery Cabinet",
+  "kind": "transparent_node",
+  "name": "48_kwh_lifepo4_battery_cabinet"
+ },
+ "eln:transparent_node@8195": {
+  "descriptor": "OffGridDescriptor",
+  "display": "64 kWh LiFePO4 Battery Cabinet",
+  "kind": "transparent_node",
+  "name": "64_kwh_lifepo4_battery_cabinet"
+ },
+ "eln:transparent_node@8196": {
+  "descriptor": "OffGridDescriptor",
+  "display": "16 kWh Wall-mounted LiFePO4 Battery",
+  "kind": "transparent_node",
+  "name": "16_kwh_wall_mounted_lifepo4_battery"
+ },
+ "eln:transparent_node@8197": {
+  "descriptor": "OffGridDescriptor",
+  "display": "32 kWh Wall-mounted LiFePO4 Battery",
+  "kind": "transparent_node",
+  "name": "32_kwh_wall_mounted_lifepo4_battery"
+ },
+ "eln:transparent_node@8198": {
+  "descriptor": "OffGridDescriptor",
+  "display": "48 kWh Wall-mounted LiFePO4 Battery",
+  "kind": "transparent_node",
+  "name": "48_kwh_wall_mounted_lifepo4_battery"
+ },
+ "eln:transparent_node@8199": {
+  "descriptor": "OffGridDescriptor",
+  "display": "64 kWh Wall-mounted LiFePO4 Battery",
+  "kind": "transparent_node",
+  "name": "64_kwh_wall_mounted_lifepo4_battery"
+ },
+ "eln:transparent_node@8200": {
+  "descriptor": "OffGridDescriptor",
+  "display": "Off-grid Inverter Charger",
+  "kind": "transparent_node",
+  "name": "off_grid_inverter_charger"
+ },
+ "eln:transparent_node@8201": {
+  "descriptor": "OffGridDescriptor",
+  "display": "LiFePO4 MPPT Charge Controller",
+  "kind": "transparent_node",
+  "name": "lifepo4_mppt_charge_controller"
+ },
+ "eln:transparent_node@8202": {
+  "descriptor": "OffGridDescriptor",
+  "display": "AC LiFePO4 Battery Charger",
+  "kind": "transparent_node",
+  "name": "ac_lifepo4_battery_charger"
+ },
+ "eln:transparent_node@8203": {
+  "descriptor": "OffGridDescriptor",
+  "display": "Fused PV Combiner and Disconnect",
+  "kind": "transparent_node",
+  "name": "fused_pv_combiner_and_disconnect"
+ },
+ "eln:transparent_node@8204": {
+  "descriptor": "OffGridDescriptor",
+  "display": "400 A DC Battery Disconnect",
+  "kind": "transparent_node",
+  "name": "400_a_dc_battery_disconnect"
+ },
+ "eln:transparent_node@84": {
+  "descriptor": "PowerCapacitorDescriptor",
+  "display": "Power capacitor",
+  "kind": "transparent_node",
+  "name": "power_capacitor_block"
  }
 }

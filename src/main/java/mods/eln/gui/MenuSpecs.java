@@ -119,6 +119,7 @@ public final class MenuSpecs {
             descriptor(0, 184 / 2 - 12, 8, 1, BatteryItem.class, MEDIUM, tr("Portable battery slot"))) : MenuSpec.SCREEN_ONLY);
 
         // ---- transparent-node devices
+        put(mods.eln.transparentnode.offgrid.OffGridDescriptor.class, d -> MenuSpec.SCREEN_ONLY.publishing(1).panel(320, 240, 0, 0));
         put(mods.eln.transparentnode.renewable.RenewableDescriptor.class, d -> MenuSpec.SCREEN_ONLY.publishing(1).panel(300, 238, 0, 0));
         put(mods.eln.transparentnode.autominer.AutoMinerDescriptor.class, d -> MenuSpec.of(
             descriptor(mods.eln.transparentnode.autominer.AutoMinerContainer.electricalDrillSlotId, 134, 8, 1,

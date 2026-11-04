@@ -78,6 +78,7 @@ public final class ElnDeviceRegistry {
         registerBattery(16);
         registerSolarPanel(48);
         registerForkPatchSolar();
+        mods.eln.transparentnode.offgrid.OffGridDevices.INSTANCE.register();
         registerLampSocket(64);
         registerLampSupply(65);
         registerLampItem(4);

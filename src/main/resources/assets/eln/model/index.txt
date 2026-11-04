@@ -5,6 +5,7 @@ alarmmedium/alarmmedium.obj
 analogchips/analogchips.obj
 anemometer/anemometer.obj
 autominer/autominer.obj
+battery_disconnect/battery_disconnect.obj
 batterybig/batterybig.obj
 batterybig/batterybighv.obj
 batterychargera/batterychargera.obj
@@ -59,6 +60,8 @@ lampsupply/lampsupply.obj
 largerheostat/largerheostat.obj
 led/led.obj
 ledswitch/ledswitch.obj
+lifepo_cabinet/lifepo_cabinet.obj
+lifepo_wall/lifepo_wall.obj
 lightsensor/lightsensor.obj
 logicgates/logicgates.obj
 longlifebattery/longlifebattery.obj
@@ -73,6 +76,9 @@ maceratorb/maceratorb.obj
 magnetizera/magnetizera.obj
 magnetizerb/magnetizerb.obj
 mediumvoltageswitch/mediumvoltageswitch.obj
+offgrid_charger/offgrid_charger.obj
+offgrid_inverter/offgrid_inverter.obj
+offgrid_mppt/offgrid_mppt.obj
 oilpump200v/oilpump200v.obj
 oilpump50v/oilpump50v.obj
 passivethermaldissipatora/passivethermaldissipatora.obj
@@ -85,6 +91,7 @@ powerpole/transformer.obj
 powerpole/utilitypole.obj
 powersocket/powersocket.obj
 proximitysensor/proximitysensor.obj
+pv_combiner/pv_combiner.obj
 redtoele/redtoele.obj
 relay800/relay800.obj
 relaybig/relaybig.obj

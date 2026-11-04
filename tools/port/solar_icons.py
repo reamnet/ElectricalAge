@@ -10,6 +10,9 @@ sys.path.insert(0, str(ROOT / "tools/icons/shaft"))
 from render3d import render
 
 COLORS = {
+    "Vents": (.035,.045,.05), "Positive": (.85,.15,.08), "Negative": (.08,.09,.1),
+    "StatusLed": (.02,.14,.04), "ChargeLed": (.02,.06,.18), "FaultLed": (.15,.02,.01),
+    "Voltage": (.02,.04,.06), "Charge": (.02,.04,.06), "Power": (.02,.04,.06), "Capacity": (.02,.04,.06),
     "Case": (.77, .80, .82), "Trim": (.17, .20, .23),
     "Solar": (.12, .55, .92), "Grid": (.08, .24, .55),
     "Output": (.97, .37, .05), "Return": (.1, .12, .14),
@@ -52,5 +55,18 @@ if __name__ == "__main__":
         ("solarhybrid", "hybrid_solar_inverter"),
         ("wallmppt", "wall_mounted_mppt_solar_controller"),
         ("wallhybrid", "wall_mounted_hybrid_solar_inverter"),
+        ('lifepo_cabinet', '16_kwh_lifepo4_battery_cabinet'),
+        ('lifepo_cabinet', '32_kwh_lifepo4_battery_cabinet'),
+        ('lifepo_cabinet', '48_kwh_lifepo4_battery_cabinet'),
+        ('lifepo_cabinet', '64_kwh_lifepo4_battery_cabinet'),
+        ('lifepo_wall', '16_kwh_wall_mounted_lifepo4_battery'),
+        ('lifepo_wall', '32_kwh_wall_mounted_lifepo4_battery'),
+        ('lifepo_wall', '48_kwh_wall_mounted_lifepo4_battery'),
+        ('lifepo_wall', '64_kwh_wall_mounted_lifepo4_battery'),
+        ('offgrid_inverter', 'off_grid_inverter_charger'),
+        ('offgrid_mppt', 'lifepo4_mppt_charge_controller'),
+        ('offgrid_charger', 'ac_lifepo4_battery_charger'),
+        ('pv_combiner', 'fused_pv_combiner_and_disconnect'),
+        ('battery_disconnect', '400_a_dc_battery_disconnect'),
     ]:
         cabinet(model, item)
