@@ -522,5 +522,12 @@
     "sourceSha256": "4e446dceee718fa370e46950b489d9d3e69b525d9372b426bd1104db5272a358",
     "mode": "native-GL-adapter",
     "status": "industrial control checkpoint: validation in progress"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchIndustrialControlTest.kt",
+    "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
+    "mode": "adapted-relay-and-shedder-production-circuit-tests",
+    "status": "industrial-circuit-passed; native-world-pending"
   }
 ]

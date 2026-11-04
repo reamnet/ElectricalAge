@@ -65,7 +65,7 @@ class ForkPatchIndustrialControlTest {
         val c=Circuit(IndustrialKind.SHEDDER);val watts=doubleArrayOf(100.0,200.0,300.0,400.0)
         c.loads.forEachIndexed { i,r->r.r=240.0*240.0/watts[i] };c.tick(4)
         watts.forEachIndexed { i,w->assertEquals(w,c.u.branchWatts[i],.1) }
-        assertEquals(c.u.inputWatts,c.loads.sumOf { it.p }+c.u.contacts.sumOf { it.power },1e-6)
+        assertEquals(c.source.p,c.loads.sumOf { it.p }+c.u.contacts.sumOf { it.power }+c.u.terminalReferences.sumOf { it.p },1e-6)
         c.u.setEnabled(false);c.tick();assertEquals(0.0,c.u.inputWatts,1e-8);assertTrue(c.loads.all { it.p<1e-8 })
     }
     @Test fun undervoltageShedsInReversePriorityAndHealthyReturnRestoresSlowly() {

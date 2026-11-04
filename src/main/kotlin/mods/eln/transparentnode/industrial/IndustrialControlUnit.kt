@@ -25,6 +25,7 @@ class IndustrialControlUnit(val kind: IndustrialKind,loads: MutableList<State>,c
     val returnOut=NbtElectricalLoad("industrialReturnOut").apply { rs=.0001 }
     val returnContact=TransferContact(returnIn,returnOut)
     val contacts=outputs.map { TransferContact(input,it) }
+    val terminalReferences: List<Resistor>
     val branchWatts=DoubleArray(4)
     val nominal get()=settings[0]
     val outputCurrent get()=contacts.sumOf { abs(it.current) }
@@ -37,7 +38,7 @@ class IndustrialControlUnit(val kind: IndustrialKind,loads: MutableList<State>,c
         if(kind==IndustrialKind.RELAY)components.add(returnContact)
         // The native LU model needs terminal references when disconnected. No path
         // crosses an open contact, and reference currents are not load measurements.
-        states.forEach { components.add(Resistor(it,null).setR(1e10)) }
+        terminalReferences=states.map { Resistor(it,null).setR(1e10) };components.addAll(terminalReferences)
         processes.add(IProcess(::step));configure()
     }
     fun applySettings(values: DoubleArray): Boolean {
