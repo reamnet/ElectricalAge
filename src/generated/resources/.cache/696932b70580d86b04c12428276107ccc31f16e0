@@ -1,4 +1,4 @@
-// 26.3	2026-11-04T21:47:32.941545658	eln-global/EA models
+// 26.3	2026-11-04T22:17:21.82269637	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/16_kwh_lifepo4_battery_cabinet.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/16_kwh_wall_mounted_lifepo4_battery.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/200v_active_thermal_dissipator.json
@@ -42,6 +42,7 @@
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/ac_lifepo4_battery_charger.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/alloy_tank.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/auto_miner.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/automatic_load_shedding_controller.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/automatic_transfer_switch.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/boiler.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/capacitor_bank.json
@@ -93,6 +94,7 @@ f0ed42296ed8f581741e53ea14400c53a04c1ba2 assets/eln/blockstates/light_block.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/power_capacitor_block.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/power_inductor_block.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/programmable_ups.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/protective_relay_cabinet.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/reservoir_water.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/single_use_battery.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/six_node.json
@@ -215,6 +217,7 @@ b4266523d7f04444657cf1ac0fa4014c036fdee3 assets/eln/items/analogic_regulator.jso
 f1b439b4872961c132440fde0c2da04142ebe0dd assets/eln/items/and_chip.json
 03e8e18e1f18922b51e25a1c29ea81d7fef61f0d assets/eln/items/animal_filter.json
 24fa46a88bc0e9157aeb354bf3de0cd1b87c8685 assets/eln/items/auto_miner.json
+f2eee401abc98585766edbc2c05964cb6dbb0e53 assets/eln/items/automatic_load_shedding_controller.json
 89adfb3665a0751633b1234e90cc95ce7f4664f1 assets/eln/items/automatic_transfer_switch.json
 baa0cd956442fa677d9e0ab1592afcab01987080 assets/eln/items/average_electrical_drill.json
 cfc7d310bae170bdd71866984830ffe65cc3ec79 assets/eln/items/average_ferromagnetic_core.json
@@ -422,6 +425,7 @@ bb572d18678811390e465d1b9223a2c06e17e29f assets/eln/items/power_inductor.json
 9a7bd0ce4042310543d384df8d2700dd4cd536d0 assets/eln/items/power_inductor_block.json
 bf068de505375f5f9ec04a78ee5c2a83a7a011cf assets/eln/items/power_resistor.json
 464bb6b331a241fd03c09f0f8e5c6c8c58ce8f2f assets/eln/items/programmable_ups.json
+3994796d8b9281eebda5a236793c737c10f846c9 assets/eln/items/protective_relay_cabinet.json
 3a1476cc2dba50c9b42511ef68a4cf4aaecd7df6 assets/eln/items/purple_brush.json
 b55edeb01df76c93f21f29619f8d26165b99d00c assets/eln/items/raw_lead.json
 1757624c1c4d7bf6ec569ae4203ce86e55daa84e assets/eln/items/raw_tungsten.json
@@ -676,6 +680,8 @@ b8e344a77ae8690f2f8e3ff265585185306fc77d assets/eln/models/item/analog_watch_3d.
 d6582993701d030fe87342eaede2d81e2a49c4d1 assets/eln/models/item/animal_filter.json
 4915e17d616760ea1bfb199f76b42fa4bc90b55e assets/eln/models/item/auto_miner.json
 4418f93f8e53346f69fc0923ca90c8b4e2d8cb35 assets/eln/models/item/auto_miner_3d.json
+3feebed1a32c0adfdb8bcf3f1c040db5f130d347 assets/eln/models/item/automatic_load_shedding_controller.json
+5d4adaf87f1b951f46ad966c38aee4e212239756 assets/eln/models/item/automatic_load_shedding_controller_3d.json
 1afedc6781a08130c7dc920af900f4e365f27776 assets/eln/models/item/automatic_transfer_switch.json
 f8bdc47853d71fdb5115639178c041b065e961d0 assets/eln/models/item/automatic_transfer_switch_3d.json
 c455a84370f11dc398c16d1dc12df534fdf26d2d assets/eln/models/item/average_electrical_drill.json
@@ -959,6 +965,8 @@ c584a778d4d7dd7e8ab18175e81630ed884060c3 assets/eln/models/item/portable_electri
 ab73c04b31e34c1972906b95e3757e8d30d947d1 assets/eln/models/item/power_resistor_3d.json
 a0404d0a3469b2b32e65bfa645fb1201622ffde4 assets/eln/models/item/programmable_ups.json
 f96a0b813fa587e903e987e3c06860b0606a5352 assets/eln/models/item/programmable_ups_3d.json
+ace573ab7c3340b39222b8c1b524acf9c81d0aa2 assets/eln/models/item/protective_relay_cabinet.json
+192f4890c869ed6ca00992720bacd6e7c7f73708 assets/eln/models/item/protective_relay_cabinet_3d.json
 abf755dac3070db29b726f36643ea6abf1b54a77 assets/eln/models/item/purple_brush.json
 9ff7a48979d0ffbb4cf0c12db3760518b492c528 assets/eln/models/item/raw_lead.json
 be4f1cab9ac17f083d360b956d4cd60acd2c42a7 assets/eln/models/item/raw_tungsten.json

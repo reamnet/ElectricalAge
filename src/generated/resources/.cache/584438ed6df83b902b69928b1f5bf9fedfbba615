@@ -1,4 +1,4 @@
-// 26.3	2026-11-04T21:47:32.962903346	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-04T22:17:21.836844931	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
 e9b18790f61c5e60d17f49af5cad947638ed8e2b data/eln/advancement/recipes/misc/10a_diode.json
@@ -102,6 +102,7 @@ deef8d780422f077177f1d8075d975640f319ae2 data/eln/advancement/recipes/misc/analo
 8adbb5fbd9a464b1637d56c80bac249461b0b459 data/eln/advancement/recipes/misc/and_chip.json
 9d88219c37e884c57072d6522173a6259b65b7ac data/eln/advancement/recipes/misc/animal_filter.json
 e397443c98e6b42bdb11364d1b6ce472b87c0a04 data/eln/advancement/recipes/misc/auto_miner.json
+60dda393535fbe75390de9b0f0db5ff5945f97d6 data/eln/advancement/recipes/misc/automatic_load_shedding_controller.json
 8956fc4b0f3d9d0ee79590bbe4cb0cc02226a092 data/eln/advancement/recipes/misc/automatic_transfer_switch.json
 9923be029e64dd1fabfd662d1f17778ee17721f6 data/eln/advancement/recipes/misc/average_electrical_drill.json
 95c342338728eb6fd711b224aeb60ab9c76f2ca1 data/eln/advancement/recipes/misc/average_ferromagnetic_core.json
@@ -268,6 +269,7 @@ d4b677a6e4eba2fcadf4ddb0ebcc9ee382faa54a data/eln/advancement/recipes/misc/porta
 4b397520f61b222a82fd5d5c4466ad24c55042e3 data/eln/advancement/recipes/misc/power_inductor.json
 77301a064d64747de5ec7404b25d3f1d6217b501 data/eln/advancement/recipes/misc/power_resistor.json
 5ee595537e294e51e983137eb9aa95560464750c data/eln/advancement/recipes/misc/programmable_ups.json
+8b800372571f70cbd5660634e289a63b8de05d35 data/eln/advancement/recipes/misc/protective_relay_cabinet.json
 5eda5d07f297d694c57d5ce56807a80dc7db2c40 data/eln/advancement/recipes/misc/purple_brush.json
 1e879bd3da5eabb33eb0f2ee6f2b3c1d9d9e9588 data/eln/advancement/recipes/misc/red_brush.json
 f7528c010eae2ecb1d9b8df30858589d7a331a88 data/eln/advancement/recipes/misc/redstone_to_voltage_converter.json
@@ -504,6 +506,7 @@ f8bb79bdca45cf72f71e9c34109d2cd1f0ea3f7c data/eln/recipe/analog_watch.json
 f08a17f8c96555319fad60d61b2788c122fbf087 data/eln/recipe/and_chip.json
 805798fa44f9f1beb943bfdbbcaf390d5e5a0861 data/eln/recipe/animal_filter.json
 e1b3870485515b24146953a51d534596cf57c58d data/eln/recipe/auto_miner.json
+1075840e489cabf0f6fa0bbae5c86ac397043062 data/eln/recipe/automatic_load_shedding_controller.json
 e06a8b286866aad23751495565a94926aad2f8b4 data/eln/recipe/automatic_transfer_switch.json
 035486821d9fa0d6a29ddf339b77c7a9c7034581 data/eln/recipe/average_electrical_drill.json
 6780dccc16e12e4195e173b9be3a0394a5c8222e data/eln/recipe/average_ferromagnetic_core.json
@@ -670,6 +673,7 @@ d00c0eea142c635ad3d3fa74e52dd5a28784225b data/eln/recipe/power_capacitor.json
 cf88d05d7133f38948590b14e13e56b8bedc883e data/eln/recipe/power_inductor.json
 1b6a55970cff2e670b8b720abc7a6bde617fa47a data/eln/recipe/power_resistor.json
 8fe02716be2013aeb288e97d5e2470d58f22cc88 data/eln/recipe/programmable_ups.json
+8c9291b93cd626d2f691a0f94156e3f93575750b data/eln/recipe/protective_relay_cabinet.json
 52a0411cfab0a219bd72692e72568b43848930e3 data/eln/recipe/purple_brush.json
 00d438d0450731bc201193aef8acef83c879d8d9 data/eln/recipe/red_brush.json
 9c5c6e47e7f3d04b13fc71c6b5ddfc3182ee73e2 data/eln/recipe/redstone_to_voltage_converter.json
