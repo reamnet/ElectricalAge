@@ -194,6 +194,9 @@ GUI packets, published display values, thin collision, recorded live geometry,
 item energy reset and node save round trips. Three existing panel cases retain
 their weather, I-V and ghost checks. Native datagen also succeeds, producing all
 four recipes, advancements, item/block definitions and English display names.
+The [final destination regression selection](forkpatch-port/solar-checkpoint-validation.json)
+passes 338 tests, with three optional preview cases skipped and no failures,
+using the same reduced 20-case fluid setting.
 
 Source cabinet geometry and live seven-segment panels record through the existing
 26.3 facade. Menus use native ElnScreen controls and element packets. Inventory icons
