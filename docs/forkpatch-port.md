@@ -374,7 +374,7 @@ Reports: [circuit tests](forkpatch-port/industrial-control-circuit-tests.json),
 [datagen](forkpatch-port/industrial-control-datagen.json), and
 [destination regressions](forkpatch-port/industrial-control-checkpoint-validation.json).
 
-### Pad transformer checkpoint (validation in progress)
+### Code checkpoint: passive pad transformer and primary fuse
 
 The Pad Mounted Neighbourhood Transformer (8068) and five physical transformer
 items (7879–7883, 10/25/50/75/100 kW) now have native adapters. Existing IDs are
@@ -402,8 +402,21 @@ inventory. The native menu exposes both slots, primary/secondary programming,
 actual primary and secondary amps, installed fuse/core ratings and explicit reset.
 Native pipe/hopper extraction and insertion use the destination inventory APIs.
 The source pad enclosure, compartment door and fuse-blow sound are included.
-Circuit, native world, datagen and destination regression validation are in progress.
-The other utility equipment and interactive client validation remain pending.
+All 12 production-circuit tests pass, covering the user's 145 A / 240 V load on
+a 200 A primary link, separate core-overload protection, actual primary shorts,
+fault-type timer separation, pending-delay persistence, shared capacity across the
+service legs, primary sag, bidirectional power balance, accurate terminal currents,
+missing hardware, invalid packets and stable native LU factors over 100 healthy
+steps. All 52 selected native port cases pass, including six new pad cases. These
+exercise actual paid transformer/fuse items, physical fuse consumption/replacement,
+shared service loading and sag, native item/panel geometry, sided inventory rules,
+menu slots, signal output, packet publication and world-node persistence. Carrying
+the cabinet's settings cannot copy installed hardware.
+Datagen and destination regressions are being finalized. The other utility
+equipment, six remaining industrial devices and interactive client validation remain pending.
+
+Reports: [circuit tests](forkpatch-port/pad-circuit-tests.json) and
+[native cases](forkpatch-port/pad-native-tests.json).
 
 ## Inventory
 
