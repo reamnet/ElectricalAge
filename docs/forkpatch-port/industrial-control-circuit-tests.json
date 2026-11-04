@@ -1,13 +1,13 @@
 {
   "name": "mods.eln.transparentnode.industrial.ForkPatchIndustrialControlTest",
-  "tests": "12",
-  "skipped": "0",
-  "failures": "0",
-  "errors": "0",
+  "tests": 12,
+  "skipped": 0,
+  "failures": 0,
+  "errors": 0,
   "timestamp": "2026-11-04T22:15:42.165Z",
   "hostname": "8ce8465ac65f",
   "time": "0.071",
-  "portCommit": "f5bbddd2 + native sensing balance checks",
+  "portCommit": "b330d434",
   "sourceVersion": "3.0.77",
   "task": "./gradlew --no-daemon --max-workers=2 :test --tests '*ForkPatchIndustrialControlTest'",
   "cases": [

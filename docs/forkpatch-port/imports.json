@@ -472,62 +472,62 @@
     "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt",
     "sourceSha256": "ba116b91d65c77c5241ee278c8a9b05168ce941bc2dbc590fcb655484666d11f",
     "mode": "verbatim",
-    "status": "industrial control checkpoint: validation in progress"
+    "status": "industrial-controls-circuit-native-datagen-passed; destination-regressions-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
     "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
     "mode": "adapted-relay-and-shedder-only",
-    "status": "industrial control checkpoint: validation in progress"
+    "status": "industrial-controls-circuit-native-datagen-passed; destination-regressions-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialControlUnit.kt",
     "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
     "mode": "adapted-relay-and-shedder-only",
-    "status": "industrial control checkpoint: validation in progress"
+    "status": "industrial-controls-circuit-native-datagen-passed; destination-regressions-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialDescriptor.kt",
     "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
     "mode": "adapted-relay-and-shedder-only",
-    "status": "industrial control checkpoint: validation in progress"
+    "status": "industrial-controls-circuit-native-datagen-passed; destination-regressions-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialDisplay.kt",
     "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
     "mode": "adapted-relay-and-shedder-only",
-    "status": "industrial control checkpoint: validation in progress"
+    "status": "industrial-controls-circuit-native-datagen-passed; destination-regressions-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialRender.kt",
     "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
     "mode": "adapted-relay-and-shedder-only",
-    "status": "industrial control checkpoint: validation in progress"
+    "status": "industrial-controls-circuit-native-datagen-passed; destination-regressions-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialScreen.kt",
     "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
     "mode": "adapted-relay-and-shedder-only",
-    "status": "industrial control checkpoint: validation in progress"
+    "status": "industrial-controls-circuit-native-datagen-passed; destination-regressions-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/client/power/ControlPanelDisplay.kt",
     "target": "src/main/kotlin/mods/eln/client/power/ControlPanelDisplay.kt",
     "sourceSha256": "4e446dceee718fa370e46950b489d9d3e69b525d9372b426bd1104db5272a358",
     "mode": "native-GL-adapter",
-    "status": "industrial control checkpoint: validation in progress"
+    "status": "industrial-controls-circuit-native-datagen-passed; destination-regressions-pending"
   },
   {
     "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
     "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchIndustrialControlTest.kt",
     "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
     "mode": "adapted-relay-and-shedder-production-circuit-tests",
-    "status": "industrial-circuit-passed; native-world-pending"
+    "status": "industrial-controls-circuit-native-datagen-passed; destination-regressions-pending"
   }
 ]

@@ -79,8 +79,8 @@ RHS values with a complete scratch solve. It does not replace the destination's
 LU physical solve, diode re-solves or cached interconnection resistances. The later converter checkpoint covers the coupled runtime; complete floating-gauge
 and stiff high-voltage accuracy work remains pending.
 
-Protective-relay, load-shedding and vehicle kernels still await their
-production cabinets/entities and menus. Solar, off-grid, UPS racks and ATS/standby adapters
+Vehicle kernels still await their production entities and menus. Solar, off-grid,
+UPS racks, ATS/standby and relay/load-shedding adapters
 are described in the later checkpoints below.
 
 ### Code checkpoint: registered solar blocks
@@ -333,7 +333,7 @@ Reports: [circuit tests](forkpatch-port/ups-circuit-tests.json),
 [datagen](forkpatch-port/ups-datagen.json), and
 [destination regressions](forkpatch-port/ups-checkpoint-validation.json).
 
-### Relay and load-shedding checkpoint (validation in progress)
+### Code checkpoint: protective relay and priority load shedding
 
 The source Protective Relay Cabinet (8066) and Automatic Load Shedding Controller
 (8070) now have native production adapters, source enclosure/panel geometry and
@@ -352,8 +352,25 @@ source's open/reclose sequence and unnecessary LU invalidations. Timers advance
 once after each accepted physical solve, never in nonlinear retry loops.
 Menus expose the six settings, live measurements, branch priorities, delay timers
 and explicit trip/reset/retry controls. Source assets are adapted to the native
-recorded GL facade. Focused circuit checks and native world validation are pending.
-Interactive client validation and the other industrial devices remain pending.
+recorded GL facade. All 12 focused production-circuit tests pass, including paired
+return/real ground leakage, delayed latching, signal trips, priority restoration,
+headroom/retry, exact power balance including voltage-sensing losses, atomic invalid
+packet rejection and save/load. A steady-state regression verifies unchanged native
+LU matrix versions over 100 physical steps for each healthy device.
+
+All 46 selected native port cases pass, including six new relay/shedder scenarios.
+These cover actual gate input/output terminals, paired-conductor leakage and reset,
+latched overcurrent, headroom/retry and undervoltage restoration, wired inhibition,
+all four front orientations, published measurements, recorded enclosure/panel
+geometry, the native menu specification and saved-node state. Datagen passes for
+two recipes/advancements, two blockstates/item definitions, four item models and
+four English names. All 395 earlier registry identities and 178 geometry models
+are retained. Destination regression validation is in progress.
+Interactive client validation and the seven other industrial devices remain pending.
+
+Reports: [circuit tests](forkpatch-port/industrial-control-circuit-tests.json),
+[native cases](forkpatch-port/industrial-control-native-tests.json), and
+[datagen](forkpatch-port/industrial-control-datagen.json).
 
 ## Inventory
 
