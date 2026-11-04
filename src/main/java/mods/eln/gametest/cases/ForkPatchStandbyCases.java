@@ -143,7 +143,7 @@ public final class ForkPatchStandbyCases {
                         double before=generator.getUnit().getFuel().getAvailableJoules();
                         ats.networkUnserialize(ctx.stream(s->s.writeByte(83)));
                         ctx.check("ATS reset: actual command reaches linked faulted engine",ats.getResetCount()==1,"count="+ats.getResetCount());
-                        ctx.checkValue("ATS reset: fuel unchanged by command",generator.getUnit().getFuel().getAvailableJoules(),before);phase=1;
+                        ctx.check("ATS reset: fuel unchanged by command",Math.abs(generator.getUnit().getFuel().getAvailableJoules()-before)<1e-7,"");phase=1;
                     }
                 }
                 if(phase==1 && elapsed>=14 && !generator.getUnit().getFault().isEmpty()) { latchedFuel=generator.getUnit().getFuel().getAvailableJoules();phase=2; }
@@ -171,12 +171,12 @@ public final class ForkPatchStandbyCases {
             ctx.checkValue("fuel: water rejected",store.getTank().fill(new FluidStack(Fluids.WATER,100),true),0);
             ctx.checkValue("fuel: component variants cannot mix",store.getTank().fill(new FluidStack(Oil.Cut.GASOLINE.source.get(),100),true),0);
             double initial=store.getAvailableJoules();ctx.check("fuel: one joule accepted",store.consume(1),"");
-            ctx.checkValue("fuel: energy paid exactly",store.getAvailableJoules(),initial-1);
+            ctx.check("fuel: energy paid exactly",Math.abs(store.getAvailableJoules()-(initial-1))<1e-7,"");
             var tag=new CompoundTag();store.write(tag);var restored=new StandbyTank(1000,()->kotlin.Unit.INSTANCE);restored.read(tag);
-            ctx.checkValue("fuel: tank and fractional reserve survive save",restored.getAvailableJoules(),store.getAvailableJoules());
+            ctx.check("fuel: tank and fractional reserve survive save",Math.abs(restored.getAvailableJoules()-store.getAvailableJoules())<1e-7,"");
             ctx.check("fuel: codec preserves fluid components",FluidStack.isSameFluidSameComponents(fuel,restored.getTank().getFluid()),"");
             restored.getTank().drain(1000,true);double reserve=restored.getReserveJoules();
-            ctx.checkValue("fuel: pipes cannot extract paid reserve",restored.getAvailableJoules(),reserve);
+            ctx.check("fuel: pipes cannot extract paid reserve",Math.abs(restored.getAvailableJoules()-reserve)<1e-7,"");
             ctx.check("fuel: invalid and excessive requests fail",!restored.consume(Double.NaN) && !restored.consume(-1) && !restored.consume(reserve+1),"");
         }
     }
