@@ -119,6 +119,12 @@ public final class MenuSpecs {
             descriptor(0, 184 / 2 - 12, 8, 1, BatteryItem.class, MEDIUM, tr("Portable battery slot"))) : MenuSpec.SCREEN_ONLY);
 
         // ---- transparent-node devices
+        put(mods.eln.transparentnode.ups.UpsDescriptor.class, d -> {
+            SlotSpec[] cells=new SlotSpec[48];
+            for(int i=0;i<48;i++)cells[i]=filter(i,16+(i%8)*18+(i/24)*144,154+(i%24/8)*18,1,
+                stack -> mods.eln.transparentnode.ups.UpsBatteryBankKt.upsBattery(stack)!=null,MEDIUM,tr("Portable battery or larger UPS cell"));
+            return MenuSpec.of(cells).publishing(1).panel(320,314,80,232);
+        });
         put(mods.eln.transparentnode.standby.BackupDescriptor.class, d -> MenuSpec.SCREEN_ONLY.publishing(1).panel(320, 256, 0, 0));
         put(mods.eln.transparentnode.offgrid.OffGridDescriptor.class, d -> MenuSpec.SCREEN_ONLY.publishing(1).panel(320, 240, 0, 0));
         put(mods.eln.transparentnode.renewable.RenewableDescriptor.class, d -> MenuSpec.SCREEN_ONLY.publishing(1).panel(300, 238, 0, 0));

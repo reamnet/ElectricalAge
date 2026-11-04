@@ -91,6 +91,7 @@ powerpole/downlink.obj
 powerpole/transformer.obj
 powerpole/utilitypole.obj
 powersocket/powersocket.obj
+programmableups/programmableups.obj
 proximitysensor/proximitysensor.obj
 pv_combiner/pv_combiner.obj
 redtoele/redtoele.obj
@@ -169,6 +170,7 @@ wallats/wallats.obj
 wallclock/wallclock.obj
 wallhybrid/wallhybrid.obj
 wallmppt/wallmppt.obj
+wallups/wallups.obj
 windturbinemini/windturbinemini.obj
 wirelesssignalrepeater/wirelesssignalrepeater.obj
 wirelesssignalrx/wirelesssignalrx.obj

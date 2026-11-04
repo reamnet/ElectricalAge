@@ -15,6 +15,7 @@ COLORS = {
     "Voltage": (.02,.04,.06), "Charge": (.02,.04,.06), "Power": (.02,.04,.06), "Capacity": (.02,.04,.06),
     "Mains": (.1,.35,.85), "Backup": (1,.65,.06), "Indicator": (.02,.2,.04), "Display": (.015,.045,.055),
     "MainsLed": (.02,.2,.04), "BackupLed": (.2,.1,.02), "BypassLed": (.15,.03,.2),
+    "Input": (.18,.36,.65),
     "Case": (.77, .80, .82), "Trim": (.17, .20, .23),
     "Solar": (.12, .55, .92), "Grid": (.08, .24, .55),
     "Output": (.97, .37, .05), "Return": (.1, .12, .14),
@@ -77,5 +78,7 @@ if __name__ == "__main__":
         ('standbygenerator_large', 'large_standby_gasoline_generator'),
         ('standbygenerator_extra_large', 'extra_large_standby_gasoline_generator'),
         ('standbygenerator_extreme', 'extreme_standby_gasoline_generator'),
+        ('programmableups', 'programmable_ups'),
+        ('wallups', 'wall_mounted_programmable_ups'),
     ]:
         cabinet(model, item)

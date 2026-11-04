@@ -68,6 +68,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeForkPatchSolar", ElnRecipes::recipeForkPatchSolar);
         run("recipeForkPatchOffgrid", ElnRecipes::recipeForkPatchOffgrid);
         run("recipeForkPatchStandby", ElnRecipes::recipeForkPatchStandby);
+        run("recipeForkPatchUps", ElnRecipes::recipeForkPatchUps);
         run("recipeThermalDissipatorPassiveAndActive", ElnRecipes::recipeThermalDissipatorPassiveAndActive);
         run("recipeElectricalAntenna", ElnRecipes::recipeElectricalAntenna);
         run("recipeEggIncubator", ElnRecipes::recipeEggIncubator);
@@ -1079,6 +1080,11 @@ public final class ElnRecipes extends ElnRecipesBase {
             'A', findItemStack("Analogic Regulator"),
             'C', findItemStack("Medium Voltage Cable"),
             'M', findItemStack("Advanced Electrical Motor"));
+    }
+
+    public static void recipeForkPatchUps() {
+        addRecipe(findItemStack("Programmable UPS"),"CVC","MFM","CVC",'C',findItemStack("Copper Cable"),'V',findItemStack("DC-DC Converter"),'M',findItemStack("Machine Block"),'F',findItemStack("Optimal Ferromagnetic Core"));
+        addShapelessRecipe(findItemStack("Wall-mounted Programmable UPS"),findItemStack("Programmable UPS"),findItemStack("Iron Plate"));
     }
 
     public static void recipeForkPatchStandby() {

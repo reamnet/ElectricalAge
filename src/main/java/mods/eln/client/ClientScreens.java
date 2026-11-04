@@ -11,6 +11,7 @@ final class ClientScreens {
     }
 
     static void registerAll() {
+        ElnScreens.register(mods.eln.transparentnode.ups.UpsDescriptor.class, mods.eln.transparentnode.ups.UpsScreen::new);
         ElnScreens.register(mods.eln.transparentnode.standby.BackupDescriptor.class, mods.eln.transparentnode.standby.BackupScreen::new);
         ElnScreens.register(mods.eln.transparentnode.offgrid.OffGridDescriptor.class, mods.eln.transparentnode.offgrid.OffGridScreen::new);
         ElnScreens.register(mods.eln.transparentnode.renewable.RenewableDescriptor.class, mods.eln.transparentnode.renewable.SolarScreen::new);

@@ -79,8 +79,8 @@ RHS values with a complete scratch solve. It does not replace the destination's
 LU physical solve, diode re-solves or cached interconnection resistances. The later converter checkpoint covers the coupled runtime; complete floating-gauge
 and stiff high-voltage accuracy work remains pending.
 
-UPS, protective-relay, load-shedding and vehicle kernels still await their
-production cabinets/entities and menus. Solar, off-grid and ATS/standby adapters
+Protective-relay, load-shedding and vehicle kernels still await their
+production cabinets/entities and menus. Solar, off-grid, UPS racks and ATS/standby adapters
 are described in the later checkpoints below.
 
 ### Code checkpoint: registered solar blocks
@@ -291,6 +291,29 @@ Reports: [controller tests](forkpatch-port/standby-circuit-tests.json),
 [native cases](forkpatch-port/standby-native-tests.json),
 [datagen](forkpatch-port/standby-datagen.json), and
 [destination regressions](forkpatch-port/standby-checkpoint-validation.json).
+
+### UPS rack checkpoint (validation in progress)
+
+The floor Programmable UPS (7947) and wall Programmable UPS (7953) now have
+native production adapters, source cabinet models and live status displays. Both
+24-cell racks appear together in the native inventory menu. Actual removable
+battery items supply their own capacity, charge and discharge ratings; the existing
+26.3 portable batteries keep their native specifications. Only complete racks
+activate. Native inventory read/remove/save/clear paths flush cached cell energy
+before transferring the physical item, including legacy hopper/container methods.
+
+The online charger and inverter share an energy-accounted internal bus. Manual
+bypass supplies the input directly without backup. The native LU solver requires
+a voltage reference at disconnected terminals: local high-resistance sense paths
+supply it without changing the shared solver or adding an idle output load.
+Electronics losses enter the native thermal system as physical joules per step.
+The recipe uses the destination's existing DC-DC Converter for the source's
+Variable DC-DC Converter ingredient, preserving the native device and ID.
+
+Focused circuit, actual item/menu and native world tests are being run. This
+checkpoint does not yet claim passing validation. The compact four-cell plug-in
+UPS remains pending with the appliance cord/socket layer; it is not registered as
+a partially functional device. Interactive client graphics/audio checks are pending.
 
 ## Inventory
 

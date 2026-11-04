@@ -2225,6 +2225,12 @@
   "kind": "transparent_node",
   "name": "hybrid_solar_inverter"
  },
+ "eln:transparent_node@7947": {
+  "descriptor": "UpsDescriptor",
+  "display": "Programmable UPS",
+  "kind": "transparent_node",
+  "name": "programmable_ups"
+ },
  "eln:transparent_node@7950": {
   "descriptor": "BackupDescriptor",
   "display": "Wall-mounted Automatic Transfer Switch",
@@ -2242,6 +2248,12 @@
   "display": "Wall-mounted Hybrid Solar Inverter",
   "kind": "transparent_node",
   "name": "wall_mounted_hybrid_solar_inverter"
+ },
+ "eln:transparent_node@7953": {
+  "descriptor": "UpsDescriptor",
+  "display": "Wall-mounted Programmable UPS",
+  "kind": "transparent_node",
+  "name": "wall_mounted_programmable_ups"
  },
  "eln:transparent_node@80": {
   "descriptor": "PowerInductorDescriptor",
