@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:pole_fuse_link",
+    "minecraft:copper_ingot"
+  ],
+  "result": {
+    "id": "eln:1_a_pole_fuse"
+  }
+}

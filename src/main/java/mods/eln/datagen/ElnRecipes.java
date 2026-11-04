@@ -1082,7 +1082,7 @@ public final class ElnRecipes extends ElnRecipesBase {
 
     public static void recipeForkPatchOffgrid() {
         addRecipe(findItemStack("UPS AGM Battery Cell"),"PPP","LBL","PPP",'P',findItemStack("Iron Plate"),'L',"ingotLead",'B',findItemStack("Portable Battery"));
-        addRecipe(findItemStack("UPS LiFePO4 Battery Cell"),"CCC","GBG","CCC",'C',findItemStack("Copper Ingot"),'G',Items.GOLD_INGOT,'B',findItemStack("UPS AGM Battery Cell"));
+        addRecipe(findItemStack("UPS LiFePO4 Battery Cell"),"CCC","GBG","CCC",'C',Items.COPPER_INGOT,'G',Items.GOLD_INGOT,'B',findItemStack("UPS AGM Battery Cell"));
         addRecipe(findItemStack("UPS Industrial Battery Module"),"PPP","BBB","PPP",'P',findItemStack("Iron Plate"),'B',findItemStack("UPS LiFePO4 Battery Cell"));
         addRecipe(findItemStack("16 kWh LiFePO4 Cell Stack"),"IBI","BCB","IBI",'I',findItemStack("Iron Plate"),'B',findItemStack("UPS Industrial Battery Module"),'C',findItemStack("Copper Cable"));
         for(var t:mods.eln.transparentnode.offgrid.OffGridType.values()) {

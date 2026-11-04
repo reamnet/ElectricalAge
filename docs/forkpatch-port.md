@@ -234,8 +234,9 @@ are still pending; this checkpoint imports their shared fuse/cell items only.
 
 All 17 adapted source off-grid circuit regressions pass on the native LU solver,
 including service headroom, parallel-bank energy balance, night isolation, cold/hot
-protection and electrical-rate-independent thermal energy. The 13 native equipment
-cases and generated recipe/asset checks remain in progress.
+protection and electrical-rate-independent thermal energy. Native datagen also passes: 29 recipes and advancements, 30 item definitions,
+13 blockstates, 43 item models and 43 English names. All 356 previous registry
+identities are retained. The 13 native equipment cases remain in progress.
 
 ## Inventory
 
