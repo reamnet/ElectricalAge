@@ -365,12 +365,14 @@ all four front orientations, published measurements, recorded enclosure/panel
 geometry, the native menu specification and saved-node state. Datagen passes for
 two recipes/advancements, two blockstates/item definitions, four item models and
 four English names. All 395 earlier registry identities and 178 geometry models
-are retained. Destination regression validation is in progress.
+are retained. The destination suite passes 403 tests with 3 optional preview skips
+and no failures (`:test -PfluidCases=20`); the default 200-case fluid corpus was not run.
 Interactive client validation and the seven other industrial devices remain pending.
 
 Reports: [circuit tests](forkpatch-port/industrial-control-circuit-tests.json),
 [native cases](forkpatch-port/industrial-control-native-tests.json), and
-[datagen](forkpatch-port/industrial-control-datagen.json).
+[datagen](forkpatch-port/industrial-control-datagen.json), and
+[destination regressions](forkpatch-port/industrial-control-checkpoint-validation.json).
 
 ## Inventory
 
