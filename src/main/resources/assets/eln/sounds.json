@@ -376,5 +376,23 @@
                 "stream": false
             }
         ]
+    },
+    "circuit_breaker_close": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "eln:circuit_breaker_close",
+                "stream": false
+            }
+        ]
+    },
+    "circuit_breaker_open": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "eln:circuit_breaker_open",
+                "stream": false
+            }
+        ]
     }
 }

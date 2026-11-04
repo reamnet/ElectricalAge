@@ -78,6 +78,7 @@ public final class ElnDeviceRegistry {
         registerBattery(16);
         registerSolarPanel(48);
         registerForkPatchSolar();
+        registerForkPatchStandby();
         mods.eln.transparentnode.offgrid.OffGridDevices.INSTANCE.register();
         registerLampSocket(64);
         registerLampSupply(65);
@@ -471,6 +472,15 @@ public final class ElnDeviceRegistry {
 
     /** From 1.12 Wp10bContent. */
     /** Source 3.0.77 identities, unused in the destination's existing registry. */
+    private static void registerForkPatchStandby() {
+        transparentNodeItem.addDescriptor((124<<6)+6,new mods.eln.transparentnode.standby.BackupDescriptor(TR_NAME(Type.NONE,"Automatic Transfer Switch"),false,false,mods.eln.transparentnode.standby.GeneratorTier.SMALL));
+        transparentNodeItem.addDescriptor((124<<6)+14,new mods.eln.transparentnode.standby.BackupDescriptor(TR_NAME(Type.NONE,"Wall-mounted Automatic Transfer Switch"),false,true,mods.eln.transparentnode.standby.GeneratorTier.SMALL));
+        for(var tier:mods.eln.transparentnode.standby.GeneratorTier.values()) {
+            int id=(tier==mods.eln.transparentnode.standby.GeneratorTier.SMALL?124:125)<<6;
+            transparentNodeItem.addDescriptor(id+tier.getSubId(),new mods.eln.transparentnode.standby.BackupDescriptor(tier.getTitle(),true,false,tier));
+        }
+    }
+
     private static void registerForkPatchSolar() {
         int base = 124 << 6;
         transparentNodeItem.addDescriptor(base + 8, new mods.eln.transparentnode.renewable.RenewableDescriptor(

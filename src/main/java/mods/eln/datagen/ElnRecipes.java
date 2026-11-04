@@ -67,6 +67,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeSolarPanel", ElnRecipes::recipeSolarPanel);
         run("recipeForkPatchSolar", ElnRecipes::recipeForkPatchSolar);
         run("recipeForkPatchOffgrid", ElnRecipes::recipeForkPatchOffgrid);
+        run("recipeForkPatchStandby", ElnRecipes::recipeForkPatchStandby);
         run("recipeThermalDissipatorPassiveAndActive", ElnRecipes::recipeThermalDissipatorPassiveAndActive);
         run("recipeElectricalAntenna", ElnRecipes::recipeElectricalAntenna);
         run("recipeEggIncubator", ElnRecipes::recipeEggIncubator);
@@ -1078,6 +1079,18 @@ public final class ElnRecipes extends ElnRecipesBase {
             'A', findItemStack("Analogic Regulator"),
             'C', findItemStack("Medium Voltage Cable"),
             'M', findItemStack("Advanced Electrical Motor"));
+    }
+
+    public static void recipeForkPatchStandby() {
+        addRecipe(findItemStack("Automatic Transfer Switch"),"IPI","RCR","IPI",'I',findItemStack("Iron Plate"),'P',Items.COMPARATOR,'R',Items.REDSTONE,'C',findItemStack("Copper Cable"));
+        addShapelessRecipe(findItemStack("Wall-mounted Automatic Transfer Switch"),findItemStack("Automatic Transfer Switch"),findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Standby Gasoline Generator"),"PPP","BGB","CRC",'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'G',findItemStack("240V Fuel Generator"),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        // Native survival upgrade paths conserve the source tiers' installed engine capacity.
+        var tiers=mods.eln.transparentnode.standby.GeneratorTier.values();
+        for(int i=1;i<tiers.length;i++) {
+            if(i==tiers.length-1)addRecipe(findItemStack(tiers[i].getTitle()),"PPP","GGG","CRC",'P',findItemStack("Iron Plate"),'G',findItemStack(tiers[i-1].getTitle()),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+            else addRecipe(findItemStack(tiers[i].getTitle()),"PPP","GCG","PRP",'P',findItemStack("Iron Plate"),'G',findItemStack(tiers[i-1].getTitle()),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        }
     }
 
     public static void recipeForkPatchOffgrid() {

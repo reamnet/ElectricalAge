@@ -4,6 +4,7 @@ advancedenergymeter/advancedenergymeter.obj
 alarmmedium/alarmmedium.obj
 analogchips/analogchips.obj
 anemometer/anemometer.obj
+automatictransferswitch/automatictransferswitch.obj
 autominer/autominer.obj
 battery_disconnect/battery_disconnect.obj
 batterybig/batterybig.obj
@@ -124,6 +125,11 @@ solarmppt/solarmppt.obj
 solarpanel2x2/solarpanel2x2.obj
 solarpanel2x3/bigsolarpanel.obj
 solarpanel2x3/bigsolarpanelrot.obj
+standbygenerator/standbygenerator.obj
+standbygenerator_extra_large/standbygenerator_extra_large.obj
+standbygenerator_extreme/standbygenerator_extreme.obj
+standbygenerator_large/standbygenerator_large.obj
+standbygenerator_medium/standbygenerator_medium.obj
 steamoven/steamoven.obj
 steamturbine200v/steamturbine200v.obj
 steamturbine50v/steamturbine50v.obj
@@ -159,6 +165,7 @@ tutoplate/tutoplate.obj
 voltagesensor/voltagesensor.obj
 voltagesource/voltagesource.obj
 vumeter/vumeter.obj
+wallats/wallats.obj
 wallclock/wallclock.obj
 wallhybrid/wallhybrid.obj
 wallmppt/wallmppt.obj

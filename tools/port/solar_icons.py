@@ -13,6 +13,8 @@ COLORS = {
     "Vents": (.035,.045,.05), "Positive": (.85,.15,.08), "Negative": (.08,.09,.1),
     "StatusLed": (.02,.14,.04), "ChargeLed": (.02,.06,.18), "FaultLed": (.15,.02,.01),
     "Voltage": (.02,.04,.06), "Charge": (.02,.04,.06), "Power": (.02,.04,.06), "Capacity": (.02,.04,.06),
+    "Mains": (.1,.35,.85), "Backup": (1,.65,.06), "Indicator": (.02,.2,.04), "Display": (.015,.045,.055),
+    "MainsLed": (.02,.2,.04), "BackupLed": (.2,.1,.02), "BypassLed": (.15,.03,.2),
     "Case": (.77, .80, .82), "Trim": (.17, .20, .23),
     "Solar": (.12, .55, .92), "Grid": (.08, .24, .55),
     "Output": (.97, .37, .05), "Return": (.1, .12, .14),
@@ -68,5 +70,12 @@ if __name__ == "__main__":
         ('offgrid_charger', 'ac_lifepo4_battery_charger'),
         ('pv_combiner', 'fused_pv_combiner_and_disconnect'),
         ('battery_disconnect', '400_a_dc_battery_disconnect'),
+        ('automatictransferswitch', 'automatic_transfer_switch'),
+        ('wallats', 'wall_mounted_automatic_transfer_switch'),
+        ('standbygenerator', 'standby_gasoline_generator'),
+        ('standbygenerator_medium', 'medium_standby_gasoline_generator'),
+        ('standbygenerator_large', 'large_standby_gasoline_generator'),
+        ('standbygenerator_extra_large', 'extra_large_standby_gasoline_generator'),
+        ('standbygenerator_extreme', 'extreme_standby_gasoline_generator'),
     ]:
         cabinet(model, item)

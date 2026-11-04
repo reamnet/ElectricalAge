@@ -255,6 +255,28 @@ A one-pole disconnect registers only its actual contact and terminals. Carrying
 over the unused second open pole made the native matrix singular; it is removed
 in this adapter, with open/reclose behavior covered by a dedicated regression.
 
+## Standby and ATS checkpoint (validation in progress)
+
+Seven source identities are now registered: floor/wall ATS cabinets and all five
+standby gasoline generator tiers (10, 20, 40, 80 and 240 kW). Native screens and
+recorded front panels expose rated voltage, channel, engine mode, fuel and the
+active feed. Source start/cooldown/transfer delays and fault latches are retained.
+The ATS sends a one-shot reset to faulted loaded generators on its case-sensitive,
+dimension-scoped channel, without changing their fuel or interrupting healthy peers.
+
+The 26.3 adapter uses the destination's transactional fluid capability and native
+container interaction. Fluid-stack codecs preserve fluid components, while a paid
+whole-mB energy reserve prevents pipes from reclaiming already consumed fuel.
+Fuel acceptance compares configured registry paths directly rather than allocating
+a scan of the complete fluid registry on each insertion. The existing fuel
+generators and fluid network implementation remain unchanged.
+
+Larger source tiers lacked survival recipes; native upgrades combine two of the
+previous tier (three for the extreme tier), preserving their installed capacity.
+All seven entries have geometry-derived inventory icons. Native fuel/capability,
+multiblock, transfer, reset, save and display checks are being added; no passing
+checkpoint or interactive client validation is claimed yet.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

@@ -2201,6 +2201,18 @@
   "kind": "transparent_node",
   "name": "utility_pole_w_dc_dc_converter"
  },
+ "eln:transparent_node@7942": {
+  "descriptor": "BackupDescriptor",
+  "display": "Automatic Transfer Switch",
+  "kind": "transparent_node",
+  "name": "automatic_transfer_switch"
+ },
+ "eln:transparent_node@7943": {
+  "descriptor": "BackupDescriptor",
+  "display": "Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "standby_gasoline_generator"
+ },
  "eln:transparent_node@7944": {
   "descriptor": "RenewableDescriptor",
   "display": "MPPT Solar Controller",
@@ -2212,6 +2224,12 @@
   "display": "Hybrid Solar Inverter",
   "kind": "transparent_node",
   "name": "hybrid_solar_inverter"
+ },
+ "eln:transparent_node@7950": {
+  "descriptor": "BackupDescriptor",
+  "display": "Wall-mounted Automatic Transfer Switch",
+  "kind": "transparent_node",
+  "name": "wall_mounted_automatic_transfer_switch"
  },
  "eln:transparent_node@7951": {
   "descriptor": "RenewableDescriptor",
@@ -2230,6 +2248,30 @@
   "display": "Power inductor",
   "kind": "transparent_node",
   "name": "power_inductor_block"
+ },
+ "eln:transparent_node@8024": {
+  "descriptor": "BackupDescriptor",
+  "display": "Medium Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "medium_standby_gasoline_generator"
+ },
+ "eln:transparent_node@8025": {
+  "descriptor": "BackupDescriptor",
+  "display": "Large Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "large_standby_gasoline_generator"
+ },
+ "eln:transparent_node@8026": {
+  "descriptor": "BackupDescriptor",
+  "display": "Extra Large Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "extra_large_standby_gasoline_generator"
+ },
+ "eln:transparent_node@8027": {
+  "descriptor": "BackupDescriptor",
+  "display": "Extreme Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "extreme_standby_gasoline_generator"
  },
  "eln:transparent_node@8192": {
   "descriptor": "OffGridDescriptor",

@@ -305,5 +305,82 @@
     "sourceSha256": "d9b8532f4b12bbc0c45f132bb7c5178dbb93a40297f2e0e68faee59efd4027a7",
     "mode": "adapted-production-list-fixtures",
     "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt",
+    "sourceSha256": "a7d66b681228236b4ec31059f01a2d9f70c4bcef5e3cf6d11c73715486bf6c2c",
+    "mode": "native-26.3-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/AtsUnit.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/AtsUnit.kt",
+    "sourceSha256": "91ec74aeb51f12c95b82d44374997034a893a9f5478da9a064691639524a9b4b",
+    "mode": "native-26.3-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyGeneratorUnit.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyGeneratorUnit.kt",
+    "sourceSha256": "83a1d37570627cbb73ad5211878350e4bce5bc10f2dad32c3255ecf72c413614",
+    "mode": "native-26.3-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyAlternator.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyAlternator.kt",
+    "sourceSha256": "929b8dd9c39f97479295e955fc0f785dc7947b4509f05cd1ef33e7afad7f6a35",
+    "mode": "native-26.3-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupElements.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/BackupElements.kt",
+    "sourceSha256": "574fd5e038161913b89b2ceeb886c00556b51103d7f40a003db79b6bf4d9901e",
+    "mode": "native-26.3-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyFuel.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyFuel.kt",
+    "sourceSha256": "c89c68792949800577fab948bebb6157642697db883ca9367d90a368ebd6864d",
+    "mode": "native-26.3-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/GeneratorEffects.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/GeneratorEffects.kt",
+    "sourceSha256": "728a47d95ecba2516a302059d2d24239a4470a12a777d86831885623f2db7e35",
+    "mode": "native-26.3-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/TransferControl.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyLink.kt",
+    "sourceSha256": "d6dce2fa0929227c312b8bac344dae4422f39091d3e04075ac1d3c2ee4b5d344",
+    "mode": "extracted-native-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/BackupDescriptor.kt",
+    "sourceSha256": "b75f558ec0547c961310750d4d456bc79eba4b4b42258ad3834207817819f3c8",
+    "mode": "extracted-native-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/BackupDisplay.kt",
+    "sourceSha256": "b75f558ec0547c961310750d4d456bc79eba4b4b42258ad3834207817819f3c8",
+    "mode": "extracted-native-adapter",
+    "status": "standby-checkpoint-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/BackupRender.kt",
+    "sourceSha256": "b75f558ec0547c961310750d4d456bc79eba4b4b42258ad3834207817819f3c8",
+    "mode": "extracted-native-adapter",
+    "status": "standby-checkpoint-validation-pending"
   }
 ]
