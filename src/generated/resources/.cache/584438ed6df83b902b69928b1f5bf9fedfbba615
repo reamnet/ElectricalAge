@@ -1,4 +1,4 @@
-// 26.3	2026-11-04T19:16:50.976238062	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-04T21:47:32.962903346	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
 e9b18790f61c5e60d17f49af5cad947638ed8e2b data/eln/advancement/recipes/misc/10a_diode.json
@@ -267,6 +267,7 @@ d4b677a6e4eba2fcadf4ddb0ebcc9ee382faa54a data/eln/advancement/recipes/misc/porta
 5fb547ef4cb1bf666d39628fbbe66662326c9c1b data/eln/advancement/recipes/misc/power_capacitor.json
 4b397520f61b222a82fd5d5c4466ad24c55042e3 data/eln/advancement/recipes/misc/power_inductor.json
 77301a064d64747de5ec7404b25d3f1d6217b501 data/eln/advancement/recipes/misc/power_resistor.json
+5ee595537e294e51e983137eb9aa95560464750c data/eln/advancement/recipes/misc/programmable_ups.json
 5eda5d07f297d694c57d5ce56807a80dc7db2c40 data/eln/advancement/recipes/misc/purple_brush.json
 1e879bd3da5eabb33eb0f2ee6f2b3c1d9d9e9588 data/eln/advancement/recipes/misc/red_brush.json
 f7528c010eae2ecb1d9b8df30858589d7a331a88 data/eln/advancement/recipes/misc/redstone_to_voltage_converter.json
@@ -367,6 +368,7 @@ bf6f0a1b124a820ae6421b3f6af5543f50ecb116 data/eln/advancement/recipes/misc/volta
 e7eaf79354b5c47ba7a926004a315c7b5b332f9c data/eln/advancement/recipes/misc/wall_mounted_automatic_transfer_switch.json
 f47b2c16d3aff37b8460e39245249fda40531f50 data/eln/advancement/recipes/misc/wall_mounted_hybrid_solar_inverter.json
 d0603e241f2719f195a0cfb63fab42351aba2f7c data/eln/advancement/recipes/misc/wall_mounted_mppt_solar_controller.json
+cbe8363c51452156f28ddfc6f640a8e1e3d4ca3f data/eln/advancement/recipes/misc/wall_mounted_programmable_ups.json
 5b4fba0cf4d8239e3cbce33bed6955b18b51f1be data/eln/advancement/recipes/misc/water_turbine.json
 db60d69221acdb19adf4acbf846d3c9cc1e7138b data/eln/advancement/recipes/misc/weak_50v_battery_charger.json
 cd1801fc1dc5360002e4ef5278cc0cdf93ca0226 data/eln/advancement/recipes/misc/well_casing.json
@@ -667,6 +669,7 @@ caf2468edaa7395edd4d3842074f75a19756a3ff data/eln/recipe/portable_electrical_min
 d00c0eea142c635ad3d3fa74e52dd5a28784225b data/eln/recipe/power_capacitor.json
 cf88d05d7133f38948590b14e13e56b8bedc883e data/eln/recipe/power_inductor.json
 1b6a55970cff2e670b8b720abc7a6bde617fa47a data/eln/recipe/power_resistor.json
+8fe02716be2013aeb288e97d5e2470d58f22cc88 data/eln/recipe/programmable_ups.json
 52a0411cfab0a219bd72692e72568b43848930e3 data/eln/recipe/purple_brush.json
 00d438d0450731bc201193aef8acef83c879d8d9 data/eln/recipe/red_brush.json
 9c5c6e47e7f3d04b13fc71c6b5ddfc3182ee73e2 data/eln/recipe/redstone_to_voltage_converter.json
@@ -767,6 +770,7 @@ bcdf2586ebaa97d9afcb494bbf7070b497d0aa22 data/eln/recipe/voltage_oriented_batter
 64821eb1ff82c259c9ce8236b0c40f163e734269 data/eln/recipe/wall_mounted_automatic_transfer_switch.json
 ee25b424184f89566f1fbc582aeb39569da6fba3 data/eln/recipe/wall_mounted_hybrid_solar_inverter.json
 655adfb11b9a89a42e6a6648445468ded01d9b53 data/eln/recipe/wall_mounted_mppt_solar_controller.json
+9410999b18c55a94badd1deb7988130ac0d79940 data/eln/recipe/wall_mounted_programmable_ups.json
 2eef55cb3770ba6e558dcb7b2078bdec640bcbf2 data/eln/recipe/water_turbine.json
 7d2fe631dadef77994ea6da566a582f8a513ec22 data/eln/recipe/weak_50v_battery_charger.json
 eeb00d96bd5e748eb1d0b827dc5d3ff52fcbe137 data/eln/recipe/well_casing.json

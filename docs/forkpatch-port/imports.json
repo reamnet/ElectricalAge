@@ -445,5 +445,26 @@
     "sourceSha256": "cde7b30cb6108325d4a43ffc6cf62018c3cd48294721d936470bfe2cf1a67b38",
     "mode": "adapted",
     "status": "UPS checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsClient.kt",
+    "target": "src/main/java/mods/eln/transparentnode/ups/UpsScreen.java",
+    "sourceSha256": "cde7b30cb6108325d4a43ffc6cf62018c3cd48294721d936470bfe2cf1a67b38",
+    "mode": "native-menu-replacement",
+    "status": "UPS checkpoint: validation in progress"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/ups/UpsTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/ups/ForkPatchUpsTest.kt",
+    "sourceSha256": "d4b3c6e0fa95a80524d2dde0bb75777830ddca14037bf312ccbe7bba0583c950",
+    "mode": "adapted-production-controllers-with-metered-energy-fixtures",
+    "status": "UPS checkpoint: validation in progress"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/ups/UpsStandbyTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/ups/ForkPatchUpsStandbyTest.kt",
+    "sourceSha256": "fbc4e0db45194e51fd65fa8c2ef40f8a1340014b2719a2b4b3b26f2ca2fbd398",
+    "mode": "adapted-production-controllers-with-metered-energy-fixtures",
+    "status": "UPS checkpoint: validation in progress"
   }
 ]

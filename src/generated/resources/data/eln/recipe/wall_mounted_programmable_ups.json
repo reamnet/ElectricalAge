@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:programmable_ups",
+    "eln:iron_plate"
+  ],
+  "result": {
+    "id": "eln:wall_mounted_programmable_ups"
+  }
+}
