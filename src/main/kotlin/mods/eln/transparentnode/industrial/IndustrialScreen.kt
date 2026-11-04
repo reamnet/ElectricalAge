@@ -15,6 +15,7 @@ class IndustrialScreen(menu: ElnNodeMenu,inventory: Inventory,title: Component,r
     private val render=render as IndustrialRender
     private val fields=ArrayList<EditBox>()
     private val drafts=ArrayList<String>()
+    private var resetButton: net.minecraft.client.gui.components.Button?=null
     override fun init() {
         super.init();fields.clear();drafts.clear()
         render.display.settings.forEachIndexed { i,v->
@@ -26,10 +27,11 @@ class IndustrialScreen(menu: ElnNodeMenu,inventory: Inventory,title: Component,r
             val p=fields.map { it.value.toDoubleOrNull() ?: return@button }.toDoubleArray();render.setSettings(p)
         })
         button(128,118,112,{if(render.display.enabled)tr("Disable / open") else tr("Enable / close")},{render.clientSendBoolean(81.toByte(),!render.display.enabled)})
-        button(248,118,112,{if(render.kind==IndustrialKind.SHEDDER)tr("Retry shed loads") else tr("Reset trip")},{render.clientSendId((if(render.kind==IndustrialKind.SHEDDER)86 else 82).toByte())})
+        resetButton=button(248,118,112,{if(render.kind==IndustrialKind.SHEDDER)tr("Retry shed loads") else tr("Reset trip")},{render.clientSendId((if(render.kind==IndustrialKind.SHEDDER)86 else 82).toByte())})
     }
     override fun extractDevice(g: GuiGraphicsExtractor,mx: Int,my: Int,delta: Float) {
         val d=render.display
+        resetButton?.active=if(render.kind==IndustrialKind.SHEDDER)d.enabled && d.closed.any { !it } else d.trip
         label(g,8,22,if(d.trip)tr("Tripped; inspect circuit before reset") else if(!d.enabled)tr("Disabled") else if(render.kind==IndustrialKind.SHEDDER)shedStatusText(d.shedStatus) else if(d.pendingReason!=0)tr("Fault detected; trip delay running") else tr("Protection ready"))
         render.kind.labels().forEachIndexed { i,s->label(g,8+(i%2)*184,46+(i/2)*24,font.plainSubstrByWidth(s,108)) }
         label(g,8,146,tr("Input: %1$; %2$",Utils.plotVolt("",d.volts).trim(),Utils.plotPower("",d.watts).trim()))
