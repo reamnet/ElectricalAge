@@ -412,11 +412,18 @@ exercise actual paid transformer/fuse items, physical fuse consumption/replaceme
 shared service loading and sag, native item/panel geometry, sided inventory rules,
 menu slots, signal output, packet publication and world-node persistence. Carrying
 the cabinet's settings cannot copy installed hardware.
-Datagen and destination regressions are being finalized. The other utility
+Datagen passes for six recipes/advancements, six item definitions, one blockstate,
+12 item models and seven English names, with no missing transformer icon warnings.
+All 397 previous registry identities and 180 geometry models are retained.
+The destination suite passes 415 tests with 3 optional preview skips
+and no failures (`:test -PfluidCases=20`); the default 200-case fluid corpus was not run.
+The other utility
 equipment, six remaining industrial devices and interactive client validation remain pending.
 
 Reports: [circuit tests](forkpatch-port/pad-circuit-tests.json) and
-[native cases](forkpatch-port/pad-native-tests.json).
+[native cases](forkpatch-port/pad-native-tests.json),
+[datagen](forkpatch-port/pad-datagen.json), and
+[destination regressions](forkpatch-port/pad-checkpoint-validation.json).
 
 ## Inventory
 
