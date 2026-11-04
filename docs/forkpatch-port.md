@@ -172,26 +172,35 @@ on normal server ticks at 120 V with 144 W of balanced output. Those round trips
 exposed and fixed the base loader
 reading component state before the saved isolated circuit had been selected.
 
-This checkpoint does not register the new MPPT/hybrid cabinets. Fully floating
+That converter checkpoint alone did not register the new MPPT/hybrid cabinets. Fully floating
 differential islands, the source double-double/gauge solver and stiff high-voltage
 port accuracy still require their own adaptation and regressions before those
 remaining controllers can be considered complete. Unsupported singular floating
 ports are rejected rather than silently grounded.
 
-### In progress: MPPT and hybrid cabinets
+### Code checkpoint: MPPT and hybrid cabinets
 
 The floor and wall MPPT/hybrid adapters now register their original source identities
 7944, 7945, 7951 and 7952, which were unused in the destination. The incoming
 harvest/DC-link accounting, output priorities, grid-following export, saved settings
-and item energy reset are adapted to native node lists and NBT APIs. Electrical
-[accounting/export regressions](forkpatch-port/solar-controller-tests.json) pass;
-native placed-block, save and publication checks are pending.
+and item energy reset are adapted to native node lists and NBT APIs. Eight
+[accounting and array regressions](forkpatch-port/solar-controller-tests.json)
+pass, including the real 96-large-panel layout feeding the production MPPT,
+night-time DC-link depletion and two MPPTs exporting together.
+
+All eight [native solar tests](forkpatch-port/solar-cabinet-native-tests.json)
+pass. Five new cabinet cases exercise floor/wall placement, real loads, grid export,
+GUI packets, published display values, thin collision, recorded live geometry,
+item energy reset and node save round trips. Three existing panel cases retain
+their weather, I-V and ghost checks. Native datagen also succeeds, producing all
+four recipes, advancements, item/block definitions and English display names.
 
 Source cabinet geometry and live seven-segment panels record through the existing
 26.3 facade. Menus use native ElnScreen controls and element packets. Inventory icons
 are reproducible from the imported geometry with `tools/port/solar_icons.py`.
 Source terrain-body batching and configuration-tool integration remain pending;
-those APIs are not available in this destination foundation yet.
+those APIs are not available in this destination foundation yet. Native geometry
+recording has been validated; an interactive client GPU screenshot is not claimed.
 
 Model-index generation now includes the existing native generated CAD catalog,
 not just shipped OBJ files; all 158 existing entries are retained alongside the

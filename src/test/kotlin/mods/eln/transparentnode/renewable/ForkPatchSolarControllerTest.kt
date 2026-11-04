@@ -77,4 +77,21 @@ class ForkPatchSolarControllerTest {
         tag.putDouble("solarJoules",Double.NaN);tag.putDouble("solarFedJoules",Double.POSITIVE_INFINITY)
         restored.read(tag);assertEquals(0.0,restored.energy,0.0);assertEquals(0.0,restored.fedJoules,0.0)
     }
+    @Test fun twoMpptsExportTogetherAndAccountForTheirOwnInputEnergy() {
+        val c=Circuit()
+        val loads=mutableListOf<State>();val components=mutableListOf<Component>();val processes=mutableListOf<IProcess>()
+        val second=SolarPowerUnit(loads,components,processes,false);second.gridFeed=true
+        loads.forEach(c.root::addState);components.forEach(c.root::addComponent)
+        c.root.addComponent(SwitchableVoltageSource("second paid PV").apply { connectTo(second.solar,second.negative);u=850.0;enabled=true })
+        c.root.addComponent(Resistor(second.output,c.unit.output).setR(.002));c.root.addProcess(second.controller)
+        var input=0.0;var output=0.0
+        repeat(300) {
+            c.run(1);processes.forEach { it.process(.05) }
+            input+=second.pvWatts*.05;output+=second.outputWatts*.05
+            assertNotEquals(second.diagnostic,"PROTECTED",second.status)
+            assertTrue(output+second.energy*.97<=input*.98*.97+.1)
+            assertTrue(second.outputSource.current in -.00001..200.0002)
+        }
+        assertTrue(c.unit.feedWatts>9000);assertTrue(second.feedWatts>9000);assertTrue(c.mains.p< -17000)
+    }
 }

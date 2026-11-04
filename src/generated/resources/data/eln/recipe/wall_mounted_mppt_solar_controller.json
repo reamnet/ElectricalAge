@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:mppt_solar_controller",
+    "eln:iron_plate"
+  ],
+  "result": {
+    "id": "eln:wall_mounted_mppt_solar_controller"
+  }
+}

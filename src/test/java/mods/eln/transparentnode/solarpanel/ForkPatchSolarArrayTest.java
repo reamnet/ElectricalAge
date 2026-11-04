@@ -82,4 +82,28 @@ public class ForkPatchSolarArrayTest {
         circuit.root.removeComponent(circuit.load); circuit.load.breakConnection(); circuit.step(16);
         assertEquals(12 * 111, circuit.volts(), 2.0);
     }
+
+    @Test public void largeArrayFeedsTheProductionMpptWithoutCreatingEnergy() {
+        ArrayCircuit circuit = new ArrayCircuit();
+        List<mods.eln.sim.mna.state.State> loads = new ArrayList<>();
+        List<mods.eln.sim.mna.component.Component> components = new ArrayList<>();
+        List<mods.eln.sim.IProcess> processes = new ArrayList<>();
+        var unit = new mods.eln.transparentnode.renewable.SolarPowerUnit(loads, components, processes, false, false);
+        loads.forEach(circuit.root::addState); components.forEach(circuit.root::addComponent);
+        circuit.wire(circuit.positive, unit.getSolar()); circuit.wire(circuit.negative, unit.getNegative());
+        Resistor load = new Resistor(unit.getOutput(), null).setR(120.0 * 120 / 5000);
+        circuit.root.addComponent(load); circuit.root.addProcess(unit.getController());
+        double harvested = 0, supplied = 0;
+        for (int step = 0; step < 100; step++) {
+            circuit.root.step(); processes.forEach(p -> p.process(.01));
+            harvested += unit.getPvWatts() * .01;
+            supplied += unit.getOutputWatts() * .01;
+            assertNotEquals(unit.getDiagnostic(), "PROTECTED", unit.getStatus());
+            assertTrue("MPPT energy must come from the connected array", supplied + unit.getEnergy() * .97 <= harvested * .98 * .97 + .1);
+        }
+        assertTrue("Real array did not energize the MPPT output: " + unit.getStatus(), load.getP() > 4900);
+        circuit.light(0);
+        for (int step = 0; step < 150; step++) { circuit.root.step(); processes.forEach(p -> p.process(.01)); }
+        assertEquals(0, unit.getOutputWatts(), 1e-6);
+    }
 }
