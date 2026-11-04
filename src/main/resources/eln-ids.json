@@ -773,6 +773,36 @@
   "kind": "shared_item",
   "name": "pole_fuse_link"
  },
+ "eln:shared_item@7879": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "10 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "10_kw_pole_transformer"
+ },
+ "eln:shared_item@7880": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "25 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "25_kw_pole_transformer"
+ },
+ "eln:shared_item@7881": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "50 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "50_kw_pole_transformer"
+ },
+ "eln:shared_item@7882": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "75 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "75_kw_pole_transformer"
+ },
+ "eln:shared_item@7883": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "100 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "100_kw_pole_transformer"
+ },
  "eln:shared_item@7884": {
   "descriptor": "PoleFuseDescriptor",
   "display": "1 A Pole Fuse",
@@ -2290,6 +2320,12 @@
   "display": "Protective Relay Cabinet",
   "kind": "transparent_node",
   "name": "protective_relay_cabinet"
+ },
+ "eln:transparent_node@8068": {
+  "descriptor": "PadTransformerDescriptor",
+  "display": "Pad Mounted Neighbourhood Transformer",
+  "kind": "transparent_node",
+  "name": "pad_mounted_neighbourhood_transformer"
  },
  "eln:transparent_node@8070": {
   "descriptor": "IndustrialDescriptor",

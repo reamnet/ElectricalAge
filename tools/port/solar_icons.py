@@ -10,6 +10,9 @@ sys.path.insert(0, str(ROOT / "tools/icons/shaft"))
 from render3d import render
 
 COLORS = {
+    "Pad": (.42,.44,.41), "Door": (.17,.35,.22), "DoorHardware": (.12,.14,.16),
+    "Nameplate": (.75,.78,.71), "Warning": (.95,.65,.08), "WarningMark": (.05,.06,.04),
+    "Lugs": (.65,.48,.25), "Elbows": (.1,.12,.13), "Ground": (.35,.49,.32),
     "Vents": (.035,.045,.05), "Positive": (.85,.15,.08), "Negative": (.08,.09,.1),
     "StatusLed": (.02,.14,.04), "ChargeLed": (.02,.06,.18), "FaultLed": (.15,.02,.01),
     "Voltage": (.02,.04,.06), "Charge": (.02,.04,.06), "Power": (.02,.04,.06), "Capacity": (.02,.04,.06),
@@ -30,7 +33,7 @@ COLORS = {
 def cabinet(model, item):
     vertices, faces, part = [], [], None
     colors = list(COLORS)
-    atlas = np.array([[COLORS[name] for name in colors]], dtype=np.float32)
+    atlas = np.array([[(.18,.37,.23) if model == "industrial_pad" and name == "Case" else COLORS[name] for name in colors]], dtype=np.float32)
     for line in (ROOT / f"src/main/resources/assets/eln/model/{model}/{model}.obj").read_text().splitlines():
         words = line.split()
         if not words:
@@ -54,6 +57,7 @@ def cabinet(model, item):
 
 if __name__ == "__main__":
     for model, item in [
+        ("industrial_pad", "pad_mounted_neighbourhood_transformer"),
         ("industrial_relay", "protective_relay_cabinet"),
         ("industrial_shedder", "automatic_load_shedding_controller"),
         ("solarmppt", "mppt_solar_controller"),

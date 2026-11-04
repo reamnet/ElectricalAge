@@ -178,3 +178,5 @@ wirelesssignaltx/wirelesssignaltx.obj
 xrayscanner/xrayscanner.obj
 industrial_relay/industrial_relay.obj
 industrial_shedder/industrial_shedder.obj
+industrial_pad/industrial_pad.obj
+poletransformer/poletransformer.obj

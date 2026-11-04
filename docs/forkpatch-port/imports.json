@@ -529,5 +529,75 @@
     "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
     "mode": "adapted-relay-and-shedder-production-circuit-tests",
     "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/ServiceSecondary.kt",
+    "target": "src/main/kotlin/mods/eln/utility/ServiceSecondary.kt",
+    "sourceSha256": "4a35fdfb27fe34957244ba8d4c96a43039c4ca01b82e2d9de253dbab341beaa5",
+    "mode": "native-terminal-current-api; service taps and secondary only",
+    "status": "pad transformer checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleHardware.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleHardware.kt",
+    "sourceSha256": "363d9bedf4e2d87c0f75ac623506b05fd57cfcbb3c2eb61029595002ba69b3f9",
+    "mode": "native-paid-transformer-items-and-fuses",
+    "status": "pad transformer checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleTransformerVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleTransformerItemVisual.kt",
+    "sourceSha256": "6e31b5bd1ff990ff3489e7fa34d1bdb1b9624cc8d5ca24892d66ae7caac9032d",
+    "mode": "extracted-can-and-bushing-item-renderer",
+    "status": "pad transformer checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad transformer checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad transformer checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerDisplay.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad transformer checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad transformer checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad transformer checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad transformer checkpoint: validation in progress"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/PadPrimaryFuseTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchPadTransformerTest.kt",
+    "sourceSha256": "6371a6fe592882ccb76d1e692b7cdfea1d6368ea1437b7343c3bab4ec792b849",
+    "mode": "adapted-production-circuit-tests",
+    "status": "pad transformer checkpoint: validation in progress"
   }
 ]

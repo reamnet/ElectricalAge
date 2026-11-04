@@ -374,6 +374,37 @@ Reports: [circuit tests](forkpatch-port/industrial-control-circuit-tests.json),
 [datagen](forkpatch-port/industrial-control-datagen.json), and
 [destination regressions](forkpatch-port/industrial-control-checkpoint-validation.json).
 
+### Pad transformer checkpoint (validation in progress)
+
+The Pad Mounted Neighbourhood Transformer (8068) and five physical transformer
+items (7879–7883, 10/25/50/75/100 kW) now have native adapters. Existing IDs are
+retained. The capacity is supplied by an installed item; voltage settings cannot
+upgrade it. A physical primary fuse is required. The 10 kW core recipe uses the
+native DC-DC Converter for the source Mains Step-down Unit, which is not ported yet;
+subsequent source recipes consume the previous capacity and additional copper/iron.
+The source legacy Mains Step-down item fallback/migration remains pending with that
+device. The pole transformer item visual extracts the source can and bushing
+submeshes without registering the unported overhead pole.
+
+Source passive service taps are adapted to the existing native `getCurrentInto`
+API. Primary and secondary terminal currents differ by the physical turns ratio;
+no global simulator/current interface replacement is needed. One paid winding
+supplies both scalar 120 V legs and the full secondary, sharing the core's capacity
+and following primary sag. Source ELN scalar service equivalents are retained;
+this is not an explicit AC phase/neutral simulation. Voltage-sensing references
+support disconnected terminals in the native LU model.
+
+Primary overcurrent consumes the installed fuse after its physical two-second
+delay. Transformer overload latches a separate trip and leaves a healthy primary
+fuse intact. Changing fault type restarts the timer. Settings, fault reason and
+pending timer use source NBT keys; installed hardware persists only in the actual
+inventory. The native menu exposes both slots, primary/secondary programming,
+actual primary and secondary amps, installed fuse/core ratings and explicit reset.
+Native pipe/hopper extraction and insertion use the destination inventory APIs.
+The source pad enclosure, compartment door and fuse-blow sound are included.
+Circuit, native world, datagen and destination regression validation are in progress.
+The other utility equipment and interactive client validation remain pending.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,
