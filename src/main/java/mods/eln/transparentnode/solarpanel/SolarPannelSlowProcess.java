@@ -29,7 +29,7 @@ public class SolarPannelSlowProcess implements IProcess {
 			}
 			else*/
             {
-                solarPannel.powerSource.setP(solarPannel.descriptor.electricalPmax * getSolarLight());
+                solarPannel.powerSource.setLightFactor(getSolarLight());
             }
             timeCounter += Math.random() * timeCounterRefreshMax / 2 + timeCounterRefreshMax / 2;
         }

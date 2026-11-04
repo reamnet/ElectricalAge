@@ -7,8 +7,10 @@ import mods.eln.misc.Coordonate;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.registry.ElnRegistry;
-import mods.eln.sim.mna.process.PowerSourceBipole;
+import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.transparentnode.solarpanel.SolarPanelElement;
+import mods.eln.transparentnode.solarpanel.SolarPanelPowerProcess;
 import mods.eln.transparentnode.solarpanel.SolarPannelSlowProcess;
 import net.minecraft.core.BlockPos;
 
@@ -31,12 +33,44 @@ public final class SolarCases {
         return List.of(new SmallSolarCase(), new SolarGhostCase());
     }
 
+    /** A physical test load owned by the element so normal node cleanup removes it. */
+    static Resistor attachLoad(SolarPanelElement panel) {
+        NbtElectricalLoad positive = Batch1Cases.field(panel, "positiveLoad");
+        NbtElectricalLoad negative = Batch1Cases.field(panel, "negativeLoad");
+        Object descriptor = Batch1Cases.field(panel, "descriptor");
+        double vmp = Batch1Cases.field(descriptor, "optimumVoltage");
+        double imp = Batch1Cases.field(descriptor, "optimumCurrent");
+        Resistor load = new Resistor(positive, negative).setR(vmp / imp);
+        panel.electricalComponentList.add(load);
+        Eln.simulator.mna.addComponent(load);
+        return load;
+    }
+
+    static void checkLoadedCurve(TestContext ctx, SolarPanelElement panel, Resistor load) {
+        SolarPanelPowerProcess source = Batch1Cases.field(panel, "powerSource");
+        Object descriptor = Batch1Cases.field(panel, "descriptor");
+        double voc = Batch1Cases.field(descriptor, "openCircuitVoltage");
+        double vmp = Batch1Cases.field(descriptor, "optimumVoltage");
+        double imp = Batch1Cases.field(descriptor, "optimumCurrent");
+        double isc = Batch1Cases.field(descriptor, "shortCircuitCurrent");
+        double expected = SolarPanelPowerProcess.currentAtVoltage(load.getU(), source.getLightFactor(), voc, vmp, imp, isc);
+        ctx.check("solar: loaded current follows the ForkPatch I-V curve",
+            Math.abs(load.getCurrent() - expected) <= 1e-5 + .005 * isc,
+            "current " + load.getCurrent() + ", expected " + expected);
+        ctx.check("solar: reported production equals the physical load power",
+            Math.abs(source.getPower() - load.getP()) <= 1e-4 + .005 * vmp * imp,
+            "reported " + source.getPower() + ", load " + load.getP());
+        ctx.check("solar: voltage stays within the panel rating", load.getU() >= -.001 && load.getU() <= voc * 1.01,
+            "voltage " + load.getU() + ", open circuit " + voc);
+    }
+
     /**
-     * Small Solar Panel: P = Pmax * light, light from the panel's own sun/sky/obstruction function (1.12 SolarCase).
-     * Plus an independent sanity check: at noon in clear weather the light is high (the 26.x sun angle source).
+     * Small Solar Panel: a physical load follows the ForkPatch I-V curve under
+     * the panel's sun/sky/obstruction function. At clear noon its light is high.
      */
     static final class SmallSolarCase implements TestCase {
         SolarPanelElement panel;
+        Resistor load;
 
         public String id() {
             return "solar_small";
@@ -51,16 +85,13 @@ public final class SolarCases {
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withSuppressedOutput(), "time set noon");
             server.setWeatherParameters(100000, 0, false, false);
             panel = (SolarPanelElement) ctx.placeTransparent(transparent("Small Solar Panel"), ctx.at(1, 1, 1));
+            load = attachLoad(panel);
         }
 
         public void measure(TestContext ctx) {
             SolarPannelSlowProcess process = Batch1Cases.field(panel, "slowProcess");
             double light = process.getSolarLight();
-            double pmax = Batch1Cases.<Double>field(Batch1Cases.field(panel, "descriptor"), "electricalPmax");
-            PowerSourceBipole src = Batch1Cases.field(panel, "powerSource");
-            double tol = 0.01 * pmax * light + 0.005 * pmax;
-            ctx.check(String.format("solar power [W] (Pmax %.1f * light %.4f)", pmax, light),
-                Math.abs(src.getP() - pmax * light) <= tol, String.format("measured %.4f, expected %.4f +- %.3f", src.getP(), pmax * light, tol));
+            checkLoadedCurve(ctx, panel, load);
             ctx.check("solar: noon, clear sky: light > 0.5 (sun angle source on 26.x)", light > 0.5, String.format("light %.4f", light));
             // local weather (Watershed's showers, by IMC): asked at the panel; rain halves the light, thunder halves it
             // again; where the source has none (null), the world's weather (clear here)

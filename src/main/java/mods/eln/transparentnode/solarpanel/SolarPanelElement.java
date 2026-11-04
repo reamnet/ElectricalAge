@@ -13,11 +13,10 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.DiodeProcess;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.VoltageSource;
-import mods.eln.sim.mna.process.PowerSourceBipole;
+import mods.eln.sim.mna.component.CurrentSource;
+import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -37,12 +36,9 @@ public class SolarPanelElement extends TransparentNodeElement {
     SolarPanelDescriptor descriptor;
     NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
     NbtElectricalLoad negativeLoad = new NbtElectricalLoad("negativeLoad");
-    VoltageSource positiveSrc = new VoltageSource("posSrc", positiveLoad, null);
-    VoltageSource negativeSrc = new VoltageSource("negSrc", negativeLoad, null);
-
-    //ElectricalCurrentSource currentSource;
-    DiodeProcess diode;
-    PowerSourceBipole powerSource;
+    CurrentSource panelSrc = new CurrentSource("panelSrc", positiveLoad, negativeLoad);
+    Resistor panelShunt = new Resistor(positiveLoad, negativeLoad);
+    SolarPanelPowerProcess powerSource;
 
     SolarPannelSlowProcess slowProcess = new SolarPannelSlowProcess(this);
 
@@ -56,26 +52,18 @@ public class SolarPanelElement extends TransparentNodeElement {
 
         grounded = false;
 
-		/*if(this.descriptor.basicModel == false)
-		{
-			currentSource = new ElectricalCurrentSource(positiveLoad,negativeLoad);
-			diode = new DiodeProcess(positiveLoad, negativeLoad);
-			electricalProcessList.add(currentSource);
-			electricalProcessList.add(diode);
-		}
-		else*/
-        {
-            powerSource = new PowerSourceBipole(positiveLoad, negativeLoad, positiveSrc, negativeSrc);
+        powerSource = new SolarPanelPowerProcess(positiveLoad, negativeLoad, panelSrc, panelShunt,
+            this.descriptor.openCircuitVoltage, this.descriptor.optimumVoltage,
+            this.descriptor.optimumCurrent, this.descriptor.shortCircuitCurrent);
 
-
-        }
 
         electricalLoadList.add(positiveLoad);
         electricalLoadList.add(negativeLoad);
 
 
-        electricalComponentList.add(positiveSrc);
-        electricalComponentList.add(negativeSrc);
+        electricalComponentList.add(panelSrc);
+        electricalComponentList.add(panelShunt);
+        electricalComponentList.add(new Resistor(negativeLoad, null).pullDown());
 
         slowProcessList.add(slowProcess);
     }
@@ -125,7 +113,8 @@ public class SolarPanelElement extends TransparentNodeElement {
 
     @Override
     public String multiMeterString(Direction side) {
-        return Utils.plotUIP(positiveLoad.getU() - negativeLoad.getU(), positiveLoad.getCurrent());
+        double volts = positiveLoad.getU() - negativeLoad.getU();
+        return Utils.plotUIP(volts, powerSource.getGeneratedCurrent(Math.max(0.0, volts)));
     }
 
     @Override
@@ -135,9 +124,6 @@ public class SolarPanelElement extends TransparentNodeElement {
 
     @Override
     public void initialize() {
-        powerSource.setUmax(this.descriptor.electricalUmax);
-        powerSource.setImax(this.descriptor.electricalPmax / this.descriptor.electricalUmax * 1.5);
-
         descriptor.applyTo(positiveLoad);
         descriptor.applyTo(negativeLoad);
 
@@ -232,7 +218,7 @@ public class SolarPanelElement extends TransparentNodeElement {
         info.put(I18N.tr("Panel angle"), Utils.plotValue((panelAlpha * (180 / Math.PI)) - 90, "\u00B0"));
         info.put(I18N.tr("Producing energy"), (slowProcess.getSolarLight() != 0 ? "Yes" : "No"));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getP()));
+            info.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getPower()));
         }
         return info;
     }

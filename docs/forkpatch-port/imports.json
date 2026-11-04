@@ -4,83 +4,90 @@
     "target": "src/main/kotlin/mods/eln/sim/power/ConverterCore.kt",
     "sourceSha256": "99317dd78e363453f2482b49de10aa6da9a4987761662873d4c1289c234f494d",
     "mode": "verbatim",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/sim/power/ControlMapping.kt",
     "target": "src/main/kotlin/mods/eln/sim/power/ControlMapping.kt",
     "sourceSha256": "554ac86bd2a9a1738e39d8f47fcc757a870c55f05b37a36138455b0269206990",
     "mode": "verbatim",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/sim/power/Insulation.kt",
     "target": "src/main/kotlin/mods/eln/sim/power/Insulation.kt",
     "sourceSha256": "46ef200e7c01cc2bd7821c061a716f4c2e00ef951141a760c46abf2616b48eef",
     "mode": "verbatim",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/sim/power/PortSafety.kt",
     "target": "src/main/kotlin/mods/eln/sim/power/PortSafety.kt",
     "sourceSha256": "44680890b7b6c4235fbafbb6fdb0fb873939e1f6ca098798b440730282af6922",
     "mode": "verbatim",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialLogic.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialLogic.kt",
     "sourceSha256": "608c09039ae974aa28e63eb15e82a8470a2fd4bd5c8945f1ea2a2617a28bce66",
     "mode": "verbatim",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsAlarm.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsAlarm.kt",
     "sourceSha256": "34bd917003a54518a50a5dff028d92567c0fd977761d096109d0176af78bc628",
     "mode": "verbatim",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/test/kotlin/mods/eln/sim/power/HighVoltageReferenceTest.kt",
     "target": "src/test/kotlin/mods/eln/sim/power/HighVoltageReferenceTest.kt",
     "sourceSha256": "0301b1c89459ef4d80d0fa13dd1ff753bd7f18f97be02b977b7569ef929456ac",
     "mode": "verbatim",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/java/mods/eln/sim/mna/component/CurrentSource.java",
     "target": "src/main/java/mods/eln/sim/mna/component/CurrentSource.java",
     "sourceSha256": "b109f9059f1415449f630959411212e1e5f51d6ea665c54d85693527b72e58d4",
     "mode": "adapted",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
     "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
     "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
     "mode": "adapted",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/standby/TransferControl.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/standby/TransferControl.kt",
     "sourceSha256": "d6dce2fa0929227c312b8bac344dae4422f39091d3e04075ac1d3c2ee4b5d344",
     "mode": "adapted",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/LifepoBank.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/LifepoState.kt",
     "sourceSha256": "370d10d1e95172b22a5eded47efffe40878063f02b753043204a89314fe35e3e",
     "mode": "adapted",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/vehicle/RoadVehicles.kt",
     "target": "src/main/kotlin/mods/eln/vehicle/RoadPhysics.kt",
     "sourceSha256": "55ff484e366373de48e5fc06cc5947ceafe228c2f0f01a284d21e0b4dc6ab309",
     "mode": "adapted",
-    "status": "source-imported-verification-pending"
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/sim/power/WindingModel.kt",
+    "target": "src/test/kotlin/mods/eln/sim/power/WindingModel.kt",
+    "sourceSha256": "e5c658d618dfd66dcca40ff15649c8a04a9a401e66b9341c6f802b09515d6012",
+    "mode": "verbatim",
+    "status": "compiled-and-focused-regressions-passed"
   }
 ]

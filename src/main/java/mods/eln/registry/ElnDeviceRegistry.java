@@ -473,17 +473,12 @@ public final class ElnDeviceRegistry {
         GhostGroup ghostGroup;
         String name;
 
-        FunctionTable diodeIfUBase;
-        diodeIfUBase = new FunctionTableYProtect(new double[]{0.0, 0.002,
-            0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04, 0.045,
-            0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.13, 1.0},
-            1.0, 0, 1.0);
-
-        FunctionTable solarIfSBase;
-        solarIfSBase = new FunctionTable(new double[]{0.0, 0.1, 0.4, 0.6,
-            0.8, 1.0}, 1);
-
-        double LVSolarU = 59;
+        // ForkPatch 3.0.77: a small module and a 3-series / 2-parallel large module.
+        // Keep the destination's configured generation multiplier on the currents.
+        double smallVoc = 37, smallVmp = 30;
+        double smallImp = 8 * solarPanelPowerFactor, smallIsc = 8.6 * solarPanelPowerFactor;
+        double largeVoc = 111, largeVmp = 90;
+        double largeImp = 16 * solarPanelPowerFactor, largeIsc = 17.2 * solarPanelPowerFactor;
 
         {
             subId = 1;
@@ -498,7 +493,7 @@ public final class ElnDeviceRegistry {
                 // solarOffsetX,int solarOffsetY,int
                 // solarOffsetZ,
                 // FunctionTable solarIfSBase,
-                null, LVSolarU / 4, 65.0 * solarPanelPowerFactor,// double electricalUmax,double
+                null, smallVoc, smallVmp, smallImp, smallIsc,// double electricalUmax,double
                 // electricalPmax,
                 0.01,// ,double electricalDropFactor
                 Math.PI / 2, Math.PI / 2 // alphaMin alphaMax
@@ -519,7 +514,7 @@ public final class ElnDeviceRegistry {
                 // solarOffsetX,int solarOffsetY,int
                 // solarOffsetZ,
                 // FunctionTable solarIfSBase,
-                null, LVSolarU / 4, solarPanelBasePower * solarPanelPowerFactor,// double electricalUmax,double
+                null, smallVoc, smallVmp, smallImp, smallIsc,// double electricalUmax,double
                 // electricalPmax,
                 0.01,// ,double electricalDropFactor
                 Math.PI / 4, Math.PI / 4 * 3 // alphaMin alphaMax
@@ -540,7 +535,7 @@ public final class ElnDeviceRegistry {
                 obj.getObj("bigSolarPanel"), meduimVoltageCableDescriptor.render,
                 ghostGroup, 1, 1, 0,
                 groundCoordinate,
-                LVSolarU * 2, solarPanelBasePower * solarPanelPowerFactor * 8,
+                largeVoc, largeVmp, largeImp, largeIsc,
                 0.01,
                 Math.PI / 2, Math.PI / 2
             );
@@ -561,7 +556,7 @@ public final class ElnDeviceRegistry {
                 obj.getObj("bigSolarPanelrot"), meduimVoltageCableDescriptor.render,
                 ghostGroup, 1, 1, 1,
                 groundCoordinate,
-                LVSolarU * 2, solarPanelBasePower * solarPanelPowerFactor * 8,
+                largeVoc, largeVmp, largeImp, largeIsc,
                 0.01,
                 Math.PI / 8 * 3, Math.PI / 8 * 5
             );

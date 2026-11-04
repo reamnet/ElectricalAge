@@ -79,12 +79,31 @@ RHS values with a complete scratch solve. It does not replace the destination's
 LU physical solve, diode re-solves or cached interconnection resistances. Full
 ForkPatch floating-gauge/converter integration is a subsequent adapter step.
 
-These controller kernels do not yet register their corresponding cabinets, menus
-or vehicles. The solar process needs to replace the destination panel adapter
-before the changed I-V model becomes available on registered solar blocks.
-The incoming production Java/Kotlin sources compile against the pinned 26.3
-toolchain. Focused MNA, controller and solar regressions are running at this
-checkpoint; passing totals will be recorded after they finish.
+The controller kernels do not yet register their corresponding cabinets, menus
+or vehicles. Those production adapters remain part of the full scope above.
+
+### Code checkpoint: registered solar blocks
+
+All four existing solar registrations now use the ForkPatch Norton I-V process.
+Small panels have 37 V open circuit, 30 V at 8 A optimum and 8.6 A short circuit;
+large panels are the 3-series / 2-parallel module (111 V / 90 V / 16 A / 17.2 A).
+The destination's generation multiplier still scales the currents. Registry keys,
+tracking, local weather support, ghost blocks and native rendering remain in use.
+Old power-budget saves are superseded by the light-dependent physical model.
+Metering reports actual generated power/current instead of the unconstrained budget.
+Roof-mount geometry and the other renewable devices are still pending.
+
+Checked probes now guard capacitor and Delay history updates; the destination's
+legacy probe and physical-step behavior remains intact. The new finite-solve bound
+is prepared lazily so unrelated physical matrix rebuilds do not pay for it.
+
+Validation on the pinned toolchain passes [49 focused tests in 9 suites](forkpatch-port/foundation-tests.json),
+including the source reference corpus's 51 deterministic checks and 12,000 seeded
+property trials. This is not the full destination suite. Three
+[native 26.3 solar game tests](forkpatch-port/native-solar-tests.json) also pass:
+loaded I-V behavior/actual production, local weather, node persistence and 2x3
+ghost creation/removal. Native tests use physical loads rather than asserting that
+an unloaded panel produces its configured maximum power.
 
 ## Inventory
 

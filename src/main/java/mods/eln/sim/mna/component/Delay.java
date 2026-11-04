@@ -51,8 +51,10 @@ public class Delay extends Bipole implements ISubSystemProcessI {
         s.addToI(aPin, -aPinI);
         s.addToI(bPin, -bPinI);
 
-        oldIa = aPinI;
-        oldIb = bPinI;
+        if (!s.isCheckedProbeActive()) {
+            oldIa = aPinI;
+            oldIb = bPinI;
+        }
     }
 
     @Override

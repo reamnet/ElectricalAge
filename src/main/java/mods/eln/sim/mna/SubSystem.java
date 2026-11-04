@@ -57,8 +57,11 @@ public class SubSystem {
         new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<>();
     private long differentialProbeBuilds;
     private double probeSafeRhsLimit;
+    private boolean probeBoundKnown;
+    private boolean checkedProbeActive;
 
     public long getDifferentialProbeBuilds() { return differentialProbeBuilds; }
+    public boolean isCheckedProbeActive() { return checkedProbeActive; }
 
     /** Diode switches of this SubSystem (ResistorSwitch.isDiode), collected by generateMatrix. */
     ArrayList<ResistorSwitch> diodes = new ArrayList<ResistorSwitch>();
@@ -142,6 +145,7 @@ public class SubSystem {
     public void generateMatrix() {
         differentialRows.clear();
         probeSafeRhsLimit = 0.0;
+        probeBoundKnown = false;
         stateCount = states.size();
 
         Profiler p = new Profiler();
@@ -227,7 +231,6 @@ public class SubSystem {
     }
 
     public void stepCalc() {
-        Profiler profiler = new Profiler();
         //	profiler.add("generateMatrix");
         if (!matrixValid) {
             generateMatrix();
@@ -270,7 +273,6 @@ public class SubSystem {
                 multiplyAInvI();
             }
         }
-        profiler.stop();
         //Utils.println(profiler);
     }
 
@@ -320,6 +322,10 @@ public class SubSystem {
         }
         invDiag = new double[n];
         for (int i = 0; i < n; i++) invDiag[i] = 1 / lu[i][i];
+    }
+
+    private void prepareProbeBound() {
+        int n = stateCount;
         // An absolute triangular-solve envelope proves all variables and partial
         // sums finite for ordinary probe RHS values. Extreme inputs use the full
         // checked solve below. Include a margin for rounding in the bound itself.
@@ -339,6 +345,7 @@ public class SubSystem {
             largest = Math.max(largest, envelope[i]);
         }
         probeSafeRhsLimit = Double.isFinite(largest) ? Double.MAX_VALUE / largest / 8.0 : 0.0;
+        probeBoundKnown = true;
     }
 
     /** Noncommitting terminal difference for the incoming Norton solar model.
@@ -351,12 +358,19 @@ public class SubSystem {
         if (singularMatrix || a == null || b == null || a.getSubSystem() != this || b.getSubSystem() != this)
             return Double.NaN;
         java.util.Arrays.fill(Idata, 0.0);
-        for (ISubSystemProcessI process : processI) process.simProcessI(this);
+        boolean previousProbe = checkedProbeActive;
+        checkedProbeActive = true;
+        try {
+            for (ISubSystemProcessI process : processI) process.simProcessI(this);
+        } finally {
+            checkedProbeActive = previousProbe;
+        }
         double maximum = 0.0;
         for (double value : Idata) {
             if (!Double.isFinite(value)) return Double.NaN;
             maximum = Math.max(maximum, Math.abs(value));
         }
+        if (!probeBoundKnown) prepareProbeBound();
         if (maximum < probeSafeRhsLimit) {
             long key = ((long) a.getId() << 32) | (b.getId() & 0xffffffffL);
             double[] row = differentialRows.get(key);

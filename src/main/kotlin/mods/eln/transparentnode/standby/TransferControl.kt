@@ -66,4 +66,3 @@ class TransferControl {
     }
     companion object { fun validVoltage(v: Double)=v.isFinite() && v in 12.0..51_200.0 }
 }
-
