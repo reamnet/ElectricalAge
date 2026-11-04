@@ -3,7 +3,11 @@ package mods.eln.sim.mna;
 import mods.eln.misc.Profiler;
 import mods.eln.misc.Utils;
 import mods.eln.sim.mna.component.Component;
+import mods.eln.sim.mna.component.Capacitor;
+import mods.eln.sim.mna.component.CurrentSource;
 import mods.eln.sim.mna.component.Delay;
+import mods.eln.sim.mna.component.DelayInterSystem2;
+import mods.eln.sim.mna.component.Inductor;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.component.ResistorSwitch;
 import mods.eln.sim.mna.component.VoltageSource;
@@ -53,12 +57,14 @@ public class SubSystem {
     // ForkPatch checked terminal probes, adapted to this port's existing LU solver.
     // Responses belong to a stamped matrix. RHS callbacks remain fresh on every
     // read so capacitors, delays and custom components cannot reuse stale history.
-    private final it.unimi.dsi.fastutil.longs.Long2ObjectMap<double[]> differentialRows =
-        new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<>();
+    private it.unimi.dsi.fastutil.longs.Long2ObjectMap<double[]> differentialRows;
     private long differentialProbeBuilds;
     private double probeSafeRhsLimit;
     private boolean probeBoundKnown;
     private boolean checkedProbeActive;
+    private boolean probeStampInfoKnown, probeStampsKnown;
+    private int[] probeStampedRows, probeRowEpoch;
+    private int probeEpoch, probeStampedCount;
 
     public long getDifferentialProbeBuilds() { return differentialProbeBuilds; }
     public boolean isCheckedProbeActive() { return checkedProbeActive; }
@@ -138,14 +144,18 @@ public class SubSystem {
 
     public void addProcess(ISubSystemProcessI p) {
         processI.add(p);
+        probeStampInfoKnown = false;
     }
 
     //double[][] getDataRef()
 
     public void generateMatrix() {
-        differentialRows.clear();
+        if (differentialRows != null) differentialRows.clear();
         probeSafeRhsLimit = 0.0;
         probeBoundKnown = false;
+        probeStampInfoKnown = false;
+        probeStampedRows = null;
+        probeRowEpoch = null;
         stateCount = states.size();
 
         Profiler p = new Profiler();
@@ -212,6 +222,10 @@ public class SubSystem {
         // Right-hand-side injections superpose (KCL). 1.7.10 assigned here (`= v`), so of two components
         // injecting into one node only the last counted. Idata is zeroed before every stepCalc/solve.
         Idata[s.getId()] += v;
+        if (checkedProbeActive && probeStampsKnown && probeRowEpoch[s.getId()] != probeEpoch) {
+            probeRowEpoch[s.getId()] = probeEpoch;
+            probeStampedRows[probeStampedCount++] = s.getId();
+        }
     }
 
 	/*
@@ -358,20 +372,28 @@ public class SubSystem {
         if (singularMatrix || a == null || b == null || a.getSubSystem() != this || b.getSubSystem() != this)
             return Double.NaN;
         java.util.Arrays.fill(Idata, 0.0);
+        if (!probeStampInfoKnown) prepareProbeStamps();
+        if (probeStampsKnown) {
+            probeStampedCount = 0;
+            if (++probeEpoch == 0) { java.util.Arrays.fill(probeRowEpoch, 0); probeEpoch = 1; }
+        }
         boolean previousProbe = checkedProbeActive;
         checkedProbeActive = true;
         try {
-            for (ISubSystemProcessI process : processI) process.simProcessI(this);
+            for (int i = 0; i < processI.size(); i++) processI.get(i).simProcessI(this);
         } finally {
             checkedProbeActive = previousProbe;
         }
         double maximum = 0.0;
-        for (double value : Idata) {
+        int terms = probeStampsKnown ? probeStampedCount : stateCount;
+        for (int k = 0; k < terms; k++) {
+            double value = Idata[probeStampsKnown ? probeStampedRows[k] : k];
             if (!Double.isFinite(value)) return Double.NaN;
             maximum = Math.max(maximum, Math.abs(value));
         }
         if (!probeBoundKnown) prepareProbeBound();
         if (maximum < probeSafeRhsLimit) {
+            if (differentialRows == null) differentialRows = new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<>();
             long key = ((long) a.getId() << 32) | (b.getId() & 0xffffffffL);
             double[] row = differentialRows.get(key);
             if (row == null) {
@@ -380,7 +402,8 @@ public class SubSystem {
                 differentialProbeBuilds++;
             }
             double sum = 0.0, correction = 0.0;
-            for (int i = 0; i < stateCount; i++) {
+            for (int k = 0; k < terms; k++) {
+                int i = probeStampsKnown ? probeStampedRows[k] : k;
                 if (Idata[i] == 0.0 || row[i] == 0.0) continue;
                 double product = row[i] * Idata[i];
                 double next = sum + product;
@@ -406,6 +429,27 @@ public class SubSystem {
         for (double value : trial) if (!Double.isFinite(value)) return Double.NaN;
         double value = trial[a.getId()] - trial[b.getId()];
         return Double.isFinite(value) ? value : Double.NaN;
+    }
+
+    private void prepareProbeStamps() {
+        // Only these exact implementations exclusively use addToI. Unknown and
+        // subclass callbacks keep a complete RHS scan, including direct writes.
+        // Record live stamps rather than cached pins: moving a current source's
+        // terminals must be observed even when its matrix stamp is unchanged.
+        probeStampsKnown = getClass() == SubSystem.class;
+        if (!probeStampsKnown) { probeStampInfoKnown = true; return; }
+        for (ISubSystemProcessI process : processI) {
+            Class<?> type = process.getClass();
+            if (type != CurrentSource.class && type != VoltageSource.class && type != DelayInterSystem2.class
+                    && type != Capacitor.class && type != Inductor.class && type != Delay.class) {
+                probeStampsKnown = false;
+                break;
+            }
+        }
+        if (probeStampsKnown && probeStampedRows == null) {
+            probeStampedRows = new int[stateCount]; probeRowEpoch = new int[stateCount]; probeEpoch = 0;
+        }
+        probeStampInfoKnown = true;
     }
 
     private double[] differentialResponse(int positive, int negative) {

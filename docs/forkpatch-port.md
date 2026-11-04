@@ -105,6 +105,35 @@ loaded I-V behavior/actual production, local weather, node persistence and 2x3
 ghost creation/removal. Native tests use physical loads rather than asserting that
 an unloaded panel produces its configured maximum power.
 
+### Code checkpoint: array and probe efficiency
+
+An explicit 96-module, 12-series by 8-parallel large-panel circuit passes open,
+loaded, shaded, night, recovery and unload checks, including generated power versus
+load power and wire losses. It exercises every terminal and wire on the destination
+solver; it is an electrical regression, not a live-server TPS measurement.
+
+Checked voltage probes now record live RHS stamps from known exact component
+implementations. This avoids scanning unmodified rows while still sampling each
+callback on every read. Unknown callbacks and subclasses retain a complete scan,
+including direct RHS writes. Tests cover callback changes, moved source terminals,
+superposed injections and subclass fallback. Response maps are allocated lazily.
+
+The [paired benchmark](forkpatch-port/probe-benchmark.json) compares two legacy
+terminal reads with one checked differential read on the same native LU circuit.
+Median wall times after warmup were 0.152/0.104 microseconds (legacy/checked) for
+12 voltage states, 0.303/0.080 for 80 and 0.682/0.144 for 240. Both paths measured
+zero median allocated bytes per read. These are synthetic sparse-source probes;
+they do not predict whole-array speed or multiplayer TPS. Enable the optional
+measurement with `ELN26_BENCH_PROBES=1` and the focused performance test.
+
+The [broader checkpoint report](forkpatch-port/checkpoint-validation.json) records
+318 passing main tests, 3 skipped tests and one failed fluid coverage assertion in
+a deliberately reduced two-case smoke run. That assertion requires at least ten
+layered and mixed examples; its separate 20-case rerun passed without changing
+fluid code or the assertion. All 15 CAD tests and all three native solar tests also
+passed. This is multi-configuration verification, not a passing full default fluid
+corpus or validation of the still-pending equipment adapters.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

@@ -5,17 +5,17 @@
     {
       "classname": "eln:floor_3x4x3",
       "name": "eln:solar_small",
-      "time": "0.419"
+      "time": "0.437"
     },
     {
       "classname": "eln:floor_8x4x3",
       "name": "eln:solar_2x3_ghosts",
-      "time": "0.168"
+      "time": "0.144"
     },
     {
       "classname": "eln:floor_4x4x3",
       "name": "eln:wp10b_solar_panel",
-      "time": "0.167"
+      "time": "0.096"
     }
   ],
   "failures": 0

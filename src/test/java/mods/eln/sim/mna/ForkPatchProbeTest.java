@@ -93,4 +93,58 @@ public class ForkPatchProbeTest {
         assertEquals(4.2, system.solveVoltageDifferenceChecked(a, b), 1e-9);
         assertTrue(Double.isNaN(system.solveVoltageDifferenceChecked(a, new VoltageState())));
     }
+
+    @Test public void newlyAddedUnknownCallbacksIncludeDirectRhsWrites() {
+        SubSystem system = new SubSystem(null, .05);
+        VoltageState a = new VoltageState(), b = new VoltageState(), c = new VoltageState();
+        system.addState(a); system.addState(b); system.addState(c);
+        system.addComponent(new VoltageSource("reference", b, null).setU(5));
+        system.addComponent(new CurrentSource("known", a, b).setCurrent(1));
+        system.addComponent(new Resistor(a, b).setR(10));
+        system.addComponent(new Resistor(c, b).setR(100));
+        assertEquals(10, system.solveVoltageDifferenceChecked(a, c), 1e-9);
+        double[] external = {0};
+        system.addProcess((mods.eln.sim.mna.misc.ISubSystemProcessI) s -> s.Idata[c.getId()] = external[0]);
+        for (int i = 0; i < 20; i++) {
+            external[0] = i;
+            assertEquals(10 - 100 * i, system.solveVoltageDifferenceChecked(a, c), 1e-8);
+        }
+        external[0] = Double.NaN;
+        assertTrue(Double.isNaN(system.solveVoltageDifferenceChecked(a, c)));
+    }
+
+    @Test public void liveSourceTerminalsAndSuperposedInjectionsUseFreshStamps() {
+        SubSystem system = new SubSystem(null, .05);
+        VoltageState a = new VoltageState(), b = new VoltageState(), c = new VoltageState();
+        system.addState(a); system.addState(b); system.addState(c);
+        system.addComponent(new VoltageSource("reference", b, null).setU(5));
+        CurrentSource source = new CurrentSource("moving", a, b).setCurrent(1);
+        system.addComponent(source);
+        system.addComponent(new CurrentSource("parallel", a, b).setCurrent(2));
+        system.addComponent(new Resistor(a, b).setR(10));
+        system.addComponent(new Resistor(c, b).setR(20));
+        assertEquals(30, system.solveVoltageDifferenceChecked(a, c), 1e-9);
+        long rows = system.getDifferentialProbeBuilds();
+        source.connectTo(c, b);
+        assertEquals(0, system.solveVoltageDifferenceChecked(a, c), 1e-9);
+        source.setCurrent(2);
+        assertEquals(-20, system.solveVoltageDifferenceChecked(a, c), 1e-9);
+        assertEquals(rows, system.getDifferentialProbeBuilds());
+    }
+
+    @Test public void customSubsystemStampOverridesKeepTheCompleteRhsScan() {
+        VoltageState a = new VoltageState(), b = new VoltageState(), c = new VoltageState();
+        SubSystem system = new SubSystem(null, .05) {
+            @Override public void addToI(State pin, double value) {
+                super.addToI(pin, value);
+                if (pin == a) Idata[c.getId()] += 1;
+            }
+        };
+        system.addState(a); system.addState(b); system.addState(c);
+        system.addComponent(new VoltageSource("reference", b, null).setU(5));
+        system.addComponent(new CurrentSource("known", a, b).setCurrent(1));
+        system.addComponent(new Resistor(a, b).setR(10));
+        system.addComponent(new Resistor(c, b).setR(20));
+        assertEquals(-10, system.solveVoltageDifferenceChecked(a, c), 1e-9);
+    }
 }
