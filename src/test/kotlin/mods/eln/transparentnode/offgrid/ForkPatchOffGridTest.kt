@@ -182,6 +182,17 @@ class ForkPatchOffGridTest {
         val c=Circuit();val before=c.bank.state.energy;c.ac.mode=IslandMode.SELF_USE;c.run(100)
         assertTrue(c.ac.outputWatts>990);assertEquals(0.0,c.ac.gridWatts);assertTrue(c.bank.state.energy<before)
     }
+    @Test fun manualDisconnectSwitchesOnlyItsSinglePhysicalPoleAndRecovers() {
+        val e=element(OffGridType.DISCONNECT);val p=e.protection!!;val root=RootSystem(.05,1)
+        assertEquals(1,p.contacts.size)
+        e.electricalLoadList.forEach(root::addState);e.electricalComponentList.forEach(root::addComponent)
+        root.addComponent(VoltageSource("battery",p.first,p.negative).setU(48.0))
+        val load=Resistor(p.output,p.negative).setR(5.0);root.addComponent(load)
+        fun tick() { root.step();p.step(.05) }
+        repeat(5) { tick() };assertTrue(load.p>450)
+        p.enabled=false;p.update();repeat(5) { tick() };assertEquals(0.0,p.contacts[0].current);assertEquals(0.0,load.p)
+        p.enabled=true;p.update();repeat(5) { tick() };assertTrue(load.p>450)
+    }
     @Test fun batteryLossesDepositPhysicalJoulesAtEitherElectricalSampleRate() {
         for(samples in listOf(1,50)) {
             val pack=element(OffGridType.BANK16);val bank=pack.bank!!

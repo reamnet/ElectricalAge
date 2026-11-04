@@ -19,7 +19,8 @@ class DcProtection(
     val second=NbtElectricalLoad("dcSecond")
     val output=NbtElectricalLoad("dcOutput")
     val negative=NbtElectricalLoad("dcReturn")
-    val contacts=listOf(TransferContact(first,output),TransferContact(second,output))
+    // A one-pole disconnect has no second contact or unused floating terminal.
+    val contacts=if(combiner)listOf(TransferContact(first,output),TransferContact(second,output)) else listOf(TransferContact(first,output))
     val fuses=List(2) { CutoutFuse() }
     var enabled=true
     var fault=""
@@ -27,7 +28,7 @@ class DcProtection(
     val amps get()=contacts.sumOf { it.current }
     val status get()=when { fault.isNotEmpty()->fault;!enabled->"DISABLED";combiner && fuses.any { it.blown }->"FUSE";else->"READY" }
     init {
-        listOf(first,second,output,negative).forEach { it.rs=.000001;loads.add(it) }
+        (if(combiner)listOf(first,second,output,negative) else listOf(first,output,negative)).forEach { it.rs=.000001;loads.add(it) }
         components.addAll(contacts)
         components.add(mods.eln.sim.mna.component.Resistor(negative,null).apply { r=1e6 })
         processes.add(IProcess(::step));update()

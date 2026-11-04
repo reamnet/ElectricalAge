@@ -39,7 +39,7 @@ public final class ForkPatchOffGridCases {
                 Direction front=new Direction[]{Direction.XN,Direction.XP,Direction.ZN,Direction.ZP}[type.ordinal()-4];
                 for(int y=0;y<2;y++)ctx.level().setBlockAndUpdate(at.above(y).relative(front.getInverse().toEnumFacing()),Blocks.STONE.defaultBlockState());
                 var player=FakePlayerFactory.getMinecraft(ctx.level());
-                TransparentNode node=((TransparentNodeItem)descriptor.parentItem).placeAt(descriptor.newItemStack(),player,ctx.level(),at,front);
+                TransparentNode node=((TransparentNodeItem)descriptor.parentItem).placeAt(descriptor.newItemStack(),player,ctx.level(),at,front.getInverse());
                 if(node==null)throw new IllegalStateException("Wall battery placement failed");
                 element=(OffGridElement)node.element;
             } else element=(OffGridElement)ctx.placeTransparent(8192+type.ordinal(),at);
