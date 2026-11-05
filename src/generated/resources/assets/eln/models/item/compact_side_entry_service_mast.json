@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eln:item/compact_side_entry_service_mast"
+  }
+}

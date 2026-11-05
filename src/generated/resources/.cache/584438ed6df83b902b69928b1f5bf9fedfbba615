@@ -1,9 +1,10 @@
-// 26.3	2026-11-05T01:06:46.009062815	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-05T02:05:25.525616097	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
 60e102cb907fe6a28f445f2f5b3c9e066e68048a data/eln/advancement/recipes/misc/10_kw_pole_transformer.json
 e9b18790f61c5e60d17f49af5cad947638ed8e2b data/eln/advancement/recipes/misc/10a_diode.json
+80754fa65d8fb60c74d8c661f51e2f9c9b8fa5fd data/eln/advancement/recipes/misc/120_240v_service_weatherhead.json
 3cfe081d056fd39ac427a25345a5fee5325575db data/eln/advancement/recipes/misc/120_240v_underground_service_handhole.json
 ffb3dd54239082d9bf2df265f579d1da09080723 data/eln/advancement/recipes/misc/16_kwh_lifepo4_battery_cabinet.json
 07e130cd23322937bb3bfc892b49b5f5d0c0cd6f data/eln/advancement/recipes/misc/16_kwh_lifepo4_cell_stack.json
@@ -131,6 +132,7 @@ c1c02f926058e1a5bf383be49d8fad52eb0c9dff data/eln/advancement/recipes/misc/charc
 f996e81fb80e515548a6e7a7c20e6807ff52a339 data/eln/advancement/recipes/misc/cheap_electrical_drill.json
 20786f52964ac84ab2f8e645c40b6af3e0d499dd data/eln/advancement/recipes/misc/cheap_ferromagnetic_core.json
 495dad7ca040158c03dae28e27b0da45f191dc33 data/eln/advancement/recipes/misc/combustion_chamber.json
+083b94981390838b2cfffae637313aade05199db data/eln/advancement/recipes/misc/compact_side_entry_service_mast.json
 a7d17767a5dbba27b8cc1a46625e6e20c8a94f1d data/eln/advancement/recipes/misc/configurable_summing_unit.json
 bdec91984c6084d4e7819043b06effcf89f1b20c data/eln/advancement/recipes/misc/copper_cable.json
 a4bc5c8521cddcafc66204673564d0f12cd4a473 data/eln/advancement/recipes/misc/copper_coil.json
@@ -184,6 +186,7 @@ a39938c4e0204b6626d2678f78657d83d72f3732 data/eln/advancement/recipes/misc/gas_t
 27456a349bab7b30e872eccc1f4f893dd699891c data/eln/advancement/recipes/misc/gas_turbine_4.json
 93a622d8232a17351f68b80011d097f36a0eb9eb data/eln/advancement/recipes/misc/generator.json
 0752c106ad070920febd9b14cf22646733f4bae4 data/eln/advancement/recipes/misc/generator_2.json
+85f830ec807c625f73305ecde729017bc8b2eb20 data/eln/advancement/recipes/misc/gooseneck_service_mast.json
 3206c8a83c23437655d503a29cdf6acb090766cf data/eln/advancement/recipes/misc/gray_brush.json
 a0d612bd4f26061b5e9c15aa0f3000b426037fd0 data/eln/advancement/recipes/misc/green_brush.json
 c14117c6913e1bb9562e34acda9dbe02383521d8 data/eln/advancement/recipes/misc/ground_cable.json
@@ -357,6 +360,7 @@ ee029a2dfa893a338f3cd2f42471b733e9d1d11b data/eln/advancement/recipes/misc/therm
 32ed230abafec9e20e83f744315723855fff0cad data/eln/advancement/recipes/misc/thermistor.json
 d19389368c43bb77c6fbd3cb02485516845d6b1e data/eln/advancement/recipes/misc/thermometer.json
 45485041f6af7df52acd56f7ab421e0763fee00f data/eln/advancement/recipes/misc/three_channel_data_logger.json
+969585b9a595d2a94fe710d8835470a53bf34e43 data/eln/advancement/recipes/misc/through_roof_service_mast.json
 d430822798a5f441a1dd42061276cb0ab4a09a5b data/eln/advancement/recipes/misc/tilted_terminal_logger.json
 ebd30793fac1b2c233ac5b6cdc2a993fbeb67027 data/eln/advancement/recipes/misc/tree_resin_collector.json
 f10a9eefb44cbdb04d4d1f0ca0507bbb07418460 data/eln/advancement/recipes/misc/tree_resin_collector_2.json
@@ -421,6 +425,7 @@ e46ace98665bbeee9e00c278a1a7d497e969c14a data/eln/advancement/recipes/misc/xnor_
 f55afec4206959bc52edd68849f62b13b674934e data/eln/recipe/10_a_pole_fuse.json
 535486cd64a7779b93efcde1659b09bdf7c7e239 data/eln/recipe/10_kw_pole_transformer.json
 4f937d8d1c4645d4749a5fa22eaa93eeecbb3255 data/eln/recipe/10a_diode.json
+e7e7f17b3cd3ebaef4108ce705acb97295f8a143 data/eln/recipe/120_240v_service_weatherhead.json
 d8610a288173bdab9043ff395a048b46e0547dbb data/eln/recipe/120_240v_underground_service_handhole.json
 5ae8875341efdea7c1dabc1039b6bcdcfab8fc07 data/eln/recipe/16_kwh_lifepo4_battery_cabinet.json
 23732fdbe30922cfe48301df9753819fa12dd809 data/eln/recipe/16_kwh_lifepo4_cell_stack.json
@@ -548,6 +553,7 @@ bd83f8e28296e360fafeb22cf8cab8536161a42c data/eln/recipe/blasting_raw_tungsten_2
 afa583372447fddaf5707f783a659b8429a6b5d5 data/eln/recipe/cheap_electrical_drill.json
 ab676e2387186148a3df59b088cf2d1f4c3a15f4 data/eln/recipe/cheap_ferromagnetic_core.json
 10859b043b2f46648ba82294d9dd0461b0bd7cc2 data/eln/recipe/combustion_chamber.json
+2c1b2da92db115ded11ac17d16c7c0345ea9dacd data/eln/recipe/compact_side_entry_service_mast.json
 e6d592a04e3a3543405fc3038e0c4d99be342217 data/eln/recipe/configurable_summing_unit.json
 59b6b7cda71498662dc4759287863f6959474cf3 data/eln/recipe/copper_cable.json
 b99487bebe5fb5db55128da9327d630d8b0b2ade data/eln/recipe/copper_coil.json
@@ -601,6 +607,7 @@ ad67f642228a2e390b3271c1a35b1bd48f9688fa data/eln/recipe/fused_pv_combiner_and_d
 50b00513e836e116b02abf07f92ef12aaefc2b57 data/eln/recipe/gas_turbine_4.json
 2c6de2262b105a9c073d74e4b81d9ca404fac24b data/eln/recipe/generator.json
 446e83be35f1bcc64e30c3b5e59ad7b6b87adf6e data/eln/recipe/generator_2.json
+2853689a112cb5b3d708ea8ca9abcc22ef3a8fc5 data/eln/recipe/gooseneck_service_mast.json
 6807bca5810c43c53a541f3192a05744bb3b73f2 data/eln/recipe/gray_brush.json
 1fd7392f8f3c4443adbf0499d84396c5da56090d data/eln/recipe/green_brush.json
 15ba4c1dcda12e30a0ba2f80409862bb6d81569f data/eln/recipe/ground_cable.json
@@ -774,6 +781,7 @@ ad1c5258b30328edec6333acc45bcc1cba8d78e1 data/eln/recipe/thermal_insulation.json
 2af88112ce9878b18e6050df825bfa08cc1df30b data/eln/recipe/thermistor.json
 6f76069fd12e628d25a69a7dd6acac1d8fae8d10 data/eln/recipe/thermometer.json
 de70d839e225ac2f84d93ae79ffb8f732b9b7950 data/eln/recipe/three_channel_data_logger.json
+4635682ce50d27b181b81e6cbaf02ce6fcc3afb1 data/eln/recipe/through_roof_service_mast.json
 ba6171c46cdef5e54d351d3d002ee195daae0359 data/eln/recipe/tilted_terminal_logger.json
 242851f63c4f602d3b0dc0b84582ae9e087dc1a1 data/eln/recipe/tree_resin_collector.json
 3755444f7d89f99a651710b209e8c730e6576173 data/eln/recipe/tree_resin_collector_2.json

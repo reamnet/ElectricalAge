@@ -19,7 +19,7 @@ import java.io.*
 object ForkPatchOverheadCases {
     private val styles=listOf(7986,8028,8029,8030)
     private val fronts=listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP)
-    @JvmStatic fun cases(): List<TestCase> = styles.flatMap { id->fronts.map { front->Power(id,front) } }+listOf(Lifetime(),Payment())
+    @JvmStatic fun cases(): List<TestCase> = styles.flatMap { id->fronts.map { front->Power(id,front) } }+listOf(Lifetime(),Payment(),Legacy(false),Legacy(true))
     private fun place(c: TestContext,id: Int,p: BlockPos,front: Direction): HouseServiceElement {
         c.level().setBlockAndUpdate(p.relative(front.inverse.toEnumFacing()),Blocks.STONE.defaultBlockState())
         val d=requireNotNull(Eln.transparentNodeItem.getDescriptor(id))
@@ -65,8 +65,16 @@ object ForkPatchOverheadCases {
                 if(kind==8029)c.check("overhead: through-roof pipe preserves the real roof block",c.level().getBlockState(a.node.coordonate.pos().above()).`is`(Blocks.STONE),"")
                 val bytes=ByteArrayOutputStream();a.networkSerialize(DataOutputStream(bytes))
                 val r=HouseServiceRender(c.level().getBlockEntity(a.node.coordonate.pos()) as TransparentNodeEntity,a.descriptor);r.networkUnserialize(DataInputStream(ByteArrayInputStream(bytes.toByteArray())))
+                val revision=r.spanGeometryRevision
+                a.unit.selectCircuit(1);val changed=ByteArrayOutputStream();a.networkSerialize(DataOutputStream(changed));a.unit.selectCircuit(2)
+                repeat(10) { r.networkUnserialize(DataInputStream(ByteArrayInputStream(changed.toByteArray()))) }
+                c.check("overhead: changing live status retains unchanged wire display lists",r.spanGeometryRevision==revision && r.display.circuit==1,"")
                 GlFrame.beginRenderFrame();val frame=GlFrame.open()
                 try { r.drawCables();c.check("overhead: all three published wires record native catenary geometry",frame.batches().values.sumOf { it.vertices() }>100,"") }finally { GlFrame.close() }
+                r.destructor();GlFrame.beginRenderFrame();val empty=GlFrame.open()
+                try { r.drawCables();c.check("overhead: discarded renderer releases its wire meshes",empty.batches().values.sumOf { it.vertices() }==0,"") }finally { GlFrame.close() }
+                r.networkUnserialize(DataInputStream(ByteArrayInputStream(bytes.toByteArray())))
+                c.check("overhead: released geometry can be restored from the same snapshot",r.spanGeometryRevision==revision+1,"");r.destructor()
             } finally { cleanup() }
         }
     }
@@ -97,6 +105,37 @@ object ForkPatchOverheadCases {
                 mods.eln.node.NodeManager.instance.addNode(b.node);b.node.connect()
                 c.check("overhead: loaded endpoint restores its shared connection",a.gridLinkList.single().connected,"")
             }finally { NodeBase.simulationVeto=prior }
+        }
+    }
+    private class Legacy(val transformer: Boolean): TestCase {
+        lateinit var a: mods.eln.gridnode.electricalpole.ElectricalPoleElement
+        lateinit var b: mods.eln.gridnode.electricalpole.ElectricalPoleElement
+        lateinit var source: VoltageSource;lateinit var load: Resistor
+        override fun id()="forkpatch_overhead_legacy_"+if(transformer)"dcdc_pole" else "plain_pole"
+        override fun width()=10;override fun height()=5;override fun depth()=10;override fun floorDepth()=10
+        override fun ticks()=100
+        override fun build(c: TestContext) {
+            a=c.placeTransparent(7876,c.at(2,1,2)) as mods.eln.gridnode.electricalpole.ElectricalPoleElement
+            b=c.placeTransparent(if(transformer)7877 else 7876,c.at(6,1,2)) as mods.eln.gridnode.electricalpole.ElectricalPoleElement
+            check(GridLink.addLink(a,b,Direction.XP,Direction.XN,ElnDeviceRegistry.highVoltageCableDescriptor,4))
+            source=VoltageSource("legacy native feeder",a.electricalLoad,null).setU(200.0)
+            load=Resistor(if(transformer)b.secondaryLoad else b.electricalLoad,null).setR(1000.0)
+            Eln.simulator.addElectricalComponent(source);Eln.simulator.addElectricalComponent(load)
+        }
+        override fun measure(c: TestContext) {
+            try {
+                c.checkValue("overhead: existing native pole voltages and DC-DC ratio retained",load.u,if(transformer)50.0 else 200.0)
+                c.check("overhead: existing native pole supplies a physical load",load.p>if(transformer)2.4 else 39.0,"P=${load.p}")
+                val link=a.gridLinkList.single();val tag=CompoundTag();link.writeToNBT(tag,"")
+                c.check("overhead: old Direction terminal encodings retain saved span sides",tag.getIntOr("as",-1)==Direction.XP.int && tag.getIntOr("bs",-1)==Direction.XN.int,"")
+                val bytes=ByteArrayOutputStream();a.networkSerialize(DataOutputStream(bytes))
+                val r=mods.eln.gridnode.electricalpole.ElectricalPoleRender(c.level().getBlockEntity(a.node.coordonate.pos()) as TransparentNodeEntity,a.descriptor)
+                r.networkUnserialize(DataInputStream(ByteArrayInputStream(bytes.toByteArray())))
+                GlFrame.beginRenderFrame();val frame=GlFrame.open()
+                try { r.drawCables();c.check("overhead: legacy native pair still records two catenaries",frame.batches().values.sumOf { it.vertices() }>100,"") }finally { GlFrame.close();r.destructor() }
+            }finally {
+                for(part in listOf(source,load)) { Eln.simulator.removeElectricalComponent(part);part.breakConnection() }
+            }
         }
     }
     private class Payment: Fixture() {
