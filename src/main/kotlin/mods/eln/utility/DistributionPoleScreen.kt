@@ -7,14 +7,19 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 
-class DistributionPoleScreen(m: ElnNodeMenu,i: Inventory,t: Component,r: Any): ElnScreen(m,i,t,368,330) {
+class DistributionPoleScreen(m: ElnNodeMenu,i: Inventory,t: Component,r: Any): ElnScreen(m,i,t,368,if((r as DistributionPoleRender).desc.kind.transformer)430 else 330) {
     private val render=r as DistributionPoleRender
     override fun init() {
         super.init();val k=render.desc.kind
         val terminals=buildList { if(!k.lvOnly) { repeat(k.phases) { add(32+it) };if(k.phases==3)add(52);if(k.protectedLine) { repeat(k.outputPhases) { add(36+it) };if(k.phases==3 && !k.singlePhaseTap)add(53) } };add(50);addAll(40..42) }
         button(8,30,352,{tr("Cable terminal: %1$",terminalLabel(render.display.terminal))},{render.clientSendInt(87.toByte(),terminals[(terminals.indexOf(render.display.terminal)+1)%terminals.size])})
-        if(k.singlePhaseTap)button(8,56,352,{tr("Tap phase: %1$",listOf("A","B","C")[render.display.phase.coerceIn(0,2)])},{render.clientSendInt(88.toByte(),(render.display.phase+1)%3)})
-        if(k.cutout || k.regulator || k.singlePhaseTap)repeat(k.fuseCount) { n->button(8+n*116,82,112,{tr("Fuse %1$: %2$",n+1,if(render.display.fuseBlown.getOrNull(n)==true)tr("BLOWN") else if(render.display.fuseClosed.getOrNull(n)==true)tr("CLOSED") else tr("OPEN"))},{render.clientSendInt(89.toByte(),n)}) }
+        if(k.singlePhaseTap || k.transformer && k.phases==3)button(8,56,352,{tr("Tap phase: %1$",listOf("A","B","C")[render.display.phase.coerceIn(0,2)])},{render.clientSendInt(88.toByte(),(render.display.phase+1)%3)})
+        if(k.cutout || k.regulator || k.singlePhaseTap || k.transformer)repeat(k.fuseCount) { n->button(8+n*116,82,112,{tr("Fuse %1$: %2$",n+1,if(render.display.fuseBlown.getOrNull(n)==true)tr("BLOWN") else if(render.display.fuseClosed.getOrNull(n)==true)tr("CLOSED") else tr("OPEN"))},{render.clientSendInt(89.toByte(),n)}) }
+        if(k.transformer) {
+            button(8,108,112,{tr("Winding: %1$ V",render.display.transformerVoltage)},{render.clientSendInt(80.toByte(),if(render.display.transformerVoltage==120)240 else 120)})
+            button(128,108,112,{if(render.display.transformerEnabled)tr("Isolate") else tr("Enable")},{render.clientSendBoolean(81.toByte(),!render.display.transformerEnabled)})
+            button(248,108,112,{tr("Reset core trip")},{render.clientSendId(82.toByte())})
+        }
         if(k.recloser) {
             button(8,56,170,{if(render.display.closed)tr("Open recloser") else tr("Close recloser")},{render.clientSendId(95.toByte())})
             button(186,56,174,{tr("Reset lockout")},{render.clientSendId(94.toByte())})
@@ -35,7 +40,19 @@ class DistributionPoleScreen(m: ElnNodeMenu,i: Inventory,t: Component,r: Any): E
         val d=render.display
         for(n in d.line.indices)label(g,8,146+n*17,tr("Phase %1$: %2$ / %3$",n+1,Utils.plotVolt("",d.line[n]),Utils.plotVolt("",d.output.getOrElse(n){0.0})))
         for(n in d.service.indices)label(g,8,204+n*17,tr("Service %1$: %2$",n+1,Utils.plotVolt("",d.service[n])))
+        if(render.desc.kind.transformer) {
+            label(g,8,260,tr("Transformer: %1$ kW; %2$",d.transformerRating/1000,Utils.plotCelsius("",d.transformerTemperature)))
+            label(g,8,277,poleTransformerStatus(d.transformerStatus))
+            label(g,8,326,tr("Primary fuse rating uses primary current"))
+            label(g,40,304,tr("Installed transformer"))
+        }
         if(render.desc.kind.recloser)label(g,8,264,if(d.locked)tr("Recloser locked out - replace the fault, then reset") else tr("Retry failures: %1$; wait %2$ s",d.failures,d.remaining.toInt()))
         if(render.desc.kind.regulator)label(g,8,264,tr("Tap ratios: %1$",d.ratios.joinToString { String.format(java.util.Locale.ROOT,"%.3f",it) }))
     }
+}
+
+internal fun poleTransformerStatus(status: String)=when(status) {
+    "NEEDS_TRANSFORMER"->tr("Install a transformer");"CORE_OVERLOAD"->tr("Core overload - reset after reducing load")
+    "OVERVOLTAGE"->tr("Primary voltage fault");"OVERHEATED"->tr("Overheated");"DISABLED"->tr("Isolated")
+    "FUSE_OPEN"->tr("Primary fuse open");"WAIT_POWER"->tr("Waiting for primary power");else->tr("Online")
 }

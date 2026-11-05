@@ -32,6 +32,7 @@ object ForkPatchDistributionCases {
         override fun id()="forkpatch_distribution_power_${kind.name.lowercase()}"
         override fun build(c: TestContext) {
             e=pole(c,kind)
+            if(kind.transformer)e.hardware.setItem(0,Eln.findItemStack(PoleHardware.transformerNames[0],1))
             if(kind.lvOnly)for(i in 0..2)install(VoltageSource("secondary$i",e.unit.services[i],null).setU(if(i==2)240.0 else 120.0),Resistor(e.unit.services[i],null).setR(24.0))
             else {
                 for(i in e.unit.lines.indices)install(VoltageSource("phase$i",e.unit.lines[i],null).setU(12470.0))
@@ -43,7 +44,7 @@ object ForkPatchDistributionCases {
                 c.check("distribution: source identity resolves to a live native element",Eln.transparentNodeItem.getDescriptor(DistributionPoles.id(kind))===e.descriptor,kind.name)
                 val out=if(kind.lvOnly)e.unit.services else e.unit.outs
                 c.check("distribution: passive equipment delivers actual supplied power",out.all { it.u>100.0 && it.u.isFinite() } && e.unit.fuses.none { it.blown },kind.name)
-                if(!kind.lvOnly)c.check("distribution: a primary pole does not invent secondary power",e.unit.services.all { kotlin.math.abs(it.u)<1e-7 },kind.name)
+                if(!kind.lvOnly && !kind.transformer)c.check("distribution: a primary pole does not invent secondary power",e.unit.services.all { kotlin.math.abs(it.u)<1e-7 },kind.name)
                 c.check("distribution: native control menu is registered",mods.eln.gui.MenuSpecs.of(e.descriptor).width()==368 && e.hasGui(),kind.name)
                 val n=CompoundTag();e.writeToNBT(n);c.check("distribution: source settings and selected terminal are saved",n.getIntOr("utilityTerminal",-1)==e.terminal && n.contains("utilityGangClosed"),kind.name)
             }finally { clean() }

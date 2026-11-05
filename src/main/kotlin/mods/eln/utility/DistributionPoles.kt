@@ -4,7 +4,7 @@ import net.minecraft.world.item.Items
 
 object DistributionPoles {
     /** Explicit source offsets; omitted transformer/light/underground variants keep their reserved identities. */
-    val supported=listOf(DistributionKind.SINGLE,DistributionKind.THREE,DistributionKind.FEEDER_THREE,DistributionKind.CUTOUT_SINGLE,DistributionKind.CUTOUT_THREE,
+    val supported=listOf(DistributionKind.SINGLE,DistributionKind.THREE,DistributionKind.TRANSFORMER_SINGLE,DistributionKind.TRANSFORMER_THREE,DistributionKind.FEEDER_THREE,DistributionKind.CUTOUT_SINGLE,DistributionKind.CUTOUT_THREE,
         DistributionKind.RECLOSER_THREE,DistributionKind.SECONDARY,DistributionKind.CAPACITOR_THREE,DistributionKind.REGULATOR_SINGLE,DistributionKind.REGULATOR_THREE,
         DistributionKind.AIR_BREAK_THREE,DistributionKind.FUSED_TAP_THREE)
     val offsets=intArrayOf(34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,53,54,57,86,87,96,97,98,99,100,13,195,196,197)
@@ -14,8 +14,8 @@ object DistributionPoles {
         fun find(n: String)=mods.eln.datagen.ElnRecipesBase.findItemStack(n,1)
         for(kind in supported) {
             val base=if(kind.lvOnly)"Utility Pole" else if(kind.phases==3 && kind!=DistributionKind.THREE)"Three Phase Utility Pole" else "Utility Pole"
-            val detail: Any=when { kind.cutout || kind.singlePhaseTap->find("Pole Fuse Link");kind.recloser->Items.COMPARATOR;kind.regulator->find("DC-DC Converter");kind.capacitor->find("Copper Cable");kind==DistributionKind.AIR_BREAK_THREE->Items.LEVER;kind==DistributionKind.FEEDER_THREE->Items.IRON_INGOT;else->if(kind.phases==1)Items.IRON_NUGGET else Items.COPPER_INGOT }
-            val marker=if(kind==DistributionKind.CUTOUT_THREE || kind==DistributionKind.REGULATOR_THREE)Items.REDSTONE else Items.IRON_NUGGET
+            val detail: Any=when { kind.transformer->find("Pole Fuse Link");kind.cutout || kind.singlePhaseTap->find("Pole Fuse Link");kind.recloser->Items.COMPARATOR;kind.regulator->find("DC-DC Converter");kind.capacitor->find("Copper Cable");kind==DistributionKind.AIR_BREAK_THREE->Items.LEVER;kind==DistributionKind.FEEDER_THREE->Items.IRON_INGOT;else->if(kind.phases==1)Items.IRON_NUGGET else Items.COPPER_INGOT }
+            val marker=if(kind==DistributionKind.TRANSFORMER_THREE || kind==DistributionKind.CUTOUT_THREE || kind==DistributionKind.REGULATOR_THREE)Items.REDSTONE else Items.IRON_NUGGET
             val extra=if(kind.cutout)kind.phases-1 else if(kind.regulator)kind.phases else 0
             shapeless(find(kind.title),arrayOf(find(base),detail,marker,*Array(extra) { find("Pole Fuse Link") }))
         }

@@ -34,12 +34,13 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
                 p("SecondaryRack",.42f,.46f,.43f);for(i in 0..2)p("Secondary$i",.58f,.63f,.61f)
             }finally { GL11.glPopMatrix() }
             for(y in listOf(4.45,5.55))PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(0.0,y,0.0),net.minecraft.world.phys.Vec3(0.0,y,-.78))
-            if(kind.cutout || kind.regulator || kind.singlePhaseTap)repeat(kind.fuseCount) { index->
-                val i=if(kind.phases==1 || kind.singlePhaseTap)1 else index
+            if(kind.cutout || kind.regulator || kind.singlePhaseTap || kind.transformer)repeat(kind.fuseCount) { index->
+                val i=if(kind.phases==1 || kind.singlePhaseTap || kind.transformer)1 else index
                 PoleCutoutVisual.draw(i,d?.fuseClosed?.getOrNull(index)!=false,d?.fuseBlown?.getOrNull(index)==true)
-                val phase=if(kind.singlePhaseTap)d?.phase ?: 0 else if(kind.phases==1)1 else index
+                val phase=if(kind.singlePhaseTap || kind.transformer)d?.phase ?: 0 else if(kind.phases==1)1 else index
                 PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(0.0,if(phase==1)7.15 else 6.63,if(kind.phases==1)0.0 else (phase-1)*.95),net.minecraft.world.phys.Vec3(-.68,6.40,(i-1)*.95))
             }
+            if(kind.transformer && (d==null || d.transformerRating>0))PoleTransformerVisual.draw(d?.transformerRating ?: 10000)
             if(kind.primaryRiser)repeat(3) { p("Riser$it",.28f,.31f,.32f);p("RiserJumper$it",.13f,.15f,.16f) }
             if(kind.regulator)repeat(kind.phases) { val i=if(kind.phases==1)1 else it;p("Regulator$i",.64f,.66f,.63f);p("RegulatorPin$i",.44f,.48f,.38f);p("RegulatorLoadPin$i",.44f,.48f,.38f);p("RegulatorFeed$i",.13f,.15f,.16f) }
             if(kind.capacitor) { p("CapacitorRack",.35f,.38f,.40f);repeat(3) { p("Capacitor$it",.76f,.77f,.72f);p("CapacitorPin$it",.4f,.45f,.35f);p("CapacitorFeed$it",.13f,.15f,.16f) } }
@@ -56,6 +57,7 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
     override fun addInformation(stack: ItemStack?,player: Player?,list: MutableList<String>,advanced: Boolean) {
         list.add(if(kind.lvOnly)tr("120/240 V secondary circuits only; no high-voltage transformer") else tr("Independent primary conductors; select a phase or three-phase bundle in the menu"))
         if(kind.cutout || kind.singlePhaseTap)list.add(tr("Physical fuse cartridges protect the load terminal; open contacts isolate the circuit"))
+        if(kind.transformer)list.add(tr("Install a physical transformer; one selected primary phase supplies shared 120/240 V service"))
         if(kind.regulator)list.add(tr("Automatic regulation changes taps gradually within 90 to 110 percent"))
         list.add(tr("Service terminals carry independent L1, L2 and 240 V circuit equivalents"))
     }

@@ -998,5 +998,33 @@
     "sourceSha256": "05d8f632a07f7882c378c625fb215e046daceec01575a0dc20b0b26198b9158d",
     "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
     "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/MainsStepDown.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleTransformerUnit.kt",
+    "sourceSha256": "fcc1773e932a55bf4a142f325eb13aa86673f52cded44468a29dfbf77cc4fb82",
+    "mode": "fixed-ratio-pole-winding-adapted-to-native-passive-ServiceTap-and-energy-accounted-thermal-load; core-overload-separate-from-actual-primary-fuse",
+    "status": "pole-transformer-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleTransformerShape.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleTransformerShape.kt",
+    "sourceSha256": "0ce6690194e206395a2bfc1541a931f22219eeafbc7c0ff9c57726f21c85ea21",
+    "mode": "source-can-dimensions-and-bushing-coordinates; adaptive-clearance-methods-pending",
+    "status": "pole-transformer-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleTransformerVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleTransformerVisual.kt",
+    "sourceSha256": "6e31b5bd1ff990ff3489e7fa34d1bdb1b9624cc8d5ca24892d66ae7caac9032d",
+    "mode": "source-installed-can-and-bushing-with-native-GL-and-fixed-rack-leads",
+    "status": "pole-transformer-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchPoleTransformerCases.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-paid-core-primary-current-shared-capacity-and-lifecycle-test-fixtures",
+    "status": "pole-transformer-production-circuits-native-cases-and-datagen-passed"
   }
 ]

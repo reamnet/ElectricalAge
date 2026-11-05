@@ -10,14 +10,26 @@ import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.Container
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.Vec3
 import java.io.*
 
 class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor): GridElement(node,d,64) {
     val kind=(d as DistributionPoleDescriptor).kind
     val unit=DistributionPoleUnit(kind,electricalLoadList,electricalComponentList,electricalProcessList)
+    val hardware=object: TransparentNodeElementInventory(if(kind.transformer)1 else 0,1,this) {
+        override fun getAccessibleSlotsFromSide(side: Int)=if(kind.transformer)intArrayOf(0) else intArrayOf()
+        override fun canInsertItem(slot: Int,stack: ItemStack?,side: Int)=kind.transformer && slot==0 && PoleHardware.transformerWatts(stack)!=null
+        override fun canExtractItem(slot: Int,stack: ItemStack?,side: Int)=kind.transformer && slot==0
+        override fun setInventorySlotContents(slot: Int,stack: ItemStack) { super.setInventorySlotContents(slot,stack);markDirty() }
+    }
+    override fun getInventory()=hardware
+    private fun installTransformer() { if(kind.transformer)unit.installTransformer(PoleHardware.transformerWatts(hardware.getItem(0))) }
+    override fun initialize() { installTransformer();super.initialize() }
+    override fun inventoryChange(inventory: Container?) { installTransformer();needPublish() }
     var terminal=if(kind.lvOnly)50 else 32;private set
-    init { unit.changed={ event->needPublish();play(mods.eln.sound.SoundCommand("eln:$event").smallRange().mulVolume(.5)) };slowProcessList.add(NodePeriodicPublishProcess(node,1.0,.5)) }
+    init { unit.transformer?.let { thermalLoadList.add(it.thermal) };unit.changed={ event->needPublish();play(mods.eln.sound.SoundCommand("eln:$event").smallRange().mulVolume(.5)) };slowProcessList.add(NodePeriodicPublishProcess(node,1.0,.5)) }
     override fun selectedGridTerminal(side: Direction)=terminal
     fun terminals()=buildList {
         if(!kind.lvOnly) { repeat(kind.phases) { add(32+it) };if(kind.phases==3)add(52);if(kind.protectedLine) { repeat(kind.outputPhases) { add(36+it) };if(kind.phases==3 && !kind.singlePhaseTap)add(53) } }
@@ -66,7 +78,7 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     override fun getThermalLoad(side: Direction,l: LRDU)=null
     override fun hasGui()=true
     fun selectPhase(value: Int): Boolean {
-        if(value !in unit.lines.indices || !kind.singlePhaseTap)return false
+        if(value !in unit.lines.indices || !(kind.singlePhaseTap || kind.transformer))return false
         for(link in gridLinkList)if(link.getTerminal(this)==36) {
             val other=link.getOtherElement(this) ?: continue
             if(GridPhaseRouting.phases(other,link.getTerminal(other),this).any { it!=value })return false
@@ -74,6 +86,10 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
         val changed=unit.selectPhase(value);if(changed)needPublish();return changed
     }
     override fun onBlockActivated(p: Player,side: Direction,x: Float,y: Float,z: Float): Boolean {
+        if(kind.transformer && PoleHardware.transformerWatts(p.mainHandItem)!=null && hardware.getItem(0).isEmpty) {
+            hardware.setItem(0,p.mainHandItem.copyWithCount(1));if(!p.isCreative)p.mainHandItem.shrink(1)
+            inventoryChange(hardware);p.inventory.setChanged();return true
+        }
         if(PoleHardware.extract(p,unit.fuses)) { unit.applyContacts();needPublish();return true }
         if(UtilityItems.isFuse(p.mainHandItem)) {
             val f=unit.fuses.firstOrNull { !it.hasCartridge || it.blown }
@@ -82,18 +98,21 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
         return super.onBlockActivated(p,side,x,y,z)
     }
     override fun multiMeterString(side: Direction)=unit.lines.mapIndexed { i,l->tr("Phase %1$: %2$",i+1,Utils.plotUIP(l.u,l.i)) }.joinToString("\n")
-    override fun thermoMeterString(side: Direction): String?=null
-    override fun getWaila()=linkedMapOf(tr("Cable terminal") to tr("Terminal %1$",terminal),tr("Protection") to when { unit.recloser.locked->tr("Recloser locked out");unit.fuses.any { it.blown }->tr("Fuse blown");else->tr("Ready") })
+    override fun thermoMeterString(side: Direction): String?=unit.transformer?.let { Utils.plotCelsius("",it.thermal.Tc) }
+    override fun getWaila()=linkedMapOf(tr("Cable terminal") to tr("Terminal %1$",terminal),tr("Protection") to when { unit.recloser.locked->tr("Recloser locked out");unit.fuses.any { it.blown }->tr("Fuse blown");else->tr("Ready") }).apply { unit.transformer?.let { put(tr("Transformer rating"),Utils.plotPower("",it.ratedWatts.toDouble()));put(tr("Temperature"),Utils.plotCelsius("",it.thermal.Tc)) } }
     private fun settings(t: CompoundTag) { unit.write(t);t.putInt("utilityTerminal",terminal) }
     private fun readSettings(t: CompoundTag) { unit.read(t);terminal=t.getIntOr("utilityTerminal",if(kind.lvOnly)50 else 32).takeIf { it in terminals() } ?: terminals().first() }
     override fun writeToNBT(t: CompoundTag) { super.writeToNBT(t);settings(t) }
-    override fun readFromNBT(t: CompoundTag) { super.readFromNBT(t);readSettings(t) }
+    override fun readFromNBT(t: CompoundTag) { super.readFromNBT(t);readSettings(t);installTransformer() }
     override fun getItemStackNBT()=CompoundTag().also(::settings)
     override fun readItemStackNBT(t: CompoundTag?) { if(t!=null)readSettings(t) }
     override fun networkSerialize(out: DataOutputStream) { super.networkSerialize(out);DistributionDisplay().apply { capture(this@DistributionPoleElement);write(out) } }
     override fun networkUnserialize(s: DataInputStream): Byte {
         val id=super.networkUnserialize(s)
         try { when(id.toInt()) {
+            80->unit.configureTransformer(s.readInt(),unit.transformer?.enabled ?: true)
+            81->unit.configureTransformer(unit.transformer?.outputVoltage ?: 120,s.readBoolean())
+            82->unit.resetTransformer()
             87->selectTerminal(s.readInt());88->selectPhase(s.readInt());89->{ val index=s.readInt();val loaded=kotlin.math.abs(unit.current(index))>.02;val closed=unit.fuses.getOrNull(index)?.closed==true
                 if(unit.operateFuse(index) && loaded && closed)play(mods.eln.sound.SoundCommand("eln:utility_arc_open").smallRange().mulVolume(.5)) }
             91->unit.configureRecloser(s.readDouble(),unit.recloser.retrySeconds,unit.recloser.maxFailures)

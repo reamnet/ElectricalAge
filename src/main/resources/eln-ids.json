@@ -3347,6 +3347,18 @@
   "kind": "transparent_node",
   "name": "three_phase_utility_pole"
  },
+ "eln:transparent_node@7972": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Transformer Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_transformer_pole"
+ },
+ "eln:transparent_node@7973": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Transformer Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_transformer_pole"
+ },
  "eln:transparent_node@7974": {
   "descriptor": "DistributionPoleDescriptor",
   "display": "Three Phase Underground Feeder Pole",

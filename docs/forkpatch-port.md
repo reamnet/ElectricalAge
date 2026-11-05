@@ -726,6 +726,42 @@ Reports: [production circuits](forkpatch-port/distribution-circuit-tests.json),
 [datagen](forkpatch-port/distribution-datagen.json), and
 [destination regressions](forkpatch-port/distribution-checkpoint-validation.json).
 
+### Transformer pole checkpoint
+
+The single- and three-phase transformer poles now retain source IDs 7972/7973,
+bringing registered distribution variants to fourteen. Both use one installed
+10/25/50/75/100 kW physical can. The three-phase pole selects one primary phase;
+it does not silently install three transformers. All 120/120/240 V service
+outputs share that can and conserve power through the destination's passive
+linear taps. Both source 120/240 V winding settings, primary sag and reverse
+power are supported without nonlinear converter probes. Steady operation keeps
+cached native LU factors.
+
+Primary cartridges measure actual primary current. A 145 A, 240 V secondary
+load leaves a healthy 200 A primary cartridge intact. Separate delayed core
+protection aggregates every service output, and resetting a core trip cannot
+restore a spent cartridge. Copper losses enter native thermal loads as joules
+once per accepted physical step; the relative-to-ambient temperature API is
+preserved. An overheated can disconnects until cool.
+
+The real one-slot menu supports paid core installation, shift-click extraction,
+sided item automation and inventory clearing. Every extraction path immediately
+removes capacity. Native saves retain core, cartridge and control state; carried
+settings cannot duplicate the core. The live panel publishes capacity, winding,
+phase, temperature and fault status. Installed can dimensions, bushings and leads
+follow all five source ratings, with two reproducible inventory icons.
+
+Fourteen new native-MNA regressions and all 144 native server cases pass, including
+twelve new placed-device cases. Datagen adds two recipes/advancements, blockstates
+and item definitions, four item models/English keys and two icons; all 599 prior
+identities remain unchanged. Full destination regressions are rerun after the
+next equipment increment. Source-world migration, adaptive
+rack alignment/clearances, remaining sixteen pole variants and other unfinished
+workstreams remain pending; this is a development checkpoint, not a release.
+
+Reports: [production circuits](forkpatch-port/pole-transformer-circuit-tests.json),
+[native server cases](forkpatch-port/pole-transformer-native-tests.json).
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

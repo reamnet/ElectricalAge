@@ -12,8 +12,10 @@ import kotlin.math.abs
 class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>,parts: MutableList<Component>,processes: MutableList<IProcess>) {
     val lines=List(kind.phases) { NbtElectricalLoad("phase$it").apply { rs=.00001 } }
     val outs=if(kind.protectedLine)List(kind.outputPhases) { NbtElectricalLoad("phaseOut$it").apply { rs=.00001 } } else lines
-    val services=List(3) { NbtElectricalLoad("secondaryBus$it").apply { rs=.00001 } }
+    val transformer=if(kind.transformer)PoleTransformerUnit(states,parts) else null
+    val services=transformer?.service?.loads ?: List(3) { NbtElectricalLoad("secondaryBus$it").apply { rs=.00001 } }
     val contacts=when {
+        kind.transformer->lines.map { TransferContact(it,transformer!!.primary) }
         kind.singlePhaseTap->lines.map { TransferContact(it,outs[0]) }
         kind.protectedLine->lines.indices.map { TransferContact(lines[it],outs[it]) }
         else->emptyList()
@@ -31,10 +33,10 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     val regulatorTaps: List<ServiceTap>
     val capacitorPins=ArrayList<NbtElectricalLoad>()
     init {
-        require(!kind.transformer && !kind.light && !kind.underground)
+        require(!kind.light && !kind.underground)
         if(!kind.lvOnly)states.addAll(lines)
         if(outs!==lines)states.addAll(outs)
-        states.addAll(services)
+        if(transformer==null)states.addAll(services)
         if(kind.regulator) {
             // A fused line contact precedes the ratio tap. Keep both contacts and ratio stamps stable at idle.
             parts.addAll(contacts)
@@ -55,11 +57,12 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
         (if(kind.lvOnly)services else lines+outs+services).distinct().forEach { parts.add(Resistor(it,null).setR(1e10)) }
         processes.add(IProcess(::step));applyContacts()
     }
-    fun current(index: Int)=contacts.getOrNull(if(kind.singlePhaseTap)phase else index)?.current ?: 0.0
+    fun current(index: Int)=contacts.getOrNull(if(kind.singlePhaseTap || kind.transformer)phase else index)?.current ?: 0.0
     fun applyContacts() {
         for(i in contacts.indices) {
             val contact=contacts[i];val was=contact.closed
             contact.closed=when {
+                kind.transformer->i==phase && fuses[0].closed && transformer!!.available
                 kind.singlePhaseTap->i==phase && fuses[0].closed
                 kind.cutout || kind.regulator->fuses[i].closed
                 kind.recloser->recloser.closed
@@ -67,8 +70,9 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
             }
             if(contact.closed && !was)pendingSample=true
         }
+        transformer?.let { it.tap.enabled=it.available && fuses[0].closed }
     }
-    fun selectPhase(value: Int): Boolean { if(!kind.singlePhaseTap || value !in lines.indices)return false;phase=value;applyContacts();return true }
+    fun selectPhase(value: Int): Boolean { if(!(kind.singlePhaseTap || kind.transformer) || value !in lines.indices)return false;phase=value;applyContacts();return true }
     fun operateFuse(index: Int): Boolean { val changed=fuses.getOrNull(index)?.operate()==true;if(changed)applyContacts();return changed }
     fun configureRecloser(pickup: Double,delay: Double,failures: Int): Boolean {
         if(!pickup.isFinite() || pickup !in 1.0..2000.0 || !delay.isFinite() || delay !in 1.0..60.0 || failures !in 1..5)return false
@@ -92,10 +96,12 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
             for(i in fuses.indices) {
                 val amps=current(i)
                 if(fuses[i].pickup(dt,amps))changed("utility_arc_close")
-                if(fuses[i].step(dt,amps,fuseAmps)) { applyContacts();changed("utility_fuse_blow") }
+                if(fuses[i].step(dt,amps,transformer?.let { it.ratedWatts/12470.0 } ?: fuseAmps)) { applyContacts();changed("utility_fuse_blow") }
             }
             if(kind.recloser && recloser.step(dt,contacts.map { it.current })) { applyContacts();changed("utility_recloser_bump") }
         }
+        if(sample && transformer?.step(dt)==true) { applyContacts();changed("utility_arc_open") }
+        transformer?.let { if(it.tap.enabled!=(it.available && fuses[0].closed))applyContacts() }
         if(kind.regulator && regulatorAutomatic) {
             regulatorClock+=dt
             if(regulatorClock>=1) {
@@ -107,13 +113,18 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
             }
         }
     }
+    fun installTransformer(watts: Int?) { transformer?.install(watts);applyContacts() }
+    fun configureTransformer(voltage: Int,on: Boolean): Boolean { val ok=transformer?.configure(voltage,on)==true;if(ok)applyContacts();return ok }
+    fun resetTransformer() { transformer?.reset();applyContacts() }
     fun write(t: CompoundTag) {
+        transformer?.write(t)
         t.putInt("utilityPhase",phase);t.putBoolean("utilityGangClosed",gangClosed);t.putDouble("utilityFuseAmps",fuseAmps)
         fuses.forEachIndexed { i,f->f.write(t,"utilityFuse$i") };recloser.write(t)
         t.putDouble("regulatorTarget",regulatorTarget);t.putBoolean("regulatorAuto",regulatorAutomatic);t.putDouble("nativeRegulatorClock",regulatorClock)
         regulatorTaps.forEachIndexed { i,p->t.putDouble("regulatorRatio$i",p.ratio) }
     }
     fun read(t: CompoundTag) {
+        transformer?.read(t)
         phase=t.getIntOr("utilityPhase",0).coerceIn(0,lines.lastIndex);gangClosed=t.getBooleanOr("utilityGangClosed",true);setFuseAmps(t.getDoubleOr("utilityFuseAmps",100.0))
         fuses.forEachIndexed { i,f->f.read(t,"utilityFuse$i") };recloser.read(t)
         configureRegulator(t.getDoubleOr("regulatorTarget",12470.0),t.getBooleanOr("regulatorAuto",true))

@@ -1,4 +1,4 @@
-// 26.3	2026-11-05T07:45:52.52444141	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-05T16:20:29.656497997	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -306,6 +306,7 @@ e80c61360089710f1963815c85fc9bb6cf61b854 data/eln/advancement/recipes/misc/silve
 08101a72ef887ffebdfd668d954057d5a5aa18d5 data/eln/advancement/recipes/misc/simple_lamp_socket.json
 0627b7a28706b0bb15442b148e22b73e0977c3ec data/eln/advancement/recipes/misc/single_phase_automatic_voltage_regulator_pole.json
 c4c2de25d54c78ab731eb99a82e47e7a033bf667 data/eln/advancement/recipes/misc/single_phase_fused_cutout_pole.json
+c18ece5d250f800cb900d4c8b62ed2a64b934bcd data/eln/advancement/recipes/misc/single_phase_transformer_pole.json
 b4992560a4aa9cc3e983f1b1e29e07f1e553ea1b data/eln/advancement/recipes/misc/single_phase_utility_pole.json
 809e721d7853cc599c22b8e9d4499b051bb1cee6 data/eln/advancement/recipes/misc/single_use_battery.json
 f665bdf9caaf800299dfc4f98c4923f398cca1ea data/eln/advancement/recipes/misc/single_use_battery_2.json
@@ -370,6 +371,7 @@ e086466010f57df59e0db6596546129ef97a1f6a data/eln/advancement/recipes/misc/three
 9923fdb279623de8a0da309a96cabc0271abefc7 data/eln/advancement/recipes/misc/three_phase_pole_mounted_capacitor_bank.json
 bcf146d8e1ddc5b59ad25f3cd7c5e3841ebd890f data/eln/advancement/recipes/misc/three_phase_pole_with_fused_single_phase_tap.json
 39b042ac1685de57251006496a494374d9e9a15a data/eln/advancement/recipes/misc/three_phase_recloser_pole.json
+4e80e7b82478f716034c78c7c6c7612674c316c0 data/eln/advancement/recipes/misc/three_phase_transformer_pole.json
 08eaa63e69407071dcc832097653c7f87179517c data/eln/advancement/recipes/misc/three_phase_underground_feeder_pole.json
 2a3cf779adf1e0f2a0058d7aad230d7901638358 data/eln/advancement/recipes/misc/three_phase_utility_pole.json
 969585b9a595d2a94fe710d8835470a53bf34e43 data/eln/advancement/recipes/misc/through_roof_service_mast.json
@@ -739,6 +741,7 @@ e371cfb3570f38a97380ab2754acb9f7c34f6739 data/eln/recipe/signal_trimmer.json
 c3083279a9092abb386e52142d77440229c42890 data/eln/recipe/simple_lamp_socket.json
 4f686bce96ff48e58ade24fcde850ff70d003cfa data/eln/recipe/single_phase_automatic_voltage_regulator_pole.json
 0b1078fcc68330f88d02c0918c0e6f166b4834e0 data/eln/recipe/single_phase_fused_cutout_pole.json
+e85571f4e882ff924d30de2e326798884d62f724 data/eln/recipe/single_phase_transformer_pole.json
 8883e9818c9ff0d324c236df7f9a124d1f01e1f1 data/eln/recipe/single_phase_utility_pole.json
 a46d6a073fd86a647a43109ec61e2b2109a872d1 data/eln/recipe/single_use_battery.json
 d6c874804a381b5b1091590bf35c9c0608b86276 data/eln/recipe/single_use_battery_2.json
@@ -803,6 +806,7 @@ b96298eedd261898b9a93ab750dc761f6ffe2605 data/eln/recipe/three_phase_automatic_v
 5e954965b14e56ed349208d573f40539371aabf7 data/eln/recipe/three_phase_pole_mounted_capacitor_bank.json
 4a15b19d18ff4e1597cd53614e7f440598c63fe4 data/eln/recipe/three_phase_pole_with_fused_single_phase_tap.json
 1ae9ac74f70d6581772a10ef3f73a432f9499f2a data/eln/recipe/three_phase_recloser_pole.json
+c59d848aad46be14d89f9cd356edef478953ad11 data/eln/recipe/three_phase_transformer_pole.json
 0e8abb59cfc9c06e345b67ab10aaff7caaa23190 data/eln/recipe/three_phase_underground_feeder_pole.json
 90c7ff91ccea969c9c73a8ff99a8495e714a2411 data/eln/recipe/three_phase_utility_pole.json
 4635682ce50d27b181b81e6cbaf02ce6fcc3afb1 data/eln/recipe/through_roof_service_mast.json

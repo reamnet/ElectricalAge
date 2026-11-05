@@ -1,0 +1,32 @@
+{
+  "itemDefinitions": 2,
+  "itemModels": 4,
+  "blockstates": 2,
+  "recipes": 2,
+  "advancements": 2,
+  "newEnglishKeys": 4,
+  "existingIdentitiesRetained": 599,
+  "totalIdentities": 601,
+  "inventoryIcons": 2,
+  "geometryModelsAdded": 0,
+  "passed": true,
+  "task": "runClientData",
+  "sourceIds": [
+    7972,
+    7973
+  ],
+  "newFiles": [
+    "src/generated/resources/assets/eln/blockstates/three_phase_transformer_pole.json",
+    "src/generated/resources/assets/eln/blockstates/single_phase_transformer_pole.json",
+    "src/generated/resources/assets/eln/items/three_phase_transformer_pole.json",
+    "src/generated/resources/assets/eln/items/single_phase_transformer_pole.json",
+    "src/generated/resources/assets/eln/models/item/three_phase_transformer_pole.json",
+    "src/generated/resources/assets/eln/models/item/single_phase_transformer_pole.json",
+    "src/generated/resources/assets/eln/models/item/three_phase_transformer_pole_3d.json",
+    "src/generated/resources/assets/eln/models/item/single_phase_transformer_pole_3d.json",
+    "src/generated/resources/data/eln/recipe/three_phase_transformer_pole.json",
+    "src/generated/resources/data/eln/recipe/single_phase_transformer_pole.json",
+    "src/generated/resources/data/eln/advancement/recipes/misc/three_phase_transformer_pole.json",
+    "src/generated/resources/data/eln/advancement/recipes/misc/single_phase_transformer_pole.json"
+  ]
+}
