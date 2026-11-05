@@ -597,6 +597,37 @@ Reports: [wire circuits and thermal physics](forkpatch-port/wire-circuit-tests.j
 [datagen](forkpatch-port/wire-datagen.json), and
 [destination regressions](forkpatch-port/wire-checkpoint-validation.json).
 
+### Multicore placed-cable checkpoint (validation in progress)
+
+All 60 source multicore identities (2268..2327) are now adapted: copper signal
+bundles, flat building cables, copper/aluminum triplex and quadruplex, and their
+hidden damaged states. Intact bundles keep two to eight independent native MNA
+loads. One metre of jacket contains every core's metal; spool lengths, shared
+thermal mass, heating and scrap accounting use the total cross-section. The
+jacket-damaged state retains that mass as one exposed conductor, as in the source.
+
+Connections expand only while constructing topology. Bundle-to-bundle links match
+colors, including palettes with different array orders; a scalar colored tap selects
+one matching core, while an uncolored device selects the default hot. An absent
+color makes no electrical connection. Direct uncolored ground terminals select a
+protective core and cannot ground a hot in a bundle without one. Native face,
+voxel boundary, internal corner and off-centre pin paths use the same routing;
+their existing lifetime containers own every added link. Ordinary scalar routing,
+bus links, native connection masks and simulation veto remain in place.
+
+Palette changes reconnect the native topology and persist by the source palette
+index. Insulation stress checks all core pairs and installs one finite 100-ohm
+fault at its saved endpoints. Shared heating sums every core's accepted I²R and
+fault power. Flat cable geometry displays conductor colors; source body dimensions,
+damaged texture, native knuckles and live temperatures remain adapted.
+
+Scope limits: multicore overhead phase mapping/payment and automatic grounding
+through chains of uncolored single wires are pending. New multicore overhead links
+are rejected until their adapter is ready; existing single-wire service spans stay
+available. Manufacturing recipes/machines, inventory trimming/tools, player shock
+hooks, room coupling, full source-world migration and interactive client checks
+also remain pending. Validation results will be recorded after the native runs.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

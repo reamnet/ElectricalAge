@@ -872,5 +872,33 @@
     "sourceSha256": "cd3a7e7985f0b10ec4d62cd1185b18214322a739fadf217bb076d9a7a7a11e69",
     "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
     "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/CableConnections.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native multicore color routing across face/voxel/pin topology; automatic tracing through uncolored scalar chains pending",
+    "status": "multicore checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCables.kt",
+    "sourceSha256": "f642d34a880f713e223187bbc9e4980ccafd262e44a1923034010d7b219a4e3e",
+    "mode": "source multicore manifest ids 2268..2327, mass and palette adapter; overhead phase routing and manufacturing pending",
+    "status": "multicore checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableElement.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native independent core loads, palette persistence, finite inter-core faults and shared physical heat",
+    "status": "multicore checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableRender.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native flat geometry/conductor colors, native knuckles and temperature publication",
+    "status": "multicore checkpoint: validation in progress"
   }
 ]

@@ -8,7 +8,7 @@ import mods.eln.i18n.I18N.tr
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.item.ItemStack
 
-/** Source allocator order: piles 2176/2177, singles 2178..2267, multicore reserved 2268..2327; HV group 38. */
+/** Source allocator order: piles 2176/2177, singles 2178..2267, multicore 2268..2327; HV group 38. */
 object UtilityCables {
     data class Spec(val label: String,val area: Double,val amps: Double,val volts: Double,val jacketC: Double,val aluminum: Boolean=false)
     val specs=listOf(
@@ -46,6 +46,73 @@ object UtilityCables {
         16 to Spec("2 AWG",33.631,100.0,40000.0,105.0),
         18 to Spec("2 AWG",33.631,100.0,150000.0,105.0)
     )
+    data class MultiSpec(val label: String,val area: Double,val count: Int,val amps: Double,val volts: Double,val jacketC: Double,
+        val flat: Boolean,val palettes: Array<UtilityCablePalette>,val poleEligible: Boolean=false)
+    private fun multiSpecs(): List<MultiSpec> {
+        val us2 = arrayOf(
+            UtilityCablePalette("US", intArrayOf(0, 15, 2)),
+            UtilityCablePalette("EU", intArrayOf(12, 11, 5))
+        )
+        val us3 = arrayOf(
+            UtilityCablePalette("US", intArrayOf(0, 1, 15, 2)),
+            UtilityCablePalette("EU", intArrayOf(12, 15, 11, 5))
+        )
+        val eu3g = arrayOf(UtilityCablePalette("EU", intArrayOf(12, 11, 5)), UtilityCablePalette("US", intArrayOf(15, 0, 13)))
+        val eu5g = arrayOf(UtilityCablePalette("EU", intArrayOf(12, 15, 7, 11, 5)), UtilityCablePalette("US", intArrayOf(15, 14, 11, 0, 13)))
+        val signal2 = arrayOf(
+            UtilityCablePalette("Signal", intArrayOf(12, 0))
+        )
+        val signal3 = arrayOf(
+            UtilityCablePalette("Signal", intArrayOf(12, 15, 0))
+        )
+        val signal4 = arrayOf(
+            UtilityCablePalette("Signal", intArrayOf(12, 15, 2, 0))
+        )
+        val signal5 = arrayOf(
+            UtilityCablePalette("Signal", intArrayOf(12, 15, 2, 1, 0))
+        )
+        val signal8 = arrayOf(
+            UtilityCablePalette("Signal", intArrayOf(12, 15, 2, 1, 14, 4, 6, 0))
+        )
+        val triplex120240 = arrayOf(
+            UtilityCablePalette("US Split-Phase", intArrayOf(0, 12, 7)),
+            UtilityCablePalette("EU", intArrayOf(4, 11, 7))
+        )
+        val quadruplex208480 = arrayOf(
+            UtilityCablePalette("US 3P", intArrayOf(0, 12, 1, 7)),
+            UtilityCablePalette("EU 3P", intArrayOf(4, 11, 7, 3))
+        )
+
+        return listOf(
+            MultiSpec("2C 18 AWG", 0.8230, 2, 7.0, 300.0, 90.0, false, signal2),
+            MultiSpec("3C 18 AWG", 0.8230, 3, 7.0, 300.0, 90.0, false, signal3),
+            MultiSpec("4C 18 AWG", 0.8230, 4, 7.0, 300.0, 90.0, false, signal4),
+            MultiSpec("5C 18 AWG", 0.8230, 5, 7.0, 300.0, 90.0, false, signal5),
+            MultiSpec("8C 18 AWG", 0.8230, 8, 7.0, 300.0, 90.0, false, signal8),
+            MultiSpec("2C 20 AWG", 0.5176, 2, 5.0, 300.0, 80.0, false, signal2),
+            MultiSpec("3C 20 AWG", 0.5176, 3, 5.0, 300.0, 80.0, false, signal3),
+            MultiSpec("4C 20 AWG", 0.5176, 4, 5.0, 300.0, 80.0, false, signal4),
+            MultiSpec("5C 20 AWG", 0.5176, 5, 5.0, 300.0, 80.0, false, signal5),
+            MultiSpec("8C 20 AWG", 0.5176, 8, 5.0, 300.0, 80.0, false, signal8),
+            MultiSpec("14/2", 2.081, 3, 15.0, 600.0, 105.0, true, us2),
+            MultiSpec("14/3", 2.081, 4, 15.0, 600.0, 105.0, true, us3),
+            MultiSpec("12/2", 3.309, 3, 20.0, 600.0, 105.0, true, us2),
+            MultiSpec("12/3", 3.309, 4, 20.0, 600.0, 105.0, true, us3),
+            MultiSpec("10/2", 5.261, 3, 30.0, 600.0, 105.0, true, us2),
+            MultiSpec("10/3", 5.261, 4, 30.0, 600.0, 105.0, true, us3),
+            MultiSpec("8/2", 8.366, 3, 40.0, 600.0, 105.0, true, us2),
+            MultiSpec("8/3", 8.366, 4, 40.0, 600.0, 105.0, true, us3),
+            MultiSpec("6/2", 13.302, 3, 60.0, 600.0, 105.0, true, us2),
+            MultiSpec("6/3", 13.302, 4, 60.0, 600.0, 105.0, true, us3),
+            MultiSpec("4/2", 21.151, 3, 80.0, 600.0, 105.0, true, us2),
+            MultiSpec("4/3", 21.151, 4, 80.0, 600.0, 105.0, true, us3),
+            MultiSpec("Triplex 1/0", 53.475, 3, 150.0, 600.0, 105.0, false, triplex120240, poleEligible = true),
+            MultiSpec("Triplex 4/0", 107.219, 3, 260.0, 600.0, 105.0, false, triplex120240, poleEligible = true),
+            MultiSpec("Quadruplex 1/0", 53.475, 4, 125.0, 600.0, 105.0, false, quadruplex208480, poleEligible = true),
+            MultiSpec("Quadruplex 4/0", 107.219, 4, 260.0, 600.0, 105.0, false, quadruplex208480, poleEligible = true)
+        )
+
+    }
     val all=ArrayList<UtilityCableDescriptor>()
     val piles=java.util.EnumMap<UtilityCableMaterial,MoltenMetalPileDescriptor>(UtilityCableMaterial::class.java)
     val scraps=WireScrapDescriptor()
@@ -62,6 +129,12 @@ object UtilityCables {
             val intact=make(next++,m,spec,true,false,false);val damaged=make(next++,m,spec,false,true,false);intact.meltedDescriptor=damaged
         }
         check(next==2268)
+        for(m in UtilityCableMaterial.entries)for(spec in multiSpecs()) {
+            if(m==UtilityCableMaterial.ALUMINUM && !spec.poleEligible)continue
+            val intact=makeMulti(next++,m,spec,false)
+            intact.meltedDescriptor=makeMulti(next++,m,spec,true)
+        }
+        check(next==2328)
         for((offset,spec)in highVoltage) {
             val intact=make(2432+offset,UtilityCableMaterial.COPPER,spec,true,false,true)
             intact.meltedDescriptor=make(2433+offset,UtilityCableMaterial.COPPER,spec,false,true,true)
@@ -80,7 +153,23 @@ object UtilityCables {
         all.add(d);if(melted)Eln.sixNodeItem.addWithoutRegistry(id,d) else Eln.sixNodeItem.addDescriptor(id,d)
         return d
     }
-    fun scrap(d: UtilityCableDescriptor,meters: Double)=scrap(d.material,d.conductorAreaMm2,meters,d.name)
+    private fun makeMulti(id: Int,m: UtilityCableMaterial,s: MultiSpec,melted: Boolean): UtilityCableDescriptor {
+        val single=when { s.area<=.5->.65f;s.area<=2.5->.95f;s.area<=10->1.25f;s.area<=35->1.75f;s.area<=120->2.35f;else->3.25f }
+        val width=if(s.flat)(s.count*.92f+single*.35f).coerceAtLeast(2.2f) else single+.75f+(s.count-2)*.4f
+        val height=if(s.flat)((single*single*s.count*.38f).coerceAtLeast(1f)/width).coerceIn(.95f,2.2f) else width
+        val total=s.area*s.count
+        val render=CableRenderDescriptor("eln",if(melted)"sprites/cable_melted_multi.png" else "sprites/cable.png",width,height)
+        val d=UtilityCableDescriptor(s.label,m,if(melted)total else s.area,s.amps,!melted,if(melted)0.0 else s.volts,melted,s.jacketC,
+            I18N.TR_NAME(I18N.Type.NONE,"${m.label} ${s.label} Cable ${if(melted)"Melted" else "${s.volts.toInt()}V"}"),render,
+            if(melted)1 else s.count,if(melted)arrayOf(UtilityCablePalette("Melted",intArrayOf(0))) else s.palettes,s.flat,total)
+        val power=s.volts*s.amps
+        d.setPhysicalConstantLikeNormalCable(s.volts,power,d.resistanceOhms()*s.amps/s.volts,s.volts*1.5,power*1.1,20.0,s.jacketC,-100.0,Eln.cableHeatingTime,Eln.cableThermalConductionTao)
+        val physics=WireThermalPhysics(m,total);d.thermalC=physics.capacity(20.0);d.thermalRp=1/physics.coolingConductance(20.0,20.0,!melted);d.thermalRs=physics.endpointThermalResistance
+        d.electricalRsPerCelcius=d.electricalRs*WirePhysics.temperatureCoefficient(m);d.setDefaultIcon("utilityinsulatedlargeicon")
+        all.add(d);if(melted)Eln.sixNodeItem.addWithoutRegistry(id,d) else Eln.sixNodeItem.addDescriptor(id,d)
+        return d
+    }
+    fun scrap(d: UtilityCableDescriptor,meters: Double)=scrap(d.material,d.totalConductorAreaMm2,meters,d.name).also { stack->ItemNbt.edit(stack) { it.putInt("wireScrapConductors",d.conductorCount) } }
     fun scrap(material: UtilityCableMaterial,area: Double,meters: Double,source: String)=scraps.newItemStack().also { stack->
         ItemNbt.set(stack,CompoundTag().apply {
             putString("wireScrapSourceName",source);putString("wireScrapMaterial",material.label);putString("wireScrapSize",source);putString("wireScrapMetricSize",area.toString())

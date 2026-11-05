@@ -1643,6 +1643,366 @@
   "kind": "six_node",
   "name": "aluminum_1000_kcmil_cable_melted"
  },
+ "eln:six_node@2268": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_2c_18_awg_cable_300v"
+ },
+ "eln:six_node@2269": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_2c_18_awg_cable_melted"
+ },
+ "eln:six_node@2270": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 3C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_3c_18_awg_cable_300v"
+ },
+ "eln:six_node@2271": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 3C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_3c_18_awg_cable_melted"
+ },
+ "eln:six_node@2272": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_4c_18_awg_cable_300v"
+ },
+ "eln:six_node@2273": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4c_18_awg_cable_melted"
+ },
+ "eln:six_node@2274": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 5C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_5c_18_awg_cable_300v"
+ },
+ "eln:six_node@2275": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 5C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_5c_18_awg_cable_melted"
+ },
+ "eln:six_node@2276": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_8c_18_awg_cable_300v"
+ },
+ "eln:six_node@2277": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_8c_18_awg_cable_melted"
+ },
+ "eln:six_node@2278": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_2c_20_awg_cable_300v"
+ },
+ "eln:six_node@2279": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_2c_20_awg_cable_melted"
+ },
+ "eln:six_node@2280": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 3C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_3c_20_awg_cable_300v"
+ },
+ "eln:six_node@2281": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 3C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_3c_20_awg_cable_melted"
+ },
+ "eln:six_node@2282": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_4c_20_awg_cable_300v"
+ },
+ "eln:six_node@2283": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4c_20_awg_cable_melted"
+ },
+ "eln:six_node@2284": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 5C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_5c_20_awg_cable_300v"
+ },
+ "eln:six_node@2285": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 5C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_5c_20_awg_cable_melted"
+ },
+ "eln:six_node@2286": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_8c_20_awg_cable_300v"
+ },
+ "eln:six_node@2287": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_8c_20_awg_cable_melted"
+ },
+ "eln:six_node@2288": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_14_2_cable_600v"
+ },
+ "eln:six_node@2289": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_14_2_cable_melted"
+ },
+ "eln:six_node@2290": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_14_3_cable_600v"
+ },
+ "eln:six_node@2291": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_14_3_cable_melted"
+ },
+ "eln:six_node@2292": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_12_2_cable_600v"
+ },
+ "eln:six_node@2293": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_12_2_cable_melted"
+ },
+ "eln:six_node@2294": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_12_3_cable_600v"
+ },
+ "eln:six_node@2295": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_12_3_cable_melted"
+ },
+ "eln:six_node@2296": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_10_2_cable_600v"
+ },
+ "eln:six_node@2297": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_10_2_cable_melted"
+ },
+ "eln:six_node@2298": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_10_3_cable_600v"
+ },
+ "eln:six_node@2299": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_10_3_cable_melted"
+ },
+ "eln:six_node@2300": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_8_2_cable_600v"
+ },
+ "eln:six_node@2301": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_8_2_cable_melted"
+ },
+ "eln:six_node@2302": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_8_3_cable_600v"
+ },
+ "eln:six_node@2303": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_8_3_cable_melted"
+ },
+ "eln:six_node@2304": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_6_2_cable_600v"
+ },
+ "eln:six_node@2305": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_6_2_cable_melted"
+ },
+ "eln:six_node@2306": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_6_3_cable_600v"
+ },
+ "eln:six_node@2307": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_6_3_cable_melted"
+ },
+ "eln:six_node@2308": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_4_2_cable_600v"
+ },
+ "eln:six_node@2309": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4_2_cable_melted"
+ },
+ "eln:six_node@2310": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_4_3_cable_600v"
+ },
+ "eln:six_node@2311": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4_3_cable_melted"
+ },
+ "eln:six_node@2312": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Triplex 1/0 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_triplex_1_0_cable_600v"
+ },
+ "eln:six_node@2313": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Triplex 1/0 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_triplex_1_0_cable_melted"
+ },
+ "eln:six_node@2314": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Triplex 4/0 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_triplex_4_0_cable_600v"
+ },
+ "eln:six_node@2315": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Triplex 4/0 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_triplex_4_0_cable_melted"
+ },
+ "eln:six_node@2316": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Quadruplex 1/0 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_quadruplex_1_0_cable_600v"
+ },
+ "eln:six_node@2317": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Quadruplex 1/0 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_quadruplex_1_0_cable_melted"
+ },
+ "eln:six_node@2318": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Quadruplex 4/0 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_quadruplex_4_0_cable_600v"
+ },
+ "eln:six_node@2319": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Quadruplex 4/0 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_quadruplex_4_0_cable_melted"
+ },
+ "eln:six_node@2320": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Triplex 1/0 Cable 600V",
+  "kind": "six_node",
+  "name": "aluminum_triplex_1_0_cable_600v"
+ },
+ "eln:six_node@2321": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Triplex 1/0 Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_triplex_1_0_cable_melted"
+ },
+ "eln:six_node@2322": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Triplex 4/0 Cable 600V",
+  "kind": "six_node",
+  "name": "aluminum_triplex_4_0_cable_600v"
+ },
+ "eln:six_node@2323": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Triplex 4/0 Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_triplex_4_0_cable_melted"
+ },
+ "eln:six_node@2324": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Quadruplex 1/0 Cable 600V",
+  "kind": "six_node",
+  "name": "aluminum_quadruplex_1_0_cable_600v"
+ },
+ "eln:six_node@2325": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Quadruplex 1/0 Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_quadruplex_1_0_cable_melted"
+ },
+ "eln:six_node@2326": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Quadruplex 4/0 Cable 600V",
+  "kind": "six_node",
+  "name": "aluminum_quadruplex_4_0_cable_600v"
+ },
+ "eln:six_node@2327": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Quadruplex 4/0 Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_quadruplex_4_0_cable_melted"
+ },
  "eln:six_node@2432": {
   "descriptor": "UtilityCableDescriptor",
   "display": "Copper 12 AWG Cable 1000V",

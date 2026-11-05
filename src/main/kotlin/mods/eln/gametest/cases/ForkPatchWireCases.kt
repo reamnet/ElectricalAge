@@ -37,8 +37,8 @@ object ForkPatchWireCases {
     private class Catalog: Base() {
         override fun id()="forkpatch_wire_catalog_and_lengths"
         override fun measure(c: TestContext) {
-            c.check("wire: all source single-core identities registered",UtilityCables.all.size==110 && UtilityCables.piles.size==2,"")
-            for(d in UtilityCables.all) {
+            c.check("wire: all source single-core identities registered",UtilityCables.all.count { it.parentItemDamage !in 2268..2327 }==110 && UtilityCables.piles.size==2,"")
+            for(d in UtilityCables.all.filter { it.parentItemDamage !in 2268..2327 }) {
                 val s=d.newItemStack();val meters=d.getRemainingLengthMeters(s);val kg=WirePhysics.massKg(d.material,d.conductorAreaMm2,meters)
                 c.check("wire: native stack is one finite mass-based spool",s.maxStackSize==1 && meters.isFinite() && meters>=1 && kg<=10+1e-9,d.name)
                 c.check("wire: source registry identity and damaged visibility retained",Eln.sixNodeItem.getDescriptor(d.parentItemDamage)===d && DescriptorRegistry.isHiddenItem(d.parentItem)==d.melted,"id=${d.parentItemDamage}")
