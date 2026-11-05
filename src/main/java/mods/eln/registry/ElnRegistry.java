@@ -279,7 +279,7 @@ public final class ElnRegistry {
                 d.parentItemDamage = id;
                 Eln.itemsByName.putIfAbsent(d.name, item); // first wins: "Signal Switch" is 6081 (gate source) as in 1.12
                 return item;
-            }));
+            }, d::itemProperties));
         }
         for (Map.Entry<Integer, mods.eln.node.transparent.TransparentNodeDescriptor> e : Eln.transparentNodeItem.all().entrySet()) {
             int id = e.getKey();
@@ -347,7 +347,10 @@ public final class ElnRegistry {
             .title(Component.literal("Electrical Age"))
             .icon(() -> new ItemStack(tabIcon.get()))
             .displayItems((params, out) -> ALL_ITEMS.forEach(i -> {
-                if (i != tabIcon && !mods.eln.node.DescriptorRegistry.isHiddenItem(i.get())) out.accept(i.get()); // 1.12 addWithoutRegistry
+                if (i != tabIcon && !mods.eln.node.DescriptorRegistry.isHiddenItem(i.get())) {
+                    if(i.get() instanceof SixNodeItem six && six.descriptor instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor cable) out.accept(cable.creativeStack());
+                    else out.accept(i.get());
+                } // 1.12 addWithoutRegistry
             }))
             .build());
         BLOCKS.register(modBus);

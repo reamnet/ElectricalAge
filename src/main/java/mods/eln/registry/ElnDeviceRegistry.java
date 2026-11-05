@@ -74,6 +74,7 @@ public final class ElnDeviceRegistry {
         registerGround(2);
         registerElectricalSource(3);
         registerElectricalCable(32);
+        mods.eln.sixnode.electricalcable.UtilityCables.register();
         // resistors (96): Wp9aContent.registerPassiveComponent, with the rest of that group
         registerBattery(16);
         registerSolarPanel(48);

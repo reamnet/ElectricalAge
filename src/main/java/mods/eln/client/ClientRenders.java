@@ -19,6 +19,8 @@ public final class ClientRenders {
         ElnRenders.six(mods.eln.sixnode.diode.DiodeDescriptor.class, mods.eln.sixnode.diode.DiodeRender::new);
         ElnRenders.six(mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor.class, mods.eln.sixnode.electricalalarm.ElectricalAlarmRender::new);
         ElnRenders.six(mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor.class, mods.eln.sixnode.electricalbreaker.ElectricalBreakerRender::new);
+        ElnRenders.six(mods.eln.sixnode.electricalcable.UtilityCableDescriptor.class,mods.eln.sixnode.electricalcable.UtilityCableRender::new);
+        ElnRenders.six(mods.eln.sixnode.electricalcable.MoltenMetalPileDescriptor.class,mods.eln.sixnode.electricalcable.MoltenMetalPileRender::new);
         ElnRenders.six(mods.eln.sixnode.electricalcable.ElectricalCableDescriptor.class, mods.eln.sixnode.electricalcable.ElectricalCableRender::new);
         ElnRenders.six(mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerDescriptor.class, mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerRender::new);
         ElnRenders.six(mods.eln.sixnode.electricalentitysensor.ElectricalEntitySensorDescriptor.class, mods.eln.sixnode.electricalentitysensor.ElectricalEntitySensorRender::new);

@@ -66,9 +66,13 @@ public class SixNodeItem extends Item implements IDescriptorItem {
             if (world.getBlockEntity(pos) instanceof mods.eln.node.voxel.VoxelNodeEntity ve && ve.getNode() instanceof mods.eln.node.voxel.VoxelNode v)
                 direction = v.placeFace(ctx.getClickedFace(), h.x - pos.getX(), h.y - pos.getY(), h.z - pos.getZ());
         }
+        var utility = descriptor instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire ? wire : null;
+        if (utility!=null && (ctx.getItemInHand().getCount()!=1 || utility.getRemainingLengthMeters(ctx.getItemInHand())<1.0)) return InteractionResult.FAIL;
         boolean ok = placeAt(ctx.getItemInHand(), ctx.getPlayer(), world, pos, direction,
             new double[]{h.x - pos.getX(), h.y - pos.getY(), h.z - pos.getZ()});
-        if (ok && ctx.getPlayer() != null && !ctx.getPlayer().isCreative()) ctx.getItemInHand().shrink(1);
+        if (ok && ctx.getPlayer() != null && !ctx.getPlayer().isCreative()) {
+            if(utility!=null) utility.consume(ctx.getItemInHand(),1.0); else ctx.getItemInHand().shrink(1);
+        }
         if (ok && ctx.getPlayer() != null) LAST_PLACED.put(ctx.getPlayer().getUUID(), new Placed(pos, world.getGameTime()));
         return ok ? InteractionResult.SUCCESS : InteractionResult.FAIL;
     }

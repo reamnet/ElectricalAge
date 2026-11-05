@@ -36,6 +36,8 @@ abstract public class GridElement extends TransparentNodeElement {
     public final int connectRange;
     private float idealRenderingAngle;
     private boolean gridConnecting;
+    private final SpanAmbientSample spanAmbient=new SpanAmbientSample();
+    public double spanAmbientCelsius() { return spanAmbient.sample(coordonate().world().getGameTime(),()->mods.eln.sim.Ambient.relative(coordonate())+20.0); }
 
     public GridElement(TransparentNode node, TransparentNodeDescriptor descriptor, int range) {
         super(node, descriptor); desc = (GridDescriptor)descriptor; connectRange = range;
@@ -45,7 +47,7 @@ abstract public class GridElement extends TransparentNodeElement {
         return !node.isDestructing() && !isBurnt() && (node.isAdded() || gridConnecting) && (veto == null || !veto.test(node));
     }
     public boolean allowsNewGridLinks() { return true; }
-    public boolean acceptsGridCable(ElectricalCableDescriptor cable) { return !cable.signalWire; }
+    public boolean acceptsGridCable(ElectricalCableDescriptor cable) { return GridCablePolicy.accepts(cable); }
     public boolean acceptsSavedGridTerminal(int terminal) { return !gridLoads(terminal).isEmpty(); }
     public int selectedGridTerminal(Direction side) { return side.getInt(); }
     public java.util.List<ElectricalLoad> gridLoads(int terminal) {
@@ -65,7 +67,7 @@ abstract public class GridElement extends TransparentNodeElement {
         if (!(item instanceof ElectricalCableDescriptor cable)) return false;
         UUID id=player.getUUID();
         int terminal=selectedGridTerminal(side);
-        if (!allowsNewGridLinks() || !acceptsGridCable(cable) || gridLoads(terminal).isEmpty()) {
+        if (!allowsNewGridLinks() || !acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || gridLoads(terminal).isEmpty()) {
             Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Select an overhead grid terminal and intact power cable"));pending.remove(id);return true;
         }
         var first=pending.get(id);
@@ -76,11 +78,14 @@ abstract public class GridElement extends TransparentNodeElement {
         }
         pending.remove(id);
         int length=(int)Math.ceil(other.coordonate().trueDistanceTo(coordonate()))*gridLoads(terminal).size();
-        if (stack.getCount()<length) { Utils.sendMessage(player,mods.eln.i18n.I18N.tr("You need %1$ units of cable",length));return true; }
+        var utility=cable instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire?wire:null;
+        boolean enough=utility==null?stack.getCount()>=length:stack.getCount()==1 && (player.isCreative() || utility.getRemainingLengthMeters(stack)+1e-6>=length);
+        if (!enough) { Utils.sendMessage(player,mods.eln.i18n.I18N.tr("You need %1$ units of cable",length));return true; }
         try {
             if (!canConnect(other) || !validLOS(other)) throw new IllegalArgumentException(mods.eln.i18n.I18N.tr("Cannot connect these two objects"));
-            if (GridLink.addLink(other,this,first.terminal(),terminal,cable,length,stack.copyWithCount(length))) {
-                stack.shrink(length);player.getInventory().setChanged();Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Added connection"));
+            ItemStack paid=utility==null?stack.copyWithCount(length):utility.segment(stack,(double)length);
+            if (GridLink.addLink(other,this,first.terminal(),terminal,cable,length,paid)) {
+                if(utility==null)stack.shrink(length);else if(!player.isCreative())utility.consume(stack,(double)length);player.getInventory().setChanged();Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Added connection"));
             } else Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Already connected"));
         } catch (IllegalArgumentException ex) { Utils.sendMessage(player,ex.getMessage()); }
         return true;
