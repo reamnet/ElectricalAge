@@ -17,6 +17,7 @@ class GridLink : INBTTReady {
     private var from=0;private var to=0
     private var cable=ItemStack.EMPTY
     private var rs=0.0
+    private var jacketLength=false
     private val connections=ArrayList<GridSpanConnection>()
     private val thermals=ArrayList<WireSpanThermal>()
     private var savedThermals: CompoundTag?=null
@@ -53,7 +54,8 @@ class GridLink : INBTTReady {
         val x=left.gridLoads(from);val y=right.gridLoads(to)
         if(x.isEmpty() || x.size!=y.size || !rs.isFinite() || rs<0)return false
         val utility=mods.eln.generic.GenericItemBlockUsingDamageDescriptor.getDescriptor(cable) as? UtilityCableDescriptor
-        val meters=utility?.getRemainingLengthMeters(cable)?.div(x.size)
+        if(utility!=null && !GridCablePlan.acceptsChannels(utility,x.size))return false
+        val meters=utility?.getRemainingLengthMeters(cable)?.let { if(!it.isFinite() || it<=0)return false;GridCablePlan.coreMeters(it,x.size,jacketLength) }
         if(utility!=null && (meters==null || !meters.isFinite() || meters<=0))return false
         for(i in x.indices) {
             val c=GridSpanConnection(x[i],y[i],rs);connections.add(c);Eln.simulator.addElectricalComponent(c)
@@ -91,12 +93,13 @@ class GridLink : INBTTReady {
     override fun readFromNBT(nbt: CompoundTag,str: String) {
         a.readFromNBT(nbt,str+"a");b.readFromNBT(nbt,str+"b")
         from=nbt.getIntOr(str+"as",0);to=nbt.getIntOr(str+"bs",0);rs=nbt.getDoubleOr(str+"rs",0.0)
+        jacketLength=nbt.getBooleanOr(str+"spanBundleMeters",false)
         cable=nbt.get(str+"cable")?.let(Utils::loadItem) ?: ItemStack.EMPTY
         savedThermals=nbt.copy()
     }
     override fun writeToNBT(nbt: CompoundTag,str: String) {
         a.writeToNBT(nbt,str+"a");b.writeToNBT(nbt,str+"b");nbt.putInt(str+"as",from);nbt.putInt(str+"bs",to);nbt.putDouble(str+"rs",rs)
-        Utils.saveItem(cable)?.let { nbt.put(str+"cable",it) }
+        Utils.saveItem(cable)?.let { nbt.put(str+"cable",it) };nbt.putBoolean(str+"spanBundleMeters",jacketLength)
         if(thermals.isNotEmpty())thermals.forEachIndexed { i,t->if(i==0)t.write(nbt) else nbt.put("spanThermal$i",CompoundTag().also(t::write)) }
         else savedThermals?.let { tag->for(key in tag.keySet())if(key.startsWith("span"))tag.get(key)?.let { nbt.put(key,it.copy()) } }
     }
@@ -118,7 +121,8 @@ class GridLink : INBTTReady {
             require(ka==kb || ka=="LEGACY" || kb=="LEGACY") { tr("Grid phases or service voltages do not match") }
             val distance=a.coordonate().trueDistanceTo(b.coordonate())
             require(distance<=minOf(a.connectRange,b.connectRange)) { tr("Grid cable span exceeds the endpoint range") }
-            require(length>=kotlin.math.ceil(distance).toInt()*x.size && length>0 && (cable is UtilityCableDescriptor || length<=cable.newItemStack().maxStackSize)) { tr("Grid cable item does not match the paid length") }
+            val minimum=GridCablePlan.requiredUnits(cable,kotlin.math.ceil(distance).toInt(),x.size)
+            require(length>=minimum && length>0 && (cable is UtilityCableDescriptor || length<=cable.newItemStack().maxStackSize)) { tr("Grid cable item does not match the paid length") }
             val old=a.gridLinkList+b.gridLinkList
             if(old.any { link->
                 if(!link.links(a,b))return@any false
@@ -128,8 +132,8 @@ class GridLink : INBTTReady {
             val stack=paid?.copy() ?: if(cable is UtilityCableDescriptor)cable.newItemStack().also { cable.setRemainingLengthMeters(it,length.toDouble()) } else cable.newItemStack(length)
             val correct=if(cable is UtilityCableDescriptor)stack.count==1 && kotlin.math.abs(cable.getRemainingLengthMeters(stack)-length)<=UtilityCableDescriptor.LENGTH_METERS_EPSILON else stack.count==length
             require(correct && mods.eln.generic.GenericItemBlockUsingDamageDescriptor.getDescriptor(stack)===cable) { tr("Grid cable item does not match the paid length") }
-            val ohms=if(cable is UtilityCableDescriptor)cable.resistanceOhms(length.toDouble()/x.size) else cable.electricalRs*length/x.size
-            val link=GridLink(a.coordonate(),b.coordonate(),from,to,stack,ohms)
+            val ohms=if(cable is UtilityCableDescriptor)cable.resistanceOhms(GridCablePlan.coreMeters(length.toDouble(),x.size,GridCablePlan.bundled(cable))) else cable.electricalRs*length/x.size
+            val link=GridLink(a.coordonate(),b.coordonate(),from,to,stack,ohms).also { it.jacketLength=GridCablePlan.bundled(cable) }
             if(!link.connect()) { link.onBreakElement();throw IllegalArgumentException(tr("Grid endpoint is no longer available")) }
             return true
         }

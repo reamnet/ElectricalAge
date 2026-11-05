@@ -645,6 +645,30 @@ Reports: [routing regressions](forkpatch-port/multicore-routing-tests.json),
 [datagen](forkpatch-port/multicore-datagen.json), and
 [destination regressions](forkpatch-port/multicore-checkpoint-validation.json).
 
+### Multicore overhead payment checkpoint
+
+New intact multicore spools can supply a terminal bundle with the same conductor
+count. A three-core jacket spanning 4 m pays 4 m of spool; three separate scalar
+wires still pay 12 m. Every active core retains 4 m of its own physical metal,
+resistance, I²R heat and cooling. Mismatched core counts and scalar-terminal use
+are rejected before payment. Existing service circuits remain the native scalar
+L1/L2/240 V equivalents; this does not introduce a new AC neutral solver.
+
+New jacket-length records save an explicit `spanBundleMeters` marker. Unmarked
+source records retain their earlier total-conductor-length interpretation instead
+of silently changing paid lengths. Canonical reloads preserve each core ledger,
+and damaged refunds return exactly the paid jacket length with its full metal
+cross-section and unrelated item components, once. The new plan runs only during
+link construction; it adds no per-tick routing scans.
+
+Six payment/routing regressions pass. All 110 native server cases pass, including
+five new cases covering actual clicks, independent voltage/heat, hot reloads,
+damaged refunds, duplicate/creative payments, incompatible cores and old records.
+The broader regression suite will run again after the distribution equipment
+checkpoint. Manufacturing and full source-world migration remain pending.
+
+Report: [bundle validation](forkpatch-port/bundle-span-validation.json).
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

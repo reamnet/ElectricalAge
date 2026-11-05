@@ -67,7 +67,7 @@ abstract public class GridElement extends TransparentNodeElement {
         if (!(item instanceof ElectricalCableDescriptor cable)) return false;
         UUID id=player.getUUID();
         int terminal=selectedGridTerminal(side);
-        if (!allowsNewGridLinks() || !acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || gridLoads(terminal).isEmpty()) {
+        if (!allowsNewGridLinks() || !acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || !GridCablePlan.acceptsChannels(cable,gridLoads(terminal).size())) {
             Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Select an overhead grid terminal and intact power cable"));pending.remove(id);return true;
         }
         var first=pending.get(id);
@@ -77,7 +77,7 @@ abstract public class GridElement extends TransparentNodeElement {
             pending.put(id,new Pending(coordonate(),terminal));Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Setting starting point"));return true;
         }
         pending.remove(id);
-        int length=(int)Math.ceil(other.coordonate().trueDistanceTo(coordonate()))*gridLoads(terminal).size();
+        int length=GridCablePlan.requiredUnits(cable,(int)Math.ceil(other.coordonate().trueDistanceTo(coordonate())),gridLoads(terminal).size());
         var utility=cable instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire?wire:null;
         boolean enough=utility==null?stack.getCount()>=length:stack.getCount()==1 && (player.isCreative() || utility.getRemainingLengthMeters(stack)+1e-6>=length);
         if (!enough) { Utils.sendMessage(player,mods.eln.i18n.I18N.tr("You need %1$ units of cable",length));return true; }

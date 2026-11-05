@@ -37,7 +37,7 @@ object ForkPatchMulticoreCases {
                     c.check("multicore: palettes have unique colors for each core",d.colorPalettes.all { it.conductorColors.size==d.conductorCount && it.conductorColors.toSet().size==d.conductorCount },d.name)
                     c.check("multicore: melted metal retains total area",d.meltedDescriptor!!.totalConductorAreaMm2==d.totalConductorAreaMm2,"")
                 }
-                c.check("multicore: pending overhead phase adapter cannot consume a bundle as scalar wire",!mods.eln.gridnode.GridCablePolicy.accepts(d),d.name)
+                c.check("multicore: only intact bundles qualify for matching overhead terminals",mods.eln.gridnode.GridCablePolicy.accepts(d)==!d.melted,d.name)
             }
         }
     }

@@ -900,5 +900,12 @@
     "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
     "mode": "native flat geometry/conductor colors, native knuckles and temperature publication",
     "status": "placed multicore checkpoint: 6 routing regressions, 105 native cases and destination suite (464 passed, 3 optional skips) passed; overhead phase routing and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/GridCablePlan.kt",
+    "sourceSha256": "cd3a7e7985f0b10ec4d62cd1185b18214322a739fadf217bb076d9a7a7a11e69",
+    "mode": "native jacket-vs-conductor payment adapter, exact core counts, explicit saved length marker; preserve unmarked source record accounting",
+    "status": "bundle checkpoint: six routing regressions and 110 native server cases passed"
   }
 ]
