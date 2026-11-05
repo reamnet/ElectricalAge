@@ -1,0 +1,24 @@
+{
+  "tests": 430,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 427,
+  "suites": 90,
+  "portCommit": "f2c84f50",
+  "scope": "All destination tests after wired service metering and underground cable equipment integration",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "serviceCircuitTests": 12,
+  "nativeTests": 65,
+  "nativeServiceCases": 13,
+  "nativeReport": "service-native-tests.json",
+  "datagenReport": "service-datagen.json",
+  "limits": [
+    "Default 200-case fluid corpus not run.",
+    "Interactive client GPU/audio validation not performed; headless recorded geometry only.",
+    "Overhead service masts/weatherheads, span endpoint integration and source legacy-span migration remain pending.",
+    "The remaining utility distribution equipment, legacy Mains Step-down fallback and six other industrial devices await production adapters."
+  ]
+}

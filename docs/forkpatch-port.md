@@ -425,7 +425,7 @@ Reports: [circuit tests](forkpatch-port/pad-circuit-tests.json) and
 [datagen](forkpatch-port/pad-datagen.json), and
 [destination regressions](forkpatch-port/pad-checkpoint-validation.json).
 
-### Wired service checkpoint (validation in progress)
+### Wired service checkpoint
 
 Native adapters now cover the compact North American Meter Base (7987), Wide
 Underground Meter Socket (8128), Underground Service Entrance Riser (8129),
@@ -451,16 +451,39 @@ semantics. Weak cable markers avoid per-tick world searches and strong owner
 retention; topology preparation runs only during connection construction.
 
 The native block's cached legacy fallback previously bypassed tile-dependent wall
-collision helpers. A descriptor-oriented shape hook now supplies cached shapes for
-the service cabinets and earlier wall-mounted power cabinets, while retaining the
-existing model-hitbox path and floor fallback. Native cabinet cases query the
+collision helpers. Wall blocks now opt into dynamic shapes; a descriptor-oriented
+hook supplies thread-safe cached shapes for their four fronts. It serves the
+service cabinets and earlier wall-mounted power cabinets while retaining the
+existing model-hitbox path, floor fallback and fixed-shape fast path (no extra
+block-entity lookup for unrelated devices). Native cabinet cases query the
 block's actual collision shape, including both the origin and reserved battery/
 meter cells, rather than accepting the descriptor helper alone.
 
 The source analog dials/disk, smart LCD pages, glass, red handle/blades and cabinet
-geometry are adapted to recorded native GL. Circuit, actual cable, collision,
-inventory, datagen and destination regression validation are in progress. Interactive
-client validation and the rest of the utility distribution system remain pending.
+geometry are adapted to recorded native GL. Twelve production-circuit tests pass,
+including actual passive service voltages/sag, isolated contacts, separate import/
+export registers and unchanged LU factors across 100 stable steps. All 65 native
+ForkPatch cases pass, including 13 service cases. They check both placement orders
+and all four fronts with real rated wall cables, isolation during open/empty/removed
+meters, freeze/reconnect without a bypass, real collision on both cells, legacy
+cube-ghost repair, actual item inventory/serial/NBT transfers, live recorded
+geometry/publication and native node persistence. Earlier wall MPPT/UPS/ATS/battery
+cases also now check actual origin collision.
+
+Native datagen passes: five blockstates, seven item definitions, 12 item models,
+seven recipes/advancements and 12 English names. Seven new identities and five new
+model entries retain all 403 previous identities and 182 earlier geometry models.
+All destination root tests with `-PfluidCases=20` pass: 427 passed, three optional
+preview cases skipped, zero failures/errors (430 selected across 90 suites). The
+default 200-case fluid corpus was not run.
+
+Interactive client validation, overhead service spans/migration and the rest of the
+utility distribution system remain pending.
+
+Reports: [production circuits](forkpatch-port/service-circuit-tests.json),
+[native service and previous cases](forkpatch-port/service-native-tests.json),
+[datagen](forkpatch-port/service-datagen.json), and
+[destination regressions](forkpatch-port/service-checkpoint-validation.json).
 
 ## Inventory
 

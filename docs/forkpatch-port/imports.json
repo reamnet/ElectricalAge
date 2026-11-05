@@ -612,97 +612,97 @@
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceUnit.kt",
     "sourceSha256": "cbdc268e9b808593ce5740937735569afbc0b15a15d18de358c495b355acc4c5",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseService.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceElement.kt",
     "sourceSha256": "cbdc268e9b808593ce5740937735569afbc0b15a15d18de358c495b355acc4c5",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseService.kt",
     "target": "src/main/kotlin/mods/eln/utility/ServiceEnergy.kt",
     "sourceSha256": "cbdc268e9b808593ce5740937735569afbc0b15a15d18de358c495b355acc4c5",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceDescriptor.kt",
     "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceDisplay.kt",
     "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceRender.kt",
     "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceScreen.kt",
     "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/ServiceMeterVisual.kt",
     "target": "src/main/kotlin/mods/eln/utility/ServiceMeterVisual.kt",
     "sourceSha256": "8a3469b156b2d8c5d6f36536e2de05060e1f1fc1e3492db015323aa963201698",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/ServiceDisconnectVisual.kt",
     "target": "src/main/kotlin/mods/eln/utility/ServiceDisconnectVisual.kt",
     "sourceSha256": "3bc02ff37b88db91ebaf79e1c6d599e086b1055a7a3a4debd12f67a23ee19cf1",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/ServiceMeters.kt",
     "target": "src/main/kotlin/mods/eln/utility/ServiceMeters.kt",
     "sourceSha256": "5ba569086d0c99cbce0037979dddc8ce98dc7ee24ff90820671e1bacef45fb78",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/UndergroundHandhole.kt",
     "target": "src/main/kotlin/mods/eln/utility/UndergroundHandhole.kt",
     "sourceSha256": "68c4b470cbcc0bd3727b705b56ba169e5cabb74ff89dd1d3fb718f5e54126361",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/WideMeterWiring.kt",
     "target": "src/main/kotlin/mods/eln/utility/WideMeterWiring.kt",
     "sourceSha256": "55e11b05fa9616ea3f1b56e055666a40dacad10261eaafbf19b468a377e0073a",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/UtilityItems.kt",
     "target": "src/main/kotlin/mods/eln/utility/UtilityItems.kt",
     "sourceSha256": "517a52dc98180f86b84ea89d37ce041de2c369f4916a0fcd4badc215a24e8027",
     "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/WideMeterWiring.kt",
     "target": "src/main/java/mods/eln/node/NodeBase.java",
     "sourceSha256": "55e11b05fa9616ea3f1b56e055666a40dacad10261eaafbf19b468a377e0073a",
     "mode": "native connection hooks for wide meter only; preserve destination connection and simulation veto lifetimes",
-    "status": "wired service checkpoint: validation in progress"
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
   }
 ]
