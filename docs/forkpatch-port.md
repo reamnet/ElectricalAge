@@ -874,6 +874,38 @@ and place inventory icons at `textures/item/<registry-name>.png`. Target thermal
 use `moveEnergyTo(watts * seconds)` when their thermal load steps less often.
 Real ItemStack component/inventory behavior belongs in native server cases.
 
+### Legacy fused-tap lighting and retired cabinet checkpoint
+
+The hidden fused-tap secondary-fed street-light pole (8022) and retired three-
+phase underground feeder cabinet (8034) now retain their source identities and
+working native adapters. They remain outside creative inventory and gain no new
+crafting recipes. The new cabinet uses the unchanged source three-phase model;
+both variants have reproducible inventory icons.
+
+The lamp's actual 120 V service supply remains independent of the protected HV
+tap. A spent tap cartridge opens its real branch while the supplied lamp and
+through primary phases stay powered. Phase selection still rejects a connection
+that would bridge separately fed phases. The retired cabinet keeps three separate
+incoming/fused outgoing primary circuits; a fault on one phase leaves the other
+two healthy, and no primary circuit invents LV service. Native reloads preserve
+blown cartridge state; extracting it returns the spent physical item.
+
+Six new production regressions pass. The complete destination run passes 532
+regressions, with three optional CAD preview skips and zero failures/errors
+(535 selected, 102 suites, `fluidCases=20`). All 182 native server cases pass,
+including seven new cases for placement/power, lamp power and world-light expiry,
+phase-change guarding, physical cartridge faults and actual reloads. Datagen adds
+two block/item definitions, four models/English keys, one raw geometry model and
+two icons, retaining all 611 preceding identities; neither hidden item gains a
+recipe or advancement.
+
+The registry now covers 25 of the 30 source distribution variants: all eighteen
+current construction variants and seven hidden older variants. Five hidden
+legacy adapters and the wider ForkPatch migration remain incomplete. See the
+[validation report](forkpatch-port/legacy-distribution-validation.json),
+[updated parity](forkpatch-port/distribution-parity.json), and
+[continuation contracts](forkpatch-port/next-distribution-work.md).
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

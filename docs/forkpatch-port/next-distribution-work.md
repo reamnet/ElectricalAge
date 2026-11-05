@@ -1,23 +1,21 @@
 # Distribution continuation after the current-variant checkpoint
 
-Production code is validated at `4148c741`: 526 passing destination regressions,
-three optional preview skips, and 175 passing native cases. Use
-[the parity report](distribution-parity.json) for exact source IDs and registration
-status. All eighteen current source construction variants are implemented; the
-remaining seven are hidden legacy equipment, not new crafting unlocks.
+The latest continuation passes 532 destination regressions, three optional preview
+skips and 182 native cases. See [its validation](legacy-distribution-validation.json)
+and [the parity report](distribution-parity.json). All eighteen current source
+construction variants and seven hidden variants are implemented. The fused-tap
+lamp (8022) and retired non-light three-phase cabinet (8034) are now covered;
+five hidden legacy adapters remain.
 
 ## Hidden legacy adapters
 
-- **8022, fused-tap street light:** preserve the independently supplied LV lamp
-  and the actual protected single-phase HV branch. Exercise phase-change guards,
-  real branch current, paid cartridges and light expiry before registering it.
 - **8023, transformer plus fused-tap street light:** this needs two contact/fuse
   roles. The current ordinary transformer contact group must not be reused as
   the separate HV branch. Keep transformer-primary pickup separate from branch
   pickup and prove that one blown fuse cannot disable the other healthy path.
-- **8034/8036, retired three-phase underground cabinets:** preserve their three
+- **8036, retired three-phase underground cabinet with light:** preserve its three
   independent primary circuits and hidden identity. Adapt the source cabinet
-  models and saved channels; keep new overhead links disabled. Do not expose
+  model, five-block fixture clearance and saved channels; keep new overhead links disabled. Do not expose
   retired equipment through new recipes.
 - **8035, single-phase underground cabinet with light:** preserve cabinet
   terminals and real LV lamp supply, and adapt the five-block fixture clearance.

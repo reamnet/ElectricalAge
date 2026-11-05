@@ -1131,5 +1131,40 @@
     "sourceSha256": "c408367d5f0f3c449c072ec541efbb3b1c31b857b4e9e0b012449438eb353e25",
     "mode": "verbatim-source-cabinet-geometry",
     "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-retired-three-phase-cabinet-geometry",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-retired-three-phase-cabinet-geometry",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3/undergroundfused3.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3/undergroundfused3.obj",
+    "sourceSha256": "23b050b578813af915a9eea9ddd4debfb6dbc5217091f0e37b73820d28c96bbb",
+    "mode": "verbatim-source-retired-three-phase-cabinet-geometry",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/test/kotlin/mods/eln/utility/ForkPatchLegacyDistributionTest.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-legacy-tap-lamp-and-independent-three-phase-cartridge-regressions",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchLegacyDistributionCases.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-legacy-tap-lamp-and-independent-three-phase-cartridge-regressions",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
   }
 ]

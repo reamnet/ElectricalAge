@@ -1,11 +1,11 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "4148c7415e2cf39ecc273f2240e96553546fdba9",
-  "ledgerEntries": 161,
-  "uniqueSourceFiles": 108,
-  "uniqueTargetFiles": 151,
-  "declaredVerbatimEntries": 18,
-  "exactCopies": 28,
+  "targetCommit": "cc5d7190d81bdd24492e3215a1f34822ec7220d8",
+  "ledgerEntries": 166,
+  "uniqueSourceFiles": 111,
+  "uniqueTargetFiles": 156,
+  "declaredVerbatimEntries": 21,
+  "exactCopies": 31,
   "passed": true,
   "problems": [],
   "entries": [
@@ -1445,7 +1445,7 @@
       "target": "src/main/kotlin/mods/eln/utility/DistributionPoleUnit.kt",
       "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
       "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
-      "targetSha256": "5bdfa110d5c699d44e2d75f83dc37f88114858642f1aa98c7e557cd7e4ed8cee",
+      "targetSha256": "92681d1b90cbfb1566a53681bfaade92eb034d354a8bd5c142e4e3f28748b985",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -1522,7 +1522,7 @@
       "target": "src/main/kotlin/mods/eln/utility/DistributionPoles.kt",
       "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
       "sourceSha256": "829cb797d9a7e3039c48d31163c2f766ac6f47f903a333bc05b4cd7252a93027",
-      "targetSha256": "89f2789396904dc47c88954388e75d9d0426bb3ef69d6e85ec51a171b17e0432",
+      "targetSha256": "a78a854bcc79f4467179361514e531180e8f3372cf680c1938acdfc597223224",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -1779,6 +1779,61 @@
       "sourceMatchesLedger": true,
       "exactCopy": true,
       "declaredVerbatim": true
+    },
+    {
+      "index": 161,
+      "source": "src/main/resources/assets/eln/model/undergroundfused3/fixture.mtl",
+      "target": "src/main/resources/assets/eln/model/undergroundfused3/fixture.mtl",
+      "mode": "verbatim-source-retired-three-phase-cabinet-geometry",
+      "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+      "targetSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 162,
+      "source": "src/main/resources/assets/eln/model/undergroundfused3/equipment_finish.mtl",
+      "target": "src/main/resources/assets/eln/model/undergroundfused3/equipment_finish.mtl",
+      "mode": "verbatim-source-retired-three-phase-cabinet-geometry",
+      "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+      "targetSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 163,
+      "source": "src/main/resources/assets/eln/model/undergroundfused3/undergroundfused3.obj",
+      "target": "src/main/resources/assets/eln/model/undergroundfused3/undergroundfused3.obj",
+      "mode": "verbatim-source-retired-three-phase-cabinet-geometry",
+      "sourceSha256": "23b050b578813af915a9eea9ddd4debfb6dbc5217091f0e37b73820d28c96bbb",
+      "targetSha256": "23b050b578813af915a9eea9ddd4debfb6dbc5217091f0e37b73820d28c96bbb",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 164,
+      "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+      "target": "src/test/kotlin/mods/eln/utility/ForkPatchLegacyDistributionTest.kt",
+      "mode": "native-legacy-tap-lamp-and-independent-three-phase-cartridge-regressions",
+      "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+      "targetSha256": "cf323419538c2241f215fd288883542f7701d6ab3a68f8f123833e0e07659f60",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 165,
+      "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+      "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchLegacyDistributionCases.kt",
+      "mode": "native-legacy-tap-lamp-and-independent-three-phase-cartridge-regressions",
+      "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+      "targetSha256": "2cbf3c77584046bf4dc9df1a8b435e6c6c1e2f1fabfe8710f379e8785b2418b6",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
     }
   ],
   "scope": "Source hashes, target existence and declared exact copies; not full runtime parity."

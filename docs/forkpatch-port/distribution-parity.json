@@ -3,9 +3,9 @@
   "sourceVariants": 30,
   "currentCreativeVariants": 18,
   "currentCreativeVariantsAdapted": 18,
-  "registeredVariants": 23,
-  "hiddenLegacyVariantsAdapted": 5,
-  "hiddenLegacyVariantsPending": 7,
+  "registeredVariants": 25,
+  "hiddenLegacyVariantsAdapted": 7,
+  "hiddenLegacyVariantsPending": 5,
   "variants": [
     {
       "kind": "SINGLE",
@@ -144,8 +144,8 @@
       "kind": "FUSED_TAP_LIGHT_THREE",
       "sourceId": 8022,
       "sourceCreative": false,
-      "status": "hidden-legacy-adapter-pending",
-      "registryName": null
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_fused_tap_secondary_fed_street_light_pole"
     },
     {
       "kind": "FUSED_TAP_TRANSFORMER_LIGHT_THREE",
@@ -172,8 +172,8 @@
       "kind": "UNDERGROUND_THREE",
       "sourceId": 8034,
       "sourceCreative": false,
-      "status": "hidden-legacy-adapter-pending",
-      "registryName": null
+      "status": "native-placement-and-power-passed",
+      "registryName": "12_5kv_three_phase_fused_underground_feeder"
     },
     {
       "kind": "UNDERGROUND_LIGHT_SINGLE",
@@ -219,10 +219,9 @@
     }
   ],
   "limits": [
-    "Seven hidden legacy distribution variants remain unregistered; all eighteen current source creative distribution variants are adapted.",
-    "Cabinet recipes retain the source shaped bill of materials in a native shapeless recipe.",
-    "Existing native scalar service equivalents are preserved; this is not a neutral/AC phasor solver.",
-    "Legacy pole/transmission attachment adapters, adaptive racks/clearances, source-world migration and interactive GPU/audio checks remain pending.",
-    "The default 200-case fluid corpus is not run; full regressions select fluidCases=20."
+    "Five hidden legacy distribution adapters remain pending.",
+    "Full source-world migration, adaptive racks, other pole-family attachments and the wider ForkPatch migration remain incomplete.",
+    "Native scalar phase/service equivalents are retained.",
+    "Three optional CAD previews skipped; default 200-case fluid corpus and interactive GPU/audio validation not run."
   ]
 }
