@@ -3,9 +3,9 @@
   "sourceVariants": 30,
   "currentCreativeVariants": 18,
   "currentCreativeVariantsAdapted": 18,
-  "registeredVariants": 25,
-  "hiddenLegacyVariantsAdapted": 7,
-  "hiddenLegacyVariantsPending": 5,
+  "registeredVariants": 29,
+  "hiddenLegacyVariantsAdapted": 11,
+  "hiddenLegacyVariantsPending": 1,
   "variants": [
     {
       "kind": "SINGLE",
@@ -151,8 +151,8 @@
       "kind": "FUSED_TAP_TRANSFORMER_LIGHT_THREE",
       "sourceId": 8023,
       "sourceCreative": false,
-      "status": "hidden-legacy-adapter-pending",
-      "registryName": null
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_transformer_street_light_pole_with_fused_single_phase_tap"
     },
     {
       "kind": "SERVICE_PEDESTAL",
@@ -179,15 +179,15 @@
       "kind": "UNDERGROUND_LIGHT_SINGLE",
       "sourceId": 8035,
       "sourceCreative": false,
-      "status": "hidden-legacy-adapter-pending",
-      "registryName": null
+      "status": "native-placement-and-power-passed",
+      "registryName": "12_5kv_single_phase_fused_underground_feeder_with_street_light"
     },
     {
       "kind": "UNDERGROUND_LIGHT_THREE",
       "sourceId": 8036,
       "sourceCreative": false,
-      "status": "hidden-legacy-adapter-pending",
-      "registryName": null
+      "status": "native-placement-and-power-passed",
+      "registryName": "12_5kv_three_phase_fused_underground_feeder_with_street_light"
     },
     {
       "kind": "TWIN_SECONDARY_LIGHT",
@@ -207,8 +207,8 @@
       "kind": "FEEDER_LIGHT_SINGLE",
       "sourceId": 8132,
       "sourceCreative": false,
-      "status": "hidden-legacy-adapter-pending",
-      "registryName": null
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_underground_feeder_pole_with_secondary_fed_street_light"
     },
     {
       "kind": "UNDERGROUND_SECONDARY_TRANSFORMER_SINGLE",
@@ -223,5 +223,6 @@
     "Full source-world migration, adaptive racks, other pole-family attachments and the wider ForkPatch migration remain incomplete.",
     "Native scalar phase/service equivalents are retained.",
     "Three optional CAD previews skipped; default 200-case fluid corpus and interactive GPU/audio validation not run."
-  ]
+  ],
+  "validatedCodeCommit": "1713adf5a42ac385f3583daea2b79e84fcee3048"
 }

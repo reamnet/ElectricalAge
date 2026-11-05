@@ -943,3 +943,26 @@ First verify the unmodified destination, then run the migrated module's tests an
 the destination regressions. Native game tests and client checks follow the
 production registry/menu/render adapters; passing pure state-machine tests alone
 does not establish working in-game equipment.
+
+### Legacy lighting completion checkpoint: 29 of 30 variants
+
+The combined transformer/fused-tap streetlight (8023), lighted underground
+single/three-phase cabinets (8035/8036), and lighted single-phase feeder (8132)
+now have production adapters. The combined pole has independent transformer and
+HV branch contacts, current measurements and physical fuse latches. A fault in
+either path leaves the other path operating. Its tap cutout has its own rendered
+offset; phase changes retain the native span guard. The native passive transformer,
+accepted copper heating and cached LU factors remain in use.
+
+Cabinet lamps draw actual upstream LV power, use source models with a five-block
+fixture reservation, and retain non-solid upper clearance cells. The feeder lamp
+explicitly chooses one 120/240 V service, not both. New variants retain their exact
+source offsets and hidden identities and have no new construction recipes.
+
+Validation: 545 regressions passed, three optional CAD previews skipped; 200
+selected native server cases passed; data generation passed for 617 identities
+without missing icons. The reduced fluid setting was 20, not the default 200.
+See [the report](forkpatch-port/legacy-lighting-validation.json). Twin-pole recovery
+and broader migration remain pending. An initial unfiltered smoke run found the
+missing cabinet model-index entries (fixed) and separate gallery/menu findings;
+[it does not establish a passing full-native baseline](forkpatch-port/unfiltered-native-smoke-findings.json).

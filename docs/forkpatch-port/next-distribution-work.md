@@ -1,56 +1,37 @@
-# Distribution continuation after the current-variant checkpoint
+# Distribution continuation after the legacy lighting checkpoint
 
-The latest continuation passes 532 destination regressions, three optional preview
-skips and 182 native cases. See [its validation](legacy-distribution-validation.json)
-and [the parity report](distribution-parity.json). All eighteen current source
-construction variants and seven hidden variants are implemented. The fused-tap
-lamp (8022) and retired non-light three-phase cabinet (8034) are now covered;
-five hidden legacy adapters remain.
+The latest checkpoint passes 545 destination regressions with three optional CAD
+preview skips and 200 selected native server cases. Data generation covers 617
+registry identities without missing icons. See [validation](legacy-lighting-validation.json)
+and [variant parity](distribution-parity.json). All eighteen current construction
+variants and eleven hidden legacy variants are implemented: 29 of 30 in total.
 
-## Hidden legacy adapters
+## Remaining hidden adapter: twin LED secondary pole (7949)
 
-- **8023, transformer plus fused-tap street light:** this needs two contact/fuse
-  roles. The current ordinary transformer contact group must not be reused as
-  the separate HV branch. Keep transformer-primary pickup separate from branch
-  pickup and prove that one blown fuse cannot disable the other healthy path.
-- **8036, retired three-phase underground cabinet with light:** preserve its three
-  independent primary circuits and hidden identity. Adapt the source cabinet
-  model, five-block fixture clearance and saved channels; keep new overhead links
-  disabled. Do not expose retired equipment through new recipes.
-- **8035, single-phase underground cabinet with light:** preserve cabinet
-  terminals and real LV lamp supply, and adapt the five-block fixture clearance.
-- **7949, twin LED pole:** preserve both heads and the shared 120 W consumption,
-  source 120/240 V selection, and recovery-only inventory for genuine old hardware.
-  Settings or an old rating field alone cannot manufacture a transformer/fuse.
-- **8132, single-phase feeder with light:** retain the fused underground primary,
-  independent secondary service, 120/240 V lamp selection and existing riser ports.
+Preserve both heads and their shared 120 W load, explicit 120/240 V selection,
+and recovery-only inventory for genuine old hardware. Settings or an old rating
+field alone cannot manufacture a transformer/fuse. The existing standalone Mains
+Step-down Unit identity must be adapted so actual old items can be recognized.
 
-Source references are `utility/DistributionPole.kt`, `DistributionClient.kt`,
-`UndergroundCabinetVisual.kt` and the utilitylight fixture controls in the pinned
-ForkPatch checkout. Keep original offsets and hidden flags.
-
-For the twin-pole recovery, also inspect `TwinPoleMigration.kt` and
-`PoleHardware.migrate`: the source gates translation on the absence of
-`utilityLamp` and presence of `mainsOutputVoltage`. Carry its old mains/aim and
+Inspect `TwinPoleMigration.kt` and `PoleHardware.migrate` in the pinned source.
+Settings translation is gated on the absence of `utilityLamp` and presence of
+`mainsOutputVoltage`. Carry old mains/lamp/dusk/aim/height and
 `poleSelectedTerminal` settings into the new keys once. Higher-rating conversion
-requires an actual old step-down item in slot zero; validate the saved rating
-against the five supported ratings before conversion. Preserve the actual
-`poleFuse` cartridge and prove that repeated reloads and carried-item reads cannot
-repeat recovery. These recovery adapters are still pending, not implemented by
-this checkpoint.
+requires an actual old step-down item in slot zero and a supported rating. Preserve
+an actual old `poleFuse` record in recovery slot one. Repeated reloads or carried
+reads must not repeat recovery. Never reconnect a former HV span as an LV supply.
 
 ## Remaining related work
 
-Paid streetlights currently attach to the adapted distribution poles. Other
-source-supported pole families still need their native secondary-port adapters;
-check `LegacyPolePorts.kt`, `PoleStreetlightAttachment.kt` and native
-`ElectricalPoleElement` before adding any legacy-pole hook. Never use its primary
-load as an attachment's secondary supply.
-
+Paid streetlights currently attach to adapted distribution poles. Other source
+pole families need native secondary-port adapters (`LegacyPolePorts.kt` and
+`ElectricalPoleElement`); do not use a primary load as an attachment's LV supply.
 Adaptive primary/service alignment, can/rack clearance routing, height/surge
-attachments, wire manufacturing/trimming and full source-world migration remain
-separate work. Preserve current catenary caches, paid spool/jacket ledgers,
-phase-inheritance guards, accepted physical-step energy accounting and existing
-JVM method descriptors when extending them. The broader appliance, vehicle,
-industrial and optional integration workstreams are still tracked in
-[the main port notes](../forkpatch-port.md).
+attachments, wire manufacturing/trimming and full source-world migration remain.
+Keep catenary caches, paid spool/jacket ledgers, phase-inheritance guards, physical
+step energy accounting and existing JVM method descriptors.
+
+The unfiltered native smoke run also observed gallery placement/menu harness
+failures outside the selected port validation. See [findings](unfiltered-native-smoke-findings.json);
+that run is not a passing full-native baseline. Broader work remains in
+[the port notes](../forkpatch-port.md).
