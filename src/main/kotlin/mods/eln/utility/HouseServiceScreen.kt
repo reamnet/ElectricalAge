@@ -13,6 +13,9 @@ class HouseServiceScreen(menu: ElnNodeMenu,inventory: Inventory,title: Component
     private var disconnect: net.minecraft.client.gui.components.Button?=null
     override fun init() {
         super.init()
+        if(render.desc.overhead)button(8,56,304,{
+            when(render.display.terminal) { 50->tr("Cable: service drop bundle");40->tr("Cable: L1 120 V");41->tr("Cable: L2 120 V");else->tr("Cable: 240 V") }
+        },{ val ts=listOf(50,40,41,42);render.clientSendInt(87.toByte(),ts[(ts.indexOf(render.display.terminal)+1)%ts.size]) })
         button(8,82,304,{
             tr("Placed cable circuit: %1$",when(render.display.circuit) { 0->tr("L1 120 V");1->tr("L2 120 V");else->tr("240 V") })
         },{render.clientSendInt(88.toByte(),(render.display.circuit+1)%3)})

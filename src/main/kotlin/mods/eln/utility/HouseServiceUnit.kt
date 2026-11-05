@@ -13,6 +13,7 @@ class HouseServiceUnit(val meter: Boolean,val serviceDisconnect: Boolean,states:
     val line=List(3) { NbtElectricalLoad("serviceLine$it").apply { rs=.00001 } }
     val load=if(meter || serviceDisconnect)List(3) { NbtElectricalLoad("serviceLoad$it").apply { rs=.00001 } } else line
     val contacts=if(meter || serviceDisconnect)List(3) { TransferContact(line[it],load[it]) } else emptyList()
+    var wiredSplitAllowed: ()->Boolean={true}
     val energy=ServiceEnergy()
     var meterType=0;private set
     var disconnected=false;private set
@@ -31,7 +32,7 @@ class HouseServiceUnit(val meter: Boolean,val serviceDisconnect: Boolean,states:
         processes.add(IProcess { dt->
             if(!dt.isFinite() || dt<=0)return@IProcess
             if(meter)energy.step(dt,watts)
-            setWired(line[2].connectedComponents.any { it is ElectricalConnection })
+            setWired(wiredSplitAllowed() && line[2].connectedComponents.any { it is ElectricalConnection })
         })
         configure()
     }

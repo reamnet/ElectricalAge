@@ -1083,6 +1083,13 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeForkPatchUps() {
+        addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        int mastIndex=0;
+        for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK)) {
+            java.util.List<Object> ingredients=new java.util.ArrayList<>();ingredients.add(findItemStack("120/240V Service Weatherhead"));
+            for(int i=0;i<=mastIndex;i++)ingredients.add(Items.IRON_INGOT);
+            addShapelessRecipe(findItemStack(mast.getTitle()),ingredients.toArray());mastIndex++;
+        }
         addRecipe(findItemStack("North American Meter Base"),"P P","PCP","P P",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
         addRecipe(findItemStack("Analog Glass Service Meter")," G ","CMC"," P ",'G',Items.GLASS,'C',findItemStack("Copper Cable"),'M',findItemStack("Electrical Motor"),'P',findItemStack("Iron Plate"));
         addShapelessRecipe(findItemStack("Smart Digital Service Meter"),findItemStack("Analog Glass Service Meter"),Items.COMPARATOR,Items.REDSTONE);

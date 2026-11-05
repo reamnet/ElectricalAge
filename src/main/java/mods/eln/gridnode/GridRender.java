@@ -34,7 +34,10 @@ public abstract class GridRender extends TransparentNodeElementRender {
     @Override
     public void draw() {
         descriptor.draw(idealRenderingAngle);
+        drawCables();
+    }
 
+    public void drawCables() {
         UtilsClient.bindTexture(cableTexture);
         // TODO: Try not to need this. (How? Math.)
         glDisable(GL_CULL_FACE);
@@ -59,7 +62,13 @@ public abstract class GridRender extends TransparentNodeElementRender {
             idealRenderingAngle = stream.readFloat();
             int linkCount = stream.readInt();
             for (int i = 0; i < linkCount; i++) {
-                // Links always come in pairs.
+                int wires=stream.readInt();
+                if (wires<1 || wires>3) throw new IOException("Invalid grid wire count");
+                if (wires!=2) {
+                    for(int wire=0;wire<wires;wire++) catenaries.add(new Catenary(readVec(stream),readVec(stream)));
+                    continue;
+                }
+                // Preserve the legacy pair's crossing minimisation.
                 Vec3 splus = readVec(stream);
                 Vec3 tplus = readVec(stream);
                 Vec3 sgnd = readVec(stream);

@@ -32,6 +32,7 @@ public class GhostBlock extends Block {
     public static final int tLadder = 2;
 
     public static final int tBatteryFloor = 7;
+    public static final int tClearance = 8; // 3..7 retain the native cabinet/battery shapes.
     public static int wallServiceMeta(Direction front) {
         return switch (front) { case XN -> 3; case XP -> 4; case ZN -> 5; case ZP -> 6;
             default -> throw new IllegalArgumentException("A wall cabinet needs a horizontal front"); };
@@ -61,6 +62,7 @@ public class GhostBlock extends Block {
             case tFloor:
                 return FLOOR;
             case tLadder:
+            case tClearance:
                 return Shapes.empty();
             default:
                 return Shapes.block();

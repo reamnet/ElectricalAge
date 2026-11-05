@@ -3,11 +3,11 @@ import mods.eln.node.transparent.*
 import mods.eln.misc.*
 import java.io.*
 
-class HouseServiceRender(entity: TransparentNodeEntity,d: TransparentNodeDescriptor): TransparentNodeElementRender(entity,d) {
+class HouseServiceRender(entity: TransparentNodeEntity,d: TransparentNodeDescriptor): mods.eln.gridnode.GridRender(entity,d) {
     val desc=d as HouseServiceDescriptor
     val display=HouseServiceDisplay()
     private var clock=0.0;private var disk=0.0
-    override fun draw()=desc.drawService(front,display,disk,((clock/5).toInt()%4))
+    override fun draw() { drawCables();desc.drawService(front,display,disk,((clock/5).toInt()%4)) }
     override fun refresh(deltaT: Float) { super.refresh(deltaT);val dt=deltaT.coerceIn(0f,.25f);clock+=dt;disk=(disk+ServiceMeters.diskDegrees(display.watts*dt))%360 }
     override fun cameraDrawOptimisation()=false
     override fun networkUnserialize(s: DataInputStream) { super.networkUnserialize(s);display.read(s);disk=ServiceMeters.diskPosition(display.imported,display.exported) }

@@ -485,6 +485,40 @@ Reports: [production circuits](forkpatch-port/service-circuit-tests.json),
 [datagen](forkpatch-port/service-datagen.json), and
 [destination regressions](forkpatch-port/service-checkpoint-validation.json).
 
+### Overhead service checkpoint (validation in progress)
+
+Four source identities now have native adapters: Service Weatherhead (7986),
+Compact Side Entry Service Mast (8028), Through Roof Service Mast (8029), and
+Gooseneck Service Mast (8030). Their source models, item icons and recipes are
+included. Masts accept either a three-wire service bundle or an individual service
+circuit and continue into placed wall cables; meters, disconnects and underground
+risers reject new overhead links. Existing saved meter/service terminals still
+have their original independent buses rather than gaining parallel split taps.
+
+The native span layer now has integer terminals with legacy Direction encodings
+0..5 retained. Three-channel bundles retain independent electrical loads and pay
+for three conductor lengths. Wire resistance remains additional to terminal
+resistance across resistance notifications, with no per-step span-world lookups.
+The destination LU solver, native pole ratings and normal connection objects are
+retained. Chunk copies merge into one canonical span; disconnect removes spans
+before their terminal states, and native simulation veto prevents reconnection
+into frozen endpoints. Endpoint references resolve against the node manager rather
+than retaining replaced nodes after reload. Breaking refunds paid cable once,
+including its native item components.
+
+The native catenary packet supports one/three service wires and retains the legacy
+two-wire crossing optimisation. Wall shapes use the native oriented-shape cache.
+Standard weatherheads reserve non-solid clearance with native ghost metadata 8;
+metadata 3..7 retain their existing cabinet/battery meanings. Roof masts permit
+real roof blocks above the wall base.
+
+Eight span circuit tests and the twelve earlier meter circuit tests pass. Native
+placement, rendering, payments, reload/freeze and full destination validation are
+in progress. Utility cable spools/thermal models, new distribution poles and phase
+routing, can-clearance wire paths, other utility hardware and complete source-world
+migration remain pending. Ordinary native cable stacks retain their normal stack
+limits; this checkpoint does not pretend they are variable-length spools.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

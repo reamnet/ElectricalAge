@@ -13,13 +13,17 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.core.BlockPos
 
-class HouseServiceDescriptor(val meter: Boolean,val disconnect: Boolean,val wide: Boolean): PowerCabinetDescriptor(
-    if(disconnect)I18N.TR_NAME(I18N.Type.NONE,"Red Handle Service Disconnect") else if(wide)I18N.TR_NAME(I18N.Type.NONE,"Wide Underground Meter Socket") else if(meter)I18N.TR_NAME(I18N.Type.NONE,"North American Meter Base") else I18N.TR_NAME(I18N.Type.NONE,"Underground Service Entrance Riser"),HouseServiceElement::class.java,HouseServiceRender::class.java,true) {
-    private val model=requireNotNull(Eln.obj.getObj(if(disconnect)"redhandleservicedisconnect" else if(wide)"wideundergroundmetersocket" else if(meter)"northamericanmeterbase" else "undergroundserviceentrance"))
+class HouseServiceDescriptor @JvmOverloads constructor(val meter: Boolean,val disconnect: Boolean,val wide: Boolean,val mast: ServiceMastStyle=ServiceMastStyle.UNDERGROUND): ServiceWallDescriptor(
+    if(disconnect)I18N.TR_NAME(I18N.Type.NONE,"Red Handle Service Disconnect") else if(wide)I18N.TR_NAME(I18N.Type.NONE,"Wide Underground Meter Socket") else if(meter)I18N.TR_NAME(I18N.Type.NONE,"North American Meter Base") else mast.title,
+    if(disconnect)"redhandleservicedisconnect" else if(wide)"wideundergroundmetersocket" else if(meter)"northamericanmeterbase" else mast.model,HouseServiceElement::class.java,HouseServiceRender::class.java) {
+    private val model=requireNotNull(Eln.obj.getObj(if(disconnect)"redhandleservicedisconnect" else if(wide)"wideundergroundmetersocket" else if(meter)"northamericanmeterbase" else mast.model))
+    val overhead get()=!meter && !disconnect && !mast.underground
     val serviceWidth get()=if(wide)2 else 1
-    init { require(!wide || meter);if(wide)ghostGroup=GhostGroup() }
-    override fun getGhostGroup(front: Direction): GhostGroup?=if(!wide)null else GhostGroup().apply {
-        val right=front.right().toEnumFacing();addElement(right.stepX,0,right.stepZ,Eln.ghostBlock,GhostBlock.wallServiceMeta(front))
+    init { require(!wide || meter);if(wide || overhead && mast==ServiceMastStyle.STANDARD)ghostGroup=GhostGroup() }
+    override fun getGhostGroup(front: Direction): GhostGroup?=when {
+        wide->GhostGroup().apply { val right=front.right().toEnumFacing();addElement(right.stepX,0,right.stepZ,Eln.ghostBlock,GhostBlock.wallServiceMeta(front)) }
+        overhead && mast==ServiceMastStyle.STANDARD->GhostGroup().apply { addElement(0,1,0,Eln.ghostBlock,GhostBlock.tClearance) }
+        else->null
     }
     override fun checkCanPlace(c: Coordonate?,front: Direction): String? {
         val reason=super.checkCanPlace(c,front);if(reason!=null)return reason
@@ -67,7 +71,8 @@ class HouseServiceDescriptor(val meter: Boolean,val disconnect: Boolean,val wide
         list.add(tr("Three-wire service bundle: L1 120 V, L2 120 V and 240 V circuit equivalents"))
         if(wide) { list.add(tr("Two blocks wide; downward input under the left half, downward output under the right"));list.add(tr("Bottom entries only: utility line on the left, customer load on the right")) }
         if(meter) { list.add(tr("Insert an Analog Glass Service Meter or Smart Digital Service Meter"));list.add(tr("Smart meter has a manual disconnect and a future remote-control hook")) }
-        else list.add(tr("Buried service enters below; continue upward to the meter with placed cables"))
+        else if(mast.underground)list.add(tr("Buried service enters below; continue upward to the meter with placed cables"))
+        else list.add(tr("Terminate a pole service drop here and continue down the wall with placed cables"))
         list.add(tr("Top and bottom cable terminals use the circuit selected in the menu"))
     }
 }

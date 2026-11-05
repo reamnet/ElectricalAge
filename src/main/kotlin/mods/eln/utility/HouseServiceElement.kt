@@ -11,9 +11,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.entity.player.Player
 import java.io.*
 
-/** Wired service equipment uses native placed cables; overhead span integration follows separately. */
-class HouseServiceElement(node: TransparentNode,d: TransparentNodeDescriptor): TransparentNodeElement(node,d) {
-    val desc=d as HouseServiceDescriptor
+/** Service cabinets use placed cables; weatherheads terminate independent overhead service buses. */
+class HouseServiceElement(node: TransparentNode,d: TransparentNodeDescriptor): mods.eln.gridnode.GridElement(node,d,64) {
+    private val serviceDesc=d as HouseServiceDescriptor
+    val desc get()=serviceDesc
     val unit=HouseServiceUnit(desc.meter,desc.disconnect,electricalLoadList,electricalComponentList,electricalProcessList)
     private val meters=object: TransparentNodeElementInventory(if(desc.meter)1 else 0,1,this) {
         fun raw()=super.getStackInSlot(0)
@@ -34,10 +35,11 @@ class HouseServiceElement(node: TransparentNode,d: TransparentNodeDescriptor): T
     fun rawMeter()=meters.raw()
     fun syncMeter() { if(desc.meter)ServiceMeters.store(meters.raw(),unit.energy,unit.disconnected) }
     init {
+        unit.wiredSplitAllowed={ !desc.overhead && gridLinkList.isEmpty() && gridLinksBooting.isEmpty() }
         slowProcessList.add(mods.eln.sim.IProcess { desc.checkSupport(this);if(desc.wide)WideMeterWiring.syncGhostShape(this) })
         slowProcessList.add(NodePeriodicPublishProcess(node,.5,0.0))
     }
-    override fun initialize() { unit.configure();connect();if(desc.wide)WideMeterWiring.refreshCables(this) }
+    override fun initialize() { unit.configure();super.initialize();if(desc.wide)WideMeterWiring.refreshCables(this) }
     override fun inventoryChange(inventory: Container?) { unit.configure();needPublish() }
     override fun onBreakElement() { syncMeter();super.onBreakElement() }
     override fun onNeighborBlockChange() { super.onNeighborBlockChange();desc.checkSupport(this) }
@@ -52,7 +54,20 @@ class HouseServiceElement(node: TransparentNode,d: TransparentNodeDescriptor): T
         if(desc.meter && unit.meterType==0 && UtilityItems.part(player.mainHandItem) in 1..2) {
             meters.setItem(0,player.mainHandItem.copyWithCount(1));if(!player.abilities.instabuild)player.mainHandItem.shrink(1);player.inventory.setChanged();return true
         }
-        return false
+        return super.onBlockActivated(player,side,x,y,z)
+    }
+    var terminal=50;private set
+    override fun allowsNewGridLinks()=desc.overhead
+    override fun selectedGridTerminal(side: Direction)=terminal
+    override fun getGridElectricalLoad(side: Direction)=unit.line[unit.circuit]
+    override fun gridLoads(terminal: Int): List<mods.eln.sim.ElectricalLoad> = when(terminal) {
+        50->unit.line;51->if(desc.meter)unit.load else emptyList();40,41,42->listOf(unit.load[terminal-40]);in 0..5->listOf(unit.line[unit.circuit]);else->emptyList()
+    }
+    override fun gridCircuitKey(terminal: Int)=when(terminal) { 50,51->"SERVICE_BUNDLE";40->"SERVICE_L1";41->"SERVICE_L2";42->"SERVICE_240";else->"LEGACY" }
+    override fun renderWireCount(terminal: Int)=if(terminal in 50..51)3 else 1
+    override fun gridCablePoint(terminal: Int,wire: Int): net.minecraft.world.phys.Vec3 {
+        val i=if(terminal in 50..51)wire else (terminal-40).coerceIn(0,2)
+        return net.minecraft.world.phys.Vec3(if(!desc.meter)desc.mast.headX else .36,if(!desc.meter)desc.mast.headY else if(terminal==50).38 else -.40,if(!desc.meter)desc.mast.headZ+(i-1)*desc.mast.spacing else (i-1)*.17)
     }
     override fun getElectricalLoad(side: Direction,lrdu: LRDU): mods.eln.sim.ElectricalLoad? {
         if(desc.wide)return if(side!=Direction.YN)null else when(lrdu) { WideMeterWiring.port(this,false)->unit.line[unit.circuit];WideMeterWiring.port(this,true)->unit.load[unit.circuit];else->null }
@@ -65,17 +80,17 @@ class HouseServiceElement(node: TransparentNode,d: TransparentNodeDescriptor): T
     override fun multiMeterString(side: Direction)=tr("Service: %1$ / %2$ / %3$",Utils.plotVolt("",unit.load[0].u),Utils.plotVolt("",unit.load[1].u),Utils.plotVolt("",unit.load[2].u))
     override fun thermoMeterString(side: Direction): String?=null
     override fun getWaila()=linkedMapOf(tr("Service") to multiMeterString(front)).apply { if(desc.meter) { put(tr("Imported energy"),tr("%1$ kWh",unit.energy.importedKwh));put(tr("Exported energy"),tr("%1$ kWh",unit.energy.exportedKwh)) } }
-    override fun writeToNBT(t: CompoundTag) { syncMeter();super.writeToNBT(t);unit.write(t) }
+    override fun writeToNBT(t: CompoundTag) { syncMeter();super.writeToNBT(t);unit.write(t);t.putInt("serviceTerminal",terminal) }
     override fun readFromNBT(t: CompoundTag) {
-        super.readFromNBT(t);unit.read(t)
+        super.readFromNBT(t);unit.read(t);terminal=t.getIntOr("serviceTerminal",50).takeIf { it in listOf(50,40,41,42) } ?: 50
         if(desc.meter && unit.meterType>0)ServiceMeters.data(meters.raw())?.let { unit.installMeter(unit.meterType,it) }
         syncMeter()
     }
-    override fun getItemStackNBT()=CompoundTag().also { t->t.putInt("serviceCircuit",unit.circuit);if(desc.disconnect)t.putBoolean("meterDisconnected",unit.disconnected) }
-    override fun readItemStackNBT(t: CompoundTag?) { if(t!=null)unit.read(t) }
+    override fun getItemStackNBT()=CompoundTag().also { t->t.putInt("serviceCircuit",unit.circuit);t.putInt("serviceTerminal",terminal);if(desc.disconnect)t.putBoolean("meterDisconnected",unit.disconnected) }
+    override fun readItemStackNBT(t: CompoundTag?) { if(t!=null) { unit.read(t);terminal=t.getIntOr("serviceTerminal",50).takeIf { it in listOf(50,40,41,42) } ?: 50 } }
     override fun networkUnserialize(s: DataInputStream): Byte {
         val id=super.networkUnserialize(s)
-        try { when(id.toInt()) { 88->if(unit.selectCircuit(s.readInt()))reconnect();89->setRemoteDisconnect(s.readBoolean()) } } catch(_: IOException) {}
+        try { when(id.toInt()) { 87->s.readInt().takeIf { it in listOf(50,40,41,42) }?.let { terminal=it };88->if(unit.selectCircuit(s.readInt()))reconnect();89->setRemoteDisconnect(s.readBoolean()) } } catch(_: IOException) {}
         needPublish();return id
     }
     override fun networkSerialize(out: DataOutputStream) { syncMeter();super.networkSerialize(out);HouseServiceDisplay().apply { capture(this@HouseServiceElement);write(out) } }

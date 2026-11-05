@@ -79,6 +79,10 @@ public final class ElnDeviceRegistry {
         registerSolarPanel(48);
         registerForkPatchSolar();
         registerForkPatchStandby();
+        transparentNodeItem.addDescriptor(50+(124<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false,mods.eln.utility.ServiceMastStyle.STANDARD));
+        int mastIndex=0;
+        for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK))
+            transparentNodeItem.addDescriptor(28+mastIndex+++(125<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false,mast));
         transparentNodeItem.addDescriptor(51+(124<<6),new mods.eln.utility.HouseServiceDescriptor(true,false,false));
         transparentNodeItem.addDescriptor(56+(124<<6),new mods.eln.utility.HouseServiceDescriptor(false,true,false));
         transparentNodeItem.addDescriptor(0+(127<<6),new mods.eln.utility.HouseServiceDescriptor(true,false,true));

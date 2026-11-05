@@ -63,6 +63,10 @@ def cabinet(model, item):
 
 if __name__ == "__main__":
     for model, item in [
+        ("serviceweatherhead", "120_240v_service_weatherhead"),
+        ("compactservicemast", "compact_side_entry_service_mast"),
+        ("roofservicemast", "through_roof_service_mast"),
+        ("gooseneckservicemast", "gooseneck_service_mast"),
         ("northamericanmeterbase", "north_american_meter_base"),
         ("wideundergroundmetersocket", "wide_underground_meter_socket"),
         ("undergroundserviceentrance", "underground_service_entrance_riser"),

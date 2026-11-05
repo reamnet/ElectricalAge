@@ -2297,6 +2297,12 @@
   "kind": "transparent_node",
   "name": "wall_mounted_programmable_ups"
  },
+ "eln:transparent_node@7986": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "120/240V Service Weatherhead",
+  "kind": "transparent_node",
+  "name": "120_240v_service_weatherhead"
+ },
  "eln:transparent_node@7987": {
   "descriptor": "HouseServiceDescriptor",
   "display": "North American Meter Base",
@@ -2338,6 +2344,24 @@
   "display": "Extreme Standby Gasoline Generator",
   "kind": "transparent_node",
   "name": "extreme_standby_gasoline_generator"
+ },
+ "eln:transparent_node@8028": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Compact Side Entry Service Mast",
+  "kind": "transparent_node",
+  "name": "compact_side_entry_service_mast"
+ },
+ "eln:transparent_node@8029": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Through Roof Service Mast",
+  "kind": "transparent_node",
+  "name": "through_roof_service_mast"
+ },
+ "eln:transparent_node@8030": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Gooseneck Service Mast",
+  "kind": "transparent_node",
+  "name": "gooseneck_service_mast"
  },
  "eln:transparent_node@8066": {
   "descriptor": "IndustrialDescriptor",
