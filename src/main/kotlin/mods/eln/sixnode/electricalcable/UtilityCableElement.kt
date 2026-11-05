@@ -77,7 +77,7 @@ class UtilityCableElement(node: SixNode,side: Direction,d: SixNodeDescriptor): S
     override fun getDropItemStack()=UtilityCables.scrap(descriptor,1.0)
     override fun multiMeterString()=conductorLoads.mapIndexed { i,l->tr("Core %1$: %2$",i+1,Utils.plotUIP(l.u,l.i)) }.joinToString("\n")
     override fun thermoMeterString()=Utils.plotCelsius("T",thermalLoad.Tc)
-    override fun getWaila(): MutableMap<String,String> {
+    override fun getWaila(): LinkedHashMap<String,String> {
         val info=linkedMapOf(tr("Voltage to ground") to Utils.plotVolt("",electricalLoad.u),tr("Current") to Utils.plotAmpere("",electricalLoad.i),tr("Temperature") to Utils.plotCelsius("",thermalLoad.Tc),tr("Insulation condition") to when { descriptor.melted->tr("Damaged - exposed conductor");insulationFailed->tr("Insulation failed - repair required");descriptor.insulated->tr("Intact");else->tr("Bare conductor") })
         if(!descriptor.actsAsSingleConductor) {
             info[tr("Conductor colors")]=tr(descriptor.colorPalettes[paletteIndex].displayName)
