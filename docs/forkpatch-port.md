@@ -425,6 +425,36 @@ Reports: [circuit tests](forkpatch-port/pad-circuit-tests.json) and
 [datagen](forkpatch-port/pad-datagen.json), and
 [destination regressions](forkpatch-port/pad-checkpoint-validation.json).
 
+### Wired service checkpoint (validation in progress)
+
+Native adapters now cover the compact North American Meter Base (7987), Wide
+Underground Meter Socket (8128), Underground Service Entrance Riser (8129),
+service handhole (8130), Red Handle Service Disconnect (7992), and removable
+analog/smart meter items (7877/7878). These are placed-cable devices. Overhead
+weatherheads, masts and span endpoint integration remain pending and are not
+registered as incomplete devices.
+
+One real 240 V wire supplies the proportional scalar 120 V legs through passive
+taps. Meter contacts measure signed physical power; import and export registers
+remain independent. The meter item retains its serial, counters and smart open
+state when removed, swapped, extracted or saved. Native legacy inventory methods
+flush the immutable item data before transfer; empty socket settings cannot copy
+meter readings. A native custom-data write reuses one copied root instead of
+copying it separately for comparison and modification.
+
+The wide socket reserves a second wall cell using the existing directional thin
+cabinet ghost shapes. Both the node and ghost retain wall-depth collision, avoiding
+an invisible full cube. Native topology hooks validate the two separate downward
+entries and prevent the adjacent wall downleads from bypassing the meter. Wiring
+uses normal native NodeConnection lifetimes, reconnection and simulation-veto
+semantics. Weak cable markers avoid per-tick world searches and strong owner
+retention; topology preparation runs only during connection construction.
+
+The source analog dials/disk, smart LCD pages, glass, red handle/blades and cabinet
+geometry are adapted to recorded native GL. Circuit, actual cable, collision,
+inventory, datagen and destination regression validation are in progress. Interactive
+client validation and the rest of the utility distribution system remain pending.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

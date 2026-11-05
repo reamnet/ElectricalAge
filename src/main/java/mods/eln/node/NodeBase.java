@@ -262,6 +262,7 @@ public abstract class NodeBase {
     }
 
     public static void tryConnectTwoNode(NodeBase nodeA, Direction directionA, LRDU lrduA, NodeBase nodeB, Direction directionB, LRDU lrduB) {
+        if (!mods.eln.utility.WideMeterWiring.permits(nodeA,directionA,lrduA,nodeB,directionB,lrduB)) return;
         if (compareConnectionMask(nodeA.getSideConnectionMask(directionA, lrduA), nodeB.getSideConnectionMask(directionB, lrduB))) {
             ElectricalConnection eCon = null;
             ThermalConnection tCon = null;
@@ -314,6 +315,7 @@ public abstract class NodeBase {
     }
 
     public void connectJob() {
+        mods.eln.utility.WideMeterWiring.prepare(this);
         // EXTERNAL OTHERS SIXNODE
         {
             int[] emptyBlockCoord = new int[3];
@@ -359,6 +361,7 @@ public abstract class NodeBase {
             }
         }
 
+        mods.eln.utility.WideMeterWiring.connect(this);
     }
 
     /**

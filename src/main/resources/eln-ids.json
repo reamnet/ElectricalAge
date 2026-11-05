@@ -773,6 +773,18 @@
   "kind": "shared_item",
   "name": "pole_fuse_link"
  },
+ "eln:shared_item@7877": {
+  "descriptor": "UtilityPartDescriptor",
+  "display": "Analog Glass Service Meter",
+  "kind": "shared_item",
+  "name": "analog_glass_service_meter"
+ },
+ "eln:shared_item@7878": {
+  "descriptor": "UtilityPartDescriptor",
+  "display": "Smart Digital Service Meter",
+  "kind": "shared_item",
+  "name": "smart_digital_service_meter"
+ },
  "eln:shared_item@7879": {
   "descriptor": "PoleTransformerDescriptor",
   "display": "10 kW Pole Transformer",
@@ -2285,6 +2297,18 @@
   "kind": "transparent_node",
   "name": "wall_mounted_programmable_ups"
  },
+ "eln:transparent_node@7987": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "North American Meter Base",
+  "kind": "transparent_node",
+  "name": "north_american_meter_base"
+ },
+ "eln:transparent_node@7992": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Red Handle Service Disconnect",
+  "kind": "transparent_node",
+  "name": "red_handle_service_disconnect"
+ },
  "eln:transparent_node@80": {
   "descriptor": "PowerInductorDescriptor",
   "display": "Power inductor",
@@ -2332,6 +2356,24 @@
   "display": "Automatic Load Shedding Controller",
   "kind": "transparent_node",
   "name": "automatic_load_shedding_controller"
+ },
+ "eln:transparent_node@8128": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Wide Underground Meter Socket",
+  "kind": "transparent_node",
+  "name": "wide_underground_meter_socket"
+ },
+ "eln:transparent_node@8129": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Underground Service Entrance Riser",
+  "kind": "transparent_node",
+  "name": "underground_service_entrance_riser"
+ },
+ "eln:transparent_node@8130": {
+  "descriptor": "UndergroundHandholeDescriptor",
+  "display": "120/240V Underground Service Handhole",
+  "kind": "transparent_node",
+  "name": "120_240v_underground_service_handhole"
  },
  "eln:transparent_node@8192": {
   "descriptor": "OffGridDescriptor",

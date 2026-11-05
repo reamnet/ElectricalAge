@@ -10,6 +10,12 @@ sys.path.insert(0, str(ROOT / "tools/icons/shaft"))
 from render3d import render
 
 COLORS = {
+    "Socket": (.1,.12,.13), "GutterCover": (.55,.57,.57), "Pipe": (.49,.51,.52), "Hood": (.40,.43,.45),
+    "EntryLine": (.13,.27,.48), "EntryLoad": (.55,.32,.12), "Jaws": (.75,.52,.29), "JawInsulator": (.12,.14,.15),
+    "MeterRing": (.67,.70,.70), "MeterFace": (.89,.89,.83), "Seal": (.81,.65,.23), "Glass": (.82,.90,.94),
+    "Insulator": (.12,.14,.14), "Hinge": (.45,.48,.50), "Handle": (.82,.035,.025),
+    "Lid": (.18,.30,.20), "Lettering": (.65,.69,.62),
+
     "Pad": (.42,.44,.41), "Door": (.17,.35,.22), "DoorHardware": (.12,.14,.16),
     "Nameplate": (.75,.78,.71), "Warning": (.95,.65,.08), "WarningMark": (.05,.06,.04),
     "Lugs": (.65,.48,.25), "Elbows": (.1,.12,.13), "Ground": (.35,.49,.32),
@@ -57,6 +63,11 @@ def cabinet(model, item):
 
 if __name__ == "__main__":
     for model, item in [
+        ("northamericanmeterbase", "north_american_meter_base"),
+        ("wideundergroundmetersocket", "wide_underground_meter_socket"),
+        ("undergroundserviceentrance", "underground_service_entrance_riser"),
+        ("redhandleservicedisconnect", "red_handle_service_disconnect"),
+        ("undergroundservicehandhole", "120_240v_underground_service_handhole"),
         ("industrial_pad", "pad_mounted_neighbourhood_transformer"),
         ("industrial_relay", "protective_relay_cabinet"),
         ("industrial_shedder", "automatic_load_shedding_controller"),

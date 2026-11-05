@@ -1083,6 +1083,13 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeForkPatchUps() {
+        addRecipe(findItemStack("North American Meter Base"),"P P","PCP","P P",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Analog Glass Service Meter")," G ","CMC"," P ",'G',Items.GLASS,'C',findItemStack("Copper Cable"),'M',findItemStack("Electrical Motor"),'P',findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Smart Digital Service Meter"),findItemStack("Analog Glass Service Meter"),Items.COMPARATOR,Items.REDSTONE);
+        addRecipe(findItemStack("Wide Underground Meter Socket"),"PPP","MCC","P P",'P',findItemStack("Iron Plate"),'M',findItemStack("North American Meter Base"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Underground Service Entrance Riser")," P "," C ","ICI",'P',findItemStack("Iron Plate"),'I',Items.IRON_INGOT,'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("120/240V Underground Service Handhole"),"IPI","CBC","III",'I',Items.STONE_BRICKS,'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'B',Items.IRON_BARS);
+        addRecipe(findItemStack("Red Handle Service Disconnect"),"PPP","CLC","PPP",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'L',Items.LEVER);
         addRecipe(findItemStack("Pad Mounted Neighbourhood Transformer"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.IRON_BLOCK,'M',findItemStack("Machine Block"));
         for(int i=0;i<5;i++)addRecipe(findItemStack(mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i)),"ICI","CTC","ICI",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'T',findItemStack(i==0?"DC-DC Converter":mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i-1)));
         addRecipe(findItemStack("Protective Relay Cabinet"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.REPEATER,'M',findItemStack("Machine Block"));
