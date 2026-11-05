@@ -40,9 +40,9 @@ object ForkPatchPoleLampCases {
                 val source=pole(c,DistributionKind.TRANSFORMER_SINGLE,14);source.hardware.setItem(0,Eln.findItemStack(PoleHardware.transformerNames[0],1))
                 add(VoltageSource("lamp service source",source.unit.lines[0],null).setU(12470.0))
                 val wire=UtilityCables.all.first { it.material==UtilityCableMaterial.COPPER && it.sizeLabel=="2 AWG" && it.insulated && !it.melted }
-                check(GridLink.addLink(source,e,40,40,wire,8))
+                if(kind.underground)add(mods.eln.sim.ElectricalConnection(source.unit.services[0],e.unit.services[0])) else check(GridLink.addLink(source,e,40,40,wire,8))
             }
-            clock=IProcess { dt->elapsed+=dt;val l=e.unit.lamp!!;if(l.light>=14 && l.watts>69)lit=true
+            clock=IProcess { dt->elapsed+=dt;val l=e.unit.lamp!!;if(l.light>=14 && l.watts>kind.lampWatts*.98)lit=true
                 if(turnOff && !switched && elapsed>=1.5) { c.check("pole lamp: real service powers light before switch-off",lit,"${l.watts}W ${l.light}");l.configure(false,false);switched=true } }
             Eln.simulator.addElectricalProcess(clock)
         }
@@ -52,7 +52,7 @@ object ForkPatchPoleLampCases {
                 val pos=e.node.coordonate.pos().offset(kotlin.math.floor(v.x+.5).toInt(),kotlin.math.floor(v.y+.5).toInt(),kotlin.math.floor(v.z+.5).toInt())
                 if(turnOff)c.check("pole lamp: no power or lingering world light after switch-off",switched && l.light==0 && l.watts<1e-6 && !c.level().getBlockState(pos).`is`(ElnDeviceRegistry.lightBlock),"${l.watts}W ${c.level().getBlockState(pos)}")
                 else {
-                    c.check("pole lamp: actual load and brightness come from supplied service",l.watts in 69.0..70.1 && l.light>=14,"${l.watts}W ${l.light}")
+                    c.check("pole lamp: actual load and brightness come from supplied service",l.watts in kind.lampWatts*.98..kind.lampWatts*1.001 && l.light>=14,"${l.watts}W ${l.light}")
                     c.check("pole lamp: native temporary light block appears at the rendered head",c.level().getBlockState(pos).`is`(ElnDeviceRegistry.lightBlock),pos.toString())
                 }
                 val bytes=ByteArrayOutputStream();e.networkSerialize(DataOutputStream(bytes));val render=DistributionPoleRender(c.level().getBlockEntity(e.node.coordonate.pos()) as TransparentNodeEntity,e.descriptor)

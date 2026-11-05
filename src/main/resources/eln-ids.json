@@ -3485,6 +3485,12 @@
   "kind": "transparent_node",
   "name": "three_phase_fused_tap_secondary_fed_street_light_pole"
  },
+ "eln:transparent_node@8023": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Transformer Street Light Pole with Fused Single Phase Tap",
+  "kind": "transparent_node",
+  "name": "three_phase_transformer_street_light_pole_with_fused_single_phase_tap"
+ },
  "eln:transparent_node@8024": {
   "descriptor": "BackupDescriptor",
   "display": "Medium Standby Gasoline Generator",
@@ -3545,6 +3551,18 @@
   "kind": "transparent_node",
   "name": "12_5kv_three_phase_fused_underground_feeder"
  },
+ "eln:transparent_node@8035": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "12.5kV Single Phase Fused Underground Feeder with Street Light",
+  "kind": "transparent_node",
+  "name": "12_5kv_single_phase_fused_underground_feeder_with_street_light"
+ },
+ "eln:transparent_node@8036": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "12.5kV Three Phase Fused Underground Feeder with Street Light",
+  "kind": "transparent_node",
+  "name": "12_5kv_three_phase_fused_underground_feeder_with_street_light"
+ },
  "eln:transparent_node@8066": {
   "descriptor": "IndustrialDescriptor",
   "display": "Protective Relay Cabinet",
@@ -3586,6 +3604,12 @@
   "display": "Single Phase Underground Feeder Pole",
   "kind": "transparent_node",
   "name": "single_phase_underground_feeder_pole"
+ },
+ "eln:transparent_node@8132": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Underground Feeder Pole with Secondary Fed Street Light",
+  "kind": "transparent_node",
+  "name": "single_phase_underground_feeder_pole_with_secondary_fed_street_light"
  },
  "eln:transparent_node@8133": {
   "descriptor": "DistributionPoleDescriptor",

@@ -14,7 +14,7 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
     private val model=requireNotNull(Eln.obj.getObj("distributionpole"))
     init {
         ghostGroup=GhostGroup().apply {
-            for(y in 1..if(kind.underground)1 else 7)addElement(0,y,0,Eln.ghostBlock,if(kind.underground)GhostBlock.tCube else GhostBlock.tClearance)
+            for(y in 1..if(kind.underground) { if(kind.light)5 else 1 } else 7)addElement(0,y,0,Eln.ghostBlock,if(kind.underground && y==1)GhostBlock.tCube else GhostBlock.tClearance)
             if(!kind.lvOnly && !kind.underground)for(y in 6..7)for(x in -1..1)for(z in -1..1)if(x!=0 || z!=0)addElement(x,y,z,Eln.ghostBlock,GhostBlock.tClearance)
         }
     }
@@ -36,10 +36,15 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
             }finally { GL11.glPopMatrix() }
             for(y in listOf(4.45,5.55))PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(0.0,y,0.0),net.minecraft.world.phys.Vec3(0.0,y,-.78))
             if(kind.cutout || kind.regulator || kind.singlePhaseTap || kind.transformer)repeat(kind.fuseCount) { index->
+                GL11.glPushMatrix()
+                try {
+                val branchZ=if(kind.transformer && kind.singlePhaseTap && index==1).65 else 0.0
+                GL11.glTranslated(0.0,0.0,branchZ)
                 val i=if(kind.phases==1 || kind.singlePhaseTap || kind.transformer)1 else index
                 PoleCutoutVisual.draw(i,d?.fuseClosed?.getOrNull(index)!=false,d?.fuseBlown?.getOrNull(index)==true)
                 val phase=if(kind.singlePhaseTap || kind.transformer)d?.phase ?: 0 else if(kind.phases==1)1 else index
-                PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(0.0,if(phase==1)7.15 else 6.63,if(kind.phases==1)0.0 else (phase-1)*.95),net.minecraft.world.phys.Vec3(-.68,6.40,(i-1)*.95))
+                PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(0.0,if(phase==1)7.15 else 6.63,(if(kind.phases==1)0.0 else (phase-1)*.95)-branchZ),net.minecraft.world.phys.Vec3(-.68,6.40,(i-1)*.95))
+                }finally { GL11.glPopMatrix() }
             }
             if(kind.transformer && (d==null || d.transformerRating>0))PoleTransformerVisual.draw(d?.transformerRating ?: 10000)
             if(kind.primaryRiser)for(i in if(kind.singlePrimaryRiser)listOf(1) else listOf(0,1,2)) { p("Riser$i",.28f,.31f,.32f);p(if(kind.singlePrimaryRiser)"RiserFuseJumper" else "RiserJumper$i",.13f,.15f,.16f) }
@@ -72,7 +77,7 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
         if(kind.cutout || kind.singlePhaseTap)list.add(tr("Physical fuse cartridges protect the load terminal; open contacts isolate the circuit"))
         if(kind.transformer)list.add(tr("Install a physical transformer; one selected primary phase supplies shared 120/240 V service"))
         if(!kind.light && !kind.underground)list.add(tr("Accepts a removable Pole Streetlight Attachment powered only by secondary service"))
-        if(kind.light)list.add(tr("70 W street light uses the 120 V service rack; manual or dusk operation with adjustable aim"))
+        if(kind.light) { if(kind.dualLampVoltage)list.add(tr("Street light uses the selected 120 or 240 V service; manual or dusk operation")) else list.add(tr("70 W street light uses the 120 V service rack; manual or dusk operation with adjustable aim")) }
         if(kind.singlePrimaryRiser)list.add(tr("Fused underground primary: bottom Up or left base; the service rack remains independent"))
         if(kind.underground)list.add(tr("Placed cables only; the overhead link tool cannot attach to this cabinet"))
         if(kind.pedestal)list.add(tr("Bottom: incoming L1/L2/240 V; base sides: fused outgoing L1/L2/240 V"))

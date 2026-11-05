@@ -14,13 +14,13 @@ class DistributionPoleScreen(m: ElnNodeMenu,i: Inventory,t: Component,r: Any): E
         val terminals=buildList { if(!k.lvOnly) { repeat(k.phases) { add(32+it) };if(k.phases==3)add(52);if(k.protectedLine) { repeat(k.outputPhases) { add(36+it) };if(k.phases==3 && !k.singlePhaseTap)add(53) } };add(50);addAll(40..42) }
         if(!k.underground)button(8,30,352,{tr("Cable terminal: %1$",terminalLabel(render.display.terminal))},{render.clientSendInt(87.toByte(),terminals[(terminals.indexOf(render.display.terminal)+1)%terminals.size])})
         if(k.singlePhaseTap || k.transformer && k.phases==3)button(8,56,352,{tr("Tap phase: %1$",listOf("A","B","C")[render.display.phase.coerceIn(0,2)])},{render.clientSendInt(88.toByte(),(render.display.phase+1)%3)})
-        if(k.cutout || k.regulator || k.singlePhaseTap || k.transformer)repeat(k.fuseCount) { n->button(8+n*116,82,112,{tr("Fuse %1$: %2$",n+1,if(render.display.fuseBlown.getOrNull(n)==true)tr("BLOWN") else if(render.display.fuseClosed.getOrNull(n)==true)tr("CLOSED") else tr("OPEN"))},{render.clientSendInt(89.toByte(),n)}) }
+        if(k.cutout || k.regulator || k.singlePhaseTap || k.transformer)repeat(k.fuseCount) { n->button(8+n*116,82,112,{tr("Fuse %1$: %2$",n+1,if(render.display.fuseBlown.getOrNull(n)==true)tr("BLOWN") else if(render.display.fuseClosed.getOrNull(n)==true)tr("CLOSED") else tr("OPEN"))},{render.clientSendInt(89.toByte(),n)},if(k.transformer && k.singlePhaseTap) { if(n==0)tr("Transformer primary fuse") else tr("Single phase tap fuse") }else tr("Physical fuse cartridge")) }
         if(k.transformer) {
             button(8,108,112,{tr("Winding: %1$ V",render.display.transformerVoltage)},{render.clientSendInt(80.toByte(),if(render.display.transformerVoltage==120)240 else 120)})
             button(128,108,112,{if(render.display.transformerEnabled)tr("Isolate") else tr("Enable")},{render.clientSendBoolean(81.toByte(),!render.display.transformerEnabled)})
             button(248,108,112,{tr("Reset core trip")},{render.clientSendId(82.toByte())})
         }
-        if(!k.underground)run {
+        if(!k.underground || k.light)run {
             val y=if(k.transformer || k.regulator)132 else 108
             button(8,y,170,{if(!render.display.lampInstalled)tr("Install light attachment") else tr("Lamp: %1$ (%2$)",if(render.display.lampOn)tr("ON") else tr("OFF"),Utils.plotPower("",render.display.lampWatts))},{render.clientSendBoolean(102.toByte(),!render.display.lampOn)})
             button(186,y,174,{if(render.display.lampAuto)tr("Dusk control: ON") else tr("Dusk control: OFF")},{render.clientSendBoolean(103.toByte(),!render.display.lampAuto)})
@@ -28,6 +28,7 @@ class DistributionPoleScreen(m: ElnNodeMenu,i: Inventory,t: Component,r: Any): E
             button(124,y+26,112,{tr("Yaw: %1$ deg",render.display.yaw)},{render.clientSendInt(105.toByte(),if(net.minecraft.client.Minecraft.getInstance().hasShiftDown())-5 else 5)},tr("Shift-click to turn the other way"))
             button(240,y+26,120,{tr("Pitch: %1$ deg",render.display.pitch)},{render.clientSendInt(106.toByte(),if(net.minecraft.client.Minecraft.getInstance().hasShiftDown())-5 else 5)},tr("Shift-click to tilt down; click to tilt up"))
         }
+        if(k.dualLampVoltage)button(8,304,170,{tr("Lamp supply: %1$ V",render.display.lampSelected)},{render.clientSendInt(107.toByte(),if(render.display.lampSelected==120)240 else 120)})
         if(!k.light && !k.underground) {
             button(if(k.transformer)124 else 8,if(k.transformer)82 else 304,112,{if(render.display.lampSupply==0)tr("Supply: AUTO") else tr("Supply: %1$ V",render.display.lampSupply)},{render.clientSendInt(107.toByte(),when(render.display.lampSupply) { 0->120;120->240;else->0 })})
             button(if(k.transformer)240 else 186,if(k.transformer)82 else 304,120,{if(render.display.lampInstalled)tr("Remove attachment") else tr("No light attachment")},{render.clientSendId(108.toByte())})
@@ -61,7 +62,7 @@ class DistributionPoleScreen(m: ElnNodeMenu,i: Inventory,t: Component,r: Any): E
 
             label(g,40,336,tr("Installed transformer"))
         }
-        if(!k.underground && !k.transformer && !k.regulator)label(g,8,274,tr("Light level: %1$/15; %2$",d.light,Utils.plotPower("",d.lampWatts)))
+        if((!k.underground || k.light) && !k.transformer && !k.regulator)label(g,8,274,tr("Light level: %1$/15; %2$",d.light,Utils.plotPower("",d.lampWatts)))
         if(render.desc.kind.recloser)label(g,8,287,if(d.locked)tr("Recloser locked out - replace the fault, then reset") else tr("Retry failures: %1$; wait %2$ s",d.failures,d.remaining.toInt()))
         if(render.desc.kind.regulator)label(g,8,287,tr("Tap ratios: %1$",d.ratios.joinToString { String.format(java.util.Locale.ROOT,"%.3f",it) }))
     }

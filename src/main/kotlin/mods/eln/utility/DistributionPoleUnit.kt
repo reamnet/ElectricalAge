@@ -17,14 +17,18 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     val undergroundInput=if(kind.pedestal)List(3) { NbtElectricalLoad("undergroundServiceIn$it").apply { rs=.00001 } } else emptyList()
     val serviceSplit=when { kind.pedestal->WiredServiceSplit(states,parts,undergroundInput);kind.singlePrimaryRiser->WiredServiceSplit(states,parts,services);else->null }
     var wiredSplitAllowed: ()->Boolean={true}
-    val lamp=when { kind.light->PoleLamp(services[0],parts,kind.lampWatts,kind.transformer);kind.underground->null;else->PoleLamp(services[0],parts,source240=services[2],removable=true) }
+    val lamp=when { kind.light->PoleLamp(services[0],parts,kind.lampWatts,kind.transformer,source240=if(kind.dualLampVoltage)services[2] else null);kind.underground->null;else->PoleLamp(services[0],parts,source240=services[2],removable=true) }
     val contacts=when {
         kind.pedestal->undergroundInput.indices.map { TransferContact(undergroundInput[it],services[it]) }
-        kind.transformer->lines.map { TransferContact(it,transformer!!.primary) }
         kind.singlePhaseTap->lines.map { TransferContact(it,outs[0]) }
+        kind.transformer->lines.map { TransferContact(it,transformer!!.primary) }
         kind.protectedLine->lines.indices.map { TransferContact(lines[it],outs[it]) }
         else->emptyList()
     }
+    // The combined legacy pole has separate tap and transformer primary paths.
+    // Neither the tap current nor its fuse may stand in for the transformer's pickup.
+    val transformerContacts=if(kind.transformer && kind.singlePhaseTap)lines.map { TransferContact(it,transformer!!.primary) } else emptyList()
+    private val transformerFeed get()=if(transformerContacts.isEmpty())contacts else transformerContacts
     val fuses=List(kind.fuseCount) { CutoutFuse() }
     val recloser=RecloserControl()
     var phase=0;private set
@@ -38,7 +42,6 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     val regulatorTaps: List<ServiceTap>
     val capacitorPins=ArrayList<NbtElectricalLoad>()
     init {
-        require(!kind.retiredGroundCabinet || kind==DistributionKind.UNDERGROUND_THREE)
         if(!kind.lvOnly)states.addAll(lines)
         if(outs!==lines && !kind.pedestal)states.addAll(outs)
         if(transformer==null)states.addAll(services)
@@ -54,7 +57,7 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
                 parts.add(Resistor(pin,outs[i]).setR(.005))
                 ServiceTap(input,pin,1.0).also(parts::add)
             }
-        } else { regulatorTaps=emptyList();parts.addAll(contacts) }
+        } else { regulatorTaps=emptyList();parts.addAll(contacts) };parts.addAll(transformerContacts)
         if(kind.capacitor)lines.forEachIndexed { i,line->
             val pin=NbtElectricalLoad("capacitor$i");capacitorPins.add(pin);states.add(pin)
             parts.add(Resistor(line,pin).setR(100.0));parts.add(Capacitor(pin,null).apply { setC(.0001) });parts.add(Resistor(pin,null).setR(1e9))
@@ -63,18 +66,23 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
         ((if(kind.lvOnly)services else lines+outs+services)+undergroundInput).distinct().forEach { parts.add(Resistor(it,null).setR(1e10)) }
         processes.add(IProcess(::step));applyContacts()
     }
-    fun current(index: Int)=if(kind.pedestal)kotlin.math.abs(contacts[2].current)+.5*(kotlin.math.abs(contacts[0].current)+kotlin.math.abs(contacts[1].current)) else contacts.getOrNull(if(kind.singlePhaseTap || kind.transformer)phase else index)?.current ?: 0.0
+    fun current(index: Int)=if(kind.pedestal)kotlin.math.abs(contacts[2].current)+.5*(kotlin.math.abs(contacts[0].current)+kotlin.math.abs(contacts[1].current)) else if(kind.transformer && index==0)transformerFeed[phase].current else contacts.getOrNull(if(kind.singlePhaseTap)phase else index)?.current ?: 0.0
     fun applyContacts() {
         for(i in contacts.indices) {
             val contact=contacts[i];val was=contact.closed
             contact.closed=when {
                 kind.pedestal->fuses[0].closed
+                kind.singlePhaseTap->i==phase && fuses[kind.tapFuseIndex].closed
                 kind.transformer->i==phase && fuses[0].closed && transformer!!.available
-                kind.singlePhaseTap->i==phase && fuses[0].closed
                 kind.cutout || kind.regulator->fuses[i].closed
                 kind.recloser->recloser.closed
                 else->gangClosed
             }
+            if(contact.closed && !was)pendingSample=true
+        }
+        transformerContacts.forEachIndexed { i,contact->
+            val was=contact.closed
+            contact.closed=i==phase && fuses[0].closed && transformer!!.available
             if(contact.closed && !was)pendingSample=true
         }
         transformer?.let { it.tap.enabled=it.available && fuses[0].closed }
@@ -105,7 +113,7 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
             for(i in fuses.indices) {
                 val amps=current(i)
                 if(fuses[i].pickup(dt,amps))changed("utility_arc_close")
-                if(fuses[i].step(dt,amps,transformer?.let { it.ratedWatts/12470.0 } ?: fuseAmps)) { applyContacts();changed("utility_fuse_blow") }
+                if(fuses[i].step(dt,amps,if(kind.transformer && i==0)transformer!!.ratedWatts/12470.0 else fuseAmps)) { applyContacts();changed("utility_fuse_blow") }
             }
             if(kind.recloser && recloser.step(dt,contacts.map { it.current })) { applyContacts();changed("utility_recloser_bump") }
         }

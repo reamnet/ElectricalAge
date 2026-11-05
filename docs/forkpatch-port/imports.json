@@ -1166,5 +1166,61 @@
     "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
     "mode": "native-legacy-tap-lamp-and-independent-three-phase-cartridge-regressions",
     "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/test/kotlin/mods/eln/utility/ForkPatchCombinedPoleTest.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "independent-native-transformer-primary-and-fused-tap-circuit-regressions",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/test/kotlin/mods/eln/utility/ForkPatchDualLampTest.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "selected-service-lamp-power-and-cabinet-fuse-isolation-regressions",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1light/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1light/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1light/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1light/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1light/undergroundfused1light.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1light/undergroundfused1light.obj",
+    "sourceSha256": "761fd5c777f9cb929722c89e87bdf50549bf3a71e51a9cbca90694092066051b",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3light/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3light/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3light/undergroundfused3light.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3light/undergroundfused3light.obj",
+    "sourceSha256": "8abf1e7aab8a6c083a5fb02b17193c1f718d22f3eb3b9e3b6312e6ea268bca41",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3light/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3light/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
   }
 ]

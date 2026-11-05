@@ -15,8 +15,8 @@ class PoleLamp(private val source: ElectricalLoad,parts: MutableList<Component>,
     var installed=!removable;private set
     var enabled=true;private set
     var automatic=false;private set
-    var supply=0;private set
-    var selected=if(source240!=null)240 else 120;private set
+    var supply=if(source240!=null && !removable)120 else 0;private set
+    var selected=if(source240!=null && removable)240 else 120;private set
     var night=false
     var yaw=0;private set
     var pitch=0;private set
@@ -29,7 +29,7 @@ class PoleLamp(private val source: ElectricalLoad,parts: MutableList<Component>,
     fun install(): Boolean { if(!removable || installed)return false;installed=true;applyLoad();return true }
     fun remove(): Boolean { if(!removable || !installed)return false;installed=false;light=0;applyLoad();return true }
     fun configure(on: Boolean,dusk: Boolean) { enabled=on;automatic=dusk;applyLoad();if(!requested)light=0 }
-    fun chooseSupply(value: Int): Boolean { if(value !in listOf(0,120,240) || value==240 && source240==null)return false;supply=value;selectSupply();applyLoad();return true }
+    fun chooseSupply(value: Int): Boolean { if(value !in listOf(0,120,240) || value==0 && !removable || value==240 && source240==null)return false;supply=value;selectSupply();applyLoad();return true }
     fun aim(step: Int,turn: Int,tilt: Int): Boolean {
         if(!StreetLightMount.validStep(step) || !StreetLightMount.validYaw(turn) || !StreetLightMount.validPitch(tilt))return false
         heightStep=step;yaw=turn;pitch=tilt;return true
@@ -47,6 +47,7 @@ class PoleLamp(private val source: ElectricalLoad,parts: MutableList<Component>,
             val d=CompoundTag();d.putBoolean("installed",installed);d.putBoolean("enabled",enabled);d.putBoolean("automatic",automatic);d.putInt("supply",supply);d.putInt("yaw",yaw);d.putInt("height",heightStep);d.putInt("pitch",pitch);t.put("poleStreetlightAttachment",d);return
         }
         if(transformer) { t.putBoolean("mainsLampEnabled",enabled);t.putBoolean("mainsLampAutomatic",automatic);t.putInt("mainsLampYaw",yaw);t.putInt("mainsLampPitch",pitch);t.putInt("mainsLampHeightStep",heightStep) }
+        if(source240!=null)t.putInt("utilityLampVoltage",selected)
         t.putBoolean("utilityLamp",enabled);t.putBoolean("utilityDusk",automatic);t.putInt("utilityLampYaw",yaw);t.putInt("utilityLampPitch",pitch);t.putInt("utilityLampHeight",heightStep)
     }
     fun read(t: CompoundTag) {
@@ -56,6 +57,7 @@ class PoleLamp(private val source: ElectricalLoad,parts: MutableList<Component>,
             readAim(d,"height","yaw","pitch");return
         }
         configure(t.getBooleanOr("utilityLamp",true) && (!transformer || t.getBooleanOr("mainsLampEnabled",true)),t.getBooleanOr("utilityDusk",false) || transformer && t.getBooleanOr("mainsLampAutomatic",false))
+        if(source240!=null)chooseSupply(if(t.getIntOr("utilityLampVoltage",120)==240)240 else 120)
         if(transformer && t.contains("mainsLampHeightStep"))readAim(t,"mainsLampHeightStep","mainsLampYaw","mainsLampPitch") else readAim(t,"utilityLampHeight","utilityLampYaw","utilityLampPitch")
     }
     private fun readAim(t: CompoundTag,h: String,y: String,p: String) {

@@ -77,7 +77,7 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
         t==52->gridCablePoint(32+wire,0);t==53->gridCablePoint(36+wire,0)
         t==50 || t in 40..42->ServiceCableMount.point(t,wire)
         t==32 && kind.phases==1 || t==33 && kind.phases==3->Vec3(0.0,7.15,0.0)
-        t==36 && kind.singlePhaseTap->Vec3(-.68,5.85,0.0)
+        t==36 && kind.singlePhaseTap->Vec3(-.68,5.85,if(kind.transformer).65 else 0.0)
         t in 36..38 && kind.cutout->Vec3(-.68,5.85,phaseZ(t-36))
         t in 36..38 && kind.regulator->Vec3(.65,5.50,phaseZ(t-36)*.73)
         t in 36..38->Vec3(.35,6.53,phaseZ(t-36))
@@ -140,7 +140,7 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     override fun networkUnserialize(s: DataInputStream): Byte {
         val id=super.networkUnserialize(s)
         try { when(id.toInt()) {
-            107->unit.lamp?.chooseSupply(s.readInt())
+            107->if(!kind.light || kind.dualLampVoltage)unit.lamp?.chooseSupply(s.readInt())
             108->{ if(unit.lamp?.remove()==true)node.dropItem(Eln.findItemStack(UtilityItems.STREETLIGHT_NAME,1)) }
             102->unit.lamp?.let { it.configure(s.readBoolean(),it.automatic) }
             103->unit.lamp?.let { it.configure(it.enabled,s.readBoolean()) }
