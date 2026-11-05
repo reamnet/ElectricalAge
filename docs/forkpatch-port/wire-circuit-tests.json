@@ -1,0 +1,103 @@
+{
+  "sourceVersion": "3.0.77",
+  "portCommit": "234329e6",
+  "tests": 23,
+  "failures": 0,
+  "errors": 0,
+  "suites": 3,
+  "cases": [
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "enthalpyTemperatureRoundTripAcrossSolidRange"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "junctionHeatingMatchesEachEndpointResistance"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "savingFlushesPendingHeatWithoutDoubleCountingAfterReload"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "fullFusionEnergyIsRequiredAndRetained"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "removingPowerCoolsAndHeatBalanceCloses"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "sustainedFiftyAmpsFailsAndStepRefinementConverges"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "oneAmpNormalOperationStaysBelowInsulationLimit"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "capacityComesFromActualMetalMass"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "coolingCanSolidifyPartialMeltWithoutLosingEnergy"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "coolingIsSignedAndGeometryDependent"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "pulsesAndDisconnectRetainEveryCommittedJoule"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "ambientReferenceChangesDoNotCreateHeatIncludingAfterRestart"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "damagedReplacementPreservesHeatWithoutResettingToAmbient"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "legacyThermalLoadsKeepTheirIntegrationContract"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWireThermalTest",
+      "name": "nbtRetainsHeatAndPartialFusion"
+    },
+    {
+      "suite": "mods.eln.gridnode.ForkPatchSpanThermalPerformanceTest",
+      "name": "cachedGeometryPreservesBareAndInsulatedCoolingAtColdNormalAndFaultTemperatures"
+    },
+    {
+      "suite": "mods.eln.gridnode.ForkPatchSpanThermalPerformanceTest",
+      "name": "warmingSpansRetainBoundedResistanceAccuracyWithoutRebuildingForEachTinyDrift"
+    },
+    {
+      "suite": "mods.eln.gridnode.ForkPatchSpanThermalPerformanceTest",
+      "name": "manyConductorsShareOneClimateReadPerEndpointPerSecondAndHandleClockRollback"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWirePhysicsTest",
+      "name": "metalAccountingDoesNotRoundSpoolLength"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWirePhysicsTest",
+      "name": "warmWireHasHigherResistance"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWirePhysicsTest",
+      "name": "referenceCopperAndAluminumPerMeter"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWirePhysicsTest",
+      "name": "invalidGeometryCannotPoisonSolver"
+    },
+    {
+      "suite": "mods.eln.sixnode.electricalcable.ForkPatchWirePhysicsTest",
+      "name": "resistanceScalesWithLengthAndInverseArea"
+    }
+  ],
+  "scope": "Source wire DC/thermal physics on the native fixed-reference energy model: exact pulse and junction heat, latent energy/overshoot, reloads, cooling, failure convergence and bounded resistance updates."
+}

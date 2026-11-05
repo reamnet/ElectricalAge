@@ -532,15 +532,70 @@ All destination root tests with `-PfluidCases=20` pass: 435 passed, three option
 preview cases skipped, zero failures/errors (438 selected across 91 suites). The
 default 200-case fluid corpus was not run.
 
-Utility cable spools/thermal models, new distribution poles and phase routing,
-can-clearance wire paths, other utility hardware, complete source-world migration
-and interactive client validation remain pending. Ordinary native cable stacks
-retain their normal stack limits; variable-length spools are not yet adapted.
+At this checkpoint, utility spools/thermal models remained pending; the following
+single-core checkpoint adds them. New distribution poles/phase routing, multicore
+wires, advanced span geometry, complete source-world migration and interactive
+client validation remain pending.
 
 Reports: [production span circuits](forkpatch-port/overhead-circuit-tests.json),
 [native cases](forkpatch-port/overhead-native-tests.json),
 [datagen](forkpatch-port/overhead-datagen.json), and
 [destination regressions](forkpatch-port/overhead-checkpoint-validation.json).
+
+### Single-core utility cable checkpoint
+
+The source single-core catalog is now adapted: 90 regular copper/aluminum bare,
+insulated and damaged variants, 20 save-stable copper HV variants, both molten
+metal pile states, and Wire Scraps. Their 113 identities preserve the source ids;
+multicore ids 2268..2327 remain reserved without registering placeholder devices.
+The former native cable identities, voxel-kit behavior and protection are retained.
+
+Spools are native single-stack items with immutable custom-data length/identity.
+Placement spends 1 m, while overhead bundles spend every conductor's length;
+creative overhead placement keeps the spool. Fractional lengths and unrelated item
+components survive cuts and refunds. Broken placed wire returns its actual one-metre
+metal mass as scrap instead of creating a fresh default spool. Hidden damaged states
+and molten piles remain out of the creative tab; intact creative spools use 128 m.
+
+DC resistance uses source material, cross-section, length and absolute temperature.
+Native thermal transfer now calls an energy-integration hook: ordinary loads retain
+their previous calculation, while wire loads integrate sensible and latent heat.
+They retain overshoot, cooling, queued electrical joules, precise temperature and
+partial fusion across disconnects, replacements and saves. Native fixed-reference
+Tc is kept distinct from biome ambient and source ambient-relative saves. Junction
+heating sums real incident I²R rather than squaring an aggregate branch current.
+
+Jacket failure replaces a placed wire with its hot exposed-conductor variant;
+completed fusion leaves a nonconducting molten pile of the same metal mass. Finite
+100-ohm insulation faults latch and consume physical power. Topology changes run
+on the native server task queue and preserve voxel slot/offsets. Span cores each
+own only their paid length and thermal mass, accumulate actual I²R joules, sample
+endpoint climate at most once per second, and bound resistance drift to 0.01%.
+Heat and jacket damage survive canonical span reloads; failed metal opens the
+span, and manual removal returns the paid damaged length and components once.
+Native cable/glow/pile rendering and live temperatures are adapted.
+
+Twenty-three focused source/adapter regressions pass. Nine new native wire cases
+pass alongside all 85 prior cases (94 total): catalog/stack rules, actual placement,
+junction and span heat, hot-state reload, damage/fusion transitions, insulation
+faults and component-preserving refunds. Native datagen passes with 113 new item
+definitions, item models and English names, retaining all 414 preceding identities
+and 191 geometry models. No manufacturing recipes are added at this checkpoint.
+The destination regression run passes 458 tests across 94 suites, with three
+optional CAD preview cases skipped (461 selected, zero failures/errors), using
+`-PfluidCases=20`; the default 200-case fluid corpus was not run.
+
+Scope limits: these new spools are currently available through creative inventory;
+the source wire-processing machinery and survival manufacturing recipes are still
+pending. Multicore routing, device-inventory cable trimming, snips/config-copy tools,
+player-contact shock hooks, room-temperature coupling, advanced per-material span
+meshes, complete source-world migration and interactive client checks remain pending.
+The original native cable recipes and devices remain usable.
+
+Reports: [wire circuits and thermal physics](forkpatch-port/wire-circuit-tests.json),
+[native cases](forkpatch-port/wire-native-tests.json),
+[datagen](forkpatch-port/wire-datagen.json), and
+[destination regressions](forkpatch-port/wire-checkpoint-validation.json).
 
 ## Inventory
 

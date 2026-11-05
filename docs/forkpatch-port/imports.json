@@ -774,5 +774,103 @@
     "sourceSha256": "975f0b63c653eb087ca871661d5c854737f88ad5e21b840de641415fd60ab7af",
     "mode": "source mast geometry; inventory icons reproduced by tools/port/solar_icons.py",
     "status": "overhead service checkpoint: native geometry checked in all four wall orientations"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableDescriptor.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableElement.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableRender.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCables.kt",
+    "sourceSha256": "f642d34a880f713e223187bbc9e4980ccafd262e44a1923034010d7b219a4e3e",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireScrapDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCables.kt",
+    "sourceSha256": "851575bddb1b755c79cf0d4262a08d4ec2353f11009571d7bad1a853b35b4f61",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/sim/ElectricalLoad.java",
+    "target": "src/main/java/mods/eln/sim/ElectricalLoad.java",
+    "sourceSha256": "169d4d3f9e6ad9698a4f7cd58148ca039ebb1e9163850ca166f8a4d34e07dd6d",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/WirePhysics.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/WirePhysics.kt",
+    "sourceSha256": "970cd1bd9978ac7c738abc501798d475e3ef08fe79e99373cb02be60b815dcb6",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/WireThermalPhysics.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/WireThermalPhysics.kt",
+    "sourceSha256": "5eafe4c7f3db7c3bf28ae4a182617bffbd80065b4b602ebcfe883631e0f6c6ea",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/WireThermalLoad.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/WireThermalLoad.kt",
+    "sourceSha256": "ab2bccd42393d9df069a07c5ebbe198443cc8636ca8cede9032f39ff4cd55ae5",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/MoltenMetalPile.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/MoltenMetalPile.kt",
+    "sourceSha256": "1e432e951909b9edf9c0d286cf64158323e132a0eafc2e9c91baae0bde1fe0ff",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridCablePolicy.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/GridCablePolicy.kt",
+    "sourceSha256": "783cf0da724be98526f5688baa1f1db1753d2faed88a532cd6670a030569d9a7",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/SpanThermalRefresh.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/SpanThermalRefresh.kt",
+    "sourceSha256": "48eac4139bff270c275a94c309aa49807367be1e59332a2a9a380b4ea757d6d5",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/WireSpanThermal.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/WireSpanThermal.kt",
+    "sourceSha256": "897ed9bea8d8d3eb07648050752d4a9dbaf6c6c649b7d96818fbe99c1166a638",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
+    "sourceSha256": "cd3a7e7985f0b10ec4d62cd1185b18214322a739fadf217bb076d9a7a7a11e69",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
   }
 ]

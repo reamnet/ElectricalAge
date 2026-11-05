@@ -1,0 +1,22 @@
+{
+  "newBlockstates": 0,
+  "newItemDefinitions": 113,
+  "newItemModels": 113,
+  "newAdvancements": 0,
+  "newRecipes": 0,
+  "task": "runClientData",
+  "passed": true,
+  "newEnglishKeys": 113,
+  "existingIdentitiesRetained": 414,
+  "newIdentities": 113,
+  "existingModelsRetained": 191,
+  "newModels": 0,
+  "singleCoreVariants": 110,
+  "moltenStates": 2,
+  "scrapItems": 1,
+  "limits": [
+    "New spools are creative-accessible; source wire-processing machines and survival manufacturing recipes remain pending.",
+    "Multicore ids 2268..2327 remain reserved; independent multicore topology is not registered as a placeholder.",
+    "Device-inventory cable trimming, snips/config-copy integration, player-contact shock hooks, room coupling and advanced span appearance remain pending."
+  ]
+}
