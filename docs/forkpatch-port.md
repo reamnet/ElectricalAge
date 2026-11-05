@@ -669,6 +669,61 @@ checkpoint. Manufacturing and full source-world migration remain pending.
 
 Report: [bundle validation](forkpatch-port/bundle-span-validation.json).
 
+### Distribution protection and phase-routing checkpoint
+
+Twelve source pole variants are adapted with their original identities: single-
+and three-phase utility poles, the three-phase underground feeder pole, single-
+and three-phase fused cutouts, the three-phase recloser, the secondary pole,
+capacitor bank, single-/three-phase regulators, the gang-operated air-break switch
+and the three-phase pole with a fused single-phase tap. The remaining eighteen
+transformer, light, underground and related variants stay reserved rather than
+registering nonfunctional devices.
+
+Primary phases stay electrically independent. Cutouts consume physical cartridges
+and keep blown/open states through native saves and carried items. Reclosers trip,
+retry, lock out and require explicit reset; manual opening does not auto-retry.
+Regulators use native power-conserving passive taps, moving at most 1% each second
+within a 90–110% range. Capacitor banks retain the native capacitor history model.
+Healthy contacts and steady taps retain native LU factors, and no primary pole
+invents a secondary supply. Protection skips the stale measurement immediately
+after a contact closes. Fuse/arc/recloser sounds and status publications follow
+actual contact events, not every simulation tick.
+
+Single-conductor runs inherit upstream phase identity at link/configuration time.
+Identity-based traversal terminates through loops and follows both sides of a
+single-phase cutout even when open. Three-phase legacy aliases retain their actual
+phase-A identity. A fused tap cannot switch a separately fed branch to another
+phase. Bundles cannot duplicate individual phase links. New phase work adds no
+per-tick world traversal.
+
+The native controls expose line/load or service terminals, fuse operation, tap
+selection, recloser settings/reset and regulator target/mode. Source pole geometry,
+animated cutout carriers, equipment leads, all four orientations, native catenary
+cache/disposal behavior and real crossarm clearance are adapted. Rack attachment
+points match the rendered service insulators. Twelve reproducible inventory icons
+are generated with `python3 tools/port/distribution_icons.py`.
+
+Fifteen native production-circuit regressions pass. All 132 native server cases
+pass, including 22 distribution cases: all twelve devices, protection/carry/packet
+state, paid cartridge insertion, three-phase power/payment, open-fuse inheritance,
+phase changes, legacy aliases, a twenty-pole cycle, geometry and actual clearance.
+Datagen adds twelve recipes/advancements, blockstates and item definitions, twenty-
+four item models/English keys, one geometry model and three sound events. All 587
+preceding identities and 191 geometry models are retained, with no missing icons.
+The source Direct Utility Pole recipe ingredient uses the existing native Utility
+Pole until the separate source base equipment is adapted.
+
+Broader destination regression validation is in progress. Transformer/light/
+underground poles, height/surge/streetlight attachments, independent adaptive rack
+alignment, wire manufacturing, full source-world migration and interactive GPU/
+audio validation remain pending. Circuits keep the native scalar phase/service
+equivalents; this checkpoint does not add an AC phasor/neutral solver.
+
+Reports: [production circuits](forkpatch-port/distribution-circuit-tests.json),
+[native cases](forkpatch-port/distribution-native-tests.json),
+[datagen](forkpatch-port/distribution-datagen.json), and
+[destination regressions](forkpatch-port/distribution-checkpoint-validation.json).
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

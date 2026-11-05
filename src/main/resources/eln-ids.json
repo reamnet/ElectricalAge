@@ -3335,6 +3335,72 @@
   "kind": "transparent_node",
   "name": "wall_mounted_programmable_ups"
  },
+ "eln:transparent_node@7970": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Utility Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_utility_pole"
+ },
+ "eln:transparent_node@7971": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Utility Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_utility_pole"
+ },
+ "eln:transparent_node@7974": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Underground Feeder Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_underground_feeder_pole"
+ },
+ "eln:transparent_node@7975": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Fused Cutout Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_fused_cutout_pole"
+ },
+ "eln:transparent_node@7976": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Fused Cutout Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_fused_cutout_pole"
+ },
+ "eln:transparent_node@7977": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Recloser Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_recloser_pole"
+ },
+ "eln:transparent_node@7978": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "120/240V Secondary Utility Pole",
+  "kind": "transparent_node",
+  "name": "120_240v_secondary_utility_pole"
+ },
+ "eln:transparent_node@7980": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Pole Mounted Capacitor Bank",
+  "kind": "transparent_node",
+  "name": "three_phase_pole_mounted_capacitor_bank"
+ },
+ "eln:transparent_node@7981": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Automatic Voltage Regulator Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_automatic_voltage_regulator_pole"
+ },
+ "eln:transparent_node@7982": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Automatic Voltage Regulator Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_automatic_voltage_regulator_pole"
+ },
+ "eln:transparent_node@7983": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Gang Operated Air Break Switch Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_gang_operated_air_break_switch_pole"
+ },
  "eln:transparent_node@7986": {
   "descriptor": "HouseServiceDescriptor",
   "display": "120/240V Service Weatherhead",
@@ -3352,6 +3418,12 @@
   "display": "Red Handle Service Disconnect",
   "kind": "transparent_node",
   "name": "red_handle_service_disconnect"
+ },
+ "eln:transparent_node@7993": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Pole with Fused Single Phase Tap",
+  "kind": "transparent_node",
+  "name": "three_phase_pole_with_fused_single_phase_tap"
  },
  "eln:transparent_node@80": {
   "descriptor": "PowerInductorDescriptor",

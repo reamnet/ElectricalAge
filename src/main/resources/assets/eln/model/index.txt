@@ -26,6 +26,7 @@ dataloggercrtfloor/dataloggercrtfloor.obj
 daylightsensor/daylightsensor.obj
 digitalwallclock/digitalwallclock.obj
 distributionboard/distributionboard.obj
+distributionpole/distributionpole.obj
 eggincubator/eggincubator.obj
 electricalanvil/electricalanvil.obj
 electricalbreaker/electricalbreaker.obj

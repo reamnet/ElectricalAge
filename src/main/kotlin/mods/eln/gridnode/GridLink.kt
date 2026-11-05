@@ -53,6 +53,7 @@ class GridLink : INBTTReady {
         if(!left.acceptsSavedGridTerminal(from) || !right.acceptsSavedGridTerminal(to))return false
         val x=left.gridLoads(from);val y=right.gridLoads(to)
         if(x.isEmpty() || x.size!=y.size || !rs.isFinite() || rs<0)return false
+        if(x.size==1 && !GridPhaseRouting.compatible(left,from,right,to))return false
         val utility=mods.eln.generic.GenericItemBlockUsingDamageDescriptor.getDescriptor(cable) as? UtilityCableDescriptor
         if(utility!=null && !GridCablePlan.acceptsChannels(utility,x.size))return false
         val meters=utility?.getRemainingLengthMeters(cable)?.let { if(!it.isFinite() || it<=0)return false;GridCablePlan.coreMeters(it,x.size,jacketLength) }
@@ -118,7 +119,9 @@ class GridLink : INBTTReady {
             val x=a.gridLoads(from);val y=b.gridLoads(to)
             require(x.isNotEmpty() && x.size==y.size) { tr("Select matching grid terminal circuits") }
             val ka=a.gridCircuitKey(from);val kb=b.gridCircuitKey(to)
-            require(ka==kb || ka=="LEGACY" || kb=="LEGACY") { tr("Grid phases or service voltages do not match") }
+            val phaseBranch=x.size==1 && (ka=="HV_SINGLE" && kb in setOf("HV0","HV1","HV2","HV_SINGLE") || kb=="HV_SINGLE" && ka in setOf("HV0","HV1","HV2","HV_SINGLE"))
+            require(ka==kb || ka=="LEGACY" || kb=="LEGACY" || phaseBranch) { tr("Grid phases or service voltages do not match") }
+            if(x.size==1)require(GridPhaseRouting.compatible(a,from,b,to)) { tr("This single-phase run is already connected to a different HV phase") }
             val distance=a.coordonate().trueDistanceTo(b.coordonate())
             require(distance<=minOf(a.connectRange,b.connectRange)) { tr("Grid cable span exceeds the endpoint range") }
             val minimum=GridCablePlan.requiredUnits(cable,kotlin.math.ceil(distance).toInt(),x.size)

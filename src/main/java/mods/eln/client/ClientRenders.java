@@ -11,6 +11,7 @@ public final class ClientRenders {
     }
 
     public static void registerAll() {
+        ElnRenders.transparent(mods.eln.utility.DistributionPoleDescriptor.class,mods.eln.utility.DistributionPoleRender::new);
         // generated from the 1.12 descriptors' RenderClass (eln/port: super(name, XElement.class, XRender.class))
         ElnRenders.six(mods.eln.signalinductor.SignalInductorDescriptor.class, mods.eln.signalinductor.SignalInductorRender::new);
         ElnRenders.six(mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor.class, mods.eln.sixnode.TreeResinCollector.TreeResinCollectorRender::new);

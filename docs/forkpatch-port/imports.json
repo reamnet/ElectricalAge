@@ -907,5 +907,96 @@
     "sourceSha256": "cd3a7e7985f0b10ec4d62cd1185b18214322a739fadf217bb076d9a7a7a11e69",
     "mode": "native jacket-vs-conductor payment adapter, exact core counts, explicit saved length marker; preserve unmarked source record accounting",
     "status": "bundle checkpoint: six routing regressions and 110 native server cases passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionKind.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleUnit.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleElement.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityProtection.kt",
+    "target": "src/main/kotlin/mods/eln/utility/RecloserControl.kt",
+    "sourceSha256": "87140dab360e424d8e12ae9ee99a7bb81b7b00b66fc05b96ec4e4ed38e37740e",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleDescriptor.kt",
+    "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionDisplay.kt",
+    "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleRender.kt",
+    "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleScreen.kt",
+    "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityRecipes.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoles.kt",
+    "sourceSha256": "829cb797d9a7e3039c48d31163c2f766ac6f47f903a333bc05b4cd7252a93027",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridPhaseRouting.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/GridPhaseRouting.kt",
+    "sourceSha256": "8a7165979b860b0ca2e79dee58b3c8525679a5bae7ee0291d896bfa9de71258e",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/ServiceCableMount.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/ServiceCableMount.kt",
+    "sourceSha256": "7cf7a74cb2ea3ddb1a1a7c28dab0b73fe5be611b4f8e6d5b1b30ab76ff8e8461",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleCutoutVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleCutoutVisual.kt",
+    "sourceSha256": "b62420076dda3af38fd230f44efb53c31a20295088e7925d905731ac6f91a7f5",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleLeadVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleLeadVisual.kt",
+    "sourceSha256": "05d8f632a07f7882c378c625fb215e046daceec01575a0dc20b0b26198b9158d",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests and 132 native cases passed; full destination regressions pending"
   }
 ]

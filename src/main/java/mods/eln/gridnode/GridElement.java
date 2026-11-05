@@ -55,6 +55,8 @@ abstract public class GridElement extends TransparentNodeElement {
         ElectricalLoad load=side==null?null:getGridElectricalLoad(side);
         return load==null?java.util.List.of():java.util.List.of(load);
     }
+    public Integer gridPhase(int terminal) { return null; }
+    public java.util.List<Integer> phaseBusTerminals(int terminal) { return java.util.List.of(terminal); }
     public String gridCircuitKey(int terminal) { return "LEGACY"; }
     public int renderWireCount(int terminal) { return 2; }
     public Vec3 gridCablePoint(int terminal,int wire) { return getCablePoint(Direction.fromInt(terminal),wire); }
