@@ -1,4 +1,4 @@
-// 26.3	2026-11-05T16:20:29.656497997	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-05T16:45:45.384617857	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -273,6 +273,7 @@ c15d5c0cc610b6749034d53b6fe5c87c72a784c3 data/eln/advancement/recipes/misc/pink_
 c22c87bd08ed65c2308e22e1978b06ec035c7d0b data/eln/advancement/recipes/misc/plant_steam_condenser.json
 4a4cb32b42945ddd436f0ebf7fa6ecfff05bbea1 data/eln/advancement/recipes/misc/player_filter.json
 e6947c2110c1bbf48fd4818708c4420062b3eab1 data/eln/advancement/recipes/misc/pole_fuse_link.json
+60e0a673caea5a0042b7b9c2fb3d7ca350bdd993 data/eln/advancement/recipes/misc/pole_streetlight_attachment.json
 af15506bbf1df0708de0892e348079db76cd76b6 data/eln/advancement/recipes/misc/portable_battery.json
 7c8367399d01fd66c86922ca2985f609d7ce06e0 data/eln/advancement/recipes/misc/portable_condensator.json
 d7fea25d78653aba807011d32fe5e574370c8378 data/eln/advancement/recipes/misc/portable_condensator_pack.json
@@ -307,6 +308,7 @@ e80c61360089710f1963815c85fc9bb6cf61b854 data/eln/advancement/recipes/misc/silve
 0627b7a28706b0bb15442b148e22b73e0977c3ec data/eln/advancement/recipes/misc/single_phase_automatic_voltage_regulator_pole.json
 c4c2de25d54c78ab731eb99a82e47e7a033bf667 data/eln/advancement/recipes/misc/single_phase_fused_cutout_pole.json
 c18ece5d250f800cb900d4c8b62ed2a64b934bcd data/eln/advancement/recipes/misc/single_phase_transformer_pole.json
+e4e32ae74861e1f7da0011bf3f38a0dd3e53d5c7 data/eln/advancement/recipes/misc/single_phase_underground_feeder_pole.json
 b4992560a4aa9cc3e983f1b1e29e07f1e553ea1b data/eln/advancement/recipes/misc/single_phase_utility_pole.json
 809e721d7853cc599c22b8e9d4499b051bb1cee6 data/eln/advancement/recipes/misc/single_use_battery.json
 f665bdf9caaf800299dfc4f98c4923f398cca1ea data/eln/advancement/recipes/misc/single_use_battery_2.json
@@ -708,6 +710,7 @@ c31f1c59279d00c829341217db7ecf75091cf6fa data/eln/recipe/pink_brush.json
 6ea63de7579029a939062d12a7c7930d2b78a4fc data/eln/recipe/plant_steam_condenser.json
 31bea419e6ecfe9febfd542ffead3424dfd77c2b data/eln/recipe/player_filter.json
 0e803994d3a7e894af1d6d822976bec076cc7673 data/eln/recipe/pole_fuse_link.json
+5cc60c7b577b45920ee62be05755e3cc3f8894ac data/eln/recipe/pole_streetlight_attachment.json
 e98466c835a24561de034c981fcb9142a1a9d70f data/eln/recipe/portable_battery.json
 6e1ebfac271ea15d5682ebba74d6e3f58b01d1ab data/eln/recipe/portable_condensator.json
 621d200d059d3149c77591253af609794fefc0d1 data/eln/recipe/portable_condensator_pack.json
@@ -742,6 +745,7 @@ c3083279a9092abb386e52142d77440229c42890 data/eln/recipe/simple_lamp_socket.json
 4f686bce96ff48e58ade24fcde850ff70d003cfa data/eln/recipe/single_phase_automatic_voltage_regulator_pole.json
 0b1078fcc68330f88d02c0918c0e6f166b4834e0 data/eln/recipe/single_phase_fused_cutout_pole.json
 e85571f4e882ff924d30de2e326798884d62f724 data/eln/recipe/single_phase_transformer_pole.json
+30aaab71fcf3a60603799718b0cf8beda007e8d3 data/eln/recipe/single_phase_underground_feeder_pole.json
 8883e9818c9ff0d324c236df7f9a124d1f01e1f1 data/eln/recipe/single_phase_utility_pole.json
 a46d6a073fd86a647a43109ec61e2b2109a872d1 data/eln/recipe/single_use_battery.json
 d6c874804a381b5b1091590bf35c9c0608b86276 data/eln/recipe/single_use_battery_2.json

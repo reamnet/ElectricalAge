@@ -1026,5 +1026,47 @@
     "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
     "mode": "native-paid-core-primary-current-shared-capacity-and-lifecycle-test-fixtures",
     "status": "pole-transformer-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StreetLightMount.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StreetLightMount.kt",
+    "sourceSha256": "af88af195e4ea87b2b5d56b2e71c41dad584be172d5007e004361ee1d2c4e76f",
+    "mode": "verbatim-source-fixture-placement-math",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightAttachment.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleLamp.kt",
+    "sourceSha256": "f2803d10717aa3ddcc984f5bccedcc58f5ad40b60fb2c02409974b3b94b8df57",
+    "mode": "shared-linear-load-for-fixed-legacy-fixtures-and-paid-removable-native-distribution-attachments",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightNetwork.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleScreen.kt",
+    "sourceSha256": "94c2126a27463a21d92f1597b6e5f79e90ad115a0052fdb75a772f2b96ebc6c9",
+    "mode": "native-node-menu-controls-instead-of-an-additional-packet-protocol",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchPoleLampCases.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-world-light-physical-load-and-fused-riser-tests",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightAttachment.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchPoleAttachmentCases.kt",
+    "sourceSha256": "f2803d10717aa3ddcc984f5bccedcc58f5ad40b60fb2c02409974b3b94b8df57",
+    "mode": "native-paid-attachment-inventory-reload-removal-and-break-refund-tests",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/polestreetlightattachment.png",
+    "target": "src/main/resources/assets/eln/textures/item/pole_streetlight_attachment.png",
+    "sourceSha256": "37a7017aa37cd0a233552d3f5e988767279a2840d7f2e30219de7a3c56031b0b",
+    "mode": "verbatim-source-icon-at-native-registry-name",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
   }
 ]

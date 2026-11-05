@@ -41,8 +41,19 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
                 PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(0.0,if(phase==1)7.15 else 6.63,if(kind.phases==1)0.0 else (phase-1)*.95),net.minecraft.world.phys.Vec3(-.68,6.40,(i-1)*.95))
             }
             if(kind.transformer && (d==null || d.transformerRating>0))PoleTransformerVisual.draw(d?.transformerRating ?: 10000)
-            if(kind.primaryRiser)repeat(3) { p("Riser$it",.28f,.31f,.32f);p("RiserJumper$it",.13f,.15f,.16f) }
+            if(kind.primaryRiser)for(i in if(kind.singlePrimaryRiser)listOf(1) else listOf(0,1,2)) { p("Riser$i",.28f,.31f,.32f);p(if(kind.singlePrimaryRiser)"RiserFuseJumper" else "RiserJumper$i",.13f,.15f,.16f) }
             if(kind.regulator)repeat(kind.phases) { val i=if(kind.phases==1)1 else it;p("Regulator$i",.64f,.66f,.63f);p("RegulatorPin$i",.44f,.48f,.38f);p("RegulatorLoadPin$i",.44f,.48f,.38f);p("RegulatorFeed$i",.13f,.15f,.16f) }
+            if(kind.light || d?.lampInstalled==true) {
+                GL11.glPushMatrix()
+                try {
+                    GL11.glTranslated(0.0,mods.eln.transparentnode.utilitylight.StreetLightMount.offset(d?.heightStep ?: 0),0.0);GL11.glRotated((d?.yaw ?: 0).toDouble(),0.0,1.0,0.0)
+                    p("LampBracket",.48f,.50f,.51f)
+                    val pivot=mods.eln.transparentnode.utilitylight.StreetLightMount.pivot
+                    GL11.glTranslated(pivot.x,pivot.y,pivot.z);GL11.glRotated((d?.pitch ?: 0).toDouble(),0.0,0.0,1.0);GL11.glTranslated(-pivot.x,-pivot.y,-pivot.z)
+                    p("LampHousing",.26f,.29f,.31f)
+                    if((d?.light ?: 0)>0) { mods.eln.misc.UtilsClient.disableLight();try { p("LampLens",1f,.94f,.77f) }finally { mods.eln.misc.UtilsClient.enableLight() } } else p("LampLens",.14f,.17f,.19f)
+                }finally { GL11.glPopMatrix() }
+            }
             if(kind.capacitor) { p("CapacitorRack",.35f,.38f,.40f);repeat(3) { p("Capacitor$it",.76f,.77f,.72f);p("CapacitorPin$it",.4f,.45f,.35f);p("CapacitorFeed$it",.13f,.15f,.16f) } }
             if(kind.recloser) { p("Recloser",.57f,.61f,.58f);p("Control",.60f,.63f,.61f) }
             if(kind.recloser || kind==DistributionKind.AIR_BREAK_THREE) {
@@ -58,6 +69,9 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
         list.add(if(kind.lvOnly)tr("120/240 V secondary circuits only; no high-voltage transformer") else tr("Independent primary conductors; select a phase or three-phase bundle in the menu"))
         if(kind.cutout || kind.singlePhaseTap)list.add(tr("Physical fuse cartridges protect the load terminal; open contacts isolate the circuit"))
         if(kind.transformer)list.add(tr("Install a physical transformer; one selected primary phase supplies shared 120/240 V service"))
+        if(!kind.light)list.add(tr("Accepts a removable Pole Streetlight Attachment powered only by secondary service"))
+        if(kind.light)list.add(tr("70 W street light uses the 120 V service rack; manual or dusk operation with adjustable aim"))
+        if(kind.singlePrimaryRiser)list.add(tr("Fused underground primary: bottom Up or left base; the service rack remains independent"))
         if(kind.regulator)list.add(tr("Automatic regulation changes taps gradually within 90 to 110 percent"))
         list.add(tr("Service terminals carry independent L1, L2 and 240 V circuit equivalents"))
     }

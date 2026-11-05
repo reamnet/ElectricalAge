@@ -64,7 +64,7 @@ object ForkPatchPoleTransformerCases {
         }
         private fun inventory(c: TestContext) {
             val spec=MenuSpecs.of(e.descriptor)
-            c.check("pole transformer: menu exposes one paid core slot and player inventory",spec.slots().size==1 && spec.playerInventory() && spec.height()==430 && spec.slots()[0].limit()==1,"")
+            c.check("pole transformer: menu exposes one paid core slot and player inventory",spec.slots().size==1 && spec.playerInventory() && spec.height()==442 && spec.slots()[0].limit()==1,"")
             c.check("pole transformer: sided automation accepts cores and rejects fuses",e.hardware.canInsertItem(0,Eln.findItemStack(PoleHardware.transformerNames[0],1),0) && !e.hardware.canInsertItem(0,Eln.findItemStack(PoleHardware.fuseNames[0],1),0),"")
             c.check("pole transformer: native item capability is present",c.level().getCapability(net.neoforged.neoforge.capabilities.Capabilities.Item.BLOCK,e.node.coordonate.pos(),net.minecraft.core.Direction.UP)!=null,"")
             val saved=CompoundTag();e.writeToNBT(saved);val copy=DistributionPoleElement(TransparentNode(),e.descriptor);copy.front=e.front;copy.readFromNBT(saved)

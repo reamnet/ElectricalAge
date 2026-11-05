@@ -120,8 +120,8 @@ public final class MenuSpecs {
 
         // ---- transparent-node devices
         put(mods.eln.utility.DistributionPoleDescriptor.class,d->(d.getKind().getTransformer()?MenuSpec.of(
-            descriptor(0,16,300,1,mods.eln.utility.PoleTransformerDescriptor.class,MEDIUM,tr("Installed pole transformer"))).publishing(1).panel(368,430,104,348)
-            :MenuSpec.SCREEN_ONLY.publishing(1).panel(368,330,0,0)));
+            descriptor(0,16,332,1,mods.eln.utility.PoleTransformerDescriptor.class,MEDIUM,tr("Installed pole transformer"))).publishing(1).panel(368,442,104,360)
+            :MenuSpec.SCREEN_ONLY.publishing(1).panel(368,350,0,0)));
         put(mods.eln.utility.HouseServiceDescriptor.class,d->(d.getMeter()?MenuSpec.of(
             filter(0,8,42,1,stack->{var part=mods.eln.utility.UtilityItems.INSTANCE.part(stack);return part!=null && (part==1 || part==2);},MEDIUM,tr("Analog or smart service meter")))
             :MenuSpec.SCREEN_ONLY).publishing(1).panel(320,284,80,202));

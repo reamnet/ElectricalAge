@@ -893,6 +893,12 @@
   "kind": "shared_item",
   "name": "blown_pole_fuse"
  },
+ "eln:shared_item@7896": {
+  "descriptor": "UtilityPartDescriptor",
+  "display": "Pole Streetlight Attachment",
+  "kind": "shared_item",
+  "name": "pole_streetlight_attachment"
+ },
  "eln:shared_item@8": {
   "descriptor": "GenericItemUsingDamageDescriptorWithComment",
   "display": "Coal Dust",
@@ -3389,6 +3395,12 @@
   "kind": "transparent_node",
   "name": "120_240v_secondary_utility_pole"
  },
+ "eln:transparent_node@7979": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "120/240V Secondary Street Light Pole",
+  "kind": "transparent_node",
+  "name": "120_240v_secondary_street_light_pole"
+ },
  "eln:transparent_node@7980": {
   "descriptor": "DistributionPoleDescriptor",
   "display": "Three Phase Pole Mounted Capacitor Bank",
@@ -3413,6 +3425,18 @@
   "kind": "transparent_node",
   "name": "three_phase_gang_operated_air_break_switch_pole"
  },
+ "eln:transparent_node@7984": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Transformer Street Light Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_transformer_street_light_pole"
+ },
+ "eln:transparent_node@7985": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Transformer Street Light Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_transformer_street_light_pole"
+ },
  "eln:transparent_node@7986": {
   "descriptor": "HouseServiceDescriptor",
   "display": "120/240V Service Weatherhead",
@@ -3424,6 +3448,18 @@
   "display": "North American Meter Base",
   "kind": "transparent_node",
   "name": "north_american_meter_base"
+ },
+ "eln:transparent_node@7989": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Secondary Fed Street Light Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_secondary_fed_street_light_pole"
+ },
+ "eln:transparent_node@7990": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Secondary Fed Street Light Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_secondary_fed_street_light_pole"
  },
  "eln:transparent_node@7992": {
   "descriptor": "HouseServiceDescriptor",
@@ -3520,6 +3556,12 @@
   "display": "120/240V Underground Service Handhole",
   "kind": "transparent_node",
   "name": "120_240v_underground_service_handhole"
+ },
+ "eln:transparent_node@8131": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Underground Feeder Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_underground_feeder_pole"
  },
  "eln:transparent_node@8192": {
   "descriptor": "OffGridDescriptor",

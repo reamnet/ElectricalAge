@@ -1083,6 +1083,7 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeForkPatchUps() {
+        addRecipe(findItemStack("Pole Streetlight Attachment")," II","CPG"," I ",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'P',findItemStack("Simple Lamp Socket"),'G',Items.GLASS);
         mods.eln.utility.DistributionPoles.recipes((out,args)->{addShapelessRecipe(out,args);return kotlin.Unit.INSTANCE;});
         addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
         int mastIndex=0;

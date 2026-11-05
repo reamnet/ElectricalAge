@@ -8,6 +8,8 @@ import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.IProcess
+import mods.eln.transparentnode.utilitylight.StreetLightMount
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.Container
@@ -29,7 +31,20 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     override fun initialize() { installTransformer();super.initialize() }
     override fun inventoryChange(inventory: Container?) { installTransformer();needPublish() }
     var terminal=if(kind.lvOnly)50 else 32;private set
-    init { unit.transformer?.let { thermalLoadList.add(it.thermal) };unit.changed={ event->needPublish();play(mods.eln.sound.SoundCommand("eln:$event").smallRange().mulVolume(.5)) };slowProcessList.add(NodePeriodicPublishProcess(node,1.0,.5)) }
+    init { unit.transformer?.let { thermalLoadList.add(it.thermal) };unit.changed={ event->needPublish();play(mods.eln.sound.SoundCommand("eln:$event").smallRange().mulVolume(.5)) };slowProcessList.add(NodePeriodicPublishProcess(node,1.0,.5));slowProcessList.add(IProcess { refreshLight() }) }
+    private fun refreshLight() {
+        val lamp=unit.lamp ?: return
+        if(!lamp.installed)return
+        val at=node.coordonate ?: return
+        val world=at.world() as? net.minecraft.server.level.ServerLevel ?: return
+        lamp.night=world.skyDarken>=4
+        if(lamp.sample())needPublish()
+        if(lamp.light>0)for(head in kind.lampHeads) {
+            val offset=StreetLightMount.adjust(head,front,lamp.heightStep,lamp.yaw,lamp.pitch)
+            val pos=at.pos().offset(kotlin.math.floor(offset.x+.5).toInt(),kotlin.math.floor(offset.y+.5).toInt(),kotlin.math.floor(offset.z+.5).toInt())
+            if(world.chunkSource.getChunkNow(pos.x shr 4,pos.z shr 4)!=null)mods.eln.sixnode.lampsocket.LightBlockEntity.addLight(world,pos.x,pos.y,pos.z,lamp.light,10)
+        }
+    }
     override fun selectedGridTerminal(side: Direction)=terminal
     fun terminals()=buildList {
         if(!kind.lvOnly) { repeat(kind.phases) { add(32+it) };if(kind.phases==3)add(52);if(kind.protectedLine) { repeat(kind.outputPhases) { add(36+it) };if(kind.phases==3 && !kind.singlePhaseTap)add(53) } }
@@ -69,10 +84,10 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     }
     private fun phaseZ(i: Int)=if(kind.phases==1)0.0 else (i-1)*.95
     override fun getElectricalLoad(side: Direction,lrdu: LRDU): ElectricalLoad? {
-        if(side==Direction.YN)return unit.services[when(lrdu) { LRDU.Left->0;LRDU.Right->1;else->2 }]
+        if(side==Direction.YN) { if(kind.singlePrimaryRiser && lrdu==LRDU.Up)return unit.outs[0];return unit.services[when(lrdu) { LRDU.Left->0;LRDU.Right->1;else->2 }] }
         if(side.isY || lrdu!=LRDU.Down)return null
         val i=when(side) { front.left()->0;front.right()->1;front.inverse->2;else->return null }
-        return if(kind==DistributionKind.FEEDER_THREE)unit.lines[i] else unit.services[i]
+        return if(kind==DistributionKind.FEEDER_THREE)unit.lines[i] else if(kind.singlePrimaryRiser)when(i) { 0->unit.outs[0];1->unit.services[2];else->unit.services[0] } else unit.services[i]
     }
     override fun getConnectionMask(side: Direction,l: LRDU)=if(getElectricalLoad(side,l)!=null)NodeBase.maskElectricalPower else 0
     override fun getThermalLoad(side: Direction,l: LRDU)=null
@@ -86,6 +101,9 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
         val changed=unit.selectPhase(value);if(changed)needPublish();return changed
     }
     override fun onBlockActivated(p: Player,side: Direction,x: Float,y: Float,z: Float): Boolean {
+        if(!kind.light && UtilityItems.part(p.mainHandItem)==3) {
+            if(unit.lamp?.install()==true) { if(!p.isCreative)p.mainHandItem.shrink(1);p.inventory.setChanged();needPublish() };return true
+        }
         if(kind.transformer && PoleHardware.transformerWatts(p.mainHandItem)!=null && hardware.getItem(0).isEmpty) {
             hardware.setItem(0,p.mainHandItem.copyWithCount(1));if(!p.isCreative)p.mainHandItem.shrink(1)
             inventoryChange(hardware);p.inventory.setChanged();return true
@@ -104,12 +122,20 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     private fun readSettings(t: CompoundTag) { unit.read(t);terminal=t.getIntOr("utilityTerminal",if(kind.lvOnly)50 else 32).takeIf { it in terminals() } ?: terminals().first() }
     override fun writeToNBT(t: CompoundTag) { super.writeToNBT(t);settings(t) }
     override fun readFromNBT(t: CompoundTag) { super.readFromNBT(t);readSettings(t);installTransformer() }
-    override fun getItemStackNBT()=CompoundTag().also(::settings)
+    override fun getItemStackNBT()=CompoundTag().also { settings(it);if(!kind.light)it.getCompoundOrEmpty("poleStreetlightAttachment").putBoolean("installed",false) }
+    override fun onBreakElement() { if(unit.lamp?.remove()==true)node.dropItem(Eln.findItemStack(UtilityItems.STREETLIGHT_NAME,1));super.onBreakElement() }
     override fun readItemStackNBT(t: CompoundTag?) { if(t!=null)readSettings(t) }
     override fun networkSerialize(out: DataOutputStream) { super.networkSerialize(out);DistributionDisplay().apply { capture(this@DistributionPoleElement);write(out) } }
     override fun networkUnserialize(s: DataInputStream): Byte {
         val id=super.networkUnserialize(s)
         try { when(id.toInt()) {
+            107->unit.lamp?.chooseSupply(s.readInt())
+            108->{ if(unit.lamp?.remove()==true)node.dropItem(Eln.findItemStack(UtilityItems.STREETLIGHT_NAME,1)) }
+            102->unit.lamp?.let { it.configure(s.readBoolean(),it.automatic) }
+            103->unit.lamp?.let { it.configure(it.enabled,s.readBoolean()) }
+            104->unit.lamp?.let { lamp->val move=s.readInt();if(move in listOf(-1,1))lamp.aim((lamp.heightStep+move).coerceIn(StreetLightMount.MIN_STEP,StreetLightMount.MAX_STEP),lamp.yaw,lamp.pitch) }
+            105->unit.lamp?.let { lamp->val move=s.readInt();if(move in listOf(-5,-1,1,5))lamp.aim(lamp.heightStep,StreetLightMount.turn(lamp.yaw,move),lamp.pitch) }
+            106->unit.lamp?.let { lamp->val move=s.readInt();if(move in listOf(-5,-1,1,5))lamp.aim(lamp.heightStep,lamp.yaw,(lamp.pitch+move).coerceIn(-60,60)) }
             80->unit.configureTransformer(s.readInt(),unit.transformer?.enabled ?: true)
             81->unit.configureTransformer(unit.transformer?.outputVoltage ?: 120,s.readBoolean())
             82->unit.resetTransformer()

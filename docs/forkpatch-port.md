@@ -762,6 +762,45 @@ workstreams remain pending; this is a development checkpoint, not a release.
 Reports: [production circuits](forkpatch-port/pole-transformer-circuit-tests.json),
 [native server cases](forkpatch-port/pole-transformer-native-tests.json).
 
+### Service lighting and single-phase feeder checkpoint
+
+The single-phase underground feeder pole now uses source ID 8131, with its fused
+primary reaching the bottom Up/left base terminals and an independent secondary
+rack. Five older built-in street-light poles retain source IDs 7979/7984/7985/
+7989/7990, remain hidden from creative inventory and have no new recipes, as in
+3.0.77. Their actual 70 W loads, power-dependent brightness, dusk mode and fixture
+height/yaw/pitch are adapted, including the older transformer lamp save keys.
+Twenty distribution identities now work; fifteen are current creative variants.
+
+New builds use the paid Pole Streetlight Attachment (source shared item 7896).
+Right-clicking one of the adapted non-light distribution poles consumes one item;
+duplicate installation consumes none. The native pole menu controls supply,
+switching, dusk operation, height and aim (Shift-click reverses each adjustment).
+Automatic 120/240 V selection has source 25% hysteresis and draws from only one
+service circuit, without connecting the service buses together. Fixed supply
+selection does not silently fall back. Steady lamps keep native LU factors.
+
+Brightness follows accepted electrical power; no supply produces no light and
+voltage sag dims the fixture. The rendered head and temporary native world light
+share placement math. Refreshes avoid loading chunks, and world light expires
+after switch-off/removal. Native saves retain paid installation and validated
+controls. Removal/breakage refunds one item, and carried pole settings exclude
+paid attachment presence. Other source pole families' attachment adapters and
+adaptive alignment remain pending.
+
+All eighteen new production-circuit cases and all 166 native server cases pass,
+including the former 144 and twenty-two new placed-device cases. The native tests
+exercise real insulated service spans, each legacy lamp kind, world light expiry,
+controls, model pose/illumination, the fused feeder, payment, actual reload and
+single break refunds. The source Basic Lamp Holder recipe ingredient uses the
+destination Simple Lamp Socket until that source holder is adapted. Full destination regressions are rerun after the final
+equipment increment in this work block.
+
+Reports: [lamp circuits](forkpatch-port/pole-lamp-circuit-tests.json),
+[attachment circuits](forkpatch-port/pole-attachment-circuit-tests.json),
+[native cases](forkpatch-port/pole-lamp-native-tests.json), and
+[generated data](forkpatch-port/pole-lamp-datagen.json).
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

@@ -8,21 +8,22 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/icons/shaft'))
 from render3d import render
 
-KINDS={7970:'single',7971:'three',7972:'transformer_single',7973:'transformer_three',7974:'feeder',7975:'cutout_single',7976:'cutout_three',7977:'recloser',7978:'secondary',7980:'capacitor',7981:'regulator_single',7982:'regulator_three',7983:'switch',7993:'tap'}
+KINDS={7970:'single',7971:'three',7972:'transformer_single',7973:'transformer_three',7974:'feeder',7975:'cutout_single',7976:'cutout_three',7977:'recloser',7978:'secondary',7980:'capacitor',7981:'regulator_single',7982:'regulator_three',7983:'switch',7993:'tap',7979:'secondary_light',7984:'transformer_light_single',7985:'transformer_light_three',7989:'fed_light_single',7990:'fed_light_three',8131:'feeder_single'}
 
 def parts(kind):
     out={'main','SecondaryRack','Secondary0','Secondary1','Secondary2'}
-    if kind!='secondary':
+    if not kind.startswith('secondary'):
         out.add('SingleArm' if kind.endswith('single') or kind=='single' else 'Crossarm');out.add('TopPin')
         if not(kind.endswith('single') or kind=='single'):out.update(('Pin0','Pin2'))
+    if 'light'in kind:out.update(('LampBracket','LampHousing','LampLens'))
     if kind.startswith('transformer'):out.update(('Transformer','TransformerPin'))
-    if kind.startswith(('cutout','regulator','transformer')) or kind=='tap':
+    if kind.startswith(('cutout','regulator','transformer')) or kind in ('tap','feeder_single'):
         for i in ([1]if kind.endswith('single') or kind=='tap' or kind.startswith('transformer') else range(3)):
             out.update(f'{name}{i}'for name in ('CutoutBase','CutoutInsulator','FuseDoor','FuseJumper'))
     if kind.startswith('regulator'):
         for i in ([1]if kind.endswith('single') else range(3)):out.update(f'{name}{i}'for name in ('Regulator','RegulatorPin','RegulatorLoadPin','RegulatorFeed'))
-    if kind=='feeder':
-        for i in range(3):out.update((f'Riser{i}',f'RiserJumper{i}'))
+    if kind.startswith('feeder'):
+        for i in ([1]if kind.endswith('single') else range(3)):out.update((f'Riser{i}','RiserFuseJumper'if kind.endswith('single') else f'RiserJumper{i}'))
     if kind=='capacitor':
         out.add('CapacitorRack')
         for i in range(3):out.update(f'{name}{i}'for name in ('Capacitor','CapacitorPin','CapacitorFeed'))

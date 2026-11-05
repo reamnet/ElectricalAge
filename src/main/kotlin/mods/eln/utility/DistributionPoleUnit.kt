@@ -14,6 +14,7 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     val outs=if(kind.protectedLine)List(kind.outputPhases) { NbtElectricalLoad("phaseOut$it").apply { rs=.00001 } } else lines
     val transformer=if(kind.transformer)PoleTransformerUnit(states,parts) else null
     val services=transformer?.service?.loads ?: List(3) { NbtElectricalLoad("secondaryBus$it").apply { rs=.00001 } }
+    val lamp=if(kind.light)PoleLamp(services[0],parts,kind.lampWatts,kind.transformer) else PoleLamp(services[0],parts,source240=services[2],removable=true)
     val contacts=when {
         kind.transformer->lines.map { TransferContact(it,transformer!!.primary) }
         kind.singlePhaseTap->lines.map { TransferContact(it,outs[0]) }
@@ -33,7 +34,7 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     val regulatorTaps: List<ServiceTap>
     val capacitorPins=ArrayList<NbtElectricalLoad>()
     init {
-        require(!kind.light && !kind.underground)
+        require(!kind.underground)
         if(!kind.lvOnly)states.addAll(lines)
         if(outs!==lines)states.addAll(outs)
         if(transformer==null)states.addAll(services)
@@ -117,14 +118,14 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     fun configureTransformer(voltage: Int,on: Boolean): Boolean { val ok=transformer?.configure(voltage,on)==true;if(ok)applyContacts();return ok }
     fun resetTransformer() { transformer?.reset();applyContacts() }
     fun write(t: CompoundTag) {
-        transformer?.write(t)
+        transformer?.write(t);lamp?.write(t)
         t.putInt("utilityPhase",phase);t.putBoolean("utilityGangClosed",gangClosed);t.putDouble("utilityFuseAmps",fuseAmps)
         fuses.forEachIndexed { i,f->f.write(t,"utilityFuse$i") };recloser.write(t)
         t.putDouble("regulatorTarget",regulatorTarget);t.putBoolean("regulatorAuto",regulatorAutomatic);t.putDouble("nativeRegulatorClock",regulatorClock)
         regulatorTaps.forEachIndexed { i,p->t.putDouble("regulatorRatio$i",p.ratio) }
     }
     fun read(t: CompoundTag) {
-        transformer?.read(t)
+        transformer?.read(t);lamp?.read(t)
         phase=t.getIntOr("utilityPhase",0).coerceIn(0,lines.lastIndex);gangClosed=t.getBooleanOr("utilityGangClosed",true);setFuseAmps(t.getDoubleOr("utilityFuseAmps",100.0))
         fuses.forEachIndexed { i,f->f.read(t,"utilityFuse$i") };recloser.read(t)
         configureRegulator(t.getDoubleOr("regulatorTarget",12470.0),t.getBooleanOr("regulatorAuto",true))
