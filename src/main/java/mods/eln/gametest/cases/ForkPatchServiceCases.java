@@ -84,7 +84,7 @@ public final class ForkPatchServiceCases {
                     c.check("service: inventory clearing or manual opening cannot leave a bypass",load.getP()<1e-7,"P="+load.getP());
                     if(!manual)meter.getInventory().setItem(0,held);else meter.setRemoteDisconnect(false);
                     if(wide && before && front==Direction.XN) {
-                        c.level().getServer().tell(new net.minecraft.server.TickTask(c.level().getServer().getTickCount(),()->{
+                        c.level().getServer().schedule(new net.minecraft.server.TickTask(c.level().getServer().getTickCount(),()->{
                             previous=NodeBase.simulationVeto;NodeBase.simulationVeto=n->n==meter.node || previous!=null && previous.test(n);frozen=true;meter.node.reconnect();
                             var a=NodeManager.instance.getNodeFromCoordonate(new Coordonate(in,c.level()));var b=NodeManager.instance.getNodeFromCoordonate(new Coordonate(out,c.level()));a.reconnect();b.reconnect();
                         }));
@@ -92,7 +92,7 @@ public final class ForkPatchServiceCases {
                     phase=5;
                 }
                 if(phase==5 && elapsed>=6) {
-                    if(frozen) { c.check("service: frozen meter cannot gain a cable bypass",load.getP()<1e-7,"P="+load.getP());c.level().getServer().tell(new net.minecraft.server.TickTask(c.level().getServer().getTickCount(),()->{NodeBase.simulationVeto=previous;frozen=false;meter.node.reconnect();})); }
+                    if(frozen) { c.check("service: frozen meter cannot gain a cable bypass",load.getP()<1e-7,"P="+load.getP());c.level().getServer().schedule(new net.minecraft.server.TickTask(c.level().getServer().getTickCount(),()->{NodeBase.simulationVeto=previous;frozen=false;meter.node.reconnect();})); }
                     phase=6;
                 }
             };Eln.simulator.addElectricalProcess(clock);
