@@ -3,9 +3,9 @@
   "sourceVariants": 30,
   "currentCreativeVariants": 18,
   "currentCreativeVariantsAdapted": 18,
-  "registeredVariants": 29,
-  "hiddenLegacyVariantsAdapted": 11,
-  "hiddenLegacyVariantsPending": 1,
+  "registeredVariants": 30,
+  "hiddenLegacyVariantsAdapted": 12,
+  "hiddenLegacyVariantsPending": 0,
   "variants": [
     {
       "kind": "SINGLE",
@@ -193,8 +193,8 @@
       "kind": "TWIN_SECONDARY_LIGHT",
       "sourceId": 7949,
       "sourceCreative": false,
-      "status": "hidden-legacy-adapter-pending",
-      "registryName": null
+      "status": "native-placement-and-power-passed",
+      "registryName": "utility_pole_twin_led_street_light"
     },
     {
       "kind": "FEEDER_SINGLE",
@@ -224,5 +224,5 @@
     "Native scalar phase/service equivalents are retained.",
     "Three optional CAD previews skipped; default 200-case fluid corpus and interactive GPU/audio validation not run."
   ],
-  "validatedCodeCommit": "1713adf5a42ac385f3583daea2b79e84fcee3048"
+  "validatedCodeCommit": "28d02d8746b4840b91709d6da8c6ed0b68da3a5c"
 }

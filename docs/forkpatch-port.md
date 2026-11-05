@@ -966,3 +966,28 @@ See [the report](forkpatch-port/legacy-lighting-validation.json). Twin-pole reco
 and broader migration remain pending. An initial unfiltered smoke run found the
 missing cabinet model-index entries (fixed) and separate gallery/menu findings;
 [it does not establish a passing full-native baseline](forkpatch-port/unfiltered-native-smoke-findings.json).
+
+### Twin LED pole and standalone step-down checkpoint
+
+All thirty distribution variants now have native production adapters. The twin
+secondary pole shares one 120 W load across its two source LED heads and explicitly
+selects 120 or 240 V service. Former HV spans are rejected as secondary connections.
+Two read-only recovery slots preserve actual old hardware; only a genuine old
+step-down item can become a supported rated core, and a former fuse record is
+required to recover its cartridge. Repeated carried reads cannot repeat recovery;
+new saves close the legacy settings gate and carried settings do not copy inventory.
+
+The standalone Mains Step-down Unit uses the existing conservative regulated
+controller with selectable 120/240 V output, 10/25/50/75/100 kW capacity, 100 A input
+limit, 95% electronics efficiency and physical winding/thermal losses. It has native
+ports, display/menu, config-tool hooks, crafting and save lifecycle. Its exact
+source lookup is 123:10 (7882), not the explicitly group-124 wind ID 7946. The
+first pole-transformer crafting tier now uses the standalone unit. Its recipe uses
+the destination DC-DC converter for the still-unadapted source variable converter.
+Existing target lookup conflicts are [recorded separately](forkpatch-port/registry-conflicts.md).
+
+Validation: 99 focused utility/converter regressions and 210 selected native cases
+passed; data generation passed for 619 identities. This is not a new full-regression
+run. Native checks cover actual 120/240 V loads, losses, ports, rendering, display,
+placed reload and recovery-only hardware. See [validation](forkpatch-port/twin-stepdown-validation.json).
+General world conversion and interactive client validation remain pending.
