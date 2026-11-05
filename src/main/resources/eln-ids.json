@@ -3287,6 +3287,12 @@
   "kind": "transparent_node",
   "name": "utility_pole_w_dc_dc_converter"
  },
+ "eln:transparent_node@7882": {
+  "descriptor": "StepDownUnitDescriptor",
+  "display": "Mains Step-down Unit",
+  "kind": "transparent_node",
+  "name": "mains_step_down_unit"
+ },
  "eln:transparent_node@7942": {
   "descriptor": "BackupDescriptor",
   "display": "Automatic Transfer Switch",
@@ -3316,6 +3322,12 @@
   "display": "Programmable UPS",
   "kind": "transparent_node",
   "name": "programmable_ups"
+ },
+ "eln:transparent_node@7949": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Utility Pole Twin LED Street Light",
+  "kind": "transparent_node",
+  "name": "utility_pole_twin_led_street_light"
  },
  "eln:transparent_node@7950": {
   "descriptor": "BackupDescriptor",

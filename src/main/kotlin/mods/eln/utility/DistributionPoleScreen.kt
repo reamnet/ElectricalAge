@@ -63,6 +63,7 @@ class DistributionPoleScreen(m: ElnNodeMenu,i: Inventory,t: Component,r: Any): E
             label(g,40,336,tr("Installed transformer"))
         }
         if((!k.underground || k.light) && !k.transformer && !k.regulator)label(g,8,274,tr("Light level: %1$/15; %2$",d.light,Utils.plotPower("",d.lampWatts)))
+        if(k.twinLight)label(g,72,336,tr("Recovered hardware: take only"))
         if(render.desc.kind.recloser)label(g,8,287,if(d.locked)tr("Recloser locked out - replace the fault, then reset") else tr("Retry failures: %1$; wait %2$ s",d.failures,d.remaining.toInt()))
         if(render.desc.kind.regulator)label(g,8,287,tr("Tap ratios: %1$",d.ratios.joinToString { String.format(java.util.Locale.ROOT,"%.3f",it) }))
     }

@@ -3,7 +3,7 @@
   "key": {
     "C": "eln:copper_cable",
     "I": "eln:iron_plate",
-    "T": "eln:dc_dc_converter"
+    "T": "eln:mains_step_down_unit"
   },
   "pattern": [
     "ICI",

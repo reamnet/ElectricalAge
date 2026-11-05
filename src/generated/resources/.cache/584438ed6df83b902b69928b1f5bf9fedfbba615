@@ -1,4 +1,4 @@
-// 26.3	2026-11-05T17:01:34.81840094	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-05T22:04:50.367078129	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -240,6 +240,7 @@ ab4a82c69f420dae28984c5d5a63affa0b65de68 data/eln/advancement/recipes/misc/lp_st
 78963af925d293a3a9e1333e02a59d52b11f763d data/eln/advancement/recipes/misc/machine_block.json
 06f47239a3574d3c0cd2dc069583599180624ea4 data/eln/advancement/recipes/misc/machine_booster.json
 8906d98097cb2c61c6f6b604bd2d2ec70c0f04f1 data/eln/advancement/recipes/misc/magenta_brush.json
+125c57dd38aa9828b539a1ef8dc9918cfea9c0f2 data/eln/advancement/recipes/misc/mains_step_down_unit.json
 1e82e13d694c4fa428bf5f0ce06a2ac3162bbdfd data/eln/advancement/recipes/misc/medium_fuel_burner.json
 66138fd5612381d71a0b5f1f9c2758dc922ad210 data/eln/advancement/recipes/misc/medium_power_receiver_antenna.json
 9cf49818e1d6c611c9fe7966b7a6d725bfa6e762 data/eln/advancement/recipes/misc/medium_power_transmitter_antenna.json
@@ -442,7 +443,7 @@ e46ace98665bbeee9e00c278a1a7d497e969c14a data/eln/advancement/recipes/misc/xnor_
 32e45819656ae39139354517dbf2bcaaf014523a data/eln/recipe/100_a_pole_fuse.json
 3b90d8e32e8f58cd94b3d3e5c237e40e74092f03 data/eln/recipe/100_kw_pole_transformer.json
 f55afec4206959bc52edd68849f62b13b674934e data/eln/recipe/10_a_pole_fuse.json
-535486cd64a7779b93efcde1659b09bdf7c7e239 data/eln/recipe/10_kw_pole_transformer.json
+536966ac34935647873fe9154f02b9dba280e7b7 data/eln/recipe/10_kw_pole_transformer.json
 4f937d8d1c4645d4749a5fa22eaa93eeecbb3255 data/eln/recipe/10a_diode.json
 9c9830151c2bcebe0c2d7ca69a5f9b881c2ec6d2 data/eln/recipe/120_240v_secondary_utility_pole.json
 e7e7f17b3cd3ebaef4108ce705acb97295f8a143 data/eln/recipe/120_240v_service_weatherhead.json
@@ -680,6 +681,7 @@ e44eec5ce607faee65bb7c914419718b2dd4636a data/eln/recipe/lp_steam_turbine_4.json
 789b4cedd5840c52844b2ddc92a42e0ff82d40e1 data/eln/recipe/machine_block.json
 d5f805910e688c02cc8ec7887d09bdb0385185cb data/eln/recipe/machine_booster.json
 e5563e26e89b0f375d849f941cbd8e2827d35aaa data/eln/recipe/magenta_brush.json
+e5db048cd6bbbbd0aa838d312e89292e9a44ad27 data/eln/recipe/mains_step_down_unit.json
 b6418d27c73561055188f90cc889cccf24063fa8 data/eln/recipe/medium_fuel_burner.json
 5c1b4d6392b77b416634a23d5285b8b82c33bd66 data/eln/recipe/medium_power_receiver_antenna.json
 e1573474fb9c89def650e1530e4eda654752e046 data/eln/recipe/medium_power_transmitter_antenna.json

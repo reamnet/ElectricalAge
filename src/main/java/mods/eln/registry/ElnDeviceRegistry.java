@@ -80,6 +80,7 @@ public final class ElnDeviceRegistry {
         registerSolarPanel(48);
         registerForkPatchSolar();
         registerForkPatchStandby();
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.ID,new mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor());
         mods.eln.utility.DistributionPoles.register();
         transparentNodeItem.addDescriptor(50+(124<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false,mods.eln.utility.ServiceMastStyle.STANDARD));
         int mastIndex=0;

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "F": "eln:optimal_ferromagnetic_core",
+    "M": "eln:machine_block",
+    "V": "eln:dc_dc_converter"
+  },
+  "pattern": [
+    "CFC",
+    "MVM",
+    "CCC"
+  ],
+  "result": {
+    "id": "eln:mains_step_down_unit"
+  }
+}

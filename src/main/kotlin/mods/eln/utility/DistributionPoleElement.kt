@@ -20,12 +20,13 @@ import java.io.*
 class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor): GridElement(node,d,64) {
     val kind=(d as DistributionPoleDescriptor).kind
     val unit=DistributionPoleUnit(kind,electricalLoadList,electricalComponentList,electricalProcessList)
-    val hardware=object: TransparentNodeElementInventory(if(kind.transformer)1 else 0,1,this) {
-        override fun getAccessibleSlotsFromSide(side: Int)=if(kind.transformer)intArrayOf(0) else intArrayOf()
+    val hardware=object: TransparentNodeElementInventory(if(kind.twinLight)2 else if(kind.transformer)1 else 0,1,this) {
+        override fun getAccessibleSlotsFromSide(side: Int)=if(kind.twinLight)intArrayOf(0,1) else if(kind.transformer)intArrayOf(0) else intArrayOf()
         override fun canInsertItem(slot: Int,stack: ItemStack?,side: Int)=kind.transformer && slot==0 && PoleHardware.transformerWatts(stack)!=null
-        override fun canExtractItem(slot: Int,stack: ItemStack?,side: Int)=kind.transformer && slot==0
+        override fun canExtractItem(slot: Int,stack: ItemStack?,side: Int)=if(kind.twinLight)slot in 0..1 else kind.transformer && slot==0
         override fun setInventorySlotContents(slot: Int,stack: ItemStack) { super.setInventorySlotContents(slot,stack);markDirty() }
     }
+    private var twinRecovered=false
     override fun getInventory()=hardware
     private fun installTransformer() { if(kind.transformer)unit.installTransformer(PoleHardware.transformerWatts(hardware.getItem(0))) }
     override fun initialize() { installTransformer();super.initialize() }
@@ -45,6 +46,7 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
             if(world.chunkSource.getChunkNow(pos.x shr 4,pos.z shr 4)!=null)mods.eln.sixnode.lampsocket.LightBlockEntity.addLight(world,pos.x,pos.y,pos.z,lamp.light,10)
         }
     }
+    override fun acceptsSavedGridTerminal(t: Int)=(!kind.twinLight || t==50 || t in 40..42) && super.acceptsSavedGridTerminal(t)
     override fun allowsNewGridLinks()=!kind.underground
     override fun selectedGridTerminal(side: Direction)=terminal
     fun terminals()=buildList {
@@ -130,12 +132,22 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     override fun thermoMeterString(side: Direction): String?=unit.transformer?.let { Utils.plotCelsius("",it.thermal.Tc) }
     override fun getWaila()=linkedMapOf(tr("Cable terminal") to tr("Terminal %1$",terminal),tr("Protection") to when { unit.recloser.locked->tr("Recloser locked out");unit.fuses.any { it.blown }->tr("Fuse blown");else->tr("Ready") }).apply { unit.transformer?.let { put(tr("Transformer rating"),Utils.plotPower("",it.ratedWatts.toDouble()));put(tr("Transformer status"),poleTransformerStatus(it.status));put(tr("Temperature"),Utils.plotCelsius("",it.thermal.Tc)) } }
     private fun settings(t: CompoundTag) { unit.write(t);t.putInt("utilityTerminal",terminal) }
-    private fun readSettings(t: CompoundTag) { unit.read(t);terminal=t.getIntOr("utilityTerminal",if(kind.lvOnly)50 else 32).takeIf { it in terminals() } ?: terminals().first() }
+    private fun readSettings(t: CompoundTag) { val settings=TwinPoleMigration.settings(kind,t);unit.read(settings);terminal=settings.getIntOr("utilityTerminal",if(kind.lvOnly)50 else 32).takeIf { it in terminals() } ?: terminals().first() }
     override fun writeToNBT(t: CompoundTag) { super.writeToNBT(t);settings(t) }
-    override fun readFromNBT(t: CompoundTag) { super.readFromNBT(t);readSettings(t);installTransformer() }
+    override fun readFromNBT(t: CompoundTag) { super.readFromNBT(t);recoverTwinHardware(t);if(kind.transformer)PoleHardware.migrate(hardware,t.getIntOr("mainsRatedWatts",10000));readSettings(t);installTransformer() }
     override fun getItemStackNBT()=CompoundTag().also { settings(it);if(!kind.light)it.getCompoundOrEmpty("poleStreetlightAttachment").putBoolean("installed",false) }
     override fun onBreakElement() { if(unit.lamp?.remove()==true)node.dropItem(Eln.findItemStack(UtilityItems.STREETLIGHT_NAME,1));super.onBreakElement() }
-    override fun readItemStackNBT(t: CompoundTag?) { if(t!=null)readSettings(t) }
+    override fun readItemStackNBT(t: CompoundTag?) { if(t!=null) { recoverTwinHardware(t);readSettings(t) } }
+    private fun recoverTwinHardware(t: CompoundTag) {
+        if(twinRecovered || !TwinPoleMigration.legacy(kind,t))return
+        twinRecovered=true
+        PoleHardware.migrate(hardware,t.getIntOr("mainsRatedWatts",10000))
+        // A control/rating snapshot alone is not an inventory. A former fuse record is required.
+        if(hardware.getItem(1).isEmpty && (t.contains("poleFuseCartridge") || t.contains("poleFuseClosed") || t.contains("poleFuseBlown"))) {
+            val old=CutoutFuse();old.read(t,"poleFuse")
+            if(old.hasCartridge)hardware.setItem(1,old.removeCartridge())
+        }
+    }
     override fun networkSerialize(out: DataOutputStream) { super.networkSerialize(out);DistributionDisplay().apply { capture(this@DistributionPoleElement);write(out) } }
     override fun networkUnserialize(s: DataInputStream): Byte {
         val id=super.networkUnserialize(s)

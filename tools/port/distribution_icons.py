@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/icons/shaft'))
 from render3d import render
 
-KINDS={7970:'single',7971:'three',7972:'transformer_single',7973:'transformer_three',7974:'feeder',7975:'cutout_single',7976:'cutout_three',7977:'recloser',7978:'secondary',7980:'capacitor',7981:'regulator_single',7982:'regulator_three',7983:'switch',7993:'tap',7979:'secondary_light',7984:'transformer_light_single',7985:'transformer_light_three',7989:'fed_light_single',7990:'fed_light_three',8131:'feeder_single',8133:'transformer_riser_single',8032:'pedestal',8033:'underground_single',8022:'tap_light',8034:'underground_three',8023:'transformer_tap_light',8035:'underground_single_light',8036:'underground_three_light',8132:'feeder_light_single'}
+KINDS={7970:'single',7971:'three',7972:'transformer_single',7973:'transformer_three',7974:'feeder',7975:'cutout_single',7976:'cutout_three',7977:'recloser',7978:'secondary',7980:'capacitor',7981:'regulator_single',7982:'regulator_three',7983:'switch',7993:'tap',7979:'secondary_light',7984:'transformer_light_single',7985:'transformer_light_three',7989:'fed_light_single',7990:'fed_light_three',8131:'feeder_single',8133:'transformer_riser_single',8032:'pedestal',8033:'underground_single',8022:'tap_light',8034:'underground_three',8023:'transformer_tap_light',8035:'underground_single_light',8036:'underground_three_light',8132:'feeder_light_single',7949:'secondary_twin_light'}
 
 def parts(kind):
     out={'main','SecondaryRack','Secondary0','Secondary1','Secondary2'}
@@ -66,6 +66,8 @@ def main():
         # The second independent cutout occupies the source tap's offset.
         if kind=="transformer_tap_light":
             selected=groups+[(part,[(x,y,z+.65)for x,y,z in points])for part,points in groups if part in {f"{name}1"for name in ("CutoutBase","CutoutInsulator","FuseDoor","FuseJumper")}]
+        if kind=="secondary_twin_light":
+            selected=[(part,points)for part,points in groups if not part.startswith('Lamp')]+[("Lamp"+part,[(x,y+2.9,z)for x,y,z in points])for part,points in read_groups("utilitytwinled")]
         names=sorted(set(part for part,_ in selected))if underground else sorted(parts(kind));atlas=np.array([[color(p)for p in names]],dtype=np.float32);faces=[]
         for part,points in selected:
             if part not in names:continue

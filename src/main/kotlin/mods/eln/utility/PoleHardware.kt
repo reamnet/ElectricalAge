@@ -25,8 +25,16 @@ class PoleTransformerDescriptor(name: String,val watts: Int): GenericItemUsingDa
 object PoleHardware {
     val transformerNames=listOf(I18N.TR_NAME(I18N.Type.NONE,"10 kW Pole Transformer"),I18N.TR_NAME(I18N.Type.NONE,"25 kW Pole Transformer"),I18N.TR_NAME(I18N.Type.NONE,"50 kW Pole Transformer"),I18N.TR_NAME(I18N.Type.NONE,"75 kW Pole Transformer"),I18N.TR_NAME(I18N.Type.NONE,"100 kW Pole Transformer"))
     val transformerRatings=listOf(10_000,25_000,50_000,75_000,100_000)
-    fun transformerWatts(stack: ItemStack?): Int?=if(stack==null || stack.isEmpty)null else (GenericItemUsingDamageDescriptor.getDescriptor(stack) as? PoleTransformerDescriptor)?.watts
+    fun transformerWatts(stack: ItemStack?): Int?=if(stack==null || stack.isEmpty)null else (GenericItemUsingDamageDescriptor.getDescriptor(stack) as? PoleTransformerDescriptor)?.watts ?:
+        if(mods.eln.generic.GenericItemBlockUsingDamageDescriptor.getDescriptor(stack) is mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor)10000 else null
 
+    /** Upgrade only actual former step-down hardware, never a settings-only rating. */
+    fun migrate(inventory: net.minecraft.world.Container,watts: Int): Boolean {
+        val index=transformerRatings.indexOf(watts)
+        if(index<=0 || inventory.containerSize==0)return false
+        if(mods.eln.generic.GenericItemBlockUsingDamageDescriptor.getDescriptor(inventory.getItem(0)) !is mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor)return false
+        inventory.setItem(0,Eln.findItemStack(transformerNames[index],1));return true
+    }
     val fuseNames=listOf(
         I18N.TR_NAME(I18N.Type.NONE,"1 A Pole Fuse"),I18N.TR_NAME(I18N.Type.NONE,"2 A Pole Fuse"),I18N.TR_NAME(I18N.Type.NONE,"3 A Pole Fuse"),
         I18N.TR_NAME(I18N.Type.NONE,"5 A Pole Fuse"),I18N.TR_NAME(I18N.Type.NONE,"8 A Pole Fuse"),I18N.TR_NAME(I18N.Type.NONE,"10 A Pole Fuse"),

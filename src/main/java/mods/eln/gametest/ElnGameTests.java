@@ -52,6 +52,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ForkPatchPoleAttachmentCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchUndergroundDistributionCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchLegacyDistributionCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchStepDownCases.cases());
         mods.eln.gametest.cases.Wp9aCases.addTo(l);
         mods.eln.gametest.cases.Wp9bCases.addTo(l);
         mods.eln.gametest.cases.Wp9cCases.addTo(l);

@@ -1084,6 +1084,7 @@ public final class ElnRecipes extends ElnRecipesBase {
 
     public static void recipeForkPatchUps() {
         addRecipe(findItemStack("Pole Streetlight Attachment")," II","CPG"," I ",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'P',findItemStack("Simple Lamp Socket"),'G',Items.GLASS);
+        addRecipe(findItemStack("Mains Step-down Unit"),"CFC","MVM","CCC",'C',findItemStack("Copper Cable"),'F',findItemStack("Optimal Ferromagnetic Core"),'M',findItemStack("Machine Block"),'V',findItemStack("DC-DC Converter"));
         mods.eln.utility.DistributionPoles.recipes((out,args)->{addShapelessRecipe(out,args);return kotlin.Unit.INSTANCE;});
         addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
         int mastIndex=0;
@@ -1100,7 +1101,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         addRecipe(findItemStack("120/240V Underground Service Handhole"),"IPI","CBC","III",'I',Items.STONE_BRICKS,'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'B',Items.IRON_BARS);
         addRecipe(findItemStack("Red Handle Service Disconnect"),"PPP","CLC","PPP",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'L',Items.LEVER);
         addRecipe(findItemStack("Pad Mounted Neighbourhood Transformer"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.IRON_BLOCK,'M',findItemStack("Machine Block"));
-        for(int i=0;i<5;i++)addRecipe(findItemStack(mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i)),"ICI","CTC","ICI",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'T',findItemStack(i==0?"DC-DC Converter":mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i-1)));
+        for(int i=0;i<5;i++)addRecipe(findItemStack(mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i)),"ICI","CTC","ICI",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'T',findItemStack(i==0?"Mains Step-down Unit":mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i-1)));
         addRecipe(findItemStack("Protective Relay Cabinet"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.REPEATER,'M',findItemStack("Machine Block"));
         addRecipe(findItemStack("Automatic Load Shedding Controller"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.OBSERVER,'M',findItemStack("Machine Block"));
         addRecipe(findItemStack("Programmable UPS"),"CVC","MFM","CVC",'C',findItemStack("Copper Cable"),'V',findItemStack("DC-DC Converter"),'M',findItemStack("Machine Block"),'F',findItemStack("Optimal Ferromagnetic Core"));

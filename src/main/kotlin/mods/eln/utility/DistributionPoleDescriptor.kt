@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player
 
 class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kind.title,requireNotNull(Eln.obj.getObj("distributionpole")),DistributionPoleElement::class.java,DistributionPoleRender::class.java,"textures/wire.png",ElnDeviceRegistry.veryHighVoltageCableDescriptor) {
     private val model=requireNotNull(Eln.obj.getObj("distributionpole"))
+    private val twinFixture by lazy { requireNotNull(Eln.obj.getObj("utilitytwinled")) }
     init {
         ghostGroup=GhostGroup().apply {
             for(y in 1..if(kind.underground) { if(kind.light)5 else 1 } else 7)addElement(0,y,0,Eln.ghostBlock,if(kind.underground && y==1)GhostBlock.tCube else GhostBlock.tClearance)
@@ -54,11 +55,16 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
                 GL11.glPushMatrix()
                 try {
                     GL11.glTranslated(0.0,mods.eln.transparentnode.utilitylight.StreetLightMount.offset(d?.heightStep ?: 0),0.0);GL11.glRotated((d?.yaw ?: 0).toDouble(),0.0,1.0,0.0)
-                    p("LampBracket",.48f,.50f,.51f)
+                    fun lampPart(name: String,r: Float,g: Float,b: Float) {
+                        if(kind.twinLight) {
+                            GL11.glPushMatrix();try { GL11.glTranslated(0.0,2.9,0.0);GL11.glColor3f(r,g,b);twinFixture.getPart(name.removePrefix("Lamp"))?.drawNoBind() }finally { GL11.glPopMatrix() }
+                        }else p(name,r,g,b)
+                    }
+                    lampPart("LampBracket",.48f,.50f,.51f)
                     val pivot=mods.eln.transparentnode.utilitylight.StreetLightMount.pivot
                     GL11.glTranslated(pivot.x,pivot.y,pivot.z);GL11.glRotated((d?.pitch ?: 0).toDouble(),0.0,0.0,1.0);GL11.glTranslated(-pivot.x,-pivot.y,-pivot.z)
-                    p("LampHousing",.26f,.29f,.31f)
-                    if((d?.light ?: 0)>0) { mods.eln.misc.UtilsClient.disableLight();try { p("LampLens",1f,.94f,.77f) }finally { mods.eln.misc.UtilsClient.enableLight() } } else p("LampLens",.14f,.17f,.19f)
+                    lampPart("LampHousing",.26f,.29f,.31f)
+                    if((d?.light ?: 0)>0) { mods.eln.misc.UtilsClient.disableLight();try { lampPart("LampLens",1f,.94f,.77f) }finally { mods.eln.misc.UtilsClient.enableLight() } } else lampPart("LampLens",.14f,.17f,.19f)
                 }finally { GL11.glPopMatrix() }
             }
             if(kind.capacitor) { p("CapacitorRack",.35f,.38f,.40f);repeat(3) { p("Capacitor$it",.76f,.77f,.72f);p("CapacitorPin$it",.4f,.45f,.35f);p("CapacitorFeed$it",.13f,.15f,.16f) } }

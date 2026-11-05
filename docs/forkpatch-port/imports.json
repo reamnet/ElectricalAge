@@ -1222,5 +1222,96 @@
     "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
     "mode": "verbatim-source-cabinet-model",
     "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightDevices.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownUnitElement.kt",
+    "sourceSha256": "df3cab4008a229201f69b92e0a619541a728daf0f25c01130541f072f444d58c",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownDisplay.kt",
+    "sourceSha256": "c418b27eec2db6c8731eddfd851d7dc405f8424d0a2549f6260eda839a0f1760",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownUnitRender.kt",
+    "sourceSha256": "c418b27eec2db6c8731eddfd851d7dc405f8424d0a2549f6260eda839a0f1760",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightDescriptors.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownUnitDescriptor.kt",
+    "sourceSha256": "8be08e72c7006d69a72fb7d384f69a87c78ee91c5f698e7363226153765f7750",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownScreen.kt",
+    "sourceSha256": "c418b27eec2db6c8731eddfd851d7dc405f8424d0a2549f6260eda839a0f1760",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/MainsStepDown.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/MainsStepDown.kt",
+    "sourceSha256": "fcc1773e932a55bf4a142f325eb13aa86673f52cded44468a29dfbf77cc4fb82",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TwinPoleMigration.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TwinPoleMigration.kt",
+    "sourceSha256": "169deb869c08274033f1d4836088bc9264ae6716a0cb32c4cd1121f2ac386ce5",
+    "mode": "native-NBT-getters-preserve-source-legacy-gates-and-translation",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TwinPoleMigration.kt",
+    "target": "src/test/kotlin/mods/eln/utility/ForkPatchTwinMigrationTest.kt",
+    "sourceSha256": "169deb869c08274033f1d4836088bc9264ae6716a0cb32c4cd1121f2ac386ce5",
+    "mode": "source-legacy-control-translation-and-HV-terminal-rejection-regressions",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/MainsStepDown.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/utilitylight/ForkPatchMainsStepDownTest.kt",
+    "sourceSha256": "fcc1773e932a55bf4a142f325eb13aa86673f52cded44468a29dfbf77cc4fb82",
+    "mode": "native-physical-circuit-and-energy-accounting-regressions",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/PoleAttachmentChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchStepDownCases.kt",
+    "sourceSha256": "fed905219dad6ea0315b05562261e1164531c62dcedc6238995611041ea0cf54",
+    "mode": "native-stepdown-world-placement-publication-and-genuine-legacy-hardware-recovery-cases",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitytwinled/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitytwinled/fixture.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim-source-two-head-fixture",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitytwinled/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitytwinled/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-two-head-fixture",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitytwinled/utilitytwinled.obj",
+    "target": "src/main/resources/assets/eln/model/utilitytwinled/utilitytwinled.obj",
+    "sourceSha256": "06279c03891ceb80a00e3bdfe5c228fc497511c906660dd11ae13822b51581f3",
+    "mode": "verbatim-source-two-head-fixture",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
   }
 ]
