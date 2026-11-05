@@ -15,8 +15,8 @@ five hidden legacy adapters remain.
   pickup and prove that one blown fuse cannot disable the other healthy path.
 - **8036, retired three-phase underground cabinet with light:** preserve its three
   independent primary circuits and hidden identity. Adapt the source cabinet
-  model, five-block fixture clearance and saved channels; keep new overhead links disabled. Do not expose
-  retired equipment through new recipes.
+  model, five-block fixture clearance and saved channels; keep new overhead links
+  disabled. Do not expose retired equipment through new recipes.
 - **8035, single-phase underground cabinet with light:** preserve cabinet
   terminals and real LV lamp supply, and adapt the five-block fixture clearance.
 - **7949, twin LED pole:** preserve both heads and the shared 120 W consumption,
@@ -28,6 +28,16 @@ five hidden legacy adapters remain.
 Source references are `utility/DistributionPole.kt`, `DistributionClient.kt`,
 `UndergroundCabinetVisual.kt` and the utilitylight fixture controls in the pinned
 ForkPatch checkout. Keep original offsets and hidden flags.
+
+For the twin-pole recovery, also inspect `TwinPoleMigration.kt` and
+`PoleHardware.migrate`: the source gates translation on the absence of
+`utilityLamp` and presence of `mainsOutputVoltage`. Carry its old mains/aim and
+`poleSelectedTerminal` settings into the new keys once. Higher-rating conversion
+requires an actual old step-down item in slot zero; validate the saved rating
+against the five supported ratings before conversion. Preserve the actual
+`poleFuse` cartridge and prove that repeated reloads and carried-item reads cannot
+repeat recovery. These recovery adapters are still pending, not implemented by
+this checkpoint.
 
 ## Remaining related work
 
