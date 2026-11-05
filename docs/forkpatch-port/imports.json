@@ -618,8 +618,8 @@
     "source": "src/main/kotlin/mods/eln/utility/HouseService.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceElement.kt",
     "sourceSha256": "cbdc268e9b808593ce5740937735569afbc0b15a15d18de358c495b355acc4c5",
-    "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseService.kt",
@@ -632,29 +632,29 @@
     "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceDescriptor.kt",
     "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
-    "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceDisplay.kt",
     "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
-    "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceRender.kt",
     "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
-    "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceScreen.kt",
     "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
-    "mode": "native-wired-service-adapter; overhead spans deferred",
-    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/ServiceMeterVisual.kt",
@@ -710,41 +710,69 @@
     "target": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
     "sourceSha256": "cd3a7e7985f0b10ec4d62cd1185b18214322a739fadf217bb076d9a7a7a11e69",
     "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
-    "status": "overhead service checkpoint: validation in progress"
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
   },
   {
-    "source": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
+    "source": "src/main/kotlin/mods/eln/gridnode/GridElement.kt",
     "target": "src/main/java/mods/eln/gridnode/GridElement.java",
-    "sourceSha256": "cd3a7e7985f0b10ec4d62cd1185b18214322a739fadf217bb076d9a7a7a11e69",
+    "sourceSha256": "996feffb80fabf7a9e059b80b5e185735f9bbd634fd598dcc4588c2fb6fbf1f4",
     "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
-    "status": "overhead service checkpoint: validation in progress"
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/gridnode/GridRender.kt",
     "target": "src/main/java/mods/eln/gridnode/GridRender.java",
     "sourceSha256": "c19e0452ad20022a37538914f660b6137ec98a72c32710a8b3ef7397cefe3fb6",
     "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
-    "status": "overhead service checkpoint: validation in progress"
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/HouseService.kt",
     "target": "src/main/kotlin/mods/eln/utility/ServiceWallDescriptor.kt",
     "sourceSha256": "cbdc268e9b808593ce5740937735569afbc0b15a15d18de358c495b355acc4c5",
     "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
-    "status": "overhead service checkpoint: validation in progress"
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt",
     "target": "src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt",
     "sourceSha256": "9f6dfec5b5d184c77ed43b574a320c9ac2f0a7aa2d8f9c1f73cb5ff67f7e22ac",
     "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
-    "status": "overhead service checkpoint: validation in progress"
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/utility/ServiceSecondary.kt",
     "target": "src/main/kotlin/mods/eln/utility/HouseServiceUnit.kt",
     "sourceSha256": "4a35fdfb27fe34957244ba8d4c96a43039c4ca01b82e2d9de253dbab341beaa5",
     "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
-    "status": "overhead service checkpoint: validation in progress"
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/serviceweatherhead/serviceweatherhead.obj",
+    "target": "src/main/resources/assets/eln/model/serviceweatherhead/serviceweatherhead.obj",
+    "sourceSha256": "e08fac96dc5b704a270d146fecd4aaa338c5482f6b8dc9e29f471f41f8574d0c",
+    "mode": "source mast geometry; inventory icons reproduced by tools/port/solar_icons.py",
+    "status": "overhead service checkpoint: native geometry checked in all four wall orientations"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/compactservicemast/compactservicemast.obj",
+    "target": "src/main/resources/assets/eln/model/compactservicemast/compactservicemast.obj",
+    "sourceSha256": "7fc8b887cd7099c72459bf80fd7313c25a4a359a47897ebaa4f1dfe0a6071ff6",
+    "mode": "source mast geometry; inventory icons reproduced by tools/port/solar_icons.py",
+    "status": "overhead service checkpoint: native geometry checked in all four wall orientations"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/roofservicemast/roofservicemast.obj",
+    "target": "src/main/resources/assets/eln/model/roofservicemast/roofservicemast.obj",
+    "sourceSha256": "b99508d176e3988a61de67993015283ff95e6af2d3ed3d7b844965695dc57640",
+    "mode": "source mast geometry; inventory icons reproduced by tools/port/solar_icons.py",
+    "status": "overhead service checkpoint: native geometry checked in all four wall orientations"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/gooseneckservicemast/gooseneckservicemast.obj",
+    "target": "src/main/resources/assets/eln/model/gooseneckservicemast/gooseneckservicemast.obj",
+    "sourceSha256": "975f0b63c653eb087ca871661d5c854737f88ad5e21b840de641415fd60ab7af",
+    "mode": "source mast geometry; inventory icons reproduced by tools/port/solar_icons.py",
+    "status": "overhead service checkpoint: native geometry checked in all four wall orientations"
   }
 ]

@@ -430,9 +430,8 @@ Reports: [circuit tests](forkpatch-port/pad-circuit-tests.json) and
 Native adapters now cover the compact North American Meter Base (7987), Wide
 Underground Meter Socket (8128), Underground Service Entrance Riser (8129),
 service handhole (8130), Red Handle Service Disconnect (7992), and removable
-analog/smart meter items (7877/7878). These are placed-cable devices. Overhead
-weatherheads, masts and span endpoint integration remain pending and are not
-registered as incomplete devices.
+analog/smart meter items (7877/7878). These are placed-cable devices. The following
+overhead checkpoint adds their weatherheads and span endpoint integration.
 
 One real 240 V wire supplies the proportional scalar 120 V legs through passive
 taps. Meter contacts measure signed physical power; import and export registers
@@ -477,15 +476,15 @@ All destination root tests with `-PfluidCases=20` pass: 427 passed, three option
 preview cases skipped, zero failures/errors (430 selected across 90 suites). The
 default 200-case fluid corpus was not run.
 
-Interactive client validation, overhead service spans/migration and the rest of the
-utility distribution system remain pending.
+Interactive client validation and complete source-world migration remain pending;
+the following checkpoint covers the next overhead-service work.
 
 Reports: [production circuits](forkpatch-port/service-circuit-tests.json),
 [native service and previous cases](forkpatch-port/service-native-tests.json),
 [datagen](forkpatch-port/service-datagen.json), and
 [destination regressions](forkpatch-port/service-checkpoint-validation.json).
 
-### Overhead service checkpoint (validation in progress)
+### Overhead service checkpoint
 
 Four source identities now have native adapters: Service Weatherhead (7986),
 Compact Side Entry Service Mast (8028), Through Roof Service Mast (8029), and
@@ -507,17 +506,41 @@ than retaining replaced nodes after reload. Breaking refunds paid cable once,
 including its native item components.
 
 The native catenary packet supports one/three service wires and retains the legacy
-two-wire crossing optimisation. Wall shapes use the native oriented-shape cache.
+two-wire crossing optimisation. Unchanged wire geometry reuses native display lists
+across live voltage/status packets, and renderer disposal releases the lists. The
+same snapshot can restore released geometry. Wall shapes use the native oriented-shape cache.
 Standard weatherheads reserve non-solid clearance with native ghost metadata 8;
 metadata 3..7 retain their existing cabinet/battery meanings. Roof masts permit
 real roof blocks above the wall base.
 
-Eight span circuit tests and the twelve earlier meter circuit tests pass. Native
-placement, rendering, payments, reload/freeze and full destination validation are
-in progress. Utility cable spools/thermal models, new distribution poles and phase
-routing, can-clearance wire paths, other utility hardware and complete source-world
-migration remain pending. Ordinary native cable stacks retain their normal stack
-limits; this checkpoint does not pretend they are variable-length spools.
+Eight span circuit tests and the twelve earlier meter circuit tests pass. All 85
+selected native server cases pass: 20 new overhead cases and 65 preceding cases.
+The new cases cover all four mast styles in all four wall orientations, independent
+120/120/240 V circuit equivalents (including asymmetric supply), physical loads,
+bundle/single duplication rejection, actual click payments and component-preserving
+single refunds, menu/carry state, roof blocks, clearance ghosts, native collision,
+publication/catenary geometry, status-only mesh reuse, disposal/restoration,
+canonical reload merging, unloaded endpoints and simulation-veto exclusion. Both
+existing native utility-pole types retain actual load power and the DC-DC ratio,
+legacy Direction terminal tags, two-wire rendering and native node persistence.
+
+Native datagen passes: four blockstates, four item definitions, eight item models,
+four recipes/advancements and eight English names. The four new identities and
+model entries retain every one of the 410 earlier identities and 187 model entries.
+
+All destination root tests with `-PfluidCases=20` pass: 435 passed, three optional
+preview cases skipped, zero failures/errors (438 selected across 91 suites). The
+default 200-case fluid corpus was not run.
+
+Utility cable spools/thermal models, new distribution poles and phase routing,
+can-clearance wire paths, other utility hardware, complete source-world migration
+and interactive client validation remain pending. Ordinary native cable stacks
+retain their normal stack limits; variable-length spools are not yet adapted.
+
+Reports: [production span circuits](forkpatch-port/overhead-circuit-tests.json),
+[native cases](forkpatch-port/overhead-native-tests.json),
+[datagen](forkpatch-port/overhead-datagen.json), and
+[destination regressions](forkpatch-port/overhead-checkpoint-validation.json).
 
 ## Inventory
 

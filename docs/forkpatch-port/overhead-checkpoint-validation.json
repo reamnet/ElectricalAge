@@ -1,0 +1,22 @@
+{
+  "tests": 438,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 435,
+  "suites": 91,
+  "portCommit": "d1480def",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "spanCircuitTests": 8,
+  "previousServiceCircuitTests": 12,
+  "nativeTests": 85,
+  "newOverheadCases": 20,
+  "limits": [
+    "Default 200-case fluid corpus not run.",
+    "Interactive client GPU/audio validation not performed.",
+    "Utility spools and thermal models, new distribution poles and phase routing, can-clearance wire paths and complete source-world migration remain pending.",
+    "Remaining industrial hardware, compact UPS/appliance cords, other appliances, vehicles, other renewables and optional integrations are still incomplete."
+  ]
+}
