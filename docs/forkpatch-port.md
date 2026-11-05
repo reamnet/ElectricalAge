@@ -839,6 +839,41 @@ Reports: [production circuits](forkpatch-port/underground-distribution-circuit-t
 [generated data](forkpatch-port/underground-distribution-datagen.json), and
 [variant parity](forkpatch-port/distribution-parity.json).
 
+### Final distribution validation and provenance audit
+
+The completed work-block suite passes 526 destination regressions with three
+optional CAD preview skips, zero failures/errors (529 selected, 101 suites,
+`-PfluidCases=20`). All 175 native server cases also pass against the final code,
+including forty-three new placed-device cases in this block. Forty-one new
+production regressions were added. The final transformer case independently
+sums accepted winding losses and verifies that startup and the final powered
+interval before a fuse opens both deposit their joules exactly once. The original
+one-argument JVM step method remains available.
+
+All 599 pre-block registry identities and 858 English keys remain unchanged.
+The block adds eleven pole identities plus the attachment item, twelve icons,
+seven recipes/advancements, twenty-three English keys and two raw geometry models.
+Gradle configuration and wrapper are unchanged. Detailed evidence is in the
+[final validation report](forkpatch-port/distribution-work-block-validation.json).
+The full ForkPatch migration remains in progress.
+
+The [import audit](forkpatch-port/import-audit.json) checks all 161 ledger entries,
+covering 108 distinct source files and 151 target paths. Every source hash matches
+3.0.77, all target files exist, and all eighteen declared exact-copy entries match;
+twenty-eight entries are byte-identical overall. This verifies provenance, not
+complete gameplay parity. Reproduce it from this checkout with:
+
+```sh
+python3 tools/port/audit_imports.py --source ../ELN1.21.1ForkPatch
+```
+
+For further adapters, add explicit `transparent_node`/`shared_item` identities
+before runtime tests, give raw model-index entries their `folder/file.obj` paths,
+and place inventory icons at `textures/item/<registry-name>.png`. Target thermal
+`Tc` is relative to ambient; processes running at electrical-step frequency must
+use `moveEnergyTo(watts * seconds)` when their thermal load steps less often.
+Real ItemStack component/inventory behavior belongs in native server cases.
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,
