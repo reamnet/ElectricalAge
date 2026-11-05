@@ -546,8 +546,8 @@ Reports: [production span circuits](forkpatch-port/overhead-circuit-tests.json),
 
 The source single-core catalog is now adapted: 90 regular copper/aluminum bare,
 insulated and damaged variants, 20 save-stable copper HV variants, both molten
-metal pile states, and Wire Scraps. Their 113 identities preserve the source ids;
-multicore ids 2268..2327 remain reserved without registering placeholder devices.
+metal pile states, and Wire Scraps. Their 113 identities preserve the source ids. At this checkpoint, multicore ids
+2268..2327 remained reserved; the following multicore checkpoint registers them.
 The former native cable identities, voxel-kit behavior and protection are retained.
 
 Spools are native single-stack items with immutable custom-data length/identity.
@@ -585,9 +585,9 @@ The destination regression run passes 458 tests across 94 suites, with three
 optional CAD preview cases skipped (461 selected, zero failures/errors), using
 `-PfluidCases=20`; the default 200-case fluid corpus was not run.
 
-Scope limits: these new spools are currently available through creative inventory;
-the source wire-processing machinery and survival manufacturing recipes are still
-pending. Multicore routing, device-inventory cable trimming, snips/config-copy tools,
+Scope limits at this checkpoint: the new spools were available through creative
+inventory, with source wire-processing machinery and manufacturing recipes pending.
+Placed multicore routing follows below. Device-inventory cable trimming, snips/config-copy tools,
 player-contact shock hooks, room-temperature coupling, advanced per-material span
 meshes, complete source-world migration and interactive client checks remain pending.
 The original native cable recipes and devices remain usable.
@@ -597,7 +597,7 @@ Reports: [wire circuits and thermal physics](forkpatch-port/wire-circuit-tests.j
 [datagen](forkpatch-port/wire-datagen.json), and
 [destination regressions](forkpatch-port/wire-checkpoint-validation.json).
 
-### Multicore placed-cable checkpoint (validation in progress)
+### Multicore placed-cable checkpoint
 
 All 60 source multicore identities (2268..2327) are now adapted: copper signal
 bundles, flat building cables, copper/aluminum triplex and quadruplex, and their
@@ -619,14 +619,31 @@ Palette changes reconnect the native topology and persist by the source palette
 index. Insulation stress checks all core pairs and installs one finite 100-ohm
 fault at its saved endpoints. Shared heating sums every core's accepted I²R and
 fault power. Flat cable geometry displays conductor colors; source body dimensions,
-damaged texture, native knuckles and live temperatures remain adapted.
+damaged texture, native knuckles and live temperatures remain adapted. The native
+HUD lists every core and preserves its existing Java return signature.
+
+Six routing regressions pass. All 105 native server cases pass, including 11 new
+multicore cases: catalog identity/mass/stack rules, actual eight-core boundary and
+inner-corner circuits, heating and hot saves, scalar taps, palette reconnects,
+finite fault endpoints, direct protective grounding, distinct flat-render colors,
+per-core HUD readings, native freeze/thaw and mass-preserving jacket failure.
+Datagen passes with 60 new item definitions, item models and English names,
+retaining all 527 preceding identities and 191 geometry models. All destination
+regressions pass with `-PfluidCases=20`: 464 passed, three optional CAD preview
+cases skipped, zero failures/errors (467 selected across 95 suites). The default
+200-case fluid corpus was not run.
 
 Scope limits: multicore overhead phase mapping/payment and automatic grounding
 through chains of uncolored single wires are pending. New multicore overhead links
 are rejected until their adapter is ready; existing single-wire service spans stay
 available. Manufacturing recipes/machines, inventory trimming/tools, player shock
 hooks, room coupling, full source-world migration and interactive client checks
-also remain pending. Validation results will be recorded after the native runs.
+also remain pending.
+
+Reports: [routing regressions](forkpatch-port/multicore-routing-tests.json),
+[native cases](forkpatch-port/multicore-native-tests.json),
+[datagen](forkpatch-port/multicore-datagen.json), and
+[destination regressions](forkpatch-port/multicore-checkpoint-validation.json).
 
 ## Inventory
 

@@ -1,0 +1,15 @@
+{
+  "portCommit": "379ce28e",
+  "tests": 6,
+  "passed": 6,
+  "failures": 0,
+  "errors": 0,
+  "cases": [
+    "eightCoreBundlesNeverDuplicateOrMergeConductors",
+    "aColoredTapConnectsOnlyOneCoreInEitherOrder",
+    "anUncoloredDeviceChoosesOneHotCoreBeforeNeutralOrGround",
+    "absentTapColorCannotShortAnUnrelatedCore",
+    "bundlesMatchColorsRatherThanArrayOffsets",
+    "scalarConnectionRetainsTheNativeSinglePair"
+  ]
+}
