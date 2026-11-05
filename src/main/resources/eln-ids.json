@@ -3521,6 +3521,18 @@
   "kind": "transparent_node",
   "name": "gooseneck_service_mast"
  },
+ "eln:transparent_node@8032": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Fused Underground 120/240V Service Pedestal",
+  "kind": "transparent_node",
+  "name": "fused_underground_120_240v_service_pedestal"
+ },
+ "eln:transparent_node@8033": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "12.5kV Single Phase Fused Underground Feeder",
+  "kind": "transparent_node",
+  "name": "12_5kv_single_phase_fused_underground_feeder"
+ },
  "eln:transparent_node@8066": {
   "descriptor": "IndustrialDescriptor",
   "display": "Protective Relay Cabinet",
@@ -3562,6 +3574,12 @@
   "display": "Single Phase Underground Feeder Pole",
   "kind": "transparent_node",
   "name": "single_phase_underground_feeder_pole"
+ },
+ "eln:transparent_node@8133": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Transformer Pole with Underground Service Riser",
+  "kind": "transparent_node",
+  "name": "single_phase_transformer_pole_with_underground_service_riser"
  },
  "eln:transparent_node@8192": {
   "descriptor": "OffGridDescriptor",

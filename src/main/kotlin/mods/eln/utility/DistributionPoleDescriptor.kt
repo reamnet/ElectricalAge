@@ -14,14 +14,15 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
     private val model=requireNotNull(Eln.obj.getObj("distributionpole"))
     init {
         ghostGroup=GhostGroup().apply {
-            for(y in 1..7)addElement(0,y,0,Eln.ghostBlock,GhostBlock.tClearance)
-            if(!kind.lvOnly)for(y in 6..7)for(x in -1..1)for(z in -1..1)if(x!=0 || z!=0)addElement(x,y,z,Eln.ghostBlock,GhostBlock.tClearance)
+            for(y in 1..if(kind.underground)1 else 7)addElement(0,y,0,Eln.ghostBlock,if(kind.underground)GhostBlock.tCube else GhostBlock.tClearance)
+            if(!kind.lvOnly && !kind.underground)for(y in 6..7)for(x in -1..1)for(z in -1..1)if(x!=0 || z!=0)addElement(x,y,z,Eln.ghostBlock,GhostBlock.tClearance)
         }
     }
     override fun rotationIsFixed()=true
     override fun hasItemDraw()=true
-    override fun drawItem(entity: Boolean) { GL11.glPushMatrix();try { GL11.glScaled(.18,.18,.18);GL11.glTranslated(0.0,-2.8,0.0);drawEquipment(Direction.XN) }finally { GL11.glPopMatrix() } }
+    override fun drawItem(entity: Boolean) { GL11.glPushMatrix();try { if(kind.underground) { GL11.glScaled(.48,.48,.48);GL11.glTranslated(0.0,-.9,0.0) } else { GL11.glScaled(.18,.18,.18);GL11.glTranslated(0.0,-2.8,0.0) };drawEquipment(Direction.XN) }finally { GL11.glPopMatrix() } }
     fun drawEquipment(front: Direction,d: DistributionDisplay?=null) {
+        if(kind.underground) { UndergroundCabinetVisual.draw(kind,front,d);return }
         GL11.glPushMatrix();front.glRotateXnRef();GL11.glPushAttrib(0xFFFFF)
         try {
             GL11.glDisable(GL11.GL_TEXTURE_2D)
@@ -43,6 +44,7 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
             if(kind.transformer && (d==null || d.transformerRating>0))PoleTransformerVisual.draw(d?.transformerRating ?: 10000)
             if(kind.primaryRiser)for(i in if(kind.singlePrimaryRiser)listOf(1) else listOf(0,1,2)) { p("Riser$i",.28f,.31f,.32f);p(if(kind.singlePrimaryRiser)"RiserFuseJumper" else "RiserJumper$i",.13f,.15f,.16f) }
             if(kind.regulator)repeat(kind.phases) { val i=if(kind.phases==1)1 else it;p("Regulator$i",.64f,.66f,.63f);p("RegulatorPin$i",.44f,.48f,.38f);p("RegulatorLoadPin$i",.44f,.48f,.38f);p("RegulatorFeed$i",.13f,.15f,.16f) }
+            if(kind.buriedSecondary) { p("SecondaryServiceRiser",.28f,.31f,.32f);for(i in 0..2)PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(.30,4.53,.27),ServiceCableMount.point(40+i,0)) }
             if(kind.light || d?.lampInstalled==true) {
                 GL11.glPushMatrix()
                 try {
@@ -69,9 +71,11 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
         list.add(if(kind.lvOnly)tr("120/240 V secondary circuits only; no high-voltage transformer") else tr("Independent primary conductors; select a phase or three-phase bundle in the menu"))
         if(kind.cutout || kind.singlePhaseTap)list.add(tr("Physical fuse cartridges protect the load terminal; open contacts isolate the circuit"))
         if(kind.transformer)list.add(tr("Install a physical transformer; one selected primary phase supplies shared 120/240 V service"))
-        if(!kind.light)list.add(tr("Accepts a removable Pole Streetlight Attachment powered only by secondary service"))
+        if(!kind.light && !kind.underground)list.add(tr("Accepts a removable Pole Streetlight Attachment powered only by secondary service"))
         if(kind.light)list.add(tr("70 W street light uses the 120 V service rack; manual or dusk operation with adjustable aim"))
         if(kind.singlePrimaryRiser)list.add(tr("Fused underground primary: bottom Up or left base; the service rack remains independent"))
+        if(kind.underground)list.add(tr("Placed cables only; the overhead link tool cannot attach to this cabinet"))
+        if(kind.pedestal)list.add(tr("Bottom: incoming L1/L2/240 V; base sides: fused outgoing L1/L2/240 V"))
         if(kind.regulator)list.add(tr("Automatic regulation changes taps gradually within 90 to 110 percent"))
         list.add(tr("Service terminals carry independent L1, L2 and 240 V circuit equivalents"))
     }

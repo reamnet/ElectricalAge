@@ -190,3 +190,5 @@ wirelesssignalrepeater/wirelesssignalrepeater.obj
 wirelesssignalrx/wirelesssignalrx.obj
 wirelesssignaltx/wirelesssignaltx.obj
 xrayscanner/xrayscanner.obj
+undergroundservicepedestal/undergroundservicepedestal.obj
+undergroundfused1/undergroundfused1.obj

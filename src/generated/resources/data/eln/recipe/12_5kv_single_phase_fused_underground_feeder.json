@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:single_phase_fused_cutout_pole",
+    "eln:pole_fuse_link",
+    "eln:copper_cable",
+    "eln:copper_cable",
+    "eln:iron_plate",
+    "eln:iron_plate",
+    "eln:iron_plate",
+    "eln:iron_plate",
+    "eln:iron_plate"
+  ],
+  "result": {
+    "id": "eln:12_5kv_single_phase_fused_underground_feeder"
+  }
+}

@@ -801,6 +801,44 @@ Reports: [lamp circuits](forkpatch-port/pole-lamp-circuit-tests.json),
 [native cases](forkpatch-port/pole-lamp-native-tests.json), and
 [generated data](forkpatch-port/pole-lamp-datagen.json).
 
+### Underground distribution and current variant parity
+
+The fused underground service pedestal, single-phase fused underground feeder
+cabinet and transformer pole with underground service riser retain source IDs
+8032/8033/8133. All eighteen variants exposed for new construction by ForkPatch
+3.0.77 are now registered, alongside five hidden older lamp variants. Seven other
+hidden/retired variants still need legacy adapters; this does not complete the
+whole ForkPatch port. The explicit per-variant [parity report](forkpatch-port/distribution-parity.json)
+links every implemented identity to a passing native placement/power case.
+
+The pedestal has actual incoming and outgoing L1/L2/240 V equivalents. One fuse
+observes combined 240 V-equivalent service current and isolates all three outputs.
+A placed 240 V feed passively supplies its two 120 V equivalents, without copying
+power or invoking converter probes. Independent overhead channels remain separate.
+The same wired split is used by the single-phase feeder's independent service
+entry. Healthy taps/contacts retain cached LU factors, and reverse power is
+conserved. A spent physical cartridge remains spent through saves/reset attempts.
+
+The primary cabinet exposes separate incoming/fused outgoing HV terminals and
+independent LV services. Both cabinets reject new overhead spans, reserve their
+real second block instead of pole-height clearance, and use the source enclosure,
+fuse/carrier and service-lug models. The buried-service transformer keeps one paid
+can and shared capacity, with a visible service riser and actual underground
+outputs. Multimeter readings and HUD faults reflect these real circuits. Cabinet
+crafting retains the source shaped bill of materials in the native shapeless
+callback; original registry identities remain unchanged.
+
+Eight new production-circuit regressions and all 175 native server cases pass.
+Native coverage includes physical placed service feeds, aggregate cartridge trips,
+reverse flow, primary/secondary separation, 145 A transformer service, all cabinet
+orientations, actual two-block clearance and overhead-link rejection. Data
+validation and the final destination regression totals accompany this checkpoint.
+
+Reports: [production circuits](forkpatch-port/underground-distribution-circuit-tests.json),
+[native cases](forkpatch-port/underground-distribution-native-tests.json),
+[generated data](forkpatch-port/underground-distribution-datagen.json), and
+[variant parity](forkpatch-port/distribution-parity.json).
+
 ## Inventory
 
 `forkpatch-port/source-inventory.json` records every incoming main-source file,

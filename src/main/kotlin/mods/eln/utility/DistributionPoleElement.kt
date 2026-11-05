@@ -31,7 +31,7 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     override fun initialize() { installTransformer();super.initialize() }
     override fun inventoryChange(inventory: Container?) { installTransformer();needPublish() }
     var terminal=if(kind.lvOnly)50 else 32;private set
-    init { unit.transformer?.let { thermalLoadList.add(it.thermal) };unit.changed={ event->needPublish();play(mods.eln.sound.SoundCommand("eln:$event").smallRange().mulVolume(.5)) };slowProcessList.add(NodePeriodicPublishProcess(node,1.0,.5));slowProcessList.add(IProcess { refreshLight() }) }
+    init { unit.wiredSplitAllowed={gridLinkList.isEmpty() && gridLinksBooting.isEmpty()};unit.transformer?.let { thermalLoadList.add(it.thermal) };unit.changed={ event->needPublish();play(mods.eln.sound.SoundCommand("eln:$event").smallRange().mulVolume(.5)) };slowProcessList.add(NodePeriodicPublishProcess(node,1.0,.5));slowProcessList.add(IProcess { refreshLight() }) }
     private fun refreshLight() {
         val lamp=unit.lamp ?: return
         if(!lamp.installed)return
@@ -45,6 +45,7 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
             if(world.chunkSource.getChunkNow(pos.x shr 4,pos.z shr 4)!=null)mods.eln.sixnode.lampsocket.LightBlockEntity.addLight(world,pos.x,pos.y,pos.z,lamp.light,10)
         }
     }
+    override fun allowsNewGridLinks()=!kind.underground
     override fun selectedGridTerminal(side: Direction)=terminal
     fun terminals()=buildList {
         if(!kind.lvOnly) { repeat(kind.phases) { add(32+it) };if(kind.phases==3)add(52);if(kind.protectedLine) { repeat(kind.outputPhases) { add(36+it) };if(kind.phases==3 && !kind.singlePhaseTap)add(53) } }
@@ -84,10 +85,16 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     }
     private fun phaseZ(i: Int)=if(kind.phases==1)0.0 else (i-1)*.95
     override fun getElectricalLoad(side: Direction,lrdu: LRDU): ElectricalLoad? {
-        if(side==Direction.YN) { if(kind.singlePrimaryRiser && lrdu==LRDU.Up)return unit.outs[0];return unit.services[when(lrdu) { LRDU.Left->0;LRDU.Right->1;else->2 }] }
+        if(side==Direction.YN) { if(kind.pedestal)return unit.undergroundInput[when(lrdu) { LRDU.Left->0;LRDU.Right->1;else->2 }];if(kind.singlePrimaryRiser && lrdu==LRDU.Up)return unit.outs[0];return unit.services[when(lrdu) { LRDU.Left->0;LRDU.Right->1;else->2 }] }
+        if(kind.underground && !kind.pedestal) {
+            if(side==front)return unit.services[when(lrdu) { LRDU.Left->0;LRDU.Right->1;else->2 }]
+            val i=when(side) { front.left()->0;front.right()->1;front.inverse->2;else->return null }
+            if(i>=kind.phases)return null
+            return when(lrdu) { LRDU.Down->unit.lines[i];LRDU.Up->unit.outs[i];else->null }
+        }
         if(side.isY || lrdu!=LRDU.Down)return null
         val i=when(side) { front.left()->0;front.right()->1;front.inverse->2;else->return null }
-        return if(kind==DistributionKind.FEEDER_THREE)unit.lines[i] else if(kind.singlePrimaryRiser)when(i) { 0->unit.outs[0];1->unit.services[2];else->unit.services[0] } else unit.services[i]
+        return if(kind.pedestal)unit.services[i] else if(kind==DistributionKind.FEEDER_THREE)unit.lines[i] else if(kind.singlePrimaryRiser)when(i) { 0->unit.outs[0];1->unit.services[2];else->unit.services[0] } else unit.services[i]
     }
     override fun getConnectionMask(side: Direction,l: LRDU)=if(getElectricalLoad(side,l)!=null)NodeBase.maskElectricalPower else 0
     override fun getThermalLoad(side: Direction,l: LRDU)=null
@@ -101,7 +108,7 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
         val changed=unit.selectPhase(value);if(changed)needPublish();return changed
     }
     override fun onBlockActivated(p: Player,side: Direction,x: Float,y: Float,z: Float): Boolean {
-        if(!kind.light && UtilityItems.part(p.mainHandItem)==3) {
+        if(!kind.light && !kind.underground && UtilityItems.part(p.mainHandItem)==3) {
             if(unit.lamp?.install()==true) { if(!p.isCreative)p.mainHandItem.shrink(1);p.inventory.setChanged();needPublish() };return true
         }
         if(kind.transformer && PoleHardware.transformerWatts(p.mainHandItem)!=null && hardware.getItem(0).isEmpty) {
@@ -115,9 +122,13 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
         }
         return super.onBlockActivated(p,side,x,y,z)
     }
-    override fun multiMeterString(side: Direction)=unit.lines.mapIndexed { i,l->tr("Phase %1$: %2$",i+1,Utils.plotUIP(l.u,l.i)) }.joinToString("\n")
+    override fun multiMeterString(side: Direction)=buildList {
+        if(!kind.lvOnly)addAll(unit.lines.mapIndexed { i,l->tr("Phase %1$: %2$",i+1,Utils.plotUIP(l.u,l.i)) })
+        if(kind.pedestal)add(tr("Incoming 240 V: %1$",Utils.plotVolt("",unit.undergroundInput[2].u)))
+        addAll(unit.services.mapIndexed { i,l->tr("Service %1$: %2$",i+1,Utils.plotUIP(l.u,l.i)) })
+    }.joinToString("\n")
     override fun thermoMeterString(side: Direction): String?=unit.transformer?.let { Utils.plotCelsius("",it.thermal.Tc) }
-    override fun getWaila()=linkedMapOf(tr("Cable terminal") to tr("Terminal %1$",terminal),tr("Protection") to when { unit.recloser.locked->tr("Recloser locked out");unit.fuses.any { it.blown }->tr("Fuse blown");else->tr("Ready") }).apply { unit.transformer?.let { put(tr("Transformer rating"),Utils.plotPower("",it.ratedWatts.toDouble()));put(tr("Temperature"),Utils.plotCelsius("",it.thermal.Tc)) } }
+    override fun getWaila()=linkedMapOf(tr("Cable terminal") to tr("Terminal %1$",terminal),tr("Protection") to when { unit.recloser.locked->tr("Recloser locked out");unit.fuses.any { it.blown }->tr("Fuse blown");else->tr("Ready") }).apply { unit.transformer?.let { put(tr("Transformer rating"),Utils.plotPower("",it.ratedWatts.toDouble()));put(tr("Transformer status"),poleTransformerStatus(it.status));put(tr("Temperature"),Utils.plotCelsius("",it.thermal.Tc)) } }
     private fun settings(t: CompoundTag) { unit.write(t);t.putInt("utilityTerminal",terminal) }
     private fun readSettings(t: CompoundTag) { unit.read(t);terminal=t.getIntOr("utilityTerminal",if(kind.lvOnly)50 else 32).takeIf { it in terminals() } ?: terminals().first() }
     override fun writeToNBT(t: CompoundTag) { super.writeToNBT(t);settings(t) }

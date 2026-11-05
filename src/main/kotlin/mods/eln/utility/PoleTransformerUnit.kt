@@ -1,5 +1,6 @@
 package mods.eln.utility
 
+import mods.eln.i18n.I18N.tr
 import mods.eln.sim.mna.component.*
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.nbt.NbtElectricalLoad
@@ -55,4 +56,10 @@ class PoleTransformerUnit(states: MutableList<State>,parts: MutableList<Componen
         protection.elapsed=t.getDoubleOr("nativePoleTripTime",0.0).takeIf { it.isFinite() }?.coerceIn(0.0,2.0) ?: 0.0
         protection.pendingReason=t.getIntOr("nativePolePendingReason",0).takeIf { it in listOf(0,1,4,7) } ?: 0
     }
+}
+
+internal fun poleTransformerStatus(status: String)=when(status) {
+    "NEEDS_TRANSFORMER"->tr("Install a transformer");"CORE_OVERLOAD"->tr("Core overload - reset after reducing load")
+    "OVERVOLTAGE"->tr("Primary voltage fault");"OVERHEATED"->tr("Overheated");"DISABLED"->tr("Isolated")
+    "FUSE_OPEN"->tr("Primary fuse open");"WAIT_POWER"->tr("Waiting for primary power");else->tr("Online")
 }

@@ -14,8 +14,12 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     val outs=if(kind.protectedLine)List(kind.outputPhases) { NbtElectricalLoad("phaseOut$it").apply { rs=.00001 } } else lines
     val transformer=if(kind.transformer)PoleTransformerUnit(states,parts) else null
     val services=transformer?.service?.loads ?: List(3) { NbtElectricalLoad("secondaryBus$it").apply { rs=.00001 } }
-    val lamp=if(kind.light)PoleLamp(services[0],parts,kind.lampWatts,kind.transformer) else PoleLamp(services[0],parts,source240=services[2],removable=true)
+    val undergroundInput=if(kind.pedestal)List(3) { NbtElectricalLoad("undergroundServiceIn$it").apply { rs=.00001 } } else emptyList()
+    val serviceSplit=when { kind.pedestal->WiredServiceSplit(states,parts,undergroundInput);kind.singlePrimaryRiser->WiredServiceSplit(states,parts,services);else->null }
+    var wiredSplitAllowed: ()->Boolean={true}
+    val lamp=when { kind.light->PoleLamp(services[0],parts,kind.lampWatts,kind.transformer);kind.underground->null;else->PoleLamp(services[0],parts,source240=services[2],removable=true) }
     val contacts=when {
+        kind.pedestal->undergroundInput.indices.map { TransferContact(undergroundInput[it],services[it]) }
         kind.transformer->lines.map { TransferContact(it,transformer!!.primary) }
         kind.singlePhaseTap->lines.map { TransferContact(it,outs[0]) }
         kind.protectedLine->lines.indices.map { TransferContact(lines[it],outs[it]) }
@@ -34,10 +38,11 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     val regulatorTaps: List<ServiceTap>
     val capacitorPins=ArrayList<NbtElectricalLoad>()
     init {
-        require(!kind.underground)
+        require(!kind.retiredGroundCabinet)
         if(!kind.lvOnly)states.addAll(lines)
-        if(outs!==lines)states.addAll(outs)
+        if(outs!==lines && !kind.pedestal)states.addAll(outs)
         if(transformer==null)states.addAll(services)
+        states.addAll(undergroundInput)
         if(kind.regulator) {
             // A fused line contact precedes the ratio tap. Keep both contacts and ratio stamps stable at idle.
             parts.addAll(contacts)
@@ -55,14 +60,15 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
             parts.add(Resistor(line,pin).setR(100.0));parts.add(Capacitor(pin,null).apply { setC(.0001) });parts.add(Resistor(pin,null).setR(1e9))
         }
         // Open terminals retain a deterministic finite reference, not a fictitious source.
-        (if(kind.lvOnly)services else lines+outs+services).distinct().forEach { parts.add(Resistor(it,null).setR(1e10)) }
+        ((if(kind.lvOnly)services else lines+outs+services)+undergroundInput).distinct().forEach { parts.add(Resistor(it,null).setR(1e10)) }
         processes.add(IProcess(::step));applyContacts()
     }
-    fun current(index: Int)=contacts.getOrNull(if(kind.singlePhaseTap || kind.transformer)phase else index)?.current ?: 0.0
+    fun current(index: Int)=if(kind.pedestal)kotlin.math.abs(contacts[2].current)+.5*(kotlin.math.abs(contacts[0].current)+kotlin.math.abs(contacts[1].current)) else contacts.getOrNull(if(kind.singlePhaseTap || kind.transformer)phase else index)?.current ?: 0.0
     fun applyContacts() {
         for(i in contacts.indices) {
             val contact=contacts[i];val was=contact.closed
             contact.closed=when {
+                kind.pedestal->fuses[0].closed
                 kind.transformer->i==phase && fuses[0].closed && transformer!!.available
                 kind.singlePhaseTap->i==phase && fuses[0].closed
                 kind.cutout || kind.regulator->fuses[i].closed
@@ -92,6 +98,7 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     fun setFuseAmps(amps: Double): Boolean { if(!amps.isFinite() || amps !in 1.0..2000.0)return false;fuseAmps=amps;return true }
     fun step(dt: Double) {
         if(!dt.isFinite() || dt<=0)return
+        serviceSplit?.update(wiredSplitAllowed())
         val sample=!pendingSample;pendingSample=false
         if(sample) {
             for(i in fuses.indices) {

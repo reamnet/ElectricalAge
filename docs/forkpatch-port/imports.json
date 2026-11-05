@@ -1068,5 +1068,68 @@
     "sourceSha256": "37a7017aa37cd0a233552d3f5e988767279a2840d7f2e30219de7a3c56031b0b",
     "mode": "verbatim-source-icon-at-native-registry-name",
     "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/ServiceSecondary.kt",
+    "target": "src/main/kotlin/mods/eln/utility/WiredServiceSplit.kt",
+    "sourceSha256": "4a35fdfb27fe34957244ba8d4c96a43039c4ca01b82e2d9de253dbab341beaa5",
+    "mode": "extracted-native-passive-wired-service-split-without-converter-probes",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UndergroundCabinetVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/UndergroundCabinetVisual.kt",
+    "sourceSha256": "d6e7eb9dfe59b8d83c413c1f7e6df29808b387a3ee46a7468014f052e1aa4667",
+    "mode": "native-GL-non-light-cabinet-adapter",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchUndergroundDistributionCases.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-placed-cabinet-shared-service-fuse-reverse-flow-ports-clearance-and-graphics-tests",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundservicepedestal/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundservicepedestal/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundservicepedestal/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundservicepedestal/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundservicepedestal/undergroundservicepedestal.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundservicepedestal/undergroundservicepedestal.obj",
+    "sourceSha256": "c408367d5f0f3c449c072ec541efbb3b1c31b857b4e9e0b012449438eb353e25",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1/undergroundfused1.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1/undergroundfused1.obj",
+    "sourceSha256": "c408367d5f0f3c449c072ec541efbb3b1c31b857b4e9e0b012449438eb353e25",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
   }
 ]
