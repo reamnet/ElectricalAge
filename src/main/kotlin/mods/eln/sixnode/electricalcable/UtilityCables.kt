@@ -89,7 +89,7 @@ object UtilityCables {
     }
 }
 
-class WireScrapDescriptor: GenericItemUsingDamageDescriptor(I18N.TR_NAME(I18N.Type.NONE,"Wire Scraps"),"Copper Cable") {
+class WireScrapDescriptor: GenericItemUsingDamageDescriptor(I18N.TR_NAME(I18N.Type.NONE,"Wire Scraps"),"utilitybareicon") {
         override fun addInformation(stack: ItemStack?,player: net.minecraft.world.entity.player.Player?,list: MutableList<Any?>,advanced: Boolean) {
             val t=stack?.let(ItemNbt::get) ?: return
             list.add(tr("Recovered from: %1$",t.getStringOr("wireScrapSourceName","")))

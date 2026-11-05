@@ -47,7 +47,7 @@ class UtilityCableDescriptor(val sizeLabel: String,val material: UtilityCableMat
     fun creativeStack()=newItemStack().also { setRemainingLengthMeters(it,128.0) }
     override fun addInformation(stack: ItemStack,player: Player?,list: MutableList<Any?>,advanced: Boolean) {
         list.add(tr("Conductor: %1$ %2$",material.label,sizeLabel));list.add(tr("Equivalent area: %1$ mm2",conductorAreaMm2))
-        list.add(tr("Resistance per core at 20 C: %1$ ohm/m",resistanceOhms()));list.add(tr("Remaining length: %1$ m",getRemainingLengthMeters(stack)))
+        list.add(tr("Nominal current: %1$ A",ampacity));list.add(tr("Resistance per core at 20 C: %1$ ohm/m",resistanceOhms()));list.add(tr("Remaining length: %1$ m",getRemainingLengthMeters(stack)))
         list.add(tr("Insulation: %1$",if(insulated)tr("%1$ V",insulationVoltageRating) else tr("Bare")))
         list.add(tr("Max temperature: %1$ C",meltTemperatureCelsius));list.add(tr("Each placed cable segment uses 1 m"))
     }

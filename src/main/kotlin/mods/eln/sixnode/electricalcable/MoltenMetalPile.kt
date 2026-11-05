@@ -30,7 +30,7 @@ class MoltenMetalPileElement(node: SixNode,side: Direction,d: SixNodeDescriptor)
     override fun getThermalLoad(l: LRDU)=null
     override fun getConnectionMask(l: LRDU)=0
     override fun multiMeterString()=""
-    override fun thermoMeterString()=Utils.plotCelsius("T",thermal.absoluteCelsius)
+    override fun thermoMeterString()=Utils.plotCelsius("T",thermal.Tc)
     override fun getDropItemStack()=UtilityCables.scrap(descriptor.material,thermal.physics.totalAreaMm2,1.0,descriptor.name)
     override fun networkSerialize(out: DataOutputStream) { super.networkSerialize(out);out.writeFloat(thermal.absoluteCelsius.toFloat()) }
 }

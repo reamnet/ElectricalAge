@@ -70,8 +70,8 @@ class UtilityCableElement(node: SixNode,side: Direction,d: SixNodeDescriptor): S
     override fun getConnectionMask(lrdu: LRDU)=descriptor.nodeMask+if(descriptor.insulated)(color shl NodeBase.maskColorShift)+(care shl NodeBase.maskColorCareShift) else 0
     override fun getDropItemStack()=UtilityCables.scrap(descriptor,1.0)
     override fun multiMeterString()=Utils.plotUIP(electricalLoad.u,electricalLoad.i)
-    override fun thermoMeterString()=Utils.plotCelsius("T",thermalLoad.absoluteCelsius)
-    override fun getWaila()=linkedMapOf(tr("Voltage to ground") to Utils.plotVolt("",electricalLoad.u),tr("Current") to Utils.plotAmpere("",electricalLoad.i),tr("Temperature") to Utils.plotCelsius("",thermalLoad.absoluteCelsius),tr("Insulation condition") to when { descriptor.melted->tr("Damaged - exposed conductor");insulationFailed->tr("Insulation failed - repair required");descriptor.insulated->tr("Intact");else->tr("Bare conductor") })
+    override fun thermoMeterString()=Utils.plotCelsius("T",thermalLoad.Tc)
+    override fun getWaila()=linkedMapOf(tr("Voltage to ground") to Utils.plotVolt("",electricalLoad.u),tr("Current") to Utils.plotAmpere("",electricalLoad.i),tr("Temperature") to Utils.plotCelsius("",thermalLoad.Tc),tr("Insulation condition") to when { descriptor.melted->tr("Damaged - exposed conductor");insulationFailed->tr("Insulation failed - repair required");descriptor.insulated->tr("Intact");else->tr("Bare conductor") })
     override fun networkSerialize(out: DataOutputStream) { super.networkSerialize(out);out.writeByte(color shl 4);out.writeFloat(thermalLoad.absoluteCelsius.toFloat()) }
     override fun readFromNBT(t: CompoundTag) {
         super.readFromNBT(t);val b=t.getByteOr("color",16).toInt();color=b and 15;care=(b shr 4) and 1
