@@ -192,3 +192,4 @@ wirelesssignaltx/wirelesssignaltx.obj
 xrayscanner/xrayscanner.obj
 undergroundservicepedestal/undergroundservicepedestal.obj
 undergroundfused1/undergroundfused1.obj
+undergroundfused3/undergroundfused3.obj

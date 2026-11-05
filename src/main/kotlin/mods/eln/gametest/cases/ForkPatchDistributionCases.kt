@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.Blocks
 import java.io.*
 
 object ForkPatchDistributionCases {
-    @JvmStatic fun cases(): List<TestCase> = DistributionPoles.supported.map(::Power)+listOf(Phase(false),Phase(true),ThreePhase(),TapSelection(),FuseInventory(),SavedControls(),Clearance(),Graphics(),ClickAliases(),Cycle())
+    @JvmStatic fun cases(): List<TestCase> = DistributionPoles.supported.map(::Power)+listOf(Phase(false),Phase(true),ThreePhase(),TapSelection(),TapSelection(DistributionKind.FUSED_TAP_LIGHT_THREE),FuseInventory(),SavedControls(),Clearance(),Graphics(),ClickAliases(),Cycle())
     private fun wire()=UtilityCables.all.first { it.material==UtilityCableMaterial.COPPER && it.sizeLabel=="2 AWG" && !it.insulated && !it.melted }
     private open class Base: TestCase {
         val parts=ArrayList<Component>()
@@ -83,11 +83,11 @@ object ForkPatchDistributionCases {
             }finally { clean() }
         }
     }
-    private class TapSelection: Base() {
+    private class TapSelection(val kind: DistributionKind=DistributionKind.FUSED_TAP_THREE): Base() {
         lateinit var tap: DistributionPoleElement;lateinit var run: DistributionPoleElement;lateinit var feed: DistributionPoleElement;lateinit var fixed: GridLink
-        override fun id()="forkpatch_distribution_fused_tap_phase_change_guard"
+        override fun id()="forkpatch_distribution_fused_tap_phase_change_guard"+if(kind.light)"_lamp"else ""
         override fun build(c: TestContext) {
-            tap=pole(c,DistributionKind.FUSED_TAP_THREE,4);run=pole(c,DistributionKind.SINGLE,10);feed=pole(c,DistributionKind.THREE,16)
+            tap=pole(c,kind,4);run=pole(c,DistributionKind.SINGLE,10);feed=pole(c,DistributionKind.THREE,16)
             check(GridLink.addLink(tap,run,36,32,wire(),6));check(GridLink.addLink(feed,run,32,32,wire(),6));fixed=feed.gridLinkList.single()
         }
         override fun measure(c: TestContext) {

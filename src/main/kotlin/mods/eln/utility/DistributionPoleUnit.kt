@@ -38,7 +38,7 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     val regulatorTaps: List<ServiceTap>
     val capacitorPins=ArrayList<NbtElectricalLoad>()
     init {
-        require(!kind.retiredGroundCabinet)
+        require(!kind.retiredGroundCabinet || kind==DistributionKind.UNDERGROUND_THREE)
         if(!kind.lvOnly)states.addAll(lines)
         if(outs!==lines && !kind.pedestal)states.addAll(outs)
         if(transformer==null)states.addAll(services)

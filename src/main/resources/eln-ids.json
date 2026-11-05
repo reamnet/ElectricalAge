@@ -3479,6 +3479,12 @@
   "kind": "transparent_node",
   "name": "power_inductor_block"
  },
+ "eln:transparent_node@8022": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Fused Tap Secondary Fed Street Light Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_fused_tap_secondary_fed_street_light_pole"
+ },
  "eln:transparent_node@8024": {
   "descriptor": "BackupDescriptor",
   "display": "Medium Standby Gasoline Generator",
@@ -3532,6 +3538,12 @@
   "display": "12.5kV Single Phase Fused Underground Feeder",
   "kind": "transparent_node",
   "name": "12_5kv_single_phase_fused_underground_feeder"
+ },
+ "eln:transparent_node@8034": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "12.5kV Three Phase Fused Underground Feeder",
+  "kind": "transparent_node",
+  "name": "12_5kv_three_phase_fused_underground_feeder"
  },
  "eln:transparent_node@8066": {
   "descriptor": "IndustrialDescriptor",

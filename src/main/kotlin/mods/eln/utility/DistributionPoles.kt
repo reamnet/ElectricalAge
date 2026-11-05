@@ -6,13 +6,14 @@ object DistributionPoles {
     /** Explicit source offsets; omitted transformer/light/underground variants keep their reserved identities. */
     val supported=listOf(DistributionKind.SINGLE,DistributionKind.THREE,DistributionKind.TRANSFORMER_SINGLE,DistributionKind.TRANSFORMER_THREE,DistributionKind.FEEDER_THREE,DistributionKind.CUTOUT_SINGLE,DistributionKind.CUTOUT_THREE,
         DistributionKind.RECLOSER_THREE,DistributionKind.SECONDARY,DistributionKind.CAPACITOR_THREE,DistributionKind.REGULATOR_SINGLE,DistributionKind.REGULATOR_THREE,
-        DistributionKind.AIR_BREAK_THREE,DistributionKind.FUSED_TAP_THREE,DistributionKind.SECONDARY_LIGHT,DistributionKind.STREET_SINGLE,DistributionKind.STREET_THREE,DistributionKind.SECONDARY_FED_SINGLE,DistributionKind.SECONDARY_FED_THREE,DistributionKind.FEEDER_SINGLE,DistributionKind.SERVICE_PEDESTAL,DistributionKind.UNDERGROUND_SINGLE,DistributionKind.UNDERGROUND_SECONDARY_TRANSFORMER_SINGLE)
+        DistributionKind.AIR_BREAK_THREE,DistributionKind.FUSED_TAP_THREE,DistributionKind.SECONDARY_LIGHT,DistributionKind.STREET_SINGLE,DistributionKind.STREET_THREE,DistributionKind.SECONDARY_FED_SINGLE,DistributionKind.SECONDARY_FED_THREE,DistributionKind.FEEDER_SINGLE,DistributionKind.SERVICE_PEDESTAL,DistributionKind.UNDERGROUND_SINGLE,DistributionKind.UNDERGROUND_SECONDARY_TRANSFORMER_SINGLE,DistributionKind.FUSED_TAP_LIGHT_THREE,DistributionKind.UNDERGROUND_THREE)
     val offsets=intArrayOf(34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,53,54,57,86,87,96,97,98,99,100,13,195,196,197)
     fun id(kind: DistributionKind)=7936+offsets[kind.ordinal]
-    @JvmStatic fun register() { supported.forEach { if(it.light)Eln.transparentNodeItem.addWithoutRegistry(id(it),DistributionPoleDescriptor(it)) else Eln.transparentNodeItem.addDescriptor(id(it),DistributionPoleDescriptor(it)) } }
+    @JvmStatic fun register() { supported.forEach { if(it.light || it.retiredGroundCabinet)Eln.transparentNodeItem.addWithoutRegistry(id(it),DistributionPoleDescriptor(it)) else Eln.transparentNodeItem.addDescriptor(id(it),DistributionPoleDescriptor(it)) } }
     @JvmStatic fun recipes(shapeless: (mods.eln.datagen.ElnRecipesBase.RStack,Array<out Any>)->Unit) {
         fun find(n: String)=mods.eln.datagen.ElnRecipesBase.findItemStack(n,1)
         for(kind in supported) {
+            if(kind.retiredGroundCabinet)continue
             if(kind.buriedSecondary) { shapeless(find(kind.title),arrayOf(find(DistributionKind.TRANSFORMER_SINGLE.title),find("Underground Service Entrance Riser"),find("Iron Plate")));continue }
             if(kind.underground) {
                 val base=if(kind.pedestal)"120/240V Service Weatherhead" else DistributionKind.CUTOUT_SINGLE.title
