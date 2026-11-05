@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "M": "eln:north_american_meter_base",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "PPP",
+    "MCC",
+    "P P"
+  ],
+  "result": {
+    "id": "eln:wide_underground_meter_socket"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "L": "minecraft:lever",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "PPP",
+    "CLC",
+    "PPP"
+  ],
+  "result": {
+    "id": "eln:red_handle_service_disconnect"
+  }
+}
