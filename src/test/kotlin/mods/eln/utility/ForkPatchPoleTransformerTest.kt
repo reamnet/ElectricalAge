@@ -86,4 +86,15 @@ class ForkPatchPoleTransformerTest {
         assertEquals(c.loads.sumOf { it.p }+c.loss(),c.sources[0].p,1e-4)
         assertTrue(c.t.tap.current>c.loads[2].p/12470.0*1.9)
     }
+    @Test fun copperHeatIncludesStartupAndTheFinalPoweredIntervalBeforeAFuseTrips() {
+        val c=Circuit(core=10000);c.loads[2].r=2.4
+        var expected=0.0;var poweredSteps=0
+        repeat(20) {
+            c.root.step()
+            if(c.t.tap.enabled) { expected+=c.t.winding.p*.05;poweredSteps++ }
+            c.processes.forEach { it.process(.05) }
+        }
+        assertTrue(c.u.fuses[0].blown);assertTrue(poweredSteps>=2);assertFalse(c.t.tap.enabled)
+        assertEquals(expected,c.t.thermal.EnergyTemp,1e-9)
+    }
 }

@@ -38,9 +38,11 @@ class PoleTransformerUnit(states: MutableList<State>,parts: MutableList<Componen
         outputVoltage=voltage;enabled=on;tap.ratio=voltage/12470.0;service.update();return true
     }
     /** Only accepted physical steps advance core protection and deposit copper heat. */
-    fun step(dt: Double): Boolean {
-        if(!dt.isFinite() || dt<=0 || !tap.enabled)return false
+    @JvmOverloads fun step(dt: Double,poweredAtSolve: Boolean=tap.enabled,protect: Boolean=true): Boolean {
+        if(!dt.isFinite() || dt<=0 || !poweredAtSolve)return false
         thermal.moveEnergyTo(winding.p.coerceAtLeast(0.0)*dt)
+        // Opening a fuse after this solve cannot erase its final interval of copper heat.
+        if(!protect || !tap.enabled)return false
         // Cartridge protection is handled by CutoutFuse on the actual primary contact.
         return protection.stepPad(dt,primary.u,tap.current,51200.0/1.5,Double.MAX_VALUE,ratedWatts.toDouble())
     }

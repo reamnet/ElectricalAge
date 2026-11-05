@@ -98,6 +98,7 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
     fun setFuseAmps(amps: Double): Boolean { if(!amps.isFinite() || amps !in 1.0..2000.0)return false;fuseAmps=amps;return true }
     fun step(dt: Double) {
         if(!dt.isFinite() || dt<=0)return
+        val transformerWasPowered=transformer?.tap?.enabled==true
         serviceSplit?.update(wiredSplitAllowed())
         val sample=!pendingSample;pendingSample=false
         if(sample) {
@@ -108,7 +109,7 @@ class DistributionPoleUnit(val kind: DistributionKind,states: MutableList<State>
             }
             if(kind.recloser && recloser.step(dt,contacts.map { it.current })) { applyContacts();changed("utility_recloser_bump") }
         }
-        if(sample && transformer?.step(dt)==true) { applyContacts();changed("utility_arc_open") }
+        if(transformer?.step(dt,transformerWasPowered,sample)==true) { applyContacts();changed("utility_arc_open") }
         transformer?.let { if(it.tap.enabled!=(it.available && fuses[0].closed))applyContacts() }
         if(kind.regulator && regulatorAutomatic) {
             regulatorClock+=dt
