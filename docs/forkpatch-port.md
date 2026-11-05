@@ -664,8 +664,8 @@ link construction; it adds no per-tick routing scans.
 Six payment/routing regressions pass. All 110 native server cases pass, including
 five new cases covering actual clicks, independent voltage/heat, hot reloads,
 damaged refunds, duplicate/creative payments, incompatible cores and old records.
-The broader regression suite will run again after the distribution equipment
-checkpoint. Manufacturing and full source-world migration remain pending.
+The following distribution checkpoint also validates the complete destination
+regression suite, including these changes. Manufacturing and full source-world migration remain pending.
 
 Report: [bundle validation](forkpatch-port/bundle-span-validation.json).
 
@@ -713,7 +713,9 @@ preceding identities and 191 geometry models are retained, with no missing icons
 The source Direct Utility Pole recipe ingredient uses the existing native Utility
 Pole until the separate source base equipment is adapted.
 
-Broader destination regression validation is in progress. Transformer/light/
+All destination regressions pass with `-PfluidCases=20`: 485 passed, three optional
+CAD preview cases skipped, zero failures/errors (488 selected across 97 suites).
+The default 200-case fluid corpus was not run. Transformer/light/
 underground poles, height/surge/streetlight attachments, independent adaptive rack
 alignment, wire manufacturing, full source-world migration and interactive GPU/
 audio validation remain pending. Circuits keep the native scalar phase/service
