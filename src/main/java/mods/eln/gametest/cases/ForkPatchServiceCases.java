@@ -52,6 +52,8 @@ public final class ForkPatchServiceCases {
         var desc=e.getDesc();var bytes=new ByteArrayOutputStream();e.networkSerialize(new DataOutputStream(bytes));
         var render=new HouseServiceRender((TransparentNodeEntity)c.level().getBlockEntity(e.node.coordonate.pos()),desc);render.networkUnserialize(new DataInputStream(new ByteArrayInputStream(bytes.toByteArray())));
         c.check("service: live panel retains actual meter registers",render.getDisplay().getImported()==e.getUnit().getEnergy().getImportedKwh() && render.getDisplay().getExported()==e.getUnit().getEnergy().getExportedKwh(),"");
+        var position=e.node.coordonate.pos();var shape=c.level().getBlockState(position).getCollisionShape(c.level(),position);var bounds=shape.bounds();
+        c.check("service: actual origin collision follows the thin enclosure",Math.abs(Math.min(bounds.maxX-bounds.minX,bounds.maxZ-bounds.minZ)-.33)<1e-8,bounds.toString());
         GlFrame.beginRenderFrame();var f=GlFrame.open();try { desc.drawService(e.front,render.getDisplay(),0,0);int n=f.batches().values().stream().mapToInt(GlFrame.Batch::vertices).sum();c.check("service: native enclosure, meter face or disconnect geometry",n>100,"vertices="+n); }finally { GlFrame.close(); }
     }
     private static final class Wired extends Fixture {

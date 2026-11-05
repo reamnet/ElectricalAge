@@ -697,5 +697,12 @@
     "sourceSha256": "517a52dc98180f86b84ea89d37ce041de2c369f4916a0fcd4badc215a24e8027",
     "mode": "native-wired-service-adapter; overhead spans deferred",
     "status": "wired service checkpoint: validation in progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/WideMeterWiring.kt",
+    "target": "src/main/java/mods/eln/node/NodeBase.java",
+    "sourceSha256": "55e11b05fa9616ea3f1b56e055666a40dacad10261eaafbf19b468a377e0073a",
+    "mode": "native connection hooks for wide meter only; preserve destination connection and simulation veto lifetimes",
+    "status": "wired service checkpoint: validation in progress"
   }
 ]

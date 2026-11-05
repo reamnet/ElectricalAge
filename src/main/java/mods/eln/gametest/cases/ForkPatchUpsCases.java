@@ -79,7 +79,7 @@ public final class ForkPatchUpsCases {
                 ctx.check("UPS: charged bank powers configured output",ups.getUnit().getSecondary().getU()>119.8,ups.getUnit().getStatus());
                 if(empty)ctx.check("UPS: idle empty rack charges without an output cable",ups.getBank().getEnergy()>100,ups.getUnit().getStatus());
                 else ctx.check("UPS: restored input feeds load and charging",phase==2 && ups.getUnit().getInputWatts()>ups.getUnit().getOutputWatts(),ups.getUnit().getStatus());
-                if(front!=null) { var d=(UpsDescriptor)ups.getDescriptor();var box=d.wallBox(front);exact(ctx,"UPS: wall enclosure collision depth",Math.min(box.maxX-box.minX,box.maxZ-box.minZ),.33);int ports=0;for(var side:Direction.values())for(var lrdu:mods.eln.misc.LRDU.values())if(ups.getElectricalLoad(side,lrdu)!=null)ports++;ctx.check("UPS: exactly two cable ports on the wall",ports==2,"ports="+ports); }
+                if(front!=null) { var pos=ups.node.coordonate.pos();var box=ctx.level().getBlockState(pos).getCollisionShape(ctx.level(),pos).bounds();exact(ctx,"UPS: wall enclosure collision depth",Math.min(box.maxX-box.minX,box.maxZ-box.minZ),.33);int ports=0;for(var side:Direction.values())for(var lrdu:mods.eln.misc.LRDU.values())if(ups.getElectricalLoad(side,lrdu)!=null)ports++;ctx.check("UPS: exactly two cable ports on the wall",ports==2,"ports="+ports); }
                 ctx.check("UPS: native hopper/pipe item capability exposed",ctx.level().getCapability(Capabilities.Item.BLOCK,ups.node.coordonate.pos(),net.minecraft.core.Direction.UP)!=null,"");
                 panel(ctx,ups);
             } finally { cleanup(); }

@@ -176,6 +176,17 @@ public class TransparentNodeDescriptor extends GenericItemBlockUsingDamageDescri
         return null;
     }
 
+    /** Avoid a block-entity lookup for devices using only the legacy fixed boxes. */
+    public boolean hasOrientedShape() {
+        return modelHitbox() != null;
+    }
+
+    /** Native oriented collision/outline; null keeps the cached legacy boxes. */
+    public net.minecraft.world.phys.shapes.VoxelShape orientedShape(Direction front) {
+        ModelHitbox hitbox = modelHitbox();
+        return hitbox == null ? null : hitbox.shape(front);
+    }
+
     public void addCollisionBoxesToList(AABB par5AxisAlignedBB, List list, Level world, int x, int y, int z) {
         AABB bb = new AABB(x, y, z, x + 1, y + 1, z + 1); // 1.7.10: stone.getCollisionBoundingBoxFromPool (absolute)
         if (par5AxisAlignedBB.intersects(bb)) list.add(bb);

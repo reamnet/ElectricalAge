@@ -76,6 +76,10 @@ public final class ForkPatchOffGridCases {
                     var bounds=shape.bounds();
                     double depth=Math.min(bounds.maxX-bounds.minX,bounds.maxZ-bounds.minZ);
                     ctx.check("battery: upper collision follows enclosure",Math.abs(depth-(type.getWall()?.33:.84))<1e-8,"depth="+depth);
+                    if(type.getWall()) {
+                        var origin=ctx.level().getBlockState(at).getCollisionShape(ctx.level(),at).bounds();
+                        ctx.check("battery: native origin collision is thin too",Math.abs(Math.min(origin.maxX-origin.minX,origin.maxZ-origin.minZ)-.33)<1e-8,origin.toString());
+                    }
                     var moved=new OffGridElement(new TransparentNode(),descriptor);moved.front=Direction.ZP;
                     moved.readItemStackNBT(element.getItemStackNBT());
                     ctx.checkValue("battery: moving preserves paid stored energy",moved.getBank().getState().getEnergy(),bank.getState().getEnergy());

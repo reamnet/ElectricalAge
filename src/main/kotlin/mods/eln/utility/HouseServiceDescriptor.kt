@@ -36,6 +36,7 @@ class HouseServiceDescriptor(val meter: Boolean,val disconnect: Boolean,val wide
         if(world is net.minecraft.server.level.ServerLevel && world.chunkSource.getChunkNow(p.x shr 4,p.z shr 4)==null)return
         if(!world.getBlockState(p).isSolidRender())e.selfDestroy()
     }
+    override fun wallBox(front: Direction)=serviceBox(front)
     fun serviceBox(front: Direction): AABB {
         val b=when(front) { Direction.XN->AABB(.67,0.0,.08,1.0,1.0,.92);Direction.XP->AABB(0.0,0.0,.08,.33,1.0,.92);Direction.ZN->AABB(.08,0.0,.67,.92,1.0,1.0);Direction.ZP->AABB(.08,0.0,0.0,.92,1.0,.33);else->error("Horizontal wall front required") }
         val d=front.right().toEnumFacing();return b.expandTowards(d.stepX*(serviceWidth-1).toDouble(),0.0,d.stepZ*(serviceWidth-1).toDouble())

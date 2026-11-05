@@ -117,7 +117,7 @@ public final class ForkPatchStandbyCases {
         public void measure(TestContext ctx) {
             try {
                 var u=ats.getUnit();ctx.check("ATS: stable mains return transfers back",phase==2 && u.getMainContact().getClosed() && !u.getBackupContact().getClosed() && load.getP()>990,u.getStatus());
-                if(wall) { var box=((BackupDescriptor)ats.getDescriptor()).wallBox(ats.front);ctx.checkValue("ATS: thin wall enclosure",Math.min(box.maxX-box.minX,box.maxZ-box.minZ),.33); }
+                if(wall) { var pos=ats.node.coordonate.pos();var box=ctx.level().getBlockState(pos).getCollisionShape(ctx.level(),pos).bounds();ctx.checkValue("ATS: thin wall enclosure",Math.min(box.maxX-box.minX,box.maxZ-box.minZ),.33); }
                 panel(ctx,ats);
             } finally { cleanup(); }
         }

@@ -85,7 +85,7 @@ public final class ForkPatchSolarControllerCases {
                     } finally { GlFrame.close(); }
                 }
                 if(wall) {
-                    var box=descriptor.wallBox(element.front);
+                    var box=ctx.level().getBlockState(at).getCollisionShape(ctx.level(),at).bounds();
                     double depth=Math.min(box.maxX-box.minX,box.maxZ-box.minZ);
                     ctx.check("wall cabinet: collision depth matches its thin enclosure",Math.abs(depth-.33)<1e-9,"depth="+depth);
                 }

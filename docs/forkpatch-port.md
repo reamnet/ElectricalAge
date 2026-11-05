@@ -450,6 +450,13 @@ uses normal native NodeConnection lifetimes, reconnection and simulation-veto
 semantics. Weak cable markers avoid per-tick world searches and strong owner
 retention; topology preparation runs only during connection construction.
 
+The native block's cached legacy fallback previously bypassed tile-dependent wall
+collision helpers. A descriptor-oriented shape hook now supplies cached shapes for
+the service cabinets and earlier wall-mounted power cabinets, while retaining the
+existing model-hitbox path and floor fallback. Native cabinet cases query the
+block's actual collision shape, including both the origin and reserved battery/
+meter cells, rather than accepting the descriptor helper alone.
+
 The source analog dials/disk, smart LCD pages, glass, red handle/blades and cabinet
 geometry are adapted to recorded native GL. Circuit, actual cable, collision,
 inventory, datagen and destination regression validation are in progress. Interactive
