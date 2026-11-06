@@ -1313,5 +1313,222 @@
     "sourceSha256": "06279c03891ceb80a00e3bdfe5c228fc497511c906660dd11ae13822b51581f3",
     "mode": "verbatim-source-two-head-fixture",
     "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearUnit.kt",
+    "sourceSha256": "8085ce7bfeccc10ca70e21368d4382289eed591e2493f3292db07ba2fa077c53",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearScreen.kt",
+    "sourceSha256": "30647e57cdca62c4c39d590cd6755d7781476e00202bb6eed1818e45ef32e579",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt",
+    "sourceSha256": "29cf730f28a1d26938f23c4b21ac6e46bfb99ee463d3aefef39af20174e9de01",
+    "mode": "verbatim",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearDescriptor.kt",
+    "sourceSha256": "30647e57cdca62c4c39d590cd6755d7781476e00202bb6eed1818e45ef32e579",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchContact.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchContact.kt",
+    "sourceSha256": "338bc45b746cc01d91520d0a4ca1842c2374677ce3b6525a6733abb8f0cd13db",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearRender.kt",
+    "sourceSha256": "30647e57cdca62c4c39d590cd6755d7781476e00202bb6eed1818e45ef32e579",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearElement.kt",
+    "sourceSha256": "8085ce7bfeccc10ca70e21368d4382289eed591e2493f3292db07ba2fa077c53",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearDisplay.kt",
+    "sourceSha256": "30647e57cdca62c4c39d590cd6755d7781476e00202bb6eed1818e45ef32e579",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr_three/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr_three/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr_three/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr_three/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr_three/switchgear_ssr_three.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr_three/switchgear_ssr_three.obj",
+    "sourceSha256": "d0814ead87a50c3bcb3aac6dc0a3d9d38e0a3c68064783f1069faae69c3005b4",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor_three/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor_three/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor_three/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor_three/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor_three/switchgear_contactor_three.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor_three/switchgear_contactor_three.obj",
+    "sourceSha256": "d90e7e917edeb40a288fac370cc633cbcb93b8781de43c27f68d42e1d01e0b15",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_two/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_two/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_two/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_two/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_two/switchgear_relay_two.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_two/switchgear_relay_two.obj",
+    "sourceSha256": "c83df8879129073e0fc1721135db2877490985f1f7aed05f4da4ef8a2474b8c5",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor/switchgear_contactor.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor/switchgear_contactor.obj",
+    "sourceSha256": "86b2cbb42f2ba93f4580062a1196016722fb760b1f2cc6b772c6e94edfd740b6",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr/switchgear_ssr.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr/switchgear_ssr.obj",
+    "sourceSha256": "84cb8cec8968250709bb59e2ab60eeaca0e2e3bf6cdb34028190e33bc2ac1968",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_four/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_four/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_four/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_four/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_four/switchgear_relay_four.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_four/switchgear_relay_four.obj",
+    "sourceSha256": "42bdb13753234cd26e37cfee6b96325b3fc6ba10abf7c52348fd9a419db7cca9",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearElement.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/switchgear/ForkPatchSwitchgearTest.kt",
+    "sourceSha256": "8085ce7bfeccc10ca70e21368d4382289eed591e2493f3292db07ba2fa077c53",
+    "mode": "native-independent-poles-coil-hysteresis-transfer-protection-and-energy-regressions",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/OutdoorExpansionChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchSwitchgearCases.kt",
+    "sourceSha256": "fc2c250bd3425b9273969032629b8a9f1ed0488dd45ad3fcd465b29348ba7603",
+    "mode": "native-switchgear-controls-protection-persistence-and-render-checks",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/VisualRefreshChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchClientFactoryCases.kt",
+    "sourceSha256": "1326c1c0a1f05e879e19d4bdb455876183a7224823d439513933bd1652e32012",
+    "mode": "native-block-entity-publication-and-factory-integration-instead-of-direct-construction",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/java/mods/eln/client/ClientRenders.java",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "explicit-native-client-factories-for-ported-descriptors-no-reflection-fallback",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/VisualRefreshChecks.kt",
+    "target": "src/main/java/mods/eln/gametest/ForkPatchClientSmokeCase.java",
+    "sourceSha256": "1326c1c0a1f05e879e19d4bdb455876183a7224823d439513933bd1652e32012",
+    "mode": "native-existing-catalog-publication-menu-and-item-contracts",
+    "status": "238-native-cases-passed"
   }
 ]

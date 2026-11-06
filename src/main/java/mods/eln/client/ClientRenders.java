@@ -11,6 +11,17 @@ public final class ClientRenders {
     }
 
     public static void registerAll() {
+        // Native publication uses these factories; descriptor RenderClass fields are not a fallback.
+        ElnRenders.transparent(mods.eln.utility.HouseServiceDescriptor.class,mods.eln.utility.HouseServiceRender::new);
+        ElnRenders.transparent(mods.eln.utility.UndergroundHandholeDescriptor.class,mods.eln.utility.UndergroundHandholeRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.PadTransformerDescriptor.class,mods.eln.transparentnode.industrial.PadTransformerRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.IndustrialDescriptor.class,mods.eln.transparentnode.industrial.IndustrialRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.ups.UpsDescriptor.class,mods.eln.transparentnode.ups.UpsRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.standby.BackupDescriptor.class,mods.eln.transparentnode.standby.BackupRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.offgrid.OffGridDescriptor.class,mods.eln.transparentnode.offgrid.OffGridRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.renewable.RenewableDescriptor.class,mods.eln.transparentnode.renewable.RenewableRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,mods.eln.transparentnode.utilitylight.StepDownUnitRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,mods.eln.transparentnode.switchgear.SwitchgearRender::new);
         ElnRenders.transparent(mods.eln.utility.DistributionPoleDescriptor.class,mods.eln.utility.DistributionPoleRender::new);
         // generated from the 1.12 descriptors' RenderClass (eln/port: super(name, XElement.class, XRender.class))
         ElnRenders.six(mods.eln.signalinductor.SignalInductorDescriptor.class, mods.eln.signalinductor.SignalInductorRender::new);

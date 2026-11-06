@@ -81,6 +81,7 @@ public final class ElnDeviceRegistry {
         registerForkPatchSolar();
         registerForkPatchStandby();
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.ID,new mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor());
+        for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values())transparentNodeItem.addDescriptor((125<<6)+kind.getSubId(),new mods.eln.transparentnode.switchgear.SwitchgearDescriptor(kind));
         mods.eln.utility.DistributionPoles.register();
         transparentNodeItem.addDescriptor(50+(124<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false,mods.eln.utility.ServiceMastStyle.STANDARD));
         int mastIndex=0;

@@ -991,3 +991,34 @@ passed; data generation passed for 619 identities. This is not a new full-regres
 run. Native checks cover actual 120/240 V loads, losses, ports, rendering, display,
 placed reload and recovery-only hardware. See [validation](forkpatch-port/twin-stepdown-validation.json).
 General world conversion and interactive client validation remain pending.
+
+### Six switchgear devices and actual client factory coverage
+
+Source identities 8037–8042 now register single/three-pole contactors, two/four-pole
+changeover relays, and single/three-pole solid-state relays. Each pole remains an
+independent physical circuit, with signal or 120/240 V coil actuation, hysteresis,
+break-before-make transfer, contact/coil heat, overload and thermal trip latches,
+native control screens, live graphics and paid recipes. Re-enable/reset/reload
+defers an NC make to the physical switching boundary so stale unsolved voltages
+cannot create a fictitious fault. Saves preserve valid hot-case temperatures and
+overload integrals beyond the trip threshold.
+
+The broader catalog check caught a real integration gap: incoming descriptors had
+render classes but lacked explicit native `ClientRenders` factory registrations.
+Those factories now cover the service cabinets, pad transformer, industrial
+controls, UPS, standby/ATS, off-grid and solar cabinets, step-down and switchgear.
+Eighteen dedicated checks exercise actual block-entity publish packets and native
+factory construction rather than directly constructing only a renderer.
+
+The catalog sweep passes all 446 publication/render paths, 171 menus and 233 drawn
+items. Its fixtures now clear waterlogged fluids and tall/wide ghosts, support both
+halves of wide meters, isolate the fake player's hand, and use the disconnect's
+normal sneak-to-open gesture. Historical 1.12 golden descriptor/slot snapshots
+remain a separate reconciliation task. This is not an unfiltered full-native pass.
+
+The full default root regression corpus passed 569 tests with three optional CAD
+previews skipped (572 selected, 107 suites, no errors/failures), including the
+default 200-case fluid corpus. All 238 selected `eln:forkpatch_*` native server
+cases passed. Data generation covers 625 identities with no missing icons.
+Gradle configuration and wrapper remain unchanged. Evidence is recorded in
+[`switchgear-client-validation.json`](forkpatch-port/switchgear-client-validation.json).

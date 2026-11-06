@@ -1085,6 +1085,11 @@ public final class ElnRecipes extends ElnRecipesBase {
     public static void recipeForkPatchUps() {
         addRecipe(findItemStack("Pole Streetlight Attachment")," II","CPG"," I ",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'P',findItemStack("Simple Lamp Socket"),'G',Items.GLASS);
         addRecipe(findItemStack("Mains Step-down Unit"),"CFC","MVM","CCC",'C',findItemStack("Copper Cable"),'F',findItemStack("Optimal Ferromagnetic Core"),'M',findItemStack("Machine Block"),'V',findItemStack("DC-DC Converter"));
+        for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values()) {
+            String previous=switch(kind) { case CONTACTOR_THREE -> "Single Pole Contactor";case RELAY_FOUR -> "Two Pole Changeover Relay";case SSR_THREE -> "Solid State Relay";default -> null; };
+            if(previous!=null)addRecipe(findItemStack(kind.getTitle()),kind.getPoles()==4?"R R":"RRR","PWP",'R',findItemStack(previous),'P',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
+            else addRecipe(findItemStack(kind.getTitle())," C ","PRP","IWI",'C',findItemStack(kind.getSolidState()?"Silicon Plate":"Cheap Ferromagnetic Core"),'P',Items.IRON_NUGGET,'R',findItemStack(kind.getSolidState()?"Signal Relay":"Low Voltage Relay"),'I',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
+        }
         mods.eln.utility.DistributionPoles.recipes((out,args)->{addShapelessRecipe(out,args);return kotlin.Unit.INSTANCE;});
         addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
         int mastIndex=0;

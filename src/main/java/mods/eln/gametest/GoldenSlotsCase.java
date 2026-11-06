@@ -310,6 +310,7 @@ final class GoldenSlotsCase implements TestCase {
 
     static void clear(TestContext ctx) {
         ServerLevel w = ctx.level();
-        for (BlockPos q : BlockPos.betweenClosed(ctx.at(0, 1, 0), ctx.at(8, 6, 6))) if (!w.getBlockState(q).isAir()) w.removeBlock(q, false);
+        // removeBlock intentionally retains a waterlogged device's fluid; fixtures need actual air.
+        for (BlockPos q : BlockPos.betweenClosed(ctx.at(-4, 1, -4), ctx.at(12, 10, 12))) if (!w.getBlockState(q).isAir()) w.setBlock(q, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
     }
 }

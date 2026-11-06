@@ -1,0 +1,11 @@
+{
+  "command": "./gradlew --offline --no-daemon --max-workers=2 :test",
+  "fluidCases": 200,
+  "suites": 107,
+  "tests": 572,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 569,
+  "scope": "Full root regression corpus including default 200 fluid cases, all standalone step-down/twin and twelve switchgear regressions. Three optional CAD previews skipped. Follow-up fixture-only changes are covered by native checks."
+}

@@ -53,6 +53,9 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ForkPatchUndergroundDistributionCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchLegacyDistributionCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchStepDownCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchSwitchgearCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchClientFactoryCases.cases());
+        l.add(new ForkPatchClientSmokeCase());
         mods.eln.gametest.cases.Wp9aCases.addTo(l);
         mods.eln.gametest.cases.Wp9bCases.addTo(l);
         mods.eln.gametest.cases.Wp9cCases.addTo(l);

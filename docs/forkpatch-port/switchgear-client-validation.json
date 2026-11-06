@@ -1,0 +1,45 @@
+{
+  "scope": "Six production switchgear adapters, complete native factory publication, current catalog smoke and full default root regressions; not general source-world migration or interactive GPU verification.",
+  "native": {
+    "selected": 238,
+    "passed": 238,
+    "failed": 0,
+    "filter": "eln:forkpatch_*",
+    "report": "/tmp/eln26-switchgear-final.xml",
+    "catalog": {
+      "publication": 446,
+      "menus": 171,
+      "itemDraw": 233
+    }
+  },
+  "regression": {
+    "command": "./gradlew --offline --no-daemon --max-workers=2 :test",
+    "fluidCases": 200,
+    "suites": 107,
+    "tests": 572,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "passed": 569,
+    "scope": "Full root regression corpus including default 200 fluid cases, all standalone step-down/twin and twelve switchgear regressions. Three optional CAD previews skipped. Follow-up fixture-only changes are covered by native checks."
+  },
+  "datagen": {
+    "identities": 625,
+    "missingIcons": 0
+  },
+  "protectionFixes": [
+    "Re-enable, reset and read defer changeover NC contact make until a physical switching step; stale unsolved voltages cannot trip a contact.",
+    "Persist any finite nonnegative overload integral and hot case temperature rather than clamping valid fault history."
+  ],
+  "clientFix": "Explicit factory mappings for service/handhole/pad/industrial/UPS/standby/off-grid/solar/step-down/switchgear descriptors; real node publication creates registered native renderers.",
+  "fixtureFixes": [
+    "Clear waterlogged fluids and wide/tall ghosts.",
+    "Build both wide meter wall supports.",
+    "Isolate menu fake player from held bucket state and use disconnect sneak gesture."
+  ],
+  "remaining": [
+    "Historical 1.12 descriptor and slot golden snapshot reconciliation",
+    "Interactive client rendering/audio",
+    "Complete source-world conversion and unfinished equipment families"
+  ]
+}

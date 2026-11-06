@@ -119,6 +119,7 @@ public final class MenuSpecs {
             descriptor(0, 184 / 2 - 12, 8, 1, BatteryItem.class, MEDIUM, tr("Portable battery slot"))) : MenuSpec.SCREEN_ONLY);
 
         // ---- transparent-node devices
+        put(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,278,0,0));
         put(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
         put(mods.eln.utility.DistributionPoleDescriptor.class,d->(d.getKind().getTwinLight()?MenuSpec.of(
             filter(0,16,332,1,stack->false,MEDIUM,tr("Recover former transformer")),

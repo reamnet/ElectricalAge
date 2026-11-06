@@ -1,5 +1,5 @@
 {
-  "scope": "Unfiltered smoke was stopped after failures. These observations are not a passing full-native baseline.",
+  "scope": "Historical stopped unfiltered smoke findings, retained for traceability; current publication/menu/item catalog checks now pass. Historical 1.12 golden descriptor/slot reconciliation remains pending.",
   "issues": {
     "golden_descriptors": [
       "golden eln:six_node@2176: known in 1.12: no such item in golden/1.12/inventory.json",
@@ -424,7 +424,13 @@
   },
   "modelIndexFailures": "Fixed in validated code; port geometry cases now pass.",
   "remainingHarnessFindings": [
-    "publish_render placement failures involving water/fixture clearance",
-    "menus_open interaction failures for furnace, separators, steam oven and standby engine variants"
-  ]
+    "Historical 1.12 descriptor/slot golden snapshots need review against ForkPatch additions and native changes."
+  ],
+  "currentCatalogValidation": {
+    "report": "switchgear-client-validation.json",
+    "publication": "446/446",
+    "menus": "171/171",
+    "itemDraw": "233/233",
+    "explicitRendererFactories": "all registered transparent descriptors covered"
+  }
 }

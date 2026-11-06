@@ -196,3 +196,9 @@ undergroundfused3/undergroundfused3.obj
 undergroundfused1light/undergroundfused1light.obj
 undergroundfused3light/undergroundfused3light.obj
 utilitytwinled/utilitytwinled.obj
+switchgear_contactor/switchgear_contactor.obj
+switchgear_contactor_three/switchgear_contactor_three.obj
+switchgear_relay_two/switchgear_relay_two.obj
+switchgear_relay_four/switchgear_relay_four.obj
+switchgear_ssr/switchgear_ssr.obj
+switchgear_ssr_three/switchgear_ssr_three.obj

@@ -11,6 +11,7 @@ final class ClientScreens {
     }
 
     static void registerAll() {
+        ElnScreens.register(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,mods.eln.transparentnode.switchgear.SwitchgearScreen::new);
         ElnScreens.register(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,mods.eln.transparentnode.utilitylight.StepDownScreen::new);
         ElnScreens.register(mods.eln.utility.DistributionPoleDescriptor.class,mods.eln.utility.DistributionPoleScreen::new);
         ElnScreens.register(mods.eln.utility.HouseServiceDescriptor.class, mods.eln.utility.HouseServiceScreen::new);
