@@ -41,7 +41,7 @@ public class SolarPanelPowerProcess implements IRootSystemPreStepProcess, INBTTR
     }
 
     public void setLightFactor(double lightFactor) {
-        this.lightFactor = Math.max(0.0, Math.min(1.0, lightFactor));
+        this.lightFactor = Double.isFinite(lightFactor) ? Math.clamp(lightFactor, 0.0, 1.0) : 0.0;
     }
 
     public double getLightFactor() {
@@ -50,7 +50,7 @@ public class SolarPanelPowerProcess implements IRootSystemPreStepProcess, INBTTR
 
     public double getPower() {
         double voltage = Math.max(0.0, aPin.state - bPin.state);
-        return voltage * getGeneratedCurrent(voltage);
+        return Double.isFinite(voltage) ? voltage * getGeneratedCurrent(voltage) : 0;
     }
 
     public double getGeneratedCurrent(double voltage) {
@@ -65,7 +65,9 @@ public class SolarPanelPowerProcess implements IRootSystemPreStepProcess, INBTTR
         double optimumCurrent,
         double shortCircuitCurrent
     ) {
-        double light = Math.max(0.0, Math.min(1.0, lightFactor));
+        if (!Double.isFinite(voltage) || !Double.isFinite(lightFactor) || !Double.isFinite(openCircuitVoltage)
+            || !Double.isFinite(optimumVoltage) || !Double.isFinite(optimumCurrent) || !Double.isFinite(shortCircuitCurrent)) return 0;
+        double light = Math.clamp(lightFactor, 0.0, 1.0);
         if (light <= 0.0 || openCircuitVoltage <= 0.0 || shortCircuitCurrent <= 0.0) return 0.0;
 
         double voc = openCircuitVoltage * Math.max(0.05, 0.92 + 0.08 * light);
@@ -104,7 +106,7 @@ public class SolarPanelPowerProcess implements IRootSystemPreStepProcess, INBTTR
 
     private void applyNortonEquivalent(double voltage) {
         double light = Math.max(0.0, Math.min(1.0, lightFactor));
-        if (light <= 0.0 || openCircuitVoltage <= 0.0 || shortCircuitCurrent <= 0.0) {
+        if (!Double.isFinite(voltage) || light <= 0.0 || openCircuitVoltage <= 0.0 || shortCircuitCurrent <= 0.0) {
             source.setCurrent(0.0);
             shunt.highImpedance();
             return;

@@ -91,6 +91,13 @@ public final class ForkPatchSolarRoofCases {
                     c.check("roof: tracker uses the pitched rotation axis",Math.abs(panel.panelAlpha-d.alphaTrunk(panel.roofMount.targetAlpha(slow.getSolarAlpha())))<1e-12,"");
                 }catch(IOException e) { throw new RuntimeException(e); }
             }
+            // The source pitches and rotates this point; a roof over its actual ray must fully shade it.
+            var shadow=net.minecraft.core.BlockPos.containing(slow.sampleOrigin()).above(2);
+            var previousShadow=c.level().getBlockState(shadow);
+            c.level().setBlock(shadow,Blocks.STONE.defaultBlockState(),2);
+            c.check("roof: an opaque block over the pitched sampling point fully shades the panel",slow.getSolarLight()==0,shadow.toString());
+            c.level().setBlock(shadow,previousShadow,2);
+            c.check("roof: removing the shade restores real pitched daylight",slow.getSolarLight()>.45,"");
             CompoundTag tag=new CompoundTag();panel.writeToNBT(tag);
             var old=new SolarPanelElement(new TransparentNode(),d);tag.remove("roofUphill");tag.putDouble("panelAlpha",Double.NaN);old.readFromNBT(tag);
             c.check("roof: old saves remain flat with a finite manual angle",old.roofMountKnown && !old.roofMount.getPitched() && Double.isFinite(old.panelAlpha),"");

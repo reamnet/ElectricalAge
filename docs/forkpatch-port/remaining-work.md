@@ -9,6 +9,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 
 - Norton solar panels and large tracking arrays; MPPT and hybrid floor/wall controls.
 - Pitched solar roofs for all four panel variants, saved orientation, uphill reservations/return terminal and replicated cached collision shapes.
+- Front/pitch-correct daylight sampling, modern opaque shadows, resident-only bounded voxel rays and conservative heightmap skipping.
 - Utility Wind Turbine 3.2kV and Large Watermill 3.2kV with bounded renewable
   supplies, sparse environmental sampling and native publication/animation.
 - Off-grid inverter/charger, charging/protection/combiner equipment and floor/wall
@@ -34,21 +35,26 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 
 Each family still participates in the cross-cutting validation/migration work below.
 
-The variable-inductor checkpoint passes **638 full root regressions**, with three
-optional previews skipped (641 selected), all **15 CAD tests**, and all **343
-selected native port cases**, including eight inductor and 18 roof cases. The
-default 200-case fluid corpus is included. All 637 previous identities and 935
-English entries remain unchanged; the catalog now has 638 identities, 936 English
-entries and 454 resolved native item textures. See [inductor evidence](variable-inductor-validation.json)
-and the [inductor guide](variable-inductor.md). The [roof evidence](solar-roof-validation.json),
-[roof guide](solar-roofs.md) and earlier [workshop/transport evidence](workshop-transport-validation.json)
-remain available.
+The latest sampling checkpoint passes **648 full root regressions**, with three
+optional previews skipped (651 selected), all **15 CAD tests**, and all **344 port
+cases inside 810 unfiltered GameTests**. The default 200-case fluid corpus is
+included. The expanded run passes 808 of 810 cases; only the historical descriptor
+and slot goldens fail, with 404 individual assertions retained for review. No
+expected references, skip lists or tolerances changed.
 
-The previous workshop/transport unfiltered run passes **781 of 783 GameTests**. The historical descriptor
-and slot comparisons remain failing; [exact differences](native-suite-review.md)
-are retained without changing expectations. Restoring shared test-player facing
-after oriented renewable placement fixes two order-dependent battery/furnace layouts.
-The charge-drive-recharge case passes in both the unfiltered and filtered-port runs.
+All 637 preceding identities and 935 English entries remain unchanged; the current
+catalog has 638 identities, 936 English entries and 454 resolved native item
+textures. See [sampling evidence](solar-sampling-validation.json), the
+[sampling guide](solar-sampling.md), [paired ray measurements](solar-ray-benchmark.json),
+[inductor guide](variable-inductor.md) and [roof guide](solar-roofs.md).
+The 96-panel field makes zero per-voxel reads above its outdoor modules. Its paired
+ray measurements show about 33× lower median CPU time, with 72 more allocated bytes
+per ray; this does not establish whole-mod performance against both baselines.
+
+The [exact historical differences](native-suite-review.md) remain visible.
+Restoring shared test-player facing after oriented renewable placement continues
+to protect unrelated battery/furnace layouts. All earlier charge/drive/recharge
+integration cases also pass in the final expanded run.
 
 Earlier checkpoints remain documented in [large renewable validation](large-renewable-validation.json),
 [industrial controls](industrial-work-block-validation.json), and the
@@ -58,7 +64,8 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 
 | Area | Remaining scope |
 | --- | --- |
-| Other power electronics | Remaining source variable converter/control behavior; review shared transformer, capacitor and regulated-supply changes against the destination solver. |
+| Shared mounting | Source partial-support insets, cable rises and matching selection/render transforms beyond the registered stair roofs; preserve native voxel geometry and resident-only queries. |
+| Other power electronics | Remaining source variable converter/control behavior; review shared transformer, capacitor and regulated-supply changes against the destination solver. See the [identity/control/winding review](power-electronics-review.md). |
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
 | Utility manufacturing | Wire drawing/processing machinery, spool/jacket manufacturing, inventory trimming and remaining wire/cable tools. |
 | Industrial devices | Appliance cord/outlet integration and interactive client/audio parity for the registered industrial families. |
@@ -83,7 +90,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The unfiltered workshop/transport run passes 781 of 783 cases; descriptor and slot
+- The latest unfiltered run passes 808 of 810 cases; descriptor and slot
   goldens still fail. Review the [exact differences](native-suite-review.md), then
   rerun after explicitly reconciling the historical expectations. The wind/watermill
   fixture now restores shared test-player facing, fixing two order-dependent layouts.

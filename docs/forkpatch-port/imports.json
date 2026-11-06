@@ -2363,5 +2363,47 @@
     "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
     "mode": "native-one-slot-live-field-layout",
     "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarRay.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-bounded-voxel-traversal-modern-opacity-and-conservative-heightmap-optimization",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarWorldRay.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-resident-only-per-query-chunk-cache-and-world-surface-probes",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/test/java/mods/eln/transparentnode/solarpanel/ForkPatchSolarRayTest.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-independent-ray-box-parity-and-bounded-shadow-regressions",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/main/java/mods/eln/gametest/cases/ForkPatchSolarSamplingCases.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-96-panel-clear-sky-work-count-and-real-shadow-weather-regressions",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+    "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
+    "mode": "native-finite-light-and-invalid-state-guards-preserving-Norton-and-checked-LU-probes",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+    "target": "src/test/java/mods/eln/transparentnode/solarpanel/ForkPatchSolarTest.java",
+    "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
+    "mode": "native-invalid-saved-light-loaded-circuit-recovery-and-finite-weather-regressions",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
   }
 ]

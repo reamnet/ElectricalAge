@@ -51,4 +51,34 @@ public class ForkPatchSolarTest {
         for (int i = 0; i < 5; i++) root.step();
         assertEquals(1440, load.getP(), .1);
     }
+
+    @Test public void invalidSavedLightOpensTheActualCircuitAndValidLightRecovers() {
+        RootSystem root = new RootSystem(.01, 50);
+        VoltageState positive = new VoltageState(), negative = new VoltageState();
+        root.addState(positive); root.addState(negative);
+        CurrentSource source = new CurrentSource("pv", positive, negative);
+        Resistor shunt = new Resistor(positive, negative), load = new Resistor(positive, negative).setR(90.0 / 16);
+        root.addComponent(source); root.addComponent(shunt); root.addComponent(load);
+        root.addComponent(new Resistor(negative, null).setR(1e9));
+        SolarPanelPowerProcess panel = new SolarPanelPowerProcess(positive, negative, source, shunt, 111, 90, 16, 17.2);
+        root.addProcess(panel);
+        for (double bad : new double[]{Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY}) {
+            var tag = new net.minecraft.nbt.CompoundTag(); tag.putDouble("light", bad); panel.readFromNBT(tag, "");
+            for (int i=0;i<3;i++) root.step();
+            assertEquals(0, panel.getLightFactor(), 0); assertEquals(0, source.getCurrent(), 0);
+            assertEquals(0, load.getP(), 1e-9); assertEquals(0, panel.getPower(), 1e-9);
+            assertEquals(0, SolarPanelPowerProcess.currentAtVoltage(90,bad,111,90,16,17.2),0);
+            assertEquals(0, SolarPanelPowerProcess.currentAtVoltage(bad,1,111,90,16,17.2),0);
+        }
+        panel.setLightFactor(1); for(int i=0;i<5;i++)root.step();assertEquals(1440,load.getP(),.1);
+    }
+
+    @Test public void localWeatherRemainsGradedBoundedAndFinite() {
+        assertEquals(.8,SolarPannelSlowProcess.weatherMultiplier(.4,0),1e-12);
+        assertEquals(.25,SolarPannelSlowProcess.weatherMultiplier(1,1),0);
+        assertEquals(1,SolarPannelSlowProcess.weatherMultiplier(-1,-2),0);
+        assertEquals(.25,SolarPannelSlowProcess.weatherMultiplier(2,3),0);
+        for(double bad:new double[]{Double.NaN,Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY})
+            assertEquals(0,SolarPannelSlowProcess.weatherMultiplier(bad,0),0);
+    }
 }

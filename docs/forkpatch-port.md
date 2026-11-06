@@ -1161,3 +1161,14 @@ The source Variable inductor is also registered at 6179 while the existing fixed
 inductor remains 6178. It uses the native LU/voxel implementation, source E6 control
 and one-core inventory. Full root/CAD and all 343 port checks pass; see the
 [inductor guide](forkpatch-port/variable-inductor.md) and [evidence](forkpatch-port/variable-inductor-validation.json).
+
+## Native solar sampling follow-up
+
+Daylight sampling now follows the source front/pitch transform. Resident-only voxel
+tracing fixes negative-coordinate and modern 0–15 opacity errors, skips clear
+heightmap columns and caps horizon work. Finite weather/saved-light guards preserve
+the native graded-weather and Norton integrations. Final checks pass 648 root tests,
+15 CAD tests and all 344 port cases within the 810-case unfiltered run; two historical
+goldens remain unresolved. See the [sampling guide](forkpatch-port/solar-sampling.md),
+[complete evidence](forkpatch-port/solar-sampling-validation.json) and
+[remaining converter review](forkpatch-port/power-electronics-review.md).

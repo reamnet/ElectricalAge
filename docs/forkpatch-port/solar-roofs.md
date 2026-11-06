@@ -39,6 +39,9 @@ Unsaved return nodes are reconstructed by their array owner during reload. The
 fixtures reload that owner and remove the array before the generic test harness
 attempts its separate per-node persistence pass.
 
-The source's flat daylight sampling offsets and existing native weather/shadow
-behavior are retained. This adapter does not convert a source world or retrofit
-old flat arrays onto slopes merely because stairs later appear below them.
+The daylight sampling point follows the source front/pitch transform. Native local
+weather remains graded. Shadow tracing uses resident chunks, native 0–15 opacity,
+bounded voxel traversal and conservative world-surface heightmaps; see the
+[solar sampling guide](solar-sampling.md). This adapter does not convert a source
+world or retrofit old flat arrays onto slopes merely because stairs later appear
+below them.

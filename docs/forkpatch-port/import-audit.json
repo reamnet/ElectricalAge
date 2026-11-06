@@ -1,9 +1,9 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "05f5055739a987d593e5771da6082696c4d45033",
-  "ledgerEntries": 337,
+  "targetCommit": "4e14ee73eee7e40655ef6ebe06bda809007a4ba6",
+  "ledgerEntries": 343,
   "uniqueSourceFiles": 208,
-  "uniqueTargetFiles": 327,
+  "uniqueTargetFiles": 332,
   "declaredVerbatimEntries": 83,
   "exactCopies": 96,
   "passed": true,
@@ -103,7 +103,7 @@
       "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
       "mode": "adapted",
       "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
-      "targetSha256": "773becd2f22f0cdbb23bc62e219027f78a56f1fb6a95d1d4530c039fa50359f0",
+      "targetSha256": "88323aa8be68fa0b1aa6d011b0af3467527a9a6561d02ccd64d74c691e0085f1",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3568,7 +3568,7 @@
       "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
       "mode": "native-pitched-incidence-and-tracker-axis-with-native-weather",
       "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
-      "targetSha256": "fcaeedb7b8f95da30e2a1aac842e7749d7b59218cd4b56e6da9b28af11c2848f",
+      "targetSha256": "33dfe2388d1683058d66e8f628d7d1e4639b2b922d3afb62b8764dbc9772f522",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3590,7 +3590,7 @@
       "target": "src/main/java/mods/eln/gametest/cases/ForkPatchSolarRoofCases.java",
       "mode": "native-item-placement-save-electrical-publication-and-loaded-only-regressions",
       "sourceSha256": "23f83a5fd9722d842a3bbb72a110675960214a3c8d8cb622862d5ffd314e2224",
-      "targetSha256": "a7671cb334dd68c7991a9c6ee0c09ec831672fcddab5b55933cdffdd727bc90c",
+      "targetSha256": "01c12c6efe86b4c07c02dcc8bfcce5c2cb21909ebf93082251ee80b227319b61",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3712,6 +3712,72 @@
       "mode": "native-one-slot-live-field-layout",
       "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
       "targetSha256": "16454ffda07c6c50ebb2540221f1532eddffe9e9f4c6568f81a89d841dc45350",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 337,
+      "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+      "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarRay.java",
+      "mode": "native-bounded-voxel-traversal-modern-opacity-and-conservative-heightmap-optimization",
+      "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+      "targetSha256": "b9b74ea8311d0ebf81eedcdec2c49bde7b3dd995693bdfc980f82572e75b522a",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 338,
+      "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+      "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarWorldRay.java",
+      "mode": "native-resident-only-per-query-chunk-cache-and-world-surface-probes",
+      "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+      "targetSha256": "9f83fed984ab1d50b18225da01c51700cc149a0abd9f1935538ad1d193df6ce1",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 339,
+      "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+      "target": "src/test/java/mods/eln/transparentnode/solarpanel/ForkPatchSolarRayTest.java",
+      "mode": "native-independent-ray-box-parity-and-bounded-shadow-regressions",
+      "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+      "targetSha256": "41b5f37d434b2677e06c969ce38687d5d08f39d07f723e1f4df915d5f5f83fee",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 340,
+      "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+      "target": "src/main/java/mods/eln/gametest/cases/ForkPatchSolarSamplingCases.java",
+      "mode": "native-96-panel-clear-sky-work-count-and-real-shadow-weather-regressions",
+      "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+      "targetSha256": "75c3c51f4eab00645188332a8478ad28737e6df720f253125a9f13ed231ca171",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 341,
+      "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+      "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+      "mode": "native-finite-light-and-invalid-state-guards-preserving-Norton-and-checked-LU-probes",
+      "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
+      "targetSha256": "88323aa8be68fa0b1aa6d011b0af3467527a9a6561d02ccd64d74c691e0085f1",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 342,
+      "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+      "target": "src/test/java/mods/eln/transparentnode/solarpanel/ForkPatchSolarTest.java",
+      "mode": "native-invalid-saved-light-loaded-circuit-recovery-and-finite-weather-regressions",
+      "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
+      "targetSha256": "5a2cd7d315e2947f5fc12fcfc2578433beda018fdd13ae1aec81357ae31fbdaf",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
