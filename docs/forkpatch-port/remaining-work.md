@@ -27,6 +27,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Variable Frequency Motor Drive with passive V/Hz ramp, output impedance and latched thermal protection.
 - Grid Control Console/SCADA with eight world-local targets, bounded loaded-node lookup and native device controls.
 - Standalone Pole Surge Arrester and paid overhead HV pole kits with finite cartridge state and native lightning protection.
+- Programmable EV Pack Charger, removable 20 kWh traction pack, Electric Welding Station and welded frames; native inventory, accepted-energy and save checks.
 
 Each family still participates in the cross-cutting validation/migration work below.
 The large renewable checkpoint passed 20 focused regressions, data generation
@@ -41,6 +42,11 @@ all 283 selected native `eln:forkpatch_*` cases. It adds the load bank, motor dr
 SCADA and arrester/pole kit while preserving all 627 handoff identities and 913
 English entries. See [final evidence](industrial-work-block-validation.json).
 
+The charging/welding checkpoint adds 14 passing focused regressions and passes all
+300 selected native port cases. All 631 previous identities and 921 English entries
+remain unchanged; four source-compatible identities are added. See
+[workshop evidence](workshop-validation.json) and [equipment guide](workshop.md).
+
 ## Equipment and behavior still requiring adapters or parity review
 
 | Area | Remaining scope |
@@ -49,7 +55,7 @@ English entries. See [final evidence](industrial-work-block-validation.json).
 | Other power electronics | Remaining source variable converter/control behavior; review shared transformer, capacitor and regulated-supply changes against the destination solver. |
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
 | Utility manufacturing | Wire drawing/processing machinery, spool/jacket manufacturing, inventory trimming and remaining wire/cable tools. |
-| Industrial devices | Programmable EV Pack Charger; Electric Welding Station. |
+| Industrial devices | Appliance cord/outlet integration and interactive client/audio parity for the registered industrial families. |
 | Industrial transport | Forklift controls, lifting/pickup behavior, pallet entities, inventories, input packets and entity renderers. |
 | Vehicles | Four-seat golf cart, two-seat electric car, stepping/collision, turn-overload fire/explosion behavior, passengers, storage, six-cell traction pack and in-car charging. Preserve the electric car's clear windows. |
 | Appliance power | Plugs/cords, wall/industrial outlets, power strip, rating and support/wiring rules, machine cord adapters and compact plug-in UPS. |

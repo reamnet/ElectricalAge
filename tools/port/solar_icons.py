@@ -72,6 +72,8 @@ if __name__ == "__main__":
         ("undergroundserviceentrance", "underground_service_entrance_riser"),
         ("redhandleservicedisconnect", "red_handle_service_disconnect"),
         ("undergroundservicehandhole", "120_240v_underground_service_handhole"),
+        ("industrial_welder", "electric_welding_station"),
+        ("industrial_charger", "programmable_ev_pack_charger"),
         ("industrial_load_bank", "programmable_load_bank"),
         ("industrial_drive", "variable_frequency_motor_drive"),
         ("industrial_scada", "grid_control_console"),

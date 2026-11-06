@@ -20,6 +20,8 @@ final class ClientScreens {
         ElnScreens.register(mods.eln.transparentnode.industrial.ScadaDescriptor.class,mods.eln.transparentnode.industrial.ScadaScreen::new);
         ElnScreens.register(mods.eln.transparentnode.industrial.SurgeArresterDescriptor.class,mods.eln.transparentnode.industrial.SurgeArresterScreen::new);
         ElnScreens.register(mods.eln.transparentnode.industrial.LoadBankDescriptor.class,mods.eln.transparentnode.industrial.LoadBankScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.WelderDescriptor.class,mods.eln.transparentnode.industrial.WelderScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.ChargerDescriptor.class,mods.eln.transparentnode.industrial.ChargerScreen::new);
         ElnScreens.register(mods.eln.transparentnode.industrial.IndustrialDescriptor.class, mods.eln.transparentnode.industrial.IndustrialScreen::new);
         ElnScreens.register(mods.eln.transparentnode.ups.UpsDescriptor.class, mods.eln.transparentnode.ups.UpsScreen::new);
         ElnScreens.register(mods.eln.transparentnode.standby.BackupDescriptor.class, mods.eln.transparentnode.standby.BackupScreen::new);

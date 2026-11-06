@@ -137,6 +137,11 @@ public final class MenuSpecs {
         put(mods.eln.transparentnode.industrial.MotorDriveDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
         put(mods.eln.transparentnode.industrial.ScadaDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
         put(mods.eln.transparentnode.industrial.SurgeArresterDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
+        put(mods.eln.transparentnode.industrial.WelderDescriptor.class,d->MenuSpec.of(
+            filter(0,24,164,64,stack->mods.eln.transparentnode.industrial.WelderInventory.Companion.workpiece(stack),MEDIUM,tr("Iron ingot or damaged tool")),
+            filter(1,60,164,64,stack->stack.is(net.minecraft.world.item.Items.IRON_INGOT),MEDIUM,tr("Iron ingot")),output(2,114,164,MEDIUM)).publishing(1).panel(368,350,104,260));
+        put(mods.eln.transparentnode.industrial.ChargerDescriptor.class,d->MenuSpec.of(
+            filter(0,24,164,1,stack->mods.eln.transparentnode.industrial.ChargerInventory.Companion.battery(stack)!=null,MEDIUM,tr("Removable battery"))).publishing(1).panel(368,350,104,260));
         put(mods.eln.transparentnode.industrial.LoadBankDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
         put(mods.eln.transparentnode.industrial.IndustrialDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
         put(mods.eln.transparentnode.ups.UpsDescriptor.class, d -> {

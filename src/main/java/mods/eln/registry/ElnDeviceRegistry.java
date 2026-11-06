@@ -96,6 +96,9 @@ public final class ElnDeviceRegistry {
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.MotorDriveDescriptor.ID,new mods.eln.transparentnode.industrial.MotorDriveDescriptor());
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.ScadaDescriptor.ID,new mods.eln.transparentnode.industrial.ScadaDescriptor());
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.SurgeArresterDescriptor.ID,new mods.eln.transparentnode.industrial.SurgeArresterDescriptor());
+        mods.eln.transparentnode.industrial.WorkshopParts.INSTANCE.register();
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.WelderDescriptor.ID,new mods.eln.transparentnode.industrial.WelderDescriptor());
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.ChargerDescriptor.ID,new mods.eln.transparentnode.industrial.ChargerDescriptor());
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.LoadBankDescriptor.ID,new mods.eln.transparentnode.industrial.LoadBankDescriptor());
         for(var kind: java.util.List.of(mods.eln.transparentnode.industrial.IndustrialKind.RELAY,mods.eln.transparentnode.industrial.IndustrialKind.SHEDDER))
             transparentNodeItem.addDescriptor((126<<6)+kind.ordinal(),new mods.eln.transparentnode.industrial.IndustrialDescriptor(kind));

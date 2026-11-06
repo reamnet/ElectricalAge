@@ -209,3 +209,5 @@ industrial_load_bank/industrial_load_bank.obj
 industrial_drive/industrial_drive.obj
 industrial_scada/industrial_scada.obj
 industrial_arrester/industrial_arrester.obj
+industrial_charger/industrial_charger.obj
+industrial_welder/industrial_welder.obj

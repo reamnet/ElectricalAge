@@ -1915,5 +1915,180 @@
     "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
     "mode": "native-surge-circuit-and-source-energy-parity-regressions",
     "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerInventory.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchChargerTest.kt",
+    "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
+    "mode": "native-workshop-source-parity-regressions",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_charger/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_charger/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_charger/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_charger/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_charger/industrial_charger.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_charger/industrial_charger.obj",
+    "sourceSha256": "d99d36b568d42bea68dcdacad32be42945122dd3f5b3f77da4b486db984ed177",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderInventory.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchWelderTest.kt",
+    "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
+    "mode": "native-workshop-source-parity-regressions",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_welder/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_welder/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_welder/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_welder/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_welder/industrial_welder.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_welder/industrial_welder.obj",
+    "sourceSha256": "ffb5d95932e80e924143af40d8ee1eb163eda2c156b0d4131ef03f05f1440fe3",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WorkshopParts.kt",
+    "sourceSha256": "1d5a29460c81ad31cecb34c9cd052a914263d6b04d6435c98a5cb0da237bdf89",
+    "mode": "native-source-id-traction-battery-and-welded-frame-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/weldedmachineframe.png",
+    "target": "src/main/resources/assets/eln/textures/item/welded_machine_frame.png",
+    "sourceSha256": "c1ee5366396853e650c2edf9c23ada737ca9bc246c1f3a361879e94e97329819",
+    "mode": "verbatim-workshop-icon",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/upsindustrialbatterymodule.png",
+    "target": "src/main/resources/assets/eln/textures/item/48_v_20_kwh_traction_battery.png",
+    "sourceSha256": "4dd4428641807673df8b30b2638870881ff599d0c338e4e2e7b7ece70185e0ed",
+    "mode": "native-workshop-existing-ups-icon-reuse",
+    "status": "14-focused-and-300-native-checks-passed"
   }
 ]

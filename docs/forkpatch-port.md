@@ -1117,3 +1117,15 @@ second healthy-grid load; repeated handling cannot debit the same bolt twice.
 See the [arrester guide](forkpatch-port/surge-arrester.md) and
 [validation report](forkpatch-port/surge-arrester-validation.json). The full port,
 world conversion and interactive client/audio checks remain unfinished.
+
+### Native EV pack charging and welding
+
+The source charger (8071) and welder (8072) now have native circuits, inventories,
+menus, publications, models and recipes. The removable 20 kWh traction pack and
+welded frame retain source item IDs 7488/7489 in their separate shared-item kinds.
+Charging stores 94% of accepted input within each pack's rating; welding requires
+120 kJ and preserves tool components during repair. Actual extraction and placed
+reload retain item energy, while carried settings cannot clone inventory or work.
+All 14 focused regressions and 300 selected port GameTests pass. See the
+[workshop guide](forkpatch-port/workshop.md) and
+[validation](forkpatch-port/workshop-validation.json).

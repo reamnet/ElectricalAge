@@ -503,6 +503,12 @@
   "kind": "shared_item",
   "name": "small_200v_tungsten_heating_corp"
  },
+ "eln:shared_item@7489": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Welded Machine Frame",
+  "kind": "shared_item",
+  "name": "welded_machine_frame"
+ },
  "eln:shared_item@7495": {
   "descriptor": "GenericItemUsingDamageDescriptor",
   "display": "16 kWh LiFePO4 Cell Stack",
@@ -952,6 +958,12 @@
   "display": "Fast Electrical Drill",
   "kind": "shared_item",
   "name": "fast_electrical_drill"
+ },
+ "eln:shared_item_stack_one@7488": {
+  "descriptor": "TractionBattery",
+  "display": "48 V 20 kWh Traction Battery",
+  "kind": "shared_item_stack_one",
+  "name": "48_v_20_kwh_traction_battery"
  },
  "eln:shared_item_stack_one@7744": {
   "descriptor": "ElectricalLampItem",
@@ -3664,6 +3676,18 @@
   "display": "Automatic Load Shedding Controller",
   "kind": "transparent_node",
   "name": "automatic_load_shedding_controller"
+ },
+ "eln:transparent_node@8071": {
+  "descriptor": "ChargerDescriptor",
+  "display": "Programmable EV Pack Charger",
+  "kind": "transparent_node",
+  "name": "programmable_ev_pack_charger"
+ },
+ "eln:transparent_node@8072": {
+  "descriptor": "WelderDescriptor",
+  "display": "Electric Welding Station",
+  "kind": "transparent_node",
+  "name": "electric_welding_station"
  },
  "eln:transparent_node@8128": {
   "descriptor": "HouseServiceDescriptor",
