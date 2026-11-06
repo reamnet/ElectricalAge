@@ -19,3 +19,18 @@ is for source imports; it must never remap an existing destination UPS item. Do 
 UPS or move its existing key to make the incoming table look identical. Full
 source-world migration is still pending; these lookup tables alone do not provide
 save conversion.
+
+## Remaining DC/DC converter names
+
+Pinned source `registerTransformer(2)` hides its Legacy DC-DC Converter at 128 and
+registers a new DC-DC Converter at 130. The destination already owns 128 with
+`TransformerDescriptor` and the native registry name `dc_dc_converter`. Keep that
+identity and its existing saves. Although 130 is numerically free at the current
+checkpoint, its source display/name would collide with the existing native name.
+The incoming adapter needs an explicit distinct native registry name and source
+import mapping; a free numeric lookup does not authorize replacing 128 or renaming
+its current item. Source and destination worlds must remain distinguishable.
+
+Source variable 129 and one-way 131–134 lookups are free at this checkpoint.
+Isolation 135 is development-only in the source registration. See the
+[control and winding review](power-electronics-review.md) before adapting them.

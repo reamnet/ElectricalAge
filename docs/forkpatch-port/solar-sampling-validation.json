@@ -160,5 +160,6 @@
     ],
     "mismatches": [],
     "scope": "Development JAR content checks against actual compiled classes/current resources; not packaged multiplayer/release validation."
-  }
+  },
+  "productionCommit": "7d57e2ac866c95640aee1488fe80c9c4139eddbf"
 }
