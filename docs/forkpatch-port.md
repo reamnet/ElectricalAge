@@ -1103,3 +1103,17 @@ consistent with the console's disconnected supply load. Source breaker-panel
 and media-addon endpoints remain pending with those adapters. See the
 [SCADA guide](forkpatch-port/scada.md) and
 [validation report](forkpatch-port/scada-validation.json).
+
+### Finite-energy arrester and paid pole kit
+
+Source identity 8067 now has a native standalone shunt and paid overhead HV pole
+attachment. Actual physical intervals consume finite cartridge capacity; spent
+cartridges fail open and retain the final conducting interval's real joules.
+Independent phase shunts, healthy LU reuse, original porcelain/lead geometry,
+native controls and real inventory/refund paths are preserved. World saves retain
+installation; carried pole settings cannot create paid hardware. Lightning uses
+a loaded, same-world nearest-node search and external 40 kJ debits without a
+second healthy-grid load; repeated handling cannot debit the same bolt twice.
+See the [arrester guide](forkpatch-port/surge-arrester.md) and
+[validation report](forkpatch-port/surge-arrester-validation.json). The full port,
+world conversion and interactive client/audio checks remain unfinished.

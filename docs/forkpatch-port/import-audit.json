@@ -1,11 +1,11 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "c682709797244967091870237ad471c483ac9e1e",
-  "ledgerEntries": 259,
-  "uniqueSourceFiles": 169,
-  "uniqueTargetFiles": 249,
-  "declaredVerbatimEntries": 65,
-  "exactCopies": 75,
+  "targetCommit": "83410c0b51d8e3743ae7f7691fe3e1ef5e2ca782",
+  "ledgerEntries": 273,
+  "uniqueSourceFiles": 174,
+  "uniqueTargetFiles": 263,
+  "declaredVerbatimEntries": 68,
+  "exactCopies": 78,
   "passed": true,
   "problems": [],
   "entries": [
@@ -1456,7 +1456,7 @@
       "target": "src/main/kotlin/mods/eln/utility/DistributionPoleElement.kt",
       "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
       "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
-      "targetSha256": "9c2effef048dd0fc14f1d8e0601b3785d8b1854023c74d751b0d4dc7da85e86a",
+      "targetSha256": "64e34d48230444db9b7de383414068995ef9a9d14d9a5bd33e39ac5c1d803ef2",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -1478,7 +1478,7 @@
       "target": "src/main/kotlin/mods/eln/utility/DistributionPoleDescriptor.kt",
       "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
       "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
-      "targetSha256": "e579226fa217c1f786f23b894a439115ab9357d90a8bd272265f58b2c1ee46cd",
+      "targetSha256": "7f770fca37e9959ed4b97287c5a3a24a6f76bb7d061849cc59eac1f8bfcffdec",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -1489,7 +1489,7 @@
       "target": "src/main/kotlin/mods/eln/utility/DistributionDisplay.kt",
       "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
       "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
-      "targetSha256": "0b248719ec74473a42131723903f9e305a8e2c1d64cbc4ec6ff7cd46b64ff1e7",
+      "targetSha256": "09815b1cb3fedde36b831f41786bd2a6993c5c47eecfe49dcf83d92d056d8424",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -2380,7 +2380,7 @@
       "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchClientFactoryCases.kt",
       "mode": "native-block-entity-publication-and-factory-integration-instead-of-direct-construction",
       "sourceSha256": "1326c1c0a1f05e879e19d4bdb455876183a7224823d439513933bd1652e32012",
-      "targetSha256": "5382bd19826c4a3b7fd366df712948130fe9dda6e4ec4668a70ee3fbc87cbe68",
+      "targetSha256": "d341afd39892798ea974aa37ede89208d943eb3f52a1022fd2b684ea838c0fd9",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -2391,7 +2391,7 @@
       "target": "src/main/java/mods/eln/client/ClientRenders.java",
       "mode": "explicit-native-client-factories-for-ported-descriptors-no-reflection-fallback",
       "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
-      "targetSha256": "e8163f657da3077ff723afa7405e0a472d471d62d65b930f34934f09360e640e",
+      "targetSha256": "43661cb3ebab4c5f43b40d0a5ebc166f5df5fe1630dc018a3b8258a32183ca96",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -2776,7 +2776,7 @@
       "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaLink.kt",
       "mode": "native-scada-world-local-address-and-guarded-control-adapter",
       "sourceSha256": "98d34385db8e3fc7e7838d1bf1a32d2b4f934b4510e02ae724f0ef7a4b4e537e",
-      "targetSha256": "7f0eef2b4a384ceb9d0f20308ba6d173bce870d36eb91ddbf9da4fed7086a061",
+      "targetSha256": "6aeae7e0807cfaa9754509cdf78449bcd278b8e55917982982c033851db1078d",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -2857,6 +2857,160 @@
       "sourceMatchesLedger": true,
       "exactCopy": true,
       "declaredVerbatim": true
+    },
+    {
+      "index": 259,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleSurgeUpgrade.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeBank.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "85d4ec8225be6465930db4ae2dbe132cc3f361d5e48c81a3c10a8f9917052e05",
+      "targetSha256": "30523ed14a3070ac1ce40cfc8949abeca4e11bcbc60df797a71228798692b30a",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 260,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterUnit.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+      "targetSha256": "b8883faab7e35af603c979b91a46230948751cc0ef940b636e0522d3ca9ef724",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 261,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterElement.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+      "targetSha256": "857b5dd5cdaa2209e69c2189ac6887fd5fd8832905e869cbc511934ad8155045",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 262,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleSurgeUpgrade.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleSurgeUpgrade.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "85d4ec8225be6465930db4ae2dbe132cc3f361d5e48c81a3c10a8f9917052e05",
+      "targetSha256": "91089cb16f8fd253f844ce3febbe92abf9f4cf5ddbfb306a01283644664d3767",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 263,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeProtection.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeProtection.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "085e409627a5ab0d2d770b21e5e5edb06a14260ab75b3ca807a2a6e4e433d4d6",
+      "targetSha256": "afceede86f2ab7abea854c76f3cd5026043a33a8f485ea352397bb0656deb153",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 264,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterDescriptor.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+      "targetSha256": "ae2338754a36ebafb08b57fbca525e2c316d3f93219a959870ae880521ead71b",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 265,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterDisplay.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+      "targetSha256": "315a04e919dbce2999f64fc59f932134a82b978dca2c1fea3a307360ae20723e",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 266,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterRender.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+      "targetSha256": "1ef1ed5c6504940bfd4a65d3c0cf568f7aa3a9a02894e065b5a6d05e6d6d9073",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 267,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterScreen.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+      "targetSha256": "e83c85456f6987f8bb943b8036c42da01a7650fec90e118cf6f2df9c75663ead",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 268,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleArresterVisual.kt",
+      "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+      "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+      "targetSha256": "18fb864ca0a64849be69fbd7d043b3ced26c270742a96cf80eb475b71367b6c1",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 269,
+      "source": "src/main/resources/assets/eln/model/industrial_arrester/equipment_finish.mtl",
+      "target": "src/main/resources/assets/eln/model/industrial_arrester/equipment_finish.mtl",
+      "mode": "verbatim-surge-resource",
+      "sourceSha256": "3367b69ecb1b613022a25608328f427e97929d9d138f448220a864659dc4c4b4",
+      "targetSha256": "3367b69ecb1b613022a25608328f427e97929d9d138f448220a864659dc4c4b4",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 270,
+      "source": "src/main/resources/assets/eln/model/industrial_arrester/fixture.mtl",
+      "target": "src/main/resources/assets/eln/model/industrial_arrester/fixture.mtl",
+      "mode": "verbatim-surge-resource",
+      "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+      "targetSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 271,
+      "source": "src/main/resources/assets/eln/model/industrial_arrester/industrial_arrester.obj",
+      "target": "src/main/resources/assets/eln/model/industrial_arrester/industrial_arrester.obj",
+      "mode": "verbatim-surge-resource",
+      "sourceSha256": "73dec011b6f732691415d1714bd8486c3275271035f79914f48981fefdee338b",
+      "targetSha256": "73dec011b6f732691415d1714bd8486c3275271035f79914f48981fefdee338b",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 272,
+      "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
+      "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchSurgeTest.kt",
+      "mode": "native-surge-circuit-and-source-energy-parity-regressions",
+      "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
+      "targetSha256": "d872f5de448dc8643eca8d1073179374618782d208858c06fdfd42aa0d8fc578",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
     }
   ],
   "scope": "Source hashes, target existence and declared exact copies; not full runtime parity."

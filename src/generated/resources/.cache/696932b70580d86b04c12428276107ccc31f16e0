@@ -1,4 +1,4 @@
-// 26.3	2026-11-06T09:24:52.457703791	eln-global/EA models
+// 26.3	2026-11-06T09:52:11.804914547	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -108,6 +108,7 @@ f0ed42296ed8f581741e53ea14400c53a04c1ba2 assets/eln/blockstates/light_block.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/off_grid_inverter_charger.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/pad_mounted_neighbourhood_transformer.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/plant_steam_condenser.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/pole_surge_arrester.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/power_capacitor_block.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/power_inductor_block.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/programmable_load_bank.json
@@ -661,6 +662,7 @@ e1c7df200fbe53eff0440d11993e5a25d66567d5 assets/eln/items/pipe_temperature_senso
 a222de97919a80552ca8b6461dd1152c42f9343b assets/eln/items/player_filter.json
 113a1b6e26e749bc126a974f0ebe92b5b908ec3f assets/eln/items/pole_fuse_link.json
 37b2928e8a57f8d14a24005a9752d58f4fd078a6 assets/eln/items/pole_streetlight_attachment.json
+28db36580fe25484717728d805551724dc2ab907 assets/eln/items/pole_surge_arrester.json
 fe78eef8cbad6b2ea4f1ee7ca815c53bd607e714 assets/eln/items/portable_battery.json
 03e549623a3e9b8e499ad90f96537ef46fcf636c assets/eln/items/portable_battery_pack.json
 1bfcb215965ebc5f61f263bac4164cda5d21759b assets/eln/items/portable_capacitor.json
@@ -1451,6 +1453,8 @@ aea553be1a7403d99f63a810998b9714ed6b7cbf assets/eln/models/item/plant_steam_cond
 4a9d386e1ae640f932b01052c84a1974236d246c assets/eln/models/item/player_filter.json
 c70361de86f40936a3dbbab169c22c76d96727eb assets/eln/models/item/pole_fuse_link.json
 44a4f5ac2c97bfd7091c539389e67ace5874f83c assets/eln/models/item/pole_streetlight_attachment.json
+784894feeac4820a8877f3d25d7ca15bcd7e8607 assets/eln/models/item/pole_surge_arrester.json
+c8bb625a389bdef8b48bd5e091ae394c2169f604 assets/eln/models/item/pole_surge_arrester_3d.json
 fae3633068c6a0dddbd79198b06f9db6c89fe250 assets/eln/models/item/portable_battery.json
 53f8a69b50216adf11b139d9f568234f8994f0d6 assets/eln/models/item/portable_battery_pack.json
 572a972efc041900557c965295fa6932ef03f8dc assets/eln/models/item/portable_capacitor.json

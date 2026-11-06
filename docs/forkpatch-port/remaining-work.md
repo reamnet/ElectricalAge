@@ -26,6 +26,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Programmable Load Bank with passive sag response, case/fan cooling and native controls.
 - Variable Frequency Motor Drive with passive V/Hz ramp, output impedance and latched thermal protection.
 - Grid Control Console/SCADA with eight world-local targets, bounded loaded-node lookup and native device controls.
+- Standalone Pole Surge Arrester and paid overhead HV pole kits with finite cartridge state and native lightning protection.
 
 Each family still participates in the cross-cutting validation/migration work below.
 The large renewable checkpoint passed 20 focused regressions, data generation
@@ -40,9 +41,9 @@ including the default 200-case fluid corpus.
 | --- | --- |
 | Solar mounting | Sloped/roof support geometry, saved roof orientation and associated render/connection offsets. |
 | Other power electronics | Remaining source variable converter/control behavior; review shared transformer, capacitor and regulated-supply changes against the destination solver. |
-| Utility attachments | Legacy non-distribution pole streetlight ports, pole height/surge attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
+| Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
 | Utility manufacturing | Wire drawing/processing machinery, spool/jacket manufacturing, inventory trimming and remaining wire/cable tools. |
-| Industrial devices | Pole Surge Arrester; Programmable EV Pack Charger; Electric Welding Station. |
+| Industrial devices | Programmable EV Pack Charger; Electric Welding Station. |
 | Industrial transport | Forklift controls, lifting/pickup behavior, pallet entities, inventories, input packets and entity renderers. |
 | Vehicles | Four-seat golf cart, two-seat electric car, stepping/collision, turn-overload fire/explosion behavior, passengers, storage, six-cell traction pack and in-car charging. Preserve the electric car's clear windows. |
 | Appliance power | Plugs/cords, wall/industrial outlets, power strip, rating and support/wiring rules, machine cord adapters and compact plug-in UPS. |

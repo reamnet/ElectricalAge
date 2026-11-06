@@ -17,6 +17,7 @@ public final class ClientRenders {
         ElnRenders.transparent(mods.eln.transparentnode.industrial.PadTransformerDescriptor.class,mods.eln.transparentnode.industrial.PadTransformerRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.industrial.MotorDriveDescriptor.class,mods.eln.transparentnode.industrial.MotorDriveRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.industrial.ScadaDescriptor.class,mods.eln.transparentnode.industrial.ScadaRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.SurgeArresterDescriptor.class,mods.eln.transparentnode.industrial.SurgeArresterRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.industrial.LoadBankDescriptor.class,mods.eln.transparentnode.industrial.LoadBankRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.industrial.IndustrialDescriptor.class,mods.eln.transparentnode.industrial.IndustrialRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.ups.UpsDescriptor.class,mods.eln.transparentnode.ups.UpsRender::new);

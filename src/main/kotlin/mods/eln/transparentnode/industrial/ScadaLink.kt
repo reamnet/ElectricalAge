@@ -35,6 +35,7 @@ object ScadaLink {
             is PadTransformerElement->{e.unit.setEnabled(closed);true}
             is LoadBankElement->{e.unit.setEnabled(closed);true}
             is MotorDriveElement->{e.unit.setEnabled(closed);true}
+            is SurgeArresterElement->{e.unit.setEnabled(closed);true}
             else->false
         }
         if(accepted)e.needPublish()

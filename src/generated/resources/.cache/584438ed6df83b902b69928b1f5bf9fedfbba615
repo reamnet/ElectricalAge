@@ -1,4 +1,4 @@
-// 26.3	2026-11-06T09:24:52.471217913	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-06T09:52:11.822027885	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -280,6 +280,7 @@ c22c87bd08ed65c2308e22e1978b06ec035c7d0b data/eln/advancement/recipes/misc/plant
 4a4cb32b42945ddd436f0ebf7fa6ecfff05bbea1 data/eln/advancement/recipes/misc/player_filter.json
 e6947c2110c1bbf48fd4818708c4420062b3eab1 data/eln/advancement/recipes/misc/pole_fuse_link.json
 60e0a673caea5a0042b7b9c2fb3d7ca350bdd993 data/eln/advancement/recipes/misc/pole_streetlight_attachment.json
+03859d7d0762c177355b0c0ede08ee485d119220 data/eln/advancement/recipes/misc/pole_surge_arrester.json
 af15506bbf1df0708de0892e348079db76cd76b6 data/eln/advancement/recipes/misc/portable_battery.json
 7c8367399d01fd66c86922ca2985f609d7ce06e0 data/eln/advancement/recipes/misc/portable_condensator.json
 d7fea25d78653aba807011d32fe5e574370c8378 data/eln/advancement/recipes/misc/portable_condensator_pack.json
@@ -732,6 +733,7 @@ c31f1c59279d00c829341217db7ecf75091cf6fa data/eln/recipe/pink_brush.json
 31bea419e6ecfe9febfd542ffead3424dfd77c2b data/eln/recipe/player_filter.json
 0e803994d3a7e894af1d6d822976bec076cc7673 data/eln/recipe/pole_fuse_link.json
 5cc60c7b577b45920ee62be05755e3cc3f8894ac data/eln/recipe/pole_streetlight_attachment.json
+a3973ba41804b0406fddbd86c78220c95aa51c42 data/eln/recipe/pole_surge_arrester.json
 e98466c835a24561de034c981fcb9142a1a9d70f data/eln/recipe/portable_battery.json
 6e1ebfac271ea15d5682ebba74d6e3f58b01d1ab data/eln/recipe/portable_condensator.json
 621d200d059d3149c77591253af609794fefc0d1 data/eln/recipe/portable_condensator_pack.json

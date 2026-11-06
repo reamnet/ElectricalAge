@@ -3641,6 +3641,12 @@
   "kind": "transparent_node",
   "name": "protective_relay_cabinet"
  },
+ "eln:transparent_node@8067": {
+  "descriptor": "SurgeArresterDescriptor",
+  "display": "Pole Surge Arrester",
+  "kind": "transparent_node",
+  "name": "pole_surge_arrester"
+ },
  "eln:transparent_node@8068": {
   "descriptor": "PadTransformerDescriptor",
   "display": "Pad Mounted Neighbourhood Transformer",

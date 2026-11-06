@@ -20,6 +20,7 @@ import java.io.*
 class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor): GridElement(node,d,64) {
     val kind=(d as DistributionPoleDescriptor).kind
     val unit=DistributionPoleUnit(kind,electricalLoadList,electricalComponentList,electricalProcessList)
+    val arrester=mods.eln.transparentnode.industrial.PoleSurgeUpgrade(this,unit.lines,!kind.lvOnly && !kind.underground)
     val hardware=object: TransparentNodeElementInventory(if(kind.twinLight)2 else if(kind.transformer)1 else 0,1,this) {
         override fun getAccessibleSlotsFromSide(side: Int)=if(kind.twinLight)intArrayOf(0,1) else if(kind.transformer)intArrayOf(0) else intArrayOf()
         override fun canInsertItem(slot: Int,stack: ItemStack?,side: Int)=kind.transformer && slot==0 && PoleHardware.transformerWatts(stack)!=null
@@ -110,6 +111,7 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
         val changed=unit.selectPhase(value);if(changed)needPublish();return changed
     }
     override fun onBlockActivated(p: Player,side: Direction,x: Float,y: Float,z: Float): Boolean {
+        if(arrester.interact(p))return true
         if(!kind.light && !kind.underground && UtilityItems.part(p.mainHandItem)==3) {
             if(unit.lamp?.install()==true) { if(!p.isCreative)p.mainHandItem.shrink(1);p.inventory.setChanged();needPublish() };return true
         }
@@ -130,13 +132,13 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
         addAll(unit.services.mapIndexed { i,l->tr("Service %1$: %2$",i+1,Utils.plotUIP(l.u,l.i)) })
     }.joinToString("\n")
     override fun thermoMeterString(side: Direction): String?=unit.transformer?.let { Utils.plotCelsius("",it.thermal.Tc) }
-    override fun getWaila()=linkedMapOf(tr("Cable terminal") to tr("Terminal %1$",terminal),tr("Protection") to when { unit.recloser.locked->tr("Recloser locked out");unit.fuses.any { it.blown }->tr("Fuse blown");else->tr("Ready") }).apply { unit.transformer?.let { put(tr("Transformer rating"),Utils.plotPower("",it.ratedWatts.toDouble()));put(tr("Transformer status"),poleTransformerStatus(it.status));put(tr("Temperature"),Utils.plotCelsius("",it.thermal.Tc)) } }
+    override fun getWaila()=linkedMapOf(tr("Cable terminal") to tr("Terminal %1$",terminal),tr("Protection") to when { unit.recloser.locked->tr("Recloser locked out");unit.fuses.any { it.blown }->tr("Fuse blown");else->tr("Ready") }).apply { if(arrester.fitted)put(tr("Surge capacity remaining"),tr("%1$ kJ",(arrester.remaining/1000).toInt()));unit.transformer?.let { put(tr("Transformer rating"),Utils.plotPower("",it.ratedWatts.toDouble()));put(tr("Transformer status"),poleTransformerStatus(it.status));put(tr("Temperature"),Utils.plotCelsius("",it.thermal.Tc)) } }
     private fun settings(t: CompoundTag) { unit.write(t);t.putInt("utilityTerminal",terminal) }
     private fun readSettings(t: CompoundTag) { val settings=TwinPoleMigration.settings(kind,t);unit.read(settings);terminal=settings.getIntOr("utilityTerminal",if(kind.lvOnly)50 else 32).takeIf { it in terminals() } ?: terminals().first() }
-    override fun writeToNBT(t: CompoundTag) { super.writeToNBT(t);settings(t) }
-    override fun readFromNBT(t: CompoundTag) { super.readFromNBT(t);recoverTwinHardware(t);if(kind.transformer)PoleHardware.migrate(hardware,t.getIntOr("mainsRatedWatts",10000));readSettings(t);installTransformer() }
+    override fun writeToNBT(t: CompoundTag) { super.writeToNBT(t);settings(t);arrester.write(t) }
+    override fun readFromNBT(t: CompoundTag) { super.readFromNBT(t);arrester.read(t);recoverTwinHardware(t);if(kind.transformer)PoleHardware.migrate(hardware,t.getIntOr("mainsRatedWatts",10000));readSettings(t);installTransformer() }
     override fun getItemStackNBT()=CompoundTag().also { settings(it);if(!kind.light)it.getCompoundOrEmpty("poleStreetlightAttachment").putBoolean("installed",false) }
-    override fun onBreakElement() { if(unit.lamp?.remove()==true)node.dropItem(Eln.findItemStack(UtilityItems.STREETLIGHT_NAME,1));super.onBreakElement() }
+    override fun onBreakElement() { arrester.drop();if(unit.lamp?.remove()==true)node.dropItem(Eln.findItemStack(UtilityItems.STREETLIGHT_NAME,1));super.onBreakElement() }
     override fun readItemStackNBT(t: CompoundTag?) { if(t!=null) { recoverTwinHardware(t);readSettings(t) } }
     private fun recoverTwinHardware(t: CompoundTag) {
         if(twinRecovered || !TwinPoleMigration.legacy(kind,t))return

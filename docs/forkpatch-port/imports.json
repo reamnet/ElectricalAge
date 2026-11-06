@@ -1817,5 +1817,103 @@
     "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
     "mode": "verbatim-scada-resource",
     "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleSurgeUpgrade.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeBank.kt",
+    "sourceSha256": "85d4ec8225be6465930db4ae2dbe132cc3f361d5e48c81a3c10a8f9917052e05",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleSurgeUpgrade.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleSurgeUpgrade.kt",
+    "sourceSha256": "85d4ec8225be6465930db4ae2dbe132cc3f361d5e48c81a3c10a8f9917052e05",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeProtection.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeProtection.kt",
+    "sourceSha256": "085e409627a5ab0d2d770b21e5e5edb06a14260ab75b3ca807a2a6e4e433d4d6",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleArresterVisual.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_arrester/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_arrester/equipment_finish.mtl",
+    "sourceSha256": "3367b69ecb1b613022a25608328f427e97929d9d138f448220a864659dc4c4b4",
+    "mode": "verbatim-surge-resource",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_arrester/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_arrester/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-surge-resource",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_arrester/industrial_arrester.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_arrester/industrial_arrester.obj",
+    "sourceSha256": "73dec011b6f732691415d1714bd8486c3275271035f79914f48981fefdee338b",
+    "mode": "verbatim-surge-resource",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchSurgeTest.kt",
+    "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
+    "mode": "native-surge-circuit-and-source-energy-parity-regressions",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
   }
 ]
