@@ -87,8 +87,8 @@
     "Unfiltered suite still fails historical descriptor and slot comparisons; expected goldens and exceptions remain unchanged"
   ],
   "unfiltered": {
-    "selected": 782,
-    "passed": 780,
+    "selected": 783,
+    "passed": 781,
     "failed": 2,
     "skipped": 0,
     "failures": [
@@ -96,7 +96,7 @@
       "eln:golden_slots"
     ],
     "report": "native-suite-review.json",
-    "scope": "Production behavior plus fixture isolation fix; the later end-to-end chain is included in the separate 317-case filtered run."
+    "scope": "Final expanded suite, including all 317 port cases and the end-to-end energy chain."
   },
   "buildCommand": "./gradlew --no-daemon --max-workers=2 :build cad:test",
   "artifact": {

@@ -1,11 +1,10 @@
 # Unfiltered native validation and historical references
 
 The workshop/transport production checkpoint `a034a5f3`, with the renewable
-fixture isolation fix, ran **782 unfiltered GameTests**: **780 passed**, two
+fixture isolation fix, ran **783 unfiltered GameTests**: **781 passed**, two
 failed, and none were skipped. The failing cases are `golden_descriptors` and
 `golden_slots`. The recipe golden case and all other behavioral cases passed,
-including the 316 port cases present in that run. The later end-to-end workshop
-case is recorded separately in the final filtered-port report.
+including the 317 port cases present in that run. The final unfiltered run also includes the end-to-end workshop energy-chain case.
 
 The initial unfiltered run also exposed two layout failures: battery low-voltage
 disconnect and heat-furnace external control. The wind/watermill fixture changed

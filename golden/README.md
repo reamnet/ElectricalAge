@@ -45,7 +45,7 @@ table (Baughn, 2026-10-25): coal ore is no longer 3 coal.
 
 ## ForkPatch 3.0.77 review remains open
 
-The native workshop/transport checkpoint has an unfiltered run with 780 of 782
+The native workshop/transport checkpoint has an unfiltered run with 781 of 783
 cases passing. `golden_descriptors` and `golden_slots` retain their failures;
 expected snapshots and exception lists were not regenerated. See the
 [review and exact differences](../docs/forkpatch-port/native-suite-review.md).

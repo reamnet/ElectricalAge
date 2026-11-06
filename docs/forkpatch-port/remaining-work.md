@@ -40,11 +40,11 @@ catalog has 637 identities, 935 English entries and 453 resolved native item tex
 See [complete evidence](workshop-transport-validation.json), the
 [workshop guide](workshop.md), and [transport guide](industrial-transport.md).
 
-The wider unfiltered run passes **780 of 782 GameTests**. The historical descriptor
+The wider unfiltered run passes **781 of 783 GameTests**. The historical descriptor
 and slot comparisons remain failing; [exact differences](native-suite-review.md)
 are retained without changing expectations. Restoring shared test-player facing
 after oriented renewable placement fixes two order-dependent battery/furnace layouts.
-The later charge-drive-recharge case is included in the separate 317-case port run.
+The charge-drive-recharge case passes in both the unfiltered and filtered-port runs.
 
 Earlier checkpoints remain documented in [large renewable validation](large-renewable-validation.json),
 [industrial controls](industrial-work-block-validation.json), and the
@@ -80,7 +80,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The unfiltered workshop/transport run passes 780 of 782 cases; descriptor and slot
+- The unfiltered workshop/transport run passes 781 of 783 cases; descriptor and slot
   goldens still fail. Review the [exact differences](native-suite-review.md), then
   rerun after explicitly reconciling the historical expectations. The wind/watermill
   fixture now restores shared test-player facing, fixing two order-dependent layouts.

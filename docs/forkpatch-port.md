@@ -1142,7 +1142,7 @@ and all 317 selected native port cases pass; see the
 [transport guide](forkpatch-port/industrial-transport.md) and
 [work-block evidence](forkpatch-port/workshop-transport-validation.json).
 
-The wider unfiltered run passes 780/782 cases, with descriptor/slot historical
+The wider unfiltered run passes 781/783 cases, with descriptor/slot historical
 goldens still failing. Restoring shared test-player facing after renewable
 placement fixes two unrelated layout failures without changing battery/furnace
 behavior. A native chain test balances one actual pack across charging, vehicle
