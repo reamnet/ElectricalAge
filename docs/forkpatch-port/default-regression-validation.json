@@ -1,11 +1,18 @@
 {
   "command": "./gradlew --offline --no-daemon --max-workers=2 :test",
+  "testedCodeCommit": "3b91d82fca8b2fc895dc9dd6257d9c6a9587be69",
   "fluidCases": 200,
-  "suites": 107,
-  "tests": 572,
+  "suites": 108,
+  "tests": 580,
   "failures": 0,
   "errors": 0,
   "skipped": 3,
-  "passed": 569,
-  "scope": "Full root regression corpus including default 200 fluid cases, all standalone step-down/twin and twelve switchgear regressions. Three optional CAD previews skipped. Follow-up fixture-only changes are covered by native checks."
+  "passed": 577,
+  "skippedCases": [
+    "mods.eln.node.voxel.VoxelPreviewTest.safetyValveAndSensor()",
+    "mods.eln.node.voxel.VoxelPreviewTest.junctionsAndAdapters()",
+    "mods.eln.client.entity.BikePreviewTest.bikes()"
+  ],
+  "elapsed": "9m 33s",
+  "scope": "Complete final root regression corpus, including default 200 fluid cases, standalone step-down/twin, switchgear, large renewable, solar, converter and destination tests. Three optional preview cases skipped. Native server validation is recorded separately."
 }

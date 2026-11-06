@@ -6,8 +6,9 @@ Unit passed 99 focused regressions and 210 selected native server cases. Data
 generation covers 619 identities with no missing icons. See
 [validation](twin-stepdown-validation.json) and [variant parity](distribution-parity.json).
 The subsequent switchgear/client checkpoint passed the full default root corpus:
-569 passed, three optional CAD previews skipped, including the default 200-case
-fluid corpus. All 238 selected native cases passed. See [current validation](switchgear-client-validation.json).
+577 passed, three optional previews skipped, including the default 200-case
+fluid corpus. All 244 selected native cases passed after the large renewable
+checkpoint. See [current validation](large-renewable-validation.json).
 
 ## Remaining related work
 

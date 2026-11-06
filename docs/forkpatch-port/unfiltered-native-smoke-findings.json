@@ -427,10 +427,10 @@
     "Historical 1.12 descriptor/slot golden snapshots need review against ForkPatch additions and native changes."
   ],
   "currentCatalogValidation": {
-    "report": "switchgear-client-validation.json",
-    "publication": "446/446",
-    "menus": "171/171",
-    "itemDraw": "233/233",
+    "report": "large-renewable-validation.json",
+    "publication": "446/446 plus dedicated large renewable publication checks",
+    "menus": "172/172",
+    "itemDraw": "235/235",
     "explicitRendererFactories": "all registered transparent descriptors covered"
   }
 }

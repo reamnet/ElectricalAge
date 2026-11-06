@@ -27,7 +27,9 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 Each family still participates in the cross-cutting validation/migration work below.
 The large renewable checkpoint passed 20 focused regressions, data generation
 for 627 identities and all 244 selected native cases. See
-[validation](large-renewable-validation.json).
+[validation](large-renewable-validation.json). The final complete root suite also
+passed 577 tests with three optional preview cases skipped (580 selected),
+including the default 200-case fluid corpus.
 
 ## Equipment and behavior still requiring adapters or parity review
 
@@ -63,6 +65,8 @@ for 627 identities and all 244 selected native cases. See
   reviewed. Current catalog publication/menu/item checks are passing separately.
 - Perform interactive client/GPU/audio and multiplayer checks, including geometry,
   animations, transparent vehicle windows, screen interactions and resource reloads.
+  Review tall legacy pole/span culling bounds and source mesh display/status parts
+  as part of that pass; emitting geometry alone does not verify those behaviors.
 - Compare representative loaded-world server performance against both baselines,
   especially solar arrays, coupled converter banks, wiring and mechanical/fluid networks.
 - Build and review release artifacts only after the intended release scope passes;

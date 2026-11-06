@@ -58,6 +58,9 @@ fluid run will be distinguished from the full property corpus in later checkpoin
 | Vehicles | Four-seat cart, two-seat electric car, storage, seats, charging and clear windows | Port entity/vehicle state, input packets, collision/step handling and 26.3 rendering |
 | Data and optional integrations | Recipes, translations, models, loot/tags, guide, diagnostics, metrics and mod bridges | Merge data and IDs; handle integrations only when a compatible 26.3 dependency exists |
 
+See the [current feature backlog](forkpatch-port/remaining-work.md) for completed
+adapters and the remaining equipment, parity and validation work.
+
 These rows define the full scope, not a claim that all features are playable yet.
 Only features with compiled production adapters and relevant passing regressions
 should be marked migrated. Copying unused files into a staging directory does not
@@ -1010,7 +1013,7 @@ controls, UPS, standby/ATS, off-grid and solar cabinets, step-down and switchgea
 Eighteen dedicated checks exercise actual block-entity publish packets and native
 factory construction rather than directly constructing only a renderer.
 
-The catalog sweep passes all 446 publication/render paths, 171 menus and 233 drawn
+The catalog sweep passes all 446 publication/render paths, 172 menus and 233 drawn
 items. Its fixtures now clear waterlogged fluids and tall/wide ghosts, support both
 halves of wide meters, isolate the fake player's hand, and use the disconnect's
 normal sneak-to-open gesture. Historical 1.12 golden descriptor/slot snapshots
@@ -1051,9 +1054,9 @@ server cases passed, including four watermill orientations, real loaded output,
 still-water/removal behavior, wind obstruction, tall clearance, renderer factory
 publication and geometry. Data generation covers 627 identities; all preceding
 625 entries are unchanged and all 443 referenced native item textures resolve.
-The preceding full default root run passed 569 tests with three optional CAD
-previews skipped; a final full run for this checkpoint is recorded separately
-when complete. Evidence: [large renewable validation](forkpatch-port/large-renewable-validation.json).
+The final complete root regression run passed 577 tests with three optional
+previews skipped (580 selected across 108 suites, no errors/failures), including
+the default 200-case fluid corpus, against code commit `3b91d82f`. Evidence: [large renewable validation](forkpatch-port/large-renewable-validation.json).
 
 The [feature backlog](forkpatch-port/remaining-work.md) distinguishes registered
 adapters from remaining equipment, shared-code review, full save conversion and
