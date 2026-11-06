@@ -26,6 +26,13 @@ source lamp clearance has its own selection treatment. Validate each owner's
 footprint, leads, picking and native geometry before deciding an import mapping.
 Existing native metadata 0–8 must retain its current meanings.
 
+One concrete remaining parity gap is the flat fixed large solar array: its source
+owner supplies half-height ghost collision, while the inherited native cube
+reservation remains full-height. The new pitched states solve the stair case,
+not this older flat-ghost behavior. Use an explicit owner-aware/native shape
+adapter with reload and remote-client checks; do not globally turn cube metadata
+into a half block for unrelated machines.
+
 The source ghost property is named `shape` with range 0–8; the native property is
 `meta` with range 0–15. Native solar root states additionally store `roof=0..4`.
 A source pitched panel's saved `roofUphill`, front, ghost positions and return

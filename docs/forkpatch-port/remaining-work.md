@@ -64,6 +64,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 
 | Area | Remaining scope |
 | --- | --- |
+| Ghost collision parity | Flat fixed solar-array reservations retain the inherited native cube collision; review source half-height owner shapes and remaining ghost picking/collision without reinterpreting existing native metadata. |
 | Shared mounting | Source partial-support insets, cable rises and matching selection/render transforms beyond the registered stair roofs; preserve native voxel geometry and resident-only queries. See the [mounting review](mounting-review.md). |
 | Other power electronics | Remaining source variable converter/control behavior; review shared transformer, capacitor and regulated-supply changes against the destination solver. See the [identity/control/winding review](power-electronics-review.md). |
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
