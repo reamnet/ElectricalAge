@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "F": "eln:welded_machine_frame",
+    "I": "minecraft:iron_block",
+    "M": "eln:electrical_motor"
+  },
+  "pattern": [
+    "FFF",
+    "CMC",
+    "III"
+  ],
+  "result": {
+    "id": "eln:electric_forklift"
+  }
+}

@@ -19,7 +19,7 @@ import java.io.*
 import kotlin.math.abs
 
 object ForkPatchWelderCases {
-    @JvmStatic fun cases():List<TestCase> = listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP).map(::Frames)+Repair()+SaveAndReplace()+Controls()+Packets()
+    @JvmStatic fun cases():List<TestCase> = listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP).map(::Frames)+Repair()+SaveAndReplace()+Controls()+Packets()+Transfers()
     private open class Base:TestCase {
         lateinit var e:WelderElement
         val parts=ArrayList<Component>()
@@ -133,4 +133,26 @@ object ForkPatchWelderCases {
             }finally { cleanup() }
         }
     }
+    private class Transfers:Base() {
+        override fun id()="forkpatch_welder_native_transfer_input_output_and_abort"
+        override fun measure(c:TestContext) {
+            try {
+                val inventory=e.getInventory()
+                val handler=requireNotNull(c.level().getCapability(net.neoforged.neoforge.capabilities.Capabilities.Item.BLOCK,e.node.coordonate.pos(),net.minecraft.core.Direction.DOWN))
+                val iron=net.neoforged.neoforge.transfer.item.ItemResource.of(Items.IRON_INGOT)
+                val frame=net.neoforged.neoforge.transfer.item.ItemResource.of(Eln.findItemStack(WorkshopParts.FRAME,1))
+                inventory.setItem(2,frame.toStack())
+                net.neoforged.neoforge.transfer.transaction.Transaction.openRoot().use { tx->
+                    c.check("welder: native capability cannot insert output or extract workpiece",handler.insert(2,iron,1,tx)==0 && handler.extract(0,iron,1,tx)==0,"")
+                    c.check("welder: native capability simulates output extraction",handler.extract(2,frame,1,tx)==1,"")
+                }
+                c.check("welder: aborted extraction leaves exactly one original output",inventory.getItem(2).count==1,"")
+                net.neoforged.neoforge.transfer.transaction.Transaction.openRoot().use { tx->handler.extract(2,frame,1,tx);tx.commit()}
+                c.check("welder: committed extraction clears only output",inventory.getItem(2).isEmpty && inventory.getItem(0).count==3 && inventory.getItem(1).count==3,"")
+                net.neoforged.neoforge.transfer.transaction.Transaction.openRoot().use { tx->c.check("welder: native insert accepts real iron",handler.insert(1,iron,2,tx)==2,"")}
+                c.check("welder: aborted input insertion preserves material count",inventory.getItem(1).count==3,"")
+            }finally { cleanup() }
+        }
+    }
+
 }

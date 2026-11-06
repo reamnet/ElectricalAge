@@ -965,6 +965,18 @@
   "kind": "shared_item_stack_one",
   "name": "48_v_20_kwh_traction_battery"
  },
+ "eln:shared_item_stack_one@7490": {
+  "descriptor": "TransportItem",
+  "display": "Electric Forklift",
+  "kind": "shared_item_stack_one",
+  "name": "electric_forklift"
+ },
+ "eln:shared_item_stack_one@7491": {
+  "descriptor": "TransportItem",
+  "display": "Warehouse Equipment Pallet",
+  "kind": "shared_item_stack_one",
+  "name": "warehouse_equipment_pallet"
+ },
  "eln:shared_item_stack_one@7744": {
   "descriptor": "ElectricalLampItem",
   "display": "Small Flashlight",

@@ -2090,5 +2090,124 @@
     "sourceSha256": "4dd4428641807673df8b30b2638870881ff599d0c338e4e2e7b7ece70185e0ed",
     "mode": "native-workshop-existing-ups-icon-reuse",
     "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransport.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransport.kt",
+    "sourceSha256": "3910c848b827d0e52f1132ebaba05b25964f1648a02c178b0565cf014209631a",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransportClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransportModels.kt",
+    "sourceSha256": "61e9a6b3aa97148c24d7479aadf0134034a8f40e0a68a9c64c04722ab99921e4",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/TransportItem.kt",
+    "sourceSha256": "1d5a29460c81ad31cecb34c9cd052a914263d6b04d6435c98a5cb0da237bdf89",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/ForkliftControls.kt",
+    "target": "src/main/java/mods/eln/transparentnode/industrial/ForkliftControls.java",
+    "sourceSha256": "d38bc293405eb37868339c925f137ad3f73b77fb542899df385a6c2f453c52b6",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransportClient.kt",
+    "target": "src/main/java/mods/eln/client/ForkliftKeys.java",
+    "sourceSha256": "61e9a6b3aa97148c24d7479aadf0134034a8f40e0a68a9c64c04722ab99921e4",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransportClient.kt",
+    "target": "src/main/java/mods/eln/client/entity/IndustrialTransportRenderer.java",
+    "sourceSha256": "61e9a6b3aa97148c24d7479aadf0134034a8f40e0a68a9c64c04722ab99921e4",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_forklift/industrial_forklift.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_forklift/industrial_forklift.obj",
+    "sourceSha256": "a492389beb54355073b45e016f3e2efa2a78664a1a1273ad4c740780c02c42d0",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_forklift/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_forklift/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_forklift/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_forklift/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/electricforklift.png",
+    "target": "src/main/resources/assets/eln/textures/item/electric_forklift.png",
+    "sourceSha256": "2782e1114beb130bd9b62cb9b08e9eb1fc59d48ae1b21fc8cebe2b934168ce35",
+    "mode": "verbatim-industrial-transport-icon",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_pallet/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_pallet/equipment_finish.mtl",
+    "sourceSha256": "ca5ffe7c12d8181b1f99db245a8a90a61821bdb8cdbf6a33e2e6efb490e0f458",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_pallet/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_pallet/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_pallet/industrial_pallet.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_pallet/industrial_pallet.obj",
+    "sourceSha256": "cdf6ce173b53cf7f6d4907d7bd22ec58ca92fb70ba3ce7d5127fa52838e7679b",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/warehouseequipmentpallet.png",
+    "target": "src/main/resources/assets/eln/textures/item/warehouse_equipment_pallet.png",
+    "sourceSha256": "22edcdc5feb6f8669ed67d159f2010b0e3aa7c4246ea57a3f8e6213bba58de85",
+    "mode": "verbatim-industrial-transport-icon",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransport.kt",
+    "target": "src/main/java/mods/eln/gui/PalletMenu.java",
+    "sourceSha256": "3910c848b827d0e52f1132ebaba05b25964f1648a02c178b0565cf014209631a",
+    "mode": "native-server-menu-guard-for-source-transport-inventory",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/IndustrialExpansionChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchTransportCases.kt",
+    "sourceSha256": "0625648fe80f5e06304661947e405ba6ee91f33b84a388cca74e9337e05feb5f",
+    "mode": "native-driving-lifting-cargo-save-and-geometry-regressions",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/ForkliftControls.kt",
+    "target": "src/test/java/mods/eln/transparentnode/industrial/ForkPatchTransportTest.java",
+    "sourceSha256": "d38bc293405eb37868339c925f137ad3f73b77fb542899df385a6c2f453c52b6",
+    "mode": "native-bounded-payload-and-truncation-regressions",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
   }
 ]

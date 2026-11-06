@@ -1,4 +1,4 @@
-// 26.3	2026-11-06T15:52:10.025821202	eln-global/EA models
+// 26.3	2026-11-06T16:14:08.656492648	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -517,6 +517,7 @@ d4caa32f84633e85483a40ba15e10644cd0b9559 assets/eln/items/e_coal_chestplate.json
 63e74dcf5b58fe5f4c1e8add6ca4c4f28dfd9113 assets/eln/items/e_coal_helmet.json
 f4dc5f5232b85e25a38e952409ce0c226af95e8d assets/eln/items/e_coal_leggings.json
 2d61393843303c27649a49ff067ba95dd01a5403 assets/eln/items/electric_bike.json
+75e3ed479fa4659f4c84074a226d9495086e0233 assets/eln/items/electric_forklift.json
 c391e13ae03f3d3f7760c445a43dab08fd305d81 assets/eln/items/electric_welding_station.json
 ef3d6d12e9ec59bbd00e14c8ade9c11e190b476d assets/eln/items/electrical_anemometer_sensor.json
 54097e9cb2beb1f9a0cada369dc2dbc6504b15b4 assets/eln/items/electrical_anvil.json
@@ -812,6 +813,7 @@ c1280aba4ef45a4f8222c2a1e27f43cc6efc444b assets/eln/items/voltage_probe.json
 9648ad52b0fc8f17171572991c17d090717d7b5c assets/eln/items/wall_mounted_hybrid_solar_inverter.json
 9d544aa2c1d2536b04018b8bc1af27c72972f77d assets/eln/items/wall_mounted_mppt_solar_controller.json
 14ad88432b8bde5b35b1b1632f4a25bb4b6b0aa2 assets/eln/items/wall_mounted_programmable_ups.json
+2fff3b0073318e1264b0e0c54649e120e468cb57 assets/eln/items/warehouse_equipment_pallet.json
 bc2933874335a5fdddc8f8ee1b2793b8c49663b1 assets/eln/items/water_turbine.json
 da76d2e869662c4cfd75df2ef03e6b4655667ed6 assets/eln/items/weak_50v_battery_charger.json
 e57c1d7efa3318a8d3af4f9c41cdf509a0e4132e assets/eln/items/welded_machine_frame.json
@@ -1242,6 +1244,7 @@ d85d53158285965ca93fd0d3377faf4113e14abe assets/eln/models/item/e_coal_chestplat
 2a158be780ed5ec520b9fc12881aa9a16d4059b0 assets/eln/models/item/e_coal_helmet.json
 0cc163329de91bae9d50eaa74060f0630cfbe1ee assets/eln/models/item/e_coal_leggings.json
 0fcc76c45b44f545d178aab491d65e24b49052e6 assets/eln/models/item/electric_bike.json
+e981a03e11497bbff0dfeeb7e7ee9ae1c1c69a9a assets/eln/models/item/electric_forklift.json
 16a06dc80dfc6feb30dac13fd58841af693d4ac7 assets/eln/models/item/electric_welding_station.json
 c5b22230a8a958e263bca847a673605f56f83f46 assets/eln/models/item/electric_welding_station_3d.json
 9ab7adf080b729d531498f341e3a09d63e6fb9df assets/eln/models/item/electrical_anemometer_sensor.json
@@ -1698,6 +1701,7 @@ cbc3f77cf84a02da73fd54eb0a60f9a7ae0ba2af assets/eln/models/item/voltage_oriented
 45664fb3b8568690460bd0c97b0902b6d1932877 assets/eln/models/item/wall_mounted_mppt_solar_controller_3d.json
 7dd3a8dba8e5716025d0b8d748f0634b005e179e assets/eln/models/item/wall_mounted_programmable_ups.json
 264b596b8ec3ef2cbab9664303c1427785accbe0 assets/eln/models/item/wall_mounted_programmable_ups_3d.json
+655adcd9fe226843282d2b772fefca87d61c2738 assets/eln/models/item/warehouse_equipment_pallet.json
 b8cf587ff7e6b1b11f3d237781793c771c4f3079 assets/eln/models/item/water_turbine.json
 6a30c58f354d06d000919bc10833277b86ecacfc assets/eln/models/item/water_turbine_3d.json
 d026402349bd1c2bd42e820c09cc5bcdba6b0cd3 assets/eln/models/item/weak_50v_battery_charger.json

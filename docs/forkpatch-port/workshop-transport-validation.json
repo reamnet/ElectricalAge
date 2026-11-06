@@ -1,0 +1,87 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Native industrial charger/welder, removable traction pack, frames, forklift and pallet; unfinished full-fork development port.",
+  "focused": [
+    {
+      "suite": "mods.eln.transparentnode.industrial.ForkPatchWelderTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "mods.eln.transparentnode.industrial.ForkPatchChargerTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "mods.eln.transparentnode.industrial.ForkPatchTransportTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "root": {
+    "suites": 115,
+    "tests": 633,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "rootCommand": "./gradlew --no-daemon --max-workers=2 :test cad:test",
+  "native": {
+    "selected": 316,
+    "failed": 0,
+    "filter": "eln:forkpatch_*",
+    "transportCases": 11,
+    "newScadaCases": 2,
+    "newTransferAndBlockBreakCases": 3,
+    "report": "/tmp/eln26-workshop-transport-final.xml",
+    "focusedCullingReport": "/tmp/eln26-transport-culling.xml",
+    "meshBoundChecks": 32,
+    "meshBoundFollowupLog": "session2-unfiltered-native.log"
+  },
+  "datagen": {
+    "identities": 637,
+    "previousIdentities": 631,
+    "changedPreviousIdentities": [],
+    "englishEntries": 935,
+    "previousEnglishEntries": 921,
+    "changedPreviousEnglishEntries": [],
+    "nativeTextureReferences": 453,
+    "missingTextures": []
+  },
+  "transportCoverage": [
+    "Four native driving orientations and actual pack depletion",
+    "Rider-only bounded payloads, stale-control timeout, nonfinite direct input rejection and server-owned motion",
+    "Real pack installation/removal, depleted-pack bounds, loaded/unloaded lift costs and 0-2.5m bounds",
+    "Exactly-once pickup/drop with open-inventory and collision guards",
+    "Native ValueInput/ValueOutput entity saves preserve pack energy, cargo components and fork height",
+    "Native guarded chest menus reject nested transport, including shift click",
+    "Creative inventory-bearing pallet placement and destruction refunds cannot clone cargo",
+    "Source geometry and native scalar render-state snapshots",
+    "Source mesh extents cover rotated forks and cargo at all lift heights; culling geometry checks also run in the focused transport fixture"
+  ],
+  "integrationCoverage": [
+    "Powered SCADA opens/closes the actual charger and welder without bypassing inventory or accepted-energy rules",
+    "Native transfer capabilities commit and abort real item changes; charger aborted extraction preserves session",
+    "Actual charger block destruction returns one charged pack and one settings-only machine"
+  ],
+  "limitations": [
+    "Complete source-world conversion remains pending",
+    "Historical unfiltered native golden reconciliation remains pending",
+    "Interactive client/GPU/audio and multiplayer sessions remain pending",
+    "Road vehicles, appliance power/cords and wider remaining feature groups are not claimed complete"
+  ]
+}

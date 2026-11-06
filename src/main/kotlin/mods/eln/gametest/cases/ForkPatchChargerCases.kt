@@ -18,7 +18,7 @@ import java.io.*
 import kotlin.math.abs
 
 object ForkPatchChargerCases {
-    @JvmStatic fun cases():List<TestCase> = listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP).map(::Supply)+Storage()+Cache()+Packets()
+    @JvmStatic fun cases():List<TestCase> = listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP).map(::Supply)+Storage()+Cache()+Packets()+Transfers()+Breaks()
     private open class Base:TestCase {
         lateinit var e:ChargerElement
         var feed:VoltageSource?=null
@@ -40,6 +40,7 @@ object ForkPatchChargerCases {
                 val render=client.elementRender as? ChargerRender
                 c.check("charger: native factory consumes entire publication",render!=null && input.available()==0,"")
                 if(render!=null) {
+                    c.check("charger: source charger adds no load-bank fan loop",render.loopedSounds.isEmpty(),"")
                     c.check("charger: display receives actual stored and consumed energy",abs(render.display.session-e.unit.sessionJoules)<1e-6 && abs(render.display.lifetime-e.unit.lifetimeJoules)<1e-6,"")
                     GlFrame.beginRenderFrame();val f=GlFrame.open()
                     try { render.draw();c.check("charger: source enclosure draws native geometry",f.batches().values.sumOf { it.vertices() }>100,"") }finally { GlFrame.close() }
@@ -123,4 +124,48 @@ object ForkPatchChargerCases {
             }finally { cleanup() }
         }
     }
+    private class Transfers:Base() {
+        override fun id()="forkpatch_charger_native_transfer_commit_and_abort"
+        override fun measure(c:TestContext) {
+            try {
+                val inventory=e.getInventory();val before=energy(inventory.getItem(0));val session=e.unit.sessionJoules
+                val handler=requireNotNull(c.level().getCapability(net.neoforged.neoforge.capabilities.Capabilities.Item.BLOCK,e.node.coordonate.pos(),net.minecraft.core.Direction.DOWN))
+                val resource=handler.getResource(0)
+                net.neoforged.neoforge.transfer.transaction.Transaction.openRoot().use { tx->
+                    c.check("charger: native capability can simulate extracting one actual charged pack",handler.extract(0,resource,1,tx)==1,"")
+                }
+                e.unit.prepare()
+                c.check("charger: aborted native extraction preserves actual energy and charging state",abs(energy(inventory.getItem(0))-before)<1e-6 && e.unit.working && e.unit.sessionJoules==session,"")
+                net.neoforged.neoforge.transfer.transaction.Transaction.openRoot().use { tx->
+                    c.check("charger: committed native extraction removes one charged pack",handler.extract(0,handler.getResource(0),1,tx)==1,"");tx.commit()
+                }
+                c.check("charger: transfer resource contains actual energy and inventory becomes empty",abs(energy(resource.toStack())-before)<1e-6 && inventory.getItem(0).isEmpty,"")
+                e.unit.prepare();c.check("charger: committed extraction opens input and resets session",!e.unit.working && e.unit.sessionJoules==0.0,"")
+                net.neoforged.neoforge.transfer.transaction.Transaction.openRoot().use { tx->
+                    c.check("charger: simulated reinsertion is accepted",handler.insert(0,resource,1,tx)==1,"")
+                }
+                c.check("charger: aborted reinsertion cannot create a second battery",inventory.getItem(0).isEmpty,"")
+                net.neoforged.neoforge.transfer.transaction.Transaction.openRoot().use { tx->handler.insert(0,resource,1,tx);tx.commit()}
+                c.check("charger: native reinsertion keeps charge without abstract energy",abs(energy(inventory.getItem(0))-before)<1e-6,"")
+            }finally { cleanup() }
+        }
+    }
+    private class Breaks:Base() {
+        override fun id()="forkpatch_charger_actual_block_break_refunds_pack_once"
+        override fun measure(c:TestContext) {
+            try {
+                val before=e.unit.sessionJoules;val at=e.node.coordonate.pos();cleanup()
+                c.level().destroyBlock(at,true)
+                val drops=c.level().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity::class.java,net.minecraft.world.phys.AABB(at).inflate(2.0))
+                val packs=drops.filter { ChargerInventory.battery(it.item)!=null }
+                val machines=drops.filter { it.item.item==Eln.findItemStack("Programmable EV Pack Charger",1).item }
+                c.check("charger: real block destruction drops one paid pack with all accepted energy",packs.size==1 && packs.single().item.count==1 && abs(energy(packs.single().item)-before)<1e-6,"")
+                c.check("charger: dropped machine cannot contain a second pack or session",machines.size==1 && ItemNbt.get(machines.single().item)?.let { !it.contains("inventory") && !it.contains("industrialSession") }==true,"")
+                val count=drops.size;c.level().destroyBlock(at,true)
+                c.check("charger: destroying the former position cannot refund again",c.level().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity::class.java,net.minecraft.world.phys.AABB(at).inflate(2.0)).size==count,"")
+                drops.forEach { it.discard() }
+            }finally { cleanup() }
+        }
+    }
+
 }

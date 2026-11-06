@@ -28,6 +28,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Grid Control Console/SCADA with eight world-local targets, bounded loaded-node lookup and native device controls.
 - Standalone Pole Surge Arrester and paid overhead HV pole kits with finite cartridge state and native lightning protection.
 - Programmable EV Pack Charger, removable 20 kWh traction pack, Electric Welding Station and welded frames; native inventory, accepted-energy and save checks.
+- Electric Forklift and Warehouse Equipment Pallet with server controls, actual pack drain/lifting costs, guarded inventories, cargo saves and refunds.
 
 Each family still participates in the cross-cutting validation/migration work below.
 The large renewable checkpoint passed 20 focused regressions, data generation
@@ -47,6 +48,12 @@ The charging/welding checkpoint adds 14 passing focused regressions and passes a
 remain unchanged; four source-compatible identities are added. See
 [workshop evidence](workshop-validation.json) and [equipment guide](workshop.md).
 
+The workshop/transport block passes **630 full root regressions**,
+15 CAD tests and all **316** selected native port cases, with the default
+200-case fluid corpus. All 631 previous identities and 921 English entries are
+unchanged. See [complete evidence](workshop-transport-validation.json) and
+[transport guide](industrial-transport.md).
+
 ## Equipment and behavior still requiring adapters or parity review
 
 | Area | Remaining scope |
@@ -56,7 +63,7 @@ remain unchanged; four source-compatible identities are added. See
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
 | Utility manufacturing | Wire drawing/processing machinery, spool/jacket manufacturing, inventory trimming and remaining wire/cable tools. |
 | Industrial devices | Appliance cord/outlet integration and interactive client/audio parity for the registered industrial families. |
-| Industrial transport | Forklift controls, lifting/pickup behavior, pallet entities, inventories, input packets and entity renderers. |
+| Industrial transport | Interactive client controls, audio and multiplayer parity of the registered forklift/pallet adapters. Road vehicles remain a separate adapter group. |
 | Vehicles | Four-seat golf cart, two-seat electric car, stepping/collision, turn-overload fire/explosion behavior, passengers, storage, six-cell traction pack and in-car charging. Preserve the electric car's clear windows. |
 | Appliance power | Plugs/cords, wall/industrial outlets, power strip, rating and support/wiring rules, machine cord adapters and compact plug-in UPS. |
 | Kitchen/laundry | Source kitchen and laundry/matter-machine families, food/process inventories, recipes, temperature/heat behavior, appliance controls and graphics. |

@@ -1129,3 +1129,15 @@ reload retain item energy, while carried settings cannot clone inventory or work
 All 14 focused regressions and 300 selected port GameTests pass. See the
 [workshop guide](forkpatch-port/workshop.md) and
 [validation](forkpatch-port/workshop-validation.json).
+
+### Native industrial transport
+
+The Electric Forklift and Warehouse Equipment Pallet retain item IDs 7490/7491
+and source entity names. Server-owned movement and lifting debit a real removable
+traction pack. Pallet inventories, native saves, guarded chest menus, collision
+checks and single refunds preserve cargo; client payloads carry bounded inputs
+only. Source geometry now uses native render-state snapshots. SCADA also controls
+the new charger/welder through their normal gates. The full default root/CAD run
+and all 316 selected native port cases pass; see the
+[transport guide](forkpatch-port/industrial-transport.md) and
+[work-block evidence](forkpatch-port/workshop-transport-validation.json).

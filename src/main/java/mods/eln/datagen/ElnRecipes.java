@@ -1112,6 +1112,8 @@ public final class ElnRecipes extends ElnRecipesBase {
         addRecipe(findItemStack("Variable Frequency Motor Drive"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.REDSTONE_BLOCK,'M',findItemStack("Machine Block"));
         addRecipe(findItemStack("Grid Control Console"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.COMPARATOR,'M',findItemStack("Machine Block"));
         addRecipe(findItemStack("Pole Surge Arrester"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.LIGHTNING_ROD.weathering().unaffected(),'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Electric Forklift"),"FFF","CMC","III",'F',findItemStack("Welded Machine Frame"),'C',findItemStack("Copper Cable"),'M',findItemStack("Electrical Motor"),'I',Items.IRON_BLOCK);
+        addRecipe(findItemStack("Warehouse Equipment Pallet"),"PPP","S S","PPP",'P',Items.OAK_PLANKS,'S',Items.STICK);
         addRecipe(findItemStack("Electric Welding Station"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.FLINT_AND_STEEL,'M',findItemStack("Machine Block"));
         addRecipe(findItemStack("Programmable EV Pack Charger"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.QUARTZ,'M',findItemStack("Machine Block"));
         addRecipe(findItemStack("48 V 20 kWh Traction Battery"),"IBI","BBB","CBC",'I',findItemStack("Iron Plate"),'B',findItemStack("UPS Industrial Battery Module"),'C',findItemStack("Copper Cable"));

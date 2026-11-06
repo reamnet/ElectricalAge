@@ -18,7 +18,7 @@ import java.io.*
 import kotlin.math.abs
 
 object ForkPatchScadaCases {
-    @JvmStatic fun cases():List<TestCase> = (0..7).map(::Endpoint)+Addresses()+Packets()+Power()
+    @JvmStatic fun cases():List<TestCase> = (0..9).map(::Endpoint)+Addresses()+Packets()+Power()
     private open class Base:TestCase {
         lateinit var e:ScadaElement;val parts=ArrayList<Component>();lateinit var supply:VoltageSource
         override fun id()="forkpatch_scada_base"
@@ -44,16 +44,16 @@ object ForkPatchScadaCases {
     }
     private class Endpoint(val type:Int):Base() {
         lateinit var target:TransparentNodeElement;var load:Resistor?=null;lateinit var clock:IProcess;var elapsed=0.0;var phase=0
-        override fun id()="forkpatch_scada_"+listOf("load_bank","switchgear","service_disconnect","latched_relay","locked_recloser","air_break","motor_drive","latched_pad")[type]
+        override fun id()="forkpatch_scada_"+listOf("load_bank","switchgear","service_disconnect","latched_relay","locked_recloser","air_break","motor_drive","latched_pad","pack_charger","welder")[type]
         override fun ticks()=80
         fun active():Boolean=when(val t=target) {
             is LoadBankElement->t.unit.enabled;is SwitchgearElement->t.unit.enabled;is HouseServiceElement->!t.unit.disconnected
             is IndustrialElement->t.unit.enabled;is DistributionPoleElement->if(type==4)t.unit.recloser.closed else t.unit.gangClosed
-            is MotorDriveElement->t.unit.enabled;is PadTransformerElement->t.unit.enabled;else->false
+            is MotorDriveElement->t.unit.enabled;is PadTransformerElement->t.unit.enabled;is ChargerElement->t.unit.enabled;is WelderElement->t.unit.enabled;else->false
         }
         override fun build(c:TestContext) {
             super.build(c)
-            val id=listOf(8064,8037,7992,8066,7977,7983,8069,8068)[type]
+            val id=listOf(8064,8037,7992,8066,7977,7983,8069,8068,8071,8072)[type]
             val pos=c.at(12,1,12)
             target=if(type==2) {
                 c.level().setBlockAndUpdate(pos.south(),Blocks.STONE.defaultBlockState());c.level().setBlockAndUpdate(pos.south().above(),Blocks.STONE.defaultBlockState())
@@ -67,6 +67,8 @@ object ForkPatchScadaCases {
                 is IndustrialElement->{t.unit.applySettings(doubleArrayOf(480.0,10.0,.8,1.2,.05,0.0));add(VoltageSource("relay overload",t.unit.input,null).setU(480.0));load=Resistor(t.unit.outputs[0],null).setR(24.0)}
                 is DistributionPoleElement->if(type==4) {t.unit.recloser.read(CompoundTag().apply {putBoolean("recloserLocked",true);putBoolean("recloserClosed",false)});t.unit.applyContacts()} else {add(VoltageSource("gang switch",t.unit.lines[0],null).setU(3200.0));load=Resistor(t.unit.outs[0],null).setR(10000.0)}
                 is MotorDriveElement->{add(VoltageSource("remote drive",t.unit.input,null).setU(480.0));load=Resistor(t.unit.output,null).setR(24.0)}
+                is ChargerElement->{t.getInventory().setItem(0,Eln.findItemStack(WorkshopParts.PACK,1));t.unit.prepare();add(VoltageSource("remote pack charger",t.unit.input,null).setU(240.0))}
+                is WelderElement->{t.getInventory().setItem(0,net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT,3));t.getInventory().setItem(1,net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT,3));t.unit.prepare();add(VoltageSource("remote welder",t.unit.input,null).setU(240.0))}
                 is PadTransformerElement->{t.unit.protection.tripped=true;t.unit.protection.reason=7;t.unit.configure()}
             }
             load?.let(::add);check(bind(target.node.coordonate.pos()))
@@ -87,6 +89,8 @@ object ForkPatchScadaCases {
                 else c.check("SCADA: enabled target preserves its own controls",active(),target.descriptor.name)
                 if(type in listOf(1,2,5,6))c.check("SCADA: restored endpoint supplies actual load",load!!.p>1,target.descriptor.name)
                 if(type==0)c.check("SCADA: enabled bank resumes real consumption",(target as LoadBankElement).unit.watts>49000,"")
+                if(type==8) {val t=target as ChargerElement;c.check("SCADA: remote charger resumes actual pack charging",t.unit.watts>7100 && ChargerInventory.battery(t.getInventory().getItem(0))!!.getEnergy(t.getInventory().getItem(0))>0,"")}
+                if(type==9) {val t=target as WelderElement;c.check("SCADA: remote welder resumes paid work on its actual inventory",t.unit.watts>5900 && t.unit.workJoules>0 && t.getInventory().getItem(0).count==3,"")}
                 if(type==3) {val t=target as IndustrialElement;c.check("SCADA: enabling never clears actual overload trip",t.unit.protection.tripped && !t.unit.contacts[0].closed && load!!.p<1e-6,"")}
                 if(type==7) {val t=target as PadTransformerElement;c.check("SCADA: enabling cannot clear core trip or mint paid hardware",t.unit.protection.tripped && !t.unit.tap.enabled && t.inventory.isEmpty,"")}
                 e.unit.poll();c.check("SCADA: telemetry names the actual selected device",e.unit.telemetry.contains(target.descriptor.name),"");panel(c)

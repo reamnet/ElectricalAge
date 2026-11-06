@@ -210,6 +210,21 @@ public final class ElnRegistry {
     public static final DeferredItem<mods.eln.bike.ElectricBikeItem> TERRAIN_BIKE =
         registerListed("terrain_bike", p -> new mods.eln.bike.ElectricBikeItem(p, mods.eln.bike.BikeType.TERRAIN), p -> p.stacksTo(1));
 
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>, net.minecraft.world.entity.EntityType<mods.eln.transparentnode.industrial.ForkliftEntity>> ELECTRIC_FORKLIFT =
+        ENTITY_TYPES.register("electric_forklift", () -> net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.transparentnode.industrial.ForkliftEntity>of(mods.eln.transparentnode.industrial.ForkliftEntity::new, net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1.1f,2.1f).clientTrackingRange(8).updateInterval(2)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"electric_forklift"))));
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>, net.minecraft.world.entity.EntityType<mods.eln.transparentnode.industrial.PalletEntity>> EQUIPMENT_PALLET =
+        ENTITY_TYPES.register("equipment_pallet", () -> net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.transparentnode.industrial.PalletEntity>of(mods.eln.transparentnode.industrial.PalletEntity::new, net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1f,.85f).clientTrackingRange(8).updateInterval(3)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"equipment_pallet"))));
+    static {
+        mods.eln.transparentnode.industrial.ForkliftEntity.TYPE=ELECTRIC_FORKLIFT;
+        mods.eln.transparentnode.industrial.PalletEntity.TYPE=EQUIPMENT_PALLET;
+    }
+
     /** 1.12 dropped a vanilla spawn egg tagged eln:replicator; 26.x eggs are per entity type. */
     public static final DeferredItem<net.minecraft.world.item.SpawnEggItem> REPLICATOR_SPAWN_EGG =
         registerListed("replicator_spawn_egg", net.minecraft.world.item.SpawnEggItem::new, p -> p.spawnEgg(REPLICATOR.get()));

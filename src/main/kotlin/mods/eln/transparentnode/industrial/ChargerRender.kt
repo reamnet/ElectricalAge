@@ -7,10 +7,6 @@ import java.io.*
 
 class ChargerRender(e: TransparentNodeEntity,d: TransparentNodeDescriptor):TransparentNodeElementRender(e,d) {
     val display=ChargerDisplay()
-    init { addLoopedSound(object: mods.eln.sound.LoopedSound("eln:appliance_industrial_fan",coordonate()) {
-        override fun getVolume()=if(display.watts>50).25f else 0f
-        override fun getPitch()=.8f
-    }) }
     override fun draw()=(transparentNodedescriptor as ChargerDescriptor).draw(front,display)
     override fun cameraDrawOptimisation()=false
     override fun getCableRender(side: Direction,lrdu: LRDU)=when {

@@ -56,6 +56,8 @@ public final class ElnClient {
             // voxel nodes: parts baked in the chunk mesh by VoxelModel; six-node elements hosted there drawn as in six-node blocks
             e.registerBlockEntityRenderer(ElnRegistry.VOXEL_NODE_ENTITY.get(), ctx -> new SixNodeRender<>());
             // every entity type needs a renderer: the client crashes on one without (thunderstorm replicators)
+            e.registerEntityRenderer(ElnRegistry.ELECTRIC_FORKLIFT.get(),ctx -> new mods.eln.client.entity.IndustrialTransportRenderer<>(ctx,false));
+            e.registerEntityRenderer(ElnRegistry.EQUIPMENT_PALLET.get(),ctx -> new mods.eln.client.entity.IndustrialTransportRenderer<>(ctx,true));
             e.registerEntityRenderer(ElnRegistry.REPLICATOR.get(), mods.eln.client.entity.ReplicatorRenderer::new);
             e.registerEntityRenderer(ElnRegistry.ELECTRIC_BIKE_ENTITY.get(), mods.eln.client.entity.BikeRenderer::new);
             e.registerEntityRenderer(ElnRegistry.TERRAIN_BIKE_ENTITY.get(), ctx -> new mods.eln.client.entity.BikeRenderer(ctx, true));
@@ -112,8 +114,10 @@ public final class ElnClient {
         mods.eln.client.render.WornCurios.register(modBus);
         mods.eln.gui.ElnNodeMenu.clientLayout = mods.eln.client.gui.ElnLayouts::apply;
         modBus.addListener(net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent.class, ClientKeys::register);
+        modBus.addListener(net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent.class, ForkliftKeys::register);
         modBus.addListener(net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent.class, DrillSpin::registerExtensions);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class, ClientKeys::tick);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class, ForkliftKeys::tick);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.InputEvent.InteractionKeyMappingTriggered.class, ClientKeys::beforeClick);
         modBus.addListener(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent.class,
             e -> {
