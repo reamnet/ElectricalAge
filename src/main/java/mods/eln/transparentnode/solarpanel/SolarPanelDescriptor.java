@@ -109,6 +109,27 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
         }
     }
 
+    @Override
+    public mods.eln.node.transparent.TransparentNodeBlock newBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties p) {
+        return new SolarPanelBlock(p, this);
+    }
+
+    @Override
+    public boolean isFloor(Block below) {
+        return below instanceof net.minecraft.world.level.block.StairBlock || super.isFloor(below);
+    }
+
+    @Override
+    public Direction mountingFront(Level world, net.minecraft.core.BlockPos pos, Direction proposed) {
+        var up = SolarRoofMount.fromSupport(world, pos).getUphill();
+        return up == null ? proposed : Direction.fromIntMinecraftSide(up.getOpposite().get3DDataValue());
+    }
+
+    @Override
+    public GhostGroup getGhostGroupAt(Coordonate coord, Direction front) {
+        return SolarRoofMount.at(coord.world(), coord.pos()).footprint(ghostGroup, front);
+    }
+
     void draw(float alpha, Direction front) {
         front.glRotateZnRef();
         GL11.glTranslatef(0, 0, main.getFloat("offZ"));

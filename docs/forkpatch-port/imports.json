@@ -2216,5 +2216,96 @@
     "sourceSha256": "0625648fe80f5e06304661947e405ba6ee91f33b84a388cca74e9337e05feb5f",
     "mode": "native-cross-device-accepted-energy-and-item-ownership-integration",
     "status": "317-native-port-cases-and-780-of-782-unfiltered-cases-passed-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/solarpanel/SolarRoofMount.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/solarpanel/SolarRoofMount.kt",
+    "sourceSha256": "5f5bb9ebfc91966291fd6400c3774569c480ddd2c4f9c966472f75d9f397110e",
+    "mode": "native-coordinate-and-replicated-ghost-shape-adaptation",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/LoadedBlockStates.kt",
+    "target": "src/main/kotlin/mods/eln/node/LoadedBlockStates.kt",
+    "sourceSha256": "036d949c3c6b7f80d7613fca0b1d56ffb26da4690d1fa315cf226841f4e1f9d0",
+    "mode": "adapted-loaded-only-native-block-state-probes",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/LoadedBlockEntities.kt",
+    "target": "src/main/kotlin/mods/eln/node/LoadedBlockEntities.kt",
+    "sourceSha256": "c6634185de21792c5d7c7a758340dbc5cbe3f1a32f355bfc3c462f92d31f6abe",
+    "mode": "adapted-loaded-only-native-block-entity-probes",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+    "mode": "native-stair-support-placement-and-pitched-footprint-hooks",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelBlock.java",
+    "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+    "mode": "native-cached-replicated-pitched-collision-and-outline-shapes",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelElement.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelElement.java",
+    "sourceSha256": "48d9298d2f5438cf74b3e0fb48b5c734c03b82451e49ac0fb7c3aeba713dad73",
+    "mode": "native-saved-roof-return-terminal-and-bounded-angle-controls",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelRender.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelRender.java",
+    "sourceSha256": "849d33e59d97c917b839362c66bcf13bf5224ef58f5143ca415c92d662719716",
+    "mode": "native-pitched-source-mesh-and-tracker-publication",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-pitched-incidence-and-tracker-axis-with-native-weather",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/solarpanel/SolarRoofMountTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/solarpanel/ForkPatchSolarRoofTest.kt",
+    "sourceSha256": "23f83a5fd9722d842a3bbb72a110675960214a3c8d8cb622862d5ffd314e2224",
+    "mode": "adapted-source-roof-mathematics-and-footprint-regressions",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/solarpanel/SolarRoofMountTest.kt",
+    "target": "src/main/java/mods/eln/gametest/cases/ForkPatchSolarRoofCases.java",
+    "sourceSha256": "23f83a5fd9722d842a3bbb72a110675960214a3c8d8cb622862d5ffd314e2224",
+    "mode": "native-item-placement-save-electrical-publication-and-loaded-only-regressions",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNodeDescriptor.kt",
+    "target": "src/main/java/mods/eln/node/transparent/TransparentNodeDescriptor.java",
+    "sourceSha256": "7bd43942ecc296b31c8c3ebdff8b0301c559155e559eb1b0f5ef55caf8ffb1ff",
+    "mode": "native-identity-default-world-aware-mount-and-footprint-hooks",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNodeItem.kt",
+    "target": "src/main/java/mods/eln/node/transparent/TransparentNodeItem.java",
+    "sourceSha256": "452c8bf175f22f1b2cc1f58c4ee99653ba1760b07374c76f2df3719bbde1c6f5",
+    "mode": "native-item-placement-mount-and-footprint-hooks",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/ghost/GhostBlock.kt",
+    "target": "src/main/java/mods/eln/ghost/GhostBlock.java",
+    "sourceSha256": "7d0eb208e20e4ce984cfefa6dfe1a191d488adc7a4f8b8b0ed322e469fa1b699",
+    "mode": "native-cached-ghost-roof-shapes-without-owner-chunk-lookups",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
   }
 ]

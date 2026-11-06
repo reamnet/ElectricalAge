@@ -53,6 +53,7 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
         front.rotateFromXN(v);
         BlockPos at = pos.offset(v[0], v[1], v[2]);
         if (!world.getBlockState(at).canBeReplaced()) return null;
+        front = descriptor.mountingFront(world, at, front);
         Coordonate coord = new Coordonate(at, world);
 
         String error;
@@ -61,7 +62,7 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
             return null;
         }
 
-        GhostGroup ghostgroup = descriptor.getGhostGroup(front);
+        GhostGroup ghostgroup = descriptor.getGhostGroupAt(coord, front);
         if (ghostgroup != null) ghostgroup.plot(coord, coord, descriptor.getGhostGroupUuid());
 
         TransparentNode node = new TransparentNode();

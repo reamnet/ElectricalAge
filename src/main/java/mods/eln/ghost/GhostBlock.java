@@ -57,6 +57,8 @@ public class GhostBlock extends Block {
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         int meta = state.getValue(BlockMeta.META);
+        // Four unused native metadata values carry roof pitch to remote clients and survive saves.
+        if (meta >= 9 && meta <= 12) return mods.eln.transparentnode.solarpanel.SolarPanelBlock.roofShape(meta - 9);
         if (meta >= 3 && meta <= tBatteryFloor) return CABINETS[meta - 3];
         switch (meta) {
             case tFloor:

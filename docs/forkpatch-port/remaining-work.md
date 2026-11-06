@@ -8,6 +8,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 ## Registered adapters with passing production checks
 
 - Norton solar panels and large tracking arrays; MPPT and hybrid floor/wall controls.
+- Pitched solar roofs for all four panel variants, saved orientation, uphill reservations/return terminal and replicated cached collision shapes.
 - Utility Wind Turbine 3.2kV and Large Watermill 3.2kV with bounded renewable
   supplies, sparse environmental sampling and native publication/animation.
 - Off-grid inverter/charger, charging/protection/combiner equipment and floor/wall
@@ -32,15 +33,15 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 
 Each family still participates in the cross-cutting validation/migration work below.
 
-The latest workshop/transport block passes **630 full root regressions**, with
-three optional previews skipped (633 selected), all **15 CAD tests**, and all
-**317 selected native port cases**. The default 200-case fluid corpus is included.
-All 631 preceding identities and 921 English entries remain unchanged; the current
-catalog has 637 identities, 935 English entries and 453 resolved native item textures.
-See [complete evidence](workshop-transport-validation.json), the
-[workshop guide](workshop.md), and [transport guide](industrial-transport.md).
+The solar-roof checkpoint passes **634 full root regressions**, with three optional
+previews skipped (637 selected), all **15 CAD tests**, and all **335 selected native
+port cases**, including 18 new roof cases. The default 200-case fluid corpus is
+included. All 637 identities and 935 English entries remain unchanged, and all
+453 referenced native item textures resolve. See [roof evidence](solar-roof-validation.json)
+and the [roof guide](solar-roofs.md). The earlier [workshop/transport evidence](workshop-transport-validation.json),
+[workshop guide](workshop.md) and [transport guide](industrial-transport.md) remain available.
 
-The wider unfiltered run passes **781 of 783 GameTests**. The historical descriptor
+The previous workshop/transport unfiltered run passes **781 of 783 GameTests**. The historical descriptor
 and slot comparisons remain failing; [exact differences](native-suite-review.md)
 are retained without changing expectations. Restoring shared test-player facing
 after oriented renewable placement fixes two order-dependent battery/furnace layouts.
@@ -54,7 +55,6 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 
 | Area | Remaining scope |
 | --- | --- |
-| Solar mounting | Sloped/roof support geometry, saved roof orientation and associated render/connection offsets. |
 | Other power electronics | Remaining source variable converter/control behavior; review shared transformer, capacitor and regulated-supply changes against the destination solver. |
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
 | Utility manufacturing | Wire drawing/processing machinery, spool/jacket manufacturing, inventory trimming and remaining wire/cable tools. |
@@ -85,7 +85,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
   rerun after explicitly reconciling the historical expectations. The wind/watermill
   fixture now restores shared test-player facing, fixing two order-dependent layouts.
 - Perform interactive client/GPU/audio and multiplayer checks, including geometry,
-  animations, transparent vehicle windows, screen interactions and resource reloads.
+  animations, transparent vehicle windows, pitched roof selection/collision, screen interactions and resource reloads.
   Review tall legacy pole/span culling bounds and source mesh display/status parts
   as part of that pass; emitting geometry alone does not verify those behaviors.
 - Compare representative loaded-world server performance against both baselines,

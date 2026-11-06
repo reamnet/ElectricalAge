@@ -116,7 +116,7 @@ public class TransparentNodeDescriptor extends GenericItemBlockUsingDamageDescri
             && !holds(coord, Direction.ZP))
             return tr("You can't place this block at this side");
 
-        GhostGroup ghostGroup = getGhostGroup(front);
+        GhostGroup ghostGroup = getGhostGroupAt(coord, front);
         if (ghostGroup != null && ghostGroup.canBePloted(coord) == false) return tr("Not enough space for this block");
         return null;
     }
@@ -149,6 +149,15 @@ public class TransparentNodeDescriptor extends GenericItemBlockUsingDamageDescri
     public GhostGroup getGhostGroup(Direction front) {
         if (ghostGroup == null) return null;
         return ghostGroup.newRotate(front);
+    }
+
+    /** World-aware mounting hooks; ordinary devices retain their existing orientation and footprint. */
+    public Direction mountingFront(Level world, net.minecraft.core.BlockPos pos, Direction proposed) {
+        return proposed;
+    }
+
+    public GhostGroup getGhostGroupAt(Coordonate coord, Direction front) {
+        return getGhostGroup(front);
     }
 
     public int getGhostGroupUuid() {

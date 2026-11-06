@@ -1147,3 +1147,12 @@ goldens still failing. Restoring shared test-player facing after renewable
 placement fixes two unrelated layout failures without changing battery/furnace
 behavior. A native chain test balances one actual pack across charging, vehicle
 work, removal and recharging. See the [unfiltered review](forkpatch-port/native-suite-review.md).
+
+## Pitched solar roof checkpoint
+
+The existing four panel identities now support the source’s saved 45° stair mounting,
+uphill reservations/return terminal, pitched incidence and tracker projection. Native
+cached root/ghost states replicate collision without owner chunk lookups. All 335
+port GameTests and the full default-fluid root/CAD checks pass; see the
+[roof guide](forkpatch-port/solar-roofs.md) and [evidence](forkpatch-port/solar-roof-validation.json).
+Interactive client checks and complete source-world conversion remain pending.
