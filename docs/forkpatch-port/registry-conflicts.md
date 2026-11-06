@@ -12,8 +12,10 @@ the wind turbine's 7946 identity. This was corrected before publishing the adapt
 An older destination checkpoint already assigned its floor Programmable UPS to
 **7947**, while the pinned source floor UPS is **7883**. Keep the destination's
 7947 and its `programmable_ups` registry name. The incoming watermill cannot reuse
-that lookup key. Its eventual adapter needs an explicit destination-only legacy
-lookup plus source-name/source-ID migration mapping. Do not silently replace the
+that lookup key. The watermill adapter uses destination lookup **16383** (`255:63`) and the stable
+`large_watermill_3_2kv` name. `LargeRenewableDescriptor.destinationIdForSource`
+explicitly maps incoming source 7947 to 16383 and preserves wind 7946. This helper
+is for source imports; it must never remap an existing destination UPS item. Do not silently replace the
 UPS or move its existing key to make the incoming table look identical. Full
 source-world migration is still pending; these lookup tables alone do not provide
 save conversion.

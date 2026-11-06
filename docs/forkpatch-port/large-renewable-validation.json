@@ -1,0 +1,70 @@
+{
+  "scope": "Production utility wind and watermill adapters, including environmental sampling, finite source law, native lifecycle/publication/rendering and explicit registry conflict handling. This is not general source-world conversion or interactive GPU validation.",
+  "focused": {
+    "command": ":test --tests '*ForkPatchLargeRenewableTest' --tests '*ForkPatchSolarControllerTest' --tests '*ForkPatchConverterRuntimeTest'",
+    "tests": 20,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "name": "mods.eln.sim.power.ForkPatchConverterRuntimeTest",
+        "tests": 6,
+        "seconds": 0.096
+      },
+      {
+        "name": "mods.eln.transparentnode.renewable.ForkPatchSolarControllerTest",
+        "tests": 6,
+        "seconds": 0.025
+      },
+      {
+        "name": "mods.eln.transparentnode.renewable.ForkPatchLargeRenewableTest",
+        "tests": 8,
+        "seconds": 0.392
+      }
+    ]
+  },
+  "native": {
+    "selected": 244,
+    "passed": 244,
+    "failed": 0,
+    "filter": "eln:forkpatch_*",
+    "report": "/tmp/eln26-large-native.xml"
+  },
+  "datagen": {
+    "identities": 627,
+    "priorIdentities": 625,
+    "changedExisting": [],
+    "textureReferencesChecked": 443,
+    "missingTextureReferences": []
+  },
+  "behavior": {
+    "windWatts": 20000,
+    "waterWatts": 10000,
+    "nominalVolts": 3200,
+    "maxAmps": 50,
+    "environmentPeriodSeconds": 2,
+    "environmentSamples": {
+      "wind": 9,
+      "water": 3
+    },
+    "powerLimitedVoltageRetrySeconds": 0.5,
+    "sourceWindId": 7946,
+    "sourceWaterId": 7947,
+    "destinationWaterId": 16383
+  },
+  "fix": "A power-limited renewable/hybrid network could stay at 4.85 kW for a restored 5 kW load after overload. The production source now requests a coherent nominal-voltage retry every 0.5 physical seconds while power-limited. Algebraic probes cannot advance that timer. All candidate power/current/reverse-flow checks remain mandatory.",
+  "nativeCases": [
+    "eln:forkpatch_large_watermill_xn",
+    "eln:forkpatch_large_watermill_xp",
+    "eln:forkpatch_large_watermill_zn",
+    "eln:forkpatch_large_watermill_zp",
+    "eln:forkpatch_large_wind_weather_clearance_and_real_output",
+    "eln:forkpatch_large_renewable_registry_and_identity_conflict"
+  ],
+  "remaining": [
+    "Full source-world conversion",
+    "Interactive GPU/audio/multiplayer validation",
+    "Remaining equipment and source/native parity work in remaining-work.md"
+  ]
+}

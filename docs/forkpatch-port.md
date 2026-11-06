@@ -1022,3 +1022,40 @@ default 200-case fluid corpus. All 238 selected `eln:forkpatch_*` native server
 cases passed. Data generation covers 625 identities with no missing icons.
 Gradle configuration and wrapper remain unchanged. Evidence is recorded in
 [`switchgear-client-validation.json`](forkpatch-port/switchgear-client-validation.json).
+
+### Large wind and watermill checkpoint
+
+The Utility Wind Turbine 3.2kV and Large Watermill 3.2kV now have registered native
+adapters, paid native recipes, source meshes, reproducible icons, animated rotors,
+complete publication/factory coverage and bounds covering their tall geometry.
+Wind preserves source lookup 7946. Water uses destination-only 16383 because UPS
+saves already use source water's 7947; an explicit source lookup helper records the
+relocation without altering existing UPS identities. This is not world conversion.
+
+The conservative supply bounds generation to available environmental power,
+3200 V and 50 A, including shorts and parallel unequal generators; external
+backfeed opens the source. Real 5.12-ohm windings retain electrical loss. Sparse
+environment checks run every two seconds: nine open-sky wind samples with weather,
+height and cut-in/out behavior, or three flowing-water samples. Native chunk-now
+lookups do not generate missing chunks. Still water produces no power.
+
+A real finite-source/hybrid regression exposed a source low-voltage branch that
+could remain at 4.85 kW for a restored 5 kW load after overload. Nominal-voltage
+retries now run every 0.5 physical seconds while power-limited; algebraic trials
+cannot advance the retry clock, and all power/current acceptance checks remain.
+This preserves cached native LU factors and avoids repeating that extra nominal
+search every overloaded tick.
+
+All 20 focused renewable/solar/converter tests passed. All 244 selected native
+server cases passed, including four watermill orientations, real loaded output,
+still-water/removal behavior, wind obstruction, tall clearance, renderer factory
+publication and geometry. Data generation covers 627 identities; all preceding
+625 entries are unchanged and all 443 referenced native item textures resolve.
+The preceding full default root run passed 569 tests with three optional CAD
+previews skipped; a final full run for this checkpoint is recorded separately
+when complete. Evidence: [large renewable validation](forkpatch-port/large-renewable-validation.json).
+
+The [feature backlog](forkpatch-port/remaining-work.md) distinguishes registered
+adapters from remaining equipment, shared-code review, full save conversion and
+interactive client/multiplayer validation. Gradle configuration and wrapper remain
+unchanged.

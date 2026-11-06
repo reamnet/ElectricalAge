@@ -202,3 +202,6 @@ switchgear_relay_two/switchgear_relay_two.obj
 switchgear_relay_four/switchgear_relay_four.obj
 switchgear_ssr/switchgear_ssr.obj
 switchgear_ssr_three/switchgear_ssr_three.obj
+
+utilitywind/utilitywind.obj
+utilitywatermill/utilitywatermill.obj

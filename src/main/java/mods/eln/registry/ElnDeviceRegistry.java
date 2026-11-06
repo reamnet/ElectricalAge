@@ -500,6 +500,8 @@ public final class ElnDeviceRegistry {
     }
 
     private static void registerForkPatchSolar() {
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.renewable.LargeRenewableDescriptor.WIND_ID,new mods.eln.transparentnode.renewable.LargeRenewableDescriptor(false));
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.renewable.LargeRenewableDescriptor.WATER_ID,new mods.eln.transparentnode.renewable.LargeRenewableDescriptor(true));
         int base = 124 << 6;
         transparentNodeItem.addDescriptor(base + 8, new mods.eln.transparentnode.renewable.RenewableDescriptor(
             TR_NAME(Type.NONE, "MPPT Solar Controller"), mods.eln.transparentnode.renewable.RenewableKind.MPPT, false));

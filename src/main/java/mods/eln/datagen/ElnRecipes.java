@@ -1083,6 +1083,8 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeForkPatchUps() {
+        addRecipe(findItemStack("Utility Wind Turbine 3.2kV"),"PPP","MCM","IFI",'P',findItemStack("Iron Plate"),'M',findItemStack("Advanced Electrical Motor"),'C',findItemStack("Copper Cable"),'I',Items.IRON_BLOCK,'F',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Large Watermill 3.2kV"),"WWW","MCM","IFI",'W',Items.OAK_PLANKS,'M',findItemStack("Advanced Electrical Motor"),'C',findItemStack("Copper Cable"),'I',Items.IRON_BLOCK,'F',findItemStack("Machine Block"));
         addRecipe(findItemStack("Pole Streetlight Attachment")," II","CPG"," I ",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'P',findItemStack("Simple Lamp Socket"),'G',Items.GLASS);
         addRecipe(findItemStack("Mains Step-down Unit"),"CFC","MVM","CCC",'C',findItemStack("Copper Cable"),'F',findItemStack("Optimal Ferromagnetic Core"),'M',findItemStack("Machine Block"),'V',findItemStack("DC-DC Converter"));
         for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values()) {

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "F": "eln:machine_block",
+    "I": "minecraft:iron_block",
+    "M": "eln:advanced_electrical_motor",
+    "W": "minecraft:oak_planks"
+  },
+  "pattern": [
+    "WWW",
+    "MCM",
+    "IFI"
+  ],
+  "result": {
+    "id": "eln:large_watermill_3_2kv"
+  }
+}

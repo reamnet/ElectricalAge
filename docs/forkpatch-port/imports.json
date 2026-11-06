@@ -1530,5 +1530,89 @@
     "sourceSha256": "1326c1c0a1f05e879e19d4bdb455876183a7224823d439513933bd1652e32012",
     "mode": "native-existing-catalog-publication-menu-and-item-contracts",
     "status": "238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewables.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableSupply.kt",
+    "sourceSha256": "14a2ee551603c699c5e13d1b1677321308557b686a812a345ccd057ca7aaa1c4",
+    "mode": "native-bounded-renewable-supply-and-environment-lifecycle",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewables.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewableElement.kt",
+    "sourceSha256": "14a2ee551603c699c5e13d1b1677321308557b686a812a345ccd057ca7aaa1c4",
+    "mode": "native-bounded-renewable-supply-and-environment-lifecycle",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewableDescriptor.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "native-large-renewable-geometry-publication-and-culling",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewableRender.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "native-large-renewable-geometry-publication-and-culling",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywind/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitywind/equipment_finish.mtl",
+    "sourceSha256": "8a5dd469738cdb02654df47fe3893b08b8d1a1ba855724c450639286110ce5c3",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywind/renewable.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitywind/renewable.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywind/utilitywind.obj",
+    "target": "src/main/resources/assets/eln/model/utilitywind/utilitywind.obj",
+    "sourceSha256": "d765c71d437ab240e72c29ab74e1686bb89f2fc869d3546f0cdffb105d59a3d9",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywatermill/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitywatermill/equipment_finish.mtl",
+    "sourceSha256": "6c118931b4d200bfc339f7ade870731e762565331e29c7758ae313adebae7bba",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywatermill/renewable.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitywatermill/renewable.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywatermill/utilitywatermill.obj",
+    "target": "src/main/resources/assets/eln/model/utilitywatermill/utilitywatermill.obj",
+    "sourceSha256": "32f51fbfc85eafa9d0d153c61183ac3f54f467d62d3281ee006319cfb28fbb51",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/renewable/RenewableTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/renewable/ForkPatchLargeRenewableTest.kt",
+    "sourceSha256": "af08dfa623194ccbcedbdeaf698b8edc7d38604eefd1287036c0c0000dff17c3",
+    "mode": "native-limits-parallel-convergence-reverse-power-and-environment-regressions",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/RenewableChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchLargeRenewableCases.kt",
+    "sourceSha256": "ad97838a11525986cc3e6519631d12cc3764723587e4b4b1ae7f3e991c377b92",
+    "mode": "native-flowing-water-sky-clearance-rotation-and-packet-tests",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
   }
 ]

@@ -1,4 +1,4 @@
-// 26.3	2026-11-05T22:23:23.006069843	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-06T03:01:02.720463246	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -214,6 +214,7 @@ ff770d82fed48e779e22e4fd14615d03adb00d06 data/eln/advancement/recipes/misc/joint
 7e78cc35fd761625e94b932f241f2759655eefdd data/eln/advancement/recipes/misc/lamp_supply.json
 e1474de512f11c17eefe20ef125d348a17f44813 data/eln/advancement/recipes/misc/large_rheostat.json
 137626f9f8bf9e6e56e22027e740ecaca997f437 data/eln/advancement/recipes/misc/large_standby_gasoline_generator.json
+aedf0a33550f951b24aa25484b4c05bb452646dc data/eln/advancement/recipes/misc/large_watermill_3_2kv.json
 742545bf4ff2aa3b041ee56578a9a0ff484773dd data/eln/advancement/recipes/misc/lead_fuse_for_high_voltage_cables.json
 788fa1526657c4577d742ec3a18e6285e899164c data/eln/advancement/recipes/misc/lead_fuse_for_low_voltage_cables.json
 da0b62134f24b081c0fe23415fa59f1077af0142 data/eln/advancement/recipes/misc/lead_fuse_for_medium_voltage_cables.json
@@ -400,6 +401,7 @@ bf8348a28f32ca7b23c9752646b97e5ef12ef005 data/eln/advancement/recipes/misc/ups_a
 45da0cd5f829bf7dcb0e5bfecc984c9067178cc3 data/eln/advancement/recipes/misc/utility_pole_2.json
 036bce211a26d4b14a24a799461b4d1e26a834f4 data/eln/advancement/recipes/misc/utility_pole_3.json
 aa8fd0f6d50cf3c54d56d97003bfc2ce7a1673bf data/eln/advancement/recipes/misc/utility_pole_w_dc_dc_converter.json
+6bb2c6efa724e4dbae5b3c7cd7d84522a157d234 data/eln/advancement/recipes/misc/utility_wind_turbine_3_2kv.json
 71ae4dcc4d2fc3bba3565e539206485515305e6d data/eln/advancement/recipes/misc/very_high_voltage_cable.json
 6893fed10d74884eb15363bba761e76e78435764 data/eln/advancement/recipes/misc/very_high_voltage_relay.json
 cbd5e648fff3d8500ff78d476e14c6cf6b01a0c1 data/eln/advancement/recipes/misc/very_high_voltage_switch.json
@@ -661,6 +663,7 @@ b90ec63e04d89ed1c2d7121a7a74ae912a6cc9f5 data/eln/recipe/lamp_socket_b_projector
 31b32598f2a28b91bcfd9dfec823966fb62504df data/eln/recipe/lamp_supply.json
 f85c8f50ce0422ca92a56a52d510ab5341f9ccb7 data/eln/recipe/large_rheostat.json
 330e8a111fa7bf7de32091f7b93fda44334b4bbf data/eln/recipe/large_standby_gasoline_generator.json
+26df1b2b26ca43585ac53c653d00dbf9e91cb643 data/eln/recipe/large_watermill_3_2kv.json
 9e0d47a2d07c01983d5db65e954b56a8b520a021 data/eln/recipe/lead_fuse_for_high_voltage_cables.json
 1771a52b5cf577c86e55ab70326eebc653251f72 data/eln/recipe/lead_fuse_for_low_voltage_cables.json
 28c6a853cdc46b49074336f99ac747ad9e32a758 data/eln/recipe/lead_fuse_for_medium_voltage_cables.json
@@ -847,6 +850,7 @@ c29034602df442dfb455ac2e3ceefbfe007ca27c data/eln/recipe/ups_agm_battery_cell.js
 b204e479cbae894349308593acaaac469f4941ab data/eln/recipe/utility_pole_2.json
 fdb6dd720302e6dca9aafb6aa3bf07a3b7b35a8f data/eln/recipe/utility_pole_3.json
 dac1cc7568c77d968ce729665085384428966fb2 data/eln/recipe/utility_pole_w_dc_dc_converter.json
+887b3e5bfcb12e714fe349a4b9a0fe190576a5a3 data/eln/recipe/utility_wind_turbine_3_2kv.json
 55fdfab7dcdd516966fdbd904c59ffcf6fd4575d data/eln/recipe/very_high_voltage_cable.json
 61c0db9640b8a7e996ef7a9d8ccbe11c01299164 data/eln/recipe/very_high_voltage_relay.json
 5d996779d5a3adeb2f1e7cc5fa9763deececb7ef data/eln/recipe/very_high_voltage_switch.json

@@ -58,7 +58,7 @@ final class PublishRenderCase implements TestCase {
     /** Devices with no render class in the port yet (Modbus RTU: modbus is off, the device unregistered). */
     static final java.util.Set<String> NO_RENDER_YET = java.util.Set.of("Modbus RTU");
     /** Need a setting this box can't give (water; a 3x3x4 free volume beside the floor): drawn in the gallery instead. */
-    static final java.util.Set<String> NOT_HERE = java.util.Set.of("Water Turbine", "Experimental Transporter");
+    static final java.util.Set<String> NOT_HERE = java.util.Set.of("Water Turbine", "Experimental Transporter", "Utility Wind Turbine 3.2kV", "Large Watermill 3.2kV");
 
     public void measure(TestContext ctx) {
         mods.eln.client.ClientRenders.registerAll();

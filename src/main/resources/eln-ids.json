@@ -2825,6 +2825,12 @@
   "kind": "transparent_node",
   "name": "dc_dc_converter"
  },
+ "eln:transparent_node@16383": {
+  "descriptor": "LargeRenewableDescriptor",
+  "display": "Large Watermill 3.2kV",
+  "kind": "transparent_node",
+  "name": "large_watermill_3_2kv"
+ },
  "eln:transparent_node@192": {
   "descriptor": "HeatFurnaceDescriptor",
   "display": "Stone Heat Furnace",
@@ -3316,6 +3322,12 @@
   "display": "Hybrid Solar Inverter",
   "kind": "transparent_node",
   "name": "hybrid_solar_inverter"
+ },
+ "eln:transparent_node@7946": {
+  "descriptor": "LargeRenewableDescriptor",
+  "display": "Utility Wind Turbine 3.2kV",
+  "kind": "transparent_node",
+  "name": "utility_wind_turbine_3_2kv"
  },
  "eln:transparent_node@7947": {
   "descriptor": "UpsDescriptor",
