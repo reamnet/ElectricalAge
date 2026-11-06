@@ -1156,3 +1156,8 @@ cached root/ghost states replicate collision without owner chunk lookups. All 33
 port GameTests and the full default-fluid root/CAD checks pass; see the
 [roof guide](forkpatch-port/solar-roofs.md) and [evidence](forkpatch-port/solar-roof-validation.json).
 Interactive client checks and complete source-world conversion remain pending.
+
+The source Variable inductor is also registered at 6179 while the existing fixed
+inductor remains 6178. It uses the native LU/voxel implementation, source E6 control
+and one-core inventory. Full root/CAD and all 343 port checks pass; see the
+[inductor guide](forkpatch-port/variable-inductor.md) and [evidence](forkpatch-port/variable-inductor-validation.json).

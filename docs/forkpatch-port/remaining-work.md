@@ -24,6 +24,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Removable distribution streetlights, selected 120/240 V lighting, twin LED pole
   recovery and standalone Mains Step-down Unit.
 - Six independent-pole contactor/changeover/solid-state switchgear devices.
+- Signal-controlled variable inductor6179 with the source E6 range, one-core menu and retained native LU/voxel behavior.
 - Programmable Load Bank with passive sag response, case/fan cooling and native controls.
 - Variable Frequency Motor Drive with passive V/Hz ramp, output impedance and latched thermal protection.
 - Grid Control Console/SCADA with eight world-local targets, bounded loaded-node lookup and native device controls.
@@ -33,13 +34,15 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 
 Each family still participates in the cross-cutting validation/migration work below.
 
-The solar-roof checkpoint passes **634 full root regressions**, with three optional
-previews skipped (637 selected), all **15 CAD tests**, and all **335 selected native
-port cases**, including 18 new roof cases. The default 200-case fluid corpus is
-included. All 637 identities and 935 English entries remain unchanged, and all
-453 referenced native item textures resolve. See [roof evidence](solar-roof-validation.json)
-and the [roof guide](solar-roofs.md). The earlier [workshop/transport evidence](workshop-transport-validation.json),
-[workshop guide](workshop.md) and [transport guide](industrial-transport.md) remain available.
+The variable-inductor checkpoint passes **638 full root regressions**, with three
+optional previews skipped (641 selected), all **15 CAD tests**, and all **343
+selected native port cases**, including eight inductor and 18 roof cases. The
+default 200-case fluid corpus is included. All 637 previous identities and 935
+English entries remain unchanged; the catalog now has 638 identities, 936 English
+entries and 454 resolved native item textures. See [inductor evidence](variable-inductor-validation.json)
+and the [inductor guide](variable-inductor.md). The [roof evidence](solar-roof-validation.json),
+[roof guide](solar-roofs.md) and earlier [workshop/transport evidence](workshop-transport-validation.json)
+remain available.
 
 The previous workshop/transport unfiltered run passes **781 of 783 GameTests**. The historical descriptor
 and slot comparisons remain failing; [exact differences](native-suite-review.md)

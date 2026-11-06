@@ -2417,6 +2417,12 @@
   "kind": "six_node",
   "name": "power_inductor"
  },
+ "eln:six_node@6179": {
+  "descriptor": "VariableInductorDescriptor",
+  "display": "Variable inductor",
+  "kind": "six_node",
+  "name": "variable_inductor"
+ },
  "eln:six_node@6180": {
   "descriptor": "ResistorDescriptor",
   "display": "Power Resistor",

@@ -2307,5 +2307,61 @@
     "sourceSha256": "7d0eb208e20e4ce984cfefa6dfe1a191d488adc7a4f8b8b0ed322e469fa1b699",
     "mode": "native-cached-ghost-roof-shapes-without-owner-chunk-lookups",
     "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/variableinductor/VariableInductor.kt",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-E6-control-core-inventory-preserved-current-and-voxel-render-adapter",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchVariableInductorCases.kt",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-six-face-RL-circuit-LU-cache-menu-publication-and-save-regressions",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/test/kotlin/mods/eln/sixnode/variableinductor/ForkPatchVariableInductorTest.kt",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-source-E6-quantization-and-backward-Euler-RL-regressions",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/batch/Wp9aContent.java",
+    "sourceSha256": "f642d34a880f713e223187bbc9e4980ccafd262e44a1923034010d7b219a4e3e",
+    "mode": "native-free-source-variable-inductor-identity6179-preserving-fixed6178",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-source-variable-inductor-crafting-pattern",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/java/mods/eln/gui/MenuSpecs.java",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-one-core-slot-variable-inductor-server-menu",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/java/mods/eln/client/ClientScreens.java",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-variable-inductor-live-control-and-inductance-screen",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/resources/assets/eln/gui/variable_inductor.json",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-one-slot-live-field-layout",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
   }
 ]

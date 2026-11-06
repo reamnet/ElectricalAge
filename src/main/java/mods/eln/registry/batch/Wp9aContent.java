@@ -175,6 +175,11 @@ public class Wp9aContent implements ElnContent {
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
         {
+            var desc = new mods.eln.sixnode.variableinductor.VariableInductorDescriptor(
+                TR_NAME(Type.NONE, "Variable inductor"), obj.getObj("PowerElectricPrimitives"));
+            sixNodeItem.addDescriptor(mods.eln.sixnode.variableinductor.VariableInductorDescriptor.ID, desc);
+        }
+        {
             subId = 36;
 
             name = TR_NAME(Type.NONE, "Power Resistor");

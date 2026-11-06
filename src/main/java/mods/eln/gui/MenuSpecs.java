@@ -101,6 +101,8 @@ public final class MenuSpecs {
                 MEDIUM, tr("Copper cable slot"), tr("(Increases inductance)")),
             descriptor(mods.eln.sixnode.powerinductorsix.PowerInductorSixContainer.coreId, 132 + 20, 8, 1,
                 FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot"))).panel(176, 112, 8, 30));
+        put(mods.eln.sixnode.variableinductor.VariableInductorDescriptor.class, d -> MenuSpec.of(
+            descriptor(0, 132, 8, 1, FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot"))).panel(176, 112, 8, 30));
         put(mods.eln.sixnode.powersocket.PowerSocketDescriptor.class, d -> MenuSpec.of().panel(176, 144, 8, 60));
         put(mods.eln.sixnode.resistor.ResistorDescriptor.class, d -> resistor());
         // the thermal probe: built-in Copper Thermal Cable; the temperature probe: an optional mode slot

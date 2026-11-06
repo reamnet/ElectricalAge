@@ -56,6 +56,7 @@ final class ClientScreens {
         layout("sixnode.powercapacitorsix.PowerCapacitorSixDescriptor", "power_capacitor");
         layout("transparentnode.powercapacitor.PowerCapacitorDescriptor", "power_capacitor");
         layout("sixnode.powerinductorsix.PowerInductorSixDescriptor", "power_inductor");
+        layout("sixnode.variableinductor.VariableInductorDescriptor", "variable_inductor");
         layout("transparentnode.powerinductor.PowerInductorDescriptor", "power_inductor");
         layout("sixnode.electricalwatch.ElectricalWatchDescriptor", "electrical_watch");
         layout("sixnode.electricalentitysensor.ElectricalEntitySensorDescriptor", "entity_sensor");
@@ -166,6 +167,12 @@ final class ClientScreens {
             tr("Inductance: %1$H", Utils.plotValue(((mods.eln.sixnode.powerinductorsix.PowerInductorSixDescriptor) d).getlValue(inv)))));
         info(mods.eln.transparentnode.powerinductor.PowerInductorDescriptor.class, (d, inv) -> java.util.List.of(
             tr("Inductance: %1$H", Utils.plotValue(((mods.eln.transparentnode.powerinductor.PowerInductorDescriptor) d).getlValue(inv)))));
+        ElnScreens.register(mods.eln.sixnode.variableinductor.VariableInductorDescriptor.class, (m, i, t, r) ->
+            new mods.eln.client.gui.InfoScreen(m, i, t, inv -> {
+                var v = r instanceof mods.eln.sixnode.variableinductor.VariableInductorRender live ? live : null;
+                return java.util.List.of(tr("Inductance: %1$H", Utils.plotValue(v == null ? 0 : v.getInductance())),
+                    Utils.plotPercent(tr("Control"), v == null ? 1 : v.getNormalizedControl()));
+            }));
     }
 
     static void info(Class<?> descriptor, java.util.function.BiFunction<Object, net.minecraft.world.Container, java.util.List<String>> lines) {

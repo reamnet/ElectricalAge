@@ -1,4 +1,4 @@
-// 26.3	2026-11-06T16:14:08.656492648	eln-global/EA models
+// 26.3	2026-11-06T20:04:08.723174347	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -800,6 +800,7 @@ c308524116bd868bd8021cbafcb55411313e7c11 assets/eln/items/ups_agm_battery_cell.j
 d1651d12134a8a7caa8f8ccdf966cbb23ef86b0f assets/eln/items/utility_pole_w_dc_dc_converter.json
 84598c7785abae11128f234b1f747a522f019b5c assets/eln/items/utility_wind_turbine_3_2kv.json
 78e4ddf7a2df9c062fbb99d8ed0504941cd4f099 assets/eln/items/variable_frequency_motor_drive.json
+38038e127dd63b101a70e512e675595e5ea70906 assets/eln/items/variable_inductor.json
 0e1e332e9e88e1e0701d633dec0723dcfd6cfd9b assets/eln/items/very_high_voltage_cable.json
 ea9db9e6fa3ac8cc392fbc1f3f95adc99b317292 assets/eln/items/very_high_voltage_relay.json
 da7da1fa73f52180d24316a46b7e59507e937997 assets/eln/items/very_high_voltage_switch.json
@@ -1677,6 +1678,8 @@ dc3600fc50aa2d81d78a472dd67303fea92b09b2 assets/eln/models/item/utility_wind_tur
 ac58ec37882aa2251d5b0972bf3a729f4ce45bd7 assets/eln/models/item/utility_wind_turbine_3_2kv_3d.json
 84397be087f93cc20e8dddfd1b49a3dba824bc3a assets/eln/models/item/variable_frequency_motor_drive.json
 ed1139ea3ba6972034b3f006f6ca070f29ae0921 assets/eln/models/item/variable_frequency_motor_drive_3d.json
+9e9bbcb88340cb15f8d80604233d27c23b62839e assets/eln/models/item/variable_inductor.json
+74fd54e2625e92d95e0859c977656f6b7dd04a15 assets/eln/models/item/variable_inductor_3d.json
 7a5234d52e6df02ac3a4dbac252a5c1b7b8b689e assets/eln/models/item/very_high_voltage_cable.json
 35fc58425356983ad33e0163ddbca11ebdb2e625 assets/eln/models/item/very_high_voltage_relay.json
 854507146f69b26e5ff6fa4774083ac69024b285 assets/eln/models/item/very_high_voltage_relay_3d.json
