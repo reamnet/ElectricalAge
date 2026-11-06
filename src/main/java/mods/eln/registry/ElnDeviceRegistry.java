@@ -93,6 +93,7 @@ public final class ElnDeviceRegistry {
         transparentNodeItem.addDescriptor(1+(127<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false));
         transparentNodeItem.addDescriptor(2+(127<<6),new mods.eln.utility.UndergroundHandholeDescriptor());
         transparentNodeItem.addDescriptor(4+(126<<6),new mods.eln.transparentnode.industrial.PadTransformerDescriptor());
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.LoadBankDescriptor.ID,new mods.eln.transparentnode.industrial.LoadBankDescriptor());
         for(var kind: java.util.List.of(mods.eln.transparentnode.industrial.IndustrialKind.RELAY,mods.eln.transparentnode.industrial.IndustrialKind.SHEDDER))
             transparentNodeItem.addDescriptor((126<<6)+kind.ordinal(),new mods.eln.transparentnode.industrial.IndustrialDescriptor(kind));
         transparentNodeItem.addDescriptor((124<<6)+11,new mods.eln.transparentnode.ups.UpsDescriptor(TR_NAME(Type.NONE,"Programmable UPS"),false,false));

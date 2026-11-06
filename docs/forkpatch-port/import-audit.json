@@ -1,11 +1,11 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "3b91d82fca8b2fc895dc9dd6257d9c6a9587be69",
-  "ledgerEntries": 230,
-  "uniqueSourceFiles": 158,
-  "uniqueTargetFiles": 220,
-  "declaredVerbatimEntries": 55,
-  "exactCopies": 65,
+  "targetCommit": "dcb903469f769f6798d711526b056c7f7c8f987f",
+  "ledgerEntries": 240,
+  "uniqueSourceFiles": 162,
+  "uniqueTargetFiles": 230,
+  "declaredVerbatimEntries": 59,
+  "exactCopies": 69,
   "passed": true,
   "problems": [],
   "entries": [
@@ -2380,7 +2380,7 @@
       "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchClientFactoryCases.kt",
       "mode": "native-block-entity-publication-and-factory-integration-instead-of-direct-construction",
       "sourceSha256": "1326c1c0a1f05e879e19d4bdb455876183a7224823d439513933bd1652e32012",
-      "targetSha256": "2048516d58bad335acb44b1a9bea0e50d3f21f9a9b55b996d806186294c516d3",
+      "targetSha256": "c0c8d15c6e972445fdb514242c0e0455b9c1310881c2dd47f61cb4f61d1cfdc9",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -2391,7 +2391,7 @@
       "target": "src/main/java/mods/eln/client/ClientRenders.java",
       "mode": "explicit-native-client-factories-for-ported-descriptors-no-reflection-fallback",
       "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
-      "targetSha256": "61a7e2185dbb5c54ce3733b3db34387fab0e27f9b04cdbdc3ee27ca93671cbf9",
+      "targetSha256": "4ec962edbc8918863db0b49681e3b293834fb37519b69474565b8424080a7e1e",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -2538,6 +2538,116 @@
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
+    },
+    {
+      "index": 230,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankUnit.kt",
+      "mode": "native-load-bank-adapter",
+      "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+      "targetSha256": "ab71f9d3ea398231364e347d059de70bcd9055c9db6256817cbcb9d95fa0cce0",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 231,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankElement.kt",
+      "mode": "native-load-bank-adapter",
+      "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+      "targetSha256": "3ec70696512a655241610b00e99e534a0d299caae701a7578e017980672ac32f",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 232,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankDescriptor.kt",
+      "mode": "native-load-bank-adapter",
+      "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+      "targetSha256": "e96e6ea61f80801669adac5f112e2a887b8b057103b8bed20d303b50c742d20b",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 233,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankDisplay.kt",
+      "mode": "native-load-bank-adapter",
+      "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+      "targetSha256": "c18e5b89ee9f4a2930e2b089dec3f3cbbfe4dfba55165ab3fb71869cbc066ab8",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 234,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankRender.kt",
+      "mode": "native-load-bank-adapter",
+      "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+      "targetSha256": "bb47634527990a2ce1066ad79dd93e9011f714d39a943540b18d7e111bba88db",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 235,
+      "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankScreen.kt",
+      "mode": "native-load-bank-adapter",
+      "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+      "targetSha256": "5e69fc8b1c3ae0953dc8ce20c2dcb4657421b04299a8d8c81499bd723057f880",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 236,
+      "source": "src/main/resources/assets/eln/model/industrial_load_bank/equipment_finish.mtl",
+      "target": "src/main/resources/assets/eln/model/industrial_load_bank/equipment_finish.mtl",
+      "mode": "verbatim-load-bank-resource",
+      "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+      "targetSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 237,
+      "source": "src/main/resources/assets/eln/model/industrial_load_bank/fixture.mtl",
+      "target": "src/main/resources/assets/eln/model/industrial_load_bank/fixture.mtl",
+      "mode": "verbatim-load-bank-resource",
+      "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+      "targetSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 238,
+      "source": "src/main/resources/assets/eln/model/industrial_load_bank/industrial_load_bank.obj",
+      "target": "src/main/resources/assets/eln/model/industrial_load_bank/industrial_load_bank.obj",
+      "mode": "verbatim-load-bank-resource",
+      "sourceSha256": "60f42c78febee4d34c9bee11d8b99f43fed3e0db9ca73e3410eb7d3228d728d7",
+      "targetSha256": "60f42c78febee4d34c9bee11d8b99f43fed3e0db9ca73e3410eb7d3228d728d7",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 239,
+      "source": "src/main/resources/assets/eln/sounds/appliance_industrial_fan.ogg",
+      "target": "src/main/resources/assets/eln/sounds/appliance_industrial_fan.ogg",
+      "mode": "verbatim-load-bank-resource",
+      "sourceSha256": "ff7ef3587c09e622977246d69b419245465041d8fb5e34d6750897f0435f19fe",
+      "targetSha256": "ff7ef3587c09e622977246d69b419245465041d8fb5e34d6750897f0435f19fe",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
     }
   ],
   "scope": "Source hashes, target existence and declared exact copies; not full runtime parity."

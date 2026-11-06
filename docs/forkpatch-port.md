@@ -1062,3 +1062,17 @@ The [feature backlog](forkpatch-port/remaining-work.md) distinguishes registered
 adapters from remaining equipment, shared-code review, full save conversion and
 interactive client/multiplayer validation. Gradle configuration and wrapper remain
 unchanged.
+
+### Programmable resistive load bank
+
+Source lookup 8064 now has a native programmable load-bank adapter, preserving
+passive voltage-squared power, the source resistance floor, real fan/case cooling,
+thermal recovery, signal inhibition and consumed-energy accounting. Stable loads
+retain native LU factors; repeated preparations cannot advance meters or heat.
+The adapter has a native menu, renderer factory, original mesh and fan sound,
+reproducible icon, source crafting bill and placed-node save/reload coverage.
+Configuration tools transfer settings without copying heat or meter history.
+See the [equipment guide](forkpatch-port/load-bank.md) and
+[validation report](forkpatch-port/load-bank-validation.json). Appliance cord
+integration, full source-world conversion and interactive audio/client checks
+remain pending. This is another development checkpoint, not completion of the port.

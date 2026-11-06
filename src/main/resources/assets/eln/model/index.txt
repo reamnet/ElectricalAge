@@ -205,3 +205,4 @@ switchgear_ssr_three/switchgear_ssr_three.obj
 
 utilitywind/utilitywind.obj
 utilitywatermill/utilitywatermill.obj
+industrial_load_bank/industrial_load_bank.obj

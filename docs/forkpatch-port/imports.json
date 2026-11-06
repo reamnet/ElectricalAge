@@ -1614,5 +1614,75 @@
     "sourceSha256": "ad97838a11525986cc3e6519631d12cc3764723587e4b4b1ae7f3e991c377b92",
     "mode": "native-flowing-water-sky-clearance-rotation-and-packet-tests",
     "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_load_bank/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_load_bank/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim-load-bank-resource",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_load_bank/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_load_bank/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-load-bank-resource",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_load_bank/industrial_load_bank.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_load_bank/industrial_load_bank.obj",
+    "sourceSha256": "60f42c78febee4d34c9bee11d8b99f43fed3e0db9ca73e3410eb7d3228d728d7",
+    "mode": "verbatim-load-bank-resource",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_industrial_fan.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_industrial_fan.ogg",
+    "sourceSha256": "ff7ef3587c09e622977246d69b419245465041d8fb5e34d6750897f0435f19fe",
+    "mode": "verbatim-load-bank-resource",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
   }
 ]

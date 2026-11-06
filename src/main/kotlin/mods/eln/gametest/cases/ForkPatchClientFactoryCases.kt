@@ -15,7 +15,7 @@ object ForkPatchClientFactoryCases {
     private val names=listOf("MPPT Solar Controller","Wall-mounted Hybrid Solar Inverter","Programmable UPS","Wall-mounted Programmable UPS",
         "Automatic Transfer Switch","Standby Gasoline Generator","16 kWh LiFePO4 Battery Cabinet","16 kWh Wall-mounted LiFePO4 Battery",
         "Off-grid Inverter Charger","Protective Relay Cabinet","Automatic Load Shedding Controller","Pad Mounted Neighbourhood Transformer",
-        "North American Meter Base","120/240V Service Weatherhead","120/240V Underground Service Handhole","Mains Step-down Unit","Four Pole Changeover Relay")
+        "North American Meter Base","120/240V Service Weatherhead","120/240V Underground Service Handhole","Mains Step-down Unit","Four Pole Changeover Relay","Programmable Load Bank")
     @JvmStatic fun cases(): List<TestCase> = listOf(Registry())+names.map(::Published)
     private open class Base:TestCase {
         override fun id()="forkpatch_client_factory_base"

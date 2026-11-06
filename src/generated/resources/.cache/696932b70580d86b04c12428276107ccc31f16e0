@@ -1,4 +1,4 @@
-// 26.3	2026-11-06T03:01:02.671674982	eln-global/EA models
+// 26.3	2026-11-06T08:47:30.276217382	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -109,6 +109,7 @@ f0ed42296ed8f581741e53ea14400c53a04c1ba2 assets/eln/blockstates/light_block.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/plant_steam_condenser.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/power_capacitor_block.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/power_inductor_block.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/programmable_load_bank.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/programmable_ups.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/protective_relay_cabinet.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/red_handle_service_disconnect.json
@@ -668,6 +669,7 @@ ca2b42fe30ea589232556a7d0298202dea727bce assets/eln/items/portable_electrical_mi
 bb572d18678811390e465d1b9223a2c06e17e29f assets/eln/items/power_inductor.json
 9a7bd0ce4042310543d384df8d2700dd4cd536d0 assets/eln/items/power_inductor_block.json
 bf068de505375f5f9ec04a78ee5c2a83a7a011cf assets/eln/items/power_resistor.json
+2381cd85409e522a6795a797918f5595c2eb9b92 assets/eln/items/programmable_load_bank.json
 464bb6b331a241fd03c09f0f8e5c6c8c58ce8f2f assets/eln/items/programmable_ups.json
 3994796d8b9281eebda5a236793c737c10f846c9 assets/eln/items/protective_relay_cabinet.json
 3a1476cc2dba50c9b42511ef68a4cf4aaecd7df6 assets/eln/items/purple_brush.json
@@ -1458,6 +1460,8 @@ c584a778d4d7dd7e8ab18175e81630ed884060c3 assets/eln/models/item/portable_electri
 058808524d7aa387542ac0204344a18337cb78a0 assets/eln/models/item/power_inductor_block.json
 4fafcb0c1d0860c264fd81adea6645e0f828f815 assets/eln/models/item/power_resistor.json
 ab73c04b31e34c1972906b95e3757e8d30d947d1 assets/eln/models/item/power_resistor_3d.json
+1713273d8d264627c9bf6a9c5df390bb9dd1f5aa assets/eln/models/item/programmable_load_bank.json
+ae2aee48c009e749015a88270520a84b917808a8 assets/eln/models/item/programmable_load_bank_3d.json
 a0404d0a3469b2b32e65bfa645fb1201622ffde4 assets/eln/models/item/programmable_ups.json
 f96a0b813fa587e903e987e3c06860b0606a5352 assets/eln/models/item/programmable_ups_3d.json
 ace573ab7c3340b39222b8c1b524acf9c81d0aa2 assets/eln/models/item/protective_relay_cabinet.json
