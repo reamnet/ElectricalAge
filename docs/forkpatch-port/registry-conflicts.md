@@ -34,3 +34,7 @@ its current item. Source and destination worlds must remain distinguishable.
 Source variable 129 and one-way 131–134 lookups are free at this checkpoint.
 Isolation 135 is development-only in the source registration. See the
 [control and winding review](power-electronics-review.md) before adapting them.
+
+Ghost block-state properties and numbers also differ between source and target.
+See the [ghost-state import review](ghost-migration-review.md); equal numbers do
+not establish equal collision, picking or owner semantics.

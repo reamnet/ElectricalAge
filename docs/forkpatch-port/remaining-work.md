@@ -84,7 +84,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 
 - Implement full **1.21.1 source-world conversion**, including blocks/entities/items,
   NBT and registry conflicts. Native save round trips and a source-ID lookup helper
-  are not a world converter. Preserve existing 26.3 save identities.
+  are not a world converter. Preserve existing 26.3 save identities. Review the [source/native ghost-state differences](ghost-migration-review.md) before converting reservations.
 - Complete recipes/manufacturing, translations, guide material, tags/loot, models,
   icons, sounds, packets and menus for every remaining adapter.
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
