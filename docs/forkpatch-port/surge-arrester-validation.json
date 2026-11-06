@@ -69,5 +69,6 @@
     "Final physical conducting interval may cross cartridge energy threshold; its real joules are retained, not truncated",
     "Full source-world conversion, historical unfiltered golden reconciliation and broader equipment parity remain pending",
     "Interactive GPU/audio/multiplayer, tall-pole culling and representative loaded-world performance comparisons are unrun"
-  ]
+  ],
+  "testedCodeCommit": "94c295d54bf1a27fb6b106f3f3956342b0361d0e"
 }

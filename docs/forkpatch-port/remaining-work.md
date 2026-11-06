@@ -35,6 +35,12 @@ for 627 identities and all 244 selected native cases. See
 passed 577 tests with three optional preview cases skipped (580 selected),
 including the default 200-case fluid corpus.
 
+The latest industrial work block passes **613 root regressions**, with three optional
+previews skipped (616 selected; full 200-case fluid corpus), all 15 CAD tests and
+all 283 selected native `eln:forkpatch_*` cases. It adds the load bank, motor drive,
+SCADA and arrester/pole kit while preserving all 627 handoff identities and 913
+English entries. See [final evidence](industrial-work-block-validation.json).
+
 ## Equipment and behavior still requiring adapters or parity review
 
 | Area | Remaining scope |
