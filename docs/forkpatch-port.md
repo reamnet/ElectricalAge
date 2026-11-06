@@ -1076,3 +1076,16 @@ See the [equipment guide](forkpatch-port/load-bank.md) and
 [validation report](forkpatch-port/load-bank-validation.json). Appliance cord
 integration, full source-world conversion and interactive audio/client checks
 remain pending. This is another development checkpoint, not completion of the port.
+
+### Passive variable frequency motor drive
+
+The source motor drive at 8069 now uses the destination's power-conserving scalar
+ServiceTap with real output impedance, physical V/Hz ramp, signal inhibition and
+latched winding-temperature protection. Disable coasts down; hot faults open and
+require a cool explicit reset. Saves retain heat/settings/faults but restart at
+zero frequency. Accepted-step accounting retains the final powered interval,
+and stable operation retains native LU factors. Native crafting, source geometry,
+icon, menu, publication factory and placed-node reload are included. The model
+is scalar, not an AC phasor solver or ideal current clamp. See the
+[motor-drive guide](forkpatch-port/motor-drive.md) and
+[validation report](forkpatch-port/motor-drive-validation.json).

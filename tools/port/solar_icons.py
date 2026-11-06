@@ -73,6 +73,7 @@ if __name__ == "__main__":
         ("redhandleservicedisconnect", "red_handle_service_disconnect"),
         ("undergroundservicehandhole", "120_240v_underground_service_handhole"),
         ("industrial_load_bank", "programmable_load_bank"),
+        ("industrial_drive", "variable_frequency_motor_drive"),
         ("industrial_pad", "pad_mounted_neighbourhood_transformer"),
         ("industrial_relay", "protective_relay_cabinet"),
         ("industrial_shedder", "automatic_load_shedding_controller"),

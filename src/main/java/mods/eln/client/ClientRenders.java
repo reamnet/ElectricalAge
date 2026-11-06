@@ -15,6 +15,7 @@ public final class ClientRenders {
         ElnRenders.transparent(mods.eln.utility.HouseServiceDescriptor.class,mods.eln.utility.HouseServiceRender::new);
         ElnRenders.transparent(mods.eln.utility.UndergroundHandholeDescriptor.class,mods.eln.utility.UndergroundHandholeRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.industrial.PadTransformerDescriptor.class,mods.eln.transparentnode.industrial.PadTransformerRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.MotorDriveDescriptor.class,mods.eln.transparentnode.industrial.MotorDriveRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.industrial.LoadBankDescriptor.class,mods.eln.transparentnode.industrial.LoadBankRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.industrial.IndustrialDescriptor.class,mods.eln.transparentnode.industrial.IndustrialRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.ups.UpsDescriptor.class,mods.eln.transparentnode.ups.UpsRender::new);

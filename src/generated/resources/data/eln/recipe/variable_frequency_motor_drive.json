@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:redstone_block",
+    "I": "eln:iron_plate",
+    "M": "eln:machine_block",
+    "P": "minecraft:redstone",
+    "W": "eln:copper_cable"
+  },
+  "pattern": [
+    "IPI",
+    "WCW",
+    "IMI"
+  ],
+  "result": {
+    "id": "eln:variable_frequency_motor_drive"
+  }
+}

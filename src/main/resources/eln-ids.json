@@ -3641,6 +3641,12 @@
   "kind": "transparent_node",
   "name": "pad_mounted_neighbourhood_transformer"
  },
+ "eln:transparent_node@8069": {
+  "descriptor": "MotorDriveDescriptor",
+  "display": "Variable Frequency Motor Drive",
+  "kind": "transparent_node",
+  "name": "variable_frequency_motor_drive"
+ },
  "eln:transparent_node@8070": {
   "descriptor": "IndustrialDescriptor",
   "display": "Automatic Load Shedding Controller",

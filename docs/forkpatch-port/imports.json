@@ -1684,5 +1684,68 @@
     "sourceSha256": "ff7ef3587c09e622977246d69b419245465041d8fb5e34d6750897f0435f19fe",
     "mode": "verbatim-load-bank-resource",
     "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_drive/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_drive/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim-motor-drive-resource",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_drive/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_drive/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-motor-drive-resource",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_drive/industrial_drive.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_drive/industrial_drive.obj",
+    "sourceSha256": "98e52842674f77bf1296c24fcae9e35fecbbd27ab9397116f0f5b1b930d62fbf",
+    "mode": "verbatim-motor-drive-resource",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
   }
 ]
