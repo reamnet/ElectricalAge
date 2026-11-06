@@ -41,16 +41,17 @@
   "fluidCases": 200,
   "rootCommand": "./gradlew --no-daemon --max-workers=2 :test cad:test",
   "native": {
-    "selected": 316,
+    "selected": 317,
     "failed": 0,
     "filter": "eln:forkpatch_*",
     "transportCases": 11,
     "newScadaCases": 2,
     "newTransferAndBlockBreakCases": 3,
-    "report": "/tmp/eln26-workshop-transport-final.xml",
+    "report": "/tmp/eln26-workshop-chain-final.xml",
     "focusedCullingReport": "/tmp/eln26-transport-culling.xml",
     "meshBoundChecks": 32,
-    "meshBoundFollowupLog": "session2-unfiltered-native.log"
+    "meshBoundFollowupLog": "session2-unfiltered-native.log",
+    "newEnergyChainCases": 1
   },
   "datagen": {
     "identities": 637,
@@ -76,12 +77,40 @@
   "integrationCoverage": [
     "Powered SCADA opens/closes the actual charger and welder without bypassing inventory or accepted-energy rules",
     "Native transfer capabilities commit and abort real item changes; charger aborted extraction preserves session",
-    "Actual charger block destruction returns one charged pack and one settings-only machine"
+    "Actual charger block destruction returns one charged pack and one settings-only machine",
+    "One actual pack is charged, extracted through the native capability, driven/lifted, removed and recharged; 36000 J accepted input yields 28259.832 J stored plus 5580.168 J paid vehicle use at 94% efficiency"
   ],
   "limitations": [
     "Complete source-world conversion remains pending",
-    "Historical unfiltered native golden reconciliation remains pending",
     "Interactive client/GPU/audio and multiplayer sessions remain pending",
-    "Road vehicles, appliance power/cords and wider remaining feature groups are not claimed complete"
-  ]
+    "Road vehicles, appliance power/cords and wider remaining feature groups are not claimed complete",
+    "Unfiltered suite still fails historical descriptor and slot comparisons; expected goldens and exceptions remain unchanged"
+  ],
+  "unfiltered": {
+    "selected": 782,
+    "passed": 780,
+    "failed": 2,
+    "skipped": 0,
+    "failures": [
+      "eln:golden_descriptors",
+      "eln:golden_slots"
+    ],
+    "report": "native-suite-review.json",
+    "scope": "Production behavior plus fixture isolation fix; the later end-to-end chain is included in the separate 317-case filtered run."
+  },
+  "buildCommand": "./gradlew --no-daemon --max-workers=2 :build cad:test",
+  "artifact": {
+    "path": "/workspace/ElectricalAge/build/libs/eln-26.3-0.1.0-port.jar",
+    "bytes": 29839829,
+    "sha256": "68d3a11e42875d3581e1e676b761b83659a0a013baa7143c2a4d48b442d35e33",
+    "verifiedClassCount": 95,
+    "classFilesMatchBuildOutputs": true,
+    "sourceModelsMatchPackagedResources": true,
+    "identitiesMatchPackagedResources": true,
+    "newRecipesMatchPackagedResources": true,
+    "weldedFramesRequirePaidWelding": true,
+    "scope": "Development JAR; class/resource integrity checked. Packaged multiplayer/client release validation remains pending."
+  },
+  "sourceUnchanged": true,
+  "gradleAndWrapperUnchanged": true
 }

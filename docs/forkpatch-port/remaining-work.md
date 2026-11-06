@@ -31,28 +31,24 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Electric Forklift and Warehouse Equipment Pallet with server controls, actual pack drain/lifting costs, guarded inventories, cargo saves and refunds.
 
 Each family still participates in the cross-cutting validation/migration work below.
-The large renewable checkpoint passed 20 focused regressions, data generation
-for 627 identities and all 244 selected native cases. See
-[validation](large-renewable-validation.json). The final complete root suite also
-passed 577 tests with three optional preview cases skipped (580 selected),
-including the default 200-case fluid corpus.
 
-The latest industrial work block passes **613 root regressions**, with three optional
-previews skipped (616 selected; full 200-case fluid corpus), all 15 CAD tests and
-all 283 selected native `eln:forkpatch_*` cases. It adds the load bank, motor drive,
-SCADA and arrester/pole kit while preserving all 627 handoff identities and 913
-English entries. See [final evidence](industrial-work-block-validation.json).
+The latest workshop/transport block passes **630 full root regressions**, with
+three optional previews skipped (633 selected), all **15 CAD tests**, and all
+**317 selected native port cases**. The default 200-case fluid corpus is included.
+All 631 preceding identities and 921 English entries remain unchanged; the current
+catalog has 637 identities, 935 English entries and 453 resolved native item textures.
+See [complete evidence](workshop-transport-validation.json), the
+[workshop guide](workshop.md), and [transport guide](industrial-transport.md).
 
-The charging/welding checkpoint adds 14 passing focused regressions and passes all
-300 selected native port cases. All 631 previous identities and 921 English entries
-remain unchanged; four source-compatible identities are added. See
-[workshop evidence](workshop-validation.json) and [equipment guide](workshop.md).
+The wider unfiltered run passes **780 of 782 GameTests**. The historical descriptor
+and slot comparisons remain failing; [exact differences](native-suite-review.md)
+are retained without changing expectations. Restoring shared test-player facing
+after oriented renewable placement fixes two order-dependent battery/furnace layouts.
+The later charge-drive-recharge case is included in the separate 317-case port run.
 
-The workshop/transport block passes **630 full root regressions**,
-15 CAD tests and all **316** selected native port cases, with the default
-200-case fluid corpus. All 631 previous identities and 921 English entries are
-unchanged. See [complete evidence](workshop-transport-validation.json) and
-[transport guide](industrial-transport.md).
+Earlier checkpoints remain documented in [large renewable validation](large-renewable-validation.json),
+[industrial controls](industrial-work-block-validation.json), and the
+[charging/welding checkpoint](workshop-validation.json).
 
 ## Equipment and behavior still requiring adapters or parity review
 
@@ -84,8 +80,10 @@ unchanged. See [complete evidence](workshop-transport-validation.json) and
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- Run the complete unfiltered native suite after those historical expectations are
-  reviewed. Current catalog publication/menu/item checks are passing separately.
+- The unfiltered workshop/transport run passes 780 of 782 cases; descriptor and slot
+  goldens still fail. Review the [exact differences](native-suite-review.md), then
+  rerun after explicitly reconciling the historical expectations. The wind/watermill
+  fixture now restores shared test-player facing, fixing two order-dependent layouts.
 - Perform interactive client/GPU/audio and multiplayer checks, including geometry,
   animations, transparent vehicle windows, screen interactions and resource reloads.
   Review tall legacy pole/span culling bounds and source mesh display/status parts

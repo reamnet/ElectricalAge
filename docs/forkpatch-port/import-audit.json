@@ -1,9 +1,9 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "e5eb366d93de234a0102aef8c492c49094c00b0f",
-  "ledgerEntries": 315,
+  "targetCommit": "a034a5f3fe9eb744c3c9a8f3ac9f23f3e8dc31dd",
+  "ledgerEntries": 316,
   "uniqueSourceFiles": 195,
-  "uniqueTargetFiles": 305,
+  "uniqueTargetFiles": 306,
   "declaredVerbatimEntries": 83,
   "exactCopies": 94,
   "passed": true,
@@ -2534,7 +2534,7 @@
       "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchLargeRenewableCases.kt",
       "mode": "native-flowing-water-sky-clearance-rotation-and-packet-tests",
       "sourceSha256": "ad97838a11525986cc3e6519631d12cc3764723587e4b4b1ae7f3e991c377b92",
-      "targetSha256": "146c8a3db35d4dc5e90b47f30537d4e41a300ff2e33e4e3b9eeb521e7debac6a",
+      "targetSha256": "5b9bac78f90f3b2bcebfffed126c1442dd4369f8e17dd13d6aa8095f0ac8567f",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3458,7 +3458,7 @@
       "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchTransportCases.kt",
       "mode": "native-driving-lifting-cargo-save-and-geometry-regressions",
       "sourceSha256": "0625648fe80f5e06304661947e405ba6ee91f33b84a388cca74e9337e05feb5f",
-      "targetSha256": "d94280f09d3518d429e081e29a0578a365700611521fa6db2a3ea149f76992b0",
+      "targetSha256": "1282bd42dfd50d1aed664643c50a0b151ec44a6455e55d568e952fcf33534f18",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3470,6 +3470,17 @@
       "mode": "native-bounded-payload-and-truncation-regressions",
       "sourceSha256": "d38bc293405eb37868339c925f137ad3f73b77fb542899df385a6c2f453c52b6",
       "targetSha256": "ce1c314d9dfaeffc29a959d51b047991f2e006f44dfc6b957621dba667280da0",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 315,
+      "source": "src/main/kotlin/mods/eln/devtest/IndustrialExpansionChecks.kt",
+      "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchWorkshopChainCases.kt",
+      "mode": "native-cross-device-accepted-energy-and-item-ownership-integration",
+      "sourceSha256": "0625648fe80f5e06304661947e405ba6ee91f33b84a388cca74e9337e05feb5f",
+      "targetSha256": "42a53bda0b61b5f79eb4a56eb8496dccb8a75555d1813e686dd421425c4b419d",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false

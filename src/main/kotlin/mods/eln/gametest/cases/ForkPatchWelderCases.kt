@@ -74,6 +74,7 @@ object ForkPatchWelderCases {
         override fun build(c:TestContext) {
             super.build(c)
             val tool=ItemStack(Items.IRON_PICKAXE).apply { damageValue=200;set(DataComponents.CUSTOM_NAME,Text.literal("Kept name"));ItemNbt.edit(this) { it.putString("owner","fixture");it.putInt("sentinel",42) } }
+            tool.enchant(c.level().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(net.minecraft.world.item.enchantment.Enchantments.UNBREAKING),3)
             expected=tool.copy().apply { damageValue=138 }
             e.getInventory().setItem(0,tool);e.unit.prepare()
         }

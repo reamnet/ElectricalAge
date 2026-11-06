@@ -2209,5 +2209,12 @@
     "sourceSha256": "d38bc293405eb37868339c925f137ad3f73b77fb542899df385a6c2f453c52b6",
     "mode": "native-bounded-payload-and-truncation-regressions",
     "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/IndustrialExpansionChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchWorkshopChainCases.kt",
+    "sourceSha256": "0625648fe80f5e06304661947e405ba6ee91f33b84a388cca74e9337e05feb5f",
+    "mode": "native-cross-device-accepted-energy-and-item-ownership-integration",
+    "status": "317-native-port-cases-and-780-of-782-unfiltered-cases-passed-historical-goldens-pending"
   }
 ]

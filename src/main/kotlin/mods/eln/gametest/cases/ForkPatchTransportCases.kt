@@ -111,6 +111,10 @@ object ForkPatchTransportCases {
                 c.check("forklift: held pickup key cannot repeatedly toggle cargo",ItemStack.isSameItemSameComponents(e.cargo,held),"")
                 val before=energy(e);repeat(40) { ForkliftControls.handle(p,ForkliftControls(0,0,1,false));e.tick() }
                 c.check("forklift: loaded lifting pays for its greater mass",e.lift>.99 && before-energy(e)>=1070*9.81*.99/.7,"")
+                val heldBeforeBlockedDrop=e.cargo.copy()
+                val obstruction=net.minecraft.core.BlockPos.containing(front(e));c.level().setBlockAndUpdate(obstruction,Blocks.STONE.defaultBlockState())
+                c.check("forklift: blocked unload retains the original inventory-bearing cargo",!e.handleCargo() && ItemStack.isSameItemSameComponents(e.cargo,heldBeforeBlockedDrop),"")
+                c.level().removeBlock(obstruction,false)
                 ForkliftControls.handle(p,ForkliftControls(0,0,0,true))
                 val dropped=c.level().getEntitiesOfClass(PalletEntity::class.java,e.boundingBox.inflate(4.0)).filter { it.isAlive }
                 entities.addAll(dropped)

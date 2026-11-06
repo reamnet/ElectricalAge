@@ -23,8 +23,14 @@ object ForkPatchLargeRenewableCases {
         override fun measure(c: TestContext) {}
         fun place(c: TestContext,water: Boolean,front: Direction):LargeRenewableElement {
             val d=requireNotNull(Eln.transparentNodeItem.getDescriptor(if(water)LargeRenewableDescriptor.WATER_ID else LargeRenewableDescriptor.WIND_ID))
-            val fp=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());fp.xRot=0f;fp.yRot=when(front) { Direction.XN->270f;Direction.XP->90f;Direction.ZN->0f;else->180f }
-            return requireNotNull((d.parentItem as TransparentNodeItem).placeAt(d.newItemStack(),fp,c.level(),c.at(12,1,12),Direction.YN)).element as LargeRenewableElement
+            val fp=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level())
+            val pitch=fp.xRot;val yaw=fp.yRot
+            val placed=try {
+                fp.xRot=0f;fp.yRot=when(front) { Direction.XN->270f;Direction.XP->90f;Direction.ZN->0f;else->180f }
+                requireNotNull((d.parentItem as TransparentNodeItem).placeAt(d.newItemStack(),fp,c.level(),c.at(12,1,12),Direction.YN)).element as LargeRenewableElement
+            }finally { fp.xRot=pitch;fp.yRot=yaw }
+            c.check("large renewable: oriented placement preserves shared test-player facing",fp.xRot==pitch && fp.yRot==yaw,"")
+            return placed
         }
         fun offset(e: LargeRenewableElement,x:Int,y:Int,z:Int):BlockPos=Coordonate(x,y,z,0).apply { applyTransformation(e.front,e.node.coordonate) }.pos()
         fun published(c: TestContext,e:LargeRenewableElement) {

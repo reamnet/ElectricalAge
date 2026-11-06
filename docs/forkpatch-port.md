@@ -1138,6 +1138,12 @@ traction pack. Pallet inventories, native saves, guarded chest menus, collision
 checks and single refunds preserve cargo; client payloads carry bounded inputs
 only. Source geometry now uses native render-state snapshots. SCADA also controls
 the new charger/welder through their normal gates. The full default root/CAD run
-and all 316 selected native port cases pass; see the
+and all 317 selected native port cases pass; see the
 [transport guide](forkpatch-port/industrial-transport.md) and
 [work-block evidence](forkpatch-port/workshop-transport-validation.json).
+
+The wider unfiltered run passes 780/782 cases, with descriptor/slot historical
+goldens still failing. Restoring shared test-player facing after renewable
+placement fixes two unrelated layout failures without changing battery/furnace
+behavior. A native chain test balances one actual pack across charging, vehicle
+work, removal and recharging. See the [unfiltered review](forkpatch-port/native-suite-review.md).
