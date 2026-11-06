@@ -1,4 +1,4 @@
-// 26.3	2026-11-06T09:03:41.834606687	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-06T09:24:52.471217913	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -193,6 +193,7 @@ a39938c4e0204b6626d2678f78657d83d72f3732 data/eln/advancement/recipes/misc/gas_t
 85f830ec807c625f73305ecde729017bc8b2eb20 data/eln/advancement/recipes/misc/gooseneck_service_mast.json
 3206c8a83c23437655d503a29cdf6acb090766cf data/eln/advancement/recipes/misc/gray_brush.json
 a0d612bd4f26061b5e9c15aa0f3000b426037fd0 data/eln/advancement/recipes/misc/green_brush.json
+709c3ad72af1a1da0bec74750a7fa8a8e408e3ef data/eln/advancement/recipes/misc/grid_control_console.json
 c14117c6913e1bb9562e34acda9dbe02383521d8 data/eln/advancement/recipes/misc/ground_cable.json
 fc128c4105f2c92ee05a3405c45a32a3d9656fb9 data/eln/advancement/recipes/misc/headlamp.json
 ca934f46f64dec6fbd4c555a9257f3af2dfa465f data/eln/advancement/recipes/misc/high_power_receiver_antenna.json
@@ -644,6 +645,7 @@ ad67f642228a2e390b3271c1a35b1bd48f9688fa data/eln/recipe/fused_pv_combiner_and_d
 2853689a112cb5b3d708ea8ca9abcc22ef3a8fc5 data/eln/recipe/gooseneck_service_mast.json
 6807bca5810c43c53a541f3192a05744bb3b73f2 data/eln/recipe/gray_brush.json
 1fd7392f8f3c4443adbf0499d84396c5da56090d data/eln/recipe/green_brush.json
+9fea350da7727347e458880b872c9ffc283ee3a3 data/eln/recipe/grid_control_console.json
 15ba4c1dcda12e30a0ba2f80409862bb6d81569f data/eln/recipe/ground_cable.json
 2a2690f54fe15a7783bdbfb8481c7334cbf4d7bf data/eln/recipe/headlamp.json
 947048bf74e986c940e07879841e888c3a75df68 data/eln/recipe/high_power_receiver_antenna.json

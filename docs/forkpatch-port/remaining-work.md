@@ -25,6 +25,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Six independent-pole contactor/changeover/solid-state switchgear devices.
 - Programmable Load Bank with passive sag response, case/fan cooling and native controls.
 - Variable Frequency Motor Drive with passive V/Hz ramp, output impedance and latched thermal protection.
+- Grid Control Console/SCADA with eight world-local targets, bounded loaded-node lookup and native device controls.
 
 Each family still participates in the cross-cutting validation/migration work below.
 The large renewable checkpoint passed 20 focused regressions, data generation
@@ -41,7 +42,7 @@ including the default 200-case fluid corpus.
 | Other power electronics | Remaining source variable converter/control behavior; review shared transformer, capacitor and regulated-supply changes against the destination solver. |
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height/surge attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
 | Utility manufacturing | Wire drawing/processing machinery, spool/jacket manufacturing, inventory trimming and remaining wire/cable tools. |
-| Industrial devices | Grid Control Console/SCADA; Pole Surge Arrester; Programmable EV Pack Charger; Electric Welding Station. |
+| Industrial devices | Pole Surge Arrester; Programmable EV Pack Charger; Electric Welding Station. |
 | Industrial transport | Forklift controls, lifting/pickup behavior, pallet entities, inventories, input packets and entity renderers. |
 | Vehicles | Four-seat golf cart, two-seat electric car, stepping/collision, turn-overload fire/explosion behavior, passengers, storage, six-cell traction pack and in-car charging. Preserve the electric car's clear windows. |
 | Appliance power | Plugs/cords, wall/industrial outlets, power strip, rating and support/wiring rules, machine cord adapters and compact plug-in UPS. |
@@ -50,7 +51,7 @@ including the default 200-case fluid corpus.
 | Pumps and growing | Industrial/world-intake pumps, fluid-port integration, growing-bed cycle and associated inventory/render/UI behavior. |
 | Lighting/decor | Remaining street/flood/work lights, festive/fairy lights/tree/candle devices, fire alarms and their networks, optics, damage, controls and audio. |
 | Other mechanics/processes | Source shaft/generator/turbine, fusion reactor and other machine/process changes not already covered by an adapter checkpoint; reconcile with existing native mechanical/fluid implementations. |
-| Tools and integration | Remaining probes, configuration interactions, wireless/control channels, diagnostics/metrics, guides and optional-mod bridges. A source file already present in 26.3 still needs conflict review. |
+| Tools and integration | Remaining probes, configuration interactions, wireless/control channels, diagnostics/metrics, guides and optional-mod bridges. SCADA endpoint integration for the still-unadapted source 12-circuit breaker panel and media addon remains pending. A source file already present in 26.3 still needs conflict review. |
 | Media addon | EAMedia is a separate addon: jukebox/external speakers and Plex/web-interface behavior need a separate platform port and integration validation. |
 
 ## Cross-cutting completion work

@@ -1747,5 +1747,75 @@
     "sourceSha256": "98e52842674f77bf1296c24fcae9e35fecbbd27ab9397116f0f5b1b930d62fbf",
     "mode": "verbatim-motor-drive-resource",
     "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaLink.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaLink.kt",
+    "sourceSha256": "98d34385db8e3fc7e7838d1bf1a32d2b4f934b4510e02ae724f0ef7a4b4e537e",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_scada/industrial_scada.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_scada/industrial_scada.obj",
+    "sourceSha256": "e95a3a8c89ee058e25daa6fcec1421c3be8e0b6d3cb80161ac21dc35bd680a0b",
+    "mode": "verbatim-scada-resource",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_scada/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_scada/equipment_finish.mtl",
+    "sourceSha256": "e9e6c9f0e5d3850a49535ecd82e8b54d690bcd84473caf8fd89b3491375066c2",
+    "mode": "verbatim-scada-resource",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_scada/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_scada/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-scada-resource",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
   }
 ]

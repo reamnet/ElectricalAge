@@ -1,4 +1,4 @@
-// 26.3	2026-11-06T09:03:41.82630723	eln-global/EA models
+// 26.3	2026-11-06T09:24:52.457703791	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -82,6 +82,7 @@ f129897addd25f967e19a97a4f915b341261ab7a assets/eln/blockstates/cinnabar_ore.jso
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/generator.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/ghost_block.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/gooseneck_service_mast.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/grid_control_console.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/high_power_receiver_antenna.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/high_power_transmitter_antenna.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/hybrid_solar_inverter.json
@@ -555,6 +556,7 @@ c5bec09b544a1b17e38e0199fc64d913404e29b6 assets/eln/items/gold_plate.json
 c7f9e26b775d9707b8295727599f3db0ec172123 assets/eln/items/gooseneck_service_mast.json
 12d8fcfd796a694035bd05fdd7dce7da9163aa76 assets/eln/items/gray_brush.json
 69b0f5a9932f8a27ea63cded262a9a9976c7c64c assets/eln/items/green_brush.json
+4937b4b4455242cc01b9bb1be054731de9dbcdfb assets/eln/items/grid_control_console.json
 68db4992640bbf3df85227400237375dfe6c8c0a assets/eln/items/ground_cable.json
 6c06cb30635979c30b010d037a6c41d65432bd3d assets/eln/items/handbook.json
 969cbb494560f0f130da42a5c8f6c3126bc99754 assets/eln/items/headlamp.json
@@ -1298,6 +1300,8 @@ a2c5bd268f992cc8110ae2d483799a2772b7ef3a assets/eln/models/item/gold_dust.json
 9dd9065d68d14621cc80318f1861b483fa5ebd03 assets/eln/models/item/gooseneck_service_mast_3d.json
 a226cf403dbdfeeb44c3bf58de0c6cf852269566 assets/eln/models/item/gray_brush.json
 f7d7b0915063be54ce1e56e3bbebdf8d27e71cae assets/eln/models/item/green_brush.json
+6f187fa2d3839502a0a5d5cfc611debdeef3caec assets/eln/models/item/grid_control_console.json
+2a9487fdd4cf462ada1f2dda96e6109ffaecb9ec assets/eln/models/item/grid_control_console_3d.json
 201074a4b4e260eea17fddafbfd0f08a956cf1e8 assets/eln/models/item/ground_cable.json
 aa44c20d680f6244c69507baaafa048cb1faa5e7 assets/eln/models/item/handbook.json
 41bda0ea22ab2fb464f1bdf14fe5f9214f02582a assets/eln/models/item/high_power_receiver_antenna.json

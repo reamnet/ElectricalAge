@@ -135,6 +135,7 @@ public final class MenuSpecs {
             filter(1,16,204,1,stack->{var fuse=mods.eln.utility.PoleHardware.INSTANCE.fuse(stack);return fuse!=null && !fuse.getSpent();},MEDIUM,tr("Primary fuse cartridge"))
         ).publishing(1).panel(368,326,104,244));
         put(mods.eln.transparentnode.industrial.MotorDriveDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
+        put(mods.eln.transparentnode.industrial.ScadaDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
         put(mods.eln.transparentnode.industrial.LoadBankDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
         put(mods.eln.transparentnode.industrial.IndustrialDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
         put(mods.eln.transparentnode.ups.UpsDescriptor.class, d -> {

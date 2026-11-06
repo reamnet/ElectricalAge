@@ -1089,3 +1089,17 @@ icon, menu, publication factory and placed-node reload are included. The model
 is scalar, not an AC phasor solver or ideal current clamp. See the
 [motor-drive guide](forkpatch-port/motor-drive.md) and
 [validation report](forkpatch-port/motor-drive-validation.json).
+
+### Eight-target native SCADA console
+
+Source identity 8065 now has a native console with eight explicit world-local
+addresses, a real 120 V / 20 W passive supply, physical-time polling, same-world
+256-block range and loaded-chunk guards. Existing endpoint APIs handle service
+disconnects/smart meters, pole switches/reclosers, switchgear and industrial
+controls without resetting protection latches or paid hardware. Native binding
+is transactional, saved addresses survive actual node reload and unsupported
+console recursion is rejected. Inhibit and overvoltage also block commands,
+consistent with the console's disconnected supply load. Source breaker-panel
+and media-addon endpoints remain pending with those adapters. See the
+[SCADA guide](forkpatch-port/scada.md) and
+[validation report](forkpatch-port/scada-validation.json).

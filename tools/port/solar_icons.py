@@ -74,6 +74,7 @@ if __name__ == "__main__":
         ("undergroundservicehandhole", "120_240v_underground_service_handhole"),
         ("industrial_load_bank", "programmable_load_bank"),
         ("industrial_drive", "variable_frequency_motor_drive"),
+        ("industrial_scada", "grid_control_console"),
         ("industrial_pad", "pad_mounted_neighbourhood_transformer"),
         ("industrial_relay", "protective_relay_cabinet"),
         ("industrial_shedder", "automatic_load_shedding_controller"),

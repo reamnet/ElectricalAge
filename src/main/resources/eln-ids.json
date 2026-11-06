@@ -3629,6 +3629,12 @@
   "kind": "transparent_node",
   "name": "programmable_load_bank"
  },
+ "eln:transparent_node@8065": {
+  "descriptor": "ScadaDescriptor",
+  "display": "Grid Control Console",
+  "kind": "transparent_node",
+  "name": "grid_control_console"
+ },
  "eln:transparent_node@8066": {
   "descriptor": "IndustrialDescriptor",
   "display": "Protective Relay Cabinet",
