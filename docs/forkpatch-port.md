@@ -1223,3 +1223,14 @@ from the same production catalog. See the [behavior guide](forkpatch-port/wire-m
 and [validation](forkpatch-port/wire-manufacturing-validation.json). The full
 ForkPatch port, historical golden reconciliation and interactive checks remain
 unfinished.
+
+### Native chip Fabricator
+
+Fabricator4480 and basic components8064–8068 now use native accepted electrical
+work, real filtered inventories/automation, saved deterministic ALU yields and
+source body/etcher meshes. Every attempt pays both ingredients and4 kJ, including
+a failed yield. Exact output capacity, copied-state guards, actual owner reload
+and real break/place have native coverage. Native paid machine/wafer bootstraps
+fill missing source survival recipes while preserving existing native chip and
+ingot/plate routes. See the [adapter](forkpatch-port/chip-fabrication.md) and
+[validation](forkpatch-port/chip-fabrication-validation.json).

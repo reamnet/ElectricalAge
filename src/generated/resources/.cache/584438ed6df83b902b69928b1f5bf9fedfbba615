@@ -1,4 +1,4 @@
-// 26.3	2026-11-07T07:24:40.564922	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-07T18:42:48.738835737	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -176,6 +176,7 @@ c95c5929d0b1534b30262ea3827c5f15d75bb044 data/eln/advancement/recipes/misc/energ
 e09f2b8bf38f6e72748fec44315b25bcf864bccc data/eln/advancement/recipes/misc/experimental_transporter.json
 52748fd272895fedc48c5836c905d52c517c5e79 data/eln/advancement/recipes/misc/extra_large_standby_gasoline_generator.json
 c489587306fb77c3b4c1d28fb1b411fe5862b610 data/eln/advancement/recipes/misc/extreme_standby_gasoline_generator.json
+086c751c02216f1bde74f860e493cad91f6c154d data/eln/advancement/recipes/misc/fabricator.json
 e6626b81782dcf21944212f0e22b7ebca4a2ce5b data/eln/advancement/recipes/misc/fast_electrical_drill.json
 7cc5812c49b47ab69555098d564e91a30828e9d7 data/eln/advancement/recipes/misc/field_bus_cable.json
 a7ff3268fc3ae3ad11defa593f5a837359306cab data/eln/advancement/recipes/misc/flare_stack.json
@@ -648,6 +649,7 @@ fcad7ac7974a4a1f34a82d16fc8438ba71b5b019 data/eln/recipe/energy_meter.json
 c2715733a822da5ec8a2af7742a673d2fdd1699e data/eln/recipe/experimental_transporter.json
 518836055b462dd52d20c8642d58d209ea05902d data/eln/recipe/extra_large_standby_gasoline_generator.json
 bd50930da857ef199e662908e257fd731183e9f8 data/eln/recipe/extreme_standby_gasoline_generator.json
+b13cb4968a13618baac1a0b74594a0fc79a51c95 data/eln/recipe/fabricator.json
 578f4c90700882a789008dc7d51958f37b2cd362 data/eln/recipe/fast_electrical_drill.json
 c69701fc0715e23ae06919546a43dbd77b2991b2 data/eln/recipe/field_bus_cable.json
 cb117cca2d60183ceb605b7c516744be0b07ec15 data/eln/recipe/flare_stack.json

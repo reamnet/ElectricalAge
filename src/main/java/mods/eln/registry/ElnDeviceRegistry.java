@@ -84,6 +84,9 @@ public final class ElnDeviceRegistry {
 
         sharedItem.addElement(mods.eln.item.wiresnips.WireSnipsDescriptor.ID, new mods.eln.item.wiresnips.WireSnipsDescriptor(TR_NAME(Type.NONE, "Wire Snips")));
         // resistors (96): Wp9aContent.registerPassiveComponent, with the rest of that group
+        transparentNodeItem.addDescriptor(4480,new mods.eln.transparentnode.fabricator.FabricatorDescriptor(TR_NAME(Type.NONE,"Fabricator")));
+        String[] fabricationParts={"Silicon Wafer","Transistor","NTC Thermistor","Nibble Memory Chip","Arithmetic Logic Unit"};
+        for(int i=0;i<fabricationParts.length;i++) sharedItem.addElement(8064+i,new mods.eln.generic.GenericItemUsingDamageDescriptor(TR_NAME(Type.NONE,fabricationParts[i]),fabricationParts[i]));
         registerBattery(16);
         registerSolarPanel(48);
         registerForkPatchSolar();

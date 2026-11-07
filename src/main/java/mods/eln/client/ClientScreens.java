@@ -27,6 +27,7 @@ final class ClientScreens {
         ElnScreens.register(mods.eln.transparentnode.standby.BackupDescriptor.class, mods.eln.transparentnode.standby.BackupScreen::new);
         ElnScreens.register(mods.eln.transparentnode.offgrid.OffGridDescriptor.class, mods.eln.transparentnode.offgrid.OffGridScreen::new);
         ElnScreens.register(mods.eln.transparentnode.wiremachine.WireMachineDescriptor.class, mods.eln.transparentnode.wiremachine.WireMachineScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.fabricator.FabricatorDescriptor.class, mods.eln.transparentnode.fabricator.FabricatorScreen::new);
         ElnScreens.register(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, mods.eln.transparentnode.converter.VariableDcDcScreen::new);
         ElnScreens.register(mods.eln.transparentnode.renewable.RenewableDescriptor.class, mods.eln.transparentnode.renewable.SolarScreen::new);
         // screen layouts (assets/eln/gui/<name>.json)

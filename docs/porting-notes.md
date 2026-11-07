@@ -561,3 +561,15 @@ Repeated break/place payload reads cannot clone resources; partial work remains
 world-owned. Hot input is retained through insulation, and combination mixes
 constituent sensible heat rather than creating a cold default bundle. See
 [further behavior and validation](forkpatch-port/wire-manufacturing.md).
+
+## ForkPatch chip fabrication attempts
+
+The native Fabricator uses accepted electrical steps for its4 kJ attempt budget.
+It matches actual wafer/plate item identities, permits exact output capacity and
+checks full output components. Each attempt consumes both ingredients and its
+whole budget, including a failed50% ALU yield. A saved per-machine seed/counter
+makes the next outcome independent of renderer/world random calls and stable
+through partial-work reload. Picked/copied settings carry only the operation;
+partial work and inventories remain world-owned. Native GameTests cover every
+operation, actual ownership, sag/outages, malformed controls and the failed-yield
+energy regression. See [the adapter and bootstrap recipes](forkpatch-port/chip-fabrication.md).

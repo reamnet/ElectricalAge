@@ -1,4 +1,4 @@
-// 26.3	2026-11-07T07:24:40.550420317	eln-global/EA models
+// 26.3	2026-11-07T18:42:48.728359326	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -71,6 +71,7 @@ f129897addd25f967e19a97a4f915b341261ab7a assets/eln/blockstates/cinnabar_ore.jso
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/experimental_transporter.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/extra_large_standby_gasoline_generator.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/extreme_standby_gasoline_generator.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/fabricator.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/flare_stack.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/flywheel.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/four_pole_changeover_relay.json
@@ -332,6 +333,7 @@ d220e455ade1e4531735554c5d302efc4604128e assets/eln/items/analog_gauge.json
 b4266523d7f04444657cf1ac0fa4014c036fdee3 assets/eln/items/analogic_regulator.json
 f1b439b4872961c132440fde0c2da04142ebe0dd assets/eln/items/and_chip.json
 03e8e18e1f18922b51e25a1c29ea81d7fef61f0d assets/eln/items/animal_filter.json
+7b69880015380a708d2d3cb7c8fa32a6f86a557f assets/eln/items/arithmetic_logic_unit.json
 24fa46a88bc0e9157aeb354bf3de0cd1b87c8685 assets/eln/items/auto_miner.json
 f2eee401abc98585766edbc2c05964cb6dbb0e53 assets/eln/items/automatic_load_shedding_controller.json
 89adfb3665a0751633b1234e90cc95ce7f4664f1 assets/eln/items/automatic_transfer_switch.json
@@ -552,6 +554,7 @@ ca36c6f6ee1a11e8922ed285329e5e23fe4f3776 assets/eln/items/energy_converter_eln_t
 de5c1b2d84fa3c31b87212d69064619a2111728b assets/eln/items/experimental_transporter.json
 aa476875e0da4c7350716d63bcec9beac434d557 assets/eln/items/extra_large_standby_gasoline_generator.json
 9f252a07d2120104138820d450cfa5f936ef89fd assets/eln/items/extreme_standby_gasoline_generator.json
+c6669cdedad562704c28b6088ec2033eff3eda21 assets/eln/items/fabricator.json
 33ba2ebe0b92001716aeee68db4dcacaf11f90f7 assets/eln/items/fast_electrical_drill.json
 d579fd2af476ff519ec84e7e704251ce31b104ab assets/eln/items/ferrite_ingot.json
 f231450e1ec972989bf51336e77fc68029b7f993 assets/eln/items/field_bus_cable.json
@@ -640,9 +643,11 @@ bbb446e6ac07c8300f67392f59722958bf5eb17e assets/eln/items/modbus_rtu.json
 105feb4478a3d5982148116e9b7179a12311ee62 assets/eln/items/mppt_solar_controller.json
 5f25bc2b1c10b44a0eb5e667c54dbf97c3c2cbcb assets/eln/items/multimeter.json
 10d80d181c61ba9bb744ff3172c96ea5fc8f6156 assets/eln/items/nand_chip.json
+2f65c94e8d23ee068409438335f18729ae7c20f1 assets/eln/items/nibble_memory_chip.json
 183597043fb1705f6cb000a42b30d3f0aa0691cc assets/eln/items/nor_chip.json
 63eedff3563e5141ff10ff24f400769c954a8ff9 assets/eln/items/north_american_meter_base.json
 e363d24aaf57486aefd22d95779993fba7fe0bc9 assets/eln/items/not_chip.json
+5a694008da144640df5342681302bd76899342f3 assets/eln/items/ntc_thermistor.json
 3c80ace7c9bea6e5eaaac4653ce61a2e50337c06 assets/eln/items/nuclear_alarm.json
 95f6fa285f54d392a41d6773ab15c540ab373183 assets/eln/items/off_grid_inverter_charger.json
 a2d3efff61392dc4ac49b056e2346398f882fd6e assets/eln/items/on_off_regulator_1.json
@@ -728,6 +733,7 @@ acffa9d25d64c01c3f9bf6e4749d5246cfb1889b assets/eln/items/signal_source.json
 d1e6b8345453c3a1932f9d38f66c635848607e2c assets/eln/items/silicon_dust.json
 76cbeb75a4e4fcc772cfd5afdf9230a18dc4c3cf assets/eln/items/silicon_ingot.json
 f978ebc08bba04be33fb94b65fa5ca7ecde3f1ef assets/eln/items/silicon_plate.json
+9a016ae84737dec48bbcc113d218e5de52e2af3a assets/eln/items/silicon_wafer.json
 5664379036a51ea87bddbaf64d4f9437cd7226fc assets/eln/items/silver_brush.json
 2e3447c41d709fccf2138aa15eb9ff227111776d assets/eln/items/simple_lamp_socket.json
 1cfcaa273cfc78edb7f18d297426c97aa1ee6ee0 assets/eln/items/single_phase_automatic_voltage_regulator_pole.json
@@ -797,6 +803,7 @@ b27d7c4c00ca97e56172465f9889a39c77407d02 assets/eln/items/three_phase_utility_po
 7e58f3965a73c0417ef4060b5cb7584eb829bd06 assets/eln/items/three_pole_solid_state_relay.json
 09e41431e3e9aa1a83b037dfd45a8556ad7966af assets/eln/items/through_roof_service_mast.json
 ea112d9ee667611f62f87e770e5e2fffb4921169 assets/eln/items/tilted_terminal_logger.json
+5ba8820d94d4cf0c3c6b45fa792b0279c9c2e42a assets/eln/items/transistor.json
 512c501158ff4f92a5a0355fc23ca1421c867b37 assets/eln/items/tree_resin.json
 c6446f5b914d4e16145d9c54a9d7bc2c574dd54a assets/eln/items/tree_resin_collector.json
 b0e9ac661430266c12c61d5c58cde97253f1b494 assets/eln/items/tungsten_cable.json
@@ -1062,6 +1069,7 @@ b8e344a77ae8690f2f8e3ff265585185306fc77d assets/eln/models/item/analog_watch_3d.
 7f3dfb36e09d470c20d0cab8a8df67c446c66371 assets/eln/models/item/and_chip.json
 4a086703f1abb7ce99361e6e754b9ed824991e8f assets/eln/models/item/and_chip_3d.json
 d6582993701d030fe87342eaede2d81e2a49c4d1 assets/eln/models/item/animal_filter.json
+fa4866cf08bdc3bdc07749abf0732c2fdc679b3b assets/eln/models/item/arithmetic_logic_unit.json
 4915e17d616760ea1bfb199f76b42fa4bc90b55e assets/eln/models/item/auto_miner.json
 4418f93f8e53346f69fc0923ca90c8b4e2d8cb35 assets/eln/models/item/auto_miner_3d.json
 3feebed1a32c0adfdb8bcf3f1c040db5f130d347 assets/eln/models/item/automatic_load_shedding_controller.json
@@ -1309,6 +1317,8 @@ e6afb16e4b0ce8dc4b31b2a6c51aae12c13d5bee assets/eln/models/item/energy_meter_3d.
 f97584528d9b7a9142fffb0deec24a01e9140caa assets/eln/models/item/extra_large_standby_gasoline_generator_3d.json
 fd11fa31ee0b2263db5603c063d80387e63cad70 assets/eln/models/item/extreme_standby_gasoline_generator.json
 1b28aca1ebdd4950cf6643dbaf3dfc5ce7f393e4 assets/eln/models/item/extreme_standby_gasoline_generator_3d.json
+fd55625e22d95f9aa7d788b84214ba12a53659c4 assets/eln/models/item/fabricator.json
+942272edbe95f79deef540c6b09adda400f91580 assets/eln/models/item/fabricator_3d.json
 37a1c402bfab093031ed4dd591bd46c078560c92 assets/eln/models/item/fast_electrical_drill.json
 501c2a5d165ccbd6a0f21052851864ca2a57e5dd assets/eln/models/item/ferrite_ingot.json
 716169343d99761dcaf4103e0bfbf7bd523dc4dd assets/eln/models/item/field_bus_cable.json
@@ -1442,12 +1452,14 @@ a3fd926cee4d09c0778c737c9d9fda3bbabf566d assets/eln/models/item/monster_filter.j
 f500cdb7712b1e3a349d4f535227bf835549c032 assets/eln/models/item/multimeter.json
 a6e994e7a725f435fa8a13475f0b6189ff4c295e assets/eln/models/item/nand_chip.json
 1f9390714830412dfbea06ac8e42077a89d80765 assets/eln/models/item/nand_chip_3d.json
+5750501b05e0eb0f21e8103e8cade1ceda7e0f9b assets/eln/models/item/nibble_memory_chip.json
 e9ed1e2f19161af4d90545acff52c0643a0dcc6c assets/eln/models/item/nor_chip.json
 d3e8359053ed228ded559115be2a2fdb71181ea8 assets/eln/models/item/nor_chip_3d.json
 2a081b4f48b53ed15f51b6197875faf174fc4893 assets/eln/models/item/north_american_meter_base.json
 3d19eba5e76597d7c5d8bb7bdd1f4e36cfbc9cd6 assets/eln/models/item/north_american_meter_base_3d.json
 bfd130360a8dc182432023570f100d4cd57e7764 assets/eln/models/item/not_chip.json
 ea86856dbeff31f933421b600bb8c63a765d8bc3 assets/eln/models/item/not_chip_3d.json
+73db346a6e789667f294c095d32c9bfcbeebc7dc assets/eln/models/item/ntc_thermistor.json
 b26e2895f72767691c3d20efac86795a9357c477 assets/eln/models/item/nuclear_alarm.json
 ace2c039086f3a5da29581dda4c0bf8581831f84 assets/eln/models/item/nuclear_alarm_3d.json
 3127447f898cad19a492ffce359f01bf45589547 assets/eln/models/item/off_grid_inverter_charger.json
@@ -1570,6 +1582,7 @@ b884dfaed18f20f37384283ead6740c15e337934 assets/eln/models/item/signal_switch_wi
 00a28575f386856c3cc870f6e54f51ddd7581839 assets/eln/models/item/silicon_dust.json
 c876a3177c7bc498c5a07fcf055f715df04223c6 assets/eln/models/item/silicon_ingot.json
 d29967a42cbf0f8a0172ac572da5ea3ccec16df2 assets/eln/models/item/silicon_plate.json
+e519ef902794cf0eb92e4fa2fd826c0f49b5c6d4 assets/eln/models/item/silicon_wafer.json
 c8b4216be6ce34e8b29adb036b16f13b0e96eea4 assets/eln/models/item/silver_brush.json
 9f66a5fa0eff39bbfab3f7ad8b75d1914cdf5782 assets/eln/models/item/simple_lamp_socket.json
 fd51d7d0b92401007aa083679118985836927a6b assets/eln/models/item/simple_lamp_socket_3d.json
@@ -1685,6 +1698,7 @@ f8e1c1df63aa244dfabd8716a0d68713ec480775 assets/eln/models/item/three_pole_solid
 6a88f1ab558c99cd05ceae997ff65aa78e4b9b76 assets/eln/models/item/through_roof_service_mast_3d.json
 8fa15563ce0c45f7f203ff519fd24c3e16bf84ce assets/eln/models/item/tilted_terminal_logger.json
 7fb3d335cc313927a277499bde37c9c8d6ec147d assets/eln/models/item/tilted_terminal_logger_3d.json
+7702cb35399b0ac46a21f18f55d56a1951009f96 assets/eln/models/item/transistor.json
 3c9727847682e4af5e194407102beb081a4e6264 assets/eln/models/item/tree_resin.json
 7a81ec2c0fa002e8fbff9b1d63d211a483fdda05 assets/eln/models/item/tree_resin_collector.json
 67759e44f7247676a819240699a03eff236bf533 assets/eln/models/item/tree_resin_collector_3d.json

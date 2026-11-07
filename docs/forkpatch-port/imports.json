@@ -2909,5 +2909,152 @@
     "sourceSha256": "e674aa992c60ba70301e043480dd469cd874dff1284d33380abce88a1f949ff0",
     "mode": "verbatim-relocated",
     "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fabricator/FabricationRules.kt",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-paid-attempt-and-yield-correct-fabricator-adapter",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fabricator/FabricationRecipes.kt",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-paid-attempt-and-yield-correct-fabricator-adapter",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fabricator/FabricatorElement.kt",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-paid-attempt-and-yield-correct-fabricator-adapter",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fabricator/FabricatorDescriptor.kt",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-paid-attempt-and-yield-correct-fabricator-adapter",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fabricator/FabricatorRender.kt",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-paid-attempt-and-yield-correct-fabricator-adapter",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fabricator/FabricatorMenus.kt",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-paid-attempt-and-yield-correct-fabricator-adapter",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fabricator/FabricatorScreen.kt",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-paid-attempt-and-yield-correct-fabricator-adapter",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchFabricatorCases.kt",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-powered-operation-ownership-menu-reload-and-crafting-regressions",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/fabricator/FabricationRulesTest.kt",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-accepted-budget-and-deterministic-yield-regressions",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/java/mods/eln/compat/jei/FabricatorCategory.java",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-optional-jei31-paid-attempt-examples",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/BasicComponents.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "507dc7928c16e68bb4020228f6f622ae571018fba15fdc8ce8968aa8c1699ac1",
+    "mode": "native-five-source-resource-identities8064-through8068",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "80adf1eb288efaf29cc41f8e751efc741bf2fa090c20707dee36ede42db1cdeb",
+    "mode": "native-source-fabricator4480-registration",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/ItemRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "43948eeb1735750e82c1c43550fb8c9c47adbd15f866ac7412eb278661455442",
+    "mode": "native-source-basic-component-registration",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-new-paid-machine-bootstrap-not-an-original-source-recipe",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/Fabricator.kt",
+    "target": "src/main/java/mods/eln/registry/ElnMachineRecipes.java",
+    "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
+    "mode": "native-new-paid-wafer-route-retaining-native-plate-recipes",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/fabricator.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/siliconwafer.png",
+    "target": "src/main/resources/assets/eln/textures/item/silicon_wafer.png",
+    "sourceSha256": "dba029adfe22079d1d7379b05f73cfea4e747af2ee8d7125bfa9c69615d3f14f",
+    "mode": "verbatim-relocated",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/transistor.png",
+    "target": "src/main/resources/assets/eln/textures/item/transistor.png",
+    "sourceSha256": "4805fe34da5b84c74fbea6e9025a528ffde0a07dd6d5768b94b766c149b13fa8",
+    "mode": "verbatim-relocated",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/ntcthermistor.png",
+    "target": "src/main/resources/assets/eln/textures/item/ntc_thermistor.png",
+    "sourceSha256": "a2f4803c61ce15869bbc453d72cc9b0e511a20d65537aafda62bb27a6b3808ee",
+    "mode": "verbatim-relocated",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/nibblememorychip.png",
+    "target": "src/main/resources/assets/eln/textures/item/nibble_memory_chip.png",
+    "sourceSha256": "028d9c36f68f19425f7e99bafa70fab242760e77094f0ca2b9cd9c13fe5a6db6",
+    "mode": "verbatim-relocated",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/arithmeticlogicunit.png",
+    "target": "src/main/resources/assets/eln/textures/item/arithmetic_logic_unit.png",
+    "sourceSha256": "f50a2a67afc6e7831308247c20fcd0dd23c4ef341db54fbe67233889fcc87b50",
+    "mode": "verbatim-relocated",
+    "status": "666-full-root-15-cad-and-all586-port-cases-in1052-unfiltered-tests-passed-two-historical-goldens-pending"
   }
 ]

@@ -57,6 +57,7 @@ public class ElnJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         ensureRecipes();
+        registration.addRecipeCategories(new FabricatorCategory(registration.getJeiHelpers().getGuiHelper()));
         for (var e : MACHINES.entrySet()) {
             var list = e.getValue().get();
             if (list.getMachines().isEmpty() || list.getRecipes().isEmpty()) continue;
@@ -72,6 +73,7 @@ public class ElnJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         ensureRecipes();
+        registration.addRecipes(FabricatorCategory.TYPE, mods.eln.transparentnode.fabricator.FabricationRecipes.examples());
         var wireSteps = mods.eln.transparentnode.wiremachine.WireProductionRecipes.steps();
         for (var entry : WIRE_TYPES.entrySet())
             registration.addRecipes(entry.getValue(), wireSteps.stream().filter(step -> step.getKind() == entry.getKey()).toList());
@@ -112,6 +114,7 @@ public class ElnJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addCraftingStation(FabricatorCategory.TYPE, Eln.findItemStack("Fabricator", 1));
         for (var entry : WIRE_TYPES.entrySet())
             registration.addCraftingStation(entry.getValue(), Eln.findItemStack(entry.getKey().getTitle(), 1));
         for (var e : MACHINES.entrySet()) {

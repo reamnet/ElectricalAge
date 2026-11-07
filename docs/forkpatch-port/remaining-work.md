@@ -35,25 +35,25 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Standalone Pole Surge Arrester and paid overhead HV pole kits with finite cartridge state and native lightning protection.
 - Programmable EV Pack Charger, removable 20 kWh traction pack, Electric Welding Station and welded frames; native inventory, accepted-energy and save checks.
 - Wire Snips 7873 with native main/off-hand menus, paid fractional cuts, preserved hot/damaged/multicore data and exact native returns.
+- Fabricator 4480 and five source basic components with real 4 kJ attempts, paid wafer/machine recipes, deterministic yields, native inventories/controls and optional JEI examples.
 - Wire Roller 4608, Insulator 4609 and Combiner 4610 with real paid buffers, wheels/bundles, hot stock, source recipes, native automation and one powered multicore production chain.
 - Electric Forklift and Warehouse Equipment Pallet with server controls, actual pack drain/lifting costs, guarded inventories, cargo saves and refunds.
 
 Each family still participates in the cross-cutting validation/migration work below.
 
-The current manufacturing checkpoint passes **662 full root tests**, with three
-optional previews skipped (665 selected), all **15 CAD tests**, and all
-**557 port cases inside 1023 unfiltered GameTests**. The default 200-case fluid
-corpus is included. The full native run passes 1021 cases; only the historical
-descriptor and slot goldens fail, retaining 429 individual assertions for review.
+The current chip-fabrication checkpoint passes **666 full root tests**, with three
+optional previews skipped (669 selected), all **15 CAD tests**, and all
+**586 port cases inside 1052 unfiltered GameTests**. The default 200-case fluid
+corpus is included. The full native run passes 1050 cases; only the historical
+descriptor and slot goldens fail, retaining 437 individual assertions for review.
 No expected references, skip lists or tolerances changed. See the
-[complete current evidence and artifact](session5-validation.json).
+[complete current evidence and artifact](session6-validation.json).
 
-All 645 preceding identities and 949 English entries remain unchanged; the current
-catalog has 652 identities, 959 English entries and 468 resolved native item
-textures. See [manufacturing behavior](wire-manufacturing.md) and
-[manufacturing evidence](wire-manufacturing-validation.json). Earlier source/native
-performance and adapter evidence remains in the individual reports; those checks
-do not establish whole-mod performance against both baselines.
+All 652 preceding identities and 959 previous English entries remain unchanged;
+the current catalog has 658 identities, 966 English entries and 474 resolved native
+item textures. See [chip fabrication](chip-fabrication.md) and
+[validation](chip-fabrication-validation.json). Earlier adapter/performance evidence
+remains in its individual reports and does not establish whole-mod comparisons.
 
 The [exact historical differences](native-suite-review.md) remain visible.
 Restoring shared test-player facing after oriented renewable placement continues
@@ -85,7 +85,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 | Climate and fans | Heating/cooling/humidity controls, fans, evaporative cooling and water handling, building/room thermal changes and integration with the destination fluid systems. |
 | Pumps and growing | Industrial/world-intake pumps, fluid-port integration, growing-bed cycle and associated inventory/render/UI behavior. |
 | Lighting/decor | Remaining street/flood/work lights, festive/fairy lights/tree/candle devices, fire alarms and their networks, optics, damage, controls and audio. |
-| Chip fabrication | Fabricator 4480 and basic components 8064–8068, valid wafer/bootstrap recipes and paid/yield-correct processing. See the [source defects and adapter contract](chip-fabrication-review.md). |
+| Chip fabrication | Interactive graphics/JEI and broader basic-component integration remain pending. Fabricator 4480 and components 8064–8068 now have paid native processing/bootstrap checks; see [fabrication](chip-fabrication.md). |
 | Other mechanics/processes | Source shaft/generator/turbine, fusion reactor and other machine/process changes not already covered by an adapter checkpoint; reconcile with existing native mechanical/fluid implementations. |
 | Tools and integration | Remaining probes, configuration interactions, wireless/control channels, diagnostics/metrics, guides and optional-mod bridges. SCADA endpoint integration for the still-unadapted source 12-circuit breaker panel and media addon remains pending. A source file already present in 26.3 still needs conflict review. |
 | Media addon | EAMedia is a separate addon: jukebox/external speakers and Plex/web-interface behavior need a separate platform port and integration validation. |
@@ -100,7 +100,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The latest unfiltered run passes 1021 of 1023 cases; descriptor and slot
+- The latest unfiltered run passes 1050 of 1052 cases; descriptor and slot
   goldens still fail. Review the [exact differences](native-suite-review.md), then
   rerun after explicitly reconciling the historical expectations. The wind/watermill
   fixture now restores shared test-player facing, fixing two order-dependent layouts.

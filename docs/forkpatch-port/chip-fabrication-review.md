@@ -4,8 +4,8 @@ Source `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` registers Fabricator at
 transparent lookup 4480 (`registerFab(70)`). Supporting shared lookups 8064–8068
 are Silicon Wafer, Transistor, NTC Thermistor, Nibble Memory Chip and Arithmetic
 Logic Unit. All six source slots are free in the current 652-entry native
-manifest. This is a source review; no native Fabricator or basic-component
-adapter is registered by this checkpoint.
+manifest. This retained source contract now has a [native adapter](chip-fabrication.md).
+Its survival bootstraps and process fixes are documented as destination changes.
 
 The source `transparentnode/Fabricator.kt` uses a grounded 40-ohm resistor
 (200 V / 1 kW), a 4,000 J budget per attempt and three slots: output 0, silicon

@@ -153,6 +153,9 @@ public final class ElnMachineRecipes {
 
     public static void recipePlateMachine() {
         float f = 10000;
+        // One paid silicon plate becomes one wafer; existing ingot-to-plate recipes are retained.
+        add(plateMachineRecipes, new Recipe(findItemStack("Silicon Plate"), findItemStack("Silicon Wafer"), f));
+
         add(plateMachineRecipes, new Recipe(
             new ItemStack(Items.COPPER_INGOT, plateConversionRatio), // 26.x: EA's copper ingot is gone
             findItemStack("Copper Plate"), 1.0 * f));

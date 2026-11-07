@@ -316,6 +316,9 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipePassiveComponent() {
+        // Native bootstrap for source Fabricator; wafer production stays in the powered plate machine.
+        addRecipe(findItemStack("Fabricator"),"ICI","PMP","IEI",'I',Items.IRON_INGOT,'C',dictCheapChip,'P',findItemStack("Copper Plate"),'M',findItemStack("Machine Block"),'E',findItemStack("Electrical Motor"));
+
         for (String[] wheel : new String[][]{{"Iron Roller Wheel","ingotIron"},{"Steel Roller Wheel","ingotSteel"},{"Aluminum Roller Wheel","ingotAluminum"}}) addRecipe(findItemStack(wheel[0],2)," M ","MIM"," M ",'M',wheel[1],'I',stack(Items.IRON_INGOT));
         addRecipe(findItemStack("Wire Roller"),"IRI","WMW","ICI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'W',findItemStack("Iron Roller Wheel"),'M',findItemStack("Machine Block"),'C',findItemStack("Electrical Motor"));
         addRecipe(findItemStack("Wire Insulator"),"IRI","BMB","ICI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'B',stack(Items.BUCKET),'M',findItemStack("Machine Block"),'C',findItemStack("Copper Cable"));
