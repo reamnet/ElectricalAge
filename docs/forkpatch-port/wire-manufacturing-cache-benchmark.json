@@ -123,5 +123,6 @@
     "Cached path includes actual readiness plus options access; uncached path only recalculates the same material catalog. These are different scopes, reported explicitly.",
     "Single process/environment; JIT, timer/instrumentation noise and scheduling affect measurements. Timing/allocation values are observations, not test thresholds.",
     "Does not establish overall tick/frame/loaded-world performance, GPU behavior or a comparison against both original repositories."
-  ]
+  ],
+  "productionCommit": "87116c458df1943e31cacf3b767b8ad52cb2702d"
 }

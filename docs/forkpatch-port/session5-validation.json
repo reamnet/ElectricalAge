@@ -62,5 +62,10 @@
     "Full source-world conversion, remaining equipment/integrations and shared-code parity remain pending.",
     "Headless native/mesh/server checks do not establish interactive client/GPU/audio/multiplayer, JEI runtime or whole-mod comparative performance.",
     "Development artifact integrity verified; this is not a finished release."
-  ]
+  ],
+  "productionCommit": "87116c458df1943e31cacf3b767b8ad52cb2702d",
+  "productionTrees": {
+    "src/main": "841d2e1946b184e9dcd5b907b062bac6eda0f0e9",
+    "src/generated": "7089caf9205c52f0b2b0daedfbde6c29697eb930"
+  }
 }
