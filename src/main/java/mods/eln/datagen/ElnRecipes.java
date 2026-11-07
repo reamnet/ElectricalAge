@@ -316,6 +316,11 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipePassiveComponent() {
+        for (String[] wheel : new String[][]{{"Iron Roller Wheel","ingotIron"},{"Steel Roller Wheel","ingotSteel"},{"Aluminum Roller Wheel","ingotAluminum"}}) addRecipe(findItemStack(wheel[0],2)," M ","MIM"," M ",'M',wheel[1],'I',stack(Items.IRON_INGOT));
+        addRecipe(findItemStack("Wire Roller"),"IRI","WMW","ICI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'W',findItemStack("Iron Roller Wheel"),'M',findItemStack("Machine Block"),'C',findItemStack("Electrical Motor"));
+        addRecipe(findItemStack("Wire Insulator"),"IRI","BMB","ICI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'B',stack(Items.BUCKET),'M',findItemStack("Machine Block"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Wire Combiner"),"IRI","CMC","IWI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'C',findItemStack("Electrical Motor"),'M',findItemStack("Machine Block"),'W',findItemStack("Iron Roller Wheel"));
+
         addRecipe(findItemStack("Winding DC-DC Converter"), "C C", "III", 'C', findItemStack("Copper Cable"), 'I', stack(Items.IRON_INGOT));
         addRecipe(findItemStack("One-way DC-DC Converter"), "D", "R", 'D', findItemStack("Winding DC-DC Converter"), 'R', stack(Items.REDSTONE));
         addRecipe(findItemStack("One-way Boost vDC/DC Converter"), "D", "R", 'D', findItemStack("Variable DC-DC Converter"), 'R', stack(Items.REDSTONE));

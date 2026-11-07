@@ -75,6 +75,13 @@ public final class ElnDeviceRegistry {
         registerElectricalSource(3);
         registerElectricalCable(32);
         mods.eln.sixnode.electricalcable.UtilityCables.register();
+        for (var kind : mods.eln.transparentnode.wiremachine.WireMachineKind.values()) transparentNodeItem.addDescriptor(kind.getId(), new mods.eln.transparentnode.wiremachine.WireMachineDescriptor(TR_NAME(Type.NONE,kind.getTitle()),kind));
+        sharedItem.addElement(7552,new mods.eln.item.wiremachine.RollerWheelDescriptor(TR_NAME(Type.NONE,"Iron Roller Wheel"),"ironrollerwheel"));
+        sharedItem.addElement(7553,new mods.eln.item.wiremachine.RollerWheelDescriptor(TR_NAME(Type.NONE,"Steel Roller Wheel"),"steelrollerwheel"));
+        sharedItem.addElement(7554,new mods.eln.item.wiremachine.RollerWheelDescriptor(TR_NAME(Type.NONE,"Aluminum Roller Wheel"),"aluminumrollerwheel"));
+        var bundle=new mods.eln.item.wiremachine.WoundWireBundleDescriptor(TR_NAME(Type.NONE,"Wound Wire Bundle"));
+        sharedItem.addElement(7556,bundle);mods.eln.transparentnode.wiremachine.WireProduction.INSTANCE.setBundle(bundle);
+
         sharedItem.addElement(mods.eln.item.wiresnips.WireSnipsDescriptor.ID, new mods.eln.item.wiresnips.WireSnipsDescriptor(TR_NAME(Type.NONE, "Wire Snips")));
         // resistors (96): Wp9aContent.registerPassiveComponent, with the rest of that group
         registerBattery(16);

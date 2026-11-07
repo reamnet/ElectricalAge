@@ -30,5 +30,5 @@ See [validation](wire-snips-validation.json). The headless cases exercise actual
 item use, native server menus/buttons, transfers, owner/length guards, full-inventory
 world drops, hot fractional spools, damaged/multicore stock and real crafting.
 Interactive screen/GPU and multiplayer validation remain pending. Other wire tools,
-manufacturing machines, spool/jacket production and full source-world conversion
-are separate remaining work.
+remaining wire tools and full source-world conversion remain separate work. The
+[manufacturing machines](wire-manufacturing.md) now provide paid spool/jacket production.

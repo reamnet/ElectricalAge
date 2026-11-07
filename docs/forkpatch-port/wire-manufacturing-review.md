@@ -1,8 +1,9 @@
 # Next wire-manufacturing adapter review
 
 Reviewed against source `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Wire Snips 7873
-is now adapted; the three processing machines and their supporting items below
-remain unregistered. This is an implementation contract, not runtime validation.
+and the three processing machines/supporting items are now adapted. This retained
+source review is the implementation contract; current behavior and evidence are
+in [the native manufacturing guide](wire-manufacturing.md).
 
 `TransparentNodeRegistration.registerWireProcessingMachines(72)` defines:
 
@@ -14,8 +15,8 @@ remain unregistered. This is an implementation contract, not runtime validation.
 
 `ItemRegistration.registerWireMachineItems(118)` defines shared items7552 Iron
 Roller Wheel,7553 Steel Roller Wheel,7554 Aluminum Roller Wheel and7556 Wound Wire
-Bundle. These source lookup slots are free in the destination's current645-entry
-manifest, but must be checked again before implementation. Existing native wire,
+Bundle. These source lookup slots were free in the645-entry baseline and are now
+registered without replacing earlier entries. Existing native wire,
 spans, metre ledgers and scraps must not be replaced by a second catalog.
 
 The source implementation is split across `transparentnode/WireProcessingMachines.kt`,

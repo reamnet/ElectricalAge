@@ -3868,5 +3868,47 @@
   "display": "Wire Snips",
   "kind": "shared_item",
   "name": "wire_snips"
+ },
+ "eln:transparent_node@4608": {
+  "descriptor": "WireMachineDescriptor",
+  "display": "Wire Roller",
+  "kind": "transparent_node",
+  "name": "wire_roller"
+ },
+ "eln:transparent_node@4609": {
+  "descriptor": "WireMachineDescriptor",
+  "display": "Wire Insulator",
+  "kind": "transparent_node",
+  "name": "wire_insulator"
+ },
+ "eln:transparent_node@4610": {
+  "descriptor": "WireMachineDescriptor",
+  "display": "Wire Combiner",
+  "kind": "transparent_node",
+  "name": "wire_combiner"
+ },
+ "eln:shared_item@7552": {
+  "descriptor": "RollerWheelDescriptor",
+  "display": "Iron Roller Wheel",
+  "kind": "shared_item",
+  "name": "iron_roller_wheel"
+ },
+ "eln:shared_item@7553": {
+  "descriptor": "RollerWheelDescriptor",
+  "display": "Steel Roller Wheel",
+  "kind": "shared_item",
+  "name": "steel_roller_wheel"
+ },
+ "eln:shared_item@7554": {
+  "descriptor": "RollerWheelDescriptor",
+  "display": "Aluminum Roller Wheel",
+  "kind": "shared_item",
+  "name": "aluminum_roller_wheel"
+ },
+ "eln:shared_item@7556": {
+  "descriptor": "WoundWireBundleDescriptor",
+  "display": "Wound Wire Bundle",
+  "kind": "shared_item",
+  "name": "wound_wire_bundle"
  }
 }

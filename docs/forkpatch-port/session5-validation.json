@@ -1,0 +1,66 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Wire Roller4608, Insulator4609, Combiner4610, three wheels and paid wound bundles; unfinished full ForkPatch port.",
+  "root": {
+    "suites": 120,
+    "tests": 665,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "native": {
+    "selected": 882,
+    "passed": 880,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 416,
+      "failed": 0
+    }
+  },
+  "historicalGoldenAssertions": 429,
+  "catalog": {
+    "identities": 652,
+    "englishEntries": 959,
+    "resolvedNativeItemTextures": 468,
+    "previousIdentityCount": 645,
+    "previousEnglishCount": 949,
+    "previousIdentitiesChanged": [],
+    "previousEnglishEntriesChanged": []
+  },
+  "artifact": {
+    "path": "build/libs/eln-26.3-0.1.0-port.jar",
+    "bytes": 30378025,
+    "sha256": "23a5629ae3733ce0b7411f69f69be25cdc9c964155109672bb6e6e7a87426262",
+    "allPrimaryOutputFilesChecked": {
+      "java": 1769,
+      "kotlin": 745
+    },
+    "scopedOutputFilesChecked": 35,
+    "processedResourcesChecked": 4787,
+    "allCheckedBytesMatch": true
+  },
+  "sourceUnchanged": true,
+  "gradleAndWrapperUnchanged": true,
+  "commands": [
+    "./gradlew --no-daemon --max-workers=2 :build cad:test runClientData",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report REPORT.xml --universe NEW_UNIQUE_WORLD'",
+    "python3 tools/port/audit_imports.py --source ../ELN1.21.1ForkPatch"
+  ],
+  "rootLog": "session5-machines-full-build.log",
+  "nativeLog": "session5-all-native-checkpoint.log",
+  "limitations": [
+    "Unfiltered historical descriptor and slot goldens still fail; no expected references, skip lists or tolerances changed.",
+    "Full source-world conversion, remaining equipment/integrations and shared-code parity remain pending.",
+    "Headless native/mesh/server checks do not establish interactive client/GPU/audio/multiplayer, JEI runtime or whole-mod comparative performance.",
+    "Development artifact integrity verified; this is not a finished release."
+  ]
+}

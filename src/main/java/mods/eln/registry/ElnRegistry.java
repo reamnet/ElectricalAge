@@ -280,7 +280,7 @@ public final class ElnRegistry {
                 d.parentItemDamage = id;
                 Eln.itemsByName.putIfAbsent(d.name, item); // first wins: "Signal Switch" is 6081 (gate source) as in 1.12
                 return item;
-            }, p -> p.stacksTo(stack)));
+            }, p -> d.itemProperties(p.stacksTo(stack))));
         }
     }
 

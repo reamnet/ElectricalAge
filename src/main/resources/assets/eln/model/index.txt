@@ -219,3 +219,4 @@ transformator/onewaydcdc.obj
 transformator/onewayboostvdcdc.obj
 transformator/onewaybuckvdcdc.obj
 transformator/onewayboostbuckvdcdc.obj
+fabricator/fabricator.obj

@@ -1210,3 +1210,16 @@ Owner/tool/packet guards, native shift transfers, full-inventory drops and closi
 refund exactly once are covered by real server cases. See the [tool guide](forkpatch-port/wire-snips.md)
 and [validation](forkpatch-port/wire-snips-validation.json). The three manufacturing
 machines remain a separate group with a [reviewed source contract](forkpatch-port/wire-manufacturing-review.md).
+
+### Native wire manufacturing
+
+Wire Roller4608, Insulator4609 and Combiner4610 now use native electrical loads,
+paid metal/rubber buffers, source wheel/bundle identities, real menus/automation
+and source meshes. Accepted-step work follows voltage sag; same-job outages keep
+paid progress. Actual break/place transfers remaining buffers once, while picked
+items and copied settings carry no resources/work. Hot stock and mixed-core
+sensible heat survive processing. Optional JEI31 categories derive32 m examples
+from the same production catalog. See the [behavior guide](forkpatch-port/wire-manufacturing.md)
+and [validation](forkpatch-port/wire-manufacturing-validation.json). The full
+ForkPatch port, historical golden reconciliation and interactive checks remain
+unfinished.

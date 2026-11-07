@@ -1,0 +1,66 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Wire Roller4608, Insulator4609, Combiner4610, three wheels and paid wound bundles; unfinished full ForkPatch port.",
+  "root": {
+    "suites": 120,
+    "tests": 665,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "native": {
+    "focusedCases": 22,
+    "focusedPassed": 22,
+    "report": "/tmp/eln26-session5-machines7.xml",
+    "log": "session5-machines-native7.log",
+    "fullSelected": 882,
+    "fullPassed": 880,
+    "fullFailed": 2,
+    "fullSkipped": 0,
+    "allPortCases": {
+      "selected": 416,
+      "failed": 0
+    }
+  },
+  "catalog": {
+    "identities": 652,
+    "englishEntries": 959,
+    "resolvedNativeItemTextures": 468,
+    "previousIdentityCount": 645,
+    "previousEnglishCount": 949,
+    "previousIdentitiesChanged": [],
+    "previousEnglishEntriesChanged": []
+  },
+  "coverage": [
+    "Real powered production in all four horizontal fronts; routed floor MV cable entry",
+    "Paid roller metal, fractional rubber layers and shortest participating combiner length with longer remainders",
+    "Three/eight-core bundles and preserved combiner output5 with eight native input slots",
+    "Mixed-temperature sensible heat and hot stock insulation; failed/malformed stock rejected",
+    "Physical sag, accepted-step work, same-job outages, job changes and1000 stable cached-LU readiness checks",
+    "Malformed/no-op controls, configuration and ordinary picks cannot create work or paid buffers",
+    "Actual native destroyBlock and survival ItemStack.useOn restore owned buffers once, with separate inventory drops",
+    "Actual owner reload retains paid buffers, partial work and energy counters",
+    "Real transactional capability extraction, abort/commit and output insertion rejection",
+    "Actual native wheel and machine bootstrap recipes",
+    "Every source-derived32 m catalog example is checked against real production predicates and paid length",
+    "Real automated roller\u2192insulator\u2192combiner\u2192insulator chain on one native cable bus, with independent mass/rubber/energy budgets",
+    "Actual registered client factory reads complete publication, emits source mesh geometry and opens native server menus"
+  ],
+  "optionalJei": "JEI31 adapter compiled; native examples validated. Interactive JEI runtime not exercised.",
+  "artifactEvidence": "session5-validation.json",
+  "rootLog": "session5-machines-full-build.log",
+  "limitations": [
+    "Unfiltered historical descriptor and slot goldens still fail; no expected references, skip lists or tolerances changed.",
+    "Full source-world conversion, remaining equipment/integrations and shared-code parity remain pending.",
+    "Headless native/mesh/server checks do not establish interactive client/GPU/audio/multiplayer, JEI runtime or whole-mod comparative performance.",
+    "Development artifact integrity verified; this is not a finished release."
+  ]
+}

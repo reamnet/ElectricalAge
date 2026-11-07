@@ -59,6 +59,9 @@ public class GenericItemUsingDamageDescriptor {
         this.IconName = "eln:" + name.replaceAll(" ", "").toLowerCase();
     }
 
+    /** Plain item properties, retaining the registry default unless a descriptor opts in. */
+    public Item.Properties itemProperties(Item.Properties properties) { return properties; }
+
     public CompoundTag getDefaultNBT() {
         return null;
     }

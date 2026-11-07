@@ -37,6 +37,12 @@ public class ElnJeiPlugin implements IModPlugin {
         for (String k : MACHINES.keySet()) TYPES.put(k, mezz.jei.api.recipe.types.IRecipeType.create("eln", k, mods.eln.misc.Recipe.class));
     }
 
+    static final java.util.Map<mods.eln.transparentnode.wiremachine.WireMachineKind, mezz.jei.api.recipe.types.IRecipeType<mods.eln.transparentnode.wiremachine.WireProductionRecipes.Step>> WIRE_TYPES = new java.util.LinkedHashMap<>();
+    static {
+        for (var kind : mods.eln.transparentnode.wiremachine.WireMachineKind.values())
+            WIRE_TYPES.put(kind, mezz.jei.api.recipe.types.IRecipeType.create("eln", "wire_" + kind.name().toLowerCase(java.util.Locale.ROOT), mods.eln.transparentnode.wiremachine.WireProductionRecipes.Step.class));
+    }
+
     /**
      * The machines' recipe lists are filled when a server starts (ElnMachineRecipes, after the registries are bound), so a
      * client on a dedicated server had none, and no machine list either: JEI showed no EA machine recipes (Baughn, on
@@ -57,6 +63,8 @@ public class ElnJeiPlugin implements IModPlugin {
             registration.addRecipeCategories(new MachineCategory(registration.getJeiHelpers().getGuiHelper(), TYPES.get(e.getKey()), e.getKey(),
                 list.getMachines().get(0)));
         }
+        for (var entry : WIRE_TYPES.entrySet())
+            registration.addRecipeCategories(new WireMachineCategory(registration.getJeiHelpers().getGuiHelper(), entry.getValue(), entry.getKey()));
         ItemStack collector = Eln.findItemStack("Tree Resin Collector", 1);
         if (!collector.isEmpty()) registration.addRecipeCategories(new ResinCategory(registration.getJeiHelpers().getGuiHelper(), collector));
     }
@@ -64,6 +72,9 @@ public class ElnJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         ensureRecipes();
+        var wireSteps = mods.eln.transparentnode.wiremachine.WireProductionRecipes.steps();
+        for (var entry : WIRE_TYPES.entrySet())
+            registration.addRecipes(entry.getValue(), wireSteps.stream().filter(step -> step.getKind() == entry.getKey()).toList());
         registration.addRecipes(RecipeTypes.CRAFTING, mods.eln.node.voxel.CableKitRecipes.examples());
         registration.addRecipes(RecipeTypes.CRAFTING, mods.eln.node.voxel.PipeKitRecipes.examples());
         for (var e : MACHINES.entrySet()) {
@@ -101,6 +112,8 @@ public class ElnJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        for (var entry : WIRE_TYPES.entrySet())
+            registration.addCraftingStation(entry.getValue(), Eln.findItemStack(entry.getKey().getTitle(), 1));
         for (var e : MACHINES.entrySet()) {
             var list = e.getValue().get();
             if (list.getRecipes().isEmpty()) continue;

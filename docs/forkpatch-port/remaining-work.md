@@ -34,27 +34,26 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Grid Control Console/SCADA with eight world-local targets, bounded loaded-node lookup and native device controls.
 - Standalone Pole Surge Arrester and paid overhead HV pole kits with finite cartridge state and native lightning protection.
 - Programmable EV Pack Charger, removable 20 kWh traction pack, Electric Welding Station and welded frames; native inventory, accepted-energy and save checks.
-- Wire Snips 7873 with native main/off-hand menus, paid fractional cuts, preserved hot/damaged/multicore data and exact native returns.
+- Wire Snips7873 with native main/off-hand menus, paid fractional cuts, preserved hot/damaged/multicore data and exact native returns.
+- Wire Roller4608, Insulator4609 and Combiner4610 with real paid buffers, wheels/bundles, hot stock, source recipes, native automation and one powered multicore production chain.
 - Electric Forklift and Warehouse Equipment Pallet with server controls, actual pack drain/lifting costs, guarded inventories, cargo saves and refunds.
 
 Each family still participates in the cross-cutting validation/migration work below.
 
-The current flat-solar, converter-family and Wire Snips checkpoint passes **662
-full root tests**, with three optional previews skipped (665 selected), all **15
-CAD tests**, and all **394 port cases inside 860 unfiltered GameTests**. The default
-200-case fluid corpus is included. The full native run passes 858 cases; only the
-historical descriptor and slot goldens fail, retaining 418 individual assertions
-for review. No expected references, skip lists or tolerances changed. See the
-[complete current evidence and artifact](session4-validation.json).
+The current manufacturing checkpoint passes **662 full root tests**, with three
+optional previews skipped (665 selected), all **15 CAD tests**, and all
+**416 port cases inside 882 unfiltered GameTests**. The default 200-case fluid
+corpus is included. The full native run passes 880 cases; only the historical
+descriptor and slot goldens fail, retaining 429 individual assertions for review.
+No expected references, skip lists or tolerances changed. See the
+[complete current evidence and artifact](session5-validation.json).
 
-All 637 preceding identities and 935 English entries remain unchanged; the current
-catalog has 638 identities, 936 English entries and 454 resolved native item
-textures. See [sampling evidence](solar-sampling-validation.json), the
-[sampling guide](solar-sampling.md), [paired ray measurements](solar-ray-benchmark.json),
-[inductor guide](variable-inductor.md) and [roof guide](solar-roofs.md).
-The 96-panel field makes zero per-voxel reads above its outdoor modules. Its paired
-ray measurements show about 33× lower median CPU time, with 72 more allocated bytes
-per ray; this does not establish whole-mod performance against both baselines.
+All 645 preceding identities and 949 English entries remain unchanged; the current
+catalog has 652 identities, 959 English entries and 468 resolved native item
+textures. See [manufacturing behavior](wire-manufacturing.md) and
+[manufacturing evidence](wire-manufacturing-validation.json). Earlier source/native
+performance and adapter evidence remains in the individual reports; those checks
+do not establish whole-mod performance against both baselines.
 
 The [exact historical differences](native-suite-review.md) remain visible.
 Restoring shared test-player facing after oriented renewable placement continues
@@ -77,11 +76,11 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 | Shared mounting | Source partial-support insets, cable rises and matching selection/render transforms beyond the registered stair roofs; preserve native voxel geometry and resident-only queries. See the [mounting review](mounting-review.md). |
 | Other power electronics | Development-only floating isolation135 and broader inherited transformer/capacitor/regulated-supply changes; fixed130 and grounded one-way131–134 are registered. against the destination solver. See the [identity/control/winding review](power-electronics-review.md). |
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
-| Utility manufacturing | Wire Roller4608, Insulator4609 and Combiner4610, their wheels/bundles and remaining wire/cable tools. Wire Snips 7873 now handles paid hot spool cuts; see the [manufacturing contract review](wire-manufacturing-review.md). |
+| Utility manufacturing | Remaining wire/cable tools and source parity/integration review. Roller4608, Insulator4609, Combiner4610 and their wheels/bundles now pass paid native production checks; see [manufacturing](wire-manufacturing.md). |
 | Industrial devices | Appliance cord/outlet integration and interactive client/audio parity for the registered industrial families. |
 | Industrial transport | Interactive client controls, audio and multiplayer parity of the registered forklift/pallet adapters. Road vehicles remain a separate adapter group. |
 | Vehicles | Four-seat golf cart, two-seat electric car, stepping/collision, turn-overload fire/explosion behavior, passengers, storage, six-cell traction pack and in-car charging. Preserve the electric car's clear windows. |
-| Appliance power | Plugs/cords, wall/industrial outlets, power strip, rating and support/wiring rules, machine cord adapters and compact plug-in UPS. |
+| Appliance power | Plugs/cords, wall/industrial outlets, power strip, rating and support/wiring rules, machine cord adapters and compact plug-in UPS. See the [source contract and ownership review](appliance-cord-review.md). |
 | Kitchen/laundry | Source kitchen and laundry/matter-machine families, food/process inventories, recipes, temperature/heat behavior, appliance controls and graphics. |
 | Climate and fans | Heating/cooling/humidity controls, fans, evaporative cooling and water handling, building/room thermal changes and integration with the destination fluid systems. |
 | Pumps and growing | Industrial/world-intake pumps, fluid-port integration, growing-bed cycle and associated inventory/render/UI behavior. |
@@ -100,7 +99,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The latest unfiltered run passes 858 of 860 cases; descriptor and slot
+- The latest unfiltered run passes 880 of 882 cases; descriptor and slot
   goldens still fail. Review the [exact differences](native-suite-review.md), then
   rerun after explicitly reconciling the historical expectations. The wind/watermill
   fixture now restores shared test-player facing, fixing two order-dependent layouts.

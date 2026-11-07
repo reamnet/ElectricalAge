@@ -546,3 +546,18 @@ on 1.7.10) onto 26.x.
   clipboard, scrolling) instead of the one-line field, a quick reference of the functions beside it (click to insert),
   and the chips needed or the first problem shown as you type; Apply sends the program. Inputs A, B and C always
   connect, whether or not the program reads them (1.12 offered only the ones it read). GameTest `wp9c signal processor`.
+
+## ForkPatch wire manufacturing ownership and work
+
+Wire Roller4608, Insulator4609 and Combiner4610 retain the source inventories,
+passive200 V load/rates and scalar paid buffers. Native accepted electrical steps
+advance work. An outage retains paid progress for the same job; stock/hardware or
+option changes clear it. Native GameTests exercise sag, outages and repeated
+readiness checks against the cached LU factors.
+
+Paid metal/rubber buffers travel only in the actual destroyed machine's one drop,
+separately from inventory. Ordinary pick/configuration payloads carry settings.
+Repeated break/place payload reads cannot clone resources; partial work remains
+world-owned. Hot input is retained through insulation, and combination mixes
+constituent sensible heat rather than creating a cold default bundle. See
+[further behavior and validation](forkpatch-port/wire-manufacturing.md).

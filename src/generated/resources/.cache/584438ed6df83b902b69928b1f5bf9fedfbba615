@@ -1,4 +1,4 @@
-// 26.3	2026-11-07T01:12:53.239418413	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-07T07:24:40.564922	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -102,6 +102,7 @@ fa365aabe999e77b03e64373107eb501cad2b094 data/eln/advancement/recipes/misc/advan
 f70b299049c176c75a99881d9bb884024c4a16e1 data/eln/advancement/recipes/misc/allmeter.json
 44d9994058ce6f90ef2b7f32ea0381792d6ad2ec data/eln/advancement/recipes/misc/alloy_dust.json
 46a1bc5bf44016039d5a7b278377fac0d516c730 data/eln/advancement/recipes/misc/alloy_tank.json
+47b8b6f850850f1871c2bd3744855e41ac18bc2c data/eln/advancement/recipes/misc/aluminum_roller_wheel.json
 d5fb6b8e7356d15e8befa93dd2868cd5e615f99c data/eln/advancement/recipes/misc/amplifier.json
 2e03d362839a5ea1f104bf7a36e1fc1731b5e5e5 data/eln/advancement/recipes/misc/analog_glass_service_meter.json
 680024760755705f28db20f9c14229ef76a77158 data/eln/advancement/recipes/misc/analog_vumeter.json
@@ -209,6 +210,7 @@ adff65b0e3b516752580628470a82e029fef2c0c data/eln/advancement/recipes/misc/high_
 66103a82763e2f5be503d9a4251d7ff65b7a29d8 data/eln/advancement/recipes/misc/improved_flashlight.json
 26baca3846cf3c09885134d3b1f92feb7bf65a5a data/eln/advancement/recipes/misc/industrial_data_logger.json
 23e7e1a3c03fa30b6de61225a6f5a79bb8c48b5e data/eln/advancement/recipes/misc/iron_cable.json
+36911902b55011201994746f5173dbebfd92709b data/eln/advancement/recipes/misc/iron_roller_wheel.json
 caa773201e3270ec7194fa6ad69acb7e3b4f7c13 data/eln/advancement/recipes/misc/iron_tank.json
 74456d14bc1de3c51ca612ecc6e5b67ec8d20996 data/eln/advancement/recipes/misc/jk_flip_flop_chip.json
 898d97ed54ccf9a038e21587c74511817611f4ce data/eln/advancement/recipes/misc/joint.json
@@ -374,6 +376,7 @@ ca2f8a0f26291613f84a226e9e99d0312ac72383 data/eln/advancement/recipes/misc/steam
 80d2514f5559c045fad856c766d9b349f59b0d1a data/eln/advancement/recipes/misc/steam_turbine_2.json
 7db10e9d7d6d8e99f8c777e97e56e3c62c8c6938 data/eln/advancement/recipes/misc/steam_turbine_3.json
 0590face2856286a25dda602fcc505727821f789 data/eln/advancement/recipes/misc/steam_turbine_4.json
+dbca10a656ed06ee0a3c054db8cf76844d00330e data/eln/advancement/recipes/misc/steel_roller_wheel.json
 64db41bd58f33e20ba7b082b4a155fa8b5980d4a data/eln/advancement/recipes/misc/stone_heat_furnace.json
 6eb149d68fe73de4c46fa56fc4ad01e8303f8d49 data/eln/advancement/recipes/misc/street_light.json
 8c7779a14aa260ae9e6e6fd490c679ba77c96e9f data/eln/advancement/recipes/misc/suspended_lamp_socket.json
@@ -453,6 +456,9 @@ dee9ed6f5239ead97624b1ad3ca0f4d29463f581 data/eln/advancement/recipes/misc/white
 e09d1b9d948c76f8434972d8523bd95bcf3cb817 data/eln/advancement/recipes/misc/wide_underground_meter_socket.json
 a2d541b9d5289ce78da711fe051954194dd8785e data/eln/advancement/recipes/misc/wind_turbine.json
 bf80438ac83c6586e86959ad11a986dd228cbb53 data/eln/advancement/recipes/misc/winding_dc_dc_converter.json
+21205fadc56821605cc7c2cb589a35b4cef15bf1 data/eln/advancement/recipes/misc/wire_combiner.json
+baeadf4bf6f1e64df58c7f9f922ef64e364b3f4e data/eln/advancement/recipes/misc/wire_insulator.json
+c87859e4e4005ff548002d8a8fbe1fbec6d2539b data/eln/advancement/recipes/misc/wire_roller.json
 1bfaaf8fc2dfdb68971b17c546361d7a9ab1a025 data/eln/advancement/recipes/misc/wire_snips.json
 afa486babb76c44ae3518be8dedbab4a38596d42 data/eln/advancement/recipes/misc/wireless_analyser.json
 d9136945c9ca7ee9877abb74f871d8bd194f8105 data/eln/advancement/recipes/misc/wireless_button.json
@@ -568,6 +574,7 @@ a423457ff31535b559770376ebc14b04c271f5e8 data/eln/recipe/advanced_machine_block.
 23dc3a28332b359aee832565c162e5f1e53db807 data/eln/recipe/allmeter.json
 3195eb3d865c65466172a7fbd6ac9ed00fbc5c40 data/eln/recipe/alloy_dust.json
 cbaccff23f3f97a836e6927f38b28d1ef2f967fe data/eln/recipe/alloy_tank.json
+47c26858195e156528ec1ac1aabc18178df8fba5 data/eln/recipe/aluminum_roller_wheel.json
 df6fff4b10786a0a7c9cec342b128d16cceeb85d data/eln/recipe/amplifier.json
 662bfd2f6977cd93ad8cda03628077ab28c922ab data/eln/recipe/analog_glass_service_meter.json
 ef281e1729ad0a2753e9bc34241a5dd3e55b2492 data/eln/recipe/analog_vumeter.json
@@ -675,6 +682,7 @@ d7a54c89e137b00cf2d50b95480ddaf28591370f data/eln/recipe/high_voltage_switch.jso
 820d044aff444868e33966e505a7ee17af71055b data/eln/recipe/improved_flashlight.json
 4a6c0ad115aeb7f8a62cb0fab925aac8786d0226 data/eln/recipe/industrial_data_logger.json
 441236a83e9903671ee085ecd8705c19a822f2ac data/eln/recipe/iron_cable.json
+ff4c3c82db840e1dfc23de8ff0fe6bcd767ee0a0 data/eln/recipe/iron_roller_wheel.json
 4b9f9ef5fa11f713b714c8dd328c65558f315235 data/eln/recipe/iron_tank.json
 06a223dc3fee3d2f1bc82751b232279336ff98fb data/eln/recipe/jk_flip_flop_chip.json
 e6776792e8a688b133e4ee88f8ec981d5c41d46e data/eln/recipe/joint.json
@@ -840,6 +848,7 @@ d73dbee890e5b032106e12119ea9857489e8714d data/eln/recipe/steam_turbine.json
 90cc99ddc75685fa0dab1231a0fdc71e1ab0fd62 data/eln/recipe/steam_turbine_2.json
 25cb56c03da5f16893a1f4e8d1aed69997ce7d22 data/eln/recipe/steam_turbine_3.json
 6a5c4ea8dd1a012cdf9c341e34853e3dcd152e29 data/eln/recipe/steam_turbine_4.json
+52853901e24676cdd8805a4dfaa551feb33c6845 data/eln/recipe/steel_roller_wheel.json
 3f4a24c3fb4412d21f208ff458e45f74a002f7ed data/eln/recipe/stone_heat_furnace.json
 f4f9406ede6ea92137dd5caf98a20da982804e2e data/eln/recipe/street_light.json
 2dd44bbf82dca6fe077678b44dfae6276ea32cf7 data/eln/recipe/suspended_lamp_socket.json
@@ -919,6 +928,9 @@ a9bbb61c125ab264a33d2bd66ddcabd59537e5fb data/eln/recipe/white_brush_2.json
 83577b0c7020f97ed82900b8a100889fda27518a data/eln/recipe/wide_underground_meter_socket.json
 16b47b45ef3d7541477d98acad4146520e81c0bc data/eln/recipe/wind_turbine.json
 3fbebe4256ec3bf3a2d8050be4115cd6d39710ec data/eln/recipe/winding_dc_dc_converter.json
+24f085b595441593c96ad3994d6253b5f7e2db20 data/eln/recipe/wire_combiner.json
+3af964cba365008f9312915dd4a6ca5ffb7a76ab data/eln/recipe/wire_insulator.json
+f53101aadc360204fef8fbf7f982178aeb4c44b0 data/eln/recipe/wire_roller.json
 e50ab6a1cfd1732c084ccabff8d3605b1a452a00 data/eln/recipe/wire_snips.json
 0d5e60a659bdc098e7501d88ccc4bbce32cf920c data/eln/recipe/wireless_analyser.json
 413fb989065bf14dae491c0ef8284db59175f6f6 data/eln/recipe/wireless_button.json
