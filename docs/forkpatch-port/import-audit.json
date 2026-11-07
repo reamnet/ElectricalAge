@@ -1,11 +1,11 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "be68c114d7567f424076c0278494ec38993fb729",
-  "ledgerEntries": 345,
-  "uniqueSourceFiles": 208,
-  "uniqueTargetFiles": 334,
-  "declaredVerbatimEntries": 83,
-  "exactCopies": 96,
+  "targetCommit": "d7b53cecdc682fe49cff8356f99c0bef29bbb3fc",
+  "ledgerEntries": 358,
+  "uniqueSourceFiles": 216,
+  "uniqueTargetFiles": 347,
+  "declaredVerbatimEntries": 88,
+  "exactCopies": 101,
   "passed": true,
   "problems": [],
   "entries": [
@@ -2391,7 +2391,7 @@
       "target": "src/main/java/mods/eln/client/ClientRenders.java",
       "mode": "explicit-native-client-factories-for-ported-descriptors-no-reflection-fallback",
       "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
-      "targetSha256": "b6299e5a70ea61c605bee164b4373ccbadbf53f2e61b54b3e8ae760dd1078e2b",
+      "targetSha256": "d16e448507a21080363a5533603211f8e3bfc9c04bdd035f528d1a8b1e4cc4e9",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3678,7 +3678,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-source-variable-inductor-crafting-pattern",
       "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
-      "targetSha256": "f4de1849ce18d908c8e45e84b16c1374f1ded8f908fee6d87265926d74d53585",
+      "targetSha256": "915628b54bf300bb7de810a3b8f75f54aa9b883bb769039f3c2522ef37055790",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3689,7 +3689,7 @@
       "target": "src/main/java/mods/eln/gui/MenuSpecs.java",
       "mode": "native-one-core-slot-variable-inductor-server-menu",
       "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
-      "targetSha256": "dafbca29ed44fd56e40163dbf9215228389038786b10b772ebc2609f4c2ca3ba",
+      "targetSha256": "80e0b5132b4c73d56756c4efbfb79eee2fdaef215434192dbef706099d98b65a",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3700,7 +3700,7 @@
       "target": "src/main/java/mods/eln/client/ClientScreens.java",
       "mode": "native-variable-inductor-live-control-and-inductance-screen",
       "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
-      "targetSha256": "bee5ff403184945a18a4bc3bcb1a2ff84a2f5ecdbfeff8b9aeb792c225548f89",
+      "targetSha256": "63683b8e5cfab254076399651daa90685cf02a8bc9746487fb7c59c875fd7153",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3803,6 +3803,149 @@
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
+    },
+    {
+      "index": 345,
+      "source": "src/main/kotlin/mods/eln/transparentnode/DcDcControl.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/converter/DcDcControl.kt",
+      "mode": "native-NBT-and-packet-adaptation-of-source-versioned-controls",
+      "sourceSha256": "bb2377990654292289351a957023f63e6abae0d09755ca2d95bdf26c5b35ae92",
+      "targetSha256": "2dfc2f0122d98e80e67a13f843c5b4f01f12083811325e4e9dd0661cbfaa691f",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 346,
+      "source": "src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/converter/DcDcWinding.kt",
+      "mode": "native-paid-length-cached-physical-winding-and-double-precision-thermal-adapter",
+      "sourceSha256": "d6d09d7d0c31554902ba775f6fb0764b491c1858b076271ef86c289b2c0818d8",
+      "targetSha256": "04707b83df9911ca714d793efbdf1e3decb2a564fb086cfb869872a2b7c95bbe",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 347,
+      "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcElement.kt",
+      "mode": "native-conservative-solver-inventory-protection-and-source-control-adapter",
+      "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+      "targetSha256": "0e35de0b92adde87d0cc904f4b865f13838886befe78ac0c8bfa8eb97081bfc3",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 348,
+      "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcDescriptor.kt",
+      "mode": "native-source-coil-and-casing-model-adapter",
+      "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+      "targetSha256": "13229acf0922ad727786bead72e8373a0858ae2f2afdd12a34a8b448a5f33931",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 349,
+      "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcRender.kt",
+      "mode": "native-publication-mesh-cable-animation-and-sound-adapter",
+      "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+      "targetSha256": "ba7babeb7ad65e65c6ecb914839f88d2acefd08b46bd1358218624f744c12308",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 350,
+      "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcScreen.kt",
+      "mode": "native-container-controls-and-live-winding-display",
+      "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+      "targetSha256": "a661e6122d2c6d544b0b502f8b40dbfc67027ab80139af92055c94057060f417",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 351,
+      "source": "src/main/kotlin/mods/eln/sim/process/heater/ElectricalHeatAccumulator.kt",
+      "target": "src/main/kotlin/mods/eln/sim/process/heater/ElectricalHeatAccumulator.kt",
+      "mode": "verbatim",
+      "sourceSha256": "40fbbd915d7bc350836911b99881efa1fe9ce7e95192919ed65005b25317cdd1",
+      "targetSha256": "40fbbd915d7bc350836911b99881efa1fe9ce7e95192919ed65005b25317cdd1",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 352,
+      "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+      "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchVariableDcDcCases.kt",
+      "mode": "native-placement-reversible-circuit-controls-paid-inventory-heat-and-save-regressions",
+      "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+      "targetSha256": "1acee1e1c265c4e4f29b5d33fe855c89aa9753963c8e2f6699a64009590e3a50",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 353,
+      "source": "src/main/kotlin/mods/eln/transparentnode/DcDcControl.kt",
+      "target": "src/test/kotlin/mods/eln/transparentnode/converter/ForkPatchDcDcControlTest.kt",
+      "mode": "native-control-transactions-heat-delivery-and-save-precision-regressions",
+      "sourceSha256": "bb2377990654292289351a957023f63e6abae0d09755ca2d95bdf26c5b35ae92",
+      "targetSha256": "249612904785c57498923b803cbec4ba728a425c8021bfa1e04204398cdb851b",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 354,
+      "source": "src/main/resources/assets/eln/model/transformator/variabledcdc.mtl",
+      "target": "src/main/resources/assets/eln/model/transformator/variabledcdc.mtl",
+      "mode": "verbatim",
+      "sourceSha256": "27e5f995c0e7bf961c24673584264e50365225918009b57e6be92bf6c38ebe33",
+      "targetSha256": "27e5f995c0e7bf961c24673584264e50365225918009b57e6be92bf6c38ebe33",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 355,
+      "source": "src/main/resources/assets/eln/model/transformator/variabledcdc.obj",
+      "target": "src/main/resources/assets/eln/model/transformator/variabledcdc.obj",
+      "mode": "verbatim",
+      "sourceSha256": "0922cd036e160123efd89e95d17703b411b3013aff6c197598e6a7b5254848a9",
+      "targetSha256": "0922cd036e160123efd89e95d17703b411b3013aff6c197598e6a7b5254848a9",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 356,
+      "source": "src/main/resources/assets/eln/model/transformator/variabledcdc.png",
+      "target": "src/main/resources/assets/eln/model/transformator/variabledcdc.png",
+      "mode": "verbatim",
+      "sourceSha256": "9521fcb28980b0e968ba2bfebc486d12cbf391748bc598b5e2f2044dad216f78",
+      "targetSha256": "9521fcb28980b0e968ba2bfebc486d12cbf391748bc598b5e2f2044dad216f78",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 357,
+      "source": "src/main/resources/assets/eln/textures/blocks/variabledc-dcconverter.png",
+      "target": "src/main/resources/assets/eln/textures/item/variable_dc_dc_converter.png",
+      "mode": "verbatim-relocated",
+      "sourceSha256": "e4f09e083a3b85377efcb3eda1c8523f8a5665006521d072ee72e810962e7fce",
+      "targetSha256": "e4f09e083a3b85377efcb3eda1c8523f8a5665006521d072ee72e810962e7fce",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
     }
   ],
   "scope": "Source hashes, target existence and declared exact copies; not full runtime parity."

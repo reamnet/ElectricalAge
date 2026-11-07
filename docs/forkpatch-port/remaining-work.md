@@ -26,6 +26,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Removable distribution streetlights, selected 120/240 V lighting, twin LED pole
   recovery and standalone Mains Step-down Unit.
 - Six independent-pole contactor/changeover/solid-state switchgear devices.
+- Variable DC/DC converter129 with paid fractional windings, versioned controls, conservative reversible transfer, hot-wire saves and native menus/rendering.
 - Signal-controlled variable inductor6179 with the source E6 range, one-core menu and retained native LU/voxel behavior.
 - Programmable Load Bank with passive sag response, case/fan cooling and native controls.
 - Variable Frequency Motor Drive with passive V/Hz ramp, output impedance and latched thermal protection.
@@ -71,7 +72,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 | --- | --- |
 | Ghost collision parity | Remaining owner-specific ghost picking/collision and source import mappings; fixed flat solar reservations now have their own state and scheduled native-save upgrade. |
 | Shared mounting | Source partial-support insets, cable rises and matching selection/render transforms beyond the registered stair roofs; preserve native voxel geometry and resident-only queries. See the [mounting review](mounting-review.md). |
-| Other power electronics | Remaining source variable converter/control behavior; review shared transformer, capacitor and regulated-supply changes against the destination solver. See the [identity/control/winding review](power-electronics-review.md). |
+| Other power electronics | Fixed130 and one-way131–134 converter adapters, dev-only isolation135, and broader shared transformer/capacitor/regulated-supply changes against the destination solver. See the [identity/control/winding review](power-electronics-review.md). |
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
 | Utility manufacturing | Wire drawing/processing machinery, spool/jacket manufacturing, inventory trimming and remaining wire/cable tools. |
 | Industrial devices | Appliance cord/outlet integration and interactive client/audio parity for the registered industrial families. |

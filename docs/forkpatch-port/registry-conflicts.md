@@ -31,7 +31,8 @@ The incoming adapter needs an explicit distinct native registry name and source
 import mapping; a free numeric lookup does not authorize replacing 128 or renaming
 its current item. Source and destination worlds must remain distinguishable.
 
-Source variable 129 and one-way 131–134 lookups are free at this checkpoint.
+Source variable129 is now registered as `variable_dc_dc_converter`; native128 is unchanged.
+One-way131–134 lookups remain free at this checkpoint.
 Isolation 135 is development-only in the source registration. See the
 [control and winding review](power-electronics-review.md) before adapting them.
 

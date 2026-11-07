@@ -2855,6 +2855,12 @@
   "kind": "transparent_node",
   "name": "dc_dc_converter"
  },
+ "eln:transparent_node@129": {
+  "descriptor": "VariableDcDcDescriptor",
+  "display": "Variable DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "variable_dc_dc_converter"
+ },
  "eln:transparent_node@16383": {
   "descriptor": "LargeRenewableDescriptor",
   "display": "Large Watermill 3.2kV",

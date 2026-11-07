@@ -227,6 +227,11 @@ public final class MenuSpecs {
         put(mods.eln.transparentnode.solarpanel.SolarPanelDescriptor.class, d -> !d.canRotate ? MenuSpec.SCREEN_ONLY : MenuSpec.of(
             descriptor(mods.eln.transparentnode.solarpanel.SolarPanelContainer.trackerSlotId, 176 / 2 - 20, 35, 1,
                 SolarTrackerDescriptor.class, MEDIUM, tr("Solar tracker slot"))).publishing(0));
+        put(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, d -> MenuSpec.of(
+            filter(0, 16, 158, 16, st -> mods.eln.transparentnode.converter.DcDcWinding.of(st) != null, MEDIUM, tr("Primary winding")),
+            filter(1, 40, 158, 16, st -> mods.eln.transparentnode.converter.DcDcWinding.of(st) != null, MEDIUM, tr("Secondary winding")),
+            descriptor(2, 64, 158, 1, FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot")),
+            descriptor(3, 88, 158, 1, CaseItemDescriptor.class, MEDIUM, tr("Casing slot"))).panel(368, 294, 8, 210));
         put(mods.eln.transparentnode.transformer.TransformerDescriptor.class, d -> MenuSpec.of(
             six(mods.eln.transparentnode.transformer.TransformerContainer.primaryCableSlotId, 58, 30, 4, CABLE, MEDIUM,
                 tr("Electrical cable slot")),

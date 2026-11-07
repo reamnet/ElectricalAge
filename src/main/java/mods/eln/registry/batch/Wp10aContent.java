@@ -178,6 +178,13 @@ public class Wp10aContent implements ElnContent {
     }
 
     public static void registerTransformer(int id) {
+        {
+            var desc = new mods.eln.transparentnode.converter.VariableDcDcDescriptor(
+                TR_NAME(Type.NONE, "Variable DC-DC Converter"), obj.getObj("variabledcdc"),
+                obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"));
+            transparentNodeItem.addDescriptor(mods.eln.transparentnode.converter.VariableDcDcDescriptor.ID, desc);
+        }
+
         int subId;
         String name;
 

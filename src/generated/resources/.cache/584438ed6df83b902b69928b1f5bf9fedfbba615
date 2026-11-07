@@ -1,4 +1,4 @@
-// 26.3	2026-11-06T20:04:08.736038289	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-07T00:33:59.64267029	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -409,6 +409,7 @@ bf8348a28f32ca7b23c9752646b97e5ef12ef005 data/eln/advancement/recipes/misc/ups_a
 036bce211a26d4b14a24a799461b4d1e26a834f4 data/eln/advancement/recipes/misc/utility_pole_3.json
 aa8fd0f6d50cf3c54d56d97003bfc2ce7a1673bf data/eln/advancement/recipes/misc/utility_pole_w_dc_dc_converter.json
 6bb2c6efa724e4dbae5b3c7cd7d84522a157d234 data/eln/advancement/recipes/misc/utility_wind_turbine_3_2kv.json
+0879323936d573baaf408452dfb3964d38934dc4 data/eln/advancement/recipes/misc/variable_dc_dc_converter.json
 de844168e12f18197ca4809d4ac9ff1bec366912 data/eln/advancement/recipes/misc/variable_frequency_motor_drive.json
 5cc02a99df853150da0d3d09f5ec9d33cc35096b data/eln/advancement/recipes/misc/variable_inductor.json
 71ae4dcc4d2fc3bba3565e539206485515305e6d data/eln/advancement/recipes/misc/very_high_voltage_cable.json
@@ -868,6 +869,7 @@ b204e479cbae894349308593acaaac469f4941ab data/eln/recipe/utility_pole_2.json
 fdb6dd720302e6dca9aafb6aa3bf07a3b7b35a8f data/eln/recipe/utility_pole_3.json
 dac1cc7568c77d968ce729665085384428966fb2 data/eln/recipe/utility_pole_w_dc_dc_converter.json
 887b3e5bfcb12e714fe349a4b9a0fe190576a5a3 data/eln/recipe/utility_wind_turbine_3_2kv.json
+e382def43ea9c892f4208a184808845996fd489c data/eln/recipe/variable_dc_dc_converter.json
 b53a9d072c6ff5043733d862ae3ec8b5a50554f5 data/eln/recipe/variable_frequency_motor_drive.json
 5a10c9fd4cdfa3a5f11bd452fc70291fc7d73d5a data/eln/recipe/variable_inductor.json
 55fdfab7dcdd516966fdbd904c59ffcf6fd4575d data/eln/recipe/very_high_voltage_cable.json

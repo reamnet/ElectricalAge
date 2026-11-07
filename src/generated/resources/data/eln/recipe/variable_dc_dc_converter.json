@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "eln:circuits/basic"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "#eln:circuits/basic",
+    "C": "eln:copper_cable",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "CBC",
+    "III"
+  ],
+  "result": {
+    "id": "eln:variable_dc_dc_converter"
+  }
+}

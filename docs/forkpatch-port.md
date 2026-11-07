@@ -1172,3 +1172,17 @@ the native graded-weather and Norton integrations. Final checks pass 648 root te
 goldens remain unresolved. See the [sampling guide](forkpatch-port/solar-sampling.md),
 [complete evidence](forkpatch-port/solar-sampling-validation.json) and
 [remaining converter review](forkpatch-port/power-electronics-review.md).
+
+### Flat array collision and variable DC/DC converter
+
+Fixed flat arrays now reserve native half-height ghost cells. Existing owned cube
+reservations are upgraded by a resident-only scheduled server repair after owner
+load. Four real placement/reload/collision cases plus ownership and rotating-array
+guards pass; see [flat solar](forkpatch-port/flat-solar.md).
+
+Variable DC/DC converter129 now has native versioned controls, reversible conservative
+transfer, paid fractional wire windings, a four-slot menu, source coil/case models
+and complete client publication. Hot wire retains temperature through extraction,
+splits and owner reloads. Thermal failure leaves damaged jacket stock or native
+bare-metal scrap with paid length and heat. Native128 remains unchanged. See the
+[adapter](forkpatch-port/variable-dcdc.md) and [validation](forkpatch-port/variable-dcdc-validation.json).

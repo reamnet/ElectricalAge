@@ -2419,5 +2419,96 @@
     "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
     "mode": "native-four-front-world-collision-scheduled-save-repair-and-owner-guard-regressions",
     "status": "648-full-root-15-cad-and350-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/DcDcControl.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/DcDcControl.kt",
+    "sourceSha256": "bb2377990654292289351a957023f63e6abae0d09755ca2d95bdf26c5b35ae92",
+    "mode": "native-NBT-and-packet-adaptation-of-source-versioned-controls",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/DcDcWinding.kt",
+    "sourceSha256": "d6d09d7d0c31554902ba775f6fb0764b491c1858b076271ef86c289b2c0818d8",
+    "mode": "native-paid-length-cached-physical-winding-and-double-precision-thermal-adapter",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcElement.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-conservative-solver-inventory-protection-and-source-control-adapter",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcDescriptor.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-source-coil-and-casing-model-adapter",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcRender.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-publication-mesh-cable-animation-and-sound-adapter",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcScreen.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-container-controls-and-live-winding-display",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/process/heater/ElectricalHeatAccumulator.kt",
+    "target": "src/main/kotlin/mods/eln/sim/process/heater/ElectricalHeatAccumulator.kt",
+    "sourceSha256": "40fbbd915d7bc350836911b99881efa1fe9ce7e95192919ed65005b25317cdd1",
+    "mode": "verbatim",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchVariableDcDcCases.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-placement-reversible-circuit-controls-paid-inventory-heat-and-save-regressions",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/DcDcControl.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/converter/ForkPatchDcDcControlTest.kt",
+    "sourceSha256": "bb2377990654292289351a957023f63e6abae0d09755ca2d95bdf26c5b35ae92",
+    "mode": "native-control-transactions-heat-delivery-and-save-precision-regressions",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/variabledcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/variabledcdc.mtl",
+    "sourceSha256": "27e5f995c0e7bf961c24673584264e50365225918009b57e6be92bf6c38ebe33",
+    "mode": "verbatim",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/variabledcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/variabledcdc.obj",
+    "sourceSha256": "0922cd036e160123efd89e95d17703b411b3013aff6c197598e6a7b5254848a9",
+    "mode": "verbatim",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/variabledcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/variabledcdc.png",
+    "sourceSha256": "9521fcb28980b0e968ba2bfebc486d12cbf391748bc598b5e2f2044dad216f78",
+    "mode": "verbatim",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/variabledc-dcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/variable_dc_dc_converter.png",
+    "sourceSha256": "e4f09e083a3b85377efcb3eda1c8523f8a5665006521d072ee72e810962e7fce",
+    "mode": "verbatim-relocated",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
   }
 ]

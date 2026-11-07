@@ -316,6 +316,7 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipePassiveComponent() {
+        addRecipe(findItemStack("Variable DC-DC Converter"), "CBC", "III", 'C', findItemStack("Copper Cable"), 'I', stack(Items.IRON_INGOT), 'B', "circuitElnBasic");
         addRecipe(findItemStack("Variable inductor"), " S ", "cIc", " c ", 'I', stack(Items.IRON_INGOT), 'c', findItemStack("Copper Cable"), 'S', findItemStack("Signal Cable"));
 
         addRecipe(findItemStack("Signal Diode", 4),
