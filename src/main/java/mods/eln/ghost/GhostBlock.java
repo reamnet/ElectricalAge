@@ -31,6 +31,7 @@ public class GhostBlock extends Block {
     public static final int tFloor = 1;
     public static final int tLadder = 2;
 
+    public static final int tFlatSolar = 13; // Fixed flat arrays: source half-height owner collision.
     public static final int tBatteryFloor = 7;
     public static final int tClearance = 8; // 3..7 retain the native cabinet/battery shapes.
     public static int wallServiceMeta(Direction front) {
@@ -42,6 +43,7 @@ public class GhostBlock extends Block {
         Shapes.box(.04,0,.67,.96,1,1), Shapes.box(.04,0,0,.96,1,.33),
         Shapes.box(.06,0,.08,.94,1,.92)
     };
+    private static final VoxelShape FLAT_SOLAR = Shapes.box(0, 0, 0, 1, .5, 1);
     private static final VoxelShape FLOOR = Block.box(0, 0, 0, 16, 1, 16);
 
     public GhostBlock(Properties properties) {
@@ -61,6 +63,8 @@ public class GhostBlock extends Block {
         if (meta >= 9 && meta <= 12) return mods.eln.transparentnode.solarpanel.SolarPanelBlock.roofShape(meta - 9);
         if (meta >= 3 && meta <= tBatteryFloor) return CABINETS[meta - 3];
         switch (meta) {
+            case tFlatSolar:
+                return FLAT_SOLAR;
             case tFloor:
                 return FLOOR;
             case tLadder:

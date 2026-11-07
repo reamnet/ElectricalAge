@@ -2405,5 +2405,19 @@
     "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
     "mode": "native-invalid-saved-light-loaded-circuit-recovery-and-finite-weather-regressions",
     "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "target": "src/main/kotlin/mods/eln/transparentnode/solarpanel/SolarGhostShapes.kt",
+    "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+    "mode": "native-cached-flat-half-height-shape-and-resident-only-owned-legacy-upgrade",
+    "status": "648-full-root-15-cad-and350-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "target": "src/main/java/mods/eln/gametest/cases/ForkPatchFlatSolarCases.java",
+    "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+    "mode": "native-four-front-world-collision-scheduled-save-repair-and-owner-guard-regressions",
+    "status": "648-full-root-15-cad-and350-native-port-cases-passed-fluid200"
   }
 ]

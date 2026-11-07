@@ -66,6 +66,7 @@ public final class ElnGameTests {
         l.add(new ForkPatchClientSmokeCase());
         l.addAll(mods.eln.gametest.cases.ForkPatchLargeRenewableCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchSolarRoofCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchFlatSolarCases.cases());
         l.add(new mods.eln.gametest.cases.ForkPatchSolarSamplingCases());
         l.addAll(mods.eln.gametest.cases.ForkPatchVariableInductorCases.cases());
         mods.eln.gametest.cases.Wp9aCases.addTo(l);

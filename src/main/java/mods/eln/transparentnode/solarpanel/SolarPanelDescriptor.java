@@ -127,7 +127,8 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
 
     @Override
     public GhostGroup getGhostGroupAt(Coordonate coord, Direction front) {
-        return SolarRoofMount.at(coord.world(), coord.pos()).footprint(ghostGroup, front);
+        var roof = SolarRoofMount.at(coord.world(), coord.pos());
+        return !canRotate && !roof.getPitched() ? SolarGhostShapes.flatFootprint(ghostGroup, front) : roof.footprint(ghostGroup, front);
     }
 
     void draw(float alpha, Direction front) {

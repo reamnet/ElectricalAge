@@ -9,6 +9,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 
 - Norton solar panels and large tracking arrays; MPPT and hybrid floor/wall controls.
 - Pitched solar roofs for all four panel variants, saved orientation, uphill reservations/return terminal and replicated cached collision shapes.
+- Fixed flat solar-array half-height reservations and resident-only scheduled repair of older native cube states.
 - Front/pitch-correct daylight sampling, modern opaque shadows, resident-only bounded voxel rays and conservative heightmap skipping.
 - Utility Wind Turbine 3.2kV and Large Watermill 3.2kV with bounded renewable
   supplies, sparse environmental sampling and native publication/animation.
@@ -35,7 +36,7 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 
 Each family still participates in the cross-cutting validation/migration work below.
 
-The latest sampling checkpoint passes **648 full root regressions**, with three
+The sampling checkpoint passes **648 full root regressions**, with three
 optional previews skipped (651 selected), all **15 CAD tests**, and all **344 port
 cases inside 810 unfiltered GameTests**. The default 200-case fluid corpus is
 included. The expanded run passes 808 of 810 cases; only the historical descriptor
@@ -56,6 +57,10 @@ Restoring shared test-player facing after oriented renewable placement continues
 to protect unrelated battery/furnace layouts. All earlier charge/drive/recharge
 integration cases also pass in the final expanded run.
 
+The flat-array follow-up passes the same 648 root regressions and 15 CAD tests,
+plus all 350 native port cases. Its 638 identities and 936 English entries are
+unchanged; see [evidence](flat-solar-validation.json) and [guide](flat-solar.md).
+
 Earlier checkpoints remain documented in [large renewable validation](large-renewable-validation.json),
 [industrial controls](industrial-work-block-validation.json), and the
 [charging/welding checkpoint](workshop-validation.json).
@@ -64,7 +69,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 
 | Area | Remaining scope |
 | --- | --- |
-| Ghost collision parity | Flat fixed solar-array reservations retain the inherited native cube collision; review source half-height owner shapes and remaining ghost picking/collision without reinterpreting existing native metadata. |
+| Ghost collision parity | Remaining owner-specific ghost picking/collision and source import mappings; fixed flat solar reservations now have their own state and scheduled native-save upgrade. |
 | Shared mounting | Source partial-support insets, cable rises and matching selection/render transforms beyond the registered stair roofs; preserve native voxel geometry and resident-only queries. See the [mounting review](mounting-review.md). |
 | Other power electronics | Remaining source variable converter/control behavior; review shared transformer, capacitor and regulated-supply changes against the destination solver. See the [identity/control/winding review](power-electronics-review.md). |
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |

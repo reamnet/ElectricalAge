@@ -1,9 +1,9 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "7d57e2ac866c95640aee1488fe80c9c4139eddbf",
-  "ledgerEntries": 343,
+  "targetCommit": "be68c114d7567f424076c0278494ec38993fb729",
+  "ledgerEntries": 345,
   "uniqueSourceFiles": 208,
-  "uniqueTargetFiles": 332,
+  "uniqueTargetFiles": 334,
   "declaredVerbatimEntries": 83,
   "exactCopies": 96,
   "passed": true,
@@ -3524,7 +3524,7 @@
       "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
       "mode": "native-stair-support-placement-and-pitched-footprint-hooks",
       "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
-      "targetSha256": "2f1b2a56cf4a59704364f6f714fcb7b314bcb05a3114d2813a5a67394c1325cf",
+      "targetSha256": "bcc3dbb2b956a84df29d5dd4895563a330d287f3abacf33b347187e564932d4e",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3535,7 +3535,7 @@
       "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelBlock.java",
       "mode": "native-cached-replicated-pitched-collision-and-outline-shapes",
       "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
-      "targetSha256": "251367747c6844304fef8500fa0bd81c9e37b0455d849c891a2e0a6dbd282ed0",
+      "targetSha256": "da11428dc716c8026da01f108f04441647db628a5ea9fc469efccffde5b7d2c2",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3623,7 +3623,7 @@
       "target": "src/main/java/mods/eln/ghost/GhostBlock.java",
       "mode": "native-cached-ghost-roof-shapes-without-owner-chunk-lookups",
       "sourceSha256": "7d0eb208e20e4ce984cfefa6dfe1a191d488adc7a4f8b8b0ed322e469fa1b699",
-      "targetSha256": "e62dd709ccc2821863e42911526234a1432180529adb50dbd27ccf32445cd00f",
+      "targetSha256": "ea8af1ae8919d9f72bf8c5757457d3e58e71ca49ccc31a95a13093c11027e490",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -3778,6 +3778,28 @@
       "mode": "native-invalid-saved-light-loaded-circuit-recovery-and-finite-weather-regressions",
       "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
       "targetSha256": "5a2cd7d315e2947f5fc12fcfc2578433beda018fdd13ae1aec81357ae31fbdaf",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 343,
+      "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+      "target": "src/main/kotlin/mods/eln/transparentnode/solarpanel/SolarGhostShapes.kt",
+      "mode": "native-cached-flat-half-height-shape-and-resident-only-owned-legacy-upgrade",
+      "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+      "targetSha256": "d953a85cd78baf04013b08d84d6264032647e15be263d10b12ab7c6b445ed306",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 344,
+      "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+      "target": "src/main/java/mods/eln/gametest/cases/ForkPatchFlatSolarCases.java",
+      "mode": "native-four-front-world-collision-scheduled-save-repair-and-owner-guard-regressions",
+      "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+      "targetSha256": "61f004a7753dd731760cf27787e65a96707992c2913dbbe48c34347d97d8b7f4",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false

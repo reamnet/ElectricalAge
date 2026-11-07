@@ -49,6 +49,17 @@ public final class SolarPanelBlock extends TransparentNodeBlock {
         return super.placedState(front, world, pos).setValue(ROOF, up == null ? 0 : up.get3DDataValue() - 1);
     }
 
+    public boolean hasFlatReservations() {
+        var group = descriptor.getGhostGroup(mods.eln.misc.Direction.XN);
+        return !((SolarPanelDescriptor) descriptor).canRotate && group != null && group.size() > 0;
+    }
+
+    @Override
+    protected void tick(BlockState state, net.minecraft.server.level.ServerLevel world, BlockPos pos, net.minecraft.util.RandomSource random) {
+        // Scheduled block ticks run on the server thread, unlike the electrical simulator's callbacks.
+        if (!SolarGhostShapes.repair(world, pos)) world.scheduleTick(pos, this, 20);
+    }
+
     public static VoxelShape roofShape(int horizontalIndex) {
         return PITCHED[horizontalIndex];
     }
