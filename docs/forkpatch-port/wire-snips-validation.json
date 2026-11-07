@@ -57,5 +57,6 @@
     "Interactive client screen/GPU and multiplayer validation remain pending.",
     "Manufacturing machines, remaining tools and full source-world conversion remain separate work.",
     "Historical descriptor/slot goldens still fail in the full native run; expected references were unchanged."
-  ]
+  ],
+  "latestValidatedProductionCommit": "bfc95c10fbd192e902070c418b5d9faa0229cd18"
 }

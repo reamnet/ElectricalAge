@@ -62,5 +62,11 @@
     "Full source-world conversion, development isolation135, remaining equipment/integrations and copy-tool work remain pending.",
     "Headless native/mesh/server checks do not establish interactive client/GPU/audio/multiplayer or complete loaded-world comparative performance.",
     "Development artifact integrity verified; this is not a finished release."
-  ]
+  ],
+  "productionCommit": "bfc95c10fbd192e902070c418b5d9faa0229cd18",
+  "provenance": {
+    "ledgerEntries": 392,
+    "passed": true
+  },
+  "goldenReferencesAndSkipListsUnchanged": true
 }

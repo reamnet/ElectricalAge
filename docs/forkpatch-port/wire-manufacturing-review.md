@@ -1,6 +1,6 @@
 # Next wire-manufacturing adapter review
 
-Reviewed against source `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Wire Snips7873
+Reviewed against source `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Wire Snips 7873
 is now adapted; the three processing machines and their supporting items below
 remain unregistered. This is an implementation contract, not runtime validation.
 

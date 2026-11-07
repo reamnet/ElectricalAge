@@ -6,7 +6,7 @@ is generated and checked through the server recipe manager. No previous native
 item identity is replaced.
 
 The menu has one filtered input slot and the player's inventory. Choose a whole
-number of metres from1 through999999, smaller than the available paid length.
+number of metres from 1 through 999999, smaller than the available paid length.
 The original spool keeps the fractional remainder and its ledger identity; the
 cut spool receives the requested metres and a fresh ledger identity. Both retain
 temperature and other wire metadata. Cutting therefore cannot turn hot winding

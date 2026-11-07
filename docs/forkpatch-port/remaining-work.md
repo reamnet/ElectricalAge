@@ -34,16 +34,16 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 - Grid Control Console/SCADA with eight world-local targets, bounded loaded-node lookup and native device controls.
 - Standalone Pole Surge Arrester and paid overhead HV pole kits with finite cartridge state and native lightning protection.
 - Programmable EV Pack Charger, removable 20 kWh traction pack, Electric Welding Station and welded frames; native inventory, accepted-energy and save checks.
-- Wire Snips7873 with native main/off-hand menus, paid fractional cuts, preserved hot/damaged/multicore data and exact native returns.
+- Wire Snips 7873 with native main/off-hand menus, paid fractional cuts, preserved hot/damaged/multicore data and exact native returns.
 - Electric Forklift and Warehouse Equipment Pallet with server controls, actual pack drain/lifting costs, guarded inventories, cargo saves and refunds.
 
 Each family still participates in the cross-cutting validation/migration work below.
 
 The current flat-solar, converter-family and Wire Snips checkpoint passes **662
 full root tests**, with three optional previews skipped (665 selected), all **15
-CAD tests**, and all **394 port cases inside860 unfiltered GameTests**. The default
-200-case fluid corpus is included. The full native run passes858 cases; only the
-historical descriptor and slot goldens fail, retaining418 individual assertions
+CAD tests**, and all **394 port cases inside 860 unfiltered GameTests**. The default
+200-case fluid corpus is included. The full native run passes 858 cases; only the
+historical descriptor and slot goldens fail, retaining 418 individual assertions
 for review. No expected references, skip lists or tolerances changed. See the
 [complete current evidence and artifact](session4-validation.json).
 
@@ -77,7 +77,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 | Shared mounting | Source partial-support insets, cable rises and matching selection/render transforms beyond the registered stair roofs; preserve native voxel geometry and resident-only queries. See the [mounting review](mounting-review.md). |
 | Other power electronics | Development-only floating isolation135 and broader inherited transformer/capacitor/regulated-supply changes; fixed130 and grounded one-way131–134 are registered. against the destination solver. See the [identity/control/winding review](power-electronics-review.md). |
 | Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
-| Utility manufacturing | Wire Roller4608, Insulator4609 and Combiner4610, their wheels/bundles and remaining wire/cable tools. Wire Snips7873 now handles paid hot spool cuts; see the [manufacturing contract review](wire-manufacturing-review.md). |
+| Utility manufacturing | Wire Roller4608, Insulator4609 and Combiner4610, their wheels/bundles and remaining wire/cable tools. Wire Snips 7873 now handles paid hot spool cuts; see the [manufacturing contract review](wire-manufacturing-review.md). |
 | Industrial devices | Appliance cord/outlet integration and interactive client/audio parity for the registered industrial families. |
 | Industrial transport | Interactive client controls, audio and multiplayer parity of the registered forklift/pallet adapters. Road vehicles remain a separate adapter group. |
 | Vehicles | Four-seat golf cart, two-seat electric car, stepping/collision, turn-overload fire/explosion behavior, passengers, storage, six-cell traction pack and in-car charging. Preserve the electric car's clear windows. |
@@ -100,7 +100,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The latest unfiltered run passes858 of860 cases; descriptor and slot
+- The latest unfiltered run passes 858 of 860 cases; descriptor and slot
   goldens still fail. Review the [exact differences](native-suite-review.md), then
   rerun after explicitly reconciling the historical expectations. The wind/watermill
   fixture now restores shared test-player facing, fixing two order-dependent layouts.
