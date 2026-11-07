@@ -83,9 +83,10 @@ headless publication/mesh checks.
 The native Fabricator adapter now exposes its original 200 V input as `power` and
 keeps its ZN/Down surface terminal fixed. Its ordinary item/configuration payload
 contains only `operation`; paid work, inputs and the deterministic yield seed/
-attempt counter stay world-owned. A future actual cord carry must transfer those
-fields through the one consumed physical snapshot, without separately dropping
-its inputs or refunding its paid cord. Copy/pick helpers must continue using the
+attempt counter stay world-owned. Source `MachineCordDevice` keeps the default `cordPortable=false`, so the
+Fabricator remains fixed equipment when connected. If a later feature explicitly
+adds actual carry, it must transfer those fields through one consumed physical
+snapshot, without separately dropping inputs or refunding the paid cord. Copy/pick helpers must continue using the
 restricted settings payload. The shared native electrical-machine process now
 accumulates work in its accepted electrical callback; cord attachment must retain
 that callback and isolate only the original input, preserving recipe/booster
@@ -112,7 +113,7 @@ Concrete native inlet review for the first consumer adapters:
 | Native consumer | Existing load / surface port | Adapter constraint |
 | --- | --- | --- |
 | `fabricator.FabricatorElement` | `power`, 200 V, global ZN/Down | Keep fixed source orientation and accepted-work callback; copy settings only through its restricted payload. |
-| `wiremachine.WireMachineElement` | `power`, 200 V, bottom-edge ports | Keep paid buffers and real break/place ownership; cord carry cannot also emit the machine's paid-buffer drop. |
+| `wiremachine.WireMachineElement` | `power`, 200 V, bottom-edge ports | Keep paid buffers and real break/place ownership; source machine-cord adapters remain nonportable. |
 | `electricalmachine.ElectricalMachineElement` | private `electricalLoad`, descriptor voltage and `powerLrdu` mask | Add a narrow inlet adapter rather than replacing its load/process/recipes; preserve the accepted-step callback added here. |
 | `electricalfurnace.ElectricalFurnaceElement` | package-local `electricalLoad`, back/Down mask | Read voltage from the installed native heating element; missing/invalid hardware must reject a cord. |
 | `batterycharger.BatteryChargerElement` | public `powerLoad`, native power on every edge | Retain this destination improvement when unplugged; suppress every native inlet edge when plugged. |
@@ -124,3 +125,85 @@ signal, thermal, shaft and fluid connections. This table records inspected nativ
 entry points, not permission to make fields public or select the first arbitrary
 load on every device. Motors, other consumers and newer native-only equipment
 still need their own explicit inlet/topology review.
+
+## Native voxel and carry integration points
+
+Porting only the source `SixNode` wrappers would leave native voxel inputs
+connected. `VoxelNode.ends()` and `VoxelNode.pins()` read hosted elements' loads
+and masks directly; explicit `edgePins()` are another path. The ordinary
+`SixNode` same-block connection helpers also access elements directly. Review
+all of those paths when suppressing a plugged consumer's original power inlet.
+Filter only the selected power load and its power bits; preserve signal, thermal,
+bus and other pins, native voxel geometry, offset slots and cable-net ownership.
+Native tests must include both same-block and adjacent-block voxel cables and
+offset hosted consumers, with the original links restored after unplugging.
+
+Source carry removes a six-node device by `owner.side`. Native six-node devices
+also occupy offset slots beyond the six faces, so carry must address the actual
+`slot` through `SixNode.deleteSlot`, with a dedicated carry policy for its
+`destroy` path. Deleting by face can select another device. Let the native voxel
+`afterSubBlockDeleted` path decide whether the host block is empty; remaining
+cables, pipes, carved hosts and other devices must survive.
+
+Native `NodeBlockEntity.setRemoved` calls ordinary break only when the node is
+not already destructing. `NodeBase.physicalSelfDestruction` marks it destructing
+before removal and drops nothing, whereas an ordinary transparent break drops
+inventory and the device. These paths are distinct; a future carry must preserve
+their ownership rules and explicitly account for ghosts, actual removal failure
+and cancellation. Setting a source-style `moving` flag alone does not add native
+carry support. A full snapshot cannot pass through the ordinary configuration or
+picked-item payload, and native subclasses that restrict `readItemStackNBT` need
+an explicit actual-owner restore path rather than an unrestricted base-class
+snapshot import.
+
+`ItemNbt.get` returns a copy of native `CUSTOM_DATA`. Selection edits must be
+written back through `ItemNbt.edit`/`set`; remove only the cord's selection key
+when consumed instead of clearing unrelated custom data/components. The existing
+`GenericItemUsingDamageDescriptor.onItemUse` is a native entry point for held
+cords. Empty-hand carry still needs a carefully ordered server interaction path;
+source hit resolution and event cancellation are not native runtime evidence.
+
+Portability is an explicit source policy, separate from electrical compatibility:
+`MachineCordDevice` does not override `cordPortable=false`. Source kitchen devices
+permit carry except the fridge, UPS permits it only in compact form, and lamp
+sockets permit it only for a table-lamp fixture. Preserve those decisions through
+the corresponding native adapters; generic machine-cord support does not imply
+Fabricator, plate-machine or wire-machine carry support.
+
+Additional explicit source carry policies are nonindustrial fans, only the
+`PORTABLE`/`PATIO` climate types, and only the holiday-candle festive descriptor.
+Six-socket strips do not override the default nonportable policy. These policies
+must remain type/descriptor decisions rather than a voltage-based whitelist.
+
+## Compact UPS boundary
+
+Source `CompactUpsElement` is a four-cell, four-socket source at lookup 8076.
+Each cell is independently active (`UpsInventory(4, 1)`), unlike the existing
+native UPS's 48 cells in complete 24-cell racks. Socket ownership uses its own
+`upsSocketId`, four `upsSocketN` reservations and `upsRevoked` tokens. The socket
+rating follows the selected 120/240 V output. Occupied or reserved sockets block
+output-voltage changes; direct bypass requires a matching input/output rating.
+Carrying a compact UPS first disconnects downstream cords before taking its
+snapshot, so those reservations are not resurrected after placement.
+
+The native `UpsPowerUnit` already contains the source compact-mode parameters:
+3 kW inverter budget, 120/240 V selection, input-rating-relative acceptance and
+20 A charger input limit, plus `allowVoltageChange`/`allowBypass` callbacks. Its
+accepted-step battery/thermal accounting and native conservative controllers
+must remain authoritative. The existing `UpsElement` still constructs the full
+rack inventory and noncompact unit; `UpsDescriptor` explicitly rejects compact
+registration. Passing a new descriptor flag alone would therefore not implement
+the compact appliance. Parameterize the owner/inventory/menu/render path only
+with the corresponding native behavioral cases and preserve the existing full
+UPS identities and defaults.
+
+Required compact checks include one through four individually active physical
+cells, mixed cell ratings, extraction/save/carry flush of cached cell energy,
+actual charger current and voltage-sag response, backup/restore with real output
+loads, voltage-control lock with both loaded and unloaded reserved consumers,
+bypass without simultaneous inverter output, four socket claim/refund races,
+upstream strip/UPS loop rejection, downstream release before actual carry and
+restoration without duplicated cell charge or cord refunds. The charger and
+inverter limits do not turn direct bypass into a regulated ideal power source.
+No compact UPS registration or native compact-device runtime coverage is claimed
+by this review.
