@@ -20,21 +20,21 @@ UPS or move its existing key to make the incoming table look identical. Full
 source-world migration is still pending; these lookup tables alone do not provide
 save conversion.
 
-## Remaining DC/DC converter names
+## DC/DC converter names
 
-Pinned source `registerTransformer(2)` hides its Legacy DC-DC Converter at 128 and
-registers a new DC-DC Converter at 130. The destination already owns 128 with
-`TransformerDescriptor` and the native registry name `dc_dc_converter`. Keep that
-identity and its existing saves. Although 130 is numerically free at the current
-checkpoint, its source display/name would collide with the existing native name.
-The incoming adapter needs an explicit distinct native registry name and source
-import mapping; a free numeric lookup does not authorize replacing 128 or renaming
-its current item. Source and destination worlds must remain distinguishable.
+Pinned source `registerTransformer(2)` hides Legacy DC-DC Converter128 and registers
+its newer DC-DC Converter130. The destination already owns128 with
+`TransformerDescriptor`, `dc_dc_converter` and its existing native recipe/saves.
+That identity is preserved. Source130 now has a distinct adapter at native130,
+display **Winding DC-DC Converter**, registry name `winding_dc_dc_converter`.
+`FixedDcDcDescriptor.nativeRegistryNameForSource(130)` records that explicit name
+mapping and returns no mapping for128. Never silently reinterpret a native world
+as a source world; this helper is not full item/block/NBT/world conversion.
 
-Source variable129 is now registered as `variable_dc_dc_converter`; native128 is unchanged.
-One-way131–134 lookups remain free at this checkpoint.
-Isolation 135 is development-only in the source registration. See the
-[control and winding review](power-electronics-review.md) before adapting them.
+Variable129 is `variable_dc_dc_converter`. One-way131–134 use their source numeric
+lookups with distinct native names; see the [family table](converter-family.md).
+Source135 is a development-only floating isolation unit and remains unregistered.
+Native128 and all previous IDs/names remain unchanged.
 
 Ghost block-state properties and numbers also differ between source and target.
 See the [ghost-state import review](ghost-migration-review.md); equal numbers do

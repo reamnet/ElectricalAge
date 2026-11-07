@@ -1,4 +1,4 @@
-// 26.3	2026-11-07T00:33:59.64267029	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-07T01:05:42.619457878	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -267,6 +267,10 @@ b4326dd5965cc5affa39c7894205a3d6ff268395 data/eln/advancement/recipes/misc/nucle
 d79ed2482bcbdabc3cfefe1b8b0c629cdff13f53 data/eln/advancement/recipes/misc/off_grid_inverter_charger.json
 64f0418eef262ed30539a691f6af7c5d33ac6d82 data/eln/advancement/recipes/misc/on_off_regulator_10_percent.json
 6361e58a3e43bbc1eb59863240b72c7380b2bf6e data/eln/advancement/recipes/misc/on_off_regulator_1_percent.json
+f5f697a4c2d85094e0eb6a100965165a590bbafa data/eln/advancement/recipes/misc/one_way_boost_buck_vdc_dc_converter.json
+e9eeca192eb95735c2f4a6834cba0908177c3a9d data/eln/advancement/recipes/misc/one_way_boost_vdc_dc_converter.json
+75b7570e57fde29ffa6edb7800f979b4cdcee23b data/eln/advancement/recipes/misc/one_way_buck_vdc_dc_converter.json
+490f18d19fd6617fd6a384934506157f0b3bac89 data/eln/advancement/recipes/misc/one_way_dc_dc_converter.json
 0c4f64d917051bd1baabd8061f7f25acc5367c91 data/eln/advancement/recipes/misc/opamp.json
 469230ae39ef296200dd8b8aea1c7637ddc0b918 data/eln/advancement/recipes/misc/optimal_ferromagnetic_core.json
 75a7511157f8baff9627dff11cff75ea078bcd34 data/eln/advancement/recipes/misc/or_chip.json
@@ -409,7 +413,7 @@ bf8348a28f32ca7b23c9752646b97e5ef12ef005 data/eln/advancement/recipes/misc/ups_a
 036bce211a26d4b14a24a799461b4d1e26a834f4 data/eln/advancement/recipes/misc/utility_pole_3.json
 aa8fd0f6d50cf3c54d56d97003bfc2ce7a1673bf data/eln/advancement/recipes/misc/utility_pole_w_dc_dc_converter.json
 6bb2c6efa724e4dbae5b3c7cd7d84522a157d234 data/eln/advancement/recipes/misc/utility_wind_turbine_3_2kv.json
-0879323936d573baaf408452dfb3964d38934dc4 data/eln/advancement/recipes/misc/variable_dc_dc_converter.json
+a9941173b507f755263377f67526e8d77d1149ac data/eln/advancement/recipes/misc/variable_dc_dc_converter.json
 de844168e12f18197ca4809d4ac9ff1bec366912 data/eln/advancement/recipes/misc/variable_frequency_motor_drive.json
 5cc02a99df853150da0d3d09f5ec9d33cc35096b data/eln/advancement/recipes/misc/variable_inductor.json
 71ae4dcc4d2fc3bba3565e539206485515305e6d data/eln/advancement/recipes/misc/very_high_voltage_cable.json
@@ -448,6 +452,7 @@ cd156126fc03bc5eead6d5475efb6374a0c267f3 data/eln/advancement/recipes/misc/white
 dee9ed6f5239ead97624b1ad3ca0f4d29463f581 data/eln/advancement/recipes/misc/white_brush_9.json
 e09d1b9d948c76f8434972d8523bd95bcf3cb817 data/eln/advancement/recipes/misc/wide_underground_meter_socket.json
 a2d541b9d5289ce78da711fe051954194dd8785e data/eln/advancement/recipes/misc/wind_turbine.json
+bf80438ac83c6586e86959ad11a986dd228cbb53 data/eln/advancement/recipes/misc/winding_dc_dc_converter.json
 afa486babb76c44ae3518be8dedbab4a38596d42 data/eln/advancement/recipes/misc/wireless_analyser.json
 d9136945c9ca7ee9877abb74f871d8bd194f8105 data/eln/advancement/recipes/misc/wireless_button.json
 a7c4d98bb61c1f2c0c89818c55e4b8dbf9c4feb5 data/eln/advancement/recipes/misc/wireless_signal_receiver.json
@@ -706,7 +711,7 @@ e44eec5ce607faee65bb7c914419718b2dd4636a data/eln/recipe/lp_steam_turbine_4.json
 789b4cedd5840c52844b2ddc92a42e0ff82d40e1 data/eln/recipe/machine_block.json
 d5f805910e688c02cc8ec7887d09bdb0385185cb data/eln/recipe/machine_booster.json
 e5563e26e89b0f375d849f941cbd8e2827d35aaa data/eln/recipe/magenta_brush.json
-e5db048cd6bbbbd0aa838d312e89292e9a44ad27 data/eln/recipe/mains_step_down_unit.json
+0054f550510b95915e43b8883657131bc97220c9 data/eln/recipe/mains_step_down_unit.json
 b6418d27c73561055188f90cc889cccf24063fa8 data/eln/recipe/medium_fuel_burner.json
 5c1b4d6392b77b416634a23d5285b8b82c33bd66 data/eln/recipe/medium_power_receiver_antenna.json
 e1573474fb9c89def650e1530e4eda654752e046 data/eln/recipe/medium_power_transmitter_antenna.json
@@ -727,6 +732,10 @@ b937a3eff0a8f08a2d43f6bc97d126a15a5689fa data/eln/recipe/monster_filter.json
 5dc6735ee65d54a1cb8b7c49c655fbb73928986a data/eln/recipe/off_grid_inverter_charger.json
 5d09df78c6b1742f9347b3725cd4b2b9fa5fb9ee data/eln/recipe/on_off_regulator_10_percent.json
 e1002b490861ef609fd891be5541cbe66a1dee3b data/eln/recipe/on_off_regulator_1_percent.json
+3eeb52fc4a07d49960a2b1251f57b9a38a06c8c1 data/eln/recipe/one_way_boost_buck_vdc_dc_converter.json
+02af8ff9fff703afb6b150ac787e2ae2b68e63e1 data/eln/recipe/one_way_boost_vdc_dc_converter.json
+bcdcbf934fd4b7b23ee8fe88e4155c314bf61ba7 data/eln/recipe/one_way_buck_vdc_dc_converter.json
+61d2e8ab993cdf96cffef672dbddceb961285a14 data/eln/recipe/one_way_dc_dc_converter.json
 706f4e67261f255c0ffb7ac708203090ce92ef3f data/eln/recipe/opamp.json
 9e8ffc258616baf24af204bdaa55c18c185b5296 data/eln/recipe/optimal_ferromagnetic_core.json
 2199cc4f8a183059ecc2810dd4eee211353ab327 data/eln/recipe/or_chip.json
@@ -754,7 +763,7 @@ cf88d05d7133f38948590b14e13e56b8bedc883e data/eln/recipe/power_inductor.json
 1b6a55970cff2e670b8b720abc7a6bde617fa47a data/eln/recipe/power_resistor.json
 a84d1d1c8f5fd09ceaefe475d62a8a2034826f14 data/eln/recipe/programmable_ev_pack_charger.json
 43e823c27f6ecaa9783b500972b0109b0e95d985 data/eln/recipe/programmable_load_bank.json
-8fe02716be2013aeb288e97d5e2470d58f22cc88 data/eln/recipe/programmable_ups.json
+a2c262d7c285ad32512bc2abc4e6ece1e4fb7750 data/eln/recipe/programmable_ups.json
 8c9291b93cd626d2f691a0f94156e3f93575750b data/eln/recipe/protective_relay_cabinet.json
 52a0411cfab0a219bd72692e72568b43848930e3 data/eln/recipe/purple_brush.json
 00d438d0450731bc201193aef8acef83c879d8d9 data/eln/recipe/red_brush.json
@@ -869,7 +878,7 @@ b204e479cbae894349308593acaaac469f4941ab data/eln/recipe/utility_pole_2.json
 fdb6dd720302e6dca9aafb6aa3bf07a3b7b35a8f data/eln/recipe/utility_pole_3.json
 dac1cc7568c77d968ce729665085384428966fb2 data/eln/recipe/utility_pole_w_dc_dc_converter.json
 887b3e5bfcb12e714fe349a4b9a0fe190576a5a3 data/eln/recipe/utility_wind_turbine_3_2kv.json
-e382def43ea9c892f4208a184808845996fd489c data/eln/recipe/variable_dc_dc_converter.json
+49cbc00d4024246ce0ff70a73f1e045fd61474ef data/eln/recipe/variable_dc_dc_converter.json
 b53a9d072c6ff5043733d862ae3ec8b5a50554f5 data/eln/recipe/variable_frequency_motor_drive.json
 5a10c9fd4cdfa3a5f11bd452fc70291fc7d73d5a data/eln/recipe/variable_inductor.json
 55fdfab7dcdd516966fdbd904c59ffcf6fd4575d data/eln/recipe/very_high_voltage_cable.json
@@ -908,6 +917,7 @@ a9bbb61c125ab264a33d2bd66ddcabd59537e5fb data/eln/recipe/white_brush_2.json
 42432bf4c200798e0a5bc858aeeaca9fcabf0fd1 data/eln/recipe/white_brush_9.json
 83577b0c7020f97ed82900b8a100889fda27518a data/eln/recipe/wide_underground_meter_socket.json
 16b47b45ef3d7541477d98acad4146520e81c0bc data/eln/recipe/wind_turbine.json
+3fbebe4256ec3bf3a2d8050be4115cd6d39710ec data/eln/recipe/winding_dc_dc_converter.json
 0d5e60a659bdc098e7501d88ccc4bbce32cf920c data/eln/recipe/wireless_analyser.json
 413fb989065bf14dae491c0ef8284db59175f6f6 data/eln/recipe/wireless_button.json
 ee218e366e10d4332393345631c21c46e9f20e14 data/eln/recipe/wireless_signal_receiver.json

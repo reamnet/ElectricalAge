@@ -24,6 +24,8 @@ class VariableDcDcRender(tile:TransparentNodeEntity,d:TransparentNodeDescriptor)
     var secondaryAmps=0.0;private set
     var primaryCelsius=20.0;private set
     var secondaryCelsius=20.0;private set
+    private var primaryWinding:DcDcWinding?=null
+    private var secondaryWinding:DcDcWinding?=null
     private val door=PhysicalInterpolator(.4f,4f,.9f,.05f)
     private val load=SlewLimiter(.5f)
     private val mask=LRDUMask();private val pri=LRDUMask();private val sec=LRDUMask();private val ctl=LRDUMask()
@@ -36,6 +38,7 @@ class VariableDcDcRender(tile:TransparentNodeEntity,d:TransparentNodeDescriptor)
     override fun networkUnserialize(s:DataInputStream) {
         super.networkUnserialize(s);settings.read(s)
         for(i in 0..3)stacks[i]=Utils.unserialiseItemStack(s)
+        primaryWinding=DcDcWinding.of(stacks[0]);secondaryWinding=DcDcWinding.of(stacks[1])
         ratio=s.readDouble();status=s.readUTF();construction=s.readUTF()
         primaryVolts=s.readDouble();secondaryVolts=s.readDouble();primaryAmps=s.readDouble();secondaryAmps=s.readDouble();primaryCelsius=s.readDouble();secondaryCelsius=s.readDouble();mask.deserialize(s)
         pri.mask=0;sec.mask=0;ctl.mask=0
@@ -47,7 +50,7 @@ class VariableDcDcRender(tile:TransparentNodeEntity,d:TransparentNodeDescriptor)
     }
     override fun refresh(dt:Float) {
         super.refresh(dt)
-        val w0=DcDcWinding.of(stacks[0]);val w1=DcDcWinding.of(stacks[1])
+        val w0=primaryWinding;val w1=secondaryWinding
         val fraction=max(abs(primaryAmps)/(w0?.maximumCurrent ?: 1.0),abs(secondaryAmps)/(w1?.maximumCurrent ?: 1.0))
         load.setTarget(if(fraction.isFinite())fraction.toFloat().coerceIn(0f,1f) else 0f);load.step(dt)
         val p=tileEntity.blockPos;val near=!stacks[3].isEmpty && tileEntity.level?.getNearestPlayer(p.x+.5,p.y+.5,p.z+.5,3.0,false)!=null
@@ -56,16 +59,16 @@ class VariableDcDcRender(tile:TransparentNodeEntity,d:TransparentNodeDescriptor)
     override fun notifyNeighborSpawn() { super.notifyNeighborSpawn();cable=null }
     override fun draw() {
         val core=GenericItemUsingDamageDescriptor.getDescriptor(stacks[2]) as? FerromagneticCoreDescriptor
-        val a=DcDcWinding.of(stacks[0]);val b=DcDcWinding.of(stacks[1])
+        val a=primaryWinding;val b=secondaryWinding
         GL11.glPushMatrix();try { front.glRotateXnRef();descriptor.draw(core?.feroPart,a?.renderedCount ?: 0,b?.renderedCount ?: 0,a?.renderedThickness ?: 1f,b?.renderedThickness ?: 1f,!stacks[3].isEmpty,door.get()) }finally { GL11.glPopMatrix() }
         cable=drawCable(front.down(),a?.descriptor?.render,pri,cable)
         cable=drawCable(front.down(),b?.descriptor?.render,sec,cable)
         cable=drawCable(front.down(),ElnDeviceRegistry.signalCableDescriptor.render,ctl,cable)
     }
     override fun getCableRender(side:Direction,lrdu:LRDU):CableRenderDescriptor?=if(lrdu!=LRDU.Down)null else when(side) {
-        front.left()->DcDcWinding.of(stacks[0])?.descriptor?.render
-        front.right()->DcDcWinding.of(stacks[1])?.descriptor?.render
-        front,front.inverse->ElnDeviceRegistry.signalCableDescriptor.render
+        front.left()->primaryWinding?.descriptor?.render
+        front.right()->secondaryWinding?.descriptor?.render
+        front,front.inverse->if(descriptor.variable)ElnDeviceRegistry.signalCableDescriptor.render else null
         else->null
     }
     fun setValue(value:Double) {

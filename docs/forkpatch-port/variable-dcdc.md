@@ -3,7 +3,8 @@
 The source variable converter is registered at **129**, native name
 `variable_dc_dc_converter`. Existing native **128** remains `TransformerDescriptor`
 and `dc_dc_converter`; its registry identity, item, settings and save path are unchanged.
-The fixed source converter 130 and one-way family are separate remaining adapters.
+The [fixed130 and grounded one-way131–134 adapters](converter-family.md) now share
+this winding/model implementation. Development isolation135 remains separate.
 
 The new block uses the existing destination `SafeTransformerProcess`, checked
 Thevenin probes and conservative accepted-step solver. The input and output have
@@ -47,6 +48,6 @@ control packets and live measurements. Headless mesh/publication checks do not
 establish interactive GPU, audio or multiplayer parity.
 
 See [validation](variable-dcdc-validation.json). Full source-world conversion,
-remaining converter variants, broader mechanical/thermal integration and historical
+development isolation135, broader mechanical/thermal integration and historical
 1.12 golden reconciliation remain unfinished. No reference snapshots, skips or
 numeric tolerances were changed to accept this adapter.

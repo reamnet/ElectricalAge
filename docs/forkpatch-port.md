@@ -310,8 +310,9 @@ bypass supplies the input directly without backup. The native LU solver requires
 a voltage reference at disconnected terminals: local high-resistance sense paths
 supply it without changing the shared solver or adding an idle output load.
 Electronics losses enter the native thermal system as physical joules per step.
-The recipe uses the destination's existing DC-DC Converter for the source's
-Variable DC-DC Converter ingredient, preserving the native device and ID.
+The initial recipe substituted native128 for the then-unavailable source variable
+converter. The later converter-family checkpoint restores the source variable129
+ingredient while preserving native128 and both existing UPS identities.
 
 All 16 focused UPS electrical/controller regressions pass. All 40 selected native
 world cases pass, including nine new UPS cases: floor outage/restore, an empty
@@ -985,8 +986,8 @@ controller with selectable 120/240 V output, 10/25/50/75/100 kW capacity, 100 A 
 limit, 95% electronics efficiency and physical winding/thermal losses. It has native
 ports, display/menu, config-tool hooks, crafting and save lifecycle. Its exact
 source lookup is 123:10 (7882), not the explicitly group-124 wind ID 7946. The
-first pole-transformer crafting tier now uses the standalone unit. Its recipe uses
-the destination DC-DC converter for the still-unadapted source variable converter.
+first pole-transformer crafting tier now uses the standalone unit. Its initial recipe substituted native128 for the source variable converter. The
+later converter-family checkpoint restores variable129 as that ingredient.
 Existing target lookup conflicts are [recorded separately](forkpatch-port/registry-conflicts.md).
 
 Validation: 99 focused utility/converter regressions and 210 selected native cases
@@ -1186,3 +1187,15 @@ and complete client publication. Hot wire retains temperature through extraction
 splits and owner reloads. Thermal failure leaves damaged jacket stock or native
 bare-metal scrap with paid length and heat. Native128 remains unchanged. See the
 [adapter](forkpatch-port/variable-dcdc.md) and [validation](forkpatch-port/variable-dcdc-validation.json).
+
+
+### Grounded fixed and one-way converter family
+
+Source130 now has a distinct native `winding_dc_dc_converter` identity, preserving
+native128 and its recipe/saves. Grounded one-way131–134 retain historical V1
+behavior and explicit disabled V2 upgrades; modern controls enforce conductor,
+voltage and gain limits without reverse transfer. They share paid hot winding
+inventories, native menus and source models with variable129. The UPS/step-down
+recipes now use the source variable ingredient. See the [family guide](forkpatch-port/converter-family.md)
+and [validation](forkpatch-port/converter-family-validation.json). Development-only
+floating isolation135 and full source-world conversion remain unfinished.

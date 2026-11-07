@@ -29,15 +29,15 @@ object ForkPatchVariableDcDcCases {
     private fun packet(id:Int,write:(DataOutputStream)->Unit={}):DataInputStream {
         val bytes=ByteArrayOutputStream();val out=DataOutputStream(bytes);out.writeByte(id);write(out);return DataInputStream(ByteArrayInputStream(bytes.toByteArray()))
     }
-    private open class Base:TestCase {
+    open class Base:TestCase {
         override fun id()="forkpatch_variable_dcdc_base"
         override fun build(c:TestContext){}
         override fun measure(c:TestContext){}
-        fun place(c:TestContext,front:Direction=Direction.XN,filled:Boolean=true):VariableDcDcElement {
+        fun place(c:TestContext,front:Direction=Direction.XN,filled:Boolean=true,id:Int=VariableDcDcDescriptor.ID):VariableDcDcElement {
             val player=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());val yaw=player.yRot;val pitch=player.xRot
             val element=try {
                 player.xRot=0f;player.yRot=when(front) { Direction.XN->270f;Direction.XP->90f;Direction.ZN->0f;else->180f }
-                c.placeTransparent(VariableDcDcDescriptor.ID,c.at(4,1,1)) as VariableDcDcElement
+                c.placeTransparent(id,c.at(4,1,1)) as VariableDcDcElement
             }finally { player.yRot=yaw;player.xRot=pitch }
             if(filled) {
                 element.inventory.setItem(0,spool(3.25));element.inventory.setItem(1,spool(7.75));element.inventory.setItem(2,core());element.inventory.setChanged()
@@ -54,7 +54,7 @@ object ForkPatchVariableDcDcCases {
                 c.check("variable DC/DC: actual native publication selects its registered client factory",r!=null,"")
                 requireNotNull(r)
                 c.check("variable DC/DC: complete native publication includes settings, paid coils, temperatures and voltmeters",input.available()==0 && r.settings.version==e.settings.version && r.settings.mode==e.settings.mode && r.settings.enabled==e.settings.enabled && r.primaryCelsius==e.primaryThermal.Tc+20 && r.secondaryCelsius==e.secondaryThermal.Tc+20 && r.primaryVolts==e.primary.u && r.secondaryVolts==e.secondary.u && r.stacks[3].count==e.inventory.getItem(3).count,"")
-                c.check("variable DC/DC: renderer uses actual coil and signal cable types",r.getCableRender(e.front.left(),LRDU.Down)===DcDcWinding.of(e.inventory.getItem(0))?.descriptor?.render && r.getCableRender(e.front,LRDU.Down)===mods.eln.registry.ElnDeviceRegistry.signalCableDescriptor.render,"")
+                c.check("variable DC/DC: renderer uses actual coil and signal cable types",r.getCableRender(e.front.left(),LRDU.Down)===DcDcWinding.of(e.inventory.getItem(0))?.descriptor?.render && r.getCableRender(e.front,LRDU.Down)===(if((e.descriptor as VariableDcDcDescriptor).variable)mods.eln.registry.ElnDeviceRegistry.signalCableDescriptor.render else null),"")
                 GlFrame.beginRenderFrame();val frame=GlFrame.open()
                 try { r.draw();c.check("variable DC/DC: original coil, core and housing mesh renders natively",frame.batches().values.sumOf { it.vertices() }>100,"") }finally { GlFrame.close() }
             }finally { client.clientDestroy() }

@@ -214,3 +214,8 @@ industrial_welder/industrial_welder.obj
 industrial_forklift/industrial_forklift.obj
 industrial_pallet/industrial_pallet.obj
 transformator/variabledcdc.obj
+transformator/dcdc.obj
+transformator/onewaydcdc.obj
+transformator/onewayboostvdcdc.obj
+transformator/onewaybuckvdcdc.obj
+transformator/onewayboostbuckvdcdc.obj

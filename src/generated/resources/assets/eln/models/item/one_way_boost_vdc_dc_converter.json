@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eln:item/one_way_boost_vdc_dc_converter"
+  }
+}

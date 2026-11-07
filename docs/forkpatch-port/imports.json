@@ -2510,5 +2510,194 @@
     "sourceSha256": "e4f09e083a3b85377efcb3eda1c8523f8a5665006521d072ee72e810962e7fce",
     "mode": "verbatim-relocated",
     "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/DcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/FixedDcDcDescriptor.kt",
+    "sourceSha256": "09e41b035695975c938199e19ebd6f2d18598615ed75a62fc10a2cd4f2de5919",
+    "mode": "native-winding-ratio-adapter-and-distinct-source130-name",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/OneWayDcDcDescriptor.kt",
+    "sourceSha256": "c5e065b426aff9c84ddbe78bdf006c8769b7b99497043f899daf699098775b91",
+    "mode": "native-grounded-fixed-boost-buck-and-boostbuck-descriptors",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/OneWayDcDcProcess.kt",
+    "sourceSha256": "c5e065b426aff9c84ddbe78bdf006c8769b7b99497043f899daf699098775b91",
+    "mode": "native-conservative-one-way-policy-with-cached-winding-ratings",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/converter/ForkPatchOneWayMathTest.kt",
+    "sourceSha256": "c5e065b426aff9c84ddbe78bdf006c8769b7b99497043f899daf699098775b91",
+    "mode": "independent-passive-terminal-energy-and-reverse-flow-regressions",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchConverterFamilyCases.kt",
+    "sourceSha256": "c5e065b426aff9c84ddbe78bdf006c8769b7b99497043f899daf699098775b91",
+    "mode": "native-paid-winding-forward-reverse-gain-current-fault-and-V1-upgrade-regressions",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchConverterRecipeCases.kt",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-real-recipe-manager-source-progression-and-preserved128-regressions",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-dictionary-and-distinct130-recipe-mapping-with-restored-variable-ingredients",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/dcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/dcdc.obj",
+    "sourceSha256": "24ade26689d17f057d4fa1a9f42231235e9a44d1aeacbf7b3725f53c94e13a3e",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/dcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/dcdc.mtl",
+    "sourceSha256": "fa1f92323d9e9ef2f4409c3fd89c83b136ab8f4be884b740b2fac98f2008c745",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/dcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/dcdc.png",
+    "sourceSha256": "80e2c62ff6ec94477d33214dc8c74737f5bf4a1cec6b02be490b7538bd4f67d8",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/dc-dcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/winding_dc_dc_converter.png",
+    "sourceSha256": "e65270a627defac552bec64fd97948124d42eac1fe8625614ba310285149d760",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaydcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaydcdc.obj",
+    "sourceSha256": "4fd4e82a282be83e49394dbbc3e4fc703cacfb8f6fd0311d423b6fe6abe0bafd",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaydcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaydcdc.mtl",
+    "sourceSha256": "9b3bd79c6ce4ab1d89f57b4e134ecc6f067261b9c45a6268305838ed595a8bb3",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaydcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaydcdc.png",
+    "sourceSha256": "e258eb8481497f644e907a690aa5e4e8c7ba1c4c9a6fdb4fc743dc875bef88eb",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/onewaydc-dcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/one_way_dc_dc_converter.png",
+    "sourceSha256": "b17baa982f2c842e2a5a6258cf7aa77e5810b476f7caf82627b712c058ba5d13",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.obj",
+    "sourceSha256": "ea3f3ff27c01acb40f161c4c08b773a9ad187963586b165b3f26051b187ae4a6",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.mtl",
+    "sourceSha256": "9f183a0f49db4f3197a5726f0e25ebcdd6bee026aa57d04206233fdb4855047d",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.png",
+    "sourceSha256": "90c8dad6541d5780caaf8d9392df0311e009f0c41d8cbd2b40cdcb2b9d586175",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/onewayboostvdcdcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/one_way_boost_vdc_dc_converter.png",
+    "sourceSha256": "65a8b40aed7235da64ab845dfb7544349e0fdd3258a54b38236a2ca0d49018af",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.obj",
+    "sourceSha256": "616663ee922ec3ca4fdfae5d562f0bc9c0616ac0ea7d20da5180cdacaa54ad24",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.mtl",
+    "sourceSha256": "ec938a848631c09eda239dfdfbe1bcd9fde465a9da4d9005141fc7307d01e64a",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.png",
+    "sourceSha256": "90c8dad6541d5780caaf8d9392df0311e009f0c41d8cbd2b40cdcb2b9d586175",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/onewaybuckvdcdcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/one_way_buck_vdc_dc_converter.png",
+    "sourceSha256": "e76a993199c9ee0a9fd7236e7c21e351f866c5db34723d6337aaf18452c24538",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.obj",
+    "sourceSha256": "8756e47fe106c7624def14f7bc8b49de526fa44b98886e993153b25babe7c68c",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.mtl",
+    "sourceSha256": "c82f9f2de5b3a89d5ebf0f0196ae0bc84351e698b1aff4e2021ed4ac0c162d72",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.png",
+    "sourceSha256": "90c8dad6541d5780caaf8d9392df0311e009f0c41d8cbd2b40cdcb2b9d586175",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/onewayboostbuckvdcdcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/one_way_boost_buck_vdc_dc_converter.png",
+    "sourceSha256": "761cea622f6fda6f3bea2c809f005ce7aae5a6d823c47b50efcbf75369264cdd",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
   }
 ]

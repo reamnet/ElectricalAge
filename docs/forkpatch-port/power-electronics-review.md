@@ -1,9 +1,11 @@
-# Next power-electronics adapter review
+# Power-electronics adapters and remaining review
 
 Reviewed against pinned source `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`.
 The variable inductor 6179 is now adapted. The variable converter129 now has a production adapter, native menu/publication,
 paid-winding protection and native save tests; see [the adapter](variable-dcdc.md).
-The remaining fixed/one-way family and full source-world conversion remain open.
+Fixed130 and grounded one-way131–134 now have [native adapters](converter-family.md).
+Development-only isolation135, the broader inherited shared-code review and full
+source-world conversion remain open.
 
 ## Preserve the existing converter identity
 
@@ -13,11 +15,11 @@ The source calls `registerTransformer(2)`:
 | --- | --- | --- |
 | 128 (2:0) | Hidden Legacy DC-DC Converter | Existing `TransformerDescriptor`, `dc_dc_converter`; preserve its identity/saves |
 | 129 (2:1) | Variable DC-DC Converter | Registered native adapter, `variable_dc_dc_converter` |
-| 130 (2:2) | DC-DC Converter | Free lookup, but `dc_dc_converter` is already the destination 128 name |
-| 131 (2:3) | One-way DC-DC Converter | Free lookup |
-| 132 (2:4) | One-way Boost vDC/DC Converter | Free lookup |
-| 133 (2:5) | One-way Buck vDC/DC Converter | Free lookup |
-| 134 (2:6) | One-way Boost/Buck vDC/DC Converter | Free lookup |
+| 130 (2:2) | DC-DC Converter | Registered as `winding_dc_dc_converter`, preserving native128 |
+| 131 (2:3) | One-way DC-DC Converter | Registered native adapter |
+| 132 (2:4) | One-way Boost vDC/DC Converter | Registered native adapter |
+| 133 (2:5) | One-way Buck vDC/DC Converter | Registered native adapter |
+| 134 (2:6) | One-way Boost/Buck vDC/DC Converter | Registered native adapter |
 | 135 (2:7) | Isolation Transformer | Free lookup; source registration is development-only |
 
 The duplicate display/registry name at 130 must be resolved explicitly while keeping
@@ -58,7 +60,8 @@ native world as a source world.
   patterns together. Use real publication and paid hot-wire removal/reload tests.
 
 The variable converter129 checkpoint implements shared controls/windings.
-Next: fixed/one-way variants after resolving the 130 registry-name conflict.
+Fixed130 and one-way131–134 now share those winding/model adapters.
+Next: development isolation135, broader inherited shared-code review and source-world conversion.
 Required cases include V1 saves, disabled-by-default V2 upgrades, voltage-target
 zero/off, reverse flow, short/overload recovery, heterogeneous cable windings,
 paid partial-spool refunds, hot/melted inventory saves, real menus, source models

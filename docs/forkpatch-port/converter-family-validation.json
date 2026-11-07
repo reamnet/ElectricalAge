@@ -1,0 +1,62 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Fixed winding converter130 and grounded one-way131-134; preserve native128 and variable129.",
+  "root": {
+    "suites": 120,
+    "tests": 665,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "focusedUnitTests": 14,
+  "native": {
+    "selected": 387,
+    "passed": 387,
+    "failed": 0,
+    "skipped": 0,
+    "newFamilyCases": 24,
+    "recipeCases": 2,
+    "variableCases": 11,
+    "filter": "eln:forkpatch_*",
+    "report": "/tmp/eln26-session4-family-port2.xml",
+    "log": "session4-family-port2.log"
+  },
+  "catalog": {
+    "identities": 644,
+    "englishEntries": 948,
+    "previousIdentitiesChanged": [],
+    "previousEnglishEntriesChanged": []
+  },
+  "commands": [
+    "./gradlew --no-daemon --max-workers=2 :build cad:test runClientData",
+    "./gradlew --no-daemon --max-workers=2 runClientData",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_* --report REPORT.xml --universe NEW_WORLD'"
+  ],
+  "rootLog": "session4-family-full-build.log",
+  "finalDatagenLog": "session4-family-recipe-datagen2.log",
+  "coverage": [
+    "Four real fixed-converter fronts with reversible transfer and physical winding ratio",
+    "All four one-way modes load correctly and block reverse drive",
+    "Real fixed overload shutdown, variable current limits, infeasible boost short shutdown and feasible boost overload recovery",
+    "V1 transfer efficiency and explicit disabled V2 upgrades",
+    "Cached configured winding ratings during solver trials and cached client winding data after publication",
+    "Native menus, complete real client factory publication and indexed source meshes",
+    "Extreme paid-length ratio clamps and explicit source130 native-name mapping",
+    "Actual server crafting for seven new/preserved converter recipes and restored UPS/step-down ingredients",
+    "Native configured basic-circuit dictionary avoids an empty historical private tag"
+  ],
+  "limitations": [
+    "Development-only floating isolation135 and broad inherited transformer/capacitor review remain pending.",
+    "Full source-world conversion, copy-tool integration and interactive client/audio/multiplayer remain pending.",
+    "Historical unfiltered goldens and representative loaded-world CPU comparison remain pending.",
+    "Full root run preceded the recipe-only dictionary correction; final native recipe checks run after regeneration."
+  ]
+}

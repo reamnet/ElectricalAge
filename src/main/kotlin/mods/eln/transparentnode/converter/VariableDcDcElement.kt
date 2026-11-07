@@ -19,13 +19,22 @@ import net.minecraft.world.item.ItemStack
 import java.io.*
 
 /** Source variable converter on the destination's conservative coupled solver and fixed-reference thermal loads. */
-class VariableDcDcElement(node:TransparentNode,d:TransparentNodeDescriptor):TransparentNodeElement(node,d) {
+open class VariableDcDcElement(node:TransparentNode,d:TransparentNodeDescriptor):TransparentNodeElement(node,d) {
     val primary=NbtElectricalLoad("primaryLoad");val secondary=NbtElectricalLoad("secondaryLoad")
     val primaryInternal=NbtElectricalLoad("primaryInternal");val secondaryInternal=NbtElectricalLoad("secondaryInternal")
     val control=NbtElectricalGateInput("control")
     val primarySource=SwitchableVoltageSource("primaryVoltageSource");val secondarySource=SwitchableVoltageSource("secondaryVoltageSource")
     val primaryResistance=Resistor(primary,primaryInternal);val secondaryResistance=Resistor(secondaryInternal,secondary)
     val settings=DcDcControl()
+    val hardwareDescriptor=d as VariableDcDcDescriptor
+    val oneWayDescriptor get()=hardwareDescriptor as OneWayDcDcDescriptor
+    val inputSink get()=primarySource
+    val outputSource get()=secondarySource
+    val primaryMeltCurrent get()=windings[0].wire?.maximumCurrent ?: 5.0
+    val secondaryMeltCurrent get()=windings[1].wire?.maximumCurrent ?: 5.0
+    var activeRatio=1.0
+    var movedPower=0.0
+    val transferReady get()=populated && !queuedMelt
     var populated=false;private set
     var construction=tr("Needs Core");private set
     private var queuedMelt=false
@@ -41,8 +50,12 @@ class VariableDcDcElement(node:TransparentNode,d:TransparentNodeDescriptor):Tran
             return stack
         }
     }
+    val directional=if(hardwareDescriptor.oneWay)OneWayDcDcProcess(this) else null
+    val transfer:ResettablePowerProcess get()=directional ?: converter
+    val transferRatio get()=if(directional!=null)activeRatio else converter.ratio
     init {
-        electricalLoadList.addAll(listOf(primary,secondary,primaryInternal,secondaryInternal,control))
+        electricalLoadList.addAll(listOf(primary,secondary,primaryInternal,secondaryInternal))
+        if(hardwareDescriptor.variable)electricalLoadList.add(control)
         electricalComponentList.addAll(listOf(primaryResistance,secondaryResistance,primarySource,secondarySource))
         thermalLoadList.addAll(listOf(primaryThermal,secondaryThermal));primaryThermal.setAsSlow();secondaryThermal.setAsSlow()
         windings.forEach { electricalProcessList.add(it.heating.sample) }
@@ -56,31 +69,37 @@ class VariableDcDcElement(node:TransparentNode,d:TransparentNodeDescriptor):Tran
     override fun hasGui()=true
     override fun getLightOpacity()=1f
     override fun onBlockActivated(p:Player,side:Direction,x:Float,y:Float,z:Float)=false
-    override fun getElectricalLoad(side:Direction,lrdu:LRDU):ElectricalLoad? = if(lrdu!=LRDU.Down)null else when(side) { front.left()->primary;front.right()->secondary;front,front.inverse->control;else->null }
+    override fun getElectricalLoad(side:Direction,lrdu:LRDU):ElectricalLoad? = if(lrdu!=LRDU.Down)null else when(side) { front.left()->primary;front.right()->secondary;front,front.inverse->if(hardwareDescriptor.variable)control else null;else->null }
     override fun getConnectionMask(side:Direction,lrdu:LRDU)=when(getElectricalLoad(side,lrdu)) { null->0;control->NodeBase.maskElectricalInputGate;else->NodeBase.maskElectricalPower }
     override fun getThermalLoad(side:Direction,lrdu:LRDU):ThermalLoad? = if(lrdu!=LRDU.Down)null else when(side) { front.left()->primaryThermal;front.right()->secondaryThermal;else->null }
     override fun initialize() {
         primarySource.connectTo(primaryInternal,null);secondarySource.connectTo(secondaryInternal,null)
         configure();updateControl();connect()
     }
-    override fun connectJob() { Eln.simulator.mna.addProcess(converter);windings.forEach { Eln.simulator.addThermalSlowProcess(it.heating.deliver) };super.connectJob() }
-    override fun disconnectJob() { windings.forEach { it.heating.flushIntoLoad();Eln.simulator.removeThermalSlowProcess(it.heating.deliver) };super.disconnectJob();Eln.simulator.mna.removeProcess(converter) }
+    override fun connectJob() { Eln.simulator.mna.addProcess(transfer);windings.forEach { Eln.simulator.addThermalSlowProcess(it.heating.deliver) };super.connectJob() }
+    override fun disconnectJob() { windings.forEach { it.heating.flushIntoLoad();Eln.simulator.removeThermalSlowProcess(it.heating.deliver) };super.disconnectJob();Eln.simulator.mna.removeProcess(transfer) }
     fun configure() {
-        construction=DcDcWinding.construction(items.getItem(2),items.getItem(0),items.getItem(1),settings.version)
+        construction=DcDcWinding.construction(items.getItem(2),items.getItem(0),items.getItem(1),if(hardwareDescriptor.fixedRatio)2 else settings.version)
         populated=construction==tr("Operational")
         windings.forEachIndexed { index,w->w.configure(items.getItem(index)) }
         primary.rs=if(populated)1e-6 else 1e12;secondary.rs=if(populated)1e-6 else 1e12
         converter.maximumPrimaryVoltage=windings[0].wire?.maximumVoltage ?: 0.0
         converter.maximumSecondaryVoltage=windings[1].wire?.maximumVoltage ?: 0.0
     }
+    fun computeRatio():Double {
+        if(!populated)return 1.0
+        if(hardwareDescriptor.fixedRatio)return ((windings[1].wire?.amount ?: 1.0)/(windings[0].wire?.amount ?: 1.0)).coerceIn(1.0/256,256.0)
+        return settings.ratio(hardwareDescriptor.kind,control.normalized)
+    }
     fun updateControl() {
-        converter.enabled=settings.enabled && !queuedMelt
-        converter.voltageTarget=if(settings.mode=="VOLTAGE")settings.value else null
-        try { converter.ratio=settings.ratio(ConverterKind.VARIABLE,control.normalized) }
+        if(directional!=null)return
+        converter.enabled=(hardwareDescriptor.fixedRatio || settings.enabled) && !queuedMelt
+        converter.voltageTarget=if(!hardwareDescriptor.fixedRatio && settings.mode=="VOLTAGE")settings.value else null
+        try { converter.ratio=computeRatio() }
         catch(_:IllegalArgumentException) { converter.enabled=false }
     }
     override fun inventoryChange(inventory:Container?) {
-        disconnect();configure();converter.resetFault();updateControl();connect();needPublish()
+        disconnect();configure();transfer.resetFault();updateControl();connect();needPublish()
     }
     private fun queueMelt(slot:Int,d:mods.eln.sixnode.electricalcable.UtilityCableDescriptor) {
         if(queuedMelt)return
@@ -108,23 +127,24 @@ class VariableDcDcElement(node:TransparentNode,d:TransparentNodeDescriptor):Tran
     override fun getItemStackNBT()=CompoundTag().also(settings::save)
     override fun readItemStackNBT(t:CompoundTag?) { if(t!=null)settings.load(t) }
     fun writeConfigTool(t:CompoundTag,p:Player)=settings.save(t)
-    fun readConfigTool(t:CompoundTag,p:Player) { if(t.contains("converterControlVersion")) { settings.load(t);configure();converter.resetFault();updateControl();needPublish() } }
+    fun readConfigTool(t:CompoundTag,p:Player) { if(t.contains("converterControlVersion")) { settings.load(t);configure();transfer.resetFault();updateControl();needPublish() } }
     override fun networkUnserialize(s:DataInputStream):Byte {
         val id=super.networkUnserialize(s)
+        if(hardwareDescriptor.fixedRatio && !hardwareDescriptor.oneWay && id.toInt() in 40..43)return unserializeNulldId
         val before=listOf(settings.version,settings.mode,settings.value,settings.enabled)
         if(!settings.handle(id,s))return id
-        if(before!=listOf(settings.version,settings.mode,settings.value,settings.enabled)) { configure();converter.resetFault();updateControl();needPublish() }
+        if(before!=listOf(settings.version,settings.mode,settings.value,settings.enabled)) { configure();transfer.resetFault();updateControl();needPublish() }
         return unserializeNulldId
     }
     override fun networkSerialize(s:DataOutputStream) {
         super.networkSerialize(s);settings.write(s)
         for(i in 0..3)Utils.serialiseItemStack(s,items.getItem(i))
-        s.writeDouble(converter.ratio);s.writeUTF(converter.status);s.writeUTF(construction)
+        s.writeDouble(transferRatio);s.writeUTF(transfer.status);s.writeUTF(construction)
         s.writeDouble(primary.u);s.writeDouble(secondary.u);s.writeDouble(primarySource.current);s.writeDouble(secondarySource.current)
         s.writeDouble(primaryThermal.Tc+20);s.writeDouble(secondaryThermal.Tc+20)
         node.lrduCubeMask.getTranslate(front.down()).serialize(s)
     }
     override fun multiMeterString(side:Direction)=tr("Primary: %1$; secondary: %2$",Utils.plotUIP(primary.u,primarySource.current),Utils.plotUIP(secondary.u,secondarySource.current))
     override fun thermoMeterString(side:Direction)=tr("Primary %1$ C; secondary %2$ C",Utils.plotValue(primaryThermal.Tc+20),Utils.plotValue(secondaryThermal.Tc+20))
-    override fun getWaila()=linkedMapOf(tr("Construction") to construction,tr("Converter state") to converter.status,tr("Ratio") to Utils.plotValue(converter.ratio),tr("Control mode") to tr("%1$ (version %2$)",settings.mode,settings.version))
+    override fun getWaila()=linkedMapOf(tr("Construction") to construction,tr("Converter state") to transfer.status,tr("Ratio") to Utils.plotValue(transferRatio),tr("Control mode") to tr("%1$ (version %2$)",settings.mode,settings.version))
 }

@@ -7,7 +7,11 @@ import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.wiki.Data
 import net.minecraft.world.item.Item
 
-class VariableDcDcDescriptor(name:String,model:Obj3D?,coreModel:Obj3D?,caseModel:Obj3D?):TransparentNodeDescriptor(name,VariableDcDcElement::class.java,VariableDcDcRender::class.java) {
+open class VariableDcDcDescriptor(name:String,model:Obj3D?,coreModel:Obj3D?,caseModel:Obj3D?):TransparentNodeDescriptor(name,VariableDcDcElement::class.java,VariableDcDcRender::class.java) {
+    open val variable=true
+    open val oneWay=false
+    open val fixedRatio=false
+    open val kind=mods.eln.sim.power.ConverterKind.VARIABLE
     companion object {
         const val ID=129
         const val MIN_LOAD_HUM=.5
@@ -40,7 +44,7 @@ class VariableDcDcDescriptor(name:String,model:Obj3D?,coreModel:Obj3D?,caseModel
         hasCasing: Boolean,
         doorOpen: Float
     ) {
-        main?.draw()
+        main.draw()
         core?.draw()
         if (core != null) {
             drawCoils(priCableNbr, false, primaryThickness)
@@ -70,7 +74,7 @@ class VariableDcDcDescriptor(name:String,model:Obj3D?,coreModel:Obj3D?,caseModel
             GL11.glTranslatef(0f, COIL_STACK_CENTER_Y + firstCenter + pitch * idx, COIL_CENTER_Z)
             GL11.glScalef(radialScale, wireScale, radialScale)
             GL11.glTranslatef(0f, -COIL_CENTER_Y, -COIL_CENTER_Z)
-            coil?.draw()
+            coil.draw()
             GL11.glPopMatrix()
         }
         GL11.glPopMatrix()

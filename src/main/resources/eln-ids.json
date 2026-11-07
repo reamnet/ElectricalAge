@@ -3832,5 +3832,35 @@
   "display": "Power capacitor",
   "kind": "transparent_node",
   "name": "power_capacitor_block"
+ },
+ "eln:transparent_node@130": {
+  "descriptor": "FixedDcDcDescriptor",
+  "display": "Winding DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "winding_dc_dc_converter"
+ },
+ "eln:transparent_node@131": {
+  "descriptor": "OneWayDcDcDescriptor",
+  "display": "One-way DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "one_way_dc_dc_converter"
+ },
+ "eln:transparent_node@132": {
+  "descriptor": "OneWayDcDcDescriptor",
+  "display": "One-way Boost vDC/DC Converter",
+  "kind": "transparent_node",
+  "name": "one_way_boost_vdc_dc_converter"
+ },
+ "eln:transparent_node@133": {
+  "descriptor": "OneWayDcDcDescriptor",
+  "display": "One-way Buck vDC/DC Converter",
+  "kind": "transparent_node",
+  "name": "one_way_buck_vdc_dc_converter"
+ },
+ "eln:transparent_node@134": {
+  "descriptor": "OneWayDcDcDescriptor",
+  "display": "One-way Boost/Buck vDC/DC Converter",
+  "kind": "transparent_node",
+  "name": "one_way_boost_buck_vdc_dc_converter"
  }
 }

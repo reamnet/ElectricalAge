@@ -178,6 +178,12 @@ public class Wp10aContent implements ElnContent {
     }
 
     public static void registerTransformer(int id) {
+        transparentNodeItem.addDescriptor(130, new mods.eln.transparentnode.converter.FixedDcDcDescriptor(TR_NAME(Type.NONE, "Winding DC-DC Converter"), obj.getObj("dcdc"), obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase")));
+        transparentNodeItem.addDescriptor(131, new mods.eln.transparentnode.converter.OneWayDcDcDescriptor(TR_NAME(Type.NONE, "One-way DC-DC Converter"), obj.getObj("onewaydcdc"), obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), mods.eln.transparentnode.converter.OneWayDcDcMode.FIXED));
+        transparentNodeItem.addDescriptor(132, new mods.eln.transparentnode.converter.OneWayDcDcDescriptor(TR_NAME(Type.NONE, "One-way Boost vDC/DC Converter"), obj.getObj("onewayboostvdcdc"), obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), mods.eln.transparentnode.converter.OneWayDcDcMode.BOOST));
+        transparentNodeItem.addDescriptor(133, new mods.eln.transparentnode.converter.OneWayDcDcDescriptor(TR_NAME(Type.NONE, "One-way Buck vDC/DC Converter"), obj.getObj("onewaybuckvdcdc"), obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), mods.eln.transparentnode.converter.OneWayDcDcMode.BUCK));
+        transparentNodeItem.addDescriptor(134, new mods.eln.transparentnode.converter.OneWayDcDcDescriptor(TR_NAME(Type.NONE, "One-way Boost/Buck vDC/DC Converter"), obj.getObj("onewayboostbuckvdcdc"), obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), mods.eln.transparentnode.converter.OneWayDcDcMode.BOOST_BUCK));
+
         {
             var desc = new mods.eln.transparentnode.converter.VariableDcDcDescriptor(
                 TR_NAME(Type.NONE, "Variable DC-DC Converter"), obj.getObj("variabledcdc"),

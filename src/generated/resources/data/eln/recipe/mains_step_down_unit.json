@@ -4,7 +4,7 @@
     "C": "eln:copper_cable",
     "F": "eln:optimal_ferromagnetic_core",
     "M": "eln:machine_block",
-    "V": "eln:dc_dc_converter"
+    "V": "eln:variable_dc_dc_converter"
   },
   "pattern": [
     "CFC",

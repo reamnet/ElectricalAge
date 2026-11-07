@@ -316,7 +316,12 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipePassiveComponent() {
-        addRecipe(findItemStack("Variable DC-DC Converter"), "CBC", "III", 'C', findItemStack("Copper Cable"), 'I', stack(Items.IRON_INGOT), 'B', "circuitElnBasic");
+        addRecipe(findItemStack("Winding DC-DC Converter"), "C C", "III", 'C', findItemStack("Copper Cable"), 'I', stack(Items.IRON_INGOT));
+        addRecipe(findItemStack("One-way DC-DC Converter"), "D", "R", 'D', findItemStack("Winding DC-DC Converter"), 'R', stack(Items.REDSTONE));
+        addRecipe(findItemStack("One-way Boost vDC/DC Converter"), "D", "R", 'D', findItemStack("Variable DC-DC Converter"), 'R', stack(Items.REDSTONE));
+        addRecipe(findItemStack("One-way Buck vDC/DC Converter"), "D", "r", 'D', findItemStack("Variable DC-DC Converter"), 'r', dictCheapChip);
+        addRecipe(findItemStack("One-way Boost/Buck vDC/DC Converter"), " B ", "DVD", " B ", 'V', findItemStack("Variable DC-DC Converter"), 'D', findItemStack("Signal Diode"), 'B', dictCheapChip);
+        addRecipe(findItemStack("Variable DC-DC Converter"), "CBC", "III", 'C', findItemStack("Copper Cable"), 'I', stack(Items.IRON_INGOT), 'B', dictCheapChip);
         addRecipe(findItemStack("Variable inductor"), " S ", "cIc", " c ", 'I', stack(Items.IRON_INGOT), 'c', findItemStack("Copper Cable"), 'S', findItemStack("Signal Cable"));
 
         addRecipe(findItemStack("Signal Diode", 4),
@@ -1089,7 +1094,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         addRecipe(findItemStack("Utility Wind Turbine 3.2kV"),"PPP","MCM","IFI",'P',findItemStack("Iron Plate"),'M',findItemStack("Advanced Electrical Motor"),'C',findItemStack("Copper Cable"),'I',Items.IRON_BLOCK,'F',findItemStack("Machine Block"));
         addRecipe(findItemStack("Large Watermill 3.2kV"),"WWW","MCM","IFI",'W',Items.OAK_PLANKS,'M',findItemStack("Advanced Electrical Motor"),'C',findItemStack("Copper Cable"),'I',Items.IRON_BLOCK,'F',findItemStack("Machine Block"));
         addRecipe(findItemStack("Pole Streetlight Attachment")," II","CPG"," I ",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'P',findItemStack("Simple Lamp Socket"),'G',Items.GLASS);
-        addRecipe(findItemStack("Mains Step-down Unit"),"CFC","MVM","CCC",'C',findItemStack("Copper Cable"),'F',findItemStack("Optimal Ferromagnetic Core"),'M',findItemStack("Machine Block"),'V',findItemStack("DC-DC Converter"));
+        addRecipe(findItemStack("Mains Step-down Unit"),"CFC","MVM","CCC",'C',findItemStack("Copper Cable"),'F',findItemStack("Optimal Ferromagnetic Core"),'M',findItemStack("Machine Block"),'V',findItemStack("Variable DC-DC Converter"));
         for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values()) {
             String previous=switch(kind) { case CONTACTOR_THREE -> "Single Pole Contactor";case RELAY_FOUR -> "Two Pole Changeover Relay";case SSR_THREE -> "Solid State Relay";default -> null; };
             if(previous!=null)addRecipe(findItemStack(kind.getTitle()),kind.getPoles()==4?"R R":"RRR","PWP",'R',findItemStack(previous),'P',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
@@ -1123,7 +1128,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         addRecipe(findItemStack("Programmable Load Bank"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.BLAZE_ROD,'M',findItemStack("Machine Block"));
         addRecipe(findItemStack("Protective Relay Cabinet"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.REPEATER,'M',findItemStack("Machine Block"));
         addRecipe(findItemStack("Automatic Load Shedding Controller"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.OBSERVER,'M',findItemStack("Machine Block"));
-        addRecipe(findItemStack("Programmable UPS"),"CVC","MFM","CVC",'C',findItemStack("Copper Cable"),'V',findItemStack("DC-DC Converter"),'M',findItemStack("Machine Block"),'F',findItemStack("Optimal Ferromagnetic Core"));
+        addRecipe(findItemStack("Programmable UPS"),"CVC","MFM","CVC",'C',findItemStack("Copper Cable"),'V',findItemStack("Variable DC-DC Converter"),'M',findItemStack("Machine Block"),'F',findItemStack("Optimal Ferromagnetic Core"));
         addShapelessRecipe(findItemStack("Wall-mounted Programmable UPS"),findItemStack("Programmable UPS"),findItemStack("Iron Plate"));
     }
 
