@@ -1,0 +1,25 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "destinationBefore": "ce152268",
+  "task": ":test --tests mods.eln.utility.ForkPatchDistributionTest --tests mods.eln.utility.ForkPatchPoleTransformerTest",
+  "newProductionCircuitCases": 14,
+  "failures": 0,
+  "errors": 0,
+  "cases": [
+    "hotCanDisconnectsAndOnlyResumesAfterCooling",
+    "allServiceLoadsContributeToOneWindingCurrent",
+    "bothWindingSettingsConservePowerAndKeep120240ServiceEquivalents",
+    "steadyTransformerRetainsNativeLuFactors",
+    "openPrimaryFuseIsolatesServiceWithoutOpeningTheThroughPrimary",
+    "copperHeatingUsesEnergyOncePerPhysicalStep",
+    "emptyPoleHasNoSecondarySource",
+    "phaseSelectionUsesExactlyOnePrimaryAndLeavesOtherPhasesIndependent",
+    "malformedSettingsDoNotAlterTheWindingAndInvalidTimeDoesNotAdvanceProtection",
+    "removingTheCoreImmediatelyDisconnectsTheService",
+    "everyPaidCoreRatingFeedsTheSameSharedService",
+    "passiveRatioFollowsPrimarySagWithoutInventingRegulatedPower",
+    "reversePowerFlowsThroughTheSamePaidWinding",
+    "savedSettingsCannotMintHardwareOrReenableAnIsolatedCore"
+  ],
+  "scope": "Actual native MNA: paid ratings, phase isolation, power balance in both winding modes and reverse flow, sag, core removal, primary fuse isolation, saved settings without capacity creation, cached LU, physical-step copper heat, cooling and shared output current."
+}

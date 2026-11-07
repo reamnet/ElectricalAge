@@ -11,6 +11,25 @@ public final class ClientRenders {
     }
 
     public static void registerAll() {
+        // Native publication uses these factories; descriptor RenderClass fields are not a fallback.
+        ElnRenders.transparent(mods.eln.utility.HouseServiceDescriptor.class,mods.eln.utility.HouseServiceRender::new);
+        ElnRenders.transparent(mods.eln.utility.UndergroundHandholeDescriptor.class,mods.eln.utility.UndergroundHandholeRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.PadTransformerDescriptor.class,mods.eln.transparentnode.industrial.PadTransformerRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.MotorDriveDescriptor.class,mods.eln.transparentnode.industrial.MotorDriveRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.ScadaDescriptor.class,mods.eln.transparentnode.industrial.ScadaRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.SurgeArresterDescriptor.class,mods.eln.transparentnode.industrial.SurgeArresterRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.LoadBankDescriptor.class,mods.eln.transparentnode.industrial.LoadBankRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.WelderDescriptor.class,mods.eln.transparentnode.industrial.WelderRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.ChargerDescriptor.class,mods.eln.transparentnode.industrial.ChargerRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.industrial.IndustrialDescriptor.class,mods.eln.transparentnode.industrial.IndustrialRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.ups.UpsDescriptor.class,mods.eln.transparentnode.ups.UpsRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.standby.BackupDescriptor.class,mods.eln.transparentnode.standby.BackupRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.offgrid.OffGridDescriptor.class,mods.eln.transparentnode.offgrid.OffGridRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.renewable.LargeRenewableDescriptor.class,mods.eln.transparentnode.renewable.LargeRenewableRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.renewable.RenewableDescriptor.class,mods.eln.transparentnode.renewable.RenewableRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,mods.eln.transparentnode.utilitylight.StepDownUnitRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,mods.eln.transparentnode.switchgear.SwitchgearRender::new);
+        ElnRenders.transparent(mods.eln.utility.DistributionPoleDescriptor.class,mods.eln.utility.DistributionPoleRender::new);
         // generated from the 1.12 descriptors' RenderClass (eln/port: super(name, XElement.class, XRender.class))
         ElnRenders.six(mods.eln.signalinductor.SignalInductorDescriptor.class, mods.eln.signalinductor.SignalInductorRender::new);
         ElnRenders.six(mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor.class, mods.eln.sixnode.TreeResinCollector.TreeResinCollectorRender::new);
@@ -19,6 +38,8 @@ public final class ClientRenders {
         ElnRenders.six(mods.eln.sixnode.diode.DiodeDescriptor.class, mods.eln.sixnode.diode.DiodeRender::new);
         ElnRenders.six(mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor.class, mods.eln.sixnode.electricalalarm.ElectricalAlarmRender::new);
         ElnRenders.six(mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor.class, mods.eln.sixnode.electricalbreaker.ElectricalBreakerRender::new);
+        ElnRenders.six(mods.eln.sixnode.electricalcable.UtilityCableDescriptor.class,mods.eln.sixnode.electricalcable.UtilityCableRender::new);
+        ElnRenders.six(mods.eln.sixnode.electricalcable.MoltenMetalPileDescriptor.class,mods.eln.sixnode.electricalcable.MoltenMetalPileRender::new);
         ElnRenders.six(mods.eln.sixnode.electricalcable.ElectricalCableDescriptor.class, mods.eln.sixnode.electricalcable.ElectricalCableRender::new);
         ElnRenders.six(mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerDescriptor.class, mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerRender::new);
         ElnRenders.six(mods.eln.sixnode.electricalentitysensor.ElectricalEntitySensorDescriptor.class, mods.eln.sixnode.electricalentitysensor.ElectricalEntitySensorRender::new);
@@ -44,6 +65,7 @@ public final class ClientRenders {
         ElnRenders.six(mods.eln.sixnode.lampsupply.LampSupplyDescriptor.class, mods.eln.sixnode.lampsupply.LampSupplyRender::new);
         ElnRenders.six(mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixDescriptor.class, mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixRender::new);
         ElnRenders.six(mods.eln.sixnode.powerinductorsix.PowerInductorSixDescriptor.class, mods.eln.sixnode.powerinductorsix.PowerInductorSixRender::new);
+        ElnRenders.six(mods.eln.sixnode.variableinductor.VariableInductorDescriptor.class, mods.eln.sixnode.variableinductor.VariableInductorRender::new);
         ElnRenders.six(mods.eln.sixnode.powersocket.PowerSocketDescriptor.class, mods.eln.sixnode.powersocket.PowerSocketRender::new);
         ElnRenders.six(mods.eln.sixnode.resistor.ResistorDescriptor.class, mods.eln.sixnode.resistor.ResistorRender::new);
         ElnRenders.six(mods.eln.sixnode.thermalcable.ThermalCableDescriptor.class, mods.eln.sixnode.thermalcable.ThermalCableRender::new);
@@ -91,6 +113,8 @@ public final class ClientRenders {
         ElnRenders.transparent(mods.eln.transparentnode.teleporter.TeleporterDescriptor.class, mods.eln.transparentnode.teleporter.TeleporterRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveDescriptor.class, mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor.class, mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.wiremachine.WireMachineDescriptor.class, mods.eln.transparentnode.wiremachine.WireMachineRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, mods.eln.transparentnode.converter.VariableDcDcRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.transformer.TransformerDescriptor.class, mods.eln.transparentnode.transformer.TransformerRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.turbine.TurbineDescriptor.class, mods.eln.transparentnode.turbine.TurbineRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.turret.TurretDescriptor.class, mods.eln.transparentnode.turret.TurretRender::new);

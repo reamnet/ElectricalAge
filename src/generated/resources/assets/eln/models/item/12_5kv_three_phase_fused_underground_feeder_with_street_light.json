@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eln:item/12_5kv_three_phase_fused_underground_feeder_with_street_light"
+  }
+}

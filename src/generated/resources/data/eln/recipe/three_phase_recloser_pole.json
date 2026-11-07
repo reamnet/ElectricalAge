@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:three_phase_utility_pole",
+    "minecraft:comparator",
+    "minecraft:iron_nugget"
+  ],
+  "result": {
+    "id": "eln:three_phase_recloser_pole"
+  }
+}

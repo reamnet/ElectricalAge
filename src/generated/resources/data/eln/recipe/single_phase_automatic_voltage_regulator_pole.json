@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:utility_pole",
+    "eln:dc_dc_converter",
+    "minecraft:iron_nugget",
+    "eln:pole_fuse_link"
+  ],
+  "result": {
+    "id": "eln:single_phase_automatic_voltage_regulator_pole"
+  }
+}

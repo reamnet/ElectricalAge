@@ -3,10 +3,15 @@ package mods.eln.sim.mna;
 import mods.eln.misc.Profiler;
 import mods.eln.misc.Utils;
 import mods.eln.sim.mna.component.Component;
+import mods.eln.sim.mna.component.Capacitor;
+import mods.eln.sim.mna.component.CurrentSource;
 import mods.eln.sim.mna.component.Delay;
+import mods.eln.sim.mna.component.DelayInterSystem2;
+import mods.eln.sim.mna.component.Inductor;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.component.ResistorSwitch;
 import mods.eln.sim.mna.component.VoltageSource;
+import mods.eln.sim.mna.component.SwitchableVoltageSource;
 import mods.eln.sim.mna.misc.IDestructor;
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush;
 import mods.eln.sim.mna.misc.ISubSystemProcessI;
@@ -32,6 +37,7 @@ public class SubSystem {
 
     double dt;
     boolean matrixValid = false;
+    private boolean validStepSolution;
     /** Counts matrix rebuilds: inter-system Thevenin resistances depend only on the matrix (DelayInterSystem2). */
     public int matrixVersion = 0;
 
@@ -49,6 +55,21 @@ public class SubSystem {
     double[] Idata;
 
     double[] XtempData;
+
+    // ForkPatch checked terminal probes, adapted to this port's existing LU solver.
+    // Responses belong to a stamped matrix. RHS callbacks remain fresh on every
+    // read so capacitors, delays and custom components cannot reuse stale history.
+    private it.unimi.dsi.fastutil.longs.Long2ObjectMap<double[]> differentialRows;
+    private long differentialProbeBuilds;
+    private double probeSafeRhsLimit;
+    private boolean probeBoundKnown;
+    private boolean checkedProbeActive;
+    private boolean probeStampInfoKnown, probeStampsKnown;
+    private int[] probeStampedRows, probeRowEpoch;
+    private int probeEpoch, probeStampedCount;
+
+    public long getDifferentialProbeBuilds() { return differentialProbeBuilds; }
+    public boolean isCheckedProbeActive() { return checkedProbeActive; }
 
     /** Diode switches of this SubSystem (ResistorSwitch.isDiode), collected by generateMatrix. */
     ArrayList<ResistorSwitch> diodes = new ArrayList<ResistorSwitch>();
@@ -69,6 +90,7 @@ public class SubSystem {
     }
 
     public void invalidate() {
+        validStepSolution = false;
         matrixValid = false;
     }
 
@@ -125,11 +147,19 @@ public class SubSystem {
 
     public void addProcess(ISubSystemProcessI p) {
         processI.add(p);
+        probeStampInfoKnown = false;
     }
 
     //double[][] getDataRef()
 
     public void generateMatrix() {
+        validStepSolution = false;
+        if (differentialRows != null) differentialRows.clear();
+        probeSafeRhsLimit = 0.0;
+        probeBoundKnown = false;
+        probeStampInfoKnown = false;
+        probeStampedRows = null;
+        probeRowEpoch = null;
         stateCount = states.size();
 
         Profiler p = new Profiler();
@@ -196,6 +226,10 @@ public class SubSystem {
         // Right-hand-side injections superpose (KCL). 1.7.10 assigned here (`= v`), so of two components
         // injecting into one node only the last counted. Idata is zeroed before every stepCalc/solve.
         Idata[s.getId()] += v;
+        if (checkedProbeActive && probeStampsKnown && probeRowEpoch[s.getId()] != probeEpoch) {
+            probeRowEpoch[s.getId()] = probeEpoch;
+            probeStampedRows[probeStampedCount++] = s.getId();
+        }
     }
 
 	/*
@@ -215,7 +249,7 @@ public class SubSystem {
     }
 
     public void stepCalc() {
-        Profiler profiler = new Profiler();
+        validStepSolution = false;
         //	profiler.add("generateMatrix");
         if (!matrixValid) {
             generateMatrix();
@@ -258,7 +292,10 @@ public class SubSystem {
                 multiplyAInvI();
             }
         }
-        profiler.stop();
+        if (!singularMatrix) {
+            validStepSolution = true;
+            for (double value : XtempData) if (!Double.isFinite(value)) { validStepSolution = false; break; }
+        }
         //Utils.println(profiler);
     }
 
@@ -310,6 +347,298 @@ public class SubSystem {
         for (int i = 0; i < n; i++) invDiag[i] = 1 / lu[i][i];
     }
 
+    private void prepareProbeBound() {
+        int n = stateCount;
+        // An absolute triangular-solve envelope proves all variables and partial
+        // sums finite for ordinary probe RHS values. Extreme inputs use the full
+        // checked solve below. Include a margin for rounding in the bound itself.
+        double[] envelope = new double[n];
+        double largest = 1.0;
+        for (int i = 0; i < n; i++) {
+            double bound = 1.0;
+            for (int k = 0; k < i; k++) bound += Math.abs(lu[i][k]) * envelope[k];
+            envelope[i] = bound;
+            largest = Math.max(largest, bound);
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            double bound = envelope[i];
+            for (int k = i + 1; k < n; k++) bound += Math.abs(lu[i][k]) * envelope[k];
+            largest = Math.max(largest, bound);
+            envelope[i] = bound * Math.abs(invDiag[i]);
+            largest = Math.max(largest, envelope[i]);
+        }
+        probeSafeRhsLimit = Double.isFinite(largest) ? Double.MAX_VALUE / largest / 8.0 : 0.0;
+        probeBoundKnown = true;
+    }
+
+    /** Noncommitting terminal difference for the incoming Norton solar model.
+     * A transposed LU solve builds one response row per pair and matrix, then each
+     * read samples callbacks once and projects only that row. Existing physical
+     * LU solves, diode switching and interconnection resistance caching stay intact.
+     */
+    public double solveVoltageDifferenceChecked(State a, State b) {
+        if (!matrixValid) generateMatrix();
+        if (singularMatrix || a == null || b == null || a.getSubSystem() != this || b.getSubSystem() != this)
+            return Double.NaN;
+        sampleCheckedRhs();
+        double maximum = 0.0;
+        int terms = probeStampsKnown ? probeStampedCount : stateCount;
+        for (int k = 0; k < terms; k++) {
+            double value = Idata[probeStampsKnown ? probeStampedRows[k] : k];
+            if (!Double.isFinite(value)) return Double.NaN;
+            maximum = Math.max(maximum, Math.abs(value));
+        }
+        if (!probeBoundKnown) prepareProbeBound();
+        if (maximum < probeSafeRhsLimit) {
+            if (differentialRows == null) differentialRows = new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<>();
+            long key = ((long) a.getId() << 32) | (b.getId() & 0xffffffffL);
+            double[] row = differentialRows.get(key);
+            if (row == null) {
+                row = differentialResponse(a.getId(), b.getId());
+                differentialRows.put(key, row);
+                differentialProbeBuilds++;
+            }
+            double sum = 0.0, correction = 0.0;
+            for (int k = 0; k < terms; k++) {
+                int i = probeStampsKnown ? probeStampedRows[k] : k;
+                if (Idata[i] == 0.0 || row[i] == 0.0) continue;
+                double product = row[i] * Idata[i];
+                double next = sum + product;
+                correction += Math.abs(sum) >= Math.abs(product) ? (sum - next) + product : (product - next) + sum;
+                correction += Math.fma(row[i], Idata[i], -product);
+                sum = next;
+            }
+            double value = sum + correction;
+            if (Double.isFinite(value)) return value;
+        }
+        // Keep XtempData and all physical state untouched, including on failure.
+        double[] trial = new double[stateCount];
+        for (int i = 0; i < stateCount; i++) {
+            double value = Idata[perm[i]];
+            for (int k = 0; k < i; k++) value -= lu[i][k] * trial[k];
+            trial[i] = value;
+        }
+        for (int i = stateCount - 1; i >= 0; i--) {
+            double value = trial[i];
+            for (int k = i + 1; k < stateCount; k++) value -= lu[i][k] * trial[k];
+            trial[i] = value * invDiag[i];
+        }
+        for (double value : trial) if (!Double.isFinite(value)) return Double.NaN;
+        double value = trial[a.getId()] - trial[b.getId()];
+        return Double.isFinite(value) ? value : Double.NaN;
+    }
+
+    private void sampleCheckedRhs() {
+        java.util.Arrays.fill(Idata, 0.0);
+        if (!probeStampInfoKnown) prepareProbeStamps();
+        if (probeStampsKnown) {
+            probeStampedCount = 0;
+            if (++probeEpoch == 0) { java.util.Arrays.fill(probeRowEpoch, 0); probeEpoch = 1; }
+        }
+        boolean previousProbe = checkedProbeActive;
+        checkedProbeActive = true;
+        try {
+            for (int i = 0; i < processI.size(); i++) processI.get(i).simProcessI(this);
+        } finally {
+            checkedProbeActive = previousProbe;
+        }
+    }
+
+    private void prepareProbeStamps() {
+        // Only these exact implementations exclusively use addToI. Unknown and
+        // subclass callbacks keep a complete RHS scan, including direct writes.
+        // Record live stamps rather than cached pins: moving a current source's
+        // terminals must be observed even when its matrix stamp is unchanged.
+        probeStampsKnown = getClass() == SubSystem.class;
+        if (!probeStampsKnown) { probeStampInfoKnown = true; return; }
+        for (ISubSystemProcessI process : processI) {
+            Class<?> type = process.getClass();
+            if (type != CurrentSource.class && type != VoltageSource.class && type != DelayInterSystem2.class
+                    && type != Capacitor.class && type != Inductor.class && type != Delay.class && type != SwitchableVoltageSource.class) {
+                probeStampsKnown = false;
+                break;
+            }
+        }
+        if (probeStampsKnown && probeStampedRows == null) {
+            probeStampedRows = new int[stateCount]; probeRowEpoch = new int[stateCount]; probeEpoch = 0;
+        }
+        probeStampInfoKnown = true;
+    }
+
+    private double[] differentialResponse(int positive, int negative) {
+        // A = P^T L U, hence A^T y = e_positive - e_negative is solved with
+        // U^T, L^T, then the inverse permutation. No reciprocal-matrix assumption.
+        double[] work = new double[stateCount];
+        for (int i = 0; i < stateCount; i++) {
+            double value = (i == positive ? 1.0 : 0.0) - (i == negative ? 1.0 : 0.0);
+            for (int k = 0; k < i; k++) value -= lu[k][i] * work[k];
+            work[i] = value * invDiag[i];
+        }
+        for (int i = stateCount - 1; i >= 0; i--) {
+            double value = work[i];
+            for (int k = i + 1; k < stateCount; k++) value -= lu[k][i] * work[k];
+            work[i] = value;
+        }
+        double[] row = new double[stateCount];
+        for (int i = 0; i < stateCount; i++) row[perm[i]] = work[i];
+        return row;
+    }
+
+    public static final class Thevenin {
+        public double voltage = Double.NaN, resistance = Double.NaN;
+    }
+
+    /** Affine active-source port response on the native LU factors. Excludes the
+     * source's command row before projection, avoiding subtraction of two large
+     * currents. No command, enabled mask, history or pending state is changed. */
+    public Thevenin sourceThevenin(VoltageSource source) {
+        Thevenin result = new Thevenin();
+        if (!matrixValid) generateMatrix();
+        State current = source.getCurrentState();
+        if (current.getSubSystem() != this || !Double.isFinite(source.getU())) return result;
+        if (singularMatrix) {
+            // Opening the sole ground-referenced branch leaves a truly unloaded
+            // port singular. Probe a separate zero-volt constraint, never the live
+            // matrix or source mask. Unbalanced current injection is still rejected.
+            if (source instanceof SwitchableVoltageSource switched && !switched.getEnabled())
+                return probeUnloadedSource(source);
+            return result;
+        }
+        sampleCheckedRhs();
+        if (!finiteProbeSolution()) return result;
+        if (source instanceof SwitchableVoltageSource switched && !switched.getEnabled()) {
+            State a = source.aPin, b = source.bPin;
+            if ((a != null && a.getSubSystem() != this) || (b != null && b.getSubSystem() != this)) return result;
+            double[] row = cachedProbeResponse(a == null ? -1 : a.getId(), b == null ? -1 : b.getId());
+            double resistance = (a == null ? 0 : row[a.getId()]) - (b == null ? 0 : row[b.getId()]);
+            double volts = projectProbe(row, -1);
+            if (!Double.isFinite(resistance) || resistance <= 0 || !Double.isFinite(volts)) return result;
+            result.resistance = resistance; result.voltage = volts;
+            return result;
+        }
+        int index = current.getId();
+        double[] row = cachedProbeResponse(index, -1);
+        double conductance = -row[index];
+        double intercept = projectProbe(row, index);
+        if (!Double.isFinite(conductance) || !Double.isFinite(intercept)) return result;
+        if (Math.abs(conductance) <= 1e-18) {
+            if (Math.abs(intercept) > 1e-12) return result;
+            result.voltage = 0; result.resistance = Double.POSITIVE_INFINITY;
+        } else if (conductance > 0) {
+            result.resistance = 1 / conductance;
+            result.voltage = intercept / conductance;
+            if (!Double.isFinite(result.voltage)) result.resistance = Double.NaN;
+        }
+        return result;
+    }
+
+    private Thevenin probeUnloadedSource(VoltageSource source) {
+        Thevenin result = new Thevenin();
+        State a = source.aPin, b = source.bPin;
+        if ((a != null && a.getSubSystem() != this) || (b != null && b.getSubSystem() != this)) return result;
+        sampleCheckedRhs();
+        for (double value : Idata) if (!Double.isFinite(value)) return result;
+        int index = source.getCurrentState().getId();
+        RealMatrix clamped = A.copy();
+        clamped.setEntry(index, index, 0);
+        if (a != null) { clamped.addToEntry(a.getId(), index, 1); clamped.addToEntry(index, a.getId(), 1); }
+        if (b != null) { clamped.addToEntry(b.getId(), index, -1); clamped.addToEntry(index, b.getId(), -1); }
+        try {
+            // The existing port has no physical solution without a reference.
+            // This scratch constraint does not add leakage or commit a reference.
+            org.apache.commons.math3.linear.DecompositionSolver solver = new QRDecomposition(clamped).getSolver();
+            double[] trial = solver.solve(new org.apache.commons.math3.linear.ArrayRealVector(Idata, true)).toArray();
+            for (double value : trial) if (!Double.isFinite(value)) return result;
+            double[] unit = new double[stateCount]; unit[index] = 1;
+            double[] row = new QRDecomposition(clamped.transpose()).getSolver()
+                .solve(new org.apache.commons.math3.linear.ArrayRealVector(unit, false)).toArray();
+            double conductance = -row[index], intercept = projectProbe(row, index);
+            if (!Double.isFinite(conductance) || !Double.isFinite(intercept)) return result;
+            if (Math.abs(conductance) <= 1e-18) {
+                if (Math.abs(intercept) > 1e-12) return result;
+                result.voltage = 0; result.resistance = Double.POSITIVE_INFINITY;
+            } else if (conductance > 0) {
+                result.resistance = 1 / conductance; result.voltage = intercept / conductance;
+                if (!Double.isFinite(result.voltage)) result.resistance = Double.NaN;
+            }
+        } catch (org.apache.commons.math3.linear.SingularMatrixException ignored) {
+            // Floating differential islands still require the separate gauge port.
+        }
+        return result;
+    }
+
+    private double[] cachedProbeResponse(int positive, int negative) {
+        if (differentialRows == null) differentialRows = new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<>();
+        long key = ((long) positive << 32) | (negative & 0xffffffffL);
+        double[] row = differentialRows.get(key);
+        if (row == null) {
+            row = differentialResponse(positive, negative);
+            differentialRows.put(key, row); differentialProbeBuilds++;
+        }
+        return row;
+    }
+
+    private double projectProbe(double[] row, int excluded) {
+        double sum = 0, correction = 0;
+        int terms = probeStampsKnown ? probeStampedCount : stateCount;
+        for (int k = 0; k < terms; k++) {
+            int i = probeStampsKnown ? probeStampedRows[k] : k;
+            if (i == excluded || row[i] == 0 || Idata[i] == 0) continue;
+            double product = row[i] * Idata[i], next = sum + product;
+            correction += Math.abs(sum) >= Math.abs(product) ? (sum - next) + product : (product - next) + sum;
+            correction += Math.fma(row[i], Idata[i], -product);
+            sum = next;
+        }
+        return sum + correction;
+    }
+
+    private boolean finiteProbeSolution() {
+        double maximum = 0;
+        for (double value : Idata) {
+            if (!Double.isFinite(value)) return false;
+            maximum = Math.max(maximum, Math.abs(value));
+        }
+        if (!probeBoundKnown) prepareProbeBound();
+        if (maximum < probeSafeRhsLimit) return true;
+        double[] trial = new double[stateCount];
+        for (int i = 0; i < stateCount; i++) {
+            double value = Idata[perm[i]];
+            for (int k = 0; k < i; k++) value -= lu[i][k] * trial[k];
+            trial[i] = value;
+        }
+        for (int i = stateCount - 1; i >= 0; i--) {
+            double value = trial[i];
+            for (int k = i + 1; k < stateCount; k++) value -= lu[i][k] * trial[k];
+            trial[i] = value * invDiag[i];
+            if (!Double.isFinite(trial[i])) return false;
+        }
+        return true;
+    }
+
+    public double[] sourceVoltageSensitivity(SwitchableVoltageSource port, SwitchableVoltageSource[] commands) {
+        if (!matrixValid || singularMatrix || !port.getEnabled() || port.getSubSystem() != this) return null;
+        double[] row = cachedProbeResponse(port.getCurrentState().getId(), -1);
+        double conductance = -row[port.getCurrentState().getId()];
+        if (!Double.isFinite(conductance) || conductance <= 1e-18) return null;
+        double[] result = new double[commands.length];
+        for (int i = 0; i < commands.length; i++) {
+            SwitchableVoltageSource command = commands[i];
+            if (command != port && command.getEnabled() && command.getSubSystem() == this) {
+                result[i] = row[command.getCurrentState().getId()] / conductance;
+                if (!Double.isFinite(result[i])) return null;
+            }
+        }
+        return result;
+    }
+
+    public boolean hasValidStepSolution() { return matrixValid && !singularMatrix && validStepSolution; }
+
+    public double pendingValue(State pin) {
+        if (pin == null) return 0;
+        if (!hasValidStepSolution() || pin.getSubSystem() != this) return Double.NaN;
+        return XtempData[pin.getId()];
+    }
+
     /** This step's solution for a state of this SubSystem (before stepFlush); ground (null) = 0. */
     private double predicted(State s) {
         return s == null ? 0 : XtempData[s.getId()];
@@ -341,7 +670,7 @@ public class SubSystem {
 
     //RealMatrix Xtemp;
     public void stepFlush() {
-        if (!singularMatrix) {
+        if (hasValidStepSolution()) {
             for (int idx = 0; idx < stateCount; idx++) {
                 //statesTab[idx].state = Xtemp.getEntry(idx, 0);
                 statesTab[idx].state = XtempData[idx];

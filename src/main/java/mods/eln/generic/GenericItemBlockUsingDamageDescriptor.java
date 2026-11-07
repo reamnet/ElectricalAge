@@ -54,6 +54,8 @@ public class GenericItemBlockUsingDamageDescriptor {
         this.iconName = name.replaceAll(" ", "").toLowerCase();
     }
 
+    public Item.Properties itemProperties(Item.Properties properties) { return properties; }
+
     public CompoundTag getDefaultNBT() {
         return null;
     }

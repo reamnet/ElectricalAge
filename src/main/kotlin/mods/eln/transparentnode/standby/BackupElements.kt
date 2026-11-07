@@ -1,0 +1,141 @@
+package mods.eln.transparentnode.standby
+
+import mods.eln.i18n.I18N.tr
+import mods.eln.misc.Direction
+import mods.eln.misc.LRDU
+import mods.eln.misc.Utils
+import mods.eln.node.NodeBase
+import mods.eln.node.NodePeriodicPublishProcess
+import mods.eln.node.transparent.*
+import mods.eln.sim.IProcess
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.player.Player
+import net.neoforged.neoforge.transfer.fluid.FluidUtil
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.IOException
+
+abstract class BackupElement(node: TransparentNode,descriptor: TransparentNodeDescriptor) : TransparentNodeElement(node,descriptor) {
+    private val backupInventory=TransparentNodeElementInventory(0,1,this)
+    override fun getInventory()=backupInventory
+    init { slowProcessList.add(NodePeriodicPublishProcess(node,.5,0.0)) }
+    override fun hasGui()=true
+    override fun thermoMeterString(side: Direction): String?=null
+    override fun initialize() { connect() }
+    override fun onBlockActivated(player: Player,side: Direction,vx: Float,vy: Float,vz: Float)=false
+    override fun getThermalLoad(side: Direction,lrdu: LRDU)=null
+    override fun getConnectionMask(side: Direction,lrdu: LRDU)=if(getElectricalLoad(side,lrdu)!=null)NodeBase.maskElectricalPower else 0
+    abstract fun settings(nbt: CompoundTag)
+    abstract fun writeSettings(nbt: CompoundTag)
+    override fun readFromNBT(nbt: CompoundTag) { super.readFromNBT(nbt);settings(nbt) }
+    override fun writeToNBT(nbt: CompoundTag) { super.writeToNBT(nbt);writeSettings(nbt) }
+    override fun readItemStackNBT(nbt: CompoundTag?) { if(nbt!=null)settings(nbt) }
+    override fun getItemStackNBT()=CompoundTag().also(::writeSettings)
+    open fun writeConfigTool(compound: CompoundTag,invoker: Player) { writeSettings(compound) }
+    open fun readConfigTool(compound: CompoundTag,invoker: Player) { settings(compound);needPublish() }
+}
+
+class AtsElement(node: TransparentNode,descriptor: TransparentNodeDescriptor) : BackupElement(node,descriptor) {
+    val unit=AtsUnit(this) { closed ->
+        if(serverWorld()!=null)play(mods.eln.sound.SoundCommand(
+            if(closed)"eln:circuit_breaker_close" else "eln:circuit_breaker_open")
+            .smallRange().mulVolume(.45f,if(closed)1.1f else 1.2f))
+    }
+    private fun serverWorld()=node?.coordonate?.world() as? ServerLevel
+    var lastReset="";private set
+    var resetCount=0;private set
+    fun resetLinkedGenerators(world: Any,tick: Long): StandbyLink.ResetResult {
+        val result=unit.resetLinkedGenerators(world,tick)
+        lastReset=when { unit.channel.isBlank()->"UNLINKED";result.linked==0->"MISSING";result.reset==0->"READY";else->"RESET" }
+        resetCount=result.reset
+        needPublish();return result
+    }
+    private fun withdraw() { serverWorld()?.let { StandbyLink.remove(it,this) } }
+    init { slowProcessList.add(IProcess { serverWorld()?.let { StandbyLink.update(it,this,unit.channel,it.gameTime,unit.control.request && unit.enabled) } }) }
+    private val cabinet get()=transparentNodeDescriptor as BackupDescriptor
+    override fun onNeighborBlockChange() { super.onNeighborBlockChange();cabinet.checkWallSupport(this) }
+    override fun getElectricalLoad(side: Direction,lrdu: LRDU)=if(!cabinet.acceptsCable(front,side,lrdu))null else when(side) {
+        front.left() -> unit.mains
+        front.right() -> unit.output
+        (if(cabinet.wallMounted)Direction.YN else front.inverse) -> unit.backup
+        else -> null
+    }
+    override fun disconnectJob() { withdraw();unit.reset(false);super.disconnectJob() }
+    override fun settings(nbt: CompoundTag) { withdraw();unit.read(nbt);lastReset="";resetCount=0 }
+    override fun writeSettings(nbt: CompoundTag)=unit.write(nbt)
+    override fun networkUnserialize(stream: DataInputStream): Byte {
+        val id=super.networkUnserialize(stream)
+        try {
+            when(id.toInt()) {
+                80 -> { if(unit.setVoltage(stream.readDouble()))withdraw() }
+                81 -> { withdraw();unit.channel=StandbyLink.channel(stream.readUTF());unit.reset();lastReset="";resetCount=0 }
+                82 -> { withdraw();unit.setEnabled(!unit.enabled) }
+                83 -> serverWorld()?.let { resetLinkedGenerators(it,it.gameTime) }
+            }
+        } catch(_: IOException) {}
+        needPublish();return id
+    }
+    override fun networkSerialize(stream: DataOutputStream) {
+        super.networkSerialize(stream)
+        BackupDisplay().apply {
+            target=unit.nominal;channel=unit.channel;status=unit.status;mode=if(unit.enabled)0 else 2
+            mains=unit.mains.u;backup=unit.backup.u;output=unit.output.u;watts=unit.watts;request=unit.control.request
+            resetResult=lastReset;resetCount=this@AtsElement.resetCount
+            connections=node!!.lrduCubeMask.getTranslate(cabinet.connectionPlane(front))
+        }.write(stream)
+    }
+    override fun multiMeterString(side: Direction)=tr("Mains: %1$; generator: %2$; output: %3$",Utils.plotVolt("",unit.mains.u),Utils.plotVolt("",unit.backup.u),Utils.plotVolt("",unit.output.u))
+    override fun getWaila()=linkedMapOf(tr("Transfer switch") to backupStatus(unit.status),tr("Output voltage") to Utils.plotVolt("",unit.output.u),tr("Wireless channel") to unit.channel)
+}
+
+class StandbyGeneratorElement(node: TransparentNode,descriptor: TransparentNodeDescriptor) : BackupElement(node,descriptor),GeneratorPeer {
+    override fun publish()=needPublish()
+    override val unit=StandbyGeneratorUnit(this,(descriptor as BackupDescriptor).tier)
+    init {
+        slowProcessList.add(IProcess {
+            val world=node?.coordonate?.world() as? ServerLevel
+            if(world!=null)StandbyLink.updateGenerator(world,this,world.gameTime)
+            unit.requested=world!=null && StandbyLink.requested(world,unit.channel,world.gameTime)
+        })
+    }
+    override fun getElectricalLoad(side: Direction,lrdu: LRDU)=if(lrdu==LRDU.Down && (side==front.left() || side==front.right()))unit.output else null
+    override fun getFluidHandler()=(unit.fuel as StandbyTank).tank
+    override fun connectJob() { super.connectJob();unit.attach(mods.eln.Eln.simulator.mna) }
+    override fun disconnectJob() { (node?.coordonate?.world() as? ServerLevel)?.let { StandbyLink.removeGenerator(it,this) };unit.requested=false;unit.detach();super.disconnectJob() }
+    override fun settings(nbt: CompoundTag)=unit.read(nbt)
+    override fun writeSettings(nbt: CompoundTag)=unit.write(nbt)
+    // Copying settings must never duplicate tank contents.
+    override fun writeConfigTool(compound: CompoundTag,invoker: Player) {
+        compound.putDouble("standbyVoltage",unit.nominal);compound.putInt("standbyMode",unit.mode.ordinal);compound.putString("standbyChannel",unit.channel)
+    }
+    override fun readConfigTool(compound: CompoundTag,invoker: Player) {
+        if(compound.contains("standbyVoltage"))unit.setVoltage(compound.getDoubleOr("standbyVoltage", 0.0))
+        unit.channel=StandbyLink.channel(compound.getStringOr("standbyChannel", ""));needPublish()
+    }
+    override fun onBlockActivated(player: Player,side: Direction,vx: Float,vy: Float,vz: Float): Boolean {
+        return FluidUtil.interactWithFluidHandler(player,InteractionHand.MAIN_HAND,node?.coordonate?.pos(),(unit.fuel as StandbyTank).tank,null)
+    }
+    override fun networkUnserialize(stream: DataInputStream): Byte {
+        val id=super.networkUnserialize(stream)
+        try {
+            when(id.toInt()) {
+                80 -> unit.setVoltage(stream.readDouble())
+                81 -> { unit.channel=StandbyLink.channel(stream.readUTF());unit.requested=false;unit.stop() }
+                82 -> { unit.mode=StandbyMode.entries[(unit.mode.ordinal+1)%StandbyMode.entries.size];if(unit.mode==StandbyMode.OFF)unit.stop() }
+                83 -> unit.reset()
+            }
+        } catch(_: IOException) {}
+        needPublish();return id
+    }
+    override fun networkSerialize(stream: DataOutputStream) {
+        super.networkSerialize(stream)
+        BackupDisplay().apply {
+            target=unit.nominal;channel=unit.channel;status=unit.status;mode=unit.mode.ordinal;output=unit.output.u
+            watts=unit.watts;fuel=unit.fuel.availableMb;request=unit.requested;connections=node!!.lrduCubeMask.getTranslate(Direction.YN)
+        }.write(stream)
+    }
+    override fun multiMeterString(side: Direction)=Utils.plotVolt("U:",unit.output.u)+Utils.plotPower("P:",unit.watts)
+    override fun getWaila()=linkedMapOf(tr("Generator") to backupStatus(unit.status),tr("Fuel") to tr("%1$ / %2$ mB",unit.fuel.availableMb.toInt(),unit.fuel.capacity),tr("Output power") to Utils.plotPower("",unit.watts))
+}

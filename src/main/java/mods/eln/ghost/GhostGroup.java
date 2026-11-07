@@ -14,11 +14,11 @@ public class GhostGroup {
     public GhostGroup() {
     }
 
-    class GhostGroupElement {
+    public class GhostGroupElement {
 
-        int x, y, z;
-        Block block;
-        int meta;
+        public final int x, y, z;
+        public final Block block;
+        public final int meta;
 
         public GhostGroupElement(int x, int y, int z, Block block, int meta) {
             this.x = x;
@@ -29,7 +29,7 @@ public class GhostGroup {
         }
     }
 
-    ArrayList<GhostGroupElement> elementList = new ArrayList<GhostGroupElement>();
+    public final ArrayList<GhostGroupElement> elementList = new ArrayList<GhostGroupElement>();
 
     public void addElement(int x, int y, int z) {
         elementList.add(new GhostGroupElement(x, y, z, Eln.ghostBlock, GhostBlock.tCube));

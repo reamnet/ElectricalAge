@@ -65,6 +65,10 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeElectricalFurnace", ElnRecipes::recipeElectricalFurnace);
         run("recipeAutoMiner", ElnRecipes::recipeAutoMiner);
         run("recipeSolarPanel", ElnRecipes::recipeSolarPanel);
+        run("recipeForkPatchSolar", ElnRecipes::recipeForkPatchSolar);
+        run("recipeForkPatchOffgrid", ElnRecipes::recipeForkPatchOffgrid);
+        run("recipeForkPatchStandby", ElnRecipes::recipeForkPatchStandby);
+        run("recipeForkPatchUps", ElnRecipes::recipeForkPatchUps);
         run("recipeThermalDissipatorPassiveAndActive", ElnRecipes::recipeThermalDissipatorPassiveAndActive);
         run("recipeElectricalAntenna", ElnRecipes::recipeElectricalAntenna);
         run("recipeEggIncubator", ElnRecipes::recipeEggIncubator);
@@ -312,6 +316,19 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipePassiveComponent() {
+        for (String[] wheel : new String[][]{{"Iron Roller Wheel","ingotIron"},{"Steel Roller Wheel","ingotSteel"},{"Aluminum Roller Wheel","ingotAluminum"}}) addRecipe(findItemStack(wheel[0],2)," M ","MIM"," M ",'M',wheel[1],'I',stack(Items.IRON_INGOT));
+        addRecipe(findItemStack("Wire Roller"),"IRI","WMW","ICI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'W',findItemStack("Iron Roller Wheel"),'M',findItemStack("Machine Block"),'C',findItemStack("Electrical Motor"));
+        addRecipe(findItemStack("Wire Insulator"),"IRI","BMB","ICI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'B',stack(Items.BUCKET),'M',findItemStack("Machine Block"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Wire Combiner"),"IRI","CMC","IWI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'C',findItemStack("Electrical Motor"),'M',findItemStack("Machine Block"),'W',findItemStack("Iron Roller Wheel"));
+
+        addRecipe(findItemStack("Winding DC-DC Converter"), "C C", "III", 'C', findItemStack("Copper Cable"), 'I', stack(Items.IRON_INGOT));
+        addRecipe(findItemStack("One-way DC-DC Converter"), "D", "R", 'D', findItemStack("Winding DC-DC Converter"), 'R', stack(Items.REDSTONE));
+        addRecipe(findItemStack("One-way Boost vDC/DC Converter"), "D", "R", 'D', findItemStack("Variable DC-DC Converter"), 'R', stack(Items.REDSTONE));
+        addRecipe(findItemStack("One-way Buck vDC/DC Converter"), "D", "r", 'D', findItemStack("Variable DC-DC Converter"), 'r', dictCheapChip);
+        addRecipe(findItemStack("One-way Boost/Buck vDC/DC Converter"), " B ", "DVD", " B ", 'V', findItemStack("Variable DC-DC Converter"), 'D', findItemStack("Signal Diode"), 'B', dictCheapChip);
+        addRecipe(findItemStack("Variable DC-DC Converter"), "CBC", "III", 'C', findItemStack("Copper Cable"), 'I', stack(Items.IRON_INGOT), 'B', dictCheapChip);
+        addRecipe(findItemStack("Variable inductor"), " S ", "cIc", " c ", 'I', stack(Items.IRON_INGOT), 'c', findItemStack("Copper Cable"), 'S', findItemStack("Signal Cable"));
+
         addRecipe(findItemStack("Signal Diode", 4),
             " RB",
             "IIR",
@@ -1076,6 +1093,95 @@ public final class ElnRecipes extends ElnRecipesBase {
             'A', findItemStack("Analogic Regulator"),
             'C', findItemStack("Medium Voltage Cable"),
             'M', findItemStack("Advanced Electrical Motor"));
+    }
+
+    public static void recipeForkPatchUps() {
+        addRecipe(findItemStack("Utility Wind Turbine 3.2kV"),"PPP","MCM","IFI",'P',findItemStack("Iron Plate"),'M',findItemStack("Advanced Electrical Motor"),'C',findItemStack("Copper Cable"),'I',Items.IRON_BLOCK,'F',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Large Watermill 3.2kV"),"WWW","MCM","IFI",'W',Items.OAK_PLANKS,'M',findItemStack("Advanced Electrical Motor"),'C',findItemStack("Copper Cable"),'I',Items.IRON_BLOCK,'F',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Pole Streetlight Attachment")," II","CPG"," I ",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'P',findItemStack("Simple Lamp Socket"),'G',Items.GLASS);
+        addRecipe(findItemStack("Mains Step-down Unit"),"CFC","MVM","CCC",'C',findItemStack("Copper Cable"),'F',findItemStack("Optimal Ferromagnetic Core"),'M',findItemStack("Machine Block"),'V',findItemStack("Variable DC-DC Converter"));
+        for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values()) {
+            String previous=switch(kind) { case CONTACTOR_THREE -> "Single Pole Contactor";case RELAY_FOUR -> "Two Pole Changeover Relay";case SSR_THREE -> "Solid State Relay";default -> null; };
+            if(previous!=null)addRecipe(findItemStack(kind.getTitle()),kind.getPoles()==4?"R R":"RRR","PWP",'R',findItemStack(previous),'P',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
+            else addRecipe(findItemStack(kind.getTitle())," C ","PRP","IWI",'C',findItemStack(kind.getSolidState()?"Silicon Plate":"Cheap Ferromagnetic Core"),'P',Items.IRON_NUGGET,'R',findItemStack(kind.getSolidState()?"Signal Relay":"Low Voltage Relay"),'I',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
+        }
+        mods.eln.utility.DistributionPoles.recipes((out,args)->{addShapelessRecipe(out,args);return kotlin.Unit.INSTANCE;});
+        addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        int mastIndex=0;
+        for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK)) {
+            java.util.List<Object> ingredients=new java.util.ArrayList<>();ingredients.add(findItemStack("120/240V Service Weatherhead"));
+            for(int i=0;i<=mastIndex;i++)ingredients.add(Items.IRON_INGOT);
+            addShapelessRecipe(findItemStack(mast.getTitle()),ingredients.toArray());mastIndex++;
+        }
+        addRecipe(findItemStack("North American Meter Base"),"P P","PCP","P P",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Analog Glass Service Meter")," G ","CMC"," P ",'G',Items.GLASS,'C',findItemStack("Copper Cable"),'M',findItemStack("Electrical Motor"),'P',findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Smart Digital Service Meter"),findItemStack("Analog Glass Service Meter"),Items.COMPARATOR,Items.REDSTONE);
+        addRecipe(findItemStack("Wide Underground Meter Socket"),"PPP","MCC","P P",'P',findItemStack("Iron Plate"),'M',findItemStack("North American Meter Base"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Underground Service Entrance Riser")," P "," C ","ICI",'P',findItemStack("Iron Plate"),'I',Items.IRON_INGOT,'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("120/240V Underground Service Handhole"),"IPI","CBC","III",'I',Items.STONE_BRICKS,'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'B',Items.IRON_BARS);
+        addRecipe(findItemStack("Red Handle Service Disconnect"),"PPP","CLC","PPP",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'L',Items.LEVER);
+        addRecipe(findItemStack("Pad Mounted Neighbourhood Transformer"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.IRON_BLOCK,'M',findItemStack("Machine Block"));
+        for(int i=0;i<5;i++)addRecipe(findItemStack(mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i)),"ICI","CTC","ICI",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'T',findItemStack(i==0?"Mains Step-down Unit":mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i-1)));
+        addRecipe(findItemStack("Variable Frequency Motor Drive"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.REDSTONE_BLOCK,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Grid Control Console"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.COMPARATOR,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Pole Surge Arrester"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.LIGHTNING_ROD.weathering().unaffected(),'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Electric Forklift"),"FFF","CMC","III",'F',findItemStack("Welded Machine Frame"),'C',findItemStack("Copper Cable"),'M',findItemStack("Electrical Motor"),'I',Items.IRON_BLOCK);
+        addRecipe(findItemStack("Warehouse Equipment Pallet"),"PPP","S S","PPP",'P',Items.OAK_PLANKS,'S',Items.STICK);
+        addRecipe(findItemStack("Electric Welding Station"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.FLINT_AND_STEEL,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Programmable EV Pack Charger"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.QUARTZ,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("48 V 20 kWh Traction Battery"),"IBI","BBB","CBC",'I',findItemStack("Iron Plate"),'B',findItemStack("UPS Industrial Battery Module"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Programmable Load Bank"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.BLAZE_ROD,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Protective Relay Cabinet"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.REPEATER,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Automatic Load Shedding Controller"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.OBSERVER,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Programmable UPS"),"CVC","MFM","CVC",'C',findItemStack("Copper Cable"),'V',findItemStack("Variable DC-DC Converter"),'M',findItemStack("Machine Block"),'F',findItemStack("Optimal Ferromagnetic Core"));
+        addShapelessRecipe(findItemStack("Wall-mounted Programmable UPS"),findItemStack("Programmable UPS"),findItemStack("Iron Plate"));
+    }
+
+    public static void recipeForkPatchStandby() {
+        addRecipe(findItemStack("Automatic Transfer Switch"),"IPI","RCR","IPI",'I',findItemStack("Iron Plate"),'P',Items.COMPARATOR,'R',Items.REDSTONE,'C',findItemStack("Copper Cable"));
+        addShapelessRecipe(findItemStack("Wall-mounted Automatic Transfer Switch"),findItemStack("Automatic Transfer Switch"),findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Standby Gasoline Generator"),"PPP","BGB","CRC",'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'G',findItemStack("200V Fuel Generator"),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        // Native survival upgrade paths conserve the source tiers' installed engine capacity.
+        var tiers=mods.eln.transparentnode.standby.GeneratorTier.values();
+        for(int i=1;i<tiers.length;i++) {
+            if(i==tiers.length-1)addRecipe(findItemStack(tiers[i].getTitle()),"PPP","GGG","CRC",'P',findItemStack("Iron Plate"),'G',findItemStack(tiers[i-1].getTitle()),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+            else addRecipe(findItemStack(tiers[i].getTitle()),"PPP","GCG","PRP",'P',findItemStack("Iron Plate"),'G',findItemStack(tiers[i-1].getTitle()),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        }
+    }
+
+    public static void recipeForkPatchOffgrid() {
+        addRecipe(findItemStack("UPS AGM Battery Cell"),"PPP","LBL","PPP",'P',findItemStack("Iron Plate"),'L',"ingotLead",'B',findItemStack("Portable Battery"));
+        addRecipe(findItemStack("UPS LiFePO4 Battery Cell"),"CCC","GBG","CCC",'C',Items.COPPER_INGOT,'G',Items.GOLD_INGOT,'B',findItemStack("UPS AGM Battery Cell"));
+        addRecipe(findItemStack("UPS Industrial Battery Module"),"PPP","BBB","PPP",'P',findItemStack("Iron Plate"),'B',findItemStack("UPS LiFePO4 Battery Cell"));
+        addRecipe(findItemStack("16 kWh LiFePO4 Cell Stack"),"IBI","BCB","IBI",'I',findItemStack("Iron Plate"),'B',findItemStack("UPS Industrial Battery Module"),'C',findItemStack("Copper Cable"));
+        for(var t:mods.eln.transparentnode.offgrid.OffGridType.values()) {
+            if(t.getBank()) {
+                String[] pattern=switch(t.getKwh()) { case 16 -> new String[]{" I ","CSC","IMI"}; case 32 -> new String[]{"SIS","CMC","III"}; case 48 -> new String[]{"SIS","CMC","ISI"}; default -> new String[]{"SIS","CMC","SIS"}; };
+                addRecipe(findItemStack(t.getTitle()),pattern[0],pattern[1],pattern[2],'I',t.getWall()?Items.IRON_CHAIN:findItemStack("Iron Plate"),'S',findItemStack("16 kWh LiFePO4 Cell Stack"),'C',findItemStack("Copper Cable"),'M',findItemStack("Machine Block"));
+            } else {
+                Object core=switch(t) { case MPPT -> findItemStack("MPPT Solar Controller"); case INVERTER -> findItemStack("Hybrid Solar Inverter"); case COMBINER -> findItemStack("30 A Pole Fuse"); default -> Items.REPEATER; };
+                addRecipe(findItemStack(t.getTitle()),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.COMPARATOR,'W',findItemStack("Copper Cable"),'C',core,'M',findItemStack("Machine Block"));
+            }
+        }
+        addRecipe(findItemStack("Pole Fuse Link",3)," C "," P "," C ",'C',findItemStack("Copper Cable"),'P',findItemStack("Iron Plate"));
+        var names=mods.eln.utility.PoleHardware.INSTANCE.getFuseNames();
+        for(int i=0;i<names.size();i++) {
+            var parts=new java.util.ArrayList<Object>();parts.add(findItemStack("Pole Fuse Link"));
+            for(int j=0;j<1+i/3;j++)parts.add(Items.COPPER_INGOT);
+            for(int j=0;j<i%3;j++)parts.add(Items.IRON_NUGGET);
+            addShapelessRecipe(findItemStack(names.get(i)),parts.toArray());
+        }
+    }
+
+    public static void recipeForkPatchSolar() {
+        addRecipe(findItemStack("MPPT Solar Controller"), "IPI", "RCR", "IPI",
+            'I', findItemStack("Iron Plate"), 'P', Items.COMPARATOR, 'R', Items.REDSTONE,
+            'C', findItemStack("Small Solar Panel"));
+        addRecipe(findItemStack("Hybrid Solar Inverter"), "PPP", "MCM", "CRC",
+            'P', findItemStack("Iron Plate"), 'M', findItemStack("MPPT Solar Controller"),
+            'C', findItemStack("Copper Cable"), 'R', Items.REDSTONE);
+        addShapelessRecipe(findItemStack("Wall-mounted MPPT Solar Controller"), findItemStack("MPPT Solar Controller"), findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Wall-mounted Hybrid Solar Inverter"), findItemStack("Hybrid Solar Inverter"), findItemStack("Iron Plate"));
     }
 
     public static void recipeSolarPanel() {
@@ -2652,5 +2758,6 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeTool() {
+        addRecipe(findItemStack("Wire Snips"), " I", "I ", "RR", 'I', "ingotIron", 'R', "itemRubber");
     }
 }

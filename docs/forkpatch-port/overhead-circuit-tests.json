@@ -1,0 +1,18 @@
+{
+  "sourceVersion": "3.0.77",
+  "portCommit": "d1480def",
+  "tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "cases": [
+    "terminalHeatingCannotEraseThePaidWireResistance",
+    "actualCableLossIncludesBothTerminalContacts",
+    "invalidSpanResistanceIsRejected",
+    "overheadServiceRetainsIndependentFeedsWithoutWiredSplitTaps",
+    "removingAndRestoringASpanDoesNotLeaveADanglingConnection",
+    "steadySpanReusesNativeLuFactors",
+    "independentBundleChannelsDoNotTurnTwoLegsIntoTheSameBus",
+    "reverseFlowRetainsPositivePhysicalWireLoss"
+  ],
+  "scope": "Production GridSpanConnection and HouseServiceUnit on native LU; loss balance, resistance updates, steady factors, disconnect/reconnect, independent buses, finite resistance checks."
+}

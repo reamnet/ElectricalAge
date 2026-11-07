@@ -1,0 +1,2913 @@
+[
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/ConverterCore.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/ConverterCore.kt",
+    "sourceSha256": "99317dd78e363453f2482b49de10aa6da9a4987761662873d4c1289c234f494d",
+    "mode": "verbatim",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/ControlMapping.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/ControlMapping.kt",
+    "sourceSha256": "554ac86bd2a9a1738e39d8f47fcc757a870c55f05b37a36138455b0269206990",
+    "mode": "verbatim",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/Insulation.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/Insulation.kt",
+    "sourceSha256": "46ef200e7c01cc2bd7821c061a716f4c2e00ef951141a760c46abf2616b48eef",
+    "mode": "verbatim",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/PortSafety.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/PortSafety.kt",
+    "sourceSha256": "44680890b7b6c4235fbafbb6fdb0fb873939e1f6ca098798b440730282af6922",
+    "mode": "verbatim",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialLogic.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialLogic.kt",
+    "sourceSha256": "608c09039ae974aa28e63eb15e82a8470a2fd4bd5c8945f1ea2a2617a28bce66",
+    "mode": "verbatim",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsAlarm.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsAlarm.kt",
+    "sourceSha256": "34bd917003a54518a50a5dff028d92567c0fd977761d096109d0176af78bc628",
+    "mode": "verbatim",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/sim/power/HighVoltageReferenceTest.kt",
+    "target": "src/test/kotlin/mods/eln/sim/power/HighVoltageReferenceTest.kt",
+    "sourceSha256": "0301b1c89459ef4d80d0fa13dd1ff753bd7f18f97be02b977b7569ef929456ac",
+    "mode": "verbatim",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/java/mods/eln/sim/mna/component/CurrentSource.java",
+    "target": "src/main/java/mods/eln/sim/mna/component/CurrentSource.java",
+    "sourceSha256": "b109f9059f1415449f630959411212e1e5f51d6ea665c54d85693527b72e58d4",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+    "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/TransferControl.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/TransferControl.kt",
+    "sourceSha256": "d6dce2fa0929227c312b8bac344dae4422f39091d3e04075ac1d3c2ee4b5d344",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/LifepoBank.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/LifepoState.kt",
+    "sourceSha256": "370d10d1e95172b22a5eded47efffe40878063f02b753043204a89314fe35e3e",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/vehicle/RoadVehicles.kt",
+    "target": "src/main/kotlin/mods/eln/vehicle/RoadPhysics.kt",
+    "sourceSha256": "55ff484e366373de48e5fc06cc5947ceafe228c2f0f01a284d21e0b4dc6ab309",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/sim/power/WindingModel.kt",
+    "target": "src/test/kotlin/mods/eln/sim/power/WindingModel.kt",
+    "sourceSha256": "e5c658d618dfd66dcca40ff15649c8a04a9a401e66b9341c6f802b09515d6012",
+    "mode": "verbatim",
+    "status": "compiled-and-focused-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/mna/component/SwitchableVoltageSource.kt",
+    "target": "src/main/kotlin/mods/eln/sim/mna/component/SwitchableVoltageSource.kt",
+    "sourceSha256": "d9d4cf9888bc3fbd305a4f63a4eb6bc265f736546f6b28ef63a2fa96f745bb99",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/ConverterNetwork.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/ConverterNetwork.kt",
+    "sourceSha256": "9df06f353635ef94aba16aaf681ef8a53f97da90ab5e6bf0fc5439f598473477",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/RegulatedPowerProcess.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/RegulatedPowerProcess.kt",
+    "sourceSha256": "f06e2e2d5b3045cf258fe8eefb9fa06fbaa4f55951f0ab547796826ba4d3e8b1",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/SafeTransformerProcess.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/SafeTransformerProcess.kt",
+    "sourceSha256": "cc92ffc90431bb2f975a386fa5d93f27ce4303ffe29e93cf4c7f1738dea0f869",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/ConverterConvergence.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/ConverterConvergence.kt",
+    "sourceSha256": "27ee4aa05a0926e13bd3d8148794581a7c61e50ee899eb4df27d443f3588fe09",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/power/LocalCommandJacobian.kt",
+    "target": "src/main/kotlin/mods/eln/sim/power/LocalCommandJacobian.kt",
+    "sourceSha256": "c0d519f12d434c74d9766ff06a8ce04975c0cfe8e0d1ad8a2aed5d2c4b0901fb",
+    "mode": "adapted",
+    "status": "compiled-and-focused-regressions-passed",
+    "adaptation": "26.3 source APIs and native LU-based affine probes; no source RHS result caching or DD/gauge replacement"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarPower.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarPower.kt",
+    "sourceSha256": "7c25a20f9c5ab29c511e9be0d5d37d91419ebfd7e381bcf8b857ea1a3c44ed5b",
+    "mode": "adapted",
+    "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarElement.kt",
+    "sourceSha256": "6e17f6261e0d40f19afe95dfe4b221ce2a07d9b7fc9a597168bc52e152e1ce9f",
+    "mode": "adapted",
+    "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/PowerCabinetDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/node/transparent/PowerCabinetDescriptor.kt",
+    "sourceSha256": "4fbb3e4c6534fdb10089c2cd4b9b5fb29b80b236e98a8d4f76b11b271bd98f8a",
+    "mode": "adapted",
+    "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/client/power/ControlPanelDisplay.kt",
+    "target": "src/main/kotlin/mods/eln/client/power/ControlPanelDisplay.kt",
+    "sourceSha256": "4e446dceee718fa370e46950b489d9d3e69b525d9372b426bd1104db5272a358",
+    "mode": "adapted",
+    "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/client/power/PowerPanelDisplay.kt",
+    "target": "src/main/kotlin/mods/eln/client/power/PowerPanelDisplay.kt",
+    "sourceSha256": "86607d9d725d0d16f8a965f747bc16841ec57e7455dc45fec630f959da6f7922",
+    "mode": "adapted",
+    "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarFrontPanel.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarFrontPanel.kt",
+    "sourceSha256": "f2e9827469aae61af7dd0e4f73c3e4742bb43a3e8340430ea35ca68dd3cf0624",
+    "mode": "adapted",
+    "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/SolarDisplay.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "adapted",
+    "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableDescriptor.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "adapted",
+    "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableRender.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "adapted",
+    "status": "compiled; electrical accounting, real-array integration, native placed-block and saved-state checks passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/LifepoBank.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/LifepoBank.kt",
+    "sourceSha256": "370d10d1e95172b22a5eded47efffe40878063f02b753043204a89314fe35e3e",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/InverterCharger.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/InverterCharger.kt",
+    "sourceSha256": "a3eff3ceb2fa788d8b4308f86d433d49a053f3ea05dff95e2e8b51aa8738bff2",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/DcProtection.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/DcProtection.kt",
+    "sourceSha256": "d67c2742d5ce0cb47d12465b9700c8fbcdcecf10bd3e385d8b99f4af583bbaa6",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/CabinetTemperature.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/CabinetTemperature.kt",
+    "sourceSha256": "98b157d996991af773062ea2bf3b2ec57bae4e6b2bacb4931b5d4d12ab786c0c",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridElement.kt",
+    "sourceSha256": "cf48d0b583d641564f8ae9fe61f6138d193f3dd1b43854ecebd7bdd6ad78668a",
+    "mode": "adapted-native-LU-NBT-thermal",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDisplay.kt",
+    "sourceSha256": "61364f91e3c72f5ee74dab1dcfb9a091df46ac2fe4726b6790d3a87a7984b3f9",
+    "mode": "extracted-native-render-menu-adapter",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDescriptor.kt",
+    "sourceSha256": "61364f91e3c72f5ee74dab1dcfb9a091df46ac2fe4726b6790d3a87a7984b3f9",
+    "mode": "extracted-native-render-menu-adapter",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridRender.kt",
+    "sourceSha256": "61364f91e3c72f5ee74dab1dcfb9a091df46ac2fe4726b6790d3a87a7984b3f9",
+    "mode": "extracted-native-render-menu-adapter",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridType.kt",
+    "sourceSha256": "07f718961607c8f120c8df982231da5575665608a2136439035980360cd48833",
+    "mode": "adapted-native-registry",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt",
+    "sourceSha256": "07f718961607c8f120c8df982231da5575665608a2136439035980360cd48833",
+    "mode": "adapted-native-registry",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityProtection.kt",
+    "target": "src/main/kotlin/mods/eln/utility/CutoutFuse.kt",
+    "sourceSha256": "87140dab360e424d8e12ae9ee99a7bb81b7b00b66fc05b96ec4e4ed38e37740e",
+    "mode": "extracted-fuse-only-native-item-codec",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleHardware.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleHardware.kt",
+    "sourceSha256": "363d9bedf4e2d87c0f75ac623506b05fd57cfcbb3c2eb61029595002ba69b3f9",
+    "mode": "extracted-fuse-items-only",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityItems.kt",
+    "target": "src/main/kotlin/mods/eln/utility/UtilityItems.kt",
+    "sourceSha256": "517a52dc98180f86b84ea89d37ce041de2c369f4916a0fcd4badc215a24e8027",
+    "mode": "extracted-basic-fuse-link-only",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsLargeCell.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsLargeCell.kt",
+    "sourceSha256": "57a3f1d9bb71a44172978e8a28cc76a8c06c2e7cb35995ee4849a1829bb0cd8e",
+    "mode": "adapted-native-battery-contract",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/offgrid/OffGridTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/offgrid/ForkPatchOffGridTest.kt",
+    "sourceSha256": "d9b8532f4b12bbc0c45f132bb7c5178dbb93a40297f2e0e68faee59efd4027a7",
+    "mode": "adapted-production-list-fixtures",
+    "status": "offgrid-native-circuit-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt",
+    "sourceSha256": "a7d66b681228236b4ec31059f01a2d9f70c4bcef5e3cf6d11c73715486bf6c2c",
+    "mode": "native-26.3-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/AtsUnit.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/AtsUnit.kt",
+    "sourceSha256": "91ec74aeb51f12c95b82d44374997034a893a9f5478da9a064691639524a9b4b",
+    "mode": "native-26.3-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyGeneratorUnit.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyGeneratorUnit.kt",
+    "sourceSha256": "83a1d37570627cbb73ad5211878350e4bce5bc10f2dad32c3255ecf72c413614",
+    "mode": "native-26.3-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyAlternator.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyAlternator.kt",
+    "sourceSha256": "929b8dd9c39f97479295e955fc0f785dc7947b4509f05cd1ef33e7afad7f6a35",
+    "mode": "native-26.3-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupElements.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/BackupElements.kt",
+    "sourceSha256": "574fd5e038161913b89b2ceeb886c00556b51103d7f40a003db79b6bf4d9901e",
+    "mode": "native-26.3-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyFuel.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyFuel.kt",
+    "sourceSha256": "c89c68792949800577fab948bebb6157642697db883ca9367d90a368ebd6864d",
+    "mode": "native-26.3-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/GeneratorEffects.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/GeneratorEffects.kt",
+    "sourceSha256": "728a47d95ecba2516a302059d2d24239a4470a12a777d86831885623f2db7e35",
+    "mode": "native-26.3-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/TransferControl.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/StandbyLink.kt",
+    "sourceSha256": "d6dce2fa0929227c312b8bac344dae4422f39091d3e04075ac1d3c2ee4b5d344",
+    "mode": "extracted-native-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/BackupDescriptor.kt",
+    "sourceSha256": "b75f558ec0547c961310750d4d456bc79eba4b4b42258ad3834207817819f3c8",
+    "mode": "extracted-native-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/BackupDisplay.kt",
+    "sourceSha256": "b75f558ec0547c961310750d4d456bc79eba4b4b42258ad3834207817819f3c8",
+    "mode": "extracted-native-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/standby/BackupRender.kt",
+    "sourceSha256": "b75f558ec0547c961310750d4d456bc79eba4b4b42258ad3834207817819f3c8",
+    "mode": "extracted-native-adapter",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/standby/StandbyTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/standby/ForkPatchStandbyTest.kt",
+    "sourceSha256": "123e02b28c4bad581756854dc805cffa43876406084e346dc7ffa8e65dba68ce",
+    "mode": "adapted-production-controllers-with-metered-fuel-fixtures",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/standby/BackupClient.kt",
+    "target": "src/main/java/mods/eln/transparentnode/standby/BackupScreen.java",
+    "sourceSha256": "b75f558ec0547c961310750d4d456bc79eba4b4b42258ad3834207817819f3c8",
+    "mode": "native-menu-replacement",
+    "status": "standby-native-controller-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsBatteryBank.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsBatteryBank.kt",
+    "sourceSha256": "562ff4094bb8e017037ce223302e710bac04b8cb5f4e99a7f3b3e680699c582b",
+    "mode": "adapted",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsChargeControl.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsChargeControl.kt",
+    "sourceSha256": "08aa2105c4c9b04a156a26067a2d9ed7928cbf3bed1076fcf90930c3120010b2",
+    "mode": "verbatim",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsPowerUnit.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsPowerUnit.kt",
+    "sourceSha256": "92c0588d402f6e57b5b0f9ca6cb646b1aa28299ffe931599d4cfbbeb02e3a90c",
+    "mode": "adapted",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsElement.kt",
+    "sourceSha256": "c0efc002a2f4bf73c6e90c1070b55e1a1a638d591cf69eb8b9a996c1d1f56af2",
+    "mode": "adapted",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsDescriptor.kt",
+    "sourceSha256": "603b6bedf0004ab9f32ca8afbcfdefd2b2e0045b81040aaebafebddf853cdfcb",
+    "mode": "adapted",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsDisplay.kt",
+    "sourceSha256": "cde7b30cb6108325d4a43ffc6cf62018c3cd48294721d936470bfe2cf1a67b38",
+    "mode": "adapted",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/UpsRender.kt",
+    "sourceSha256": "cde7b30cb6108325d4a43ffc6cf62018c3cd48294721d936470bfe2cf1a67b38",
+    "mode": "adapted",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/UpsClient.kt",
+    "target": "src/main/java/mods/eln/transparentnode/ups/UpsScreen.java",
+    "sourceSha256": "cde7b30cb6108325d4a43ffc6cf62018c3cd48294721d936470bfe2cf1a67b38",
+    "mode": "native-menu-replacement",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/ups/UpsTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/ups/ForkPatchUpsTest.kt",
+    "sourceSha256": "d4b3c6e0fa95a80524d2dde0bb75777830ddca14037bf312ccbe7bba0583c950",
+    "mode": "adapted-production-controllers-with-metered-energy-fixtures",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/ups/UpsStandbyTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/ups/ForkPatchUpsStandbyTest.kt",
+    "sourceSha256": "fbc4e0db45194e51fd65fa8c2ef40f8a1340014b2719a2b4b3b26f2ca2fbd398",
+    "mode": "adapted-production-controllers-with-metered-energy-fixtures",
+    "status": "ups-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt",
+    "sourceSha256": "ba116b91d65c77c5241ee278c8a9b05168ce941bc2dbc590fcb655484666d11f",
+    "mode": "verbatim",
+    "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "adapted-relay-and-shedder-only",
+    "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialControlUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "adapted-relay-and-shedder-only",
+    "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "adapted-relay-and-shedder-only",
+    "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "adapted-relay-and-shedder-only",
+    "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "adapted-relay-and-shedder-only",
+    "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "adapted-relay-and-shedder-only",
+    "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/client/power/ControlPanelDisplay.kt",
+    "target": "src/main/kotlin/mods/eln/client/power/ControlPanelDisplay.kt",
+    "sourceSha256": "4e446dceee718fa370e46950b489d9d3e69b525d9372b426bd1104db5272a358",
+    "mode": "native-GL-adapter",
+    "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchIndustrialControlTest.kt",
+    "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
+    "mode": "adapted-relay-and-shedder-production-circuit-tests",
+    "status": "industrial-controls-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/ServiceSecondary.kt",
+    "target": "src/main/kotlin/mods/eln/utility/ServiceSecondary.kt",
+    "sourceSha256": "4a35fdfb27fe34957244ba8d4c96a43039c4ca01b82e2d9de253dbab341beaa5",
+    "mode": "native-terminal-current-api; service taps and secondary only",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleHardware.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleHardware.kt",
+    "sourceSha256": "363d9bedf4e2d87c0f75ac623506b05fd57cfcbb3c2eb61029595002ba69b3f9",
+    "mode": "native-paid-transformer-items-and-fuses",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleTransformerVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleTransformerItemVisual.kt",
+    "sourceSha256": "6e31b5bd1ff990ff3489e7fa34d1bdb1b9624cc8d5ca24892d66ae7caac9032d",
+    "mode": "extracted-can-and-bushing-item-renderer",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerDisplay.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PadTransformerScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "extracted-pad-native-adapter",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/PadPrimaryFuseTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchPadTransformerTest.kt",
+    "sourceSha256": "6371a6fe592882ccb76d1e692b7cdfea1d6368ea1437b7343c3bab4ec792b849",
+    "mode": "adapted-production-circuit-tests",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/distributionpole/distributionpole.obj",
+    "target": "src/main/resources/assets/eln/model/poletransformer/poletransformer.obj",
+    "sourceSha256": "130cb6a3ffb2635ac3a1f365f6681bfaee067cac076fbe95bd7ffe735355ec53",
+    "mode": "extracted-and-recentered-Transformer-and-TransformerPin-submeshes; reproducible with tools/port/pole_transformer_mesh.py",
+    "status": "pad-circuit-native-datagen-and-destination-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/HouseService.kt",
+    "target": "src/main/kotlin/mods/eln/utility/HouseServiceUnit.kt",
+    "sourceSha256": "cbdc268e9b808593ce5740937735569afbc0b15a15d18de358c495b355acc4c5",
+    "mode": "native-wired-service-adapter; overhead spans deferred",
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/HouseService.kt",
+    "target": "src/main/kotlin/mods/eln/utility/HouseServiceElement.kt",
+    "sourceSha256": "cbdc268e9b808593ce5740937735569afbc0b15a15d18de358c495b355acc4c5",
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/HouseService.kt",
+    "target": "src/main/kotlin/mods/eln/utility/ServiceEnergy.kt",
+    "sourceSha256": "cbdc268e9b808593ce5740937735569afbc0b15a15d18de358c495b355acc4c5",
+    "mode": "native-wired-service-adapter; overhead spans deferred",
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/HouseServiceDescriptor.kt",
+    "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/HouseServiceDisplay.kt",
+    "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/HouseServiceRender.kt",
+    "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/HouseServiceClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/HouseServiceScreen.kt",
+    "sourceSha256": "94de368543d265dfe97778dfb5ffda1ff71182d815692a253f2946f769f6915c",
+    "mode": "native service cabinet and overhead mast adapter; remaining utility hardware deferred",
+    "status": "wired service and overhead checkpoints: 85 native cases passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/ServiceMeterVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/ServiceMeterVisual.kt",
+    "sourceSha256": "8a3469b156b2d8c5d6f36536e2de05060e1f1fc1e3492db015323aa963201698",
+    "mode": "native-wired-service-adapter; overhead spans deferred",
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/ServiceDisconnectVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/ServiceDisconnectVisual.kt",
+    "sourceSha256": "3bc02ff37b88db91ebaf79e1c6d599e086b1055a7a3a4debd12f67a23ee19cf1",
+    "mode": "native-wired-service-adapter; overhead spans deferred",
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/ServiceMeters.kt",
+    "target": "src/main/kotlin/mods/eln/utility/ServiceMeters.kt",
+    "sourceSha256": "5ba569086d0c99cbce0037979dddc8ce98dc7ee24ff90820671e1bacef45fb78",
+    "mode": "native-wired-service-adapter; overhead spans deferred",
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UndergroundHandhole.kt",
+    "target": "src/main/kotlin/mods/eln/utility/UndergroundHandhole.kt",
+    "sourceSha256": "68c4b470cbcc0bd3727b705b56ba169e5cabb74ff89dd1d3fb718f5e54126361",
+    "mode": "native-wired-service-adapter; overhead spans deferred",
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/WideMeterWiring.kt",
+    "target": "src/main/kotlin/mods/eln/utility/WideMeterWiring.kt",
+    "sourceSha256": "55e11b05fa9616ea3f1b56e055666a40dacad10261eaafbf19b468a377e0073a",
+    "mode": "native-wired-service-adapter; overhead spans deferred",
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityItems.kt",
+    "target": "src/main/kotlin/mods/eln/utility/UtilityItems.kt",
+    "sourceSha256": "517a52dc98180f86b84ea89d37ce041de2c369f4916a0fcd4badc215a24e8027",
+    "mode": "native-wired-service-adapter; overhead spans deferred",
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/WideMeterWiring.kt",
+    "target": "src/main/java/mods/eln/node/NodeBase.java",
+    "sourceSha256": "55e11b05fa9616ea3f1b56e055666a40dacad10261eaafbf19b468a377e0073a",
+    "mode": "native connection hooks for wide meter only; preserve destination connection and simulation veto lifetimes",
+    "status": "wired service checkpoint: 12 production-circuit and 65 native server cases passed; overhead spans deferred"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
+    "sourceSha256": "cd3a7e7985f0b10ec4d62cd1185b18214322a739fadf217bb076d9a7a7a11e69",
+    "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridElement.kt",
+    "target": "src/main/java/mods/eln/gridnode/GridElement.java",
+    "sourceSha256": "996feffb80fabf7a9e059b80b5e185735f9bbd634fd598dcc4588c2fb6fbf1f4",
+    "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridRender.kt",
+    "target": "src/main/java/mods/eln/gridnode/GridRender.java",
+    "sourceSha256": "c19e0452ad20022a37538914f660b6137ec98a72c32710a8b3ef7397cefe3fb6",
+    "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/HouseService.kt",
+    "target": "src/main/kotlin/mods/eln/utility/ServiceWallDescriptor.kt",
+    "sourceSha256": "cbdc268e9b808593ce5740937735569afbc0b15a15d18de358c495b355acc4c5",
+    "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt",
+    "target": "src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt",
+    "sourceSha256": "9f6dfec5b5d184c77ed43b574a320c9ac2f0a7aa2d8f9c1f73cb5ff67f7e22ac",
+    "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/ServiceSecondary.kt",
+    "target": "src/main/kotlin/mods/eln/utility/HouseServiceUnit.kt",
+    "sourceSha256": "4a35fdfb27fe34957244ba8d4c96a43039c4ca01b82e2d9de253dbab341beaa5",
+    "mode": "native overhead service adapter; utility spools/thermal, distribution phase routing and complete source-world migration deferred",
+    "status": "overhead service checkpoint: 8 production span circuits and 85 native cases passed; utility spools/thermal and other distribution hardware pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/serviceweatherhead/serviceweatherhead.obj",
+    "target": "src/main/resources/assets/eln/model/serviceweatherhead/serviceweatherhead.obj",
+    "sourceSha256": "e08fac96dc5b704a270d146fecd4aaa338c5482f6b8dc9e29f471f41f8574d0c",
+    "mode": "source mast geometry; inventory icons reproduced by tools/port/solar_icons.py",
+    "status": "overhead service checkpoint: native geometry checked in all four wall orientations"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/compactservicemast/compactservicemast.obj",
+    "target": "src/main/resources/assets/eln/model/compactservicemast/compactservicemast.obj",
+    "sourceSha256": "7fc8b887cd7099c72459bf80fd7313c25a4a359a47897ebaa4f1dfe0a6071ff6",
+    "mode": "source mast geometry; inventory icons reproduced by tools/port/solar_icons.py",
+    "status": "overhead service checkpoint: native geometry checked in all four wall orientations"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/roofservicemast/roofservicemast.obj",
+    "target": "src/main/resources/assets/eln/model/roofservicemast/roofservicemast.obj",
+    "sourceSha256": "b99508d176e3988a61de67993015283ff95e6af2d3ed3d7b844965695dc57640",
+    "mode": "source mast geometry; inventory icons reproduced by tools/port/solar_icons.py",
+    "status": "overhead service checkpoint: native geometry checked in all four wall orientations"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/gooseneckservicemast/gooseneckservicemast.obj",
+    "target": "src/main/resources/assets/eln/model/gooseneckservicemast/gooseneckservicemast.obj",
+    "sourceSha256": "975f0b63c653eb087ca871661d5c854737f88ad5e21b840de641415fd60ab7af",
+    "mode": "source mast geometry; inventory icons reproduced by tools/port/solar_icons.py",
+    "status": "overhead service checkpoint: native geometry checked in all four wall orientations"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableDescriptor.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableElement.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableRender.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCables.kt",
+    "sourceSha256": "f642d34a880f713e223187bbc9e4980ccafd262e44a1923034010d7b219a4e3e",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireScrapDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCables.kt",
+    "sourceSha256": "851575bddb1b755c79cf0d4262a08d4ec2353f11009571d7bad1a853b35b4f61",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/sim/ElectricalLoad.java",
+    "target": "src/main/java/mods/eln/sim/ElectricalLoad.java",
+    "sourceSha256": "169d4d3f9e6ad9698a4f7cd58148ca039ebb1e9163850ca166f8a4d34e07dd6d",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/WirePhysics.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/WirePhysics.kt",
+    "sourceSha256": "970cd1bd9978ac7c738abc501798d475e3ef08fe79e99373cb02be60b815dcb6",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/WireThermalPhysics.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/WireThermalPhysics.kt",
+    "sourceSha256": "5eafe4c7f3db7c3bf28ae4a182617bffbd80065b4b602ebcfe883631e0f6c6ea",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/WireThermalLoad.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/WireThermalLoad.kt",
+    "sourceSha256": "ab2bccd42393d9df069a07c5ebbe198443cc8636ca8cede9032f39ff4cd55ae5",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/MoltenMetalPile.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/MoltenMetalPile.kt",
+    "sourceSha256": "1e432e951909b9edf9c0d286cf64158323e132a0eafc2e9c91baae0bde1fe0ff",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridCablePolicy.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/GridCablePolicy.kt",
+    "sourceSha256": "783cf0da724be98526f5688baa1f1db1753d2faed88a532cd6670a030569d9a7",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/SpanThermalRefresh.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/SpanThermalRefresh.kt",
+    "sourceSha256": "48eac4139bff270c275a94c309aa49807367be1e59332a2a9a380b4ea757d6d5",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/WireSpanThermal.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/WireSpanThermal.kt",
+    "sourceSha256": "897ed9bea8d8d3eb07648050752d4a9dbaf6c6c649b7d96818fbe99c1166a638",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
+    "sourceSha256": "cd3a7e7985f0b10ec4d62cd1185b18214322a739fadf217bb076d9a7a7a11e69",
+    "mode": "native single-core/spool thermal adapter; multicore and wire manufacturing remain pending",
+    "status": "single-core wire checkpoint: 23 focused regressions, 94 native cases and destination suite (458 passed, 3 optional skips) passed; multicore and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/CableConnections.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native multicore color routing across face/voxel/pin topology; automatic tracing through uncolored scalar chains pending",
+    "status": "placed multicore checkpoint: 6 routing regressions, 105 native cases and destination suite (464 passed, 3 optional skips) passed; overhead phase routing and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCables.kt",
+    "sourceSha256": "f642d34a880f713e223187bbc9e4980ccafd262e44a1923034010d7b219a4e3e",
+    "mode": "source multicore manifest ids 2268..2327, mass and palette adapter; overhead phase routing and manufacturing pending",
+    "status": "placed multicore checkpoint: 6 routing regressions, 105 native cases and destination suite (464 passed, 3 optional skips) passed; overhead phase routing and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableElement.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native independent core loads, palette persistence, finite inter-core faults and shared physical heat",
+    "status": "placed multicore checkpoint: 6 routing regressions, 105 native cases and destination suite (464 passed, 3 optional skips) passed; overhead phase routing and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCableRender.kt",
+    "sourceSha256": "e005f8c21f9e9043f98939269b03c509da8a2f5a66d37ea4d24efa6dd4ec47e8",
+    "mode": "native flat geometry/conductor colors, native knuckles and temperature publication",
+    "status": "placed multicore checkpoint: 6 routing regressions, 105 native cases and destination suite (464 passed, 3 optional skips) passed; overhead phase routing and manufacturing pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridLink.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/GridCablePlan.kt",
+    "sourceSha256": "cd3a7e7985f0b10ec4d62cd1185b18214322a739fadf217bb076d9a7a7a11e69",
+    "mode": "native jacket-vs-conductor payment adapter, exact core counts, explicit saved length marker; preserve unmarked source record accounting",
+    "status": "bundle checkpoint: six routing regressions and 110 native server cases passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionKind.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleUnit.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleElement.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityProtection.kt",
+    "target": "src/main/kotlin/mods/eln/utility/RecloserControl.kt",
+    "sourceSha256": "87140dab360e424d8e12ae9ee99a7bb81b7b00b66fc05b96ec4e4ed38e37740e",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleDescriptor.kt",
+    "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionDisplay.kt",
+    "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleRender.kt",
+    "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleScreen.kt",
+    "sourceSha256": "ceba3acf374cd27e6412e40769c829325702fcf37a805fee6c0d04df6748bbca",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityRecipes.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoles.kt",
+    "sourceSha256": "829cb797d9a7e3039c48d31163c2f766ac6f47f903a333bc05b4cd7252a93027",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridPhaseRouting.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/GridPhaseRouting.kt",
+    "sourceSha256": "8a7165979b860b0ca2e79dee58b3c8525679a5bae7ee0291d896bfa9de71258e",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/ServiceCableMount.kt",
+    "target": "src/main/kotlin/mods/eln/gridnode/ServiceCableMount.kt",
+    "sourceSha256": "7cf7a74cb2ea3ddb1a1a7c28dab0b73fe5be611b4f8e6d5b1b30ab76ff8e8461",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleCutoutVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleCutoutVisual.kt",
+    "sourceSha256": "b62420076dda3af38fd230f44efb53c31a20295088e7925d905731ac6f91a7f5",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleLeadVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleLeadVisual.kt",
+    "sourceSha256": "05d8f632a07f7882c378c625fb215e046daceec01575a0dc20b0b26198b9158d",
+    "mode": "native passive distribution adapter: twelve of thirty variants; retain source ids, native LU, menus, rendering and paid fuses; transformer/light/underground and advanced attachments pending",
+    "status": "distribution checkpoint: 15 production circuit tests, 132 native cases and full destination suite (485 passed, 3 optional skips) passed; other variants/attachments pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/MainsStepDown.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleTransformerUnit.kt",
+    "sourceSha256": "fcc1773e932a55bf4a142f325eb13aa86673f52cded44468a29dfbf77cc4fb82",
+    "mode": "fixed-ratio-pole-winding-adapted-to-native-passive-ServiceTap-and-energy-accounted-thermal-load; core-overload-separate-from-actual-primary-fuse",
+    "status": "pole-transformer-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleTransformerShape.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleTransformerShape.kt",
+    "sourceSha256": "0ce6690194e206395a2bfc1541a931f22219eeafbc7c0ff9c57726f21c85ea21",
+    "mode": "source-can-dimensions-and-bushing-coordinates; adaptive-clearance-methods-pending",
+    "status": "pole-transformer-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleTransformerVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleTransformerVisual.kt",
+    "sourceSha256": "6e31b5bd1ff990ff3489e7fa34d1bdb1b9624cc8d5ca24892d66ae7caac9032d",
+    "mode": "source-installed-can-and-bushing-with-native-GL-and-fixed-rack-leads",
+    "status": "pole-transformer-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchPoleTransformerCases.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-paid-core-primary-current-shared-capacity-and-lifecycle-test-fixtures",
+    "status": "pole-transformer-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StreetLightMount.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StreetLightMount.kt",
+    "sourceSha256": "af88af195e4ea87b2b5d56b2e71c41dad584be172d5007e004361ee1d2c4e76f",
+    "mode": "verbatim-source-fixture-placement-math",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightAttachment.kt",
+    "target": "src/main/kotlin/mods/eln/utility/PoleLamp.kt",
+    "sourceSha256": "f2803d10717aa3ddcc984f5bccedcc58f5ad40b60fb2c02409974b3b94b8df57",
+    "mode": "shared-linear-load-for-fixed-legacy-fixtures-and-paid-removable-native-distribution-attachments",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightNetwork.kt",
+    "target": "src/main/kotlin/mods/eln/utility/DistributionPoleScreen.kt",
+    "sourceSha256": "94c2126a27463a21d92f1597b6e5f79e90ad115a0052fdb75a772f2b96ebc6c9",
+    "mode": "native-node-menu-controls-instead-of-an-additional-packet-protocol",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchPoleLampCases.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-world-light-physical-load-and-fused-riser-tests",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightAttachment.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchPoleAttachmentCases.kt",
+    "sourceSha256": "f2803d10717aa3ddcc984f5bccedcc58f5ad40b60fb2c02409974b3b94b8df57",
+    "mode": "native-paid-attachment-inventory-reload-removal-and-break-refund-tests",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/polestreetlightattachment.png",
+    "target": "src/main/resources/assets/eln/textures/item/pole_streetlight_attachment.png",
+    "sourceSha256": "37a7017aa37cd0a233552d3f5e988767279a2840d7f2e30219de7a3c56031b0b",
+    "mode": "verbatim-source-icon-at-native-registry-name",
+    "status": "pole-lamp-and-attachment-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/ServiceSecondary.kt",
+    "target": "src/main/kotlin/mods/eln/utility/WiredServiceSplit.kt",
+    "sourceSha256": "4a35fdfb27fe34957244ba8d4c96a43039c4ca01b82e2d9de253dbab341beaa5",
+    "mode": "extracted-native-passive-wired-service-split-without-converter-probes",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UndergroundCabinetVisual.kt",
+    "target": "src/main/kotlin/mods/eln/utility/UndergroundCabinetVisual.kt",
+    "sourceSha256": "d6e7eb9dfe59b8d83c413c1f7e6df29808b387a3ee46a7468014f052e1aa4667",
+    "mode": "native-GL-non-light-cabinet-adapter",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchUndergroundDistributionCases.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-placed-cabinet-shared-service-fuse-reverse-flow-ports-clearance-and-graphics-tests",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundservicepedestal/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundservicepedestal/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundservicepedestal/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundservicepedestal/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundservicepedestal/undergroundservicepedestal.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundservicepedestal/undergroundservicepedestal.obj",
+    "sourceSha256": "c408367d5f0f3c449c072ec541efbb3b1c31b857b4e9e0b012449438eb353e25",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1/undergroundfused1.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1/undergroundfused1.obj",
+    "sourceSha256": "c408367d5f0f3c449c072ec541efbb3b1c31b857b4e9e0b012449438eb353e25",
+    "mode": "verbatim-source-cabinet-geometry",
+    "status": "underground-distribution-production-circuits-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-retired-three-phase-cabinet-geometry",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-retired-three-phase-cabinet-geometry",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3/undergroundfused3.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3/undergroundfused3.obj",
+    "sourceSha256": "23b050b578813af915a9eea9ddd4debfb6dbc5217091f0e37b73820d28c96bbb",
+    "mode": "verbatim-source-retired-three-phase-cabinet-geometry",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/test/kotlin/mods/eln/utility/ForkPatchLegacyDistributionTest.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-legacy-tap-lamp-and-independent-three-phase-cartridge-regressions",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchLegacyDistributionCases.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "native-legacy-tap-lamp-and-independent-three-phase-cartridge-regressions",
+    "status": "legacy-distribution-full-regressions-native-cases-and-datagen-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/test/kotlin/mods/eln/utility/ForkPatchCombinedPoleTest.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "independent-native-transformer-primary-and-fused-tap-circuit-regressions",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/DistributionPole.kt",
+    "target": "src/test/kotlin/mods/eln/utility/ForkPatchDualLampTest.kt",
+    "sourceSha256": "058179208b335a6a852bfb23b021bd5f724def9064e3907a496fcdc88e1ae6bc",
+    "mode": "selected-service-lamp-power-and-cabinet-fuse-isolation-regressions",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1light/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1light/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1light/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1light/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused1light/undergroundfused1light.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundfused1light/undergroundfused1light.obj",
+    "sourceSha256": "761fd5c777f9cb929722c89e87bdf50549bf3a71e51a9cbca90694092066051b",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3light/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3light/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3light/undergroundfused3light.obj",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3light/undergroundfused3light.obj",
+    "sourceSha256": "8abf1e7aab8a6c083a5fb02b17193c1f718d22f3eb3b9e3b6312e6ea268bca41",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/undergroundfused3light/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/undergroundfused3light/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-cabinet-model",
+    "status": "compiled-reduced-regressions-and-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightDevices.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownUnitElement.kt",
+    "sourceSha256": "df3cab4008a229201f69b92e0a619541a728daf0f25c01130541f072f444d58c",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownDisplay.kt",
+    "sourceSha256": "c418b27eec2db6c8731eddfd851d7dc405f8424d0a2549f6260eda839a0f1760",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownUnitRender.kt",
+    "sourceSha256": "c418b27eec2db6c8731eddfd851d7dc405f8424d0a2549f6260eda839a0f1760",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightDescriptors.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownUnitDescriptor.kt",
+    "sourceSha256": "8be08e72c7006d69a72fb7d384f69a87c78ee91c5f698e7363226153765f7750",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/UtilityLightClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/StepDownScreen.kt",
+    "sourceSha256": "c418b27eec2db6c8731eddfd851d7dc405f8424d0a2549f6260eda839a0f1760",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/MainsStepDown.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/utilitylight/MainsStepDown.kt",
+    "sourceSha256": "fcc1773e932a55bf4a142f325eb13aa86673f52cded44468a29dfbf77cc4fb82",
+    "mode": "native-26.3-standalone-stepdown-adapter-with-existing-conservative-controller",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TwinPoleMigration.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TwinPoleMigration.kt",
+    "sourceSha256": "169deb869c08274033f1d4836088bc9264ae6716a0cb32c4cd1121f2ac386ce5",
+    "mode": "native-NBT-getters-preserve-source-legacy-gates-and-translation",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TwinPoleMigration.kt",
+    "target": "src/test/kotlin/mods/eln/utility/ForkPatchTwinMigrationTest.kt",
+    "sourceSha256": "169deb869c08274033f1d4836088bc9264ae6716a0cb32c4cd1121f2ac386ce5",
+    "mode": "source-legacy-control-translation-and-HV-terminal-rejection-regressions",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/utilitylight/MainsStepDown.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/utilitylight/ForkPatchMainsStepDownTest.kt",
+    "sourceSha256": "fcc1773e932a55bf4a142f325eb13aa86673f52cded44468a29dfbf77cc4fb82",
+    "mode": "native-physical-circuit-and-energy-accounting-regressions",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/PoleAttachmentChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchStepDownCases.kt",
+    "sourceSha256": "fed905219dad6ea0315b05562261e1164531c62dcedc6238995611041ea0cf54",
+    "mode": "native-stepdown-world-placement-publication-and-genuine-legacy-hardware-recovery-cases",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitytwinled/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitytwinled/fixture.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim-source-two-head-fixture",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitytwinled/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitytwinled/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-two-head-fixture",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitytwinled/utilitytwinled.obj",
+    "target": "src/main/resources/assets/eln/model/utilitytwinled/utilitytwinled.obj",
+    "sourceSha256": "06279c03891ceb80a00e3bdfe5c228fc497511c906660dd11ae13822b51581f3",
+    "mode": "verbatim-source-two-head-fixture",
+    "status": "focused-circuits-and-final-source-id-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearUnit.kt",
+    "sourceSha256": "8085ce7bfeccc10ca70e21368d4382289eed591e2493f3292db07ba2fa077c53",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearScreen.kt",
+    "sourceSha256": "30647e57cdca62c4c39d590cd6755d7781476e00202bb6eed1818e45ef32e579",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt",
+    "sourceSha256": "29cf730f28a1d26938f23c4b21ac6e46bfb99ee463d3aefef39af20174e9de01",
+    "mode": "verbatim",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearDescriptor.kt",
+    "sourceSha256": "30647e57cdca62c4c39d590cd6755d7781476e00202bb6eed1818e45ef32e579",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchContact.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchContact.kt",
+    "sourceSha256": "338bc45b746cc01d91520d0a4ca1842c2374677ce3b6525a6733abb8f0cd13db",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearRender.kt",
+    "sourceSha256": "30647e57cdca62c4c39d590cd6755d7781476e00202bb6eed1818e45ef32e579",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearElement.kt",
+    "sourceSha256": "8085ce7bfeccc10ca70e21368d4382289eed591e2493f3292db07ba2fa077c53",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearDisplay.kt",
+    "sourceSha256": "30647e57cdca62c4c39d590cd6755d7781476e00202bb6eed1818e45ef32e579",
+    "mode": "native-independent-contact-circuit-or-menu-render-adapter",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr_three/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr_three/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr_three/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr_three/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr_three/switchgear_ssr_three.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr_three/switchgear_ssr_three.obj",
+    "sourceSha256": "d0814ead87a50c3bcb3aac6dc0a3d9d38e0a3c68064783f1069faae69c3005b4",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor_three/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor_three/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor_three/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor_three/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor_three/switchgear_contactor_three.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor_three/switchgear_contactor_three.obj",
+    "sourceSha256": "d90e7e917edeb40a288fac370cc633cbcb93b8781de43c27f68d42e1d01e0b15",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_two/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_two/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_two/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_two/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_two/switchgear_relay_two.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_two/switchgear_relay_two.obj",
+    "sourceSha256": "c83df8879129073e0fc1721135db2877490985f1f7aed05f4da4ef8a2474b8c5",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_contactor/switchgear_contactor.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_contactor/switchgear_contactor.obj",
+    "sourceSha256": "86b2cbb42f2ba93f4580062a1196016722fb760b1f2cc6b772c6e94edfd740b6",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_ssr/switchgear_ssr.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_ssr/switchgear_ssr.obj",
+    "sourceSha256": "84cb8cec8968250709bb59e2ab60eeaca0e2e3bf6cdb34028190e33bc2ac1968",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_four/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_four/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_four/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_four/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/switchgear_relay_four/switchgear_relay_four.obj",
+    "target": "src/main/resources/assets/eln/model/switchgear_relay_four/switchgear_relay_four.obj",
+    "sourceSha256": "42bdb13753234cd26e37cfee6b96325b3fc6ba10abf7c52348fd9a419db7cca9",
+    "mode": "verbatim-source-switchgear-model",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearElement.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/switchgear/ForkPatchSwitchgearTest.kt",
+    "sourceSha256": "8085ce7bfeccc10ca70e21368d4382289eed591e2493f3292db07ba2fa077c53",
+    "mode": "native-independent-poles-coil-hysteresis-transfer-protection-and-energy-regressions",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/OutdoorExpansionChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchSwitchgearCases.kt",
+    "sourceSha256": "fc2c250bd3425b9273969032629b8a9f1ed0488dd45ad3fcd465b29348ba7603",
+    "mode": "native-switchgear-controls-protection-persistence-and-render-checks",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/VisualRefreshChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchClientFactoryCases.kt",
+    "sourceSha256": "1326c1c0a1f05e879e19d4bdb455876183a7224823d439513933bd1652e32012",
+    "mode": "native-block-entity-publication-and-factory-integration-instead-of-direct-construction",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/java/mods/eln/client/ClientRenders.java",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "explicit-native-client-factories-for-ported-descriptors-no-reflection-fallback",
+    "status": "compiled-default-root-regressions-and-238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/VisualRefreshChecks.kt",
+    "target": "src/main/java/mods/eln/gametest/ForkPatchClientSmokeCase.java",
+    "sourceSha256": "1326c1c0a1f05e879e19d4bdb455876183a7224823d439513933bd1652e32012",
+    "mode": "native-existing-catalog-publication-menu-and-item-contracts",
+    "status": "238-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewables.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableSupply.kt",
+    "sourceSha256": "14a2ee551603c699c5e13d1b1677321308557b686a812a345ccd057ca7aaa1c4",
+    "mode": "native-bounded-renewable-supply-and-environment-lifecycle",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewables.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewableElement.kt",
+    "sourceSha256": "14a2ee551603c699c5e13d1b1677321308557b686a812a345ccd057ca7aaa1c4",
+    "mode": "native-bounded-renewable-supply-and-environment-lifecycle",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewableDescriptor.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "native-large-renewable-geometry-publication-and-culling",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/renewable/RenewableClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/renewable/LargeRenewableRender.kt",
+    "sourceSha256": "947d7d546ee69ad21600851ba877a0671f7b2e7c8fcf6d3a40dcaf4ac095f1ae",
+    "mode": "native-large-renewable-geometry-publication-and-culling",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywind/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitywind/equipment_finish.mtl",
+    "sourceSha256": "8a5dd469738cdb02654df47fe3893b08b8d1a1ba855724c450639286110ce5c3",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywind/renewable.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitywind/renewable.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywind/utilitywind.obj",
+    "target": "src/main/resources/assets/eln/model/utilitywind/utilitywind.obj",
+    "sourceSha256": "d765c71d437ab240e72c29ab74e1686bb89f2fc869d3546f0cdffb105d59a3d9",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywatermill/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitywatermill/equipment_finish.mtl",
+    "sourceSha256": "6c118931b4d200bfc339f7ade870731e762565331e29c7758ae313adebae7bba",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywatermill/renewable.mtl",
+    "target": "src/main/resources/assets/eln/model/utilitywatermill/renewable.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/utilitywatermill/utilitywatermill.obj",
+    "target": "src/main/resources/assets/eln/model/utilitywatermill/utilitywatermill.obj",
+    "sourceSha256": "32f51fbfc85eafa9d0d153c61183ac3f54f467d62d3281ee006319cfb28fbb51",
+    "mode": "verbatim-large-renewable-source-model",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/renewable/RenewableTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/renewable/ForkPatchLargeRenewableTest.kt",
+    "sourceSha256": "af08dfa623194ccbcedbdeaf698b8edc7d38604eefd1287036c0c0000dff17c3",
+    "mode": "native-limits-parallel-convergence-reverse-power-and-environment-regressions",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/RenewableChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchLargeRenewableCases.kt",
+    "sourceSha256": "ad97838a11525986cc3e6519631d12cc3764723587e4b4b1ae7f3e991c377b92",
+    "mode": "native-flowing-water-sky-clearance-rotation-and-packet-tests",
+    "status": "compiled-20-focused-regressions-datagen-and-244-native-cases-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/LoadBankScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-load-bank-adapter",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_load_bank/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_load_bank/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim-load-bank-resource",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_load_bank/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_load_bank/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-load-bank-resource",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_load_bank/industrial_load_bank.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_load_bank/industrial_load_bank.obj",
+    "sourceSha256": "60f42c78febee4d34c9bee11d8b99f43fed3e0db9ca73e3410eb7d3228d728d7",
+    "mode": "verbatim-load-bank-resource",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_industrial_fan.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_industrial_fan.ogg",
+    "sourceSha256": "ff7ef3587c09e622977246d69b419245465041d8fb5e34d6750897f0435f19fe",
+    "mode": "verbatim-load-bank-resource",
+    "status": "9-focused-586-root-15-cad-and-251-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/MotorDriveScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-passive-motor-drive-adapter",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_drive/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_drive/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim-motor-drive-resource",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_drive/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_drive/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-motor-drive-resource",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_drive/industrial_drive.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_drive/industrial_drive.obj",
+    "sourceSha256": "98e52842674f77bf1296c24fcae9e35fecbbd27ab9397116f0f5b1b930d62fbf",
+    "mode": "verbatim-motor-drive-resource",
+    "status": "9-focused-595-full-root-15-cad-and-259-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaLink.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaLink.kt",
+    "sourceSha256": "98d34385db8e3fc7e7838d1bf1a32d2b4f934b4510e02ae724f0ef7a4b4e537e",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ScadaScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-scada-world-local-address-and-guarded-control-adapter",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_scada/industrial_scada.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_scada/industrial_scada.obj",
+    "sourceSha256": "e95a3a8c89ee058e25daa6fcec1421c3be8e0b6d3cb80161ac21dc35bd680a0b",
+    "mode": "verbatim-scada-resource",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_scada/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_scada/equipment_finish.mtl",
+    "sourceSha256": "e9e6c9f0e5d3850a49535ecd82e8b54d690bcd84473caf8fd89b3491375066c2",
+    "mode": "verbatim-scada-resource",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_scada/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_scada/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-scada-resource",
+    "status": "9-focused-604-root-15-cad-and-271-native-checks-passed-fluid20"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleSurgeUpgrade.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeBank.kt",
+    "sourceSha256": "85d4ec8225be6465930db4ae2dbe132cc3f361d5e48c81a3c10a8f9917052e05",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleSurgeUpgrade.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleSurgeUpgrade.kt",
+    "sourceSha256": "85d4ec8225be6465930db4ae2dbe132cc3f361d5e48c81a3c10a8f9917052e05",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeProtection.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeProtection.kt",
+    "sourceSha256": "085e409627a5ab0d2d770b21e5e5edb06a14260ab75b3ca807a2a6e4e433d4d6",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/SurgeArresterScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/PoleArresterVisual.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-surge-physical-budget-paid-kit-and-lightning-adapter",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_arrester/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_arrester/equipment_finish.mtl",
+    "sourceSha256": "3367b69ecb1b613022a25608328f427e97929d9d138f448220a864659dc4c4b4",
+    "mode": "verbatim-surge-resource",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_arrester/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_arrester/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-surge-resource",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_arrester/industrial_arrester.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_arrester/industrial_arrester.obj",
+    "sourceSha256": "73dec011b6f732691415d1714bd8486c3275271035f79914f48981fefdee338b",
+    "mode": "verbatim-surge-resource",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchSurgeTest.kt",
+    "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
+    "mode": "native-surge-circuit-and-source-energy-parity-regressions",
+    "status": "9-focused-613-full-root-15-cad-and-283-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerInventory.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/ChargerScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchChargerTest.kt",
+    "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
+    "mode": "native-workshop-source-parity-regressions",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_charger/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_charger/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_charger/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_charger/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_charger/industrial_charger.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_charger/industrial_charger.obj",
+    "sourceSha256": "d99d36b568d42bea68dcdacad32be42945122dd3f5b3f77da4b486db984ed177",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderUnit.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderElement.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderInventory.kt",
+    "sourceSha256": "1d87210f0be7b87e9e99f3f9607335f953cf1f382456239800bdcf7274b7f01e",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderDescriptor.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderDisplay.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderRender.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WelderScreen.kt",
+    "sourceSha256": "df22010fd26bb3f8bf4cc659d1fbdad38326b1c8a4b3c949341c09b749874fe3",
+    "mode": "native-workshop-accepted-energy-and-inventory-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/industrial/IndustrialDevicesTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/industrial/ForkPatchWelderTest.kt",
+    "sourceSha256": "c9f2bf355b5f87b9ff1fd2a96ec45e1ee5488219c43ec9e88f324b621f89a101",
+    "mode": "native-workshop-source-parity-regressions",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_welder/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_welder/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_welder/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_welder/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_welder/industrial_welder.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_welder/industrial_welder.obj",
+    "sourceSha256": "ffb5d95932e80e924143af40d8ee1eb163eda2c156b0d4131ef03f05f1440fe3",
+    "mode": "verbatim-workshop-model",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/WorkshopParts.kt",
+    "sourceSha256": "1d5a29460c81ad31cecb34c9cd052a914263d6b04d6435c98a5cb0da237bdf89",
+    "mode": "native-source-id-traction-battery-and-welded-frame-adapter",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/weldedmachineframe.png",
+    "target": "src/main/resources/assets/eln/textures/item/welded_machine_frame.png",
+    "sourceSha256": "c1ee5366396853e650c2edf9c23ada737ca9bc246c1f3a361879e94e97329819",
+    "mode": "verbatim-workshop-icon",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/upsindustrialbatterymodule.png",
+    "target": "src/main/resources/assets/eln/textures/item/48_v_20_kwh_traction_battery.png",
+    "sourceSha256": "4dd4428641807673df8b30b2638870881ff599d0c338e4e2e7b7ece70185e0ed",
+    "mode": "native-workshop-existing-ups-icon-reuse",
+    "status": "14-focused-and-300-native-checks-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransport.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransport.kt",
+    "sourceSha256": "3910c848b827d0e52f1132ebaba05b25964f1648a02c178b0565cf014209631a",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransportClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransportModels.kt",
+    "sourceSha256": "61e9a6b3aa97148c24d7479aadf0134034a8f40e0a68a9c64c04722ab99921e4",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/industrial/TransportItem.kt",
+    "sourceSha256": "1d5a29460c81ad31cecb34c9cd052a914263d6b04d6435c98a5cb0da237bdf89",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/ForkliftControls.kt",
+    "target": "src/main/java/mods/eln/transparentnode/industrial/ForkliftControls.java",
+    "sourceSha256": "d38bc293405eb37868339c925f137ad3f73b77fb542899df385a6c2f453c52b6",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransportClient.kt",
+    "target": "src/main/java/mods/eln/client/ForkliftKeys.java",
+    "sourceSha256": "61e9a6b3aa97148c24d7479aadf0134034a8f40e0a68a9c64c04722ab99921e4",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransportClient.kt",
+    "target": "src/main/java/mods/eln/client/entity/IndustrialTransportRenderer.java",
+    "sourceSha256": "61e9a6b3aa97148c24d7479aadf0134034a8f40e0a68a9c64c04722ab99921e4",
+    "mode": "native-26-entity-controls-render-state-and-inventory-adapter",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_forklift/industrial_forklift.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_forklift/industrial_forklift.obj",
+    "sourceSha256": "a492389beb54355073b45e016f3e2efa2a78664a1a1273ad4c740780c02c42d0",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_forklift/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_forklift/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_forklift/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_forklift/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/electricforklift.png",
+    "target": "src/main/resources/assets/eln/textures/item/electric_forklift.png",
+    "sourceSha256": "2782e1114beb130bd9b62cb9b08e9eb1fc59d48ae1b21fc8cebe2b934168ce35",
+    "mode": "verbatim-industrial-transport-icon",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_pallet/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_pallet/equipment_finish.mtl",
+    "sourceSha256": "ca5ffe7c12d8181b1f99db245a8a90a61821bdb8cdbf6a33e2e6efb490e0f458",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_pallet/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrial_pallet/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrial_pallet/industrial_pallet.obj",
+    "target": "src/main/resources/assets/eln/model/industrial_pallet/industrial_pallet.obj",
+    "sourceSha256": "cdf6ce173b53cf7f6d4907d7bd22ec58ca92fb70ba3ce7d5127fa52838e7679b",
+    "mode": "verbatim-industrial-transport-model",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/warehouseequipmentpallet.png",
+    "target": "src/main/resources/assets/eln/textures/item/warehouse_equipment_pallet.png",
+    "sourceSha256": "22edcdc5feb6f8669ed67d159f2010b0e3aa7c4246ea57a3f8e6213bba58de85",
+    "mode": "verbatim-industrial-transport-icon",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialTransport.kt",
+    "target": "src/main/java/mods/eln/gui/PalletMenu.java",
+    "sourceSha256": "3910c848b827d0e52f1132ebaba05b25964f1648a02c178b0565cf014209631a",
+    "mode": "native-server-menu-guard-for-source-transport-inventory",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/IndustrialExpansionChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchTransportCases.kt",
+    "sourceSha256": "0625648fe80f5e06304661947e405ba6ee91f33b84a388cca74e9337e05feb5f",
+    "mode": "native-driving-lifting-cargo-save-and-geometry-regressions",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/industrial/ForkliftControls.kt",
+    "target": "src/test/java/mods/eln/transparentnode/industrial/ForkPatchTransportTest.java",
+    "sourceSha256": "d38bc293405eb37868339c925f137ad3f73b77fb542899df385a6c2f453c52b6",
+    "mode": "native-bounded-payload-and-truncation-regressions",
+    "status": "17-focused-630-full-root-15-cad-and-316-native-checks-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/IndustrialExpansionChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchWorkshopChainCases.kt",
+    "sourceSha256": "0625648fe80f5e06304661947e405ba6ee91f33b84a388cca74e9337e05feb5f",
+    "mode": "native-cross-device-accepted-energy-and-item-ownership-integration",
+    "status": "317-native-port-cases-and-780-of-782-unfiltered-cases-passed-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/solarpanel/SolarRoofMount.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/solarpanel/SolarRoofMount.kt",
+    "sourceSha256": "5f5bb9ebfc91966291fd6400c3774569c480ddd2c4f9c966472f75d9f397110e",
+    "mode": "native-coordinate-and-replicated-ghost-shape-adaptation",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/LoadedBlockStates.kt",
+    "target": "src/main/kotlin/mods/eln/node/LoadedBlockStates.kt",
+    "sourceSha256": "036d949c3c6b7f80d7613fca0b1d56ffb26da4690d1fa315cf226841f4e1f9d0",
+    "mode": "adapted-loaded-only-native-block-state-probes",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/LoadedBlockEntities.kt",
+    "target": "src/main/kotlin/mods/eln/node/LoadedBlockEntities.kt",
+    "sourceSha256": "c6634185de21792c5d7c7a758340dbc5cbe3f1a32f355bfc3c462f92d31f6abe",
+    "mode": "adapted-loaded-only-native-block-entity-probes",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+    "mode": "native-stair-support-placement-and-pitched-footprint-hooks",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelBlock.java",
+    "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+    "mode": "native-cached-replicated-pitched-collision-and-outline-shapes",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelElement.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelElement.java",
+    "sourceSha256": "48d9298d2f5438cf74b3e0fb48b5c734c03b82451e49ac0fb7c3aeba713dad73",
+    "mode": "native-saved-roof-return-terminal-and-bounded-angle-controls",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelRender.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelRender.java",
+    "sourceSha256": "849d33e59d97c917b839362c66bcf13bf5224ef58f5143ca415c92d662719716",
+    "mode": "native-pitched-source-mesh-and-tracker-publication",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-pitched-incidence-and-tracker-axis-with-native-weather",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/solarpanel/SolarRoofMountTest.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/solarpanel/ForkPatchSolarRoofTest.kt",
+    "sourceSha256": "23f83a5fd9722d842a3bbb72a110675960214a3c8d8cb622862d5ffd314e2224",
+    "mode": "adapted-source-roof-mathematics-and-footprint-regressions",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/test/kotlin/mods/eln/transparentnode/solarpanel/SolarRoofMountTest.kt",
+    "target": "src/main/java/mods/eln/gametest/cases/ForkPatchSolarRoofCases.java",
+    "sourceSha256": "23f83a5fd9722d842a3bbb72a110675960214a3c8d8cb622862d5ffd314e2224",
+    "mode": "native-item-placement-save-electrical-publication-and-loaded-only-regressions",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNodeDescriptor.kt",
+    "target": "src/main/java/mods/eln/node/transparent/TransparentNodeDescriptor.java",
+    "sourceSha256": "7bd43942ecc296b31c8c3ebdff8b0301c559155e559eb1b0f5ef55caf8ffb1ff",
+    "mode": "native-identity-default-world-aware-mount-and-footprint-hooks",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNodeItem.kt",
+    "target": "src/main/java/mods/eln/node/transparent/TransparentNodeItem.java",
+    "sourceSha256": "452c8bf175f22f1b2cc1f58c4ee99653ba1760b07374c76f2df3719bbde1c6f5",
+    "mode": "native-item-placement-mount-and-footprint-hooks",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/ghost/GhostBlock.kt",
+    "target": "src/main/java/mods/eln/ghost/GhostBlock.java",
+    "sourceSha256": "7d0eb208e20e4ce984cfefa6dfe1a191d488adc7a4f8b8b0ed322e469fa1b699",
+    "mode": "native-cached-ghost-roof-shapes-without-owner-chunk-lookups",
+    "status": "634-full-root-15-cad-and-335-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/variableinductor/VariableInductor.kt",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-E6-control-core-inventory-preserved-current-and-voxel-render-adapter",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchVariableInductorCases.kt",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-six-face-RL-circuit-LU-cache-menu-publication-and-save-regressions",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/test/kotlin/mods/eln/sixnode/variableinductor/ForkPatchVariableInductorTest.kt",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-source-E6-quantization-and-backward-Euler-RL-regressions",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/batch/Wp9aContent.java",
+    "sourceSha256": "f642d34a880f713e223187bbc9e4980ccafd262e44a1923034010d7b219a4e3e",
+    "mode": "native-free-source-variable-inductor-identity6179-preserving-fixed6178",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-source-variable-inductor-crafting-pattern",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/java/mods/eln/gui/MenuSpecs.java",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-one-core-slot-variable-inductor-server-menu",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/java/mods/eln/client/ClientScreens.java",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-variable-inductor-live-control-and-inductance-screen",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt",
+    "target": "src/main/resources/assets/eln/gui/variable_inductor.json",
+    "sourceSha256": "f4f88e6817ffd033df794c1c39f5a6814c5adc363de0115fe9f3cf8cb874bce9",
+    "mode": "native-one-slot-live-field-layout",
+    "status": "638-full-root-15-cad-and-343-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarRay.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-bounded-voxel-traversal-modern-opacity-and-conservative-heightmap-optimization",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarWorldRay.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-resident-only-per-query-chunk-cache-and-world-surface-probes",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/test/java/mods/eln/transparentnode/solarpanel/ForkPatchSolarRayTest.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-independent-ray-box-parity-and-bounded-shadow-regressions",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelSlowProcess.java",
+    "target": "src/main/java/mods/eln/gametest/cases/ForkPatchSolarSamplingCases.java",
+    "sourceSha256": "769f245407c917d89c70edef028255973a7295d3c19d52745ac6fd7a23876d6c",
+    "mode": "native-96-panel-clear-sky-work-count-and-real-shadow-weather-regressions",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+    "target": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+    "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
+    "mode": "native-finite-light-and-invalid-state-guards-preserving-Norton-and-checked-LU-probes",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelPowerProcess.java",
+    "target": "src/test/java/mods/eln/transparentnode/solarpanel/ForkPatchSolarTest.java",
+    "sourceSha256": "936f0a7f66db57eda7b1257426cfedbebb56f5ebd965fc8873f7a20bd5f6c54d",
+    "mode": "native-invalid-saved-light-loaded-circuit-recovery-and-finite-weather-regressions",
+    "status": "648-full-root-15-cad-and-all344-port-cases-in810-unfiltered-checks-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "target": "src/main/kotlin/mods/eln/transparentnode/solarpanel/SolarGhostShapes.kt",
+    "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+    "mode": "native-cached-flat-half-height-shape-and-resident-only-owned-legacy-upgrade",
+    "status": "648-full-root-15-cad-and350-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java",
+    "target": "src/main/java/mods/eln/gametest/cases/ForkPatchFlatSolarCases.java",
+    "sourceSha256": "9b11d09f5a111d126eced1b0af94854b6bf058c80b39452ffb0ebc225b67b7ff",
+    "mode": "native-four-front-world-collision-scheduled-save-repair-and-owner-guard-regressions",
+    "status": "648-full-root-15-cad-and350-native-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/DcDcControl.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/DcDcControl.kt",
+    "sourceSha256": "bb2377990654292289351a957023f63e6abae0d09755ca2d95bdf26c5b35ae92",
+    "mode": "native-NBT-and-packet-adaptation-of-source-versioned-controls",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/DcDcWinding.kt",
+    "sourceSha256": "d6d09d7d0c31554902ba775f6fb0764b491c1858b076271ef86c289b2c0818d8",
+    "mode": "native-paid-length-cached-physical-winding-and-double-precision-thermal-adapter",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcElement.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-conservative-solver-inventory-protection-and-source-control-adapter",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcDescriptor.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-source-coil-and-casing-model-adapter",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcRender.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-publication-mesh-cable-animation-and-sound-adapter",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/VariableDcDcScreen.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-container-controls-and-live-winding-display",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/process/heater/ElectricalHeatAccumulator.kt",
+    "target": "src/main/kotlin/mods/eln/sim/process/heater/ElectricalHeatAccumulator.kt",
+    "sourceSha256": "40fbbd915d7bc350836911b99881efa1fe9ce7e95192919ed65005b25317cdd1",
+    "mode": "verbatim",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchVariableDcDcCases.kt",
+    "sourceSha256": "e417b45e233391d1371729a00eeb902e94f989ac7d6b9da24808388a5311509b",
+    "mode": "native-placement-reversible-circuit-controls-paid-inventory-heat-and-save-regressions",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/DcDcControl.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/converter/ForkPatchDcDcControlTest.kt",
+    "sourceSha256": "bb2377990654292289351a957023f63e6abae0d09755ca2d95bdf26c5b35ae92",
+    "mode": "native-control-transactions-heat-delivery-and-save-precision-regressions",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/variabledcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/variabledcdc.mtl",
+    "sourceSha256": "27e5f995c0e7bf961c24673584264e50365225918009b57e6be92bf6c38ebe33",
+    "mode": "verbatim",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/variabledcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/variabledcdc.obj",
+    "sourceSha256": "0922cd036e160123efd89e95d17703b411b3013aff6c197598e6a7b5254848a9",
+    "mode": "verbatim",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/variabledcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/variabledcdc.png",
+    "sourceSha256": "9521fcb28980b0e968ba2bfebc486d12cbf391748bc598b5e2f2044dad216f78",
+    "mode": "verbatim",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/variabledc-dcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/variable_dc_dc_converter.png",
+    "sourceSha256": "e4f09e083a3b85377efcb3eda1c8523f8a5665006521d072ee72e810962e7fce",
+    "mode": "verbatim-relocated",
+    "status": "658-full-root-15-cad-and-all361-port-cases-passed-fluid200"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/DcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/FixedDcDcDescriptor.kt",
+    "sourceSha256": "09e41b035695975c938199e19ebd6f2d18598615ed75a62fc10a2cd4f2de5919",
+    "mode": "native-winding-ratio-adapter-and-distinct-source130-name",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/OneWayDcDcDescriptor.kt",
+    "sourceSha256": "c5e065b426aff9c84ddbe78bdf006c8769b7b99497043f899daf699098775b91",
+    "mode": "native-grounded-fixed-boost-buck-and-boostbuck-descriptors",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/converter/OneWayDcDcProcess.kt",
+    "sourceSha256": "c5e065b426aff9c84ddbe78bdf006c8769b7b99497043f899daf699098775b91",
+    "mode": "native-conservative-one-way-policy-with-cached-winding-ratings",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/converter/ForkPatchOneWayMathTest.kt",
+    "sourceSha256": "c5e065b426aff9c84ddbe78bdf006c8769b7b99497043f899daf699098775b91",
+    "mode": "independent-passive-terminal-energy-and-reverse-flow-regressions",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchConverterFamilyCases.kt",
+    "sourceSha256": "c5e065b426aff9c84ddbe78bdf006c8769b7b99497043f899daf699098775b91",
+    "mode": "native-paid-winding-forward-reverse-gain-current-fault-and-V1-upgrade-regressions",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchConverterRecipeCases.kt",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-real-recipe-manager-source-progression-and-preserved128-regressions",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-dictionary-and-distinct130-recipe-mapping-with-restored-variable-ingredients",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/dcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/dcdc.obj",
+    "sourceSha256": "24ade26689d17f057d4fa1a9f42231235e9a44d1aeacbf7b3725f53c94e13a3e",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/dcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/dcdc.mtl",
+    "sourceSha256": "fa1f92323d9e9ef2f4409c3fd89c83b136ab8f4be884b740b2fac98f2008c745",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/dcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/dcdc.png",
+    "sourceSha256": "80e2c62ff6ec94477d33214dc8c74737f5bf4a1cec6b02be490b7538bd4f67d8",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/dc-dcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/winding_dc_dc_converter.png",
+    "sourceSha256": "e65270a627defac552bec64fd97948124d42eac1fe8625614ba310285149d760",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaydcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaydcdc.obj",
+    "sourceSha256": "4fd4e82a282be83e49394dbbc3e4fc703cacfb8f6fd0311d423b6fe6abe0bafd",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaydcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaydcdc.mtl",
+    "sourceSha256": "9b3bd79c6ce4ab1d89f57b4e134ecc6f067261b9c45a6268305838ed595a8bb3",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaydcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaydcdc.png",
+    "sourceSha256": "e258eb8481497f644e907a690aa5e4e8c7ba1c4c9a6fdb4fc743dc875bef88eb",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/onewaydc-dcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/one_way_dc_dc_converter.png",
+    "sourceSha256": "b17baa982f2c842e2a5a6258cf7aa77e5810b476f7caf82627b712c058ba5d13",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.obj",
+    "sourceSha256": "ea3f3ff27c01acb40f161c4c08b773a9ad187963586b165b3f26051b187ae4a6",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.mtl",
+    "sourceSha256": "9f183a0f49db4f3197a5726f0e25ebcdd6bee026aa57d04206233fdb4855047d",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostvdcdc.png",
+    "sourceSha256": "90c8dad6541d5780caaf8d9392df0311e009f0c41d8cbd2b40cdcb2b9d586175",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/onewayboostvdcdcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/one_way_boost_vdc_dc_converter.png",
+    "sourceSha256": "65a8b40aed7235da64ab845dfb7544349e0fdd3258a54b38236a2ca0d49018af",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.obj",
+    "sourceSha256": "616663ee922ec3ca4fdfae5d562f0bc9c0616ac0ea7d20da5180cdacaa54ad24",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.mtl",
+    "sourceSha256": "ec938a848631c09eda239dfdfbe1bcd9fde465a9da4d9005141fc7307d01e64a",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/onewaybuckvdcdc.png",
+    "sourceSha256": "90c8dad6541d5780caaf8d9392df0311e009f0c41d8cbd2b40cdcb2b9d586175",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/onewaybuckvdcdcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/one_way_buck_vdc_dc_converter.png",
+    "sourceSha256": "e76a993199c9ee0a9fd7236e7c21e351f866c5db34723d6337aaf18452c24538",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.obj",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.obj",
+    "sourceSha256": "8756e47fe106c7624def14f7bc8b49de526fa44b98886e993153b25babe7c68c",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.mtl",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.mtl",
+    "sourceSha256": "c82f9f2de5b3a89d5ebf0f0196ae0bc84351e698b1aff4e2021ed4ac0c162d72",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.png",
+    "target": "src/main/resources/assets/eln/model/transformator/onewayboostbuckvdcdc.png",
+    "sourceSha256": "90c8dad6541d5780caaf8d9392df0311e009f0c41d8cbd2b40cdcb2b9d586175",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/onewayboostbuckvdcdcconverter.png",
+    "target": "src/main/resources/assets/eln/textures/item/one_way_boost_buck_vdc_dc_converter.png",
+    "sourceSha256": "761cea622f6fda6f3bea2c809f005ce7aae5a6d823c47b50efcbf75369264cdd",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/item/wiresnips/WireSnipsDescriptor.kt",
+    "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+    "mode": "native-right-click-tool-descriptor",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/item/wiresnips/WireSnipsMenu.kt",
+    "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+    "mode": "native-owned-menu-paid-hot-metadata-and-distinct-cut-ledgers",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+    "target": "src/main/java/mods/eln/client/gui/WireSnipsScreen.java",
+    "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+    "mode": "native-inventory-button-screen-and-safe-text-entry",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchWireSnipsCases.kt",
+    "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+    "mode": "native-item-use-cut-transfer-drop-owner-and-source-crafting-regressions",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/wiresnips.png",
+    "target": "src/main/resources/assets/eln/textures/item/wire_snips.png",
+    "sourceSha256": "c80be2eb2f3c31d3c10c800a7cd88b611fd613ef241079e17b532e4431affcb0",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/ItemRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "43948eeb1735750e82c1c43550fb8c9c47adbd15f866ac7412eb278661455442",
+    "mode": "native-source-wire-snips7873-registration",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-source-iron-rubber-wire-snips-recipe",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineElement.kt",
+    "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
+    "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineDescriptor.kt",
+    "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
+    "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineRender.kt",
+    "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
+    "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineScreen.kt",
+    "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
+    "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineMenus.kt",
+    "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
+    "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/WireProduction.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireProduction.kt",
+    "sourceSha256": "8953841f4c9f518013812f0df1681f4a03b31ef6b5d214600718e5c19c26d05a",
+    "mode": "native-shared-catalog-material-and-variable-length-examples",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/WireProductionRecipes.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireProductionRecipes.kt",
+    "sourceSha256": "e7adb7211da82e5c0ccb2cf10cac9535c48c9d4120154d32a5844a183929b2d4",
+    "mode": "native-shared-catalog-material-and-variable-length-examples",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireMachineItems.kt",
+    "target": "src/main/kotlin/mods/eln/item/wiremachine/WireMachineItems.kt",
+    "sourceSha256": "16a6932a131229db358a6584149bd3be1e77ede29c7f3d2bf72d664ddf3e3d75",
+    "mode": "native-paid-single-stack-bundle-and-source-wheels",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/WireProductionRecipes.kt",
+    "target": "src/main/java/mods/eln/compat/jei/WireMachineCategory.java",
+    "sourceSha256": "e7adb7211da82e5c0ccb2cf10cac9535c48c9d4120154d32a5844a183929b2d4",
+    "mode": "native-optional-jei31-production-category",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchWireMachineCases.kt",
+    "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
+    "mode": "native-circuit-material-thermal-break-place-automation-chain-and-catalog-regressions",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "80adf1eb288efaf29cc41f8e751efc741bf2fa090c20707dee36ede42db1cdeb",
+    "mode": "native-wire-machines4608-through4610-registration",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/ItemRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "43948eeb1735750e82c1c43550fb8c9c47adbd15f866ac7412eb278661455442",
+    "mode": "native-wheels7552-through7554-bundle7556-registration",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-source-wire-machine-and-wheel-bootstrap-recipes",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/fabricator/fabricator.mtl",
+    "target": "src/main/resources/assets/eln/model/fabricator/fabricator.mtl",
+    "sourceSha256": "85c0a9784b2def513aca9a06544af86a0ff4c704c31361f64ad35a23211b4bd3",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/fabricator/pcb_etcher.png",
+    "target": "src/main/resources/assets/eln/model/fabricator/pcb_etcher.png",
+    "sourceSha256": "43edee293623751497a6cfb07d10c9a088bc4992da1ea2c66a52e0aed43fd9b7",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/fabricator/fabricator.obj",
+    "target": "src/main/resources/assets/eln/model/fabricator/fabricator.obj",
+    "sourceSha256": "e586964e5c38f141805234fe9e517418e72e0255304be09d10206ec9c9ee447c",
+    "mode": "verbatim",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/50vplatemachine.png",
+    "target": "src/main/resources/assets/eln/textures/item/wire_roller.png",
+    "sourceSha256": "f82d7d42a3c9247eae2206971f788eb7399204cdc1766368d743b744be631e8f",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/wire_insulator.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/50vmagnetizer.png",
+    "target": "src/main/resources/assets/eln/textures/item/wire_combiner.png",
+    "sourceSha256": "59dd414010bde50e8466eb796020e8d796429ebd88fc346e0e92724ce0deb887",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/ironrollerwheel.png",
+    "target": "src/main/resources/assets/eln/textures/item/iron_roller_wheel.png",
+    "sourceSha256": "93e997ee4b1e37139ff383d3b44c3b23e453a932f60e121f3d033dc88dfc3af4",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/steelrollerwheel.png",
+    "target": "src/main/resources/assets/eln/textures/item/steel_roller_wheel.png",
+    "sourceSha256": "c0fcf3e4c859553f2915c4bb26fd783dfbd6373eab08f56093b4d29a1684fb44",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/aluminumrollerwheel.png",
+    "target": "src/main/resources/assets/eln/textures/item/aluminum_roller_wheel.png",
+    "sourceSha256": "e1f82afad1c78f8bdd5ff55ab89c896057e9d0aa680be60df06889dfd2b1cf56",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/coppercable.png",
+    "target": "src/main/resources/assets/eln/textures/item/wound_wire_bundle.png",
+    "sourceSha256": "e674aa992c60ba70301e043480dd469cd874dff1284d33380abce88a1f949ff0",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
+  }
+]

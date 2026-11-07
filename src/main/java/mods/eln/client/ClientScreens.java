@@ -11,6 +11,24 @@ final class ClientScreens {
     }
 
     static void registerAll() {
+        ElnScreens.register(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,mods.eln.transparentnode.switchgear.SwitchgearScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,mods.eln.transparentnode.utilitylight.StepDownScreen::new);
+        ElnScreens.register(mods.eln.utility.DistributionPoleDescriptor.class,mods.eln.utility.DistributionPoleScreen::new);
+        ElnScreens.register(mods.eln.utility.HouseServiceDescriptor.class, mods.eln.utility.HouseServiceScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.PadTransformerDescriptor.class, mods.eln.transparentnode.industrial.PadTransformerScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.MotorDriveDescriptor.class,mods.eln.transparentnode.industrial.MotorDriveScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.ScadaDescriptor.class,mods.eln.transparentnode.industrial.ScadaScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.SurgeArresterDescriptor.class,mods.eln.transparentnode.industrial.SurgeArresterScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.LoadBankDescriptor.class,mods.eln.transparentnode.industrial.LoadBankScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.WelderDescriptor.class,mods.eln.transparentnode.industrial.WelderScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.ChargerDescriptor.class,mods.eln.transparentnode.industrial.ChargerScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.industrial.IndustrialDescriptor.class, mods.eln.transparentnode.industrial.IndustrialScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.ups.UpsDescriptor.class, mods.eln.transparentnode.ups.UpsScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.standby.BackupDescriptor.class, mods.eln.transparentnode.standby.BackupScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.offgrid.OffGridDescriptor.class, mods.eln.transparentnode.offgrid.OffGridScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.wiremachine.WireMachineDescriptor.class, mods.eln.transparentnode.wiremachine.WireMachineScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, mods.eln.transparentnode.converter.VariableDcDcScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.renewable.RenewableDescriptor.class, mods.eln.transparentnode.renewable.SolarScreen::new);
         // screen layouts (assets/eln/gui/<name>.json)
         layout("transparentnode.electricalfurnace.ElectricalFurnaceDescriptor", "electrical_furnace");
         layout("transparentnode.smelter.SmelterDescriptor", "smelter");
@@ -40,6 +58,7 @@ final class ClientScreens {
         layout("sixnode.powercapacitorsix.PowerCapacitorSixDescriptor", "power_capacitor");
         layout("transparentnode.powercapacitor.PowerCapacitorDescriptor", "power_capacitor");
         layout("sixnode.powerinductorsix.PowerInductorSixDescriptor", "power_inductor");
+        layout("sixnode.variableinductor.VariableInductorDescriptor", "variable_inductor");
         layout("transparentnode.powerinductor.PowerInductorDescriptor", "power_inductor");
         layout("sixnode.electricalwatch.ElectricalWatchDescriptor", "electrical_watch");
         layout("sixnode.electricalentitysensor.ElectricalEntitySensorDescriptor", "entity_sensor");
@@ -150,6 +169,12 @@ final class ClientScreens {
             tr("Inductance: %1$H", Utils.plotValue(((mods.eln.sixnode.powerinductorsix.PowerInductorSixDescriptor) d).getlValue(inv)))));
         info(mods.eln.transparentnode.powerinductor.PowerInductorDescriptor.class, (d, inv) -> java.util.List.of(
             tr("Inductance: %1$H", Utils.plotValue(((mods.eln.transparentnode.powerinductor.PowerInductorDescriptor) d).getlValue(inv)))));
+        ElnScreens.register(mods.eln.sixnode.variableinductor.VariableInductorDescriptor.class, (m, i, t, r) ->
+            new mods.eln.client.gui.InfoScreen(m, i, t, inv -> {
+                var v = r instanceof mods.eln.sixnode.variableinductor.VariableInductorRender live ? live : null;
+                return java.util.List.of(tr("Inductance: %1$H", Utils.plotValue(v == null ? 0 : v.getInductance())),
+                    Utils.plotPercent(tr("Control"), v == null ? 1 : v.getNormalizedControl()));
+            }));
     }
 
     static void info(Class<?> descriptor, java.util.function.BiFunction<Object, net.minecraft.world.Container, java.util.List<String>> lines) {

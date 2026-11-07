@@ -1,4 +1,5 @@
 {
+    "appliance_industrial_fan": {"category": "block", "sounds": [{"name": "eln:appliance_industrial_fan", "stream": false}]},
     "smallalarm_critical": {
         "category": "record",
         "sounds": [
@@ -373,6 +374,65 @@
         "sounds": [
             {
                 "name": "eln:pump_cavitation",
+                "stream": false
+            }
+        ]
+    },
+    "circuit_breaker_close": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "eln:circuit_breaker_close",
+                "stream": false
+            }
+        ]
+    },
+    "circuit_breaker_open": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "eln:circuit_breaker_open",
+                "stream": false
+            }
+        ]
+    },
+    "beep_error": {
+        "category": "player",
+        "sounds": [
+            {
+                "name": "eln:beep_error",
+                "stream": false
+            }
+        ]
+    },
+    "utility_fuse_blow": {
+        "sounds": [
+            {
+                "name": "eln:utility_fuse_blow",
+                "stream": false
+            }
+        ]
+    },
+    "utility_recloser_bump": {
+        "sounds": [
+            {
+                "name": "eln:utility_recloser_bump",
+                "stream": false
+            }
+        ]
+    },
+    "utility_arc_close": {
+        "sounds": [
+            {
+                "name": "eln:utility_arc_close",
+                "stream": false
+            }
+        ]
+    },
+    "utility_arc_open": {
+        "sounds": [
+            {
+                "name": "eln:utility_arc_open",
                 "stream": false
             }
         ]

@@ -50,6 +50,8 @@ public final class ElnNet {
         modBus.addListener(RegisterPayloadHandlersEvent.class, e -> e.registrar(BuildInfo.channelVersion("1")).playBidirectional(Data.TYPE, Data.CODEC,
             (Data d, IPayloadContext ctx) -> serverHandler.accept(d.bytes(), (ServerPlayer) ctx.player()),
             (Data d, IPayloadContext ctx) -> clientHandler.accept(d.bytes()))
+            .playToServer(mods.eln.transparentnode.industrial.ForkliftControls.TYPE, mods.eln.transparentnode.industrial.ForkliftControls.CODEC,
+                (mods.eln.transparentnode.industrial.ForkliftControls input, IPayloadContext ctx) -> mods.eln.transparentnode.industrial.ForkliftControls.handle((ServerPlayer) ctx.player(),input))
             .playToServer(mods.eln.bike.BikeCrash.TYPE, mods.eln.bike.BikeCrash.CODEC,
                 (mods.eln.bike.BikeCrash c, IPayloadContext ctx) -> mods.eln.bike.ElectricBike.onCrash((ServerPlayer) ctx.player(), c.entityId()))
             .playToServer(mods.eln.bike.BikeLamp.TYPE, mods.eln.bike.BikeLamp.CODEC,

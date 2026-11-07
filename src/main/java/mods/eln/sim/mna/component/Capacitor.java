@@ -41,8 +41,9 @@ public class Capacitor extends Bipole implements ISubSystemProcessI {
 
     @Override
     public void simProcessI(SubSystem s) {
-        uPrev = s.getXSafe(aPin) - s.getXSafe(bPin);
-        double add = uPrev * cdt;
+        double previousVoltage = s.getXSafe(aPin) - s.getXSafe(bPin);
+        if (!s.isCheckedProbeActive()) uPrev = previousVoltage;
+        double add = previousVoltage * cdt;
         s.addToI(aPin, add);
         s.addToI(bPin, -add);
     }

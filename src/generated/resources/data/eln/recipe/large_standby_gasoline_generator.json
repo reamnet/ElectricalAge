@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "G": "eln:medium_standby_gasoline_generator",
+    "P": "eln:iron_plate",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "PPP",
+    "GCG",
+    "PRP"
+  ],
+  "result": {
+    "id": "eln:large_standby_gasoline_generator"
+  }
+}

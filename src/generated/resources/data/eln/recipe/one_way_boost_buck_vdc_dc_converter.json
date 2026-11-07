@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "#c:circuits/basic",
+    "D": "eln:signal_diode",
+    "V": "eln:variable_dc_dc_converter"
+  },
+  "pattern": [
+    " B ",
+    "DVD",
+    " B "
+  ],
+  "result": {
+    "id": "eln:one_way_boost_buck_vdc_dc_converter"
+  }
+}

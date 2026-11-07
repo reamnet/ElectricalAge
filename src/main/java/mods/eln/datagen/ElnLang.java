@@ -37,6 +37,12 @@ public class ElnLang extends LanguageProvider {
         add("container.eln.electric_bike", "Bike Trunk");
         add("message.eln.electric_bike.no_battery", "No battery: pedalling only");
         add("message.eln.electric_bike.flat_battery", "The battery is flat: pedalling only");
+        add("entity.eln.electric_forklift","Electric Forklift");
+        add("entity.eln.equipment_pallet","Warehouse Equipment Pallet");
+        add("key.categories.eln.vehicles","Electrical Age vehicles");
+        add("key.eln.forklift.raise","Forklift: raise forks");
+        add("key.eln.forklift.lower","Forklift: lower forks");
+        add("key.eln.forklift.cargo","Forklift: load or unload pallet");
         add("key.eln.wrench", "Wrench (hold: a switch's screen on click; the chisel's brush menu)");
         add("key.eln.headlamp", "Lights on/off (headlamp, flashlights in hand)");
         add("eln.headlamp.none", "No headlamp worn, no flashlight in hand");

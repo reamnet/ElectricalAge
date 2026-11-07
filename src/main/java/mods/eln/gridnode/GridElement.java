@@ -28,79 +28,75 @@ abstract public class GridElement extends TransparentNodeElement {
     /**
      * The last place any given player tried to link two instance nodes.
      */
-    private static HashMap<UUID, Pair<Coordonate, Direction>> pending = new HashMap<UUID, Pair<Coordonate, Direction>>();
-    public HashSet<GridLink> gridLinkList = new HashSet<GridLink>();
-    public HashSet<GridLink> gridLinksBooting = new HashSet<GridLink>();
-    GridDescriptor desc;
-    int connectRange;
+    private record Pending(Coordonate coordinate, int terminal) { }
+    private static final HashMap<UUID, Pending> pending = new HashMap<>();
+    public final HashSet<GridLink> gridLinkList = new HashSet<>();
+    public final HashSet<GridLink> gridLinksBooting = new HashSet<>();
+    protected GridDescriptor desc;
+    public final int connectRange;
     private float idealRenderingAngle;
+    private boolean gridConnecting;
+    private final SpanAmbientSample spanAmbient=new SpanAmbientSample();
+    public double spanAmbientCelsius() { return spanAmbient.sample(coordonate().world().getGameTime(),()->mods.eln.sim.Ambient.relative(coordonate())+20.0); }
 
-    public GridElement(TransparentNode transparentNode, TransparentNodeDescriptor descriptor, int connectRange) {
-        super(transparentNode, descriptor);
-        this.desc = (GridDescriptor) descriptor;
-        this.connectRange = connectRange;
+    public GridElement(TransparentNode node, TransparentNodeDescriptor descriptor, int range) {
+        super(node, descriptor); desc = (GridDescriptor)descriptor; connectRange = range;
     }
+    public boolean gridReady() {
+        var veto = mods.eln.node.NodeBase.simulationVeto;
+        return !node.isDestructing() && !isBurnt() && (node.isAdded() || gridConnecting) && (veto == null || !veto.test(node));
+    }
+    public boolean allowsNewGridLinks() { return true; }
+    public boolean acceptsGridCable(ElectricalCableDescriptor cable) { return GridCablePolicy.accepts(cable); }
+    public boolean acceptsSavedGridTerminal(int terminal) { return !gridLoads(terminal).isEmpty(); }
+    public int selectedGridTerminal(Direction side) { return side.getInt(); }
+    public java.util.List<ElectricalLoad> gridLoads(int terminal) {
+        Direction side=Direction.fromInt(terminal);
+        ElectricalLoad load=side==null?null:getGridElectricalLoad(side);
+        return load==null?java.util.List.of():java.util.List.of(load);
+    }
+    public Integer gridPhase(int terminal) { return null; }
+    public java.util.List<Integer> phaseBusTerminals(int terminal) { return java.util.List.of(terminal); }
+    public String gridCircuitKey(int terminal) { return "LEGACY"; }
+    public int renderWireCount(int terminal) { return 2; }
+    public Vec3 gridCablePoint(int terminal,int wire) { return getCablePoint(Direction.fromInt(terminal),wire); }
+    public Vec3 renderedGridCablePoint(int terminal,int wire) { return gridCablePoint(terminal,wire).yRot((float)Math.toRadians(idealRenderingAngle)); }
 
-    /* Connect one GridNode to another. */
     @Override
-    public boolean onBlockActivated(Player entityPlayer, Direction side, float vx, float vy, float vz) {
-        // Check if user is holding an appropriate tool.
-        final ItemStack stack = entityPlayer.getMainHandItem();
-        final GenericItemBlockUsingDamageDescriptor itemDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stack);
-        if (itemDesc instanceof ElectricalCableDescriptor) {
-            return onTryGridConnect(entityPlayer, stack, (ElectricalCableDescriptor) itemDesc, side);
+    public boolean onBlockActivated(Player player, Direction side, float x, float y, float z) {
+        ItemStack stack=player.getMainHandItem();
+        var item=GenericItemBlockUsingDamageDescriptor.getDescriptor(stack);
+        if (!(item instanceof ElectricalCableDescriptor cable)) return false;
+        UUID id=player.getUUID();
+        int terminal=selectedGridTerminal(side);
+        if (!allowsNewGridLinks() || !acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || !GridCablePlan.acceptsChannels(cable,gridLoads(terminal).size())) {
+            Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Select an overhead grid terminal and intact power cable"));pending.remove(id);return true;
         }
-        // TODO: Scissors. Break the connection without breaking the pole.
-        return false;
-    }
-
-    private boolean onTryGridConnect(Player entityPlayer, ItemStack stack, ElectricalCableDescriptor cable, Direction side) {
-        // First node, or second node?
-        UUID uuid = entityPlayer.getUUID();
-        Pair<Coordonate, Direction> p = pending.get(uuid);
-        GridElement other = null;
-        if (p != null) {
-            other = GridLink.getElementFromCoordinate(p.getLeft());
+        var first=pending.get(id);
+        GridElement other=first==null?null:GridLink.getElementFromCoordinate(first.coordinate());
+        if (other==this) { pending.remove(id);Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Cancelled connection"));return true; }
+        if (other==null) {
+            pending.put(id,new Pending(coordonate(),terminal));Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Setting starting point"));return true;
         }
-        // Check if it's the *correct* cable descriptor.
-        if (!cable.equals(desc.cableDescriptor)) {
-            Utils.sendMessage(entityPlayer, "Wrong cable, you need " + desc.cableDescriptor.name);
-            return true;
-        }
-        if (other == null || other == this) {
-            Utils.sendMessage(entityPlayer, "Setting starting point");
-            pending.put(uuid, Pair.of(this.coordonate(), side));
-        } else {
-            final double distance = other.coordonate().trueDistanceTo(this.coordonate());
-            final int cableLength = (int) Math.ceil(distance);
-            final int range = Math.min(connectRange, other.connectRange);
-            if (stack.getCount() < distance) {
-                Utils.sendMessage(entityPlayer, "You need " + cableLength + " units of cable");
-            } else if (distance > range) {
-                Utils.sendMessage(entityPlayer, "Cannot connect, range " + Math.ceil(distance) + " and limit " + range + " blocks");
-            } else if (!this.canConnect(other)) {
-                Utils.sendMessage(entityPlayer, "Cannot connect these two objects");
-            } else if (!this.validLOS(other)) {
-                Utils.sendMessage(entityPlayer, "Cannot connect, no line of sight");
-            } else {
-                if (GridLink.addLink(this, other, side, p.getRight(), cable, cableLength)) {
-                    Utils.sendMessage(entityPlayer, "Added connection");
-                    stack.split(cableLength);
-                } else {
-                    Utils.sendMessage(entityPlayer, "Already connected");
-                }
-            }
-            pending.remove(uuid);
-        }
+        pending.remove(id);
+        int length=GridCablePlan.requiredUnits(cable,(int)Math.ceil(other.coordonate().trueDistanceTo(coordonate())),gridLoads(terminal).size());
+        var utility=cable instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire?wire:null;
+        boolean enough=utility==null?stack.getCount()>=length:stack.getCount()==1 && (player.isCreative() || utility.getRemainingLengthMeters(stack)+1e-6>=length);
+        if (!enough) { Utils.sendMessage(player,mods.eln.i18n.I18N.tr("You need %1$ units of cable",length));return true; }
+        try {
+            if (!canConnect(other) || !validLOS(other)) throw new IllegalArgumentException(mods.eln.i18n.I18N.tr("Cannot connect these two objects"));
+            ItemStack paid=utility==null?stack.copyWithCount(length):utility.segment(stack,(double)length);
+            if (GridLink.addLink(other,this,first.terminal(),terminal,cable,length,paid)) {
+                if(utility==null)stack.shrink(length);else if(!player.isCreative())utility.consume(stack,(double)length);player.getInventory().setChanged();Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Added connection"));
+            } else Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Already connected"));
+        } catch (IllegalArgumentException ex) { Utils.sendMessage(player,ex.getMessage()); }
         return true;
     }
 
     @Override
     public void initialize() {
         connect();
-        for (GridLink link : gridLinksBooting) {
-            link.connect();
-        }
+        for (GridLink link : new HashSet<>(gridLinksBooting)) link.connect();
         gridLinksBooting.clear();
         updateIdealRenderAngle();
     }
@@ -108,17 +104,16 @@ abstract public class GridElement extends TransparentNodeElement {
     @Override
     public void connectJob() {
         super.connectJob();
-        for (GridLink link : gridLinkList) {
-            link.connect();
-        }
+        gridConnecting=true;
+        try { for (GridLink link : new HashSet<>(gridLinkList)) link.connect(); }
+        finally { gridConnecting=false; }
     }
 
     @Override
     public void disconnectJob() {
+        // Spans must leave before either endpoint's electrical states do.
+        for (GridLink link : new HashSet<>(gridLinkList)) link.disconnect();
         super.disconnectJob();
-        for (GridLink link : gridLinkList) {
-            link.disconnect();
-        }
     }
 
     @Override
@@ -145,7 +140,7 @@ abstract public class GridElement extends TransparentNodeElement {
 
         Integer i = 0;
         CompoundTag gridLinks = Utils.newNbtTagCompund(nbt, "gridLinks");
-        for (GridLink link : gridLinkList) {
+        for (GridLink link : gridLinkList.stream().sorted(java.util.Comparator.comparing(link -> { var tag=new CompoundTag();link.writeToNBT(tag, "");return tag.toString(); })).toList()) {
             link.writeToNBT(Utils.newNbtTagCompund(gridLinks, i.toString()), "");
             i++;
         }
@@ -215,7 +210,7 @@ abstract public class GridElement extends TransparentNodeElement {
                 if (vec.z < 0)
                     vec = vec.negate();
                 double h = Math.sqrt(vec.x * vec.x + vec.z * vec.z);
-                angles[i++] = Math.acos(vec.x / h);
+                if (h > 1e-9) angles[i++] = Math.acos(vec.x / h);
             }
             // This could probably be optimised with a bit of math, but w.e.
             double optAngle = 0;
@@ -246,7 +241,7 @@ abstract public class GridElement extends TransparentNodeElement {
             // Check for which ones it's this one.
             ArrayList<GridLink> ourLinks = new ArrayList<GridLink>();
             for (GridLink link : gridLinkList) {
-                if (link.a.equals(coordonate())/* && link.connected*/) {
+                if (link.a.equals(coordonate()) && link.getOtherElement(this)!=null) {
                     ourLinks.add(link);
                 }
             }
@@ -259,17 +254,14 @@ abstract public class GridElement extends TransparentNodeElement {
             stream.writeInt(ourLinks.size());
             for (GridLink link : ourLinks) {
                 GridElement target = link.getOtherElement(this);
-                Direction ourSide = link.getSide(this);
-                Direction theirSide = link.getSide(target);
-                // It's always the "a" side doing this.
-                Coordonate offset = link.b.subtract(link.a);
-                for (int i = 0; i < 2; i++) {
-                    // 1.12: Vec3 is immutable (1.7.10 rotateAroundY rotated in place; rotateYaw is the same rotation)
-                    final Vec3 start = getCablePoint(ourSide, i).yRot((float) Math.toRadians(idealRenderingAngle));
-                    Vec3 end = target.getCablePoint(theirSide, i).yRot((float) Math.toRadians(target.idealRenderingAngle));
-                    end = end.add(offset.x, offset.y, offset.z);
-                    writeVec(stream, start);
-                    writeVec(stream, end);
+                int terminal=link.getTerminal(this), remote=link.getTerminal(target);
+                int count=renderWireCount(terminal);
+                stream.writeInt(count);
+                Coordonate offset=link.b.subtract(link.a);
+                for (int i=0;i<count;i++) {
+                    Vec3 start=renderedGridCablePoint(terminal,i);
+                    Vec3 end=target.renderedGridCablePoint(remote,i).add(offset.x,offset.y,offset.z);
+                    writeVec(stream,start);writeVec(stream,end);
                 }
             }
         } catch (IOException e) {

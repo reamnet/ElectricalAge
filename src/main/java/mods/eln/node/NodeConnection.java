@@ -12,6 +12,8 @@ public class NodeConnection {
     LRDU lrdu1, lrdu2;
     ElectricalConnection EC;
     ThermalConnection TC;
+    private final java.util.List<ElectricalConnection> extra = new java.util.ArrayList<>();
+    public void addElectricalConnection(ElectricalConnection connection) { extra.add(connection); }
 
     /** The node at the other end from n. */
     public NodeBase other(NodeBase n) {
@@ -32,6 +34,8 @@ public class NodeConnection {
 
     public void destroy() {
         Eln.simulator.removeElectricalComponent(EC);
+        for (var e : extra) Eln.simulator.removeElectricalComponent(e);
+        extra.clear();
         Eln.simulator.removeThermalConnection(TC);
 
         if (N1 != null) N1.externalDisconnect(dir1, lrdu1);

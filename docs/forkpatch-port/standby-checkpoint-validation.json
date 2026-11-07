@@ -1,0 +1,42 @@
+{
+  "tests": 378,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 375,
+  "suites": 85,
+  "portCommit": "1ae27b39",
+  "scope": "All destination tests after standby generator and ATS integration",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "standbyCircuitTests": 19,
+  "datagenReport": "standby-datagen.json",
+  "skippedCases": [
+    {
+      "name": "safetyValveAndSensor()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "junctionsAndAdapters()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "bikes()",
+      "classname": "mods.eln.client.entity.BikePreviewTest",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    }
+  ],
+  "limits": [
+    "Default 200-case fluid corpus not run.",
+    "Interactive client GPU/audio validation not performed.",
+    "The source mixed-voltage pole feeder case depends on utility equipment not ported yet."
+  ],
+  "nativeTests": 31,
+  "nativeStandbyTests": 10,
+  "nativePassed": true,
+  "nativeReport": "standby-native-tests.json",
+  "nativeCommit": "2aa9d313"
+}

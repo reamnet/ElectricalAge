@@ -1,0 +1,55 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Registered variable DC/DC converter129, source controls/windings and preserved native converter128.",
+  "root": {
+    "suites": 119,
+    "tests": 661,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "focusedUnitTests": 10,
+  "native": {
+    "selected": 361,
+    "passed": 361,
+    "failed": 0,
+    "skipped": 0,
+    "converterCases": 11,
+    "filter": "eln:forkpatch_*",
+    "report": "/tmp/eln26-session4-converter-port2.xml",
+    "log": "session4-converter-port2.log"
+  },
+  "catalog": {
+    "identities": 639,
+    "englishEntries": 938,
+    "previousIdentitiesChanged": [],
+    "previousEnglishEntriesChanged": []
+  },
+  "commands": [
+    "./gradlew --no-daemon --max-workers=2 :test cad:test runClientData",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_* --report REPORT.xml --universe NEW_WORLD'"
+  ],
+  "coverage": [
+    "Four actual placement fronts and loaded forward/reverse transfer with conserved internal power",
+    "Stable controls/winding properties retain native LU factors",
+    "Real zero-voltage and disabled steps, automatic recovery and malformed packet rejection",
+    "V1 historical mapping/matched windings, explicit disabled V2 upgrade, heterogeneous wires",
+    "Paid fractional metre spools and legacy stack count, hot full/split extraction",
+    "Real native owner reload and older saves lacking item temperature metadata",
+    "Optional casing, actual server menu, real client publication/factory and source mesh",
+    "Deferred damaged-jacket and bare-metal scrap replacements preserve paid metres, heat and metal mass"
+  ],
+  "limitations": [
+    "Remaining fixed/one-way/isolation variants and full source-world conversion are separate work.",
+    "Unfiltered historical goldens remain pending; this checkpoint reruns all361 port cases.",
+    "No interactive GPU/audio/multiplayer or representative loaded-world CPU comparison claim."
+  ]
+}

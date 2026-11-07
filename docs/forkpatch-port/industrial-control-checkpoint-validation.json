@@ -1,0 +1,23 @@
+{
+  "tests": 406,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 403,
+  "suites": 88,
+  "portCommit": "c5549d4c",
+  "scope": "All destination tests after protective relay and priority shedding integration",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "industrialCircuitTests": 12,
+  "nativeTests": 46,
+  "nativeIndustrialCases": 6,
+  "nativeReport": "industrial-control-native-tests.json",
+  "datagenReport": "industrial-control-datagen.json",
+  "limits": [
+    "Default 200-case fluid corpus not run.",
+    "Interactive client GPU/audio validation not performed.",
+    "Only relay and shedder industrial cabinets are implemented; seven other industrial devices await their production adapters."
+  ]
+}

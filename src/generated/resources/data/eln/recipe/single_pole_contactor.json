@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:cheap_ferromagnetic_core",
+    "I": "eln:iron_plate",
+    "P": "minecraft:iron_nugget",
+    "R": "eln:low_voltage_relay",
+    "W": "eln:copper_cable"
+  },
+  "pattern": [
+    " C ",
+    "PRP",
+    "IWI"
+  ],
+  "result": {
+    "id": "eln:single_pole_contactor"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "itemDefinitions": 7,
+  "itemModels": 13,
+  "blockstates": 6,
+  "recipes": 2,
+  "advancements": 2,
+  "newEnglishKeys": 13,
+  "existingIdentitiesRetained": 601,
+  "totalIdentities": 608,
+  "hiddenLegacyPoleVariants": 5,
+  "activePoleVariants": 15,
+  "paidAttachmentItems": 1,
+  "inventoryIcons": 7,
+  "passed": true,
+  "task": "runClientData",
+  "limits": [
+    "Paid streetlight attachments currently support the adapted distribution poles. Legacy ElectricalPole/Transmission attachment adapters remain pending.",
+    "Five hidden source built-in lamp variants are retained for older worlds and deliberately have no new crafting recipes.",
+    "Adaptive service-rack alignment, remaining ten source pole variants, source-world migration and interactive GPU validation remain pending."
+  ]
+}

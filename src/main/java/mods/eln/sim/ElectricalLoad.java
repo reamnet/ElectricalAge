@@ -47,6 +47,15 @@ public class ElectricalLoad extends VoltageStateLineReady {
         return i * 0.5;
     }
 
+    /** Actual endpoint I-squared-R, including unequal branches at junctions. */
+    public double getSerialPower() {
+        double watts=0;
+        for (Component c:getConnectedComponents()) if (c instanceof ElectricalConnection connection) {
+            double current=connection.getCurrent();watts+=current*current*Rs;
+        }
+        return watts;
+    }
+
     public double getCurrent() {
         return getI();
     }

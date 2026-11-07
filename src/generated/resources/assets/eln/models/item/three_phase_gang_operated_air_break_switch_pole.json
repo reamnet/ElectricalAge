@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eln:item/three_phase_gang_operated_air_break_switch_pole"
+  }
+}

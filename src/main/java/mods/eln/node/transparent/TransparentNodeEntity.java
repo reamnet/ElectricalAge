@@ -25,6 +25,14 @@ public class TransparentNodeEntity extends NodeBlockEntity {
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+        if (level instanceof net.minecraft.server.level.ServerLevel world
+            && getBlockState().getBlock() instanceof mods.eln.transparentnode.solarpanel.SolarPanelBlock solar
+            && solar.hasFlatReservations()) world.scheduleTick(worldPosition, solar, 1);
+    }
+
+    @Override
     public String getNodeUuid() {
         return "t";
     }

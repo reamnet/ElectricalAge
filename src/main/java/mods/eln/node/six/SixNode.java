@@ -633,17 +633,11 @@ public class SixNode extends Node {
             lrduElementMask.set(otherSide, otherLRDU, true);
             // A burnt element keeps its (visual) connection but carries nothing.
             if (element.isBurnt() || otherElement.isBurnt()) return;
-            ElectricalLoad eLoad;
-            if ((eLoad = element.getElectricalLoad(lrdu)) != null) {
-                ElectricalLoad otherELoad = otherElement.getElectricalLoad(otherLRDU);
-                if (otherELoad != null) {
-                    ElectricalConnection eCon;
-                    eCon = new ElectricalConnection(eLoad, otherELoad);
-
-                    Eln.simulator.addElectricalComponent(eCon);
-
-                    internalElectricalConnectionList.add(eCon);
-                }
+            for (var connection : mods.eln.sixnode.electricalcable.CableConnections.create(
+                    element.getElectricalLoad(lrdu), element.getConnectionMask(lrdu),
+                    otherElement.getElectricalLoad(otherLRDU), otherElement.getConnectionMask(otherLRDU))) {
+                Eln.simulator.addElectricalComponent(connection);
+                internalElectricalConnectionList.add(connection);
             }
             // (1.12 took this.getThermalLoad(side, lrdu), which is the other element's load, and the element's load toward
             // otherLRDU, an edge name of the other face: on most corners that was nothing, and the heat never crossed)

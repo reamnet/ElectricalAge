@@ -1,0 +1,23 @@
+{
+  "tests": 418,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 415,
+  "suites": 89,
+  "portCommit": "a0e3a0ba",
+  "scope": "All destination tests after passive pad transformer and primary protection integration",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "padCircuitTests": 12,
+  "nativeTests": 52,
+  "nativePadCases": 6,
+  "nativeReport": "pad-native-tests.json",
+  "datagenReport": "pad-datagen.json",
+  "limits": [
+    "Default 200-case fluid corpus not run.",
+    "Interactive client GPU/audio validation not performed.",
+    "The remaining utility distribution equipment, legacy Mains Step-down fallback and six other industrial devices await production adapters."
+  ]
+}

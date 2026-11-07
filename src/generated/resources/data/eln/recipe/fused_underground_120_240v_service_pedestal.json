@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:120_240v_service_weatherhead",
+    "eln:pole_fuse_link",
+    "eln:copper_cable",
+    "eln:copper_cable",
+    "eln:iron_plate",
+    "eln:iron_plate",
+    "eln:iron_plate",
+    "eln:iron_plate",
+    "eln:iron_plate"
+  ],
+  "result": {
+    "id": "eln:fused_underground_120_240v_service_pedestal"
+  }
+}

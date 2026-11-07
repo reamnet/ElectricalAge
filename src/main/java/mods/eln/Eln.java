@@ -310,6 +310,7 @@ public class Eln {
         NeoForge.EVENT_BUS.addListener(ServerTickEvent.Post.class, e -> mods.eln.node.NodeOrphans.tick(e.getServer()));
         // X-ray scanner: ore blocks per material come from tags
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.TagsUpdatedEvent.class, e -> mods.eln.item.xray.XRayFilter.invalidate());
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent.class, mods.eln.transparentnode.industrial.SurgeProtection::lightning);
         serverEventListener = new mods.eln.server.ServerEventListener();
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent.class,
             mods.eln.item.electricalitem.ElectricalArmor::onIncomingDamage);

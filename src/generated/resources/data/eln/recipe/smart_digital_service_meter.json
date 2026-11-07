@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:analog_glass_service_meter",
+    "minecraft:comparator",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "id": "eln:smart_digital_service_meter"
+  }
+}
