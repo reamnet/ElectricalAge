@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 /** Variable length examples; the displayed ingot surplus remains in the real machine's paid buffer. */
 public class WireMachineCategory extends AbstractRecipeCategory<WireProductionRecipes.Step> {
     public WireMachineCategory(IGuiHelper gui, IRecipeType<WireProductionRecipes.Step> type, WireMachineKind kind) {
-        super(type, Component.literal(kind.getTitle()), gui.createDrawableItemStack(Eln.findItemStack(kind.getTitle(), 1)), 184, 102);
+        super(type, Component.literal(kind.getTitle()), gui.createDrawableItemStack(Eln.findItemStack(kind.getTitle(), 1)), 184, 128);
     }
     @Override public void setRecipe(IRecipeLayoutBuilder b, WireProductionRecipes.Step r, IFocusGroup focuses) {
         for (int i = 0; i < r.getInputs().size(); i++)
@@ -24,9 +24,9 @@ public class WireMachineCategory extends AbstractRecipeCategory<WireProductionRe
             b.addSlot(mezz.jei.api.recipe.RecipeIngredientRole.CRAFTING_STATION, 2 + 20 * i, 48).setStandardSlotBackground().add(r.getCatalysts().get(i).copy());
     }
     @Override public void createRecipeExtras(IRecipeExtrasBuilder b, WireProductionRecipes.Step r, IFocusGroup focuses) {
-        b.addRecipeArrow().setPosition(112, 12);
+        b.addRecipeArrowWidget().setPosition(112, 12);
         b.addText(Component.literal("32 m  /  " + mods.eln.misc.Utils.plotEnergy("", r.getEnergyJoules()).trim()), 184, 12).setPosition(0, 72);
         if (r.getMetalKg() > 0)
-            b.addText(Component.literal(String.format(java.util.Locale.ROOT, "Metal: %.4f kg; surplus retained", r.getMetalKg())), 184, 12).setPosition(0, 88);
+            b.addText(Component.literal(String.format(java.util.Locale.ROOT, "Metal: %.4f kg\nLoad in batches; surplus retained", r.getMetalKg())), 184, 38).setPosition(0, 88);
     }
 }

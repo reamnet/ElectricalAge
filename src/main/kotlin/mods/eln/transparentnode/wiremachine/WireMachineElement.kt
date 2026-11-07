@@ -39,6 +39,8 @@ class WireMachineElement(node:TransparentNode,d:TransparentNodeDescriptor):Trans
     private var layerCost=1.0
     private var internalChange=false
     private var optionsDirty=true
+    private var targetDirty=true
+    private var targetCache=0.0
     private var optionsCache=emptyList<UtilityCableDescriptor>()
     private var itemBuffersRead=false
     private var breakHandled=false
@@ -70,7 +72,7 @@ class WireMachineElement(node:TransparentNode,d:TransparentNodeDescriptor):Trans
     override fun thermoMeterString(side:Direction)=""
     override fun initialize() { itemBuffersRead=true;prepare();connect() }
     override fun inventoryChange(inventory:Container?) {
-        optionsDirty=true
+        optionsDirty=true;targetDirty=true
         if(!internalChange) { progressMeters=0.0;progressTargetMeters=target();running=false;active=null;resistor.highImpedance() }
         needPublish()
     }
@@ -85,10 +87,17 @@ class WireMachineElement(node:TransparentNode,d:TransparentNodeDescriptor):Trans
         return optionsCache
     }
     private fun inputs()=WireProduction.combinerInputs.map { items.getItem(it) }.filterNot { it.isEmpty }
-    private fun target():Double=when(kind) {
-        WireMachineKind.ROLLER->targetLengthMeters.toDouble()
-        WireMachineKind.INSULATOR->items.getItem(0).let { WireProduction.cable(it)?.getRemainingLengthMeters(it) ?: if(WireProduction.bundle.valid(it))WireProduction.bundle.getLengthMeters(it) else 0.0 }
-        WireMachineKind.COMBINER->inputs().takeIf { it.size>=2 }?.minOf { WireProduction.cable(it)?.getRemainingLengthMeters(it) ?: 0.0 } ?: 0.0
+    /** Inventory callbacks invalidate both the options and paid-length snapshot. */
+    private fun target():Double {
+        if(targetDirty) {
+            targetCache=when(kind) {
+                WireMachineKind.ROLLER->targetLengthMeters.toDouble()
+                WireMachineKind.INSULATOR->items.getItem(0).let { WireProduction.cable(it)?.getRemainingLengthMeters(it) ?: if(WireProduction.bundle.valid(it))WireProduction.bundle.getLengthMeters(it) else 0.0 }
+                WireMachineKind.COMBINER->inputs().takeIf { it.size>=2 }?.minOf { WireProduction.cable(it)?.getRemainingLengthMeters(it) ?: 0.0 } ?: 0.0
+            }
+            targetDirty=false
+        }
+        return targetCache
     }
     private inline fun mutate(block:()->Unit) { internalChange=true;try { block() }finally { internalChange=false } }
     /** Only readiness/material mutation runs here; physical work advances after accepted electrical steps. */
@@ -116,7 +125,7 @@ class WireMachineElement(node:TransparentNode,d:TransparentNodeDescriptor):Trans
                         if(WireProduction.rubber(rubber)) { insulationMetersBuffer+=rubber.count*WireProduction.RUBBER_METERS;items.setItem(1,ItemStack.EMPTY);needPublish() }
                         ready=insulationMetersBuffer>=length*WireProduction.insulationCostFactor(selected)
                     }
-                    WireMachineKind.COMBINER->{ ready=inputs().size==selected.conductorCount }
+                    WireMachineKind.COMBINER->{ /* Cached options already validate every participating core. */ }
                 }
             }
         }
@@ -173,7 +182,7 @@ class WireMachineElement(node:TransparentNode,d:TransparentNodeDescriptor):Trans
         selectedOption=tag.getIntOr("selectedOption",0).coerceAtLeast(0);targetLengthMeters=tag.getIntOr("targetLengthMeters",32).coerceIn(1,WireProduction.MAX_LENGTH)
         if(tag.contains("wireBuffers"))readBuffers(tag.getCompoundOrEmpty("wireBuffers"))
         itemBuffersRead=true
-        progressMeters=0.0;progressTargetMeters=0.0;optionsDirty=true
+        progressMeters=0.0;progressTargetMeters=0.0;optionsDirty=true;targetDirty=true
     }
     override fun getDropItemStack():ItemStack=paidDrop?.also { paidDrop=null } ?: super.getDropItemStack()
     override fun onBreakElement() {
@@ -196,7 +205,7 @@ class WireMachineElement(node:TransparentNode,d:TransparentNodeDescriptor):Trans
     override fun readFromNBT(tag:CompoundTag) {
         super.readFromNBT(tag);itemBuffersRead=true;selectedOption=tag.getIntOr("selectedOption",0).coerceAtLeast(0);targetLengthMeters=tag.getIntOr("targetLengthMeters",32).coerceIn(1,WireProduction.MAX_LENGTH)
         progressMeters=positive(tag,"progressMeters");progressTargetMeters=positive(tag,"progressTargetMeters");readBuffers(tag)
-        acceptedJoules=positive(tag,"wireMachineAcceptedJoules");usefulJoules=positive(tag,"wireMachineUsefulJoules");completedJoules=positive(tag,"wireMachineCompletedJoules");optionsDirty=true
+        acceptedJoules=positive(tag,"wireMachineAcceptedJoules");usefulJoules=positive(tag,"wireMachineUsefulJoules");completedJoules=positive(tag,"wireMachineCompletedJoules");optionsDirty=true;targetDirty=true
     }
     override fun writeToNBT(tag:CompoundTag) {
         super.writeToNBT(tag);tag.putInt("selectedOption",selectedOption);tag.putInt("targetLengthMeters",targetLengthMeters)
@@ -218,7 +227,10 @@ class WireMachineElement(node:TransparentNode,d:TransparentNodeDescriptor):Trans
     fun readConfigTool(tag:CompoundTag,player:Player) {
         if(!tag.contains("targetLengthMeters"))return
         val value=tag.getIntOr("targetLengthMeters",32);if(value !in 1..WireProduction.MAX_LENGTH)return
-        selectedOption=tag.getIntOr("selectedOption",0).coerceAtLeast(0);targetLengthMeters=value;inventoryChange(items)
+        val choice=tag.getIntOr("selectedOption",0).coerceIn(0,max(0,options().lastIndex))
+        val length=if(kind==WireMachineKind.ROLLER)value else targetLengthMeters
+        if(choice==selectedOption && length==targetLengthMeters)return
+        selectedOption=choice;targetLengthMeters=length;inventoryChange(items)
     }
     override fun networkSerialize(stream:DataOutputStream) {
         super.networkSerialize(stream);stream.writeInt(selectedOption);stream.writeInt(targetLengthMeters)

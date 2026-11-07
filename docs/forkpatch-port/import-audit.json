@@ -1,6 +1,6 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "6905d1178c4049eeb207f6b6019ae4be32ffffe6",
+  "targetCommit": "b7971f4b3d3ccbfee19efce3ed4be202bbad73fc",
   "ledgerEntries": 415,
   "uniqueSourceFiles": 256,
   "uniqueTargetFiles": 399,
@@ -4327,7 +4327,7 @@
       "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineElement.kt",
       "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
       "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
-      "targetSha256": "ae18f7706d3c645038aa4283692fd8f6197c873237bb8ee3f14d01dad0af41cc",
+      "targetSha256": "2d28ddb75190bbc7a515e302f1d59dc1496a13402b09f4a29577c7cdffa004cf",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4393,7 +4393,7 @@
       "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireProductionRecipes.kt",
       "mode": "native-shared-catalog-material-and-variable-length-examples",
       "sourceSha256": "e7adb7211da82e5c0ccb2cf10cac9535c48c9d4120154d32a5844a183929b2d4",
-      "targetSha256": "6473776aca860cb1ecbd2b63a1a3805afa4dad58d4a27ac7a4ef667ce68944b6",
+      "targetSha256": "bcfd5112ce915537b687e5394b21ece755dfe1e20dd78e40479cf229c6605cf4",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4415,7 +4415,7 @@
       "target": "src/main/java/mods/eln/compat/jei/WireMachineCategory.java",
       "mode": "native-optional-jei31-production-category",
       "sourceSha256": "e7adb7211da82e5c0ccb2cf10cac9535c48c9d4120154d32a5844a183929b2d4",
-      "targetSha256": "398d6e125e03b9178bf1c072c4c8a2f800e3a9073ab16995145cbfc0da3bd192",
+      "targetSha256": "91e3fa8233daacc3aef4e33be07b395b5574a13d717d2f078263f807b1f22f27",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4426,7 +4426,7 @@
       "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchWireMachineCases.kt",
       "mode": "native-circuit-material-thermal-break-place-automation-chain-and-catalog-regressions",
       "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
-      "targetSha256": "0a3a67c2a3b871b1db6a8c6582264e1c4f8e6e1b865fa15f02fe87bcd9ca2c04",
+      "targetSha256": "0df383be60cb6c055126783071ef69e3ec92b4751019f4cc33c48623d51a8f2a",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false

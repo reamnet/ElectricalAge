@@ -1,11 +1,11 @@
 # Unfiltered native validation and historical references
 
-The wire-manufacturing checkpoint ran **882 unfiltered GameTests**:
-**880 passed**, two failed, and none were skipped. The failures are
-`golden_descriptors` and `golden_slots`. All **416 port cases pass** in this expanded
+The wire-manufacturing checkpoint ran **1023 unfiltered GameTests**:
+**1021 passed**, two failed, and none were skipped. The failures are
+`golden_descriptors` and `golden_slots`. All **557 port cases pass** in this expanded
 run. Every other native behavioral and recipe case passes. The complete root run
-passes662 tests with three optional previews skipped (665 selected); all15 CAD
-tests and the default200 fluid corpus are included.
+passes 662 tests with three optional previews skipped (665 selected); all 15 CAD
+tests and the default 200 fluid corpus are included.
 
 [Machine-readable differences](native-suite-review.json) retain all failing
 assertions and messages. These are **429 assertions in two test cases**, not 429
@@ -17,8 +17,8 @@ were changed.
 | Identity absent from 1.12 | 300 | Establish each source identity and intentional destination mapping; additions alone are not approved exceptions. |
 | Descriptor values changed | 4 | Four original solar panels use source Norton ratings; compare source constructors and retained native behavior. |
 | Slot acceptance changed | 15 | Review added battery categories and their actual charging/discharge limits. |
-| Device has no1.12 container | 90 | Incoming cabinet/pole/control/converter menus need a source-aware reference. |
-| Descriptor class has no1.12 container | 19 | Map new descriptor/menu contracts explicitly; the grounded converters share one native menu registration. |
+| Device has no 1.12 container | 90 | Incoming cabinet/pole/control/converter menus need a source-aware reference. |
+| Descriptor class has no 1.12 container | 19 | Map new descriptor/menu contracts explicitly; the grounded converters share one native menu registration. |
 | Slot comparison summary | 1 | Aggregate of the acceptance differences. |
 
 Small fixed/rotating solar panels report 37 V open circuit and 240 W peak rather than

@@ -26,7 +26,9 @@ object WireProductionRecipes {
             if(!d.insulated && d.conductorCount==1) {
                 val kg=WirePhysics.massKg(d.material,d.totalConductorAreaMm2,EXAMPLE_METRES)
                 val metal=ingot(d.material);if(metal.isEmpty)continue
-                add(Step(WireMachineKind.ROLLER,listOf(metal.copyWithCount(ceil(kg).toInt())),spool(d),List(2) { Eln.findItemStack("Iron Roller Wheel",1) },kg))
+                var remaining=ceil(kg).toInt()
+                val batches=buildList { while(remaining>0) { val count=minOf(remaining,metal.maxStackSize);add(metal.copyWithCount(count));remaining-=count } }
+                add(Step(WireMachineKind.ROLLER,batches,spool(d),List(2) { Eln.findItemStack("Iron Roller Wheel",1) },kg))
             }else if(d.insulated && d.conductorCount==1) {
                 val bare=WireProduction.singleFor(d,false) ?: continue
                 add(Step(WireMachineKind.INSULATOR,listOf(spool(bare),Eln.findItemStack("Rubber",ceil(WireProduction.insulationCostFactor(d)).toInt())),spool(d)))

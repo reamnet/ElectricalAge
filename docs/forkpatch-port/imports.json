@@ -2754,160 +2754,160 @@
     "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineElement.kt",
     "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
     "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineDescriptor.kt",
     "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
     "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineRender.kt",
     "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
     "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineScreen.kt",
     "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
     "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireMachineMenus.kt",
     "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
     "mode": "native-paid-material-buffer-accepted-work-and-native-client-adapter",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/WireProduction.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireProduction.kt",
     "sourceSha256": "8953841f4c9f518013812f0df1681f4a03b31ef6b5d214600718e5c19c26d05a",
     "mode": "native-shared-catalog-material-and-variable-length-examples",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/WireProductionRecipes.kt",
     "target": "src/main/kotlin/mods/eln/transparentnode/wiremachine/WireProductionRecipes.kt",
     "sourceSha256": "e7adb7211da82e5c0ccb2cf10cac9535c48c9d4120154d32a5844a183929b2d4",
     "mode": "native-shared-catalog-material-and-variable-length-examples",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/item/WireMachineItems.kt",
     "target": "src/main/kotlin/mods/eln/item/wiremachine/WireMachineItems.kt",
     "sourceSha256": "16a6932a131229db358a6584149bd3be1e77ede29c7f3d2bf72d664ddf3e3d75",
     "mode": "native-paid-single-stack-bundle-and-source-wheels",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/WireProductionRecipes.kt",
     "target": "src/main/java/mods/eln/compat/jei/WireMachineCategory.java",
     "sourceSha256": "e7adb7211da82e5c0ccb2cf10cac9535c48c9d4120154d32a5844a183929b2d4",
     "mode": "native-optional-jei31-production-category",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt",
     "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchWireMachineCases.kt",
     "sourceSha256": "7d575d5d5398282dad27ac6a600a0be506ab7b791dd0cae8a103830f8794e074",
     "mode": "native-circuit-material-thermal-break-place-automation-chain-and-catalog-regressions",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt",
     "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
     "sourceSha256": "80adf1eb288efaf29cc41f8e751efc741bf2fa090c20707dee36ede42db1cdeb",
     "mode": "native-wire-machines4608-through4610-registration",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/registration/ItemRegistration.kt",
     "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
     "sourceSha256": "43948eeb1735750e82c1c43550fb8c9c47adbd15f866ac7412eb278661455442",
     "mode": "native-wheels7552-through7554-bundle7556-registration",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
     "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
     "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
     "mode": "native-source-wire-machine-and-wheel-bootstrap-recipes",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/model/fabricator/fabricator.mtl",
     "target": "src/main/resources/assets/eln/model/fabricator/fabricator.mtl",
     "sourceSha256": "85c0a9784b2def513aca9a06544af86a0ff4c704c31361f64ad35a23211b4bd3",
     "mode": "verbatim",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/model/fabricator/pcb_etcher.png",
     "target": "src/main/resources/assets/eln/model/fabricator/pcb_etcher.png",
     "sourceSha256": "43edee293623751497a6cfb07d10c9a088bc4992da1ea2c66a52e0aed43fd9b7",
     "mode": "verbatim",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/model/fabricator/fabricator.obj",
     "target": "src/main/resources/assets/eln/model/fabricator/fabricator.obj",
     "sourceSha256": "e586964e5c38f141805234fe9e517418e72e0255304be09d10206ec9c9ee447c",
     "mode": "verbatim",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/textures/blocks/50vplatemachine.png",
     "target": "src/main/resources/assets/eln/textures/item/wire_roller.png",
     "sourceSha256": "f82d7d42a3c9247eae2206971f788eb7399204cdc1766368d743b744be631e8f",
     "mode": "verbatim-relocated",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
     "target": "src/main/resources/assets/eln/textures/item/wire_insulator.png",
     "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
     "mode": "verbatim-relocated",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/textures/blocks/50vmagnetizer.png",
     "target": "src/main/resources/assets/eln/textures/item/wire_combiner.png",
     "sourceSha256": "59dd414010bde50e8466eb796020e8d796429ebd88fc346e0e92724ce0deb887",
     "mode": "verbatim-relocated",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/textures/items/ironrollerwheel.png",
     "target": "src/main/resources/assets/eln/textures/item/iron_roller_wheel.png",
     "sourceSha256": "93e997ee4b1e37139ff383d3b44c3b23e453a932f60e121f3d033dc88dfc3af4",
     "mode": "verbatim-relocated",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/textures/items/steelrollerwheel.png",
     "target": "src/main/resources/assets/eln/textures/item/steel_roller_wheel.png",
     "sourceSha256": "c0fcf3e4c859553f2915c4bb26fd783dfbd6373eab08f56093b4d29a1684fb44",
     "mode": "verbatim-relocated",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/textures/items/aluminumrollerwheel.png",
     "target": "src/main/resources/assets/eln/textures/item/aluminum_roller_wheel.png",
     "sourceSha256": "e1f82afad1c78f8bdd5ff55ab89c896057e9d0aa680be60df06889dfd2b1cf56",
     "mode": "verbatim-relocated",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   },
   {
     "source": "src/main/resources/assets/eln/textures/items/coppercable.png",
     "target": "src/main/resources/assets/eln/textures/item/wound_wire_bundle.png",
     "sourceSha256": "e674aa992c60ba70301e043480dd469cd874dff1284d33380abce88a1f949ff0",
     "mode": "verbatim-relocated",
-    "status": "662-full-root-15-cad-and-all416-port-cases-in882-unfiltered-tests-passed-two-historical-goldens-pending"
+    "status": "662-full-root-15-cad-and-all557-port-cases-in1023-unfiltered-tests-passed-two-historical-goldens-pending"
   }
 ]

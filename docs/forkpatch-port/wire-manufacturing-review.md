@@ -1,4 +1,4 @@
-# Next wire-manufacturing adapter review
+# Wire manufacturing source contract
 
 Reviewed against source `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Wire Snips 7873
 and the three processing machines/supporting items are now adapted. This retained
@@ -32,13 +32,13 @@ turning voltage sag into a free nominal-power supply. Inventory/option changes
 must not let a new input inherit a previous job's paid progress.
 
 Inventory layouts are4 slots for roller,3 for insulator and9 for combiner. Outputs
-are respectively3,2 and **5**. Combiner inputs are0,1,2,3,4,6,7,8; output5 is a
+are respectively3,2 and **5**. Combiner inputs are0,1,2,3,4,6,7,8; output 5 is a
 preserved historical slot, not the last slot in the enlarged inventory. Source
 sided automation inserts into inputs and extracts only output. Adapt those rules
 together with actual native transfer capabilities and `MenuSpecs`.
 
 Roller buffering converts accepted ingot count to paid kilograms and tracks its
-material. Rubber contributes32 base insulation-metres each. Maximum target length
+material. Rubber contributes 32 base insulation-metres each. Maximum target length
 is65536 m; insulation layer costs scale by voltage rating. The source carries
 `loadedMaterial`, `loadedMassKg` and `insulationMetersBuffer` in its machine item,
 while inventory drops separately and partial progress resets. These are paid

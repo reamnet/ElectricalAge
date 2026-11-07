@@ -1,0 +1,127 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Same-server diagnostic of cached native readiness/options versus an uncached native roller catalog query. Neither is a whole-mod/ForkPatch performance baseline.",
+  "jdk": 25,
+  "warmupIterationsPerPath": 2000,
+  "samplesPerPath": 7,
+  "iterationsPerSample": 1000,
+  "columns": [
+    "wallNanos",
+    "threadCpuNanos",
+    "threadAllocatedBytes",
+    "descriptorCountChecksum"
+  ],
+  "raw": {
+    "iterations": 1000,
+    "cached": [
+      [
+        513927,
+        523556,
+        1456,
+        21000
+      ],
+      [
+        517553,
+        520452,
+        760,
+        21000
+      ],
+      [
+        363506,
+        366063,
+        0,
+        21000
+      ],
+      [
+        481580,
+        484869,
+        0,
+        21000
+      ],
+      [
+        340081,
+        342928,
+        0,
+        21000
+      ],
+      [
+        323057,
+        324561,
+        0,
+        21000
+      ],
+      [
+        329977,
+        331652,
+        0,
+        21000
+      ]
+    ],
+    "uncached": [
+      [
+        4639533,
+        4645428,
+        456000,
+        21000
+      ],
+      [
+        4504104,
+        4510217,
+        456000,
+        21000
+      ],
+      [
+        4587737,
+        4591898,
+        456000,
+        21000
+      ],
+      [
+        2602849,
+        2589399,
+        439296,
+        21000
+      ],
+      [
+        855131,
+        858753,
+        424000,
+        21000
+      ],
+      [
+        831637,
+        834427,
+        424000,
+        21000
+      ],
+      [
+        877925,
+        881137,
+        424000,
+        21000
+      ]
+    ]
+  },
+  "medianPer1000Checks": {
+    "cached": {
+      "wallNanos": 363506,
+      "threadCpuNanos": 366063,
+      "threadAllocatedBytes": 0
+    },
+    "uncached": {
+      "wallNanos": 2602849,
+      "threadCpuNanos": 2589399,
+      "threadAllocatedBytes": 439296
+    }
+  },
+  "medianCpuRatioUncachedOverCached": 7.073643061440244,
+  "instrumentation": "System.nanoTime, currentThreadCpuTime and com.sun.management.ThreadMXBean thread allocation counters; alternating measurement order.",
+  "correctness": "Repeated checks retain paid progress, energy counters, option-list identity, native matrix version and cached LU validity.",
+  "log": "session5-all-native-latest.log",
+  "report": "/tmp/eln26-session5-all-latest.xml",
+  "limitations": [
+    "Cached path includes actual readiness plus options access; uncached path only recalculates the same material catalog. These are different scopes, reported explicitly.",
+    "Single process/environment; JIT, timer/instrumentation noise and scheduling affect measurements. Timing/allocation values are observations, not test thresholds.",
+    "Does not establish overall tick/frame/loaded-world performance, GPU behavior or a comparison against both original repositories."
+  ]
+}

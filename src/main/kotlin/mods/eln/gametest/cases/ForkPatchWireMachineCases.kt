@@ -24,7 +24,13 @@ import kotlin.math.abs
 
 object ForkPatchWireMachineCases {
     @JvmStatic fun cases():List<TestCase> = WireMachineKind.entries.flatMap { kind->listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP).map { Production(kind,it,if(kind==WireMachineKind.COMBINER)3 else 0) } }+
-        listOf(Production(WireMachineKind.COMBINER,Direction.XN,8),Sag(),Outage(),Guards(),BreakBuffers(),WorldReload(),MenusAndAutomation(),Recipes(),Chain(),ProductionExamples())
+        listOf(Production(WireMachineKind.COMBINER,Direction.XN,8),Sag(),Outage(),Guards(),BreakBuffers(),WorldReload(),MenusAndAutomation(),Recipes(),Chain(),ProductionExamples(),Aluminum(),Overvoltage(),RubberBreak(),ChangedInputLength(),WorldReload(WireMachineKind.INSULATOR),WorldReload(WireMachineKind.COMBINER))+
+        listOf(1000,5000,20000,40000,150000).map { InsulationTier(it) }+
+        UtilityCables.all.filterNot { it.melted }.flatMapIndexed { index,target->
+            if(!target.insulated)listOf(CatalogProduction(WireMachineKind.ROLLER,target,index))
+            else if(target.conductorCount==1)listOf(CatalogProduction(WireMachineKind.INSULATOR,target,index))
+            else listOf(CatalogProduction(WireMachineKind.COMBINER,target,index),CatalogProduction(WireMachineKind.INSULATOR,target,index))
+        }
     private fun single(label:String="12 AWG",insulated:Boolean=false)=UtilityCables.all.first { it.sizeLabel==label && it.material==UtilityCableMaterial.COPPER && it.conductorCount==1 && it.insulated==insulated && !it.melted }
     private fun multi(count:Int)=UtilityCables.all.first { it.conductorCount==count && it.material==UtilityCableMaterial.COPPER && it.insulated && !it.melted }
     private fun spool(d:UtilityCableDescriptor,length:Double,temperature:Double=20.0)=d.newItemStack().also { d.setRemainingLengthMeters(it,length);ItemNbt.edit(it) { tag->tag.putDouble("windingTemperatureCelsius",temperature) } }
@@ -127,7 +133,22 @@ object ForkPatchWireMachineCases {
             try {
                 c.check("wire roller: half voltage draws quarter power and advances only paid partial work",e.resistor.p in 74.9..75.1 && e.progressMeters in 1.0..4.0 && e.inventory.getItem(3).isEmpty,"${e.progressMeters}, ${e.resistor.p}")
                 val progress=e.progressMeters;val joules=e.acceptedJoules;val choices=e.options();val system=e.power.subSystem!!;val version=system.matrixVersion
-                repeat(1000) { e.prepare() }
+                repeat(2000) { e.prepare();WireProduction.rollerOptions(e.loadedMaterial) }
+                val bean=java.lang.management.ManagementFactory.getThreadMXBean()
+                val allocation=bean as? com.sun.management.ThreadMXBean
+                val thread=Thread.currentThread().threadId()
+                fun sample(cached:Boolean):LongArray {
+                    val bytes=if(allocation?.isThreadAllocatedMemorySupported==true && allocation.isThreadAllocatedMemoryEnabled)allocation.getThreadAllocatedBytes(thread) else -1L
+                    val cpu=bean.currentThreadCpuTime;val start=System.nanoTime();var checksum=0L
+                    repeat(1000) { if(cached) { e.prepare();checksum+=e.options().size } else checksum+=WireProduction.rollerOptions(e.loadedMaterial).size }
+                    val wall=System.nanoTime()-start;val usedCpu=bean.currentThreadCpuTime-cpu
+                    val usedBytes=if(bytes>=0)allocation!!.getThreadAllocatedBytes(thread)-bytes else -1L
+                    return longArrayOf(wall,usedCpu,usedBytes,checksum)
+                }
+                val cached=ArrayList<LongArray>();val uncached=ArrayList<LongArray>()
+                repeat(7) { i->if(i%2==0) { cached.add(sample(true));uncached.add(sample(false)) }else { uncached.add(sample(false));cached.add(sample(true)) } }
+                fun rows(values:List<LongArray>)=values.joinToString(",","[","]") { it.joinToString(",","[","]") }
+                c.line("WIRE_MANUFACTURING_CACHE_DIAGNOSTIC {\"iterations\":1000,\"cached\":${rows(cached)},\"uncached\":${rows(uncached)}}")
                 c.check("wire machine: repeated readiness/options checks do not create work or rebuild stable LU",e.progressMeters==progress && e.acceptedJoules==joules && e.options()===choices && system.matrixVersion==version && Batch1Cases.field<Boolean>(system,"matrixValid"),"")
                 panel(c)
             }finally { clean() }
@@ -156,27 +177,43 @@ object ForkPatchWireMachineCases {
         override fun measure(c:TestContext) {
             try {
                 val old=e.selectedOption;val length=e.targetLengthMeters;val progress=e.progressMeters
-                e.networkUnserialize(packet(1));e.networkUnserialize(packet(2));e.networkUnserialize(packet(1,Int.MAX_VALUE));e.networkUnserialize(packet(2,-1))
+                e.networkUnserialize(packet(1));e.networkUnserialize(packet(2));e.networkUnserialize(packet(1,Int.MAX_VALUE));e.networkUnserialize(packet(2,-1));e.networkUnserialize(packet(1,old));e.networkUnserialize(packet(2,length))
                 c.check("wire machine: truncated and invalid control packets leave the active job intact",e.selectedOption==old && e.targetLengthMeters==length && e.progressMeters==progress,"")
                 val player=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());val kg=e.loadedMassKg
                 e.readConfigTool(CompoundTag().apply { putInt("selectedOption",old);putInt("targetLengthMeters",length);putDouble("loadedMassKg",1e9);putDouble("progressMeters",1e9);put("wireBuffers",CompoundTag().apply { putInt("loadedMaterial",0);putDouble("loadedMassKg",1e9) }) },player)
-                c.check("wire machine: settings copy cannot refill metal or import completed work",e.loadedMassKg==kg && e.progressMeters==0.0,"")
+                c.check("wire machine: settings copy cannot refill metal or import completed work",e.loadedMassKg==kg && e.progressMeters==progress,"")
+                c.check("wire machine: copying identical settings preserves only the existing paid job",e.progressMeters==progress,"")
+                e.readConfigTool(CompoundTag().apply { putInt("selectedOption",old);putInt("targetLengthMeters",length+1) },player)
+                c.check("wire machine: genuinely changed configuration cannot inherit old paid work",e.progressMeters==0.0 && e.loadedMassKg==kg,"")
                 val picked=ItemNbt.get(e.dropItemStack)!!
                 c.check("wire machine: ordinary pick/settings payload contains no paid material, slots or work",!picked.contains("wireBuffers") && !picked.contains("loadedMassKg") && !picked.contains("progressMeters") && !picked.contains("inv"),"")
+                val damaged=UtilityCables.all.first { it.melted }.newItemStack()
+                val hot=spool(single(),1.0,1085.0);val malformed=spool(single(),1.0);ItemNbt.edit(malformed) { it.putDouble("utilityLengthMeters",Double.NaN) }
+                val stacked=spool(single(),1.0).copyWithCount(2)
+                c.check("wire machine: failed, malformed and stacked stock cannot become fresh manufactured cable",listOf(damaged,hot,malformed,stacked).all { WireProduction.insulatorOptions(it).isEmpty() },"")
+                val first=spool(single(insulated=true),1.0);val different=spool(single("10 AWG",true),1.0)
+                c.check("wire machine: incompatible or unsupported core counts cannot mint a bundle",WireProduction.combinerOptions(listOf(first,different)).isEmpty() && WireProduction.combinerOptions(List(9) { first }).isEmpty(),"")
                 val invalid=CompoundTag();e.writeToNBT(invalid);invalid.putDouble("loadedMassKg",Double.NaN);invalid.putDouble("progressMeters",Double.POSITIVE_INFINITY)
                 val copy=WireMachineElement(TransparentNode(),e.descriptor);copy.front=e.front;copy.readFromNBT(invalid)
                 c.check("wire machine: nonfinite saved buffers and work fail closed",copy.loadedMassKg==0.0 && copy.progressMeters==0.0,"")
             }finally { clean() }
         }
     }
-    private class WorldReload:Base() {
-        override fun id()="forkpatch_wire_machine_actual_owner_reload_keeps_paid_buffers_and_partial_work"
-        override fun build(c:TestContext) { place(c,WireMachineKind.ROLLER);roller(20);feed(100.0) }
+    private class WorldReload(val kind:WireMachineKind=WireMachineKind.ROLLER):Base() {
+        override fun id()="forkpatch_wire_machine_actual_${kind.name.lowercase()}_owner_reload_keeps_paid_buffers_and_partial_work"
+        override fun build(c:TestContext) {
+            place(c,kind)
+            when(kind) {
+                WireMachineKind.ROLLER->roller(20)
+                WireMachineKind.INSULATOR->{ e.inventory.setItem(0,spool(single(),20.0));e.inventory.setItem(1,Eln.findItemStack("Rubber",1));e.inventory.setChanged();e.prepare() }
+                WireMachineKind.COMBINER->{ val target=multi(8);val wire=WireProduction.singleFor(target,true)!!;for(slot in WireProduction.combinerInputs)e.inventory.setItem(slot,spool(wire,20.0));e.inventory.setChanged();e.networkUnserialize(packet(1,e.options().indexOf(target)));e.prepare() }
+            };feed(100.0)
+        }
         override fun measure(c:TestContext) {
             try {
-                val progress=e.progressMeters;val kg=e.loadedMassKg;val energy=e.acceptedJoules;clean();val pos=e.node.coordonate.pos()
+                val progress=e.progressMeters;val kg=e.loadedMassKg;val rubber=e.insulationMetersBuffer;val energy=e.acceptedJoules;clean();val pos=e.node.coordonate.pos()
                 e=(Reload.node(c.level(),pos).fresh as TransparentNode).element as WireMachineElement
-                c.check("wire machine: actual native owner reload keeps paid partial work and metal",e.progressMeters==progress && e.loadedMassKg==kg && e.acceptedJoules==energy && e.inventory.getItem(1).count==1 && e.inventory.getItem(2).count==1,"")
+                c.check("wire machine: actual native owner reload keeps paid partial work and metal",e.progressMeters==progress && e.loadedMassKg==kg && e.acceptedJoules==energy && progress>0 && e.insulationMetersBuffer==rubber,"")
                 e.readItemStackNBT(CompoundTag().apply { put("wireBuffers",CompoundTag().apply { putInt("loadedMaterial",0);putDouble("loadedMassKg",1000.0) }) })
                 c.check("wire machine: carried reads cannot refill an already initialized world owner",e.loadedMassKg==kg,"")
                 panel(c)
@@ -281,15 +318,172 @@ object ForkPatchWireMachineCases {
             }finally { Eln.simulator.removeSlowProcess(clock);clean() }
         }
     }
+    /** An external inventory change must invalidate both the options and paid-length snapshot. */
+    private class ChangedInputLength:Base() {
+        lateinit var clock:IProcess;lateinit var target:UtilityCableDescriptor;lateinit var removed:ItemStack
+        var elapsed=0.0;var changed=false
+        override fun id()="forkpatch_wire_machine_inventory_length_change_invalidates_cached_job"
+        override fun ticks()=100
+        override fun build(c:TestContext) {
+            place(c,WireMachineKind.COMBINER);target=multi(2);val core=WireProduction.singleFor(target,true)!!
+            e.inventory.setItem(0,spool(core,10.0));e.inventory.setItem(1,spool(core,11.0));e.inventory.setChanged();e.networkUnserialize(packet(1,e.options().indexOf(target)));e.prepare();feed(100.0)
+            clock=IProcess { dt->
+                elapsed+=dt
+                if(!changed && elapsed>=.6) {
+                    c.check("wire cache: original long job has actually paid partial work",e.progressMeters>0.1 && e.progressTargetMeters==10.0,"")
+                    removed=e.inventory.removeItem(0,1);e.inventory.setItem(0,spool(core,1.125));e.inventory.setChanged();e.prepare();changed=true
+                    c.check("wire cache: changed native inventory resets old work and recomputes exact paid length",e.progressMeters==0.0 && e.progressTargetMeters==1.125,"")
+                }
+            };Eln.simulator.addSlowProcess(clock)
+        }
+        override fun measure(c:TestContext) {
+            try {
+                val bundle=WireProduction.bundle;val output=e.inventory.getItem(5)
+                c.check("wire cache: replacement input completes only its actual shorter bundle",changed && bundle.valid(output) && bundle.getLengthMeters(output)==1.125 && e.inventory.getItem(0).isEmpty,"")
+                val remaining=e.inventory.getItem(1)
+                c.check("wire cache: withdrawn spool and other core retain their own paid lengths",WireProduction.cable(removed)!!.getRemainingLengthMeters(removed)==10.0 && WireProduction.cable(remaining)!!.getRemainingLengthMeters(remaining)==9.875,"")
+                c.check("wire cache: old partial work cannot cover the new job's energy budget",abs(e.completedJoules-1.125/5*120)<1e-9 && e.usefulJoules>e.completedJoules,"")
+            }finally { Eln.simulator.removeSlowProcess(clock);clean() }
+        }
+    }
+    /** Run every intact gauge/jacket/core option through the real powered machine. */
+    private class CatalogProduction(val kind:WireMachineKind,val target:UtilityCableDescriptor,val catalogIndex:Int):Base() {
+        var initialCoreMetres=0.0
+        override fun id()="forkpatch_wire_machine_catalog_${kind.name.lowercase()}_$catalogIndex"
+        override fun ticks()=40
+        override fun build(c:TestContext) {
+            if(kind==WireMachineKind.ROLLER) {
+                val descriptor=requireNotNull(Eln.transparentNodeItem.getDescriptor(kind.id));val paid=descriptor.newItemStack()
+                ItemNbt.set(paid,CompoundTag().apply { put("wireBuffers",CompoundTag().apply { putInt("loadedMaterial",target.material.ordinal);putDouble("loadedMassKg",10.0) }) })
+                val player=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level())
+                val node=requireNotNull((descriptor.parentItem as TransparentNodeItem).placeAt(paid,player,c.level(),c.at(4,1,1),Direction.YN))
+                e=node.element as WireMachineElement
+                e.inventory.setItem(1,Eln.findItemStack("Iron Roller Wheel",1));e.inventory.setItem(2,Eln.findItemStack("Iron Roller Wheel",1));e.inventory.setChanged();e.networkUnserialize(packet(2,1))
+            }else {
+                place(c,kind)
+                if(kind==WireMachineKind.INSULATOR) {
+                    val input=if(target.conductorCount==1)spool(WireProduction.singleFor(target,false)!!,.125,35.0)
+                        else WireProduction.bundle.createBundleStack(target.sizeLabel,target.conductorAreaMm2.toString(),target.material,target.conductorCount,target.conductorAreaMm2,.125).also { ItemNbt.edit(it) { n->n.putDouble("windingTemperatureCelsius",35.0) } }
+                    e.inventory.setItem(0,input);e.inventory.setItem(1,Eln.findItemStack("Rubber",1))
+                }else {
+                    val core=WireProduction.singleFor(target,true)!!
+                    repeat(target.conductorCount) { i->val length=.125+i*.03125;initialCoreMetres+=length;e.inventory.setItem(WireProduction.combinerInputs[i],spool(core,length,35.0)) }
+                }
+                e.inventory.setChanged()
+            }
+            val index=e.options().indexOf(target)
+            c.check("wire catalog: intended native descriptor is a real production choice",index>=0,"${target.name}")
+            e.networkUnserialize(packet(1,index));e.prepare();feed()
+        }
+        override fun measure(c:TestContext) {
+            try {
+                val output=e.inventory.getItem(kind.outputSlot);val metres=if(kind==WireMachineKind.ROLLER)1.0 else .125
+                when(kind) {
+                    WireMachineKind.ROLLER->{
+                        c.check("wire catalog: each bare gauge/material is produced from its owned metal buffer",WireProduction.cable(output)===target && target.getRemainingLengthMeters(output)==metres,"${target.name}: $output")
+                        c.check("wire catalog: each gauge/material pays its independent density and area mass",abs(e.loadedMassKg+WirePhysics.massKg(target.material,target.totalConductorAreaMm2,metres)-10.0)<1e-10,"")
+                    }
+                    WireMachineKind.INSULATOR->{
+                        c.check("wire catalog: every single/multicore jacket produces the exact existing native identity",WireProduction.cable(output)===target && target.getRemainingLengthMeters(output)==metres && e.inventory.getItem(0).isEmpty,"${target.name}: $output")
+                        c.check("wire catalog: each jacket debits the right layer credit and retains hot stock",abs(e.insulationMetersBuffer+metres*WireProduction.insulationCostFactor(target)-32.0)<1e-12 && WireProduction.temperature(output)==35.0,"")
+                    }
+                    WireMachineKind.COMBINER->{
+                        val bundle=WireProduction.bundle
+                        c.check("wire catalog: every multicore target has an exact paid bundle",bundle.valid(output) && bundle.getTargetLabel(output)==target.sizeLabel && bundle.getMaterial(output)==target.material && bundle.getAreaMm2(output)==target.conductorAreaMm2 && bundle.getConductorCount(output)==target.conductorCount && bundle.getLengthMeters(output)==metres,"${target.name}")
+                        val remaining=WireProduction.combinerInputs.sumOf { slot->e.inventory.getItem(slot).let { WireProduction.cable(it)?.getRemainingLengthMeters(it) ?: 0.0 } }
+                        c.check("wire catalog: every participating core preserves its own fractional remainder",abs(remaining+metres*target.conductorCount-initialCoreMetres)<1e-12,"")
+                    }
+                }
+                val expected=metres/kind.metresPerSecond*kind.watts*(if(kind==WireMachineKind.INSULATOR)WireProduction.insulationCostFactor(target) else 1.0)
+                c.check("wire catalog: each native output pays all required accepted electrical work",abs(e.completedJoules-expected)<1e-10 && e.acceptedJoules+1e-5>=e.usefulJoules && e.usefulJoules+1e-5>=expected,"$expected J for ${target.name}")
+                c.check("wire catalog: occupied output stops the real load",!e.running && e.resistor.r>=1e9,"")
+            }finally { clean() }
+        }
+    }
+    private class Aluminum:Base() {
+        lateinit var target:UtilityCableDescriptor
+        override fun id()="forkpatch_wire_machine_owned_aluminum_buffer_density_and_source_wheels"
+        override fun ticks()=50
+        override fun build(c:TestContext) {
+            // The base mod has no aluminum ingot: it accepts a modpack's c:ingots/aluminum tag.
+            // Start this fixture with a real carried machine owning2 kg, then consume that stock.
+            val d=requireNotNull(Eln.transparentNodeItem.getDescriptor(WireMachineKind.ROLLER.id))
+            val physical=d.newItemStack();ItemNbt.set(physical,CompoundTag().apply { put("wireBuffers",CompoundTag().apply { putInt("loadedMaterial",UtilityCableMaterial.ALUMINUM.ordinal);putDouble("loadedMassKg",2.0) }) })
+            val player=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level())
+            val pos=c.at(4,1,1);val floor=pos.below();val hit=BlockHitResult(Vec3(floor.x+.5,floor.y+1.0,floor.z+.5),net.minecraft.core.Direction.UP,floor,false)
+            ((d.parentItem) as TransparentNodeItem).placeAt(physical,player,c.level(),pos,Direction.YN)
+            e=(NodeManager.instance.getNodeFromCoordonate(Coordonate(pos,c.level())) as TransparentNode).element as WireMachineElement
+            target=WireProduction.rollerOptions(UtilityCableMaterial.ALUMINUM).first { it.sizeLabel=="2 AWG" }
+            e.inventory.setItem(1,Eln.findItemStack("Steel Roller Wheel",1));e.inventory.setItem(2,Eln.findItemStack("Aluminum Roller Wheel",1));e.inventory.setChanged()
+            e.networkUnserialize(packet(1,e.options().indexOf(target)));e.networkUnserialize(packet(2,2));e.prepare();feed()
+        }
+        override fun measure(c:TestContext) {
+            try {
+                val output=e.inventory.getItem(3)
+                c.check("wire roller: owned aluminum buffer and both alternative source wheels make aluminum stock",WireProduction.cable(output)===target && target.getRemainingLengthMeters(output)==2.0 && WireProduction.wheel(e.inventory.getItem(1)) && WireProduction.wheel(e.inventory.getItem(2)),"output=$output material=${e.loadedMaterial} kg=${e.loadedMassKg}")
+                c.check("wire roller: aluminum density debits the actual metal rather than copper mass",abs(e.loadedMassKg+WirePhysics.massKg(UtilityCableMaterial.ALUMINUM,target.totalConductorAreaMm2,2.0)-2.0)<1e-12 && e.loadedMaterial==UtilityCableMaterial.ALUMINUM,"")
+                panel(c)
+            }finally { clean() }
+        }
+    }
+    private class InsulationTier(val volts:Int):Base() {
+        lateinit var target:UtilityCableDescriptor
+        override fun id()="forkpatch_wire_machine_insulation_${volts}v_layer_work_and_rubber"
+        override fun ticks()=50
+        override fun build(c:TestContext) {
+            place(c,WireMachineKind.INSULATOR);target=UtilityCables.all.first { it.material==UtilityCableMaterial.COPPER && it.sizeLabel=="12 AWG" && it.insulated && !it.melted && it.insulationVoltageRating==volts.toDouble() }
+            e.inventory.setItem(0,spool(single(),.375,55.0));e.inventory.setItem(1,Eln.findItemStack("Rubber",1));e.inventory.setChanged();e.networkUnserialize(packet(1,e.options().indexOf(target)));e.prepare();feed()
+        }
+        override fun measure(c:TestContext) {
+            try {
+                val output=e.inventory.getItem(2);val factor=WireProduction.insulationCostFactor(target);val energy=.375/4*160*factor
+                c.check("wire insulator: selected voltage tier consumes exact fractional layer metres",WireProduction.cable(output)===target && target.getRemainingLengthMeters(output)==.375 && abs(e.insulationMetersBuffer+.375*factor-32.0)<1e-12,"")
+                c.check("wire insulator: every voltage tier pays its own complete layer work",abs(e.completedJoules-energy)<1e-10 && e.usefulJoules+1e-5>=energy && e.acceptedJoules+1e-5>=e.usefulJoules,"$volts V factor=$factor energy=$energy")
+                c.check("wire insulator: higher voltage jacket does not cool paid hot stock",WireProduction.temperature(output)==55.0,"")
+            }finally { clean() }
+        }
+    }
+    private class Overvoltage:Base() {
+        override fun id()="forkpatch_wire_machine_overvoltage_is_passive_and_work_is_rate_limited"
+        override fun build(c:TestContext) { place(c,WireMachineKind.ROLLER);roller(20);feed(400.0) }
+        override fun measure(c:TestContext) {
+            try {
+                c.check("wire machine: double voltage accepts four times actual resistor power",e.resistor.p in 1199.0..1201.0 && e.acceptedJoules>2*e.usefulJoules,"${e.resistor.p}")
+                c.check("wire machine: overvoltage cannot accelerate source processing beyond its nominal rate",e.progressMeters in 10.0..13.0 && e.inventory.getItem(3).isEmpty && abs(e.progressMeters-e.usefulJoules*6/300)<1e-8,"${e.progressMeters}")
+            }finally { clean() }
+        }
+    }
+    private class RubberBreak:Base() {
+        override fun id()="forkpatch_wire_machine_actual_break_place_preserves_rubber_credit_once"
+        override fun ticks()=50
+        override fun build(c:TestContext) { place(c,WireMachineKind.INSULATOR);e.inventory.setItem(0,spool(single(),.5));e.inventory.setItem(1,Eln.findItemStack("Rubber",2));e.inventory.setChanged();e.prepare();feed() }
+        override fun measure(c:TestContext) {
+            val p=TransportTestPlayer(c.level(),com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes(id().toByteArray()),"rubberBuffer"))
+            try {
+                val paid=e.insulationMetersBuffer;val at=e.node.coordonate.pos();val item=e.descriptor.parentItem;clean();c.level().destroyBlock(at,true)
+                val drops=c.level().getEntitiesOfClass(ItemEntity::class.java,AABB(at).inflate(2.0));val machines=drops.filter { it.item.item===item };val wires=drops.filter { WireProduction.cable(it.item)!=null }
+                c.check("wire insulator: completed output drops separately from remaining paid rubber credit",paid==63.5 && machines.size==1 && wires.size==1 && WireProduction.cable(wires.single().item)!!.getRemainingLengthMeters(wires.single().item)==.5,"")
+                val physical=machines.single().item;val payload=ItemNbt.get(physical)!!.copy();drops.forEach { it.discard() }
+                p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);p.setItemInHand(InteractionHand.MAIN_HAND,physical)
+                val pos=c.at(6,1,1);val floor=pos.below();val hit=BlockHitResult(Vec3(floor.x+.5,floor.y+1.0,floor.z+.5),net.minecraft.core.Direction.UP,floor,false)
+                physical.useOn(net.minecraft.world.item.context.UseOnContext(p,InteractionHand.MAIN_HAND,hit))
+                e=(NodeManager.instance.getNodeFromCoordonate(Coordonate(pos,c.level())) as TransparentNode).element as WireMachineElement
+                c.check("wire insulator: actual survival placement restores only the owned rubber buffer",p.mainHandItem.isEmpty && e.insulationMetersBuffer==paid && e.loadedMassKg==0.0 && e.inventory.isEmpty,"")
+                repeat(3) { e.readItemStackNBT(payload) }
+                c.check("wire insulator: repeated carrier reads cannot duplicate saved rubber credit",e.insulationMetersBuffer==paid && !ItemNbt.get(e.dropItemStack)!!.contains("wireBuffers"),"")
+            }finally { clean();p.inventory.clearContent() }
+        }
+    }
     private class ProductionExamples:Base() {
         override fun id()="forkpatch_wire_machine_all_catalog_production_examples_match_real_predicates"
         override fun measure(c:TestContext) {
             val steps=WireProductionRecipes.steps()
+            c.check("wire production: physical catalog fixtures cover the complete native source allocator",UtilityCables.all.size==170 && UtilityCables.all.count { !it.melted }==100,"${UtilityCables.all.size} descriptors")
             c.check("wire production: complete intact catalog has manufacturing examples",steps.isNotEmpty() && WireMachineKind.entries.all { kind->steps.any { it.kind==kind } },"${steps.size} examples")
             for(step in steps) {
                 val output=WireProduction.cable(step.output)
                 val valid=when(step.kind) {
-                    WireMachineKind.ROLLER->output!=null && output in WireProduction.rollerOptions(WireProduction.material(step.inputs.single())) && step.inputs.single().count>=step.metalKg && step.catalysts.size==2 && step.catalysts.all(WireProduction::wheel)
+                    WireMachineKind.ROLLER->output!=null && output in WireProduction.rollerOptions(WireProduction.material(step.inputs.first())) && step.inputs.sumOf { it.count }>=step.metalKg && step.inputs.all { WireProduction.material(it)==output.material && it.count<=it.maxStackSize } && step.catalysts.size==2 && step.catalysts.all(WireProduction::wheel)
                     WireMachineKind.INSULATOR->output!=null && output in WireProduction.insulatorOptions(step.inputs[0]) && WireProduction.rubber(step.inputs[1]) && step.inputs[1].count*32.0>=32.0*WireProduction.insulationCostFactor(output)
                     WireMachineKind.COMBINER->WireProduction.bundle.valid(step.output) && WireProduction.combinerOptions(step.inputs).any { it.sizeLabel==WireProduction.bundle.getTargetLabel(step.output) && it.conductorCount==step.inputs.size && it.material==WireProduction.bundle.getMaterial(step.output) }
                 }

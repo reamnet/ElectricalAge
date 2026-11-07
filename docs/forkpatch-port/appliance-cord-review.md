@@ -6,26 +6,26 @@ below remains unregistered and has no native runtime validation.
 
 | Source lookup | Device/item | Nominal voltage / current |
 | --- | --- | --- |
-| transparent7968 | Experimental Wall Outlet (display:120 V Wall Outlet) | 120 V /20 A, two sockets |
-| transparent7969 | 240 V Wall Outlet | 240 V /20 A, two sockets |
-| transparent7991 | Six Socket Power Strip | 120 V /20 A, six sockets |
-| transparent8000–8005 | Machine/workshop/industrial outlets | 24,48,200,480,800,3200 V; first three32 A, others125 A |
-| transparent8012 | 240 V30 A Dryer Outlet | 240 V /30 A |
-| shared7874/7875 | Flexible /240 V Appliance Cord | 120/240 V |
-| shared8000–8005 | Machine/workshop/industrial cords | same six industrial ratings |
-| shared8006 | 240 V30 A Dryer Cord | 240 V /30 A |
-| transparent8076 | Four Cell Plug-in UPS | separate compact battery-backed socket source |
+| transparent 7968 | Experimental Wall Outlet (display: 120 V Wall Outlet) | 120 V / 20 A, two sockets |
+| transparent 7969 | 240 V Wall Outlet | 240 V / 20 A, two sockets |
+| transparent 7991 | Six Socket Power Strip | 120 V / 20 A, six sockets |
+| transparent 8000–8005 | Machine/workshop/industrial outlets | 24, 48, 200, 480, 800, 3200 V; first three 32 A, others 125 A |
+| transparent 8012 | 240 V 30 A Dryer Outlet | 240 V / 30 A |
+| shared 7874/7875 | Flexible /240 V Appliance Cord | 120/240 V |
+| shared 8000–8005 | Machine/workshop/industrial cords | same six industrial ratings |
+| shared 8006 | 240 V 30 A Dryer Cord | 240 V / 30 A |
+| transparent 8076 | Four Cell Plug-in UPS | separate compact battery-backed socket source |
 
-The19 cord/outlet slots above are free in the current652-entry native manifest;
+The 19 cord/outlet slots above are free in the current 652-entry native manifest;
 recheck before registration. Shared and transparent lookup spaces are separate.
 The compact UPS must be checked independently against the native UPS identities
-and physical cell inventory. Native programmable UPS7947 must remain unchanged.
+and physical cell inventory. Native programmable UPS 7947 must remain unchanged.
 
 Source files under `transparentnode/cord` separate rating, physical attachment,
 interaction, source reservations, consumer adapters, recessed-wall wiring and
 client rendering. `MachineCordSupport` explicitly selects consumer families and
 their original power inlet; it must not make generators/storage outputs or signal
-loads into appliance inputs. Wire manufacturing uses a200 V inlet. Native device
+loads into appliance inputs. Wire manufacturing uses a 200 V inlet. Native device
 menus, shafts, fluids and solver components remain authoritative.
 
 A cord is a passive resistor between the actual source and appliance loads, with
