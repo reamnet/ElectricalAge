@@ -1199,3 +1199,14 @@ inventories, native menus and source models with variable129. The UPS/step-down
 recipes now use the source variable ingredient. See the [family guide](forkpatch-port/converter-family.md)
 and [validation](forkpatch-port/converter-family-validation.json). Development-only
 floating isolation135 and full source-world conversion remain unfinished.
+
+
+### Wire Snips
+
+Source shared item7873 now opens a native menu from either hand and cuts whole
+metres from paid utility spools. Fractional remainder, temperature and damaged or
+multicore identity survive, and the new piece gets a distinct ledger identity.
+Owner/tool/packet guards, native shift transfers, full-inventory drops and closing
+refund exactly once are covered by real server cases. See the [tool guide](forkpatch-port/wire-snips.md)
+and [validation](forkpatch-port/wire-snips-validation.json). The three manufacturing
+machines remain a separate group with a [reviewed source contract](forkpatch-port/wire-manufacturing-review.md).

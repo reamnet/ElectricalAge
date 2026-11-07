@@ -1,52 +1,45 @@
 # Unfiltered native validation and historical references
 
-The solar-roof, variable-inductor and sampling checkpoint ran **810 unfiltered
-GameTests**: **808 passed**, two failed, and none were skipped. The failing cases
-are `golden_descriptors` and `golden_slots`. All 344 port cases pass within that
-expanded run, including pitched solar roofs, the variable inductor and the 96-panel
-sampling scene. Recipe references and every other behavioral case pass.
-
-The initial unfiltered run also exposed two layout failures: battery low-voltage
-disconnect and heat-furnace external control. The wind/watermill fixture changed
-the shared fake player's facing without restoring it. Subsequent layouts then
-placed supplies outside their platforms or inside the furnace. Saving and
-restoring yaw/pitch in `finally` fixes both; the rerun verifies the original
-battery protection and furnace signal behavior without changing either device.
+The flat-solar, converter-family and Wire Snips checkpoint ran **860 unfiltered
+GameTests**: **858 passed**, two failed, and none were skipped. The failures are
+`golden_descriptors` and `golden_slots`. All **394 port cases pass** in this expanded
+run. Every other native behavioral and recipe case passes. The complete root run
+passes662 tests with three optional previews skipped (665 selected); all15 CAD
+tests and the default200 fluid corpus are included.
 
 [Machine-readable differences](native-suite-review.json) retain all failing
-assertions and their original messages. These are **404 assertions in two test
-cases**, rather than 401 failed test cases:
+assertions and messages. These are **418 assertions in two test cases**, not418
+failed cases. No expected snapshots, exception/skip lists or numeric tolerances
+were changed.
 
 | Historical comparison | Observed differences | Review still required |
 | --- | ---: | --- |
-| Descriptor identity absent from 1.12 | 286 | Establish source identities and explicit destination conflict mappings against pinned 3.0.77; do not derive approvals from current target IDs alone. |
-| Descriptor values changed | 4 | The four original solar panels now use ForkPatch Norton ratings; review the source constructor values and retained destination behavior. |
-| Slot acceptance changed | 15 | Legacy battery slots recognize added battery types; review item categories and actual charging/discharge limits. |
-| Device has no 1.12 container | 81 | Incoming cabinet/pole/control families need a source-aware menu reference. |
-| Descriptor class has no 1.12 container | 17 | Native adapters use new descriptor classes; map each reviewed source menu contract explicitly. |
-| Slot comparison summary | 1 | Aggregate of the acceptance differences above. |
+| Identity absent from1.12 | 293 | Establish each source identity and intentional destination mapping; additions alone are not approved exceptions. |
+| Descriptor values changed | 4 | Four original solar panels use source Norton ratings; compare source constructors and retained native behavior. |
+| Slot acceptance changed | 15 | Review added battery categories and their actual charging/discharge limits. |
+| Device has no1.12 container | 87 | Incoming cabinet/pole/control/converter menus need a source-aware reference. |
+| Descriptor class has no1.12 container | 18 | Map new descriptor/menu contracts explicitly; the grounded converters share one native menu registration. |
+| Slot comparison summary | 1 | Aggregate of the acceptance differences. |
 
-The solar differences are specific: small fixed/rotating panels report 37 V open
-circuit and 240 W peak, versus 14.75 V/65 W in 1.12; 2x3 panels report 111 V/1440 W,
-versus 118 V/520 W. Their series resistance also changes. The pinned source's
-`registration/TransparentNodeRegistration.kt` defines `smallSolarVoc/Vmp/Imp/Isc`
-and the large-array series/parallel arrangement. Those source values and the
-passing Norton circuit tests are evidence for review, not an automatic waiver.
+Small fixed/rotating solar panels report37 V open circuit and240 W peak rather than
+14.75 V/65 W in1.12; large arrays report111 V/1440 W rather than118 V/520 W. Series
+resistance also changes. Pinned source `TransparentNodeRegistration.kt`, the Norton
+circuit checks and native world cases supply evidence for reconciliation, not an
+automatic waiver.
 
-The variable-inductor addition contributes one new historical identity, one device
-without an old container and one new descriptor class. These remain explicit
-review differences; the passing native core/menu cases do not waive them.
+Native converter128 and `dc_dc_converter` remain unchanged. Source129 and131–134
+keep their numeric lookups; source130 has the explicit distinct native
+`winding_dc_dc_converter` name. Wire Snips7873 adds a shared-item identity. Their
+real native circuit/menu/crafting and paid-inventory checks pass, but that does
+not waive the historical missing-reference assertions. See the
+[registry conflicts](registry-conflicts.md), [converter family](converter-family.md)
+and [Wire Snips](wire-snips.md).
 
-No expected golden JSON, skip list, assertion, or comparison tolerance was
-changed. Completing historical reconciliation and achieving a passing unfiltered
-suite remain open work. Full source-world conversion, interactive GPU/audio and
-multiplayer checks, and the remaining feature families are separate requirements.
+The earlier unfiltered run also found two order-dependent battery/furnace layouts
+because a renewable fixture did not restore shared fake-player facing. The fixture
+now saves/restores yaw and pitch in `finally`; those original behavioral cases pass
+in this new full run without changing their production devices or assertions.
 
-Reproduce the review after a fresh unfiltered run:
-
-```sh
-python3 tools/port/review_native_results.py \
-  --report /tmp/eln26-native.xml \
-  --log /workspace/.cloud-setup/native.log \
-  --output docs/forkpatch-port/native-suite-review.json
-```
+See [complete current evidence and artifact](session4-validation.json). Full
+source-world conversion, remaining equipment/integrations, interactive GPU/audio,
+multiplayer and representative loaded-world CPU comparisons remain unfinished.

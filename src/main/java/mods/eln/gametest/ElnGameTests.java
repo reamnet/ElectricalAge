@@ -70,6 +70,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ForkPatchVariableDcDcCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchConverterFamilyCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchConverterRecipeCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchWireSnipsCases.cases());
         l.add(new mods.eln.gametest.cases.ForkPatchSolarSamplingCases());
         l.addAll(mods.eln.gametest.cases.ForkPatchVariableInductorCases.cases());
         mods.eln.gametest.cases.Wp9aCases.addTo(l);

@@ -3862,5 +3862,11 @@
   "display": "One-way Boost/Buck vDC/DC Converter",
   "kind": "transparent_node",
   "name": "one_way_boost_buck_vdc_dc_converter"
+ },
+ "eln:shared_item@7873": {
+  "descriptor": "WireSnipsDescriptor",
+  "display": "Wire Snips",
+  "kind": "shared_item",
+  "name": "wire_snips"
  }
 }

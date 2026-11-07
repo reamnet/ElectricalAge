@@ -75,6 +75,7 @@ public final class ElnDeviceRegistry {
         registerElectricalSource(3);
         registerElectricalCable(32);
         mods.eln.sixnode.electricalcable.UtilityCables.register();
+        sharedItem.addElement(mods.eln.item.wiresnips.WireSnipsDescriptor.ID, new mods.eln.item.wiresnips.WireSnipsDescriptor(TR_NAME(Type.NONE, "Wire Snips")));
         // resistors (96): Wp9aContent.registerPassiveComponent, with the rest of that group
         registerBattery(16);
         registerSolarPanel(48);

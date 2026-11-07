@@ -124,6 +124,7 @@ public final class ElnClient {
                 e.register(ElnRegistry.NODE_MENU.get(), mods.eln.client.gui.ElnScreens::create);
                 e.register(ElnRegistry.XRAY_MENU.get(), mods.eln.client.gui.XRayScannerScreen::new);
                 e.register(ElnRegistry.BELT_MENU.get(), mods.eln.client.gui.BeltScreen::new);
+                e.register(ElnRegistry.WIRE_SNIPS_MENU.get(), mods.eln.client.gui.WireSnipsScreen::new);
                 e.register(ElnRegistry.BIKE_TRUNK_MENU.get(), mods.eln.client.gui.BikeTrunkScreen::new);
             });
         XRayScan.install();

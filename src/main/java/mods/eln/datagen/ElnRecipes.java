@@ -2753,5 +2753,6 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeTool() {
+        addRecipe(findItemStack("Wire Snips"), " I", "I ", "RR", 'I', "ingotIron", 'R', "itemRubber");
     }
 }

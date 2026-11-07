@@ -2699,5 +2699,54 @@
     "sourceSha256": "761cea622f6fda6f3bea2c809f005ce7aae5a6d823c47b50efcbf75369264cdd",
     "mode": "verbatim-relocated",
     "status": "662-full-root-15-cad-and-all387-port-cases-passed-fluid200-final-recipes-native-verified"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/item/wiresnips/WireSnipsDescriptor.kt",
+    "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+    "mode": "native-right-click-tool-descriptor",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/item/wiresnips/WireSnipsMenu.kt",
+    "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+    "mode": "native-owned-menu-paid-hot-metadata-and-distinct-cut-ledgers",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+    "target": "src/main/java/mods/eln/client/gui/WireSnipsScreen.java",
+    "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+    "mode": "native-inventory-button-screen-and-safe-text-entry",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchWireSnipsCases.kt",
+    "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+    "mode": "native-item-use-cut-transfer-drop-owner-and-source-crafting-regressions",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/wiresnips.png",
+    "target": "src/main/resources/assets/eln/textures/item/wire_snips.png",
+    "sourceSha256": "c80be2eb2f3c31d3c10c800a7cd88b611fd613ef241079e17b532e4431affcb0",
+    "mode": "verbatim-relocated",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/ItemRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "43948eeb1735750e82c1c43550fb8c9c47adbd15f866ac7412eb278661455442",
+    "mode": "native-source-wire-snips7873-registration",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-source-iron-rubber-wire-snips-recipe",
+    "status": "662-full-root-15-cad-and-all394-port-cases-in860-unfiltered-tests-passed-two-historical-goldens-pending"
   }
 ]

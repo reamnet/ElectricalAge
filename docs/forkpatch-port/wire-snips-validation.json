@@ -1,0 +1,61 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Wire Snips7873, native bound main/off-hand menu and paid hot-wire cuts.",
+  "root": {
+    "suites": 120,
+    "tests": 665,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "native": {
+    "focusedCases": 7,
+    "focusedPassed": 7,
+    "report": "/tmp/eln26-session4-snips1.xml",
+    "log": "session4-snips-native1.log",
+    "fullSelected": 860,
+    "fullPassed": 858,
+    "fullFailed": 2,
+    "fullSkipped": 0,
+    "allPortCases": {
+      "selected": 394,
+      "failed": 0
+    }
+  },
+  "catalog": {
+    "identities": 645,
+    "englishEntries": 949,
+    "resolvedNativeItemTextures": 461,
+    "previousIdentityCount": 638,
+    "previousEnglishCount": 936,
+    "previousIdentitiesChanged": [],
+    "previousEnglishEntriesChanged": []
+  },
+  "coverage": [
+    "Actual registered item use opens owning server menu in both hands",
+    "Whole metre cuts preserve fractional paid remainder and total length",
+    "Cut pieces retain temperature and material metadata; only new piece gets fresh ledger UUID",
+    "Invalid owner, moved tool, malformed/wrong-slot/excessive/nonfinite/fractional/overflowing requests do not cut",
+    "Native shift transfer and protected tool slot",
+    "Full inventory emits two actual world items with complete paid metres and heat; repeated close cannot refund again",
+    "Intact multicore and damaged wire preserve item identity, conductor material/count and paid mass",
+    "Actual native recipe manager accepts source iron/rubber pattern"
+  ],
+  "protocolInspection": "26.3 ServerboundContainerButtonClickPacket bytecode uses VAR_INT for buttonId, supporting the retained source action range.",
+  "rootCommand": "./gradlew --no-daemon --max-workers=2 :build cad:test runClientData",
+  "rootLog": "session4-final-full-build.log",
+  "artifactEvidence": "session4-validation.json",
+  "limitations": [
+    "Interactive client screen/GPU and multiplayer validation remain pending.",
+    "Manufacturing machines, remaining tools and full source-world conversion remain separate work.",
+    "Historical descriptor/slot goldens still fail in the full native run; expected references were unchanged."
+  ]
+}

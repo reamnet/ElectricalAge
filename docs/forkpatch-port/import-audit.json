@@ -1,11 +1,11 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "b91f712695d8e12ddd5fd813f00815fa622e4f12",
-  "ledgerEntries": 385,
-  "uniqueSourceFiles": 238,
-  "uniqueTargetFiles": 373,
-  "declaredVerbatimEntries": 108,
-  "exactCopies": 121,
+  "targetCommit": "b9631a9d1e8fa5b6152daecfd50ad9f3c4ae1dc3",
+  "ledgerEntries": 392,
+  "uniqueSourceFiles": 241,
+  "uniqueTargetFiles": 379,
+  "declaredVerbatimEntries": 109,
+  "exactCopies": 122,
   "passed": true,
   "problems": [],
   "entries": [
@@ -3678,7 +3678,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-source-variable-inductor-crafting-pattern",
       "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
-      "targetSha256": "81c55c58e5aa6f67b110dc1e98956db6d3c8317527c287a43dbd221be7495eeb",
+      "targetSha256": "b69a941661771a9d95724c3a3e1c779c6aae5de3e62ceddbd9f869b303893a19",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4019,7 +4019,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-dictionary-and-distinct130-recipe-mapping-with-restored-variable-ingredients",
       "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
-      "targetSha256": "81c55c58e5aa6f67b110dc1e98956db6d3c8317527c287a43dbd221be7495eeb",
+      "targetSha256": "b69a941661771a9d95724c3a3e1c779c6aae5de3e62ceddbd9f869b303893a19",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4243,6 +4243,83 @@
       "sourceMatchesLedger": true,
       "exactCopy": true,
       "declaredVerbatim": true
+    },
+    {
+      "index": 385,
+      "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+      "target": "src/main/kotlin/mods/eln/item/wiresnips/WireSnipsDescriptor.kt",
+      "mode": "native-right-click-tool-descriptor",
+      "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+      "targetSha256": "d5b337cb94ba9fc748e5f3ba42a3725bc08b773b2f2ad4744e8c39be8c11e3ee",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 386,
+      "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+      "target": "src/main/kotlin/mods/eln/item/wiresnips/WireSnipsMenu.kt",
+      "mode": "native-owned-menu-paid-hot-metadata-and-distinct-cut-ledgers",
+      "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+      "targetSha256": "10690df63d2269fd78bf2d94544d63e58bb3cceb7593c5067008216fd0cf459a",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 387,
+      "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+      "target": "src/main/java/mods/eln/client/gui/WireSnipsScreen.java",
+      "mode": "native-inventory-button-screen-and-safe-text-entry",
+      "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+      "targetSha256": "0ddd0706c4fc6caab1604924bd579e5f4ed5a0e5aacd6d71246580da5dda31ce",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 388,
+      "source": "src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt",
+      "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchWireSnipsCases.kt",
+      "mode": "native-item-use-cut-transfer-drop-owner-and-source-crafting-regressions",
+      "sourceSha256": "12ff280191e7f2f494743c3d53c80f1926507a7c669fe8d9661902f03dcd41a8",
+      "targetSha256": "f94316ae1c03202cae6eb56d13c94f98999dbda4fd0cdeb519dae9cd6052bdc1",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 389,
+      "source": "src/main/resources/assets/eln/textures/items/wiresnips.png",
+      "target": "src/main/resources/assets/eln/textures/item/wire_snips.png",
+      "mode": "verbatim-relocated",
+      "sourceSha256": "c80be2eb2f3c31d3c10c800a7cd88b611fd613ef241079e17b532e4431affcb0",
+      "targetSha256": "c80be2eb2f3c31d3c10c800a7cd88b611fd613ef241079e17b532e4431affcb0",
+      "sourceMatchesLedger": true,
+      "exactCopy": true,
+      "declaredVerbatim": true
+    },
+    {
+      "index": 390,
+      "source": "src/main/kotlin/mods/eln/registration/ItemRegistration.kt",
+      "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+      "mode": "native-source-wire-snips7873-registration",
+      "sourceSha256": "43948eeb1735750e82c1c43550fb8c9c47adbd15f866ac7412eb278661455442",
+      "targetSha256": "8359a18e1a5979e308cddddf54e8b31dda60a4c8dc815aeb7c57b47ee94c4722",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 391,
+      "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+      "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+      "mode": "native-source-iron-rubber-wire-snips-recipe",
+      "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+      "targetSha256": "b69a941661771a9d95724c3a3e1c779c6aae5de3e62ceddbd9f869b303893a19",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
     }
   ],
   "scope": "Source hashes, target existence and declared exact copies; not full runtime parity."

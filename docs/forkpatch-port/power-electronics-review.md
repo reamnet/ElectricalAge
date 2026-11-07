@@ -22,11 +22,10 @@ The source calls `registerTransformer(2)`:
 | 134 (2:6) | One-way Boost/Buck vDC/DC Converter | Registered native adapter |
 | 135 (2:7) | Isolation Transformer | Free lookup; source registration is development-only |
 
-The duplicate display/registry name at 130 must be resolved explicitly while keeping
-native 128. A free numeric lookup does not make a duplicate native registry name
-valid. Choose an explicit new native name and record source-import mappings when
-implementing it; do not replace the existing converter or silently reinterpret a
-native world as a source world.
+The duplicate source display/name at130 is resolved as native
+`winding_dc_dc_converter` / Winding DC-DC Converter. Native128 remains unchanged.
+The [explicit registry-name mapping](registry-conflicts.md) does not convert a
+source world or reinterpret an existing native world.
 
 ## Shared behavior requiring integration checks
 
@@ -62,8 +61,8 @@ native world as a source world.
 The variable converter129 checkpoint implements shared controls/windings.
 Fixed130 and one-way131–134 now share those winding/model adapters.
 Next: development isolation135, broader inherited shared-code review and source-world conversion.
-Required cases include V1 saves, disabled-by-default V2 upgrades, voltage-target
-zero/off, reverse flow, short/overload recovery, heterogeneous cable windings,
-paid partial-spool refunds, hot/melted inventory saves, real menus, source models
-and coupled renewable/drive networks. Representative loaded-world CPU comparisons
-against both complete baselines remain separate work.
+The grounded adapter checks cover V1 saves, disabled V2 upgrades, voltage-target
+zero/off, reverse flow, short/overload recovery, heterogeneous windings, paid partial
+spools, hot/melted saves, real menus and source models; see the [family evidence](converter-family-validation.json).
+Broader coupled renewable/drive scenes, floating isolation and representative
+loaded-world CPU comparisons against both complete baselines remain separate work.

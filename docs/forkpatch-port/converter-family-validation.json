@@ -40,7 +40,7 @@
     "./gradlew --no-daemon --max-workers=2 runClientData",
     "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_* --report REPORT.xml --universe NEW_WORLD'"
   ],
-  "rootLog": "session4-family-full-build.log",
+  "rootLog": "session4-final-full-build.log",
   "finalDatagenLog": "session4-family-recipe-datagen2.log",
   "coverage": [
     "Four real fixed-converter fronts with reversible transfer and physical winding ratio",
@@ -56,7 +56,17 @@
   "limitations": [
     "Development-only floating isolation135 and broad inherited transformer/capacitor review remain pending.",
     "Full source-world conversion, copy-tool integration and interactive client/audio/multiplayer remain pending.",
-    "Historical unfiltered goldens and representative loaded-world CPU comparison remain pending.",
-    "Full root run preceded the recipe-only dictionary correction; final native recipe checks run after regeneration."
-  ]
+    "Historical unfiltered goldens and representative loaded-world CPU comparison remain pending."
+  ],
+  "latestCompleteRegression": "session4-validation.json",
+  "finalUnfilteredNative": {
+    "selected": 860,
+    "passed": 858,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 394,
+      "failed": 0
+    }
+  }
 }
