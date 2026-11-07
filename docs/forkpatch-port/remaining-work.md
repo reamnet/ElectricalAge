@@ -43,8 +43,8 @@ Each family still participates in the cross-cutting validation/migration work be
 
 The current chip-fabrication checkpoint passes **666 full root tests**, with three
 optional previews skipped (669 selected), all **15 CAD tests**, and all
-**586 port cases inside 1052 unfiltered GameTests**. The default 200-case fluid
-corpus is included. The full native run passes 1050 cases; only the historical
+**605 port cases inside 1071 unfiltered GameTests**. The default 200-case fluid
+corpus is included. The full native run passes 1069 cases; only the historical
 descriptor and slot goldens fail, retaining 437 individual assertions for review.
 No expected references, skip lists or tolerances changed. See the
 [complete current evidence and artifact](session6-validation.json).
@@ -100,7 +100,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The latest unfiltered run passes 1050 of 1052 cases; descriptor and slot
+- The latest unfiltered run passes 1069 of 1071 cases; descriptor and slot
   goldens still fail. Review the [exact differences](native-suite-review.md), then
   rerun after explicitly reconciling the historical expectations. The wind/watermill
   fixture now restores shared test-player facing, fixing two order-dependent layouts.

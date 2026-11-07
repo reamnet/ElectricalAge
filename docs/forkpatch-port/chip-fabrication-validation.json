@@ -1,6 +1,6 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "scope": "Native chip Fabricator4480, five source basic components, paid native bootstrap recipes and deterministic accepted-energy yield; unfinished full ForkPatch port.",
+  "scope": "Native chip Fabricator 4480, five source basic components, paid bootstrap recipes, deterministic yields and the shared native stack-machine accepted-energy clock; unfinished full ForkPatch port.",
   "root": {
     "suites": 121,
     "tests": 669,
@@ -17,17 +17,17 @@
   },
   "fluidCases": 200,
   "native": {
-    "focusedSelected": 29,
-    "focusedPassed": 29,
-    "report": "/tmp/eln26-session6-fabricator1.xml",
-    "log": "session6-fabricator-native1.log",
+    "focusedSelected": 48,
+    "focusedPassed": 48,
+    "report": "/tmp/eln26-session6-fabricator5.xml",
+    "log": "session6-fabricator-native5.log",
     "full": {
-      "selected": 1052,
-      "passed": 1050,
+      "selected": 1071,
+      "passed": 1069,
       "failed": 2,
       "skipped": 0,
       "portCases": {
-        "selected": 586,
+        "selected": 605,
         "failed": 0
       }
     }
@@ -59,14 +59,138 @@
     "Real native output automation with abort/commit and strict source slot filters",
     "Native crafting manager plus preserved ingot/plate and new paid wafer machine recipes",
     "Actual client factory reads complete publication; source body and both etcher meshes draw; only client clock advances motion",
-    "All15 optional JEI examples use executable native inputs/outputs with visible chance/paid attempt cost"
+    "All15 optional JEI examples use executable native inputs/outputs with visible chance/paid attempt cost",
+    "Actual ingot\u2192plate\u2192wafer\u219216transistor chain on one native floor-cable bus with independent processing-energy meters",
+    "64real ALU attempts,31successes and62actual chips transferred into player inventory across scheduled main-thread owner reload",
+    "Every50V/200V macerator, compressor, magnetizer and plate machine pays independently measured work in both supply polarities;2000readiness checks cannot advance work/LU"
   ],
   "artifactEvidence": "session6-validation.json",
-  "rootLog": "session6-fabricator-full-build1.log",
+  "rootLog": "session6-latest-full-build.log",
   "limitations": [
     "Unfiltered historical descriptor and slot goldens still fail; no expected references, skip lists or tolerances changed.",
     "Full source-world conversion, remaining equipment/integrations and shared-code parity remain pending.",
     "Headless native/mesh/server checks do not establish interactive client/GPU/audio/multiplayer, JEI runtime or whole-mod comparative performance.",
     "Development artifact integrity verified; this is not a finished release."
-  ]
+  ],
+  "measuredIntegration": {
+    "evidenceLog": "session6-fabricator-native5.log",
+    "productionChain": {
+      "siliconIngots": 4,
+      "copperPlates": 1,
+      "transistors": 16,
+      "plateAndWaferRequiredJoules": 20000,
+      "plateAndWaferMeterJoules": 20194.099005782722,
+      "fabricatorRequiredJoules": 4000,
+      "fabricatorAcceptedJoules": 4019.794808825848
+    },
+    "aluCampaign": {
+      "attempts": 64,
+      "inputPairsConsumed": 64,
+      "successfulAttempts": 31,
+      "actualInventoryChips": 62,
+      "completedJoules": 256000,
+      "acceptedJoules": 262200.0,
+      "independentMeterJoules": 262200.00230400875,
+      "actualOwnerReloadAfterFirstFailure": true
+    },
+    "sharedMachinePartialWorkSamples": [
+      {
+        "lookup": 2112,
+        "supplyPolarity": 1,
+        "processWorkJoules": 3.9000000000000026,
+        "independentlyMeteredJoules": 3.9000000012500022
+      },
+      {
+        "lookup": 2112,
+        "supplyPolarity": -1,
+        "processWorkJoules": 3.9000000000000026,
+        "independentlyMeteredJoules": 3.9000000012500022
+      },
+      {
+        "lookup": 2116,
+        "supplyPolarity": 1,
+        "processWorkJoules": 39.0,
+        "independentlyMeteredJoules": 39.00000002
+      },
+      {
+        "lookup": 2116,
+        "supplyPolarity": -1,
+        "processWorkJoules": 39.0,
+        "independentlyMeteredJoules": 39.00000002
+      },
+      {
+        "lookup": 2240,
+        "supplyPolarity": 1,
+        "processWorkJoules": 3.900000000000002,
+        "independentlyMeteredJoules": 3.9000000012500022
+      },
+      {
+        "lookup": 2240,
+        "supplyPolarity": -1,
+        "processWorkJoules": 3.900000000000002,
+        "independentlyMeteredJoules": 3.9000000012500022
+      },
+      {
+        "lookup": 2244,
+        "supplyPolarity": 1,
+        "processWorkJoules": 39.0,
+        "independentlyMeteredJoules": 39.00000002
+      },
+      {
+        "lookup": 2244,
+        "supplyPolarity": -1,
+        "processWorkJoules": 39.0,
+        "independentlyMeteredJoules": 39.00000002
+      },
+      {
+        "lookup": 2304,
+        "supplyPolarity": 1,
+        "processWorkJoules": 3.900000000000002,
+        "independentlyMeteredJoules": 3.9000000012500022
+      },
+      {
+        "lookup": 2304,
+        "supplyPolarity": -1,
+        "processWorkJoules": 3.900000000000002,
+        "independentlyMeteredJoules": 3.9000000012500022
+      },
+      {
+        "lookup": 2308,
+        "supplyPolarity": 1,
+        "processWorkJoules": 39.0,
+        "independentlyMeteredJoules": 39.00000002
+      },
+      {
+        "lookup": 2308,
+        "supplyPolarity": -1,
+        "processWorkJoules": 39.0,
+        "independentlyMeteredJoules": 39.00000002
+      },
+      {
+        "lookup": 2368,
+        "supplyPolarity": 1,
+        "processWorkJoules": 3.900000000000002,
+        "independentlyMeteredJoules": 3.9000000012500022
+      },
+      {
+        "lookup": 2368,
+        "supplyPolarity": -1,
+        "processWorkJoules": 3.900000000000002,
+        "independentlyMeteredJoules": 3.9000000012500022
+      },
+      {
+        "lookup": 2372,
+        "supplyPolarity": 1,
+        "processWorkJoules": 39.0,
+        "independentlyMeteredJoules": 39.00000002
+      },
+      {
+        "lookup": 2372,
+        "supplyPolarity": -1,
+        "processWorkJoules": 39.0,
+        "independentlyMeteredJoules": 39.00000002
+      }
+    ],
+    "scope": "Headless native production/energy/ownership regression evidence; not loaded-world comparative performance."
+  }
 }

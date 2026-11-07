@@ -1226,9 +1226,9 @@ unfinished.
 
 ### Native chip Fabricator
 
-Fabricator4480 and basic components8064–8068 now use native accepted electrical
+Fabricator 4480 and basic components 8064–8068 now use native accepted electrical
 work, real filtered inventories/automation, saved deterministic ALU yields and
-source body/etcher meshes. Every attempt pays both ingredients and4 kJ, including
+source body/etcher meshes. Every attempt pays both ingredients and 4 kJ, including
 a failed yield. Exact output capacity, copied-state guards, actual owner reload
 and real break/place have native coverage. Native paid machine/wafer bootstraps
 fill missing source survival recipes while preserving existing native chip and

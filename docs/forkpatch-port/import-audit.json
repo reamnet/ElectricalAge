@@ -1,9 +1,9 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "8705e1f6bb7a478ea076eb74b0061be34c9a03fe",
-  "ledgerEntries": 436,
-  "uniqueSourceFiles": 263,
-  "uniqueTargetFiles": 416,
+  "targetCommit": "f9830d8f23d6b28c498cc9d87c894049d5e52313",
+  "ledgerEntries": 438,
+  "uniqueSourceFiles": 265,
+  "uniqueTargetFiles": 418,
   "declaredVerbatimEntries": 125,
   "exactCopies": 138,
   "passed": true,
@@ -4613,7 +4613,7 @@
       "target": "src/main/kotlin/mods/eln/transparentnode/fabricator/FabricatorDescriptor.kt",
       "mode": "native-paid-attempt-and-yield-correct-fabricator-adapter",
       "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
-      "targetSha256": "2a38fa626888856259b0d0c18e548d2d2a65d9b93413742976cb4721a558e371",
+      "targetSha256": "b9d599e00f07b61b36931e7305243623c8e7d90d4729a22061ee64154dd041ef",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4657,7 +4657,7 @@
       "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchFabricatorCases.kt",
       "mode": "native-powered-operation-ownership-menu-reload-and-crafting-regressions",
       "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
-      "targetSha256": "ce7c5e4872f211d1ce00ef4184d5acdfb63cd12251144405801c36457596fc94",
+      "targetSha256": "32f3bed6d3b9d2a7f80bc6dc056ff0699affa216088f66a1777b4cf8e8cf3aa0",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4679,7 +4679,7 @@
       "target": "src/main/java/mods/eln/compat/jei/FabricatorCategory.java",
       "mode": "native-optional-jei31-paid-attempt-examples",
       "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
-      "targetSha256": "583114ec5bb03b848573a24729b9cd40c956f775eb13f113fb0df8b165d905bc",
+      "targetSha256": "921b1a2850a7d2c5a988d4f93d9f479dd234659d6d040849efc7af127d955df0",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4804,6 +4804,28 @@
       "sourceMatchesLedger": true,
       "exactCopy": true,
       "declaredVerbatim": true
+    },
+    {
+      "index": 436,
+      "source": "src/main/java/mods/eln/sim/ElectricalStackMachineProcess.java",
+      "target": "src/main/java/mods/eln/sim/ElectricalStackMachineProcess.java",
+      "mode": "native-accepted-step-shared-machine-energy-clock",
+      "sourceSha256": "92c2b261f222489335fea65c273d71e756cafdceed79001f96ae14f1893ba760",
+      "targetSha256": "1d51f5f075a092af4fada9bd4bf735cc9b131b96176146ffc6655074f4d8b6ae",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
+    },
+    {
+      "index": 437,
+      "source": "src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineElement.java",
+      "target": "src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineElement.java",
+      "mode": "native-accepted-step-shared-machine-energy-clock",
+      "sourceSha256": "98a7aff1c5d0b8fb75dde1fcd6d4b97e136cda1013e62cf407f51d3c495ce351",
+      "targetSha256": "ab83d6c229938c36e0782b8ab625f764e6b16ea90a4c2e7dad597bbf01544087",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
     }
   ],
   "scope": "Source hashes, target existence and declared exact copies; not full runtime parity."

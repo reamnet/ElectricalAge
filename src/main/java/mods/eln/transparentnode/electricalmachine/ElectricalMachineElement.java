@@ -64,6 +64,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
 
         electricalLoadList.add(electricalLoad);
         electricalComponentList.add(electricalResistor);
+        electricalProcessList.add(slowRefreshProcess::acceptedElectricalStep);
         slowProcessList.add(slowRefreshProcess);
         slowProcessList.add(slowProcess);
         slowProcessList.add(fieldSpeedProcess);

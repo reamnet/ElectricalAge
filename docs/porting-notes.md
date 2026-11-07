@@ -564,12 +564,26 @@ constituent sensible heat rather than creating a cold default bundle. See
 
 ## ForkPatch chip fabrication attempts
 
-The native Fabricator uses accepted electrical steps for its4 kJ attempt budget.
+The native Fabricator uses accepted electrical steps for its 4 kJ attempt budget.
 It matches actual wafer/plate item identities, permits exact output capacity and
 checks full output components. Each attempt consumes both ingredients and its
-whole budget, including a failed50% ALU yield. A saved per-machine seed/counter
+whole budget, including a failed 50% ALU yield. A saved per-machine seed/counter
 makes the next outcome independent of renderer/world random calls and stable
 through partial-work reload. Picked/copied settings carry only the operation;
 partial work and inventories remain world-owned. Native GameTests cover every
 operation, actual ownership, sag/outages, malformed controls and the failed-yield
 energy regression. See [the adapter and bootstrap recipes](forkpatch-port/chip-fabrication.md).
+
+## Accepted energy for the native stack-machine process
+
+The ingot→plate→wafer→Fabricator integration exposed an inherited ordering error:
+`ElectricalStackMachineProcess.process` changed the load resistance and then
+credited that new resistance's power at the previous solved voltage. Starting a
+job could therefore count one unsolved sample before the circuit had supplied it.
+The shared process now accumulates work only in an accepted electrical callback;
+its slow callback handles readiness and completion. The existing machine element
+registers that callback. Recipe, booster, port, inventory and solver infrastructure
+remain in place, with no save keys changed. A native energy-metered production
+chain and 2,000 repeated-readiness checks guard the fix. The native campaign also
+verifies 64 paid ALU attempts, 62 real output chips, and an actual scheduled owner
+reload after a failed attempt.

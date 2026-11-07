@@ -25,7 +25,10 @@ import kotlin.math.abs
 object ForkPatchFabricatorCases {
     @JvmStatic fun cases(): List<TestCase> = FabricatorOperation.entries.map { Production(it, Direction.XN) } +
         listOf(Direction.XP, Direction.ZN, Direction.ZP).map { Production(FabricatorOperation.TRANSISTOR, it) } +
-        listOf(Sag(), Outage(), FailedYield(), ExactCapacity(), Blocked(false), Blocked(true), Guards(), WorldReload(), BreakOwnership(), Automation(), Recipes())
+        listOf(Sag(), Outage(), FailedYield(), ExactCapacity(), Blocked(false), Blocked(true), Guards(), WorldReload(), BreakOwnership(), Automation(), Recipes(), ProductionChain(), YieldCampaign(), PlateReadiness()) +
+        listOf(2112, 2116, 2240, 2244, 2304, 2308, 2368, 2372).flatMap { id ->
+            listOf(InheritedMachineBudget(id, 1), InheritedMachineBudget(id, -1))
+        }
     private fun item(name: String, count: Int = 1) = Eln.findItemStack(name, count)
     private fun packet(value: Int? = null): DataInputStream {
         val bytes = ByteArrayOutputStream()
@@ -255,6 +258,141 @@ object ForkPatchFabricatorCases {
                 c.check("fabricator: actual server inventory accepts only the source wafer/plate slots", e.inventory.canInsertItem(1, item("Silicon Wafer"), 0) && e.inventory.canInsertItem(2, item("Copper Plate"), 0) && !e.inventory.canInsertItem(1, item("Silicon Plate"), 0) && !e.inventory.canExtractItem(1, item("Silicon Wafer"), 0), "")
                 panel(c)
             } finally { clean() }
+        }
+    }
+    /** Both existing plate recipes and the new Fabricator run from one real floor-cable bus. */
+    private class ProductionChain : Base() {
+        lateinit var plate: mods.eln.transparentnode.electricalmachine.ElectricalMachineElement
+        lateinit var clock: IProcess; lateinit var accounting: IProcess
+        var stage = 0; var plateJoules = 0.0
+        override fun id() = "forkpatch_fabricator_native_ingot_plate_wafer_chip_automated_chain"
+        override fun ticks() = 400
+        override fun build(c: TestContext) {
+            val player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level())
+            val yaw = player.yRot; val pitch = player.xRot
+            try { player.yRot = 270f; player.xRot = 0f; plate = c.placeTransparent(2372, c.at(2, 1, 1)) as mods.eln.transparentnode.electricalmachine.ElectricalMachineElement }
+            finally { player.yRot = yaw; player.xRot = pitch }
+            place(c)
+            plate.inventory.setItem(plate.inSlotId, item("Silicon Ingot", 4)); plate.inventory.setChanged()
+            e.inventory.setItem(2, item("Copper Plate")); e.inventory.setChanged(); e.prepare()
+            c.placeSix(mods.eln.registry.ElnDeviceRegistry.meduimVoltageCableDescriptor.parentItemDamage, c.at(2, 1, 0))
+            val wire = c.placeSix(mods.eln.registry.ElnDeviceRegistry.meduimVoltageCableDescriptor.parentItemDamage, c.at(3, 1, 0)) as ElectricalCableElement
+            c.placeSix(mods.eln.registry.ElnDeviceRegistry.meduimVoltageCableDescriptor.parentItemDamage, c.at(4, 1, 0))
+            parts.add(VoltageSource("fabrication bus", wire.electricalLoad, null).setU(200.0).also { Eln.simulator.addElectricalComponent(it) })
+            val plateResistor = plate.electricalComponentList.filterIsInstance<Resistor>().first()
+            accounting = IProcess { dt -> if (dt > 0 && plateResistor.p.isFinite() && plateResistor.p > 0) plateJoules += plateResistor.p * dt }
+            Eln.simulator.addElectricalProcess(accounting)
+            fun transfer(target: mods.eln.node.transparent.TransparentNodeElement, slot: Int): Boolean {
+                val from = requireNotNull(c.level().getCapability(net.neoforged.neoforge.capabilities.Capabilities.Item.BLOCK, plate.node.coordonate.pos(), net.minecraft.core.Direction.DOWN))
+                val to = requireNotNull(c.level().getCapability(net.neoforged.neoforge.capabilities.Capabilities.Item.BLOCK, target.node.coordonate.pos(), net.minecraft.core.Direction.UP))
+                val resource = from.getResource(0); if (resource.isEmpty) return false
+                net.neoforged.neoforge.transfer.transaction.Transaction.openRoot().use { tx ->
+                    if (to.insert(slot, resource, 1, tx) != 1 || from.extract(0, resource, 1, tx) != 1) return false
+                    tx.commit(); return true
+                }
+            }
+            clock = IProcess {
+                if (stage == 0 && !plate.inventory.getItem(0).isEmpty && transfer(plate, 0)) stage = 1
+                else if (stage == 1 && !plate.inventory.getItem(0).isEmpty && transfer(e, 1)) stage = 2
+            }; Eln.simulator.addSlowProcess(clock)
+        }
+        override fun measure(c: TestContext) {
+            try {
+                val output = e.inventory.getItem(0)
+                c.check("fabrication chain: four actual silicon ingots pass through native plate and wafer production into16 transistors", stage == 2 && ItemStack.isSameItemSameComponents(output, FabricationRecipes.output(FabricatorOperation.TRANSISTOR)) && output.count == 16 && plate.inventory.isEmpty && e.inventory.getItem(1).isEmpty && e.inventory.getItem(2).isEmpty, "stage=$stage input=${plate.inventory.getItem(plate.inSlotId)} plateOut=${plate.inventory.getItem(0)} output=$output")
+                c.check("fabrication chain: original and new plate operations each pay their own10 kJ", plateJoules + 1e-5 >= 20000.0, "$plateJoules")
+                c.check("fabrication chain: wafer transfer cannot inherit plate processing work", e.completedJoules == 4000.0 && e.acceptedJoules + 1e-5 >= 4000.0 && e.attempts == 1L, "${e.acceptedJoules}")
+            } finally { Eln.simulator.removeSlowProcess(clock); Eln.simulator.removeElectricalProcess(accounting); clean() }
+        }
+    }
+    /** A real input/output campaign survives a queued main-thread owner reload after its first failed yield. */
+    private class YieldCampaign : Base() {
+        lateinit var player: TransportTestPlayer; lateinit var clock: IProcess; lateinit var accounting: IProcess
+        var queued = false; var reloaded = false; var paid = 0.0
+        override fun id() = "forkpatch_fabricator_64_paid_yield_attempts_with_actual_owner_reload_and_output_automation"
+        override fun ticks() = 1600
+        override fun build(c: TestContext) {
+            place(c); stock(FabricatorOperation.ALU, 64); feed(400.0)
+            player = TransportTestPlayer(c.level(), com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes(id().toByteArray()), "fabCampaign"))
+            accounting = IProcess { dt -> if (dt > 0 && e.resistor.p.isFinite() && e.resistor.p > 0) paid += e.resistor.p * dt }
+            Eln.simulator.addElectricalProcess(accounting)
+            clock = IProcess {
+                if (!queued && e.attempts == 1L) {
+                    queued = true
+                    c.level().server.schedule(net.minecraft.server.TickTask(c.level().server.tickCount) {
+                        val work = e.progressJoules; val attempts = e.attempts; val pos = e.node.coordonate.pos()
+                        clean(); e = (Reload.node(c.level(), pos).fresh as TransparentNode).element as FabricatorElement
+                        c.check("fabricator campaign: actual scheduled owner reload retains paid work and consumed-attempt boundary", e.progressJoules == work && e.attempts == attempts && e.operation == FabricatorOperation.ALU, "")
+                        reloaded = true; feed(400.0)
+                    })
+                }
+                if (!e.inventory.getItem(0).isEmpty) {
+                    val handler = requireNotNull(c.level().getCapability(net.neoforged.neoforge.capabilities.Capabilities.Item.BLOCK, e.node.coordonate.pos(), net.minecraft.core.Direction.UP))
+                    val resource = handler.getResource(0)
+                    net.neoforged.neoforge.transfer.transaction.Transaction.openRoot().use { tx ->
+                        if (handler.extract(0, resource, 2, tx) == 2) { tx.commit(); player.inventory.add(resource.toStack().copyWithCount(2)) }
+                    }
+                }
+            }; Eln.simulator.addSlowProcess(clock)
+        }
+        override fun measure(c: TestContext) {
+            try {
+                val expected = (0L until 64L).count { FabricationRules.succeeds(0, it, FabricatorOperation.ALU) }
+                val chips = (0 until player.inventory.containerSize).sumOf { slot -> player.inventory.getItem(slot).let { if (it.item === item("Arithmetic Logic Unit").item) it.count else 0 } }
+                c.check("fabricator campaign: every failed/successful attempt consumes exactly one pair across a real reload", reloaded && e.attempts == 64L && e.successful == expected.toLong() && e.inventory.isEmpty, "attempts=${e.attempts} expected successes=$expected actual=${e.successful}")
+                c.check("fabricator campaign: real automation owns exactly the deterministic produced chips", chips == expected * 2, "$chips")
+                c.check("fabricator campaign: all64 attempts including failures pay independent real input energy", e.completedJoules == 64 * 4000.0 && e.acceptedJoules + 1e-5 >= e.completedJoules && paid + 1e-5 >= e.completedJoules, "accepted=${e.acceptedJoules} independently measured=$paid")
+            } finally { Eln.simulator.removeSlowProcess(clock); Eln.simulator.removeElectricalProcess(accounting); clean(); player.inventory.clearContent() }
+        }
+    }
+    private class PlateReadiness : Base() {
+        lateinit var plate: mods.eln.transparentnode.electricalmachine.ElectricalMachineElement
+        override fun id() = "forkpatch_fabricator_legacy_plate_machine_readiness_cannot_mint_work"
+        override fun build(c: TestContext) {
+            plate = c.placeTransparent(2372, c.at(4, 1, 1)) as mods.eln.transparentnode.electricalmachine.ElectricalMachineElement
+            plate.inventory.setItem(plate.inSlotId, item("Silicon Plate")); plate.inventory.setChanged()
+            val source = VoltageSource("plate readiness supply", plate.electricalLoadList.first(), null).setU(100.0)
+            parts.add(source); Eln.simulator.addElectricalComponent(source)
+        }
+        override fun measure(c: TestContext) {
+            try {
+                val process = Batch1Cases.field<mods.eln.sim.ElectricalStackMachineProcess>(plate, "slowRefreshProcess")
+                val work = process.processState(); val load = plate.electricalLoadList.first(); val system = load.subSystem!!; val version = system.matrixVersion
+                repeat(2000) { process.process(.05) }
+                c.check("plate machine: repeated readiness cannot pay or finish an inherited native recipe", work > 0 && work < 1 && process.processState() == work && plate.inventory.getItem(0).isEmpty && plate.inventory.getItem(plate.inSlotId).count == 1, "$work -> ${process.processState()}")
+                c.check("plate machine: unchanged readiness preserves native LU factors", system.matrixVersion == version && Batch1Cases.field<Boolean>(system, "matrixValid"), "")
+            } finally { clean() }
+        }
+    }
+    /** Every voltage tier/polarity of the shared legacy machine owner pays only solved electrical steps. */
+    private class InheritedMachineBudget(val lookup: Int, val sign: Int) : Base() {
+        lateinit var machine: mods.eln.transparentnode.electricalmachine.ElectricalMachineElement
+        lateinit var process: mods.eln.sim.ElectricalStackMachineProcess
+        lateinit var recipe: mods.eln.misc.Recipe
+        lateinit var meter: IProcess
+        var paid = 0.0
+        override fun id() = "forkpatch_fabricator_inherited_machine_${lookup}_${if (sign > 0) "positive" else "negative"}_paid_steps"
+        override fun build(c: TestContext) {
+            machine = c.placeTransparent(lookup, c.at(4, 1, 1)) as mods.eln.transparentnode.electricalmachine.ElectricalMachineElement
+            val descriptor = machine.descriptor as mods.eln.transparentnode.electricalmachine.ElectricalMachineDescriptor
+            recipe = descriptor.recipe.recipes.first()
+            machine.inventory.setItem(machine.inSlotId, recipe.input.copy()); machine.inventory.setChanged()
+            process = Batch1Cases.field(machine, "slowRefreshProcess")
+            val resistor = machine.electricalComponentList.filterIsInstance<Resistor>().first()
+            val nominal = if (lookup % 64 == 0) 50.0 else 200.0
+            val source = VoltageSource("inherited machine supply", machine.electricalLoadList.first(), null).setU(sign * nominal * .1)
+            parts.add(source); Eln.simulator.addElectricalComponent(source)
+            meter = IProcess { dt -> if (dt > 0 && resistor.p.isFinite() && resistor.p > 0) paid += resistor.p * dt }
+            Eln.simulator.addElectricalProcess(meter)
+        }
+        override fun measure(c: TestContext) {
+            try {
+                val work = process.processState() * recipe.energy
+                c.check("native machine: every inherited family/tier/polarity pays partial work from an independent accepted-step meter", work > 0 && work < recipe.energy && abs(work - paid) < 1e-5, "$lookup/$sign work=$work paid=$paid")
+                val system = machine.electricalLoadList.first().subSystem!!; val version = system.matrixVersion
+                repeat(2000) { process.process(.05) }
+                c.check("native machine: repeated readiness cannot advance any inherited recipe or rebuild stable LU", process.processState() * recipe.energy == work && machine.inventory.getItem(machine.inSlotId).count == recipe.input.count && machine.inventory.getItem(0).isEmpty && system.matrixVersion == version && Batch1Cases.field<Boolean>(system, "matrixValid"), "$lookup/$sign")
+            } finally { Eln.simulator.removeElectricalProcess(meter); clean() }
         }
     }
     private class Recipes : Base() {

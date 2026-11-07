@@ -1,6 +1,6 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "scope": "Native chip Fabricator4480, five source basic components, paid native bootstrap recipes and deterministic accepted-energy yield; unfinished full ForkPatch port.",
+  "scope": "Native chip Fabricator 4480, five source basic components, paid bootstrap recipes, deterministic yields and the shared native stack-machine accepted-energy clock; unfinished full ForkPatch port.",
   "root": {
     "suites": 121,
     "tests": 669,
@@ -17,12 +17,12 @@
   },
   "fluidCases": 200,
   "native": {
-    "selected": 1052,
-    "passed": 1050,
+    "selected": 1071,
+    "passed": 1069,
     "failed": 2,
     "skipped": 0,
     "portCases": {
-      "selected": 586,
+      "selected": 605,
       "failed": 0
     }
   },
@@ -38,13 +38,13 @@
   },
   "artifact": {
     "path": "build/libs/eln-26.3-0.1.0-port.jar",
-    "bytes": 30510594,
-    "sha256": "deba0ee751724d648d6d1f4bfad7fccd354b4d1eddd9eada85ec172a913965e4",
+    "bytes": 30532906,
+    "sha256": "d06a6ba617ed3eff85291f5da6c28392b0b50eb6881acca9440df0f0a26bd107",
     "allPrimaryOutputFilesChecked": {
       "java": 1770,
-      "kotlin": 780
+      "kotlin": 784
     },
-    "scopedOutputFilesChecked": 28,
+    "scopedOutputFilesChecked": 32,
     "processedResourcesChecked": 4809,
     "allCheckedBytesMatch": true
   },
@@ -52,11 +52,11 @@
   "gradleAndWrapperUnchanged": true,
   "commands": [
     "./gradlew --no-daemon --max-workers=2 :build cad:test runClientData",
-    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report REPORT.xml --universe NEW_UNIQUE_WORLD'",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report /tmp/eln26-session6-all-final.xml --universe /workspace/ElectricalAge/run/session6-all-final'",
     "python3 tools/port/audit_imports.py --source ../ELN1.21.1ForkPatch"
   ],
-  "rootLog": "session6-fabricator-full-build1.log",
-  "nativeLog": "session6-all-native-checkpoint.log",
+  "rootLog": "session6-latest-full-build.log",
+  "nativeLog": "session6-all-native-final.log",
   "limitations": [
     "Unfiltered historical descriptor and slot goldens still fail; no expected references, skip lists or tolerances changed.",
     "Full source-world conversion, remaining equipment/integrations and shared-code parity remain pending.",

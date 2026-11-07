@@ -53,3 +53,19 @@ have headless checks. See [validation](chip-fabrication-validation.json).
 Interactive screen/GPU, JEI runtime, audio and multiplayer checks remain pending.
 The [source review](chip-fabrication-review.md) retains the original defects and
 contract; this remains part of the unfinished full ForkPatch port.
+
+The full native production chain starts with four silicon ingots and one copper
+plate, powers the existing plate machine and Fabricator from one floor-cable bus,
+and moves actual output resources through sided transactions. It finishes with 16
+transistors and independently measures both 10 kJ plate operations and the 4 kJ
+fabrication attempt. This exposed and fixed an inherited stack-machine ordering
+bug: readiness used to sample a newly changed resistor at an old solved voltage.
+The shared native process now pays work only after accepted electrical steps;
+recipe/booster/port behavior and save keys remain unchanged.
+
+A 64-attempt ALU campaign consumes 64 wafer/copper pairs, reloads its actual world
+owner on a queued main-thread task after the first failure, and transfers exactly
+62 chips into a real player inventory. Its 31 successful outcomes match the saved
+seed/counter sequence. All 64 attempts, including failures, are covered by an
+independent actual-resistor energy integral. These are headless production checks,
+not interactive client or general loaded-world performance measurements.

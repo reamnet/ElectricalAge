@@ -1,8 +1,8 @@
 # Unfiltered native validation and historical references
 
-The chip-fabrication checkpoint ran **1052 unfiltered GameTests**:
-**1050 passed**, two failed, and none were skipped. The failures are
-`golden_descriptors` and `golden_slots`. All **586 port cases pass** in this expanded
+The chip-fabrication checkpoint ran **1071 unfiltered GameTests**:
+**1069 passed**, two failed, and none were skipped. The failures are
+`golden_descriptors` and `golden_slots`. All **605 port cases pass** in this expanded
 run. Every other native behavioral and recipe case passes. The complete root run
 passes 666 tests with three optional previews skipped (669 selected); all 15 CAD
 tests and the default 200 fluid corpus are included.
@@ -44,7 +44,8 @@ See [complete current evidence and artifact](session6-validation.json). Full
 source-world conversion, remaining equipment/integrations, interactive GPU/audio,
 multiplayer and representative loaded-world CPU comparisons remain unfinished.
 
-The native silicon-plate-to-wafer route adds a deliberate recipe to both existing
-plate-machine input menus. Their accepted inputs are therefore included in the
-retained slot differences. The new Fabricator/basic components add source lookup
-identities and a native menu, not an exception to historical comparison checks.
+The new wafer recipe extends native plate processing and is validated against
+its actual processing and input/output APIs. The observed 15 historical slot
+acceptance differences still concern the four added battery categories in legacy
+chargers, watches and the fire buzzer. The Fabricator/basic components add source
+lookup identities and a native menu; no historical comparison is waived.

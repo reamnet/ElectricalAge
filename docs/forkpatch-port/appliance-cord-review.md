@@ -16,7 +16,7 @@ below remains unregistered and has no native runtime validation.
 | shared 8006 | 240 V 30 A Dryer Cord | 240 V / 30 A |
 | transparent 8076 | Four Cell Plug-in UPS | separate compact battery-backed socket source |
 
-The 19 cord/outlet slots above are free in the current 652-entry native manifest;
+The 19 cord/outlet slots above are free in the current 658-entry native manifest;
 recheck before registration. Shared and transparent lookup spaces are separate.
 The compact UPS must be checked independently against the native UPS identities
 and physical cell inventory. Native programmable UPS 7947 must remain unchanged.
@@ -79,3 +79,48 @@ recessed support removal and ordinary wall restoration; native cable isolation;
 wireless/cord exclusion; real client publication, cached cord paths, plug meshes,
 menus, recipes and multiplayer. Interactive/GPU checks remain separate from
 headless publication/mesh checks.
+
+The native Fabricator adapter now exposes its original 200 V input as `power` and
+keeps its ZN/Down surface terminal fixed. Its ordinary item/configuration payload
+contains only `operation`; paid work, inputs and the deterministic yield seed/
+attempt counter stay world-owned. A future actual cord carry must transfer those
+fields through the one consumed physical snapshot, without separately dropping
+its inputs or refunding its paid cord. Copy/pick helpers must continue using the
+restricted settings payload. The shared native electrical-machine process now
+accumulates work in its accepted electrical callback; cord attachment must retain
+that callback and isolate only the original input, preserving recipe/booster
+logic and native cached LU behavior.
+
+Before implementation, keep decoding separate from physical claims. Source
+`CordRating.read` defaults an unknown name to 120 V, while `CordAnchor.read`
+clamps socket indices to 0–5. Native decoding should reject an unknown rating or
+out-of-range socket instead of turning malformed state into another valid
+connector. The outlet's actual capacity is authoritative. Preserve an explicit
+source-save conversion path separately from validation of new native state.
+
+Source `cordWouldLoop` walks upstream anchors until it reaches a disconnected
+source or repeated UUID. Adapt that walk to resident-only native owner lookups
+with a documented visit budget; budget exhaustion must reject an attachment.
+A saved reservation token and a live physical claimant are different: unload
+removes the conductor/live claim while retaining the reservation, and permanent
+removal releases/refunds once. Repeated claim/poll/read paths must not advance
+Fabricator or inherited machine work. These are reviewed implementation
+requirements; no outlet/cord adapter or native test coverage is claimed yet.
+
+Concrete native inlet review for the first consumer adapters:
+
+| Native consumer | Existing load / surface port | Adapter constraint |
+| --- | --- | --- |
+| `fabricator.FabricatorElement` | `power`, 200 V, global ZN/Down | Keep fixed source orientation and accepted-work callback; copy settings only through its restricted payload. |
+| `wiremachine.WireMachineElement` | `power`, 200 V, bottom-edge ports | Keep paid buffers and real break/place ownership; cord carry cannot also emit the machine's paid-buffer drop. |
+| `electricalmachine.ElectricalMachineElement` | private `electricalLoad`, descriptor voltage and `powerLrdu` mask | Add a narrow inlet adapter rather than replacing its load/process/recipes; preserve the accepted-step callback added here. |
+| `electricalfurnace.ElectricalFurnaceElement` | package-local `electricalLoad`, back/Down mask | Read voltage from the installed native heating element; missing/invalid hardware must reject a cord. |
+| `batterycharger.BatteryChargerElement` | public `powerLoad`, native power on every edge | Retain this destination improvement when unplugged; suppress every native inlet edge when plugged. |
+| `lampsupply.LampSupplyElement` | public `powerLoad`, front LRDU | Keep native channel accounting and prevent simultaneous alternate power inputs. |
+
+Both connection masks and load lookup paths need the same plugged-input policy;
+several native getters return the load more broadly than their masks. Preserve
+signal, thermal, shaft and fluid connections. This table records inspected native
+entry points, not permission to make fields public or select the first arbitrary
+load on every device. Motors, other consumers and newer native-only equipment
+still need their own explicit inlet/topology review.

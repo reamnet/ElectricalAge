@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 public class FabricatorCategory extends AbstractRecipeCategory<FabricationRecipes.Example> {
     public static final IRecipeType<FabricationRecipes.Example> TYPE = IRecipeType.create("eln", "fabricator", FabricationRecipes.Example.class);
     public FabricatorCategory(IGuiHelper gui) {
-        super(TYPE, Component.translatable("block.eln.fabricator"), gui.createDrawableItemStack(Eln.findItemStack("Fabricator", 1)), 184, 78);
+        super(TYPE, Component.translatable("block.eln.fabricator"), gui.createDrawableItemStack(Eln.findItemStack("Fabricator", 1)), 184, 84);
     }
     @Override public void setRecipe(IRecipeLayoutBuilder layout, FabricationRecipes.Example example, IFocusGroup focuses) {
         for (int i = 0; i < example.getInputs().size(); i++)
