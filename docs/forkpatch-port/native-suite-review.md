@@ -1,24 +1,24 @@
 # Unfiltered native validation and historical references
 
-The chip-fabrication checkpoint ran **1071 unfiltered GameTests**:
-**1069 passed**, two failed, and none were skipped. The failures are
-`golden_descriptors` and `golden_slots`. All **605 port cases pass** in this expanded
-run. Every other native behavioral and recipe case passes. The complete root run
-passes 666 tests with three optional previews skipped (669 selected); all 15 CAD
-tests and the default 200 fluid corpus are included.
+The surface-cord checkpoint ran **1123 unfiltered GameTests**:
+**1121 passed**, two failed, and none were skipped. The failures remain
+`golden_descriptors` and `golden_slots`. All **657 port cases pass**, including
+52 cord/outlet cases. Every other native behavioral and recipe case passes.
+The full root run passes 670 tests with three optional previews skipped (673
+selected); all 15 CAD tests and the default 200-case fluid corpus are included.
 
 [Machine-readable differences](native-suite-review.json) retain all failing
-assertions and messages. These are **437 assertions in two test cases**, not 437
+assertions and messages. These are **467 assertions in two test cases**, not 467
 failed cases. No expected snapshots, exception/skip lists or numeric tolerances
 were changed.
 
 | Historical comparison | Observed differences | Review still required |
 | --- | ---: | --- |
-| Identity absent from 1.12 | 306 | Establish each source identity and intentional destination mapping; additions alone are not approved exceptions. |
+| Identity absent from 1.12 | 325 | Establish each source identity and intentional destination mapping; additions alone are not approved exceptions. |
 | Descriptor values changed | 4 | Four original solar panels use source Norton ratings; compare source constructors and retained native behavior. |
 | Slot acceptance changed | 15 | Review added battery categories and their actual charging/discharge limits. |
-| Device has no 1.12 container | 91 | Incoming cabinet/pole/control/converter menus need a source-aware reference. |
-| Descriptor class has no 1.12 container | 20 | Map new descriptor/menu contracts explicitly; the grounded converters share one native menu registration. |
+| Device has no 1.12 container | 101 | Incoming cabinet/pole/control/converter menus need a source-aware reference. |
+| Descriptor class has no 1.12 container | 21 | Map new descriptor/menu contracts explicitly; the grounded converters share one native menu registration. |
 | Slot comparison summary | 1 | Aggregate of the acceptance differences. |
 
 Small fixed/rotating solar panels report 37 V open circuit and 240 W peak rather than
@@ -40,7 +40,7 @@ because a renewable fixture did not restore shared fake-player facing. The fixtu
 now saves/restores yaw and pitch in `finally`; those original behavioral cases pass
 in this new full run without changing their production devices or assertions.
 
-See [complete current evidence and artifact](session6-validation.json). Full
+See [complete current evidence and artifact](session7-validation.json). Full
 source-world conversion, remaining equipment/integrations, interactive GPU/audio,
 multiplayer and representative loaded-world CPU comparisons remain unfinished.
 
@@ -49,3 +49,11 @@ its actual processing and input/output APIs. The observed 15 historical slot
 acceptance differences still concern the four added battery categories in legacy
 chargers, watches and the fire buzzer. The Fabricator/basic components add source
 lookup identities and a native menu; no historical comparison is waived.
+
+
+The cord/outlet additions account for 19 source identities, ten native control
+menus and one shared outlet descriptor class absent from the 1.12 reference.
+Their actual source registrations, native item/block names, socket ownership,
+passive physics and executable recipes are reviewed in [the adapter](cord-outlets.md).
+Those checks do not waive the old reference assertions. Slot-acceptance differences
+remain the preceding battery categories; the four solar value differences remain.

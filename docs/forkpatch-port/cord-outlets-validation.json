@@ -1,16 +1,19 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "scope": "Surface outlets, strips and fixed-machine cords; recessed walls, portable appliances and compact UPS pending.",
+  "scope": "Native surface outlets/strips and nine cord ratings, passive fixed-machine inputs, paid item ownership and native voxel isolation; recessed walls, portable carry and compact UPS pending",
   "root": {
     "suites": 122,
-    "selected": 673,
-    "passed": 670,
-    "skipped": 3,
-    "failed": 0
+    "tests": 673,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
   },
   "cad": {
-    "selected": 15,
-    "passed": 15
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
   },
   "fluidCases": 200,
   "focusedNative": {
@@ -19,16 +22,53 @@
     "report": "/tmp/eln26-session7-cord6.xml",
     "log": "session7-full-build-native6.log"
   },
-  "unfilteredNative": "Running; no full-native success claim yet.",
+  "unfilteredNative": {
+    "selected": 1123,
+    "passed": 1121,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 657,
+      "failed": 0
+    }
+  },
   "catalog": {
     "identities": 677,
     "englishEntries": 995,
-    "precedingIdentitiesUnchanged": 658,
-    "precedingEnglishUnchanged": 966
+    "resolvedNativeItemTextures": 493,
+    "previousIdentityCount": 658,
+    "previousEnglishCount": 966,
+    "previousIdentitiesChanged": [],
+    "previousEnglishEntriesChanged": []
   },
+  "artifactEvidence": "session7-validation.json",
+  "coverage": [
+    "All nine source connector classes and both physical supply polarities, with actual passive contact losses.",
+    "All four wall fronts, native horizontal block collision state and actual routed wall cables.",
+    "Two/six saved socket reservations; exact selected release across native reconnects.",
+    "Native Fabricator paid production and independently measured sag/work/link loss.",
+    "Actual server survival selection, consumed cord, preserved remaining custom data, exact refund and full-inventory drop.",
+    "Real owner reload, temporary source-owner absence, cleared disconnected reservations and real resident replacement.",
+    "Duplicate live token denial and actual duplicate-owner destruction without another cord refund.",
+    "Two real passive strips conserve source/load/contact/link power and reject an actual cycle.",
+    "All currently supported fixed-machine classes retain their original inlets, inventories and native processes.",
+    "Legacy and converted-voxel battery chargers exclude an actual adjacent alternate cable supply and restore native wiring on unplug.",
+    "Wireless bridges charge the actual native supply once and disconnect before its loads unload.",
+    "Strict world link fields, missing/invalid token identity, ratings/reach/dimension/UUID/slot guards and truncated control packets.",
+    "Actual client factory/publication, native menus, source body/plug geometry and cached terrain mesh.",
+    "Source survival recipes execute through the actual native crafting manager; no previous native recipes replaced.",
+    "Inactive native owners cannot be reactivated by a new attachment."
+  ],
   "limitations": [
-    "Historical descriptor/slot references remain unreconciled.",
-    "Surface/fixed equipment only; no recessed wall replacement, portable carry, compact UPS, generalized breaker-panel supply or full source-world conversion.",
-    "Headless native checks do not establish interactive GPU/audio/JEI/multiplayer or whole-mod comparative performance."
-  ]
+    "Unfiltered historical descriptor and slot goldens still fail; no expected references, skip lists or tolerances changed.",
+    "Full source-world conversion, remaining equipment/integrations and shared-code parity remain pending.",
+    "Headless native/mesh/server checks do not establish interactive client/GPU/audio/multiplayer, JEI runtime or whole-mod comparative performance.",
+    "Development artifact integrity verified; this is not a finished release.",
+    "Registered adapter covers surface/fixed equipment; recessed walls, portable carry, compact UPS, newer rated lamp-supply consumers and generalized breaker-panel channels remain pending."
+  ],
+  "productionCommit": "cc702a72b68b3c887853e4ca6d1c7dfdfbf9de83",
+  "productionTrees": {
+    "src/main": "a6e7ddbe9d6c5d20b9fd3677bf9dad8b5d9add79",
+    "src/generated": "9ac1b63746a42a8aa9e7965e2ee5864c9c822c1b"
+  }
 }

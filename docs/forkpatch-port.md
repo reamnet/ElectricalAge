@@ -1234,3 +1234,15 @@ and real break/place have native coverage. Native paid machine/wafer bootstraps
 fill missing source survival recipes while preserving existing native chip and
 ingot/plate routes. See the [adapter](forkpatch-port/chip-fabrication.md) and
 [validation](forkpatch-port/chip-fabrication-validation.json).
+
+
+### Native surface outlets and fixed-machine cords
+
+Nine source connector ratings, ten outlets/strip devices and paid fixed-machine
+cords now use native passive links, inventories, menus, state-based collision,
+source models and executable recipes. Saved socket reservations survive owner
+reload, and real survival attach/unplug/refund paths conserve one paid cord.
+Native voxel pins and ordinary node connections isolate the same original inlet;
+wireless bridges charge actual source power once. See [behavior and limits](forkpatch-port/cord-outlets.md)
+and [validation](forkpatch-port/cord-outlets-validation.json). Recessed walls,
+portable appliances/carry and compact UPS remain separate work.

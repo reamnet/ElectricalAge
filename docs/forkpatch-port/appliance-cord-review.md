@@ -1,8 +1,7 @@
 # Appliance cord and outlet adapter review
 
 Reviewed source `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` after the native wire
-manufacturing adapter. This is the next implementation contract; the equipment
-below remains unregistered and has no native runtime validation.
+manufacturing adapter. The [native surface/fixed adapter](cord-outlets.md) now implements the 19 cord/outlet identities below. This retained contract also covers pending recessed walls, additional consumers, portable carry and compact UPS.
 
 | Source lookup | Device/item | Nominal voltage / current |
 | --- | --- | --- |
@@ -16,8 +15,7 @@ below remains unregistered and has no native runtime validation.
 | shared 8006 | 240 V 30 A Dryer Cord | 240 V / 30 A |
 | transparent 8076 | Four Cell Plug-in UPS | separate compact battery-backed socket source |
 
-The 19 cord/outlet slots above are free in the current 658-entry native manifest;
-recheck before registration. Shared and transparent lookup spaces are separate.
+The 19 cord/outlet slots above are now registered in the 677-entry native manifest. Compact UPS 8076 remains free and unregistered. Recheck future additions; shared and transparent lookup spaces are separate.
 The compact UPS must be checked independently against the native UPS identities
 and physical cell inventory. Native programmable UPS 7947 must remain unchanged.
 
@@ -106,7 +104,7 @@ A saved reservation token and a live physical claimant are different: unload
 removes the conductor/live claim while retaining the reservation, and permanent
 removal releases/refunds once. Repeated claim/poll/read paths must not advance
 Fabricator or inherited machine work. These are reviewed implementation
-requirements; no outlet/cord adapter or native test coverage is claimed yet.
+requirements; runtime coverage is scoped to the [surface/fixed adapter](cord-outlets-validation.json).
 
 Concrete native inlet review for the first consumer adapters:
 
