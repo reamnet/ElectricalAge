@@ -62,6 +62,7 @@ class ApplianceCord(private val device: CordDevice,val owner: Any,val input: Nbt
         return plugged
     }
     fun poll() {
+        if(!CordSupport.active(owner)) { disconnect();return }
         val a=anchor ?: return
         if(!inReach(a) || !device.acceptsCord(a.rating)) { detach();return }
         val found=lookup(a);val target=found.outlet

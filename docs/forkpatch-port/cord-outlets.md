@@ -38,8 +38,12 @@ end/pin construction, including explicit edge pins, without suppressing other
 signal/thermal/bus paths. Wireless outlet mode bridges the native lamp supply's
 actual load through a passive .08-ohm link. It does not also report equivalent
 lamp demand. Only loaded, added, nonburnt sources in range and the same dimension
-qualify. Teardown removes bridges before their source loads leave simulation.
-Source generalized breaker-panel channels remain part of the pending panel port.
+qualify. Teardown removes bridges before their source loads leave simulation. Explicit
+wireless refresh also refuses an inactive outlet load; normal native resume
+restores its bridge to the real supply.
+The default channel is the pinned source and native legacy `Default channel`;
+explicit saved custom channel names remain intact. Source generalized breaker-panel
+channels remain part of the pending panel port.
 
 Sources own UUIDs and two/six saved token reservations. Live physical occupancy
 and logical reservation are separate. A bounded weak reference identifies a
@@ -49,7 +53,9 @@ cannot steal or refund the original owner's token. Clearing a socket while its
 consumer is unloaded prevents a later silent reclaim. Resident source replacement
 releases/refunds once; temporary source-owner absence disconnects power and waits
 without loading chunks or manufacturing a refund. Strip cycles are rejected by a
-resident-only upstream walk with a 64-source visit limit.
+resident-only upstream walk with a 64-source visit limit. A suspended consumer
+keeps its paid logical reservation while all physical polls refuse to reconnect
+it; ordinary native resume reclaims the same reservation once.
 
 World-only cord data retains source position/UUID/rating/socket/token and paid
 state. Unknown ratings, missing token identity and invalid slots/facing fail
@@ -61,7 +67,9 @@ block state, so collision workers do not request block entities or chunks.
 Source body and plug parts draw through the native mesh pipeline. Cord paths use
 bounded terrain samples and a cached joined mesh; draws cannot advance machine
 work or ownership. Bounds include their physical endpoint. Native controls expose
-mode, channel, horizontal mounting and individual/all-socket release. This is
+mode, channel, horizontal mounting and individual/all-socket release. Horizontal
+rotation immediately republishes resident linked endpoints without paying work or
+changing stable LU. Render teardown releases the cached mesh. This is
 headless publication/geometry evidence; interactive graphics and multiplayer
 remain unverified.
 

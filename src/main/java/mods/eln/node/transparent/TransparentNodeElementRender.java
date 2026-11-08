@@ -272,6 +272,7 @@ public abstract class TransparentNodeElementRender {
 
 
     public void destructor() {
+        cordDisplay.clear();
         for (mods.eln.sound.LoopedSound l : loopedSounds) l.setActive(false);
     }
 

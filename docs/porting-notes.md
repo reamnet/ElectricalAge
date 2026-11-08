@@ -613,3 +613,21 @@ they do not also add equivalent lamp demand. Native source-style surface outlet
 shapes are stored by front/horizontal block state, preserving resident-only
 queries. Recessed walls, portable carry and compact UPS remain separate work.
 See [the adapter and limits](forkpatch-port/cord-outlets.md).
+
+
+Cord lifecycle follow-up: a strengthened paid-owner suspension case reproduced an
+explicit `ApplianceCord.poll()` reconnecting a suspended native owner. Physical
+polls now require the exact resident owner to be added; the paid logical socket
+reservation survives and normal native resume reclaims it once. The pre-fix test
+failure is retained separately from passing final evidence. Default outlet
+channels use the source/legacy `Default channel`, preserving explicit custom
+values. Horizontal socket controls immediately republish resident cord anchors
+without work or stable-LU changes, and render teardown clears cached cord meshes.
+
+The same explicit-refresh suspension defect was reproduced for a wireless outlet:
+after native unload removed its input load, `WirelessOutletPower.refresh()` could
+add a new bridge to that inactive load. Refresh now requires the exact resident
+outlet to be added, disconnecting otherwise; ordinary native resume reconnects
+the original real supply. The strengthened wireless production case retains
+both unload/refusal and resume checks, alongside its independently metered power
+and 2000 stable-LU refresh checks.

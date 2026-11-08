@@ -11,6 +11,7 @@ class WirelessOutletPower(private val owner: OutletElement) {
     var supply: LampSupplyElement?=null;private set
     val connected get()=supply!=null
     fun refresh() {
+        if(!CordSupport.active(owner)) { disconnect();return }
         val here=owner.node.coordonate
         val next=if(owner.wireless && !owner.cord.plugged)LampSupplyElement.channelMap[owner.channel]?.asSequence()
             ?.filter { !it.element.isBurnt && it.element.sixNode!=null && it.element.sixNode.isAdded && !it.element.sixNode.isDestructing && it.element.sixNode.coordonate.dimention==here.dimention && it.element.getChannelState(it.id) && it.element.sixNode.coordonate.trueDistanceTo(here)<=it.element.range }

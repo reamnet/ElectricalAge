@@ -91,6 +91,7 @@ object ForkPatchCordCases {
         override fun id()="forkpatch_cord_outlet_native_orientation_${facing.name.lowercase()}"
         override fun build(c: TestContext) { o=outlet(c,7968,front=facing) }
         override fun measure(c: TestContext) {
+            c.check("cord outlet: source default channel matches native legacy sockets",o.channel=="Default channel",o.channel)
             val world=c.level();val pos=o.node.coordonate.pos();val before=world.getBlockState(pos).getCollisionShape(world,pos).bounds()
             c.check("cord outlet: actual source mounting face has thin native geometry",o.front==facing && abs(kotlin.math.min(before.xsize,before.zsize)-.14)<1e-9,"$before")
             o.networkUnserialize(c.stream { it.writeByte(84) });val state=world.getBlockState(pos);val after=state.getCollisionShape(world,pos).bounds()
@@ -134,7 +135,10 @@ object ForkPatchCordCases {
             val stream=DataInputStream(ByteArrayInputStream(bytes.toByteArray()));render.networkUnserialize(stream)
             c.check("cord: native consumer factory state retains its machine fields and added physical endpoint",stream.available()==0 && render.cordDisplay.active() && render.cordDisplay.endpoint==o.node.coordonate.pos() && render.attempts==e.attempts,"")
             GlFrame.beginRenderFrame();val frame=GlFrame.open();val progress=e.progressJoules
-            try { render.cordDisplay.draw(c.level(),e.node.coordonate.pos());val n=frame.batches().values.sumOf { it.vertices() };val builds=render.cordDisplay.rebuilds;repeat(20) { render.cordDisplay.draw(c.level(),e.node.coordonate.pos()) };c.check("cord: cached real terrain mesh draws without advancing physical work",n>100 && render.cordDisplay.rebuilds==builds && e.progressJoules==progress,"vertices=$n rebuilds=$builds") }finally { GlFrame.close();render.destructor() }
+            try { render.cordDisplay.draw(c.level(),e.node.coordonate.pos());val n=frame.batches().values.sumOf { it.vertices() };val builds=render.cordDisplay.rebuilds;repeat(20) { render.cordDisplay.draw(c.level(),e.node.coordonate.pos()) };c.check("cord: cached real terrain mesh draws without advancing physical work",n>100 && render.cordDisplay.rebuilds==builds && e.progressJoules==progress,"vertices=$n rebuilds=$builds")
+                val system=e.power.subSystem!!;val version=system.matrixVersion;o.networkUnserialize(c.stream { it.writeByte(84) })
+                val rotated=ByteArrayOutputStream();e.networkSerialize(DataOutputStream(rotated));render.networkUnserialize(DataInputStream(ByteArrayInputStream(rotated.toByteArray())))
+                c.check("cord: native socket rotation immediately republishes its linked endpoint without paying work or changing stable LU",cord(e).anchor?.horizontal==true && render.cordDisplay.horizontal && e.progressJoules==progress && system.matrixVersion==version,"") }finally { GlFrame.close();render.destructor() }
         }finally { clean() } }
     }
     private class Sag: Base() {
@@ -272,6 +276,10 @@ object ForkPatchCordCases {
                 c.check("cord wireless: actual source pays native machine demand and every passive bridge loss once",e.resistor.p>980 && abs(abs(source.u*source.current)-e.resistor.p-loss)<1e-4 && supply.loadResistor.p<1e-5,"source=${source.u*source.current} load=${e.resistor.p} loss=$loss")
                 c.check("cord wireless: enabled mode isolates native surface cable input",o.wireless && Direction.values().all { side->LRDU.values().all { o.getElectricalLoad(side,it)==null } },"")
                 val system=o.input.subSystem!!;val version=system.matrixVersion;repeat(2000) { o.wirelessPower.refresh() };c.check("cord wireless: stable supply polls preserve cached LU factors",system.matrixVersion==version,"")
+                o.node.unload();o.wirelessPower.refresh()
+                c.check("cord wireless: an explicit bridge refresh cannot reconnect a suspended outlet load",!o.node.isAdded && !o.wirelessPower.connected,"")
+                o.node.connect();o.wirelessPower.refresh()
+                c.check("cord wireless: ordinary native resume restores the bridge to the same real supply",o.node.isAdded && o.wirelessPower.supply===supply,"")
             }
             panel(c,o)
         }finally { clean() } }
@@ -322,10 +330,11 @@ object ForkPatchCordCases {
     private class Frozen: Base() {
         override fun id()="forkpatch_cord_inactive_native_owner_cannot_reactivate_via_attachment"
         override fun measure(c: TestContext) {
-            val o=outlet(c);val e=fab(c);e.node.unload()
-            c.check("cord lifecycle: attaching to an inactive native owner does not bypass suspension",!cord(e).attach(o.anchor(0),true) && !e.node.isAdded && !cord(e).plugged,"")
-            e.node.connect()
-            c.check("cord lifecycle: ordinary native reconnect restores explicit consumer eligibility",e.node.isAdded && cord(e).attach(o.anchor(0),true),"")
+            val o=outlet(c);val e=fab(c);val link=cord(e);check(link.attach(o.anchor(0),true));e.node.unload();link.poll()
+            c.check("cord lifecycle: an explicit physical poll cannot reconnect a suspended native load",!e.node.isAdded && !link.connected && link.plugged && link.paid && o.occupied(0),"")
+            c.check("cord lifecycle: a new attachment cannot bypass suspension",!link.attach(o.anchor(1),true) && !e.node.isAdded,"")
+            e.node.connect();link.poll()
+            c.check("cord lifecycle: ordinary native resume reclaims the existing paid reservation once",e.node.isAdded && link.connected && link.paid && link.anchor?.socket==0 && !o.occupied(1),"")
         }
     }
     private class Recipes: Base() {

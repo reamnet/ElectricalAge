@@ -287,6 +287,7 @@ public abstract class SixNodeElementRender {
     }
 
     public void destructor() {
+        cordDisplay.clear();
         for (mods.eln.sound.LoopedSound l : loopedSounds) l.setActive(false);
         if (glListEnable()) {
             UtilsClient.glDeleteListsSafe(glList);
