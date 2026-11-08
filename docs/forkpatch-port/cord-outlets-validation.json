@@ -19,8 +19,8 @@
   "focusedNative": {
     "selected": 52,
     "passed": 52,
-    "report": "/tmp/eln26-session7-cord6.xml",
-    "log": "session7-full-build-native6.log"
+    "report": "/tmp/eln26-session7-cord8.xml",
+    "log": "/workspace/.cloud-setup/session7-final-build2.log"
   },
   "unfilteredNative": {
     "selected": 1123,
@@ -53,11 +53,12 @@
     "Two real passive strips conserve source/load/contact/link power and reject an actual cycle.",
     "All currently supported fixed-machine classes retain their original inlets, inventories and native processes.",
     "Legacy and converted-voxel battery chargers exclude an actual adjacent alternate cable supply and restore native wiring on unplug.",
-    "Wireless bridges charge the actual native supply once and disconnect before its loads unload.",
+    "Wireless bridges charge the actual native supply once, disconnect before source loads unload, refuse explicit refresh of suspended outlet loads, and reconnect only on ordinary native resume.",
     "Strict world link fields, missing/invalid token identity, ratings/reach/dimension/UUID/slot guards and truncated control packets.",
     "Actual client factory/publication, native menus, source body/plug geometry and cached terrain mesh.",
     "Source survival recipes execute through the actual native crafting manager; no previous native recipes replaced.",
-    "Inactive native owners cannot be reactivated by a new attachment."
+    "Paid cord suspension survives explicit physical polls without reactivating the owner; native resume reclaims the same reservation exactly once.",
+    "Default wireless channel matches the pinned source and legacy native sockets; horizontal socket rotation republishes linked endpoints immediately without work or LU changes."
   ],
   "limitations": [
     "Unfiltered historical descriptor and slot goldens still fail; no expected references, skip lists or tolerances changed.",
@@ -66,9 +67,9 @@
     "Development artifact integrity verified; this is not a finished release.",
     "Registered adapter covers surface/fixed equipment; recessed walls, portable carry, compact UPS, newer rated lamp-supply consumers and generalized breaker-panel channels remain pending."
   ],
-  "productionCommit": "cc702a72b68b3c887853e4ca6d1c7dfdfbf9de83",
+  "productionCommit": "43715fdc384e9953a09fd9d4772d2b7192053d6a",
   "productionTrees": {
-    "src/main": "a6e7ddbe9d6c5d20b9fd3677bf9dad8b5d9add79",
+    "src/main": "40fd982a251d793959f42300ad48cf92096dcc36",
     "src/generated": "9ac1b63746a42a8aa9e7965e2ee5864c9c822c1b"
   }
 }

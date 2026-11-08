@@ -1,8 +1,8 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "cc702a72b68b3c887853e4ca6d1c7dfdfbf9de83",
-  "ledgerEntries": 521,
-  "uniqueSourceFiles": 311,
+  "targetCommit": "43715fdc384e9953a09fd9d4772d2b7192053d6a",
+  "ledgerEntries": 522,
+  "uniqueSourceFiles": 312,
   "uniqueTargetFiles": 494,
   "declaredVerbatimEntries": 171,
   "exactCopies": 184,
@@ -4866,7 +4866,7 @@
       "target": "src/main/kotlin/mods/eln/transparentnode/cord/ApplianceCord.kt",
       "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
       "sourceSha256": "12edb238daccb5a81d5bfa052869bce874855738025057c09a6a8cd79ad7c50c",
-      "targetSha256": "f7d6ba254b8e85587fcaf0f546bcbf4d16e6800a63425fdcfeaf87c52fa3bcee",
+      "targetSha256": "c2bc2b9023e3cc068e38ffac99f097a0bbd6703730269c37606712d00f514db7",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4877,7 +4877,7 @@
       "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletElement.kt",
       "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
       "sourceSha256": "44d3c3f2d0b86ca7dce4f1ea0e367f5170a2ea48d5dbd08167aaf63cccdb795b",
-      "targetSha256": "c7436b1e13c292f6cde3a25b804f6dcc6a9de24539852b405fc97db1a57db797",
+      "targetSha256": "eaff8bbf3607a6ac7d08eef42b8c41d34204206ae9d529a8a7b3754f6a0c88c5",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4888,7 +4888,7 @@
       "target": "src/main/kotlin/mods/eln/transparentnode/cord/WirelessOutletPower.kt",
       "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
       "sourceSha256": "1743df5925ccb2c5c3e658b100d7917f571daaacee72c143a72fef80aa1ac711",
-      "targetSha256": "7ed21129dde5f8e7f07f486be55c7d169c846ba899a894ac54ed2e2927a7b9dc",
+      "targetSha256": "9765f787761507f27e9e97fdf66b1169b9402527fab29e6df6ba92c1e6be4794",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -5053,7 +5053,7 @@
       "target": "src/main/java/mods/eln/node/transparent/TransparentNodeElementRender.java",
       "mode": "native-cord-lifecycle-and-optional-publication-hooks",
       "sourceSha256": "c2eba2f7254ccde1fef054897c362294966906691fa8aec38fe9424456c81fe1",
-      "targetSha256": "f261a898b255433269ed5265b67b819ecd932093aa30bb2a61cde722e5f5eb77",
+      "targetSha256": "6fe1b330e6e7f4aceab2faef62b972db8e5b377edf347bb7e6d743ea493932bc",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -5097,7 +5097,7 @@
       "target": "src/main/java/mods/eln/node/six/SixNodeElementRender.java",
       "mode": "native-cord-lifecycle-and-optional-publication-hooks",
       "sourceSha256": "f0bfe7cad4c2d62f35995307f4653c8d44021aaf1fe000afe9b5c0b6e4815869",
-      "targetSha256": "50e5b859bf9f6122224b3901f65590cfa9eca4fcd14f293e8b50cfd10aa27e96",
+      "targetSha256": "0bf258f4d1eef398fed6b9ddc0f40f0d092375ad9b550e5a233a8d142dd56eb0",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -5218,7 +5218,7 @@
       "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchCordCases.kt",
       "mode": "native-powered-ratings-ownership-reload-and-consumer-regressions",
       "sourceSha256": "1d764620284af9af9ae38bd1a6892df4d9eb0f92f007d5fad648e46faa3265f6",
-      "targetSha256": "0529f6c6ed7488bcde3fda170192e60f35eaefb75e785e47833279632104ab41",
+      "targetSha256": "bfdbe1ffd29058db3b556623ef1a51fd9aa6994aa9140fcbcfcb36aec5299100",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -5739,6 +5739,17 @@
       "sourceMatchesLedger": true,
       "exactCopy": true,
       "declaredVerbatim": true
+    },
+    {
+      "index": 521,
+      "source": "src/main/kotlin/mods/eln/sixnode/lampsocket/LampChannelMemory.kt",
+      "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletElement.kt",
+      "mode": "native-source-and-legacy-default-channel-name",
+      "sourceSha256": "5d8c292e3a4610a993207a6d20da34c7a9a9337d30f9b23085c5c1a1f38e73cb",
+      "targetSha256": "eaff8bbf3607a6ac7d08eef42b8c41d34204206ae9d529a8a7b3754f6a0c88c5",
+      "sourceMatchesLedger": true,
+      "exactCopy": false,
+      "declaredVerbatim": false
     }
   ],
   "scope": "Source hashes, target existence and declared exact copies; not full runtime parity."

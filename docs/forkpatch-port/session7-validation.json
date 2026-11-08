@@ -38,8 +38,8 @@
   },
   "artifact": {
     "path": "build/libs/eln-26.3-0.1.0-port.jar",
-    "bytes": 30813222,
-    "sha256": "f3b2d1447536b4feac385f0163a0daa4b1a1d4349c68359986d40df655064be6",
+    "bytes": 30815059,
+    "sha256": "5350ab2faff80e52adca39f2d644dffe7d093d98a427c5d29ecbef4d7a797935",
     "allPrimaryOutputFilesChecked": {
       "java": 1770,
       "kotlin": 832
@@ -51,21 +51,27 @@
   "sourceUnchanged": true,
   "gradleAndWrapperUnchanged": true,
   "commands": [
-    "./gradlew --no-daemon --max-workers=2 :build cad:test runClientData runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_cord_* --report /tmp/eln26-session7-cord6.xml --universe /workspace/ElectricalAge/run/session7-cord6'",
-    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report /tmp/eln26-session7-all1.xml --universe /workspace/ElectricalAge/run/session7-all1'",
+    "./gradlew --no-daemon --max-workers=2 :build cad:test runClientData runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_cord_* --report /tmp/eln26-session7-cord8.xml --universe /workspace/ElectricalAge/run/session7-cord8'",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report /tmp/eln26-session7-all-final2.xml --universe /workspace/ElectricalAge/run/session7-all-final2'",
     "python3 tools/port/audit_imports.py --source ../ELN1.21.1ForkPatch"
   ],
-  "rootLog": "session7-full-build-native6.log",
-  "nativeLog": "session7-all-native1.log",
+  "rootLog": "session7-final-build2.log",
+  "nativeLog": "session7-all-native-final2.log",
   "limitations": [
     "Unfiltered historical descriptor and slot goldens still fail; no expected references, skip lists or tolerances changed.",
     "Full source-world conversion, remaining equipment/integrations and shared-code parity remain pending.",
     "Headless native/mesh/server checks do not establish interactive client/GPU/audio/multiplayer, JEI runtime or whole-mod comparative performance.",
     "Development artifact integrity verified; this is not a finished release."
   ],
-  "productionCommit": "cc702a72b68b3c887853e4ca6d1c7dfdfbf9de83",
+  "focusedNative": {
+    "selected": 52,
+    "passed": 52,
+    "report": "/tmp/eln26-session7-cord8.xml",
+    "log": "/workspace/.cloud-setup/session7-final-build2.log"
+  },
+  "productionCommit": "43715fdc384e9953a09fd9d4772d2b7192053d6a",
   "productionTrees": {
-    "src/main": "a6e7ddbe9d6c5d20b9fd3677bf9dad8b5d9add79",
+    "src/main": "40fd982a251d793959f42300ad48cf92096dcc36",
     "src/generated": "9ac1b63746a42a8aa9e7965e2ee5864c9c822c1b"
   }
 }

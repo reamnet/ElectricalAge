@@ -115,7 +115,7 @@ Concrete native inlet review for the first consumer adapters:
 | `electricalmachine.ElectricalMachineElement` | private `electricalLoad`, descriptor voltage and `powerLrdu` mask | Add a narrow inlet adapter rather than replacing its load/process/recipes; preserve the accepted-step callback added here. |
 | `electricalfurnace.ElectricalFurnaceElement` | package-local `electricalLoad`, back/Down mask | Read voltage from the installed native heating element; missing/invalid hardware must reject a cord. |
 | `batterycharger.BatteryChargerElement` | public `powerLoad`, native power on every edge | Retain this destination improvement when unplugged; suppress every native inlet edge when plugged. |
-| `lampsupply.LampSupplyElement` | public `powerLoad`, front LRDU | Keep native channel accounting and prevent simultaneous alternate power inputs. |
+| `lampsupply.LampSupplyElement` | public `powerLoad`, front LRDU, no explicit mains voltage | Supported as a wireless outlet source only; a cord consumer needs a separately reviewed, explicitly rated descriptor. |
 
 Both connection masks and load lookup paths need the same plugged-input policy;
 several native getters return the load more broadly than their masks. Preserve
@@ -195,6 +195,25 @@ the compact appliance. Parameterize the owner/inventory/menu/render path only
 with the corresponding native behavioral cases and preserve the existing full
 UPS identities and defaults.
 
+The current native surface adapter deliberately uses `OutletElement` in
+`ApplianceCord.Lookup`, reservation access and resident source lookup. A compact
+UPS extends `UpsElement`, so it cannot be enabled merely by registering 8076 or
+passing `compact=true`. Extract a narrowly scoped native socket-source contract
+for the existing outlet and the real UPS owner, preserving exact resident owner,
+UUID/token, capacity, rating and physical output-load checks. Retain the existing
+weak resident-owner leases and strict reclaim rules rather than reintroducing
+the source's permissive reservation behavior.
+
+Native `CordAnchor.read` currently rejects `cabinet` and `recessed` source state;
+its publication/geometry implements surface/strip endpoints only. UPS socket
+geometry, compatible client publication and source lookup must be extended with
+the actual four indexed endpoints and bounded render paths. Do not reinterpret
+an old surface socket or malformed tag as a UPS socket. Keep source-world
+conversion separate from accepting new native saves. The existing native
+`UpsElement` creates `UpsInventory(this)` and `UpsPowerUnit(this,bank)` with full
+rack defaults; both constructor paths and their real menu/render factories need
+review alongside the shared socket interface.
+
 Required compact checks include one through four individually active physical
 cells, mixed cell ratings, extraction/save/carry flush of cached cell energy,
 actual charger current and voltage-sag response, backup/restore with real output
@@ -205,3 +224,91 @@ restoration without duplicated cell charge or cord refunds. The charger and
 inverter limits do not turn direct bypass into a regulated ideal power source.
 No compact UPS registration or native compact-device runtime coverage is claimed
 by this review.
+
+
+## Remaining recessed-wall integration
+
+The pinned source `node/transparent/TransparentNodeItem.kt` replaces the clicked
+wall cell only for non-strip outlets clicked on a vertical face. Its eligibility
+is a solid-render wall with no block entity and an empty fluid state. The complete
+original block state is saved under `outletWall`; a surface placement still uses
+the adjacent replaceable cell. The native `TransparentNodeItem.placeAt` currently
+requires a replaceable destination and always follows the ordinary support path.
+Adding only an outlet descriptor flag would therefore not implement recessed
+placement. Check actual target-cell permissions, successful block replacement,
+node registration and item consumption as one transaction; failure must retain
+the original wall and held outlet. Do not copy a world/reservation payload through
+an ordinary picked or configuration item.
+
+The source `NodeBase.physicalSelfDestruction` restores the saved wall (or its
+normal fluid fallback). Its recessed player-break route deliberately calls that
+path. Native `physicalSelfDestruction` currently disconnects, removes the block
+and unregisters the node without ordinary device drops; native
+`NodeBlockEntity.setRemoved` invokes ordinary break unless the node is already
+destructing. A recessed adapter must explicitly decide restoration and cord
+release/refund ordering for player removal, explosion, actual replacement and
+failed operations. Reusing one path without checking the others risks losing
+the original wall or duplicating device/cord drops. Neighbor unload is neither a
+wall-removal event nor permission to restore over a different resident block.
+
+The source `OutletWiring` places each front terminal one cell ahead of the outlet
+node and one lateral edge away. It reconnects from either the outlet or the wall
+cable, checks the real cable descriptor/element side, rejects wireless/corded
+alternate inputs, and suppresses an already-created exact connection. The native
+`SixNode`/`VoxelNode` endpoint and pin systems have different representations;
+there is no drop-in native `NodeConnectionEndpoint` adapter. Review both legacy
+surface cable and converted voxel paths, including offset slots, before enabling
+these terminals. An unrelated appliance occupying the free cell in front must
+still need its cord rather than gaining the wall-face feed.
+
+Source `OutletWall` draws the saved wall through the old block-model dispatcher,
+and source block lighting/occlusion/collision helpers consult loaded block
+entities. Native rendering uses extracted render state and `SubmitNodeCollector`;
+the source tessellation calls do not match that pipeline. Preserve the existing
+surface outlet's state-only collision guarantee. Recessed collision, light and
+occlusion queries need immutable or otherwise thread-safe state instead of
+worker-thread node/chunk access. Preserve all saved wall properties for world
+restoration and client publication, not only a bare block registry identity.
+
+Before declaring recessed parity, add real survival placement/removal and denied
+placement cases, original-wall property restoration, each mounting front,
+reload with actual occupied sockets, both cable reconnect orders and duplicate
+link checks, a front appliance that remains unpowered without its plug, legacy
+and voxel isolation, unloaded-neighbor guards, collision/light queries without
+block-entity access, and actual client publication/mesh checks. Interactive wall
+appearance and multiplayer remain separate validation. No recessed registration
+or runtime coverage is claimed by this review.
+
+
+## Remaining fixed consumers
+
+The pinned source `MachineCordSupport` also selects consumers beyond the five
+families implemented here. Native inherited classes exist for several, but they
+are intentionally not enabled by this checkpoint:
+
+| Native family | Reviewed original inlet / rating source | Required boundary |
+| --- | --- | --- |
+| Auto Miner | `inPowerLoad`, descriptor cable-derived `nominalVoltage` | Add a narrow inlet/rating accessor; retain real mining inventory, pipe costs and watchdog behavior. |
+| Egg Incubator | `powerLoad`, descriptor `nominalVoltage` | Keep heat/hatching and physical inventory; verify actual paid input power rather than only successful attachment. |
+| Active Thermal Dissipator | `positiveLoad`, descriptor `nominalElectricalU` | Isolate its power inlet without removing the separate thermal faces or cooling process. |
+| Electrical Antenna Transmitter | private `powerIn`, descriptor `electricalNominalVoltage` | Preserve `commandIn` and `signalOut` gates and the real transmitter/receiver accounting; receiver outputs remain ineligible. |
+| Teleporter | `powerLoad`, descriptor cable `electricalNominalVoltage` | Preserve charging, world interaction and inventory/ghost ownership. |
+| Turret | `load`, existing native high-voltage cable | Verify the actual native voltage and charged-energy process before accepting a source 800 V connector. |
+
+Several load/rating fields are package-local; exposing every field or selecting
+any available load is not a substitute for the explicit adapter. For each new
+family, use the existing native load, check matching and incompatible ratings,
+measure real sag/work/loss in both polarities where appropriate, retain other
+ports, verify suspension/reload/refund ownership, and restore the original cable
+inlet on unplug. Adding a source whitelist entry is not runtime parity.
+
+Source `MotorElement` additionally supports an optional separate negative return
+load for bipolar terminals. The destination instead has its own
+`mechanical/ShaftMotor.kt` with `ShaftMotorElement`, original power `load`, a
+separate back speed gate and the native shaft/inertia/torque process. The current
+native cord adapter has one grounded inlet and cannot represent the source's
+optional two-terminal topology. Review that mapping explicitly, preserving native
+shaft behavior and independent accepted electrical/mechanical energy checks;
+do not replace the native mechanical implementation or suppress its speed gate.
+The source evaporative cooler and arc furnace also need their separate native
+equipment/parity work before their cord entries can be enabled.
