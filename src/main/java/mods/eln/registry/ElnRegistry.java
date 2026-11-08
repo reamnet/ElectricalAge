@@ -307,6 +307,7 @@ public final class ElnRegistry {
             TRANSPARENT_BLOCKS.add(block);
             ALL_ITEMS.add(ITEMS.registerItem(name, p -> {
                 mods.eln.node.transparent.TransparentNodeItem item = new mods.eln.node.transparent.TransparentNodeItem(p, d, block::get);
+                if (d instanceof mods.eln.transparentnode.cord.OutletDescriptor o && o.getRating() == mods.eln.transparentnode.cord.CordRating.V120 && !o.getStrip()) Eln.itemsByName.putIfAbsent("120 V Wall Outlet", item);
                 d.parentItem = item;
                 d.parentItemDamage = id;
                 Eln.itemsByName.putIfAbsent(d.name, item); // first wins: "Signal Switch" is 6081 (gate source) as in 1.12

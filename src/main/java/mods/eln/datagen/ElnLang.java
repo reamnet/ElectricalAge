@@ -134,7 +134,7 @@ public class ElnLang extends LanguageProvider {
         add(ElnRegistry.LIGHT_BLOCK.get(), "Electrical Age Light");
         for (var b : ElnRegistry.TRANSPARENT_BLOCKS) {
             var d = b.get().descriptor;
-            add(b.get(), d.name);
+            add(b.get(), descriptorName(d));
         }
         add("itemGroup.eln", "Electrical Age");
         add("death.attack.eln.scald", "%1$s was scalded by steam");
@@ -154,6 +154,7 @@ public class ElnLang extends LanguageProvider {
     }
 
     static String descriptorName(Object d) {
+        if (d instanceof mods.eln.transparentnode.cord.OutletDescriptor o && o.getRating() == mods.eln.transparentnode.cord.CordRating.V120 && !o.getStrip()) return "120 V Wall Outlet";
         if (d instanceof mods.eln.generic.GenericItemUsingDamageDescriptor g) return g.name;
         if (d instanceof mods.eln.generic.GenericItemBlockUsingDamageDescriptor g) return g.name;
         if (d instanceof mods.eln.misc.DescriptorBase b) return b.descriptorKey;

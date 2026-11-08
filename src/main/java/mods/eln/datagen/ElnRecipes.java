@@ -316,6 +316,22 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipePassiveComponent() {
+
+        addRecipe(findItemStack("Experimental Wall Outlet")," P ","CRC"," P ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        addShapelessRecipe(findItemStack("Flexible Appliance Cord"),findItemStack("Copper Cable"),findItemStack("Copper Cable"),findItemStack("Rubber"));
+        addShapelessRecipe(findItemStack("240 V Wall Outlet"),findItemStack("Experimental Wall Outlet"),vanilla("orange_dye"));
+        addShapelessRecipe(findItemStack("240 V Appliance Cord"),findItemStack("Flexible Appliance Cord"),vanilla("orange_dye"));
+        addShapelessRecipe(findItemStack("240 V 30 A Dryer Cord"),findItemStack("240 V Appliance Cord"),findItemStack("Copper Cable"),findItemStack("Rubber"));
+        addShapelessRecipe(findItemStack("240 V 30 A Dryer Outlet"),findItemStack("240 V Wall Outlet"),findItemStack("Copper Cable"),findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Six Socket Power Strip"),findItemStack("Experimental Wall Outlet"),findItemStack("Experimental Wall Outlet"),findItemStack("Experimental Wall Outlet"),findItemStack("Iron Plate"));
+        var cordDyes = new Object[]{vanilla("purple_dye"),vanilla("light_gray_dye"),vanilla("green_dye"),vanilla("red_dye"),vanilla("black_dye"),vanilla("yellow_dye")};
+        int cordDye=0;
+        for(var rating: mods.eln.transparentnode.cord.CordRating.values()) if(rating.getIndustrial()) {
+            var dye=cordDyes[cordDye++];
+            addShapelessRecipe(findItemStack(rating.getCordName()),findItemStack("Flexible Appliance Cord"),findItemStack("Rubber"),dye);
+            addShapelessRecipe(findItemStack(rating.getOutletName()),findItemStack("Experimental Wall Outlet"),findItemStack("Iron Plate"),dye);
+        }
+
         // Native bootstrap for source Fabricator; wafer production stays in the powered plate machine.
         addRecipe(findItemStack("Fabricator"),"ICI","PMP","IEI",'I',Items.IRON_INGOT,'C',dictCheapChip,'P',findItemStack("Copper Plate"),'M',findItemStack("Machine Block"),'E',findItemStack("Electrical Motor"));
 

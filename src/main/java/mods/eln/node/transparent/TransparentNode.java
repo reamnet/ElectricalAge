@@ -82,7 +82,7 @@ public class TransparentNode extends Node {
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
         if (element.isBurnt()) return null;
-        return element.getElectricalLoad(side, lrdu);
+        return mods.eln.transparentnode.cord.CordSupport.load(element, element.getElectricalLoad(side, lrdu));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class TransparentNode extends Node {
 
     @Override
     public int getSideConnectionMask(Direction side, LRDU lrdu) {
-        return element.getConnectionMask(side, lrdu);
+        return mods.eln.transparentnode.cord.CordSupport.mask(element, element.getElectricalLoad(side, lrdu), element.getConnectionMask(side, lrdu));
     }
 
     @Override

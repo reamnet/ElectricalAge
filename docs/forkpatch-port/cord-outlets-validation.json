@@ -1,0 +1,34 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Surface outlets, strips and fixed-machine cords; recessed walls, portable appliances and compact UPS pending.",
+  "root": {
+    "suites": 122,
+    "selected": 673,
+    "passed": 670,
+    "skipped": 3,
+    "failed": 0
+  },
+  "cad": {
+    "selected": 15,
+    "passed": 15
+  },
+  "fluidCases": 200,
+  "focusedNative": {
+    "selected": 52,
+    "passed": 52,
+    "report": "/tmp/eln26-session7-cord6.xml",
+    "log": "session7-full-build-native6.log"
+  },
+  "unfilteredNative": "Running; no full-native success claim yet.",
+  "catalog": {
+    "identities": 677,
+    "englishEntries": 995,
+    "precedingIdentitiesUnchanged": 658,
+    "precedingEnglishUnchanged": 966
+  },
+  "limitations": [
+    "Historical descriptor/slot references remain unreconciled.",
+    "Surface/fixed equipment only; no recessed wall replacement, portable carry, compact UPS, generalized breaker-panel supply or full source-world conversion.",
+    "Headless native checks do not establish interactive GPU/audio/JEI/multiplayer or whole-mod comparative performance."
+  ]
+}

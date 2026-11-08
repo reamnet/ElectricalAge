@@ -1318,11 +1318,11 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                     int along = fs.applyLRDU(l.left()).toEnumFacing().get3DDataValue();
                     int[] q = c.clone();
                     q[CablePart.normalAxis(along)] = 8 + (along % 2 == 0 ? -p.offset() : p.offset());
-                    out.add(new End(q[0], q[1], q[2], dv, p.mask(), burnt ? null : p.load(), null, f, l,
+                    out.add(new End(q[0], q[1], q[2], dv, mods.eln.transparentnode.cord.CordSupport.mask(e, p.load(), p.mask()), burnt ? null : mods.eln.transparentnode.cord.CordSupport.load(e, p.load()), null, f, l,
                         p.mask() == maskRs485 ? e.busPort(l) : null));
                 }
                 if (!pinned)
-                    out.add(new End(c[0], c[1], c[2], dv, e.getConnectionMask(l), burnt ? null : e.getElectricalLoad(l), burnt ? null : e.getThermalLoad(l), f, l,
+                    out.add(new End(c[0], c[1], c[2], dv, e.connectionMask(l), burnt ? null : e.connectionElectricalLoad(l), burnt ? null : e.getThermalLoad(l), f, l,
                         e.busPort(l)));
             }
         }
@@ -1356,12 +1356,12 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     static List<Pin> pins(mods.eln.node.six.SixNodeElement e) {
         List<Pin> out = new ArrayList<>();
         for (LRDU l : LRDU.values()) {
-            int mask = e.getConnectionMask(l);
+            int mask = e.connectionMask(l);
             if (mask == 0) continue;
             int[][] g = pinGeometry(e.sixNodeElementDescriptor, e.side, e.front, e.ox, e.oy, e.oz, l);
             int dv = e.side.applyLRDU(l).toEnumFacing().get3DDataValue();
             boolean burnt = e.isBurnt();
-            out.add(new Pin(e.slot, l, g[0], g[1], g[2], dv, mask, burnt ? null : e.getElectricalLoad(l), burnt ? null : e.getThermalLoad(l),
+            out.add(new Pin(e.slot, l, g[0], g[1], g[2], dv, mask, burnt ? null : e.connectionElectricalLoad(l), burnt ? null : e.getThermalLoad(l),
                 e.busPort(l)));
         }
         return out;
@@ -1429,7 +1429,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             var e = sideElementList[i];
             if (e == null) continue;
             int m = 0;
-            for (LRDU l : LRDU.values()) if (e.getConnectionMask(l) != 0) m |= 1 << l.toInt();
+            for (LRDU l : LRDU.values()) if (e.connectionMask(l) != 0) m |= 1 << l.toInt();
             sig = sig * 31 + i * 16L + m;
         }
         if (sig == publishedPins) return;

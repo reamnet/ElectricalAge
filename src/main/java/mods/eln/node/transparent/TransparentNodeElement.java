@@ -62,6 +62,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     }
 
     public void connectJob() {
+        mods.eln.transparentnode.cord.CordSupport.beforeConnect(this);
         // If we are about to destruct ourselves, do not add any elements to the simulation anymore.
         if (node != null && node.isDestructing()) return;
         
@@ -82,6 +83,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     public double ambient;
 
     public void disconnectJob() {
+        mods.eln.transparentnode.cord.CordSupport.beforeDisconnect(this);
         Eln.simulator.removeAllSlowProcess(slowProcessList);
 
         Eln.simulator.removeAllElectricalComponent(electricalComponentList);
@@ -286,6 +288,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     }
 
     public void onBreakElement() {
+        mods.eln.transparentnode.cord.CordSupport.broken(this);
         if (useUuid()) stop(uuid);
 
         if (transparentNodeDescriptor.hasGhostGroup()) {
@@ -309,6 +312,16 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     }
 
 
+    private mods.eln.transparentnode.cord.MachineCordDevice machineCord;
+    private boolean machineCordChecked;
+    public final mods.eln.transparentnode.cord.MachineCordDevice machineCord() {
+        if (!machineCordChecked) {
+            machineCordChecked = true;
+            machineCord = mods.eln.transparentnode.cord.CordSupport.create(this);
+        }
+        return machineCord;
+    }
+
     public abstract ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu);
 
     public abstract ThermalLoad getThermalLoad(Direction side, LRDU lrdu);
@@ -322,11 +335,14 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
 
 
     /** Bit in the header byte of networkSerialize: the element is burnt out. */
+    public static final int HEADER_CORD = 0x20;
     public static final int HEADER_BURNT = 0x10;
 
     public void networkSerialize(DataOutputStream stream) {
         try {
-            stream.writeByte(front.getInt() + (grounded ? 8 : 0) + (isBurnt() ? HEADER_BURNT : 0));
+            boolean hasCord = mods.eln.transparentnode.cord.CordPublication.has(this);
+            stream.writeByte(front.getInt() + (grounded ? 8 : 0) + (isBurnt() ? HEADER_BURNT : 0) + (hasCord ? HEADER_CORD : 0));
+            if (hasCord) mods.eln.transparentnode.cord.CordPublication.write(this, stream);
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -362,6 +378,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
 
 
     public void readFromNBT(CompoundTag nbt) {
+        mods.eln.transparentnode.cord.CordSupport.read(this, nbt);
         Container inv = getInventory();
         if (inv != null) {
             Utils.readFromNBT(nbt, "inv", inv);
@@ -379,6 +396,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
 
 
     public void writeToNBT(CompoundTag nbt) {
+        mods.eln.transparentnode.cord.CordSupport.write(this, nbt);
         if (burnt != null) {
             nbt.putByte("burnt", (byte) (burnt.ordinal() + 1));
             nbt.putByte("burntKind", (byte) burntKind.ordinal());
@@ -516,6 +534,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
      * should tick, but should stop doing useful things.
      */
     public void connectBurntJob() {
+        mods.eln.transparentnode.cord.CordSupport.beforeDisconnect(this);
         if (node != null && node.isDestructing()) return;
         ambient = mods.eln.sim.Ambient.relative(node.coordonate);
         mods.eln.sim.Ambient.stamp(thermalLoadList, ambient);

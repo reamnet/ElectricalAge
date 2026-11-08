@@ -228,6 +228,7 @@ public final class MenuSpecs {
             descriptor(mods.eln.transparentnode.solarpanel.SolarPanelContainer.trackerSlotId, 176 / 2 - 20, 35, 1,
                 SolarTrackerDescriptor.class, MEDIUM, tr("Solar tracker slot"))).publishing(0));
         put(mods.eln.transparentnode.wiremachine.WireMachineDescriptor.class, mods.eln.transparentnode.wiremachine.WireMachineMenus::spec);
+        put(mods.eln.transparentnode.cord.OutletDescriptor.class,d -> MenuSpec.of().panel(368,294,8,210));
         put(mods.eln.transparentnode.fabricator.FabricatorDescriptor.class, mods.eln.transparentnode.fabricator.FabricatorMenus::spec);
         put(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, d -> MenuSpec.of(
             filter(0, 16, 158, 16, st -> mods.eln.transparentnode.converter.DcDcWinding.of(st) != null, MEDIUM, tr("Primary winding")),

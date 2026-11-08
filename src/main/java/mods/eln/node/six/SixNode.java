@@ -386,7 +386,7 @@ public class SixNode extends Node {
         SixNodeElement element = sideElementList[elementSide.getInt()];
         if (element == null || element.isBurnt())
             return null;
-        return element.getElectricalLoad(elementSide.getLRDUGoingTo(side));
+        return element.connectionElectricalLoad(elementSide.getLRDUGoingTo(side));
     }
 
     @Override
@@ -404,7 +404,7 @@ public class SixNode extends Node {
         SixNodeElement element = sideElementList[elementSide.getInt()];
         if (element == null)
             return 0;
-        return element.getConnectionMask(elementSide.getLRDUGoingTo(side));
+        return element.connectionMask(elementSide.getLRDUGoingTo(side));
     }
 
     @Override
@@ -455,7 +455,7 @@ public class SixNode extends Node {
                 stream.writeByte(e.oy);
                 stream.writeByte(e.oz);
                 int pins = 0;   // (the edges it connects on: its pins)
-                for (LRDU l : LRDU.values()) if (e.getConnectionMask(l) != 0) pins |= 1 << l.toInt();
+                for (LRDU l : LRDU.values()) if (e.connectionMask(l) != 0) pins |= 1 << l.toInt();
                 stream.writeByte(pins);
                 stream.writeShort((short) sideElementIdList[idx]);
                 java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
@@ -613,7 +613,7 @@ public class SixNode extends Node {
     }
 
     private void visualInternal(Direction side, SixNodeElement element, LRDU lrdu, Direction otherSide, SixNodeElement otherElement, LRDU otherLRDU) {
-        if (compareConnectionMask(element.getConnectionMask(lrdu), otherElement.getConnectionMask(otherLRDU))) {
+        if (compareConnectionMask(element.connectionMask(lrdu), otherElement.connectionMask(otherLRDU))) {
             lrduElementMask.set(side, lrdu, true);
             lrduElementMask.set(otherSide, otherLRDU, true);
         }
@@ -628,14 +628,14 @@ public class SixNode extends Node {
     }
 
     public void tryConnectTwoInternalElement(Direction side, SixNodeElement element, LRDU lrdu, Direction otherSide, SixNodeElement otherElement, LRDU otherLRDU) {
-        if (compareConnectionMask(element.getConnectionMask(lrdu), otherElement.getConnectionMask(otherLRDU))) {
+        if (compareConnectionMask(element.connectionMask(lrdu), otherElement.connectionMask(otherLRDU))) {
             lrduElementMask.set(side, lrdu, true);
             lrduElementMask.set(otherSide, otherLRDU, true);
             // A burnt element keeps its (visual) connection but carries nothing.
             if (element.isBurnt() || otherElement.isBurnt()) return;
             for (var connection : mods.eln.sixnode.electricalcable.CableConnections.create(
-                    element.getElectricalLoad(lrdu), element.getConnectionMask(lrdu),
-                    otherElement.getElectricalLoad(otherLRDU), otherElement.getConnectionMask(otherLRDU))) {
+                    element.connectionElectricalLoad(lrdu), element.connectionMask(lrdu),
+                    otherElement.connectionElectricalLoad(otherLRDU), otherElement.connectionMask(otherLRDU))) {
                 Eln.simulator.addElectricalComponent(connection);
                 internalElectricalConnectionList.add(connection);
             }

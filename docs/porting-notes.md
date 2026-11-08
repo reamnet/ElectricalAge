@@ -587,3 +587,29 @@ remain in place, with no save keys changed. A native energy-metered production
 chain and 2,000 repeated-readiness checks guard the fix. The native campaign also
 verifies 64 paid ALU attempts, 62 real output chips, and an actual scheduled owner
 reload after a failed attempt.
+
+
+## Native fixed-machine cords and passive outlets
+
+Source connector identities now use actual native passive links and filtered
+native inlets. Survival connections debit the held cord only after attachment
+succeeds; selection, rejected claims and copied settings cannot create a paid
+resource. Contacts and cords dissipate real input power, and existing machine
+work clocks remain accepted-step callbacks. Polling and drawing never pay work.
+
+Native reconnects can remove a physical link while retaining its logical socket
+reservation. Bounded weak owner references preserve immediate resident unplug
+without retaining unloaded instances. Duplicate loaded tokens cannot steal or
+refund a live owner's reservation. Explicit release invalidates an unloaded
+consumer's old claim; its later poll refunds the original paid cord once.
+Unknown source rating names and malformed socket indices now reject rather than
+silently defaulting/clamping to another valid connector. Ordinary native settings
+never import the world-owned link or source socket ledger.
+
+Native voxel end/pin paths enforce the same plugged-inlet policy as ordinary
+nodes and preserve non-power connections. Wireless outlet bridges charge the
+actual supply through one passive link and remove it before source teardown;
+they do not also add equivalent lamp demand. Native source-style surface outlet
+shapes are stored by front/horizontal block state, preserving resident-only
+queries. Recessed walls, portable carry and compact UPS remain separate work.
+See [the adapter and limits](forkpatch-port/cord-outlets.md).

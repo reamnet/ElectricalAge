@@ -3946,5 +3946,119 @@
   "display": "Arithmetic Logic Unit",
   "kind": "shared_item",
   "name": "arithmetic_logic_unit"
+ },
+ "eln:transparent_node@7968": {
+  "descriptor": "OutletDescriptor",
+  "display": "Experimental Wall Outlet",
+  "kind": "transparent_node",
+  "name": "experimental_wall_outlet"
+ },
+ "eln:shared_item@7874": {
+  "descriptor": "CordDescriptor",
+  "display": "Flexible Appliance Cord",
+  "kind": "shared_item",
+  "name": "flexible_appliance_cord"
+ },
+ "eln:transparent_node@7969": {
+  "descriptor": "OutletDescriptor",
+  "display": "240 V Wall Outlet",
+  "kind": "transparent_node",
+  "name": "240_v_wall_outlet"
+ },
+ "eln:shared_item@7875": {
+  "descriptor": "CordDescriptor",
+  "display": "240 V Appliance Cord",
+  "kind": "shared_item",
+  "name": "240_v_appliance_cord"
+ },
+ "eln:transparent_node@8000": {
+  "descriptor": "OutletDescriptor",
+  "display": "24 V Machine Outlet",
+  "kind": "transparent_node",
+  "name": "24_v_machine_outlet"
+ },
+ "eln:shared_item@8000": {
+  "descriptor": "CordDescriptor",
+  "display": "24 V Machine Cord",
+  "kind": "shared_item",
+  "name": "24_v_machine_cord"
+ },
+ "eln:transparent_node@8001": {
+  "descriptor": "OutletDescriptor",
+  "display": "48 V Machine Outlet",
+  "kind": "transparent_node",
+  "name": "48_v_machine_outlet"
+ },
+ "eln:shared_item@8001": {
+  "descriptor": "CordDescriptor",
+  "display": "48 V Machine Cord",
+  "kind": "shared_item",
+  "name": "48_v_machine_cord"
+ },
+ "eln:transparent_node@8002": {
+  "descriptor": "OutletDescriptor",
+  "display": "200 V Workshop Outlet",
+  "kind": "transparent_node",
+  "name": "200_v_workshop_outlet"
+ },
+ "eln:shared_item@8002": {
+  "descriptor": "CordDescriptor",
+  "display": "200 V Workshop Cord",
+  "kind": "shared_item",
+  "name": "200_v_workshop_cord"
+ },
+ "eln:transparent_node@8003": {
+  "descriptor": "OutletDescriptor",
+  "display": "480 V Industrial Outlet",
+  "kind": "transparent_node",
+  "name": "480_v_industrial_outlet"
+ },
+ "eln:shared_item@8003": {
+  "descriptor": "CordDescriptor",
+  "display": "480 V Industrial Cord",
+  "kind": "shared_item",
+  "name": "480_v_industrial_cord"
+ },
+ "eln:transparent_node@8004": {
+  "descriptor": "OutletDescriptor",
+  "display": "800 V Industrial Outlet",
+  "kind": "transparent_node",
+  "name": "800_v_industrial_outlet"
+ },
+ "eln:shared_item@8004": {
+  "descriptor": "CordDescriptor",
+  "display": "800 V Industrial Cord",
+  "kind": "shared_item",
+  "name": "800_v_industrial_cord"
+ },
+ "eln:transparent_node@8005": {
+  "descriptor": "OutletDescriptor",
+  "display": "3.2 kV Industrial Outlet",
+  "kind": "transparent_node",
+  "name": "3_2_kv_industrial_outlet"
+ },
+ "eln:shared_item@8005": {
+  "descriptor": "CordDescriptor",
+  "display": "3.2 kV Industrial Cord",
+  "kind": "shared_item",
+  "name": "3_2_kv_industrial_cord"
+ },
+ "eln:transparent_node@8012": {
+  "descriptor": "OutletDescriptor",
+  "display": "240 V 30 A Dryer Outlet",
+  "kind": "transparent_node",
+  "name": "240_v_30_a_dryer_outlet"
+ },
+ "eln:shared_item@8006": {
+  "descriptor": "CordDescriptor",
+  "display": "240 V 30 A Dryer Cord",
+  "kind": "shared_item",
+  "name": "240_v_30_a_dryer_cord"
+ },
+ "eln:transparent_node@7991": {
+  "descriptor": "OutletDescriptor",
+  "display": "Six Socket Power Strip",
+  "kind": "transparent_node",
+  "name": "six_socket_power_strip"
  }
 }

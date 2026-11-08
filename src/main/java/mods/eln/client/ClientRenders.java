@@ -114,6 +114,7 @@ public final class ClientRenders {
         ElnRenders.transparent(mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveDescriptor.class, mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor.class, mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.wiremachine.WireMachineDescriptor.class, mods.eln.transparentnode.wiremachine.WireMachineRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.cord.OutletDescriptor.class,mods.eln.transparentnode.cord.OutletRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.fabricator.FabricatorDescriptor.class, mods.eln.transparentnode.fabricator.FabricatorRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, mods.eln.transparentnode.converter.VariableDcDcRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.transformer.TransformerDescriptor.class, mods.eln.transparentnode.transformer.TransformerRender::new);

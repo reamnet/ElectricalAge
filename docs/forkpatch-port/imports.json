@@ -3070,5 +3070,586 @@
     "sourceSha256": "98a7aff1c5d0b8fb75dde1fcd6d4b97e136cda1013e62cf407f51d3c495ce351",
     "mode": "native-accepted-step-shared-machine-energy-clock",
     "status": "666-full-root-15-cad-and-all605-port-cases-in1071-unfiltered-tests-passed-two-historical-goldens-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt",
+    "sourceSha256": "8466abf72382234459b405365b40b89e60701bedc82d0d98dccb3ae1ff538540",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/ApplianceCord.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordState.kt",
+    "sourceSha256": "12edb238daccb5a81d5bfa052869bce874855738025057c09a6a8cd79ad7c50c",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordSupport.kt",
+    "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/ApplianceCord.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/ApplianceCord.kt",
+    "sourceSha256": "12edb238daccb5a81d5bfa052869bce874855738025057c09a6a8cd79ad7c50c",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletElement.kt",
+    "sourceSha256": "44d3c3f2d0b86ca7dce4f1ea0e367f5170a2ea48d5dbd08167aaf63cccdb795b",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/WirelessOutletPower.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/WirelessOutletPower.kt",
+    "sourceSha256": "1743df5925ccb2c5c3e658b100d7917f571daaacee72c143a72fef80aa1ac711",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CordVisual.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordGeometry.kt",
+    "sourceSha256": "6d1b6c54946d9ab2f0f5ae47a2fec63f36ac8756e1c471cfbfa78700cd5ac885",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CordVisual.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordPath.kt",
+    "sourceSha256": "6d1b6c54946d9ab2f0f5ae47a2fec63f36ac8756e1c471cfbfa78700cd5ac885",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/ApplianceCord.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordPublication.kt",
+    "sourceSha256": "12edb238daccb5a81d5bfa052869bce874855738025057c09a6a8cd79ad7c50c",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CordVisual.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordDisplay.kt",
+    "sourceSha256": "6d1b6c54946d9ab2f0f5ae47a2fec63f36ac8756e1c471cfbfa78700cd5ac885",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletDescriptor.kt",
+    "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletBlock.kt",
+    "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletRender.kt",
+    "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletScreen.kt",
+    "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CordInteraction.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordDescriptor.kt",
+    "sourceSha256": "7c215b34d3f91ea41c4f417072ead7763a3fc5bc5f009a1ba050ce9d2db4576d",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CordInteraction.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordInteraction.kt",
+    "sourceSha256": "7c215b34d3f91ea41c4f417072ead7763a3fc5bc5f009a1ba050ce9d2db4576d",
+    "mode": "native-source-cord-outlet-ownership-and-physical-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordGeometry.kt",
+    "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
+    "mode": "native-source-socket-anchor-geometry",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLight.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordGeometry.kt",
+    "sourceSha256": "0bf6a5837978f9a4b13f8d67f69e62dbe3d0ff68db15f688628c78081828cb30",
+    "mode": "native-source-horizontal-front-basis",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNode.kt",
+    "target": "src/main/java/mods/eln/node/transparent/TransparentNode.java",
+    "sourceSha256": "a0cb402821f4755890de861f725770338f78650129c691b95d51da6e305b0401",
+    "mode": "native-cord-lifecycle-and-optional-publication-hooks",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNodeElement.kt",
+    "target": "src/main/java/mods/eln/node/transparent/TransparentNodeElement.java",
+    "sourceSha256": "0b396b0a848e9ef80c00c42dc7249964666801afa7abc65adb47ad44a2e4205e",
+    "mode": "native-cord-lifecycle-and-optional-publication-hooks",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNodeElementRender.kt",
+    "target": "src/main/java/mods/eln/node/transparent/TransparentNodeElementRender.java",
+    "sourceSha256": "c2eba2f7254ccde1fef054897c362294966906691fa8aec38fe9424456c81fe1",
+    "mode": "native-cord-lifecycle-and-optional-publication-hooks",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNodeRender.kt",
+    "target": "src/main/java/mods/eln/node/transparent/TransparentNodeRender.java",
+    "sourceSha256": "af3e87556614daf0cea2a8a227f9b67918d828eada047a5f1c57cf4bfa3b1eba",
+    "mode": "native-cord-lifecycle-and-optional-publication-hooks",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/six/SixNode.kt",
+    "target": "src/main/java/mods/eln/node/six/SixNode.java",
+    "sourceSha256": "b0e3270efab32618258b05d837aff3db3f21314842453b98f90c2280f64762d8",
+    "mode": "native-cord-lifecycle-and-optional-publication-hooks",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/six/SixNodeElement.kt",
+    "target": "src/main/java/mods/eln/node/six/SixNodeElement.java",
+    "sourceSha256": "416cc4d9f897b9c1405a36dc4d65e6084c10271f28a45a3bf58c5d0835dabb1d",
+    "mode": "native-cord-lifecycle-and-optional-publication-hooks",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/six/SixNodeElementRender.kt",
+    "target": "src/main/java/mods/eln/node/six/SixNodeElementRender.java",
+    "sourceSha256": "f0bfe7cad4c2d62f35995307f4653c8d44021aaf1fe000afe9b5c0b6e4815869",
+    "mode": "native-cord-lifecycle-and-optional-publication-hooks",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/six/SixNodeRender.kt",
+    "target": "src/main/java/mods/eln/node/six/SixNodeRender.java",
+    "sourceSha256": "bffcc30efa7e54ea56e90d6eaa7d7215159096942c9682c8efab29691857479e",
+    "mode": "native-cord-lifecycle-and-optional-publication-hooks",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/six/SixNode.kt",
+    "target": "src/main/java/mods/eln/node/voxel/VoxelNode.java",
+    "sourceSha256": "b0e3270efab32618258b05d837aff3db3f21314842453b98f90c2280f64762d8",
+    "mode": "native-voxel-end-pin-inlet-isolation-retaining-native-geometry",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CordInteraction.kt",
+    "target": "src/main/java/mods/eln/node/NodeBlock.java",
+    "sourceSha256": "7c215b34d3f91ea41c4f417072ead7763a3fc5bc5f009a1ba050ce9d2db4576d",
+    "mode": "native-cord-interaction-before-device-menu",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
+    "target": "src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineElement.java",
+    "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
+    "mode": "native-narrow-readonly-original-machine-inlet-adapter",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnRegistry.java",
+    "sourceSha256": "80adf1eb288efaf29cc41f8e751efc741bf2fa090c20707dee36ede42db1cdeb",
+    "mode": "native-source-outlet-identities-and-display-alias",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "80adf1eb288efaf29cc41f8e751efc741bf2fa090c20707dee36ede42db1cdeb",
+    "mode": "native-source-outlet-identities-and-display-alias",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/ItemRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "43948eeb1735750e82c1c43550fb8c9c47adbd15f866ac7412eb278661455442",
+    "mode": "native-source-nine-cord-identities",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-source-executable-cord-outlet-recipes",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/UtilityRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "829cb797d9a7e3039c48d31163c2f766ac6f47f903a333bc05b4cd7252a93027",
+    "mode": "native-source-executable-cord-outlet-recipes",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnLang.java",
+    "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
+    "mode": "native-source-display-name-preserving-experimental-identity",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/devtest/OutletCordChecks.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchCordCases.kt",
+    "sourceSha256": "1d764620284af9af9ae38bd1a6892df4d9eb0f92f007d5fad648e46faa3265f6",
+    "mode": "native-powered-ratings-ownership-reload-and-consumer-regressions",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CordVisual.kt",
+    "target": "src/test/kotlin/mods/eln/transparentnode/cord/CordStateTest.kt",
+    "sourceSha256": "6d1b6c54946d9ab2f0f5ae47a2fec63f36ac8756e1c471cfbfa78700cd5ac885",
+    "mode": "native-strict-state-and-bounded-terrain-geometry-regressions",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/appliancewalloutlet/appliancewalloutlet.obj",
+    "target": "src/main/resources/assets/eln/model/appliancewalloutlet/appliancewalloutlet.obj",
+    "sourceSha256": "ab7e410e825f54829c40489fc8c2f0122172befdec314c8707fcb97b420e354a",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/appliancewalloutlet/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/appliancewalloutlet/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/appliancewalloutlet/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/appliancewalloutlet/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/walloutlet240/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/walloutlet240/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/walloutlet240/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/walloutlet240/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/walloutlet240/walloutlet240.obj",
+    "target": "src/main/resources/assets/eln/model/walloutlet240/walloutlet240.obj",
+    "sourceSha256": "2b26ba6baa5dc9ed5e9d2acf07202d088389c9f28560540e080dc9c457042041",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/dryeroutlet30/dryeroutlet30.obj",
+    "target": "src/main/resources/assets/eln/model/dryeroutlet30/dryeroutlet30.obj",
+    "sourceSha256": "a2dbeacf0105f6fb28ca97e137f0912ef91d7d8124839198ad5d71a03e74e2ab",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/dryeroutlet30/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/dryeroutlet30/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/dryeroutlet30/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/dryeroutlet30/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrialmachineoutlet/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrialmachineoutlet/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrialmachineoutlet/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrialmachineoutlet/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrialmachineoutlet/industrialmachineoutlet.obj",
+    "target": "src/main/resources/assets/eln/model/industrialmachineoutlet/industrialmachineoutlet.obj",
+    "sourceSha256": "19a494231e9b5d6d519666ff199adac3e46d7dd22585dd8c275701ff9e3e78bc",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/sixsocketpowerstrip/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/sixsocketpowerstrip/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/sixsocketpowerstrip/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/sixsocketpowerstrip/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/sixsocketpowerstrip/sixsocketpowerstrip.obj",
+    "target": "src/main/resources/assets/eln/model/sixsocketpowerstrip/sixsocketpowerstrip.obj",
+    "sourceSha256": "cbdefb65a909b06689c63987c9482565e0eaa09ce32d924cf71367e4d88e524d",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/nema520plug/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/nema520plug/equipment_finish.mtl",
+    "sourceSha256": "e96fd9f4da7d545777c9103153eb63d9323a5c03277220c6f2e5fc191f6793be",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/nema520plug/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/nema520plug/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/nema520plug/nema520plug.obj",
+    "target": "src/main/resources/assets/eln/model/nema520plug/nema520plug.obj",
+    "sourceSha256": "ba8d45ad8973b862fb878b58cc29f33f9b1f8e3a2a4bb59a2b28b2519b8e6ffe",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/nema620plug/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/nema620plug/equipment_finish.mtl",
+    "sourceSha256": "e96fd9f4da7d545777c9103153eb63d9323a5c03277220c6f2e5fc191f6793be",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/nema620plug/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/nema620plug/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/nema620plug/nema620plug.obj",
+    "target": "src/main/resources/assets/eln/model/nema620plug/nema620plug.obj",
+    "sourceSha256": "21834fe2efd57e3206171494eceb1698b6a68588df1af90949ea7108abe006f9",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/nema1030plug/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/nema1030plug/equipment_finish.mtl",
+    "sourceSha256": "e96fd9f4da7d545777c9103153eb63d9323a5c03277220c6f2e5fc191f6793be",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/nema1030plug/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/nema1030plug/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/nema1030plug/nema1030plug.obj",
+    "target": "src/main/resources/assets/eln/model/nema1030plug/nema1030plug.obj",
+    "sourceSha256": "12fb6b3c1f47daca289de9573856084939ebdf0b08bb62f611466294dca4acc6",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrialmachineplug/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrialmachineplug/equipment_finish.mtl",
+    "sourceSha256": "e96fd9f4da7d545777c9103153eb63d9323a5c03277220c6f2e5fc191f6793be",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrialmachineplug/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrialmachineplug/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrialmachineplug/industrialmachineplug.obj",
+    "target": "src/main/resources/assets/eln/model/industrialmachineplug/industrialmachineplug.obj",
+    "sourceSha256": "502ef4ae71cb360651b161a689576b24f226f095d69ed10de1fcad5d42d7337e",
+    "mode": "verbatim-cord-outlet-model-bundle",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/experimental_wall_outlet.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/flexibleappliancecord.png",
+    "target": "src/main/resources/assets/eln/textures/item/flexible_appliance_cord.png",
+    "sourceSha256": "d27adc4623e693fb627a968ed6f62476c0cdb2d55ffe6ec247b5117081d02d1c",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/240_v_wall_outlet.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/flexibleappliancecord.png",
+    "target": "src/main/resources/assets/eln/textures/item/240_v_appliance_cord.png",
+    "sourceSha256": "d27adc4623e693fb627a968ed6f62476c0cdb2d55ffe6ec247b5117081d02d1c",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/24_v_machine_outlet.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/flexibleappliancecord.png",
+    "target": "src/main/resources/assets/eln/textures/item/24_v_machine_cord.png",
+    "sourceSha256": "d27adc4623e693fb627a968ed6f62476c0cdb2d55ffe6ec247b5117081d02d1c",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/48_v_machine_outlet.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/flexibleappliancecord.png",
+    "target": "src/main/resources/assets/eln/textures/item/48_v_machine_cord.png",
+    "sourceSha256": "d27adc4623e693fb627a968ed6f62476c0cdb2d55ffe6ec247b5117081d02d1c",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/200_v_workshop_outlet.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/flexibleappliancecord.png",
+    "target": "src/main/resources/assets/eln/textures/item/200_v_workshop_cord.png",
+    "sourceSha256": "d27adc4623e693fb627a968ed6f62476c0cdb2d55ffe6ec247b5117081d02d1c",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/480_v_industrial_outlet.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/flexibleappliancecord.png",
+    "target": "src/main/resources/assets/eln/textures/item/480_v_industrial_cord.png",
+    "sourceSha256": "d27adc4623e693fb627a968ed6f62476c0cdb2d55ffe6ec247b5117081d02d1c",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/800_v_industrial_outlet.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/flexibleappliancecord.png",
+    "target": "src/main/resources/assets/eln/textures/item/800_v_industrial_cord.png",
+    "sourceSha256": "d27adc4623e693fb627a968ed6f62476c0cdb2d55ffe6ec247b5117081d02d1c",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/3_2_kv_industrial_outlet.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/flexibleappliancecord.png",
+    "target": "src/main/resources/assets/eln/textures/item/3_2_kv_industrial_cord.png",
+    "sourceSha256": "d27adc4623e693fb627a968ed6f62476c0cdb2d55ffe6ec247b5117081d02d1c",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/240_v_30_a_dryer_outlet.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/flexibleappliancecord.png",
+    "target": "src/main/resources/assets/eln/textures/item/240_v_30_a_dryer_cord.png",
+    "sourceSha256": "d27adc4623e693fb627a968ed6f62476c0cdb2d55ffe6ec247b5117081d02d1c",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/machineblock.png",
+    "target": "src/main/resources/assets/eln/textures/item/six_socket_power_strip.png",
+    "sourceSha256": "9b55163418f17b56bc6faea681f681fc697692d895a49dd7a1e59055457a6a9a",
+    "mode": "verbatim-relocated-cord-outlet-icon",
+    "status": "670-full-root-15-cad-and-52-focused-native-passed-unfiltered-review-pending"
   }
 ]

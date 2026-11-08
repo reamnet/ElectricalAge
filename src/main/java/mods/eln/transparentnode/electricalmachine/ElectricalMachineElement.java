@@ -86,6 +86,9 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         return true;
     }
 
+    public NbtElectricalLoad cordInput() { return electricalLoad; }
+    public double cordNominalVoltage() { return descriptor.nominalU; }
+
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
         return electricalLoad;
