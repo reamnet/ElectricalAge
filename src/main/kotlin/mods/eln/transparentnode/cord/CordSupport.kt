@@ -17,6 +17,8 @@ import mods.eln.transparentnode.eggincubator.EggIncubatorElement
 import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveElement
 import mods.eln.transparentnode.electricalantennatx.ElectricalAntennaTxElement
 import mods.eln.transparentnode.turret.TurretElement
+import mods.eln.transparentnode.autominer.AutoMinerElement
+import mods.eln.transparentnode.teleporter.TeleporterElement
 import net.minecraft.nbt.CompoundTag
 
 interface CordDevice {
@@ -35,6 +37,8 @@ object CordSupport {
         if(owner is ElectricalMachineElement)return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
         // Bind explicit power loads, never whichever load happens to be first in a list.
         when(owner) {
+            is AutoMinerElement -> return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
+            is TeleporterElement -> return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
             is EggIncubatorElement -> return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
             is ThermalDissipatorActiveElement -> return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
             is ElectricalAntennaTxElement -> return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
@@ -66,13 +70,23 @@ object CordSupport {
         is SixNodeElement -> (mods.eln.node.NodeManager.instance.getNodeFromCoordonate(owner.sixNode.coordonate) as? mods.eln.node.six.SixNode)?.getElement(owner.slot)===owner
         else -> false
     }
-    fun active(owner: Any)=resident(owner) && when(owner) { is TransparentNodeElement->owner.node.isAdded;is SixNodeElement->owner.sixNode.isAdded;else->false }
+    @JvmStatic fun active(owner: Any)=resident(owner) && when(owner) { is TransparentNodeElement->owner.node.isAdded && !owner.isBurnt;is SixNodeElement->owner.sixNode.isAdded && !owner.isBurnt;else->false }
     fun reconnect(owner: Any) { when(owner) { is TransparentNodeElement->if(owner.node.isAdded && !owner.node.isDestructing)owner.reconnect();is SixNodeElement->if(owner.sixNode.isAdded && !owner.sixNode.isDestructing)owner.reconnect() } }
     fun publish(owner: Any) { when(owner) { is TransparentNodeElement->owner.needPublish();is SixNodeElement->owner.needPublish() } }
     fun processes(owner: Any)=when(owner) { is TransparentNodeElement->owner.slowProcessList;is SixNodeElement->owner.slowProcessList;else->error("Unsupported owner") }
     fun drop(owner: Any,stack: net.minecraft.world.item.ItemStack) { when(owner) { is TransparentNodeElement->owner.node.dropItem(stack);is SixNodeElement->owner.sixNode.dropItem(stack) } }
     @JvmStatic fun beforeConnect(owner: Any) { device(owner)?.cord }
+    private fun auxiliaryNodes(owner: Any): List<NodeBase> = when(owner) {
+        is AutoMinerElement -> owner.cordPowerNodes()
+        is TeleporterElement -> owner.cordPowerNodes()
+        else -> emptyList()
+    }
+    /** Called only after the native owner has completed resume, never by a cord poll. */
+    @JvmStatic fun afterConnect(owner: Any) {
+        if(active(owner))auxiliaryNodes(owner).forEach { it.reconnect() }
+    }
     @JvmStatic fun beforeDisconnect(owner: Any) {
+        auxiliaryNodes(owner).forEach { it.disconnect() }
         WirelessOutletPower.disconnectSupply(owner)
         device(owner)?.cord?.disconnect()
     }

@@ -36,5 +36,10 @@
     "Earlier checkpoint pass counts do not validate these changes.",
     "No new mod artifact or runtime parity claim.",
     "No Gradle/wrapper, registry or source-checkout changes."
-  ]
+  ],
+  "followUp": {
+    "status": "dependency-access-restored-mod-compilation-and-all-fifteen-native-cases-pass",
+    "evidence": "continuation-validation.json",
+    "originalBlockerRetained": true
+  }
 }

@@ -39,7 +39,8 @@ object ForkPatchCordCases {
         listOf(4130 to 8002,450 to 8002,452 to 8004,4224 to 8004).flatMap {
             listOf(ConsumerInlet(it.first,it.second),ConsumerReload(it.first,it.second),ConsumerPaidUse(it.first,it.second))
         } +
-        listOf(2624,4128,448).map { UnmatchedInlet(it) }
+        listOf(2624,4128,448).map { UnmatchedInlet(it) } +
+        listOf(2688,4160).flatMap { id -> listOf(GhostInlet(id,1,false),GhostInlet(id,-1,false),GhostInlet(id,1,true),GhostLifecycle(id)) }
     private fun item(name: String,n: Int=1)=Eln.findItemStack(name,n)
     private open class Base: TestCase {
         val parts=mutableListOf<Component>();var clock: IProcess?=null
@@ -404,6 +405,83 @@ object ForkPatchCordCases {
         if(wall)c.floor(pos.relative(net.minecraft.core.Direction.NORTH))
         val player=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level())
         return requireNotNull((d.parentItem as TransparentNodeItem).placeAt(d.newItemStack(),player,c.level(),pos,if(wall)Direction.ZN else Direction.YN)).element
+    }
+    private open class GhostBase(val lookup: Int): Base() {
+        override fun width()=9
+        override fun height()=7
+        override fun depth()=7
+        fun machine(c: TestContext): TransparentNodeElement {
+            val at=c.at(5,3,4);c.floor(at.below())
+            val p=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level())
+            val yaw=p.yRot
+            return try {
+                p.setYRot(0f)
+                val d=requireNotNull(Eln.transparentNodeItem.getDescriptor(lookup))
+                val offset=intArrayOf(d.spawnDeltaX,d.spawnDeltaY,d.spawnDeltaZ)
+                d.getFrontFromPlace(Direction.YN,p).rotateFromXN(offset)
+                requireNotNull((d.parentItem as TransparentNodeItem).placeAt(d.newItemStack(),p,c.level(),at.offset(-offset[0],-offset[1],-offset[2]),Direction.YN)) { "Ghost fixture $lookup at $at offset=${offset.toList()} front=${d.getFrontFromPlace(Direction.YN,p)}: ${d.checkCanPlace(Coordonate(at,c.level()),d.getFrontFromPlace(Direction.YN,p))}" }.element
+            } finally { p.setYRot(yaw) }
+        }
+        fun ghosts(e: TransparentNodeElement): List<NodeBase> = when(e) {
+            is mods.eln.transparentnode.autominer.AutoMinerElement -> e.cordPowerNodes()
+            is mods.eln.transparentnode.teleporter.TeleporterElement -> e.cordPowerNodes()
+            else -> error("Not an auxiliary consumer")
+        }
+        fun isolated(e: TransparentNodeElement)=ghosts(e).all { g -> Direction.values().all { side -> LRDU.values().all {
+            g.getElectricalLoad(side,it)==null && g.getSideConnectionMask(side,it) and NodeBase.maskElectricalPower==0
+        } } }
+    }
+    /** An actual powered adjacent cable must not bypass the cord through a ghost terminal. */
+    private class GhostInlet(lookup: Int,val sign: Int,val unplugged: Boolean): GhostBase(lookup) {
+        lateinit var e: TransparentNodeElement;lateinit var o: OutletElement;lateinit var cable: mods.eln.sixnode.electricalcable.ElectricalCableElement
+        override fun id()="forkpatch_cord_ghost_${lookup}_${if(unplugged)"unplugged" else if(sign>0)"positive" else "negative"}_competing_supply"
+        override fun build(c: TestContext) {
+            e=machine(c);o=outlet(c,8004,1,6)
+            val ghost=ghosts(e).first()
+            val side=Direction.values().first { ghost.getSideConnectionMask(it,LRDU.Down) and NodeBase.maskElectricalPower!=0 }
+            val pos=ghost.coordonate.pos().relative(side.toEnumFacing());c.floor(pos.below())
+            cable=c.placeSix(mods.eln.registry.ElnDeviceRegistry.highVoltageCableDescriptor.parentItemDamage,pos) as mods.eln.sixnode.electricalcable.ElectricalCableElement
+            c.check("cord ghost: fixture has a real native cable connection before attachment",ghost.nodeConnectionList.any { it.other(ghost)===cable.sixNode },"$lookup")
+            feed(cable.electricalLoad,sign*600.0)
+            check(cord(e).attach(o.anchor(0),true));feed(o.input,sign*800.0)
+            c.check("cord ghost: attaching removes every pre-existing auxiliary cable connection",isolated(e) && ghosts(e).all { it.nodeConnectionList.isEmpty() },"$lookup")
+            if(unplugged)cord(e).detach()
+        }
+        override fun measure(c: TestContext) { try {
+            val link=cord(e);val voltage=sign*link.input.u
+            if(sign<0) {
+                c.check("cord ghost: reverse supply retains the native polar-device failure",e.burnt==mods.eln.sim.process.destruct.FailureCause.REVERSE_VOLTAGE && !link.connected && isolated(e),"$lookup: ${e.burnt}")
+                repeat(2000) { link.poll() }
+                c.check("cord ghost: physical polls cannot reactivate burnt owner or auxiliary terminals",!link.connected && isolated(e) && ghosts(e).all { it.nodeConnectionList.isEmpty() },"$lookup")
+                val before=dropped(c,o.rating.cordName);link.detach();link.detach()
+                c.check("cord ghost: burnt owner returns its paid cord once without reopening terminals",dropped(c,o.rating.cordName)==before+1 && isolated(e),"$lookup")
+            } else if(unplugged) {
+                c.check("cord ghost: unplug rebuilds actual auxiliary cable power",voltage in 599.0..600.1 && !link.connected && ghosts(e).any { it.nodeConnectionList.isNotEmpty() },"$lookup: $voltage")
+            } else {
+                c.check("cord ghost: competing native supply cannot energize the cord-isolated load",voltage in 799.0..800.1 && link.connected && isolated(e),"$lookup: $voltage")
+                val system=link.input.subSystem!!;val version=system.matrixVersion
+                repeat(2000) { link.poll() }
+                c.check("cord ghost: stable polls never rebuild auxiliary connections or LU factors",system.matrixVersion==version && isolated(e),"$lookup")
+                val before=dropped(c,o.rating.cordName);link.detach();link.detach()
+                c.check("cord ghost: one paid refund restores native auxiliary wiring",dropped(c,o.rating.cordName)==before+1 && ghosts(e).any { it.nodeConnectionList.isNotEmpty() },"$lookup")
+            }
+        } finally { clean() } }
+    }
+    private class GhostLifecycle(lookup: Int): GhostBase(lookup) {
+        override fun id()="forkpatch_cord_ghost_${lookup}_suspend_reload_refund"
+        override fun measure(c: TestContext) {
+            val o=outlet(c,8004,1,6);var e=machine(c);var link=cord(e)
+            check(link.attach(o.anchor(0),true));val token=link.token
+            e.node.unload();link.poll();ghosts(e).forEach { it.reconnect() }
+            c.check("cord ghost: auxiliary reconnect and physical poll cannot bypass owner suspension",!e.node.isAdded && !link.connected && link.paid && isolated(e) && ghosts(e).all { it.nodeConnectionList.isEmpty() },"$lookup")
+            e.node.connect();link.poll()
+            c.check("cord ghost: ordinary native resume retains one paid reservation and terminal isolation",link.connected && link.token==token && o.occupied(0) && isolated(e),"$lookup")
+            val oldGhosts=ghosts(e).toList();val oldInput=link.input
+            e=(Reload.node(c.level(),e.node.coordonate.pos()).fresh as TransparentNode).element;link=cord(e);link.poll()
+            c.check("cord ghost: reload owns new terminals and retains the paid identity",link.connected && link.token==token && link.paid && link.input!==oldInput && isolated(e) && oldGhosts.all { !it.isAdded && it.nodeConnectionList.isEmpty() },"$lookup")
+            val before=dropped(c,o.rating.cordName);o.disconnectSocket(0);o.disconnectSocket(0)
+            c.check("cord ghost: source release refunds once and restores fresh native terminals",!link.plugged && dropped(c,o.rating.cordName)==before+1 && ghosts(e).all { g -> Direction.values().any { g.getSideConnectionMask(it,LRDU.Down) and NodeBase.maskElectricalPower!=0 } },"$lookup")
+        }
     }
     private class DuplicateBreak: Base() {
         override fun id()="forkpatch_cord_duplicate_owner_actual_break_cannot_refund_live_token"

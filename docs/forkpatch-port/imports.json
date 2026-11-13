@@ -3664,34 +3664,62 @@
     "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordSupport.kt",
     "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
     "mode": "native-explicit-consumer-inlet-adapter",
-    "status": "implementation-added-build-and-native-validation-blocked-by-neoforge-maven-http403"
+    "status": "validated-fifteen-extended-native-cases-see-continuation-validation.json"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
     "target": "src/main/java/mods/eln/transparentnode/eggincubator/EggIncubatorElement.java",
     "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
     "mode": "native-explicit-consumer-inlet-adapter",
-    "status": "implementation-added-build-and-native-validation-blocked-by-neoforge-maven-http403"
+    "status": "validated-fifteen-extended-native-cases-see-continuation-validation.json"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
     "target": "src/main/java/mods/eln/transparentnode/thermaldissipatoractive/ThermalDissipatorActiveElement.java",
     "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
     "mode": "native-explicit-consumer-inlet-adapter",
-    "status": "implementation-added-build-and-native-validation-blocked-by-neoforge-maven-http403"
+    "status": "validated-fifteen-extended-native-cases-see-continuation-validation.json"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
     "target": "src/main/java/mods/eln/transparentnode/electricalantennatx/ElectricalAntennaTxElement.java",
     "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
     "mode": "native-explicit-consumer-inlet-adapter",
-    "status": "implementation-added-build-and-native-validation-blocked-by-neoforge-maven-http403"
+    "status": "validated-fifteen-extended-native-cases-see-continuation-validation.json"
   },
   {
     "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
     "target": "src/main/java/mods/eln/transparentnode/turret/TurretElement.java",
     "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
     "mode": "native-explicit-consumer-inlet-adapter",
-    "status": "implementation-added-build-and-native-validation-blocked-by-neoforge-maven-http403"
+    "status": "validated-fifteen-extended-native-cases-see-continuation-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
+    "target": "src/main/java/mods/eln/transparentnode/autominer/AutoMinerElement.java",
+    "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
+    "mode": "native-auxiliary-consumer-cord-lifecycle-adapter",
+    "status": "see-continuation-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
+    "target": "src/main/java/mods/eln/transparentnode/autominer/AutoMinerPowerNode.java",
+    "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
+    "mode": "native-auxiliary-consumer-cord-lifecycle-adapter",
+    "status": "see-continuation-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
+    "target": "src/main/java/mods/eln/transparentnode/teleporter/TeleporterElement.java",
+    "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
+    "mode": "native-auxiliary-consumer-cord-lifecycle-adapter",
+    "status": "see-continuation-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
+    "target": "src/main/java/mods/eln/transparentnode/teleporter/TeleporterPowerNode.java",
+    "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
+    "mode": "native-auxiliary-consumer-cord-lifecycle-adapter",
+    "status": "see-continuation-validation.json"
   }
 ]

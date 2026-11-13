@@ -226,6 +226,12 @@ public class TransparentNode extends Node {
     }
 
     @Override
+    public void connect() {
+        super.connect();
+        if (element != null) mods.eln.transparentnode.cord.CordSupport.afterConnect(element);
+    }
+
+    @Override
     public void connectJob() {
         super.connectJob();
         // A burnt element keeps only its thermal loads in the simulation (see TransparentNodeElement.connectBurntJob).

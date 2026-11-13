@@ -5,14 +5,13 @@ backlog, not a count of missing files or a statement that every inherited class
 has been reviewed. The [source inventory](source-inventory.json) retains that
 file-by-file review surface; the [import audit](import-audit.json) checks provenance.
 
-## Current continuation awaiting validation
+## Current continuation
 
-The [extended fixed-consumer checkpoint](extended-consumers.md) adds explicit
-native cooler, transmitter, turret and incubator inlet selection and fifteen
-regression cases. Mod compilation and native execution are blocked by environment
-proxy HTTP 403 for NeoForge Maven. These additions are not included in the prior
-passing counts below; the independent CAD suite passes 15 tests. See the
-[current validation status](extended-consumers-validation.json).
+The [extended fixed consumers](extended-consumers.md) now compile and all fifteen
+native regressions execute successfully. The [miner/transporter adapter](ghost-consumers.md)
+adds original native 800 V inputs with auxiliary-terminal isolation and preserves
+native reverse-voltage burnout. See [current evidence](continuation-validation.json)
+for final results; older checkpoint counts below remain historical.
 
 ## Registered adapters with passing production checks
 
@@ -44,7 +43,7 @@ passing counts below; the independent CAD suite passes 15 tests. See the
 - Standalone Pole Surge Arrester and paid overhead HV pole kits with finite cartridge state and native lightning protection.
 - Programmable EV Pack Charger, removable 20 kWh traction pack, Electric Welding Station and welded frames; native inventory, accepted-energy and save checks.
 - Wire Snips 7873 with native main/off-hand menus, paid fractional cuts, preserved hot/damaged/multicore data and exact native returns.
-- Native surface outlets/strips and nine cord ratings with paid fixed-machine links, source recipes, native controls/geometry and voxel inlet isolation. Recessed walls, portable carry and compact UPS remain pending.
+- Native surface outlets/strips and nine cord ratings with paid fixed-machine links, source recipes, native controls/geometry and voxel inlet isolation. Extended cooler/transmitter/turret inputs and miner/transporter auxiliary terminals are covered by the current continuation; recessed walls, portable carry and compact UPS remain pending.
 - Fabricator 4480 and five source basic components with real 4 kJ attempts, paid wafer/machine recipes, deterministic yields, native inventories/controls and optional JEI examples.
 - Wire Roller 4608, Insulator 4609 and Combiner 4610 with real paid buffers, wheels/bundles, hot stock, source recipes, native automation and one powered multicore production chain.
 - Electric Forklift and Warehouse Equipment Pallet with server controls, actual pack drain/lifting costs, guarded inventories, cargo saves and refunds.
@@ -90,7 +89,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 | Industrial devices | Appliance cord/outlet integration and interactive client/audio parity for the registered industrial families. |
 | Industrial transport | Interactive client controls, audio and multiplayer parity of the registered forklift/pallet adapters. Road vehicles remain a separate adapter group. |
 | Vehicles | Four-seat golf cart, two-seat electric car, stepping/collision, turn-overload fire/explosion behavior, passengers, storage, six-cell traction pack and in-car charging. Preserve the electric car's clear windows. |
-| Appliance power | Recessed wall placement/rendering/restoration, portable consumers/carry, newer rated lamp-supply consumers, generalized panel channels and compact plug-in UPS. Surface outlets/strips and five fixed-machine families now use paid native links; see [adapter](cord-outlets.md) and [source review](appliance-cord-review.md). |
+| Appliance power | Recessed wall placement/rendering/restoration, portable consumers/carry, newer rated lamp-supply consumers, generalized panel channels and compact plug-in UPS. Surface outlets/strips and fixed-machine families now use paid native links; see [adapter](cord-outlets.md) and [source review](appliance-cord-review.md). |
 | Kitchen/laundry | Source kitchen and laundry/matter-machine families, food/process inventories, recipes, temperature/heat behavior, appliance controls and graphics. |
 | Climate and fans | Heating/cooling/humidity controls, fans, evaporative cooling and water handling, building/room thermal changes and integration with the destination fluid systems. |
 | Pumps and growing | Industrial/world-intake pumps, fluid-port integration, growing-bed cycle and associated inventory/render/UI behavior. |

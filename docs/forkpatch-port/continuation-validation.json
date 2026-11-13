@@ -1,0 +1,87 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "previousCheckpoint": "ce694aa3fa3e8a91fdbcb60c0f0262ab2a1a1b37",
+  "scope": "Validate fifteen extended fixed-consumer cases; port native Auto Miner 2688 and Experimental Transporter 4160 cord inlets with auxiliary-terminal lifecycle isolation and burnt-owner polling guards",
+  "focusedNative": {
+    "selected": 75,
+    "passed": 75,
+    "failed": 0,
+    "skipped": 0,
+    "failedCases": [],
+    "portCases": {
+      "selected": 75,
+      "failed": 0
+    },
+    "report": "/workspace/setup/pr1-cord-final.xml"
+  },
+  "native": {
+    "selected": 1146,
+    "passed": 1144,
+    "failed": 2,
+    "skipped": 0,
+    "failedCases": [
+      "eln:golden_descriptors",
+      "eln:golden_slots"
+    ],
+    "portCases": {
+      "selected": 680,
+      "failed": 0
+    },
+    "report": "/workspace/setup/pr1-all-native.xml"
+  },
+  "newNativeCases": 8,
+  "previouslyBlockedNativeCasesValidated": 15,
+  "root": {
+    "tests": 673,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "suites": 122,
+    "passed": 670
+  },
+  "cad": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": 3
+  },
+  "provenance": {
+    "ledgerEntries": 531,
+    "passed": true
+  },
+  "sourceUnchanged": true,
+  "gradleAndWrapperUnchanged": true,
+  "commands": [
+    "source /workspace/setup/activate.sh",
+    "./gradlew --no-daemon --max-workers=2 :build :cad:test",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_cord_* --report /workspace/setup/pr1-cord-final.xml --universe /workspace/ElectricalAge/run/pr1-cord-final'",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report /workspace/setup/pr1-all-native.xml --universe /workspace/ElectricalAge/run/pr1-all-native'",
+    "python3 tools/port/audit_imports.py --source ../ELN1.21.1ForkPatch --output /workspace/setup/pr1-final-import-audit.json",
+    "git diff --check"
+  ],
+  "limitations": [
+    "Historical golden_descriptors and golden_slots failures remain visible; no expected snapshots, existing skip lists or tolerances changed.",
+    "Headless native tests do not establish interactive client/GPU/audio, JEI runtime or multiplayer parity.",
+    "No source-world converter or full remaining-device parity claim.",
+    "Interrupted concurrent Gradle attempts are excluded; final validation uses sequential builds."
+  ],
+  "historicalGoldenChecks": 1099,
+  "historicalGoldenFailedAssertions": 467,
+  "artifact": {
+    "path": "build/libs/eln-26.3-0.1.0-port.jar",
+    "bytes": 30849796,
+    "sha256": "5d8b498e85f122b73ea33d7f286f6c93156085ff7442f8084cfd0b76a9e79fc9",
+    "checkedFiles": {
+      "java": 1770,
+      "kotlin": 840,
+      "resources": 4951
+    },
+    "allCheckedBytesMatch": true
+  },
+  "registryAndResourceFilesUnchanged": true,
+  "fluidCases": 200,
+  "status": "mod-build-root-cad-and-all680-port-native-cases-pass-two-historical-golden-comparisons-remain",
+  "rootLog": "/workspace/setup/pr1-final-build2.log",
+  "nativeLog": "/workspace/setup/pr1-all-native.log"
+}

@@ -17,11 +17,10 @@ be used on 26.3.
 
 ## Conflict policy
 
-Current continuation: [extended fixed-consumer cord inputs](forkpatch-port/extended-consumers.md).
-Implementation and fifteen native cases are added, but the changed mod has not
-compiled because NeoForge dependency access is blocked by the environment proxy.
-The independent CAD suite passes 15 tests. Earlier full pass counts below are
-historical checkpoint evidence, not validation of this continuation.
+Current continuation: [miner/transporter auxiliary cord inputs](forkpatch-port/ghost-consumers.md).
+The previously blocked [extended consumer checkpoint](forkpatch-port/extended-consumers.md)
+now compiles and its fifteen native cases pass. Current commands, test results
+and artifact evidence are recorded in [continuation validation](forkpatch-port/continuation-validation.json).
 
 The existing 26.3 port is the platform foundation. A shared file/class name does
 not establish compatible behavior. Keep its working registry, save, networking,

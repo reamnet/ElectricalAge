@@ -4,7 +4,7 @@ Continuation of PR #1, **Port ForkPatch 3.0.77 devices, manufacturing and cords
 to NeoForge 26.3**, from `3f54f0ca`. Source remains ForkPatch 3.0.77 at
 `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`.
 
-## Implemented, awaiting native validation
+## Implemented and validated
 
 The source `MachineCordSupport` explicitly includes several existing native
 consumer families not selected by the preceding 26.3 adapter. This checkpoint
@@ -41,12 +41,11 @@ Fifteen additional native cases are registered under `forkpatch_cord_*`:
 - Three 50 V cases reject all available connector ratings, including attempted
   48 V attachment without payment or reservation.
 
-These cases are **written but not executed**. Both the root build and native
-launcher stop at `:createMinecraftArtifacts`: the environment proxy returns
-HTTP 403 for `maven.neoforged.net` when resolving NeoForm Runtime 2.0.31. Changed
-mod code has not compiled. The independent CAD suite passes 15 tests; that does
-not validate these adapters. Import provenance and whitespace checks pass.
-See [the exact validation status and commands](extended-consumers-validation.json).
+The original checkpoint could not compile because its environment proxy returned
+HTTP 403 for NeoForge Maven. The 2026-11-13 continuation resolved dependency
+access, compiled the mod, and executed all fifteen cases successfully. See the
+[original blocker record](extended-consumers-validation.json) and
+[current continuation evidence](continuation-validation.json).
 
 ## Reviewed boundaries and next work
 
@@ -55,12 +54,10 @@ replicated geometry and matching external cable endpoints. Surface outlets must
 not be presented as recessed support just by moving their mesh.
 
 The miner and transporter have additional `AutoMinerPowerNode` and
-`TeleporterPowerNode` ghost inlets which directly return the owner's load.
-Simply adding them to the selector would let those terminals bypass the cord
-inlet isolation. Their connections must be disconnected/rebuilt together with
-owner attach/unplug, suspend/resume and reload; add powered competing-source
-cases before enabling those families. Motors additionally need their actual
-bipolar return topology. These adapters are deliberately still pending.
+`TeleporterPowerNode` ghost inlets. The [next adapter](ghost-consumers.md) gates
+those terminals and rebuilds their actual connections with owner lifecycle
+changes, with competing-source, suspension and reload coverage. Motors still
+need their actual bipolar return topology and remain pending.
 
 Portable appliances/carry, rated lamp-supply variants, compact UPS and source
 world conversion remain pending as recorded in the feature backlog. Historical
@@ -78,8 +75,7 @@ golden failures have not been waived or regenerated.
 5. Extended the source import ledger and recorded current evidence separately
    from the preceding checkpoint's successful full regressions.
 
-The environment draft contains dependency-host additions and `api.github.com`
-for GitHub CLI PR editing. They must be applied in environment settings before
-retrying blocked operations. Git HTTPS transport remains usable. No credentials
-are needed for the public dependency downloads. This checkpoint is development
-work for review, not a validated release.
+The original environment needed dependency-host access. In the current cloud
+environment, dependency downloads, Git HTTPS transport and GitHub PR editing work
+with the existing authentication. No additional credentials were requested.
+This checkpoint remains development work for review, not a release.

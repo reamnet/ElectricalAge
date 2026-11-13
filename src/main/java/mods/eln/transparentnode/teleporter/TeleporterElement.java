@@ -68,6 +68,11 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
 
     Coordonate lightCoordonate;
 
+    /** The native inlet and its auxiliary terminals remain owned by this machine. */
+    public NbtElectricalLoad cordInput() { return powerLoad; }
+    public double cordNominalVoltage() { return descriptor.cable.electricalNominalVoltage; }
+    public java.util.List<TeleporterPowerNode> cordPowerNodes() { return java.util.Collections.unmodifiableList(powerNodeList); }
+
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
 
