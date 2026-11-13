@@ -1,0 +1,40 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "previousCheckpoint": "3f54f0ca2c1c69175862872ecb3b088cc6ee7968",
+  "status": "implementation-awaiting-mod-compilation-and-native-validation",
+  "newNativeCases": 15,
+  "cad": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": 3
+  },
+  "modBuild": {
+    "status": "blocked-before-compiling-changed-mod",
+    "task": ":createMinecraftArtifacts",
+    "dependency": "net.neoforged:neoform-runtime:2.0.31",
+    "httpStatus": 403,
+    "host": "maven.neoforged.net"
+  },
+  "native": {
+    "status": "not-executed-dependency-resolution-blocked",
+    "testsExecuted": 0
+  },
+  "checks": [
+    "git diff --check",
+    "python tools/port/audit_imports.py --source ../ELN1.21.1ForkPatch --output /workspace/setup/continue-port-audit.json"
+  ],
+  "commands": [
+    "source /workspace/setup/activate.sh",
+    "bash ./gradlew :build --max-workers=2 --console=plain",
+    "bash ./gradlew :cad:test --max-workers=2 --console=plain",
+    "bash ./gradlew runGameTestServer --max-workers=2 --console=plain --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_cord_* --report /workspace/setup/extended-cord-native.xml --universe /workspace/ElectricalAge/run/extended-cord-native'"
+  ],
+  "limitations": [
+    "CAD success does not validate the changed device adapters.",
+    "Earlier checkpoint pass counts do not validate these changes.",
+    "No new mod artifact or runtime parity claim.",
+    "No Gradle/wrapper, registry or source-checkout changes."
+  ]
+}

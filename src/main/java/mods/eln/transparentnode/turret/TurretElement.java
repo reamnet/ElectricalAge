@@ -118,6 +118,10 @@ public class TurretElement extends TransparentNodeElement {
         return simulation.isEnabled();
     }
 
+    /** The cord feeds the existing power inlet; signal/thermal terminals remain independent. */
+    public NbtElectricalLoad cordInput() { return load; }
+    public double cordNominalVoltage() { return ElnDeviceRegistry.highVoltageCableDescriptor.electricalNominalVoltage; }
+
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
         if (side == front.back() && lrdu == LRDU.Down) return load;

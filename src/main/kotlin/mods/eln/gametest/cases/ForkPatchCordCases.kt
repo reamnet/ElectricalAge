@@ -35,7 +35,11 @@ object ForkPatchCordCases {
         listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP).map { Front(it) } +
         listOf(Capacity(false),Capacity(true),Production(),Sag(),StripChain(),LoopGuard(),PaidUse(false),PaidUse(true),ReloadOwner(),PendingSource(),Replacement(),CopiedSettings(),Guards(),Duplicate(),Battery(false),Battery(true),Wireless(false),Wireless(true),Recipes(),DuplicateBreak(),Frozen()) +
         listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP).map { WiredOutlet(it) } +
-        listOf(4608,4609,4610,2372,2048).map { FixedMachine(it) }
+        listOf(4608,4609,4610,2372,2048).map { FixedMachine(it) } +
+        listOf(4130 to 8002,450 to 8002,452 to 8004,4224 to 8004).flatMap {
+            listOf(ConsumerInlet(it.first,it.second),ConsumerReload(it.first,it.second),ConsumerPaidUse(it.first,it.second))
+        } +
+        listOf(2624,4128,448).map { UnmatchedInlet(it) }
     private fun item(name: String,n: Int=1)=Eln.findItemStack(name,n)
     private open class Base: TestCase {
         val parts=mutableListOf<Component>();var clock: IProcess?=null
@@ -317,6 +321,89 @@ object ForkPatchCordCases {
             }else cord(machine).detach()
             c.check("cord machine: unplug restores the existing native surface inlet",Direction.values().any { side->LRDU.values().any { machine.node.getElectricalLoad(side,it)===input } },"")
         }finally { clean() } }
+    }
+    /** Preserve native terminal identities, including antenna signals and cooler heat paths. */
+    private class ConsumerInlet(val lookup: Int,val sourceLookup: Int): Base() {
+        lateinit var o: OutletElement;lateinit var machine: TransparentNodeElement
+        private data class Port(val side: Direction,val edge: LRDU,val load: ElectricalLoad?,val mask: Int,val heat: ThermalLoad?)
+        private var ports=listOf<Port>()
+        override fun id()="forkpatch_cord_extended_consumer_${lookup}_native_ports"
+        override fun build(c: TestContext) {
+            o=outlet(c,sourceLookup)
+            machine=placeConsumer(c,lookup)
+            ports=Direction.values().flatMap { side->LRDU.values().map { edge->
+                Port(side,edge,machine.node.getElectricalLoad(side,edge),machine.node.getSideConnectionMask(side,edge),machine.node.getThermalLoad(side,edge))
+            } }
+            val d=requireNotNull(CordSupport.device(machine))
+            c.check("cord consumer: wrong voltage fails before reserving or paying",!d.cord.attach(o.anchor(0).copy(rating=CordRating.V24),true) && !o.occupied(0) && !d.cord.paid,"")
+            check(d.cord.attach(o.anchor(0),true));feed(o.input,o.rating.volts)
+        }
+        override fun measure(c: TestContext) { try {
+            val link=cord(machine);val input=link.input
+            c.check("cord consumer: real passive conductor powers the original load",link.connected && input.u>o.rating.volts*.98 && input.u<=o.rating.volts,"$lookup: ${input.u}")
+            c.check("cord consumer: native power inlet existed before attachment",ports.any { it.load===input && it.mask and NodeBase.maskElectricalPower!=0 },"$lookup")
+            for(p in ports) {
+                val masked=p.load===input
+                c.check("cord consumer: native input alone is isolated",machine.node.getElectricalLoad(p.side,p.edge)==(if(masked)null else p.load),"$lookup: ${p.side}/${p.edge}")
+                c.check("cord consumer: signal/thermal masks stay unchanged",machine.node.getSideConnectionMask(p.side,p.edge)==(if(masked)p.mask and NodeBase.maskElectricalPower.inv() else p.mask) && machine.node.getThermalLoad(p.side,p.edge)===p.heat,"$lookup: ${p.side}/${p.edge}")
+            }
+            if(lookup==4130) {
+                val nativeLoad=machine.electricalComponentList.filterIsInstance<Resistor>().sumOf { it.p }
+                c.check("cord cooler: native fan pays its real60 W resistive demand",nativeLoad>58.0 && nativeLoad<=60.001,"$nativeLoad")
+            }
+            val version=input.subSystem!!.matrixVersion
+            repeat(2000) { link.poll() }
+            c.check("cord consumer: physical polls retain native LU factors",input.subSystem!!.matrixVersion==version,"")
+            val before=dropped(c,o.rating.cordName);link.detach();link.detach()
+            c.check("cord consumer: repeated unplug refunds exactly one paid cord",!link.plugged && !o.occupied(0) && dropped(c,o.rating.cordName)==before+1,"")
+            c.check("cord consumer: unplug restores every original native terminal",ports.all { p->machine.node.getElectricalLoad(p.side,p.edge)===p.load && machine.node.getSideConnectionMask(p.side,p.edge)==p.mask && machine.node.getThermalLoad(p.side,p.edge)===p.heat },"$lookup")
+        }finally { clean() } }
+    }
+    private class ConsumerReload(val lookup: Int,val sourceLookup: Int): Base() {
+        override fun id()="forkpatch_cord_extended_consumer_${lookup}_saved_owner"
+        override fun measure(c: TestContext) {
+            val o=outlet(c,sourceLookup);var e=placeConsumer(c,lookup);val old=cord(e)
+            check(old.attach(o.anchor(0),true));val token=old.token
+            e=(Reload.node(c.level(),e.node.coordonate.pos()).fresh as TransparentNode).element
+            val fresh=cord(e)
+            c.check("cord consumer: actual node reload retains one paid token",fresh!==old && fresh.token==token && fresh.paid && fresh.plugged && !fresh.connected && o.occupied(0),"$lookup")
+            fresh.poll()
+            c.check("cord consumer: fresh owner reclaims its real socket",fresh.connected && fresh.input!==old.input && fresh.anchor?.id==o.id,"$lookup")
+            val before=dropped(c,o.rating.cordName);o.disconnectSocket(0);o.disconnectSocket(0)
+            c.check("cord consumer: source release after reload refunds once",!fresh.plugged && !o.occupied(0) && dropped(c,o.rating.cordName)==before+1,"")
+        }
+    }
+    private class ConsumerPaidUse(val lookup: Int,val sourceLookup: Int): Base() {
+        override fun id()="forkpatch_cord_extended_consumer_${lookup}_survival_use"
+        override fun measure(c: TestContext) {
+            val o=outlet(c,sourceLookup);val e=placeConsumer(c,lookup);val p=player(c)
+            p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL)
+            p.setItemInHand(InteractionHand.MAIN_HAND,item(o.rating.cordName,3))
+            fun use(pos: BlockPos) { c.level().getBlockState(pos).useItemOn(p.mainHandItem,c.level(),p,InteractionHand.MAIN_HAND,hit(pos)) }
+            try {
+                use(o.node.coordonate.pos());use(e.node.coordonate.pos())
+                c.check("cord consumer: actual survival use consumes one paid resource",count(p,o.rating.cordName)==2 && cord(e).paid && cord(e).connected,"$lookup")
+                p.setShiftKeyDown(true);use(e.node.coordonate.pos());use(e.node.coordonate.pos())
+                c.check("cord consumer: actual repeated unplug returns one resource",count(p,o.rating.cordName)==3 && !cord(e).plugged && !o.occupied(0),"$lookup")
+            }finally { p.setShiftKeyDown(false);p.inventory.clearContent() }
+        }
+    }
+    private class UnmatchedInlet(val lookup: Int): Base() {
+        override fun id()="forkpatch_cord_native_50v_consumer_${lookup}_rejects_48v"
+        override fun measure(c: TestContext) {
+            val machine=placeConsumer(c,lookup);val device=requireNotNull(CordSupport.device(machine))
+            c.check("cord consumer: native50 V is never relabeled48 V",CordRating.entries.none(device::acceptsCord),"$lookup")
+            val o=outlet(c,8001);val before=dropped(c,CordRating.V48.cordName)
+            c.check("cord consumer: unmatched connector cannot claim a socket or acquire paid state",!device.cord.attach(o.anchor(0),true) && !o.occupied(0) && !device.cord.plugged && !device.cord.paid && dropped(c,CordRating.V48.cordName)==before,"")
+        }
+    }
+    private fun placeConsumer(c: TestContext,lookup: Int): TransparentNodeElement {
+        val d=requireNotNull(Eln.transparentNodeItem.getDescriptor(lookup));val pos=c.at(4,1,1)
+        c.floor(pos.below())
+        val wall=d.mustHaveWallFrontInverse()
+        if(wall)c.floor(pos.relative(net.minecraft.core.Direction.NORTH))
+        val player=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level())
+        return requireNotNull((d.parentItem as TransparentNodeItem).placeAt(d.newItemStack(),player,c.level(),pos,if(wall)Direction.ZN else Direction.YN)).element
     }
     private class DuplicateBreak: Base() {
         override fun id()="forkpatch_cord_duplicate_owner_actual_break_cannot_refund_live_token"

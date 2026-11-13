@@ -5,6 +5,15 @@ backlog, not a count of missing files or a statement that every inherited class
 has been reviewed. The [source inventory](source-inventory.json) retains that
 file-by-file review surface; the [import audit](import-audit.json) checks provenance.
 
+## Current continuation awaiting validation
+
+The [extended fixed-consumer checkpoint](extended-consumers.md) adds explicit
+native cooler, transmitter, turret and incubator inlet selection and fifteen
+regression cases. Mod compilation and native execution are blocked by environment
+proxy HTTP 403 for NeoForge Maven. These additions are not included in the prior
+passing counts below; the independent CAD suite passes 15 tests. See the
+[current validation status](extended-consumers-validation.json).
+
 ## Registered adapters with passing production checks
 
 - Norton solar panels and large tracking arrays; MPPT and hybrid floor/wall controls.

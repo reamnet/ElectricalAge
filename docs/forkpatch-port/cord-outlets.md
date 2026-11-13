@@ -23,6 +23,11 @@ Branch protection remains upstream. Real voltage sag and link/contact losses
 reach the existing native device process. Polls never pay work or change stable
 solver topology. Unplug restores the original native cable inlet.
 
+The [extended consumer continuation](extended-consumers.md) adds explicit native
+cooler, transmitter, turret and incubator selection; its mod build and fifteen
+new cases await dependency network access. Prior passing evidence below covers
+the initial consumers only.
+
 Initial fixed consumer support is explicit: Fabricator, all three wire machines,
 legacy electrical machines, electrical furnace with installed rated heating
 hardware, and native battery chargers. Their existing inventories, menus,

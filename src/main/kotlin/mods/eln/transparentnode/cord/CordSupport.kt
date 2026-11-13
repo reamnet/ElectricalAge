@@ -13,6 +13,10 @@ import mods.eln.transparentnode.fabricator.FabricatorElement
 import mods.eln.transparentnode.wiremachine.WireMachineElement
 import mods.eln.transparentnode.electricalmachine.*
 import mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceElement
+import mods.eln.transparentnode.eggincubator.EggIncubatorElement
+import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveElement
+import mods.eln.transparentnode.electricalantennatx.ElectricalAntennaTxElement
+import mods.eln.transparentnode.turret.TurretElement
 import net.minecraft.nbt.CompoundTag
 
 interface CordDevice {
@@ -29,6 +33,13 @@ object CordSupport {
     @JvmStatic fun create(owner: Any): MachineCordDevice? {
         if(owner is BatteryChargerElement)return MachineCordDevice(owner,owner.powerLoad) { owner.descriptor.nominalVoltage }
         if(owner is ElectricalMachineElement)return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
+        // Bind explicit power loads, never whichever load happens to be first in a list.
+        when(owner) {
+            is EggIncubatorElement -> return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
+            is ThermalDissipatorActiveElement -> return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
+            is ElectricalAntennaTxElement -> return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
+            is TurretElement -> return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
+        }
         if(owner !is TransparentNodeElement)return null
         val nominal: ()->Double=when(owner) {
             is FabricatorElement -> { { 200.0 } }

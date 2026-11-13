@@ -83,6 +83,10 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
         return rxElement;
     }
 
+    /** The cord feeds the existing power inlet; signal/thermal terminals remain independent. */
+    public NbtElectricalLoad cordInput() { return powerIn; }
+    public double cordNominalVoltage() { return descriptor.electricalNominalVoltage; }
+
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
         if (front.getInverse() != side.applyLRDU(lrdu)) return null;

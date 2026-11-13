@@ -17,6 +17,12 @@ be used on 26.3.
 
 ## Conflict policy
 
+Current continuation: [extended fixed-consumer cord inputs](forkpatch-port/extended-consumers.md).
+Implementation and fifteen native cases are added, but the changed mod has not
+compiled because NeoForge dependency access is blocked by the environment proxy.
+The independent CAD suite passes 15 tests. Earlier full pass counts below are
+historical checkpoint evidence, not validation of this continuation.
+
 The existing 26.3 port is the platform foundation. A shared file/class name does
 not establish compatible behavior. Keep its working registry, save, networking,
 rendering, menu, fluid, cable and CAD integrations while adapting incoming features.
