@@ -812,6 +812,13 @@ public final class ElnDeviceRegistry {
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
+        // ForkPatch's 120 V source lookup collides with the native generic supply above.
+        // Keep its name, item and save identity; register rated inlets independently.
+        sixNodeItem.addDescriptor(LampSupplyDescriptor.RATED_120_ID, new LampSupplyDescriptor(
+            TR_NAME(Type.NONE, "120V Lamp Supply"), obj.getObj("DistributionBoard"), 32, 120));
+        sixNodeItem.addDescriptor(LampSupplyDescriptor.RATED_240_ID, new LampSupplyDescriptor(
+            TR_NAME(Type.NONE, "240V Lamp Supply"), obj.getObj("DistributionBoard"), 32, 240));
+
     }
 
     public static void registerLampItem(int id) {

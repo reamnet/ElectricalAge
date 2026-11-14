@@ -296,6 +296,14 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', "ingotCopper",
             'I', stack(Items.IRON_INGOT));
 
+        // Preserve the native generic recipe: a separate conversion avoids two outputs
+        // competing for the source's otherwise identical 120 V crafting pattern.
+        addShapelessRecipe(findItemStack("120V Lamp Supply"), findItemStack("Lamp Supply"));
+        addRecipe(findItemStack("240V Lamp Supply"),
+            " I ", "ACA", " I ",
+            'C', "ingotCopper", 'I', stack(Items.IRON_INGOT),
+            'A', findItemStack("Advanced Machine Block"));
+
     }
 
     public static void recipePowerSocket() {

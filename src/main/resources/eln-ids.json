@@ -4066,5 +4066,17 @@
   "display": "Four Cell Plug-in UPS",
   "kind": "transparent_node",
   "name": "four_cell_plug_in_ups"
+ },
+ "eln:six_node@4162": {
+  "descriptor": "LampSupplyDescriptor",
+  "display": "120V Lamp Supply",
+  "kind": "six_node",
+  "name": "120v_lamp_supply"
+ },
+ "eln:six_node@4161": {
+  "descriptor": "LampSupplyDescriptor",
+  "display": "240V Lamp Supply",
+  "kind": "six_node",
+  "name": "240v_lamp_supply"
  }
 }

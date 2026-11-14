@@ -1,7 +1,14 @@
 # Appliance cord and outlet adapter review
 
 Reviewed source `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` after the native wire
-manufacturing adapter. The [native surface/fixed adapter](cord-outlets.md) now implements the 19 cord/outlet identities below. This retained contract also covers pending recessed walls, additional consumers, portable carry and compact UPS.
+manufacturing adapter. The [native surface/fixed adapter](cord-outlets.md) implements
+the 19 cord/outlet identities below. This retained contract informed the later
+[recessed-wall](recessed-outlets.md), [compact UPS](compact-ups.md),
+[extended consumer](extended-consumers.md), [miner/transporter](ghost-consumers.md)
+and [rated lamp-supply](rated-lamp-supplies.md) adapters. Portable carry remains
+unfinished. The compact integration section below retains the initial review's
+implementation boundary; its descriptions of then-missing native support are
+historical, not the current registration status.
 
 | Source lookup | Device/item | Nominal voltage / current |
 | --- | --- | --- |
@@ -15,7 +22,10 @@ manufacturing adapter. The [native surface/fixed adapter](cord-outlets.md) now i
 | shared 8006 | 240 V 30 A Dryer Cord | 240 V / 30 A |
 | transparent 8076 | Four Cell Plug-in UPS | separate compact battery-backed socket source |
 
-The 19 cord/outlet slots above are now registered in the 677-entry native manifest. Compact UPS 8076 remains free and unregistered. Recheck future additions; shared and transparent lookup spaces are separate.
+The original 19 cord/outlet slots above were registered in the 677-entry native
+manifest. Compact UPS 8076 was subsequently registered by its own adapter.
+Recheck future additions; shared, six-node and transparent lookup spaces are
+separate.
 The compact UPS must be checked independently against the native UPS identities
 and physical cell inventory. Native programmable UPS 7947 must remain unchanged.
 
@@ -115,7 +125,7 @@ Concrete native inlet review for the first consumer adapters:
 | `electricalmachine.ElectricalMachineElement` | private `electricalLoad`, descriptor voltage and `powerLrdu` mask | Add a narrow inlet adapter rather than replacing its load/process/recipes; preserve the accepted-step callback added here. |
 | `electricalfurnace.ElectricalFurnaceElement` | package-local `electricalLoad`, back/Down mask | Read voltage from the installed native heating element; missing/invalid hardware must reject a cord. |
 | `batterycharger.BatteryChargerElement` | public `powerLoad`, native power on every edge | Retain this destination improvement when unplugged; suppress every native inlet edge when plugged. |
-| `lampsupply.LampSupplyElement` | public `powerLoad`, front LRDU, no explicit mains voltage | Supported as a wireless outlet source only; a cord consumer needs a separately reviewed, explicitly rated descriptor. |
+| `lampsupply.LampSupplyElement` | public `powerLoad`, front LRDU | Generic native 4160 remains unrated and has no cord input. Explicit 120/240 V adapters use this original load and shared native legacy/voxel inlet isolation; see [rated supply review](rated-lamp-supplies.md). |
 
 Both connection masks and load lookup paths need the same plugged-input policy;
 several native getters return the load more broadly than their masks. Preserve
@@ -174,6 +184,8 @@ Six-socket strips do not override the default nonportable policy. These policies
 must remain type/descriptor decisions rather than a voltage-based whitelist.
 
 ## Compact UPS boundary
+
+This section records the review before the [compact native adapter](compact-ups.md).
 
 Source `CompactUpsElement` is a four-cell, four-socket source at lookup 8076.
 Each cell is independently active (`UpsInventory(4, 1)`), unlike the existing

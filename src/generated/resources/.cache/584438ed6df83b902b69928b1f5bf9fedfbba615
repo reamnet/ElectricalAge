@@ -1,4 +1,4 @@
-// 26.3	2026-11-14T08:34:01.932344236	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-14T14:08:53.495890822	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -7,6 +7,7 @@ e9b18790f61c5e60d17f49af5cad947638ed8e2b data/eln/advancement/recipes/misc/10a_d
 bc0883fb89144b8ab5c4e44380700ad31e206b25 data/eln/advancement/recipes/misc/120_240v_secondary_utility_pole.json
 80754fa65d8fb60c74d8c661f51e2f9c9b8fa5fd data/eln/advancement/recipes/misc/120_240v_service_weatherhead.json
 3cfe081d056fd39ac427a25345a5fee5325575db data/eln/advancement/recipes/misc/120_240v_underground_service_handhole.json
+d737475748d89ac47f01892f9a333a82c1f8f15e data/eln/advancement/recipes/misc/120v_lamp_supply.json
 a353250b0e42df7a59162c5b4f8f0b29850cb5b6 data/eln/advancement/recipes/misc/12_5kv_single_phase_fused_underground_feeder.json
 ffb3dd54239082d9bf2df265f579d1da09080723 data/eln/advancement/recipes/misc/16_kwh_lifepo4_battery_cabinet.json
 07e130cd23322937bb3bfc892b49b5f5d0c0cd6f data/eln/advancement/recipes/misc/16_kwh_lifepo4_cell_stack.json
@@ -44,6 +45,7 @@ d874405c2f0b96e6269c1dcb75a4bbdd7005544d data/eln/advancement/recipes/misc/200v_
 b28c4113102e1003d8d5eb0df00b16221d5b507a data/eln/advancement/recipes/misc/240_v_30_a_dryer_outlet.json
 fcd0659b88d2bf9321eaf7d63543a5ad0264e6c6 data/eln/advancement/recipes/misc/240_v_appliance_cord.json
 fd3fc3ea7454e217027c7bcc7604ad808184e492 data/eln/advancement/recipes/misc/240_v_wall_outlet.json
+da2bcbbc0664c6acd361fe1ceec41f13ee1abc2b data/eln/advancement/recipes/misc/240v_lamp_supply.json
 7a50f090f1bc3a732be95fc7e1255a97cafe91f6 data/eln/advancement/recipes/misc/24_v_machine_cord.json
 8666b75f7e51eb38e0e0a4d771b674bb855e8d07 data/eln/advancement/recipes/misc/24_v_machine_outlet.json
 9afdf82a3372b707db5e44e33363d00c03bff7ed data/eln/advancement/recipes/misc/25_kw_pole_transformer.json
@@ -500,6 +502,7 @@ f55afec4206959bc52edd68849f62b13b674934e data/eln/recipe/10_a_pole_fuse.json
 9c9830151c2bcebe0c2d7ca69a5f9b881c2ec6d2 data/eln/recipe/120_240v_secondary_utility_pole.json
 e7e7f17b3cd3ebaef4108ce705acb97295f8a143 data/eln/recipe/120_240v_service_weatherhead.json
 d8610a288173bdab9043ff395a048b46e0547dbb data/eln/recipe/120_240v_underground_service_handhole.json
+8c676519943825b18fc414719427c4d00abb212c data/eln/recipe/120v_lamp_supply.json
 e5991b54ef0273ef28fa0f5a3d77be9f1611280a data/eln/recipe/12_5kv_single_phase_fused_underground_feeder.json
 5ae8875341efdea7c1dabc1039b6bcdcfab8fc07 data/eln/recipe/16_kwh_lifepo4_battery_cabinet.json
 23732fdbe30922cfe48301df9753819fa12dd809 data/eln/recipe/16_kwh_lifepo4_cell_stack.json
@@ -537,6 +540,7 @@ e25333ec84e2f843591d15dc724e02fd024fe100 data/eln/recipe/200v_submersible_pump.j
 e648f6e62c5e7891f857c0793ce8b8e64d6dddd9 data/eln/recipe/240_v_30_a_dryer_outlet.json
 39722f326594ea24680384fe7995101db08c423b data/eln/recipe/240_v_appliance_cord.json
 ce38819dc9e85b1208099622d9e769ba2426de8e data/eln/recipe/240_v_wall_outlet.json
+f31d6ad880e9c8a35925178d3ababf2abaf477a1 data/eln/recipe/240v_lamp_supply.json
 3c4bd8bb1458f292858a3f0283019f7d29af674d data/eln/recipe/24_v_machine_cord.json
 e70016457550076c6e6f29728e98853753873605 data/eln/recipe/24_v_machine_outlet.json
 32bf56aa11b1fde2ddd36099ceec9ef4b9252aa7 data/eln/recipe/25_kw_pole_transformer.json

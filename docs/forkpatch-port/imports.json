@@ -3861,5 +3861,54 @@
     "sourceSha256": "be872ebc27b7a3354774b8d38a839ec142af8450c937ff3cdeb1a7e0add9a361",
     "mode": "verbatim-source-compact-ups-geometry",
     "status": "see-compact-ups-validation.json"
+  },
+  {
+    "source": "src/main/java/mods/eln/sixnode/lampsupply/LampSupplyDescriptor.java",
+    "target": "src/main/java/mods/eln/sixnode/lampsupply/LampSupplyDescriptor.java",
+    "sourceSha256": "15d863ed2329ab40808249433ed824842e7cc3b518a54f3f78b60b4ba628c7cc",
+    "mode": "native-rated-lamp-supply-descriptor-preserving-generic",
+    "status": "see-rated-lamp-supplies-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt",
+    "target": "src/main/java/mods/eln/registry/ElnDeviceRegistry.java",
+    "sourceSha256": "f642d34a880f713e223187bbc9e4980ccafd262e44a1923034010d7b219a4e3e",
+    "mode": "native-rated-lamp-supply-registration-with-source-id-conflict",
+    "status": "see-rated-lamp-supplies-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/craft/CraftingRecipes.kt",
+    "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
+    "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
+    "mode": "native-rated-lamp-supply-recipes-preserving-generic",
+    "status": "see-rated-lamp-supplies-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordSupport.kt",
+    "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
+    "mode": "native-explicit-rated-lamp-supply-inlets",
+    "status": "see-rated-lamp-supplies-validation.json"
+  },
+  {
+    "source": "src/main/java/mods/eln/sixnode/lampsupply/LampSupplyDescriptor.java",
+    "target": "src/main/java/mods/eln/datagen/ElnModels.java",
+    "sourceSha256": "15d863ed2329ab40808249433ed824842e7cc3b518a54f3f78b60b4ba628c7cc",
+    "mode": "native-rated-lamp-supply-existing-icon-bridge",
+    "status": "see-rated-lamp-supplies-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/MachineCordSupport.kt",
+    "target": "src/main/kotlin/mods/eln/gametest/cases/ForkPatchLampSupplyCases.kt",
+    "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
+    "mode": "native-production-tests-for-rated-lamp-supply-adapter",
+    "status": "see-rated-lamp-supplies-validation.json"
+  },
+  {
+    "source": "src/main/java/mods/eln/sixnode/lampsupply/LampSupplyElement.java",
+    "target": "src/main/java/mods/eln/sixnode/lampsupply/LampSupplyElement.java",
+    "sourceSha256": "2771a277a769b30b58ba408f9df2c9d6b12005e8f497b7f1c73af0414e0a2061",
+    "mode": "native-lamp-supply-bounded-controls-and-saved-channel-decoding",
+    "status": "see-rated-lamp-supplies-validation.json"
   }
 ]
