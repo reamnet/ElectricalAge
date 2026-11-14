@@ -1,0 +1,18 @@
+{
+  "golden_descriptors": {
+    "oldAssertions": 329,
+    "newAssertions": 330,
+    "removed": [],
+    "added": [
+      "golden eln:transparent_node@8076: known in 1.12: no such item in golden/1.12/inventory.json"
+    ]
+  },
+  "golden_slots": {
+    "oldAssertions": 138,
+    "newAssertions": 139,
+    "removed": [],
+    "added": [
+      "golden slots: Four Cell Plug-in UPS has no 1.12 container: spec from UpsDescriptor"
+    ]
+  }
+}

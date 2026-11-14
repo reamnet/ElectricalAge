@@ -92,3 +92,59 @@ while rejecting new attachments through the unresolved chain. Genuine cycles
 and the 64-owner bound still fail closed. The final report records the rerun,
 including actual battery debit, delivered work, native packet/mesh state and
 unchanged cached LU matrices during repeated lease polls.
+
+## Native client continuation
+
+The local software-Vulkan client uses a copy of our earlier development test
+world, `CompactUpsPortCheck`; no user world is used. Its inventory/initial cell
+charge is seeded with development commands. Actual native placement, menu item
+transfers, cord selection, charging and voltage controls are then exercised.
+
+- [Four mixed cells and complete 720p automatic-scale controls](evidence/compact-ups/four-mixed-cells-720p.png).
+- [A real downstream empty cell charging through a physical cord](evidence/compact-ups/downstream-charging-720p.png).
+- [Source battery output and reservation-locked 120 V setting](evidence/compact-ups/reserved-voltage-lock-720p.png).
+- [Two native UPS owners and their actual cord](evidence/compact-ups/two-ups-powered-cord.png).
+
+The first visual pass caught a cabinet-specific path problem: the terrain sampler
+saw the source's own full collision cell and raised the cord over the cabinet.
+Cabinet cords now leave the front socket by 0.2 blocks before terrain sampling;
+wall/outlet paths retain their existing behavior. The regression reproduces the
+old rise above the enclosure, checks the corrected descent for all four facings,
+and preserves exact physical endpoints. The final client pass uses a fresh JVM
+and the saved native owners, rather than reloading classes under a running game.
+
+
+The final checks also exercise [output unplug](evidence/compact-ups/output-unplug-controls.png),
+[released 240 V selection](evidence/compact-ups/released-voltage-selection-240v.png),
+[input unplug with battery backup](evidence/compact-ups/input-unplug-battery-backup.png),
+and [restored charging after another JVM restart](evidence/compact-ups/reconnected-owner-fresh-jvm.png).
+The two local-primary reloads preserve cells and real cord ownership. All three
+primary client runs save and exit normally. A second local client reaches the
+LAN listener but cannot authenticate because Minecraft's session discovery
+service is unreachable; multiplayer synchronization is **not verified**.
+
+## Final production evidence
+
+At code commit `4694577cd98097c7e67d58241af350fd4cb6c01b`:
+
+- Full build: **683 selected, 680 passed, three optional previews skipped**,
+  zero failures/errors; the default **200-case fluid corpus** remains enabled.
+- All **15 CAD tests** pass. Repeated data generation writes **zero files**.
+- Unfiltered native: **1,205 selected, 1,203 passed**, zero skips. All **739
+  ForkPatch cases**, including all **24 compact UPS cases**, pass.
+- Only `golden_descriptors` and `golden_slots` fail. Every one of their previous
+  **467 assertions remains unchanged**; the new compact identity and container
+  add two explicitly recorded 1.12-reference differences, totaling **469**.
+  [Exact delta](compact-ups-golden-delta.json). No snapshots, existing skips or
+  tolerances were edited.
+- All **551 provenance entries** pass. All **677 previous identities** and
+  **995 English entries** retain their exact values; one identity and two names
+  are added.
+- The development JAR matches all **1,774 Java classes, 881 Kotlin classes and
+  4,961 processed resources**, with the clean committed build marker.
+  SHA-256: `a1d0294b7a788245a7762acea6436d7dd41b7572e9e824ab5a56739a6ce2c755`.
+
+Hardware graphics, audio, external-server/multiplayer and universal resource-pack
+parity remain unverified. This session does not establish a whole-mod performance
+comparison. Portable carry and the other [backlog families](remaining-work.md)
+remain unfinished.

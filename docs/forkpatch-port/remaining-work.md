@@ -27,6 +27,7 @@ remain implemented; older counts below are historical checkpoint evidence.
   16/32/48/64 kWh LiFePO4 banks.
 - ATS floor/wall controls, standby generator tiers and synchronized reset.
 - Floor/wall programmable UPS, protective relay and automatic priority load shedding.
+- Four Cell Plug-in UPS 8076 with independently active cells, four durable cord sockets, native cable terminals, 120/240 V controls and conservative 3 kW power.
 - Passive pad transformer, primary bayonet fuses and separate core protection.
 - Service weatherheads, meter bases and wide underground socket, meter registers,
   manual disconnect, buried entries and handholes with thin wall collision.
@@ -52,7 +53,7 @@ remain implemented; older counts below are historical checkpoint evidence.
 
 Each family still participates in the cross-cutting validation/migration work below.
 
-The current surface-cord checkpoint passes **670 full root tests**, with three
+The historical surface-cord checkpoint passed **670 full root tests**, with three
 optional previews skipped (673 selected), all **15 CAD tests**, and all
 **657 port cases inside 1123 unfiltered GameTests**. The default 200-case
 fluid corpus is included. The full native run passes 1121 cases; only the historical
@@ -60,7 +61,7 @@ descriptor and slot goldens fail, retaining 467 individual assertions for review
 No expected references, skip lists or tolerances changed. See the
 [complete current evidence and artifact](session7-validation.json).
 
-All 658 preceding identities and 966 English entries remain unchanged. The current
+All 658 preceding identities and 966 English entries remain unchanged. That checkpoint
 catalog has 677 identities, 995 English entries and 493 resolved native item
 textures. See [surface cords/outlets](cord-outlets.md) and [validation](cord-outlets-validation.json).
 Earlier adapter/performance evidence remains in its individual reports and does
