@@ -23,7 +23,7 @@ import kotlin.math.abs
 
 /** Real native cells, input cords, socket leases and accepted electrical steps. */
 object ForkPatchCompactUpsCases {
-    @JvmStatic fun cases(): List<TestCase> = (1..4).map(::Cells) + listOf(Sockets(),ReloadSockets(),Duplicate(),Loops(),PaidUse(),Guards(),BreakSource(),PendingSource(),StripPower()) +
+    @JvmStatic fun cases(): List<TestCase> = (1..4).map(::Cells) + listOf(Sockets(),ReloadSockets(),Duplicate(),Loops(),PaidUse(),Guards(),BreakSource(),PendingSource(),StripPower(),StripPower(true)) +
         listOf(120.0,240.0).flatMap { listOf(Backup(it),Bypass(it),Charging(it,false),Charging(it,true),CableInput(it)) }
     private open class Base: TestCase {
         override fun id()="forkpatch_compact_ups_base"
@@ -183,14 +183,21 @@ object ForkPatchCompactUpsCases {
             c.check("compact unload: explicit release prevents later reclaim and refunds once",!d.cord.plugged && drops(c)==before+1,"")
         }
     }
-    private class StripPower: Base() {
-        override fun id()="forkpatch_compact_ups_real_output_cord_strip_energy_accounting"
+    private class StripPower(val pendingUpstream: Boolean=false): Base() {
+        override fun id()="forkpatch_compact_ups_real_output_cord_strip_${if(pendingUpstream)"upstream_unload_backup" else "energy_accounting"}"
         lateinit var e: CompactUpsElement;lateinit var strip: OutletElement;lateinit var load: Resistor
         var before=0.0;var spent=0.0;var delivered=0.0
         override fun ticks()=100
         override fun build(c: TestContext) {
-            e=ups(c);fill(e);val pos=c.at(5,1,2);c.floor(pos.relative(net.minecraft.core.Direction.NORTH));val desc=Eln.transparentNodeItem.getDescriptor(7991)!!;val p=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());strip=(desc.parentItem as TransparentNodeItem).placeAt(desc.newItemStack(),p,c.level(),pos,Direction.ZN)!!.element as OutletElement
-            check(strip.cord.attach(e.anchor(3),true));load=Resistor(strip.output,null).setR(14.4);parts.add(load);Eln.simulator.addElectricalComponent(load);before=e.bank.energy
+            e=ups(c);fill(e);val upstream=if(pendingUpstream)outlet(c) else null;if(upstream!=null)check(e.cord.attach(upstream.anchor(0),true));val pos=c.at(5,1,2);c.floor(pos.relative(net.minecraft.core.Direction.NORTH));val desc=Eln.transparentNodeItem.getDescriptor(7991)!!;val p=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());strip=(desc.parentItem as TransparentNodeItem).placeAt(desc.newItemStack(),p,c.level(),pos,Direction.ZN)!!.element as OutletElement
+            check(strip.cord.attach(e.anchor(3),true))
+            if(upstream!=null) {
+                val pos=upstream.node.coordonate.pos();upstream.node.unload();NodeManager.instance.removeNode(upstream.node);(c.level().getBlockEntity(pos) as NodeBlockEntity).forgetNode()
+                e.cord.poll();strip.cord.poll()
+                c.check("compact upstream unload: established output lease survives unresolved upstream owner",e.cord.plugged && e.cord.state=="MISSING" && strip.cord.plugged && strip.cord.connected && e.occupied(3),"")
+                val newcomer=ups(c,7,2);c.check("compact upstream unload: unresolved chain rejects a new attachment without claiming a socket",!newcomer.cord.attach(e.anchor(0),true) && !e.occupied(0),"")
+            }
+            load=Resistor(strip.output,null).setR(14.4);parts.add(load);Eln.simulator.addElectricalComponent(load);before=e.bank.energy
             clock=IProcess { dt->spent+=e.unit.batteryWatts*dt;delivered+=(load.p+strip.contact.p+strip.cord.conductor.p)*dt };Eln.simulator.addElectricalProcess(clock)
         }
         override fun measure(c: TestContext) { try {

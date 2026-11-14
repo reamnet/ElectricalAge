@@ -43,7 +43,9 @@ native passive contacts.
    bounded to loaded chunks and preserves pending claims without forcing loads.
 2. Extended the owner walk through UPS and strip input cords. Self-links, cycles,
    duplicate resident tokens and exhaustion of the existing 64-source bound fail
-   without reserving or consuming another cord.
+   without reserving or consuming another cord. Temporarily absent upstream
+   owners reject new links, while established downstream leases remain connected
+   to a resident UPS so actual battery backup survives upstream chunk unload.
 3. Added four durable UUID reservations with weak resident-owner references.
    Disconnect preserves reservations; explicit unplug/removal clears them and
    refunds each paid cord once. Stale source teardown cannot detach the restored
@@ -74,3 +76,19 @@ cords. No source `upsRevoked` moving-owner ledger is imported: native moving
 appliance ownership is not enabled. The four-cell device's ordinary native saves
 use `upsSocketId` and `upsSocket0`–`upsSocket3`; general source-world conversion
 remains separate. The full-size UPS has not been added to the cord whitelist.
+
+## Upstream-owner unload regression
+
+The first implementation exposed an inherited cord-walk problem: when an
+upstream outlet owner was temporarily absent, the loop guard treated the
+unresolved walk as a cycle and detached an established downstream link. For a
+resident UPS this incorrectly discarded its battery-backed output cord.
+
+`forkpatch_compact_ups_real_output_cord_strip_upstream_unload_backup` reproduces
+the problem with real outlet → UPS → strip owners and a passive load. Against
+commit `33113951` it loses the output lease and delivers **0 W**. The follow-up
+keeps established downstream reservations when an upstream owner is pending,
+while rejecting new attachments through the unresolved chain. Genuine cycles
+and the 64-owner bound still fail closed. The final report records the rerun,
+including actual battery debit, delivered work, native packet/mesh state and
+unchanged cached LU matrices during repeated lease polls.

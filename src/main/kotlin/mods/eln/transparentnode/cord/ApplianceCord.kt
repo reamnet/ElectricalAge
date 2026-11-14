@@ -40,14 +40,17 @@ class ApplianceCord(private val device: CordDevice,val owner: Any,val input: Nbt
         val block=chunk.getBlockState(a.pos).block as? TransparentNodeBlock
         return Lookup(null,(block?.descriptor is OutletDescriptor || (block?.descriptor as? mods.eln.transparentnode.ups.UpsDescriptor)?.compact==true) && (node==null || !node.isDestructing))
     }
-    private fun loops(source: CordSocketSource): Boolean {
+    private fun loops(source: CordSocketSource,allowPendingUpstream: Boolean=false): Boolean {
         val seen=HashSet<UUID>();var current: CordSocketSource?=source
         repeat(64) {
             val next=current ?: return false
             if(next.socketOwner===owner || !seen.add(next.id))return true
             val cord=CordSupport.device(next.socketOwner)?.cord ?: return false
             val up=cord.anchor ?: return false
-            val found=cord.lookup(up);if(found.pending)return true
+            // A missing upstream owner has no live conductor. Preserve established
+            // downstream leases (and UPS battery backup), but do not create a new
+            // link through an unresolved ownership walk.
+            val found=cord.lookup(up);if(found.pending)return !allowPendingUpstream
             current=found.outlet
         }
         return true
@@ -72,7 +75,7 @@ class ApplianceCord(private val device: CordDevice,val owner: Any,val input: Nbt
             if(!found.pending)detach() else if(state!="MISSING") { state="MISSING";CordSupport.publish(owner) }
             return
         }
-        if(loops(target) || !target.canClaim(this,a.socket)) { if(target.duplicateClaim(this,a.socket))paid=false;detach();return }
+        if(loops(target,allowPendingUpstream=true) || !target.canClaim(this,a.socket)) { if(target.duplicateClaim(this,a.socket))paid=false;detach();return }
         val next=target.anchor(a.socket)
         if(next!=anchor) { anchor=next;CordSupport.publish(owner) }
         if(outlet!==target || !connected) {
