@@ -77,6 +77,69 @@ reload, each native channel, passive power/loss accounting, source unload and
 cached LU preservation. Existing tests, expected goldens, skips and tolerances
 remain intact.
 
+## Local client and final evidence
+
+The local continuation installs Temurin **21.0.13+9** and **25.0.5+8** in
+`/tmp/eln-port-jdks`, with its dependency cache at `/tmp/eln-port-gradle`.
+`source /tmp/eln-port-java-env.sh` selects those homes for subsequent local
+commands. These are temporary local installations, not changes to the pinned
+Gradle wrapper, properties or build script.
+
+The starting checkpoint passes 680 root tests (three optional previews skipped)
+and 15 CAD tests. Its unfiltered native run reproduces 1,203/1,205 passes and all
+469 historical golden failed assertions before implementation begins.
+
+The final production content, including the title-layout fix, is committed at
+`19ad0deea05aad49f213fc92ea29321043b792df`:
+
+- Full root build: **683 selected, 680 passed, three existing optional previews
+  skipped**; default **200-case fluid corpus** included. All **15 CAD tests** pass.
+- Unfiltered native: **1,224 selected, 1,222 passed**, zero skips. All **758
+  ForkPatch cases**, including **19 rated-supply cases**, pass.
+- Only historical `golden_descriptors` and `golden_slots` fail. All **469**
+  previous failed assertions remain unchanged; the two identities and two
+  containers add **four** visible differences, totaling **473**.
+  [Exact delta](rated-lamp-supplies-golden-delta.json). No expected reference,
+  existing test, skip or tolerance was changed.
+- All **558 provenance entries** pass. All **678 previous identities** and
+  **997 English entries** retain their exact values; two of each are added.
+  Repeat data generation writes **zero files**.
+- The clean development JAR matches all **1,774 Java classes, 889 Kotlin classes
+  and 4,971 processed resources**. Build marker `19ad0deea05a`;
+  SHA-256 `cb533255661128722af05d12d77c4004bcff31f2fb9db575389823cd71baa434`.
+
+Controlled interaction uses software OpenGL/llvmpipe on a temporary Xvfb display,
+1280×720 with automatic GUI scale. The world is a copy of this session's native
+GameTest world; no user world or 1.21.1 source world is used. Commands seed the
+exhibit floor, materials and initial player position. Native item placement,
+menus, inventory transfers and survival cord attachment are actual interactions.
+
+- [120 V controls](evidence/rated-lamp-supplies/120v-controls-720p.png): all three
+  names and Biggest/Smallest/Toggle controls; seven real cables increase range
+  from 32 to 39 blocks.
+- [240 V controls](evidence/rated-lamp-supplies/240v-controls-720p.png) remain
+  independently configured.
+- [Two paid survival cords](evidence/rated-lamp-supplies/paid-cords-720p.png): one
+  cord of each matching rating is consumed, leaving two of each in inventory.
+- [Completed resource reload](evidence/rated-lamp-supplies/resource-reload-720p.png)
+  retains both native meshes and physical endpoints.
+- [Fresh-JVM restoration](evidence/rated-lamp-supplies/fresh-jvm-120v-720p.png)
+  retains channels, aggregator modes and all seven installed cables. Direct
+  comparison of the four native saved owners also verifies unchanged paid cord
+  tokens, source UUIDs and matching socket reservations for both ratings.
+
+The first visual pass caught [header overlap](evidence/rated-lamp-supplies/header-before.png):
+the shared layout measured only the shorter generic title. Its title sample now
+includes the longer rated name; a fresh JVM verifies the corrected spacing.
+All three virtual-display client runs save and exit normally. The initial WSLg
+attempt can capture the window but loses input focus; it is not counted as a
+successful interactive check.
+
+The manual exhibit outlets are unpowered. Real accepted work and all passive
+losses are covered by the production native cases, separately from this geometry
+and ownership pass. Hardware graphics, audio, multiplayer and universal
+resource-pack parity remain unverified.
+
 Portable carry, generalized panel channels, source-world conversion and broader
 appliance/lighting adapters remain unfinished. Headless publication and menu
 checks do not establish interactive GPU, audio or multiplayer parity.

@@ -12,6 +12,13 @@ cord inputs to the existing native three-channel supply system, preserving the
 generic native supply at lookup 4160. Source 120 V lookup 4160 maps explicitly
 to free native lookup 4162; 240 V retains 4161. Their validation is recorded
 separately in [rated supply evidence](rated-lamp-supplies-validation.json).
+Its final run passes all 680 root regressions (three existing optional previews
+skipped), 15 CAD tests and all 758 ForkPatch cases inside 1,224 unfiltered native
+cases. Only the two historical goldens fail: their 469 previous failed
+assertions remain unchanged, with four new identity/container differences.
+Software-OpenGL client placement, controls, paid cords, resource reload and
+fresh-JVM ownership restoration are verified; hardware/audio/multiplayer remain
+separate checks.
 
 The [compact UPS adapter](compact-ups.md) adds source identity 8076, four
 independent cell slots, four durable native socket reservations, 120/240 V
@@ -53,7 +60,7 @@ remain implemented; older counts below are historical checkpoint evidence.
 - Programmable EV Pack Charger, removable 20 kWh traction pack, Electric Welding Station and welded frames; native inventory, accepted-energy and save checks.
 - Wire Snips 7873 with native main/off-hand menus, paid fractional cuts, preserved hot/damaged/multicore data and exact native returns.
 - Native surface outlets/strips and nine cord ratings with paid fixed-machine links, source recipes, native controls/geometry and voxel inlet isolation. Extended cooler/transmitter/turret inputs, miner/transporter auxiliary terminals and recessed wall ownership/cable geometry are covered by subsequent continuations; portable carry remains pending.
-- Explicit 120/240 V lamp supplies with native three-channel controls, optional cable range extensions, paid cord inputs and passive wireless-outlet power; the established unrated Lamp Supply remains unchanged.
+- Explicit 120/240 V lamp supplies with native three-channel controls, optional cable range extensions, paid cord inputs and passive wireless-outlet power; the established unrated Lamp Supply retains its identity and normal channel behavior. Shared malformed-channel decoding and phantom channel registration are corrected.
 - Fabricator 4480 and five source basic components with real 4 kJ attempts, paid wafer/machine recipes, deterministic yields, native inventories/controls and optional JEI examples.
 - Wire Roller 4608, Insulator 4609 and Combiner 4610 with real paid buffers, wheels/bundles, hot stock, source recipes, native automation and one powered multicore production chain.
 - Electric Forklift and Warehouse Equipment Pallet with server controls, actual pack drain/lifting costs, guarded inventories, cargo saves and refunds.
@@ -119,8 +126,9 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The latest unfiltered run passes 1121 of 1123 cases; descriptor and slot
-  goldens still fail. Review the [exact differences](native-suite-review.md), then
+- The latest unfiltered run passes 1222 of 1224 cases; descriptor and slot
+  goldens still fail. The [latest delta](rated-lamp-supplies-golden-delta.json)
+  preserves every earlier failed assertion; review the [historical differences](native-suite-review.md), then
   rerun after explicitly reconciling the historical expectations. The wind/watermill
   fixture now restores shared test-player facing, fixing two order-dependent layouts.
 - Perform interactive client/GPU/audio and multiplayer checks, including geometry,

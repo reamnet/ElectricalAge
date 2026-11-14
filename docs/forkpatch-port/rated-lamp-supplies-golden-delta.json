@@ -1,0 +1,20 @@
+{
+  "golden_descriptors": {
+    "oldAssertions": 330,
+    "newAssertions": 332,
+    "removed": [],
+    "added": [
+      "golden eln:six_node@4161: known in 1.12: no such item in golden/1.12/inventory.json",
+      "golden eln:six_node@4162: known in 1.12: no such item in golden/1.12/inventory.json"
+    ]
+  },
+  "golden_slots": {
+    "oldAssertions": 139,
+    "newAssertions": 141,
+    "removed": [],
+    "added": [
+      "golden slots: 240V Lamp Supply has no 1.12 container: spec from LampSupplyDescriptor",
+      "golden slots: 120V Lamp Supply has no 1.12 container: spec from LampSupplyDescriptor"
+    ]
+  }
+}
