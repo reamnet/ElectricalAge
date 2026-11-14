@@ -16,10 +16,11 @@ import java.io.DataOutputStream
 
 open class UpsElement(node: TransparentNode, descriptor: TransparentNodeDescriptor) : TransparentNodeElement(node,descriptor) {
     val compact=(descriptor as UpsDescriptor).compact
-    val upsInventory=UpsInventory(this)
+    val upsInventory=UpsInventory(this,if(compact)4 else 48,if(compact)1 else 24)
     override fun getInventory()=upsInventory
     val bank=UpsBatteryBank(upsInventory)
-    val unit=UpsPowerUnit(this,bank)
+    val unit: UpsPowerUnit=UpsPowerUnit(this,bank,compact,::inputNominal)
+    private fun inputNominal(): Double=mods.eln.transparentnode.cord.CordSupport.device(this)?.cord?.anchor?.rating?.volts ?: if(compact && unit.primary.u<180.0)120.0 else 240.0
     private val alarm=UpsAlarm()
     init {
         slowProcessList.add(NodePeriodicPublishProcess(node,.5,0.0))
@@ -34,7 +35,7 @@ open class UpsElement(node: TransparentNode, descriptor: TransparentNodeDescript
     private val cabinet get()=transparentNodeDescriptor as UpsDescriptor
     override fun onNeighborBlockChange() { super.onNeighborBlockChange();cabinet.checkWallSupport(this) }
     override fun getElectricalLoad(side: Direction, lrdu: LRDU)=if(!cabinet.acceptsCable(front,side,lrdu))null else when(side) {
-        front.left() -> unit.primary
+        front.left() -> unit.primary.takeUnless { compact && mods.eln.transparentnode.cord.CordSupport.device(this)?.cord?.plugged==true }
         front.right() -> unit.secondary
         else -> null
     }

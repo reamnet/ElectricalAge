@@ -131,7 +131,7 @@ public final class MenuSpecs {
             :MenuSpec.SCREEN_ONLY.publishing(1).panel(368,d.getKind().getUnderground()?330:350,0,0)));
         put(mods.eln.utility.HouseServiceDescriptor.class,d->(d.getMeter()?MenuSpec.of(
             filter(0,8,42,1,stack->{var part=mods.eln.utility.UtilityItems.INSTANCE.part(stack);return part!=null && (part==1 || part==2);},MEDIUM,tr("Analog or smart service meter")))
-            :MenuSpec.SCREEN_ONLY).publishing(1).panel(320,284,80,202));
+            :MenuSpec.SCREEN_ONLY).publishing(1).panel(320,240,80,158));
         put(mods.eln.transparentnode.industrial.PadTransformerDescriptor.class,d->MenuSpec.of(
             descriptor(0,16,180,1,mods.eln.utility.PoleTransformerDescriptor.class,MEDIUM,tr("Physical transformer capacity")),
             filter(1,16,204,1,stack->{var fuse=mods.eln.utility.PoleHardware.INSTANCE.fuse(stack);return fuse!=null && !fuse.getSpent();},MEDIUM,tr("Primary fuse cartridge"))
@@ -147,6 +147,11 @@ public final class MenuSpecs {
         put(mods.eln.transparentnode.industrial.LoadBankDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
         put(mods.eln.transparentnode.industrial.IndustrialDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
         put(mods.eln.transparentnode.ups.UpsDescriptor.class, d -> {
+            if(d.getCompact()) {
+                SlotSpec[] cells=new SlotSpec[4];
+                for(int i=0;i<4;i++)cells[i]=filter(i,16+i*18,130,1,stack -> mods.eln.transparentnode.ups.UpsBatteryBankKt.upsBattery(stack)!=null,MEDIUM,tr("Portable battery or larger UPS cell"));
+                return MenuSpec.of(cells).publishing(1).panel(320,240,80,158);
+            }
             SlotSpec[] cells=new SlotSpec[48];
             for(int i=0;i<48;i++)cells[i]=filter(i,16+(i%8)*18+(i/24)*144,154+(i%24/8)*18,1,
                 stack -> mods.eln.transparentnode.ups.UpsBatteryBankKt.upsBattery(stack)!=null,MEDIUM,tr("Portable battery or larger UPS cell"));

@@ -9,7 +9,8 @@ import net.minecraft.world.phys.Vec3
 object CordGeometry {
     fun world(front: Direction,v: Vec3): Vec3 { val r=DoubleArray(3);front.right().applyTo(r,v.x);front.applyTo(r,v.z);return Vec3(r[0],v.y,r[2]) }
     fun offset(socket: Int,strip: Boolean)=if(strip)Vec3((socket%3-1)*.25,if(socket<3).02 else .22,0.0) else Vec3(0.0,socket*.26,0.0)
-    fun tip(socket: Int,horizontal: Boolean,strip: Boolean,recessed: Boolean=false): Vec3 {
+    fun tip(socket: Int,horizontal: Boolean,strip: Boolean,recessed: Boolean=false,cabinet: Boolean=false): Vec3 {
+        if(cabinet)return CompactSocketGeometry.tip(socket)
         val v=Vec3(0.0,-.1,-.224).add(offset(socket,strip))
         val rotated=if(horizontal)Vec3(-v.y,v.x,v.z) else v
         return if(recessed)rotated.add(0.0,0.0,1.0) else rotated

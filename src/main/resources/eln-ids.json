@@ -4060,5 +4060,11 @@
   "display": "Six Socket Power Strip",
   "kind": "transparent_node",
   "name": "six_socket_power_strip"
+ },
+ "eln:transparent_node@8076": {
+  "descriptor": "UpsDescriptor",
+  "display": "Four Cell Plug-in UPS",
+  "kind": "transparent_node",
+  "name": "four_cell_plug_in_ups"
  }
 }

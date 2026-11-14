@@ -1,4 +1,4 @@
-// 26.3	2026-11-07T23:59:41.157648635	eln-global/EA models
+// 26.3	2026-11-14T08:34:01.924038239	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -83,6 +83,7 @@ f129897addd25f967e19a97a4f915b341261ab7a assets/eln/blockstates/cinnabar_ore.jso
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/fabricator.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/flare_stack.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/flywheel.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/four_cell_plug_in_ups.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/four_pole_changeover_relay.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/fractionating_column_base.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/fractionating_column_segment.json
@@ -590,6 +591,7 @@ ddc607965cfb890c82537469702f0e1b834bcfe4 assets/eln/items/flare_stack.json
 8f1575daf0bf2d534a4fa98a70d02ca6d849132a assets/eln/items/flexible_appliance_cord.json
 eaeabb81f8f3ce34a04ca742e056c6aa8c581081 assets/eln/items/fluorescent_lamp_socket.json
 063a7a8b175e5e59b2f7890dc4a59d0b3cd0552d assets/eln/items/flywheel.json
+61dc414c8e11bc5a1ee0725c22f5bde12cd1288d assets/eln/items/four_cell_plug_in_ups.json
 5b5ac380ece2087bc8205dc1b1e199e1069bc42c assets/eln/items/four_pole_changeover_relay.json
 9f20a5510e2d394a6d6d49ee411ed09a1a09f041 assets/eln/items/fractionating_column_base.json
 f43f61713632096fb8ef2c0bb21dd13938b7650c assets/eln/items/fractionating_column_segment.json
@@ -1385,6 +1387,8 @@ d1dd01a046887ae73e38c4221a7bf357db7de1fa assets/eln/models/item/flexible_applian
 6ac53b24ea215ee00901e1ff5fe39148ff4e4a32 assets/eln/models/item/fluorescent_lamp_socket_3d.json
 63c0c6cc448a474bd2d053f47794a8a6d5c27988 assets/eln/models/item/flywheel.json
 8433eea1cfdb8bb4482bfc229803d2f951c7cc27 assets/eln/models/item/flywheel_3d.json
+58cdf1fac371390e4aa3b503ea55206a9356dee0 assets/eln/models/item/four_cell_plug_in_ups.json
+ef2bae240cb9a44db0e14fdc361b89efe4984a7b assets/eln/models/item/four_cell_plug_in_ups_3d.json
 3f9532cf25d98c4b6d91246fbed9a6a72aae03b6 assets/eln/models/item/four_pole_changeover_relay.json
 c7e795469a9056636039bfc56246df3d4c75abd8 assets/eln/models/item/four_pole_changeover_relay_3d.json
 256b9deac7b3597fbaca6cd86bcd1bf83db5ac5e assets/eln/models/item/fractionating_column_base.json

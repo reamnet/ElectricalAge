@@ -15,12 +15,12 @@ import java.io.*
 import java.util.*
 
 /** Passive contacts and durable socket reservations; protection remains upstream. */
-class OutletElement(node: TransparentNode,d: TransparentNodeDescriptor): TransparentNodeElement(node,d),CordDevice {
+class OutletElement(node: TransparentNode,d: TransparentNodeDescriptor): TransparentNodeElement(node,d),CordDevice,CordSocketSource {
     val desc=d as OutletDescriptor
-    val rating get()=desc.rating
-    val capacity get()=desc.sockets
+    override val rating get()=desc.rating
+    override val capacity get()=desc.sockets
     val input=NbtElectricalLoad("outletInput").apply { rs=.002 }
-    val output=NbtElectricalLoad("outletOutput").apply { rs=.002 }
+    override val output=NbtElectricalLoad("outletOutput").apply { rs=.002 }
     val contact=Resistor(input,output).apply { r=.005 }
     val wirelessPower=WirelessOutletPower(this)
     override val cord=ApplianceCord(this,this,input)
@@ -36,7 +36,8 @@ class OutletElement(node: TransparentNode,d: TransparentNodeDescriptor): Transpa
     fun removeRecessed(dropDevice: Boolean) { suppressDeviceDrop=!dropDevice;node.onBreakBlock() }
     override fun getDropItemStack()=if(suppressDeviceDrop)net.minecraft.world.item.ItemStack.EMPTY else super.getDropItemStack()
     override fun checkCanStay(onCreate: Boolean) { if(!recessed)super.checkCanStay(onCreate) }
-    var id=UUID.randomUUID();private set
+    override var id=UUID.randomUUID();private set
+    override val socketOwner get()=this
     var wireless=false;private set
     var channel="Default channel";private set
     var horizontal=false;private set
@@ -54,18 +55,18 @@ class OutletElement(node: TransparentNode,d: TransparentNodeDescriptor): Transpa
     override fun getInventory()=items
     override fun initialize() { connect() }
     override fun acceptsCord(rating: CordRating)=desc.strip && rating==this.rating
-    fun occupied(slot: Int)=slot in reservations.indices && reservations[slot]!=null
-    fun freeSocket()=reservations.indices.firstOrNull { !occupied(it) }
+    override fun occupied(slot: Int)=slot in reservations.indices && reservations[slot]!=null
+    override fun freeSocket()=reservations.indices.firstOrNull { !occupied(it) }
     private fun otherOwner(c: ApplianceCord,slot: Int)=known[slot]?.get()?.let { it!==c && CordSupport.resident(it.owner) } ?: false
-    fun canClaim(c: ApplianceCord,slot: Int)=slot in reservations.indices && reservations[slot]==c.token && !otherOwner(c,slot) && (occupants[slot]==null || occupants[slot]===c)
-    fun duplicateClaim(c: ApplianceCord,slot: Int)=slot in reservations.indices && reservations[slot]==c.token && otherOwner(c,slot)
-    fun reserve(c: ApplianceCord,slot: Int): Boolean {
+    override fun canClaim(c: ApplianceCord,slot: Int)=slot in reservations.indices && reservations[slot]==c.token && !otherOwner(c,slot) && (occupants[slot]==null || occupants[slot]===c)
+    override fun duplicateClaim(c: ApplianceCord,slot: Int)=slot in reservations.indices && reservations[slot]==c.token && otherOwner(c,slot)
+    override fun reserve(c: ApplianceCord,slot: Int): Boolean {
         if(slot !in reservations.indices || reservations[slot]!=null && reservations[slot]!=c.token || occupants[slot]!=null && occupants[slot]!==c)return false
         if(otherOwner(c,slot) || reservations.indices.any { it!=slot && reservations[it]==c.token })return false
         reservations[slot]=c.token;known[slot]=java.lang.ref.WeakReference(c);needPublish();return true
     }
-    fun claim(c: ApplianceCord,slot: Int): Boolean { if(!canClaim(c,slot))return false;occupants[slot]=c;known[slot]=java.lang.ref.WeakReference(c);return true }
-    fun release(c: ApplianceCord,forget: Boolean) {
+    override fun claim(c: ApplianceCord,slot: Int): Boolean { if(!canClaim(c,slot))return false;occupants[slot]=c;known[slot]=java.lang.ref.WeakReference(c);return true }
+    override fun release(c: ApplianceCord,forget: Boolean) {
         var changed=false
         for(i in reservations.indices) {
             if(occupants[i]===c)occupants[i]=null
@@ -73,18 +74,18 @@ class OutletElement(node: TransparentNode,d: TransparentNodeDescriptor): Transpa
         }
         if(changed)needPublish()
     }
-    fun disconnectSocket(slot: Int,player: ServerPlayer?=null) {
+    override fun disconnectSocket(slot: Int,player: ServerPlayer?) {
         if(slot !in reservations.indices)return
         known[slot]?.get()?.takeIf { CordSupport.resident(it.owner) }?.detach(player)
         occupants[slot]=null;known[slot]=null;reservations[slot]=null;needPublish()
     }
-    fun anchor(slot: Int)=CordAnchor(node.coordonate.dimention,node.coordonate.pos(),id,front,rating,slot,horizontal,desc.strip,recessed)
+    override fun anchor(slot: Int)=CordAnchor(node.coordonate.dimention,node.coordonate.pos(),id,front,rating,slot,horizontal,desc.strip,recessed)
     override fun disconnectJob() {
         occupants.filterNotNull().toList().forEach { it.disconnect() }
         wirelessPower.disconnect();super.disconnectJob()
     }
     override fun onBreakElement() {
-        if(broken)return;broken=true
+        if(broken || !CordSupport.resident(this))return;broken=true
         node.setLightValue(0)
         known.mapNotNull { it?.get() }.filter { CordSupport.resident(it.owner) }.toList().forEach { it.detach() }
         super.onBreakElement()

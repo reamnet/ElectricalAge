@@ -21,7 +21,7 @@ class ApplianceCord(private val device: CordDevice,val owner: Any,val input: Nbt
     var state="UNPLUGGED";private set
     val plugged get()=anchor!=null
     val conductor=Resistor(null,null)
-    private var outlet: OutletElement?=null
+    private var outlet: CordSocketSource?=null
     private var timer=0.0
     init { CordSupport.processes(owner).add(IProcess { dt -> if(anchor!=null && dt.isFinite() && dt>0) { timer-=dt;if(timer<=0) { timer=.5;poll() } } }) }
     fun inReach(a: CordAnchor): Boolean {
@@ -29,24 +29,25 @@ class ApplianceCord(private val device: CordDevice,val owner: Any,val input: Nbt
         val dx=c.x.toDouble()-a.pos.x;val dy=c.y.toDouble()-a.pos.y;val dz=c.z.toDouble()-a.pos.z
         return c.dimention==a.dimension && dx*dx+dy*dy+dz*dz<=64.0
     }
-    data class Lookup(val outlet: OutletElement?,val pending: Boolean)
+    data class Lookup(val outlet: CordSocketSource?,val pending: Boolean)
     fun lookup(a: CordAnchor): Lookup {
         val coord=CordSupport.coordinate(owner);if(coord.dimention!=a.dimension)return Lookup(null,false)
         val world=coord.world() as? ServerLevel ?: return Lookup(null,true)
         val chunk=world.chunkSource.getChunkNow(a.pos.x shr 4,a.pos.z shr 4) ?: return Lookup(null,true)
         val node=NodeManager.instance.getNodeFromCoordonate(Coordonate(a.pos,world)) as? TransparentNode
-        val source=node?.element as? OutletElement
-        if(source!=null && node.isAdded && !node.isDestructing)return Lookup(source.takeIf { it.id==a.id && it.rating==a.rating },false)
+        val source=node?.element as? CordSocketSource
+        if(source!=null && node.isAdded && !node.isDestructing)return Lookup(source.takeIf { it.id==a.id && it.rating==a.rating && a.socket in 0 until it.capacity && it.anchor(a.socket).let { current->current.cabinet==a.cabinet && current.strip==a.strip && current.recessed==a.recessed } },false)
         val block=chunk.getBlockState(a.pos).block as? TransparentNodeBlock
-        return Lookup(null,block?.descriptor is OutletDescriptor && (node==null || !node.isDestructing))
+        return Lookup(null,(block?.descriptor is OutletDescriptor || (block?.descriptor as? mods.eln.transparentnode.ups.UpsDescriptor)?.compact==true) && (node==null || !node.isDestructing))
     }
-    private fun loops(source: OutletElement): Boolean {
-        val seen=HashSet<UUID>();var current: OutletElement?=source
+    private fun loops(source: CordSocketSource): Boolean {
+        val seen=HashSet<UUID>();var current: CordSocketSource?=source
         repeat(64) {
             val next=current ?: return false
-            if(next===owner || !seen.add(next.id))return true
-            val up=next.cord.anchor ?: return false
-            val found=next.cord.lookup(up);if(found.pending)return true
+            if(next.socketOwner===owner || !seen.add(next.id))return true
+            val cord=CordSupport.device(next.socketOwner)?.cord ?: return false
+            val up=cord.anchor ?: return false
+            val found=cord.lookup(up);if(found.pending)return true
             current=found.outlet
         }
         return true

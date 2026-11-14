@@ -1,4 +1,4 @@
-// 26.3	2026-11-07T23:59:41.176467232	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-14T08:34:01.932344236	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -201,6 +201,7 @@ a7ff3268fc3ae3ad11defa593f5a837359306cab data/eln/advancement/recipes/misc/flare
 a96e19cb6d546b02a41ad04c2c929047c61e228b data/eln/advancement/recipes/misc/flexible_appliance_cord.json
 2e185699c3874a3467dccd5da7b635d3eb802814 data/eln/advancement/recipes/misc/fluorescent_lamp_socket.json
 192d3d8e0d4035a6d58da9cb46f76f84b50f02ba data/eln/advancement/recipes/misc/flywheel.json
+e2cb3091961dfe55dcfef7cefa65e36b9f71a5d9 data/eln/advancement/recipes/misc/four_cell_plug_in_ups.json
 e80634e68d9dabd107c1f3e0c15db90628fdd6bd data/eln/advancement/recipes/misc/four_pole_changeover_relay.json
 dd4b74f6687c3c994c00c5e3dc28203c9904cc82 data/eln/advancement/recipes/misc/fractionating_column_base.json
 dd1fb2604117c1c07ac4fae2710fffaafb40d578 data/eln/advancement/recipes/misc/fractionating_column_segment.json
@@ -693,6 +694,7 @@ cb117cca2d60183ceb605b7c516744be0b07ec15 data/eln/recipe/flare_stack.json
 06ae39993c5f3de54a060ff7a740bdc8b7755d87 data/eln/recipe/flexible_appliance_cord.json
 dcac5b388078066d6313cefb6951a595b5afe2dd data/eln/recipe/fluorescent_lamp_socket.json
 d6f7bffa2f89a8f70b83ca846b9e79c8d9de798b data/eln/recipe/flywheel.json
+be011a299374570cb7d4852acd9349341dfeb4a8 data/eln/recipe/four_cell_plug_in_ups.json
 54104e8ee930679c6683a5b2a11494b160f8ab9a data/eln/recipe/four_pole_changeover_relay.json
 f40d83e7a9b182e47c01049007e072cf2b632b8d data/eln/recipe/fractionating_column_base.json
 400c134f2f0ab8df3af2081c578f9949cac8b435 data/eln/recipe/fractionating_column_segment.json

@@ -26,6 +26,20 @@ class CordStateTest {
             assertNull(CordAnchor.read(anchor.write().apply { putInt("socket",2) }))
         }
     }
+    @Test fun compactSocketsRequireExplicitTopologyAndPreserveAllFourPositions() {
+        for(rating in listOf(CordRating.V120,CordRating.V240))for(slot in 0..3) {
+            val a=CordAnchor(0,BlockPos(1,64,2),UUID.randomUUID(),Direction.XN,rating,slot,cabinet=true)
+            assertEquals(a,CordAnchor.read(a.write()))
+            assertNull(CordAnchor.read(a.write().apply { putInt("socket",4) }))
+            assertNull(CordAnchor.read(a.write().apply { putBoolean("horizontal",true) }))
+            assertNull(CordAnchor.read(a.write().apply { putBoolean("strip",true) }))
+            assertNull(CordAnchor.read(a.write().apply { putBoolean("recessed",true) }))
+            assertNull(CordAnchor.read(a.write().apply { putString("rating","V240_30") }))
+        }
+        val tips=(0..3).map(CompactSocketGeometry::tip)
+        assertEquals(4,tips.toSet().size)
+        assertTrue(tips.all { it.z>.49 && it.z<.5 })
+    }
     @Test fun ratingsRejectNonfiniteAndWrongNominalVoltage() {
         assertEquals(9,CordRating.entries.size)
         for(r in CordRating.entries) { assertTrue(r.accepts(r.volts));assertFalse(r.accepts(Double.NaN));assertFalse(r.accepts(Double.POSITIVE_INFINITY));assertFalse(r.accepts(r.volts+1)) }

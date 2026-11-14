@@ -15,10 +15,10 @@ object CordNbt {
     fun putUuid(tag: CompoundTag,key: String,id: UUID) { tag.putIntArray(key,intArrayOf((id.mostSignificantBits ushr 32).toInt(),id.mostSignificantBits.toInt(),(id.leastSignificantBits ushr 32).toInt(),id.leastSignificantBits.toInt())) }
 }
 
-data class CordAnchor(val dimension: Int,val pos: BlockPos,val id: UUID,val front: Direction,val rating: CordRating,val socket: Int,val horizontal: Boolean=false,val strip: Boolean=false,val recessed: Boolean=false) {
+data class CordAnchor(val dimension: Int,val pos: BlockPos,val id: UUID,val front: Direction,val rating: CordRating,val socket: Int,val horizontal: Boolean=false,val strip: Boolean=false,val recessed: Boolean=false,val cabinet: Boolean=false) {
     fun write()=CompoundTag().apply {
         putInt("dimension",dimension);putLong("position",pos.asLong());CordNbt.putUuid(this,"outletId",this@CordAnchor.id);putInt("facing",front.int)
-        putString("rating",rating.name);putInt("socket",socket);putBoolean("horizontal",horizontal);putBoolean("strip",strip);putBoolean("recessed",recessed)
+        putString("rating",rating.name);putInt("socket",socket);putBoolean("horizontal",horizontal);putBoolean("strip",strip);putBoolean("recessed",recessed);putBoolean("cabinet",cabinet)
     }
     companion object {
         fun read(t: CompoundTag): CordAnchor? {
@@ -28,10 +28,11 @@ data class CordAnchor(val dimension: Int,val pos: BlockPos,val id: UUID,val fron
             if(front==Direction.YN || front==Direction.YP)return null
             val slot=t.getIntOr("socket",-1);if(slot !in 0..5 || !t.contains("position") || !t.contains("dimension"))return null
             val pos=t.getLongOr("position",Long.MIN_VALUE);val dim=t.getIntOr("dimension",Int.MIN_VALUE)
-            if(pos==Long.MIN_VALUE || dim==Int.MIN_VALUE || t.getBooleanOr("cabinet",false))return null
+            if(pos==Long.MIN_VALUE || dim==Int.MIN_VALUE)return null
             val strip=t.getBooleanOr("strip",false);val recessed=t.getBooleanOr("recessed",false)
-            if(strip && recessed || slot>=if(strip)6 else 2)return null
-            return CordAnchor(dim,BlockPos.of(pos),id,front,rating,slot,t.getBooleanOr("horizontal",false),strip,recessed)
+            val cabinet=t.getBooleanOr("cabinet",false)
+            if(strip && recessed || cabinet && (strip || recessed || t.getBooleanOr("horizontal",false) || rating !in setOf(CordRating.V120,CordRating.V240)) || slot>=if(cabinet)4 else if(strip)6 else 2)return null
+            return CordAnchor(dim,BlockPos.of(pos),id,front,rating,slot,t.getBooleanOr("horizontal",false),strip,recessed,cabinet)
         }
     }
 }

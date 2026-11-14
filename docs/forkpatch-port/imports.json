@@ -3819,5 +3819,47 @@
     "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
     "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
     "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/ups/CompactUpsElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/ups/CompactUpsElement.kt",
+    "sourceSha256": "e707a9d2ed8e7085cff553d6f71df567fc753ae866112703c0be72923e4eb937",
+    "mode": "native-compact-ups-resident-socket-adapter",
+    "status": "see-compact-ups-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CordSocketSource.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordSocketSource.kt",
+    "sourceSha256": "f8953e4da139983b46e55774ec2a96efa5d5109ea3af527e8ea732120f9fa277",
+    "mode": "native-compact-ups-resident-socket-adapter",
+    "status": "see-compact-ups-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/CompactSocketGeometry.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CompactSocketGeometry.kt",
+    "sourceSha256": "9caa3463ce1ea38030ab3fc346bfbdbad4b1ea748ec351d50a9c235f79ac64b1",
+    "mode": "native-compact-ups-resident-socket-adapter",
+    "status": "see-compact-ups-validation.json"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/compactups/compactups.obj",
+    "target": "src/main/resources/assets/eln/model/compactups/compactups.obj",
+    "sourceSha256": "ff3c891501c3762820fee74f08cb3e56ec2bf7a6438a2636624568f27fb1ec1a",
+    "mode": "verbatim-source-compact-ups-geometry",
+    "status": "see-compact-ups-validation.json"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/compactups/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/compactups/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim-source-compact-ups-geometry",
+    "status": "see-compact-ups-validation.json"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/compactups/panel.mtl",
+    "target": "src/main/resources/assets/eln/model/compactups/panel.mtl",
+    "sourceSha256": "be872ebc27b7a3354774b8d38a839ec142af8450c937ff3cdeb1a7e0add9a361",
+    "mode": "verbatim-source-compact-ups-geometry",
+    "status": "see-compact-ups-validation.json"
   }
 ]

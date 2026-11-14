@@ -29,15 +29,15 @@ object CordInteraction {
         }
         val device=owner?.let(CordSupport::device)
         if(player.isShiftKeyDown) {
-            if(owner is OutletElement) {
-                val slot=(0 until owner.capacity).filter(owner::occupied).minByOrNull { i->net.minecraft.world.phys.Vec3.atCenterOf(hit.blockPos).add(CordGeometry.world(owner.front,CordGeometry.tip(i,owner.horizontal,owner.desc.strip,owner.recessed))).distanceToSqr(hit.location) }
+            if(owner is CordSocketSource) {
+                val slot=(0 until owner.capacity).filter(owner::occupied).minByOrNull { i->net.minecraft.world.phys.Vec3.atCenterOf(hit.blockPos).add(owner.anchor(i).let { a->CordGeometry.world(a.front,CordGeometry.tip(i,a.horizontal,a.strip,a.recessed,a.cabinet)) }).distanceToSqr(hit.location) }
                 if(slot!=null)owner.disconnectSocket(slot,player)
                 return InteractionResult.SUCCESS
             }
             if(device?.cord?.plugged==true) { device.cord.detach(player);return InteractionResult.SUCCESS }
         }
         val data=ItemNbt.get(held);val selected=data?.getCompoundOrEmpty("cordSelection")?.let(CordAnchor::read)
-        if(owner is OutletElement && !(owner.desc.strip && selected!=null && selected.id!=owner.id)) {
+        if(owner is CordSocketSource && !(CordSupport.device(owner.socketOwner)?.acceptsCord(desc.rating)==true && selected!=null && selected.id!=owner.id)) {
             if(owner.rating!=desc.rating) { Utils.sendMessage(player,tr("This cord requires a %1$ outlet",desc.rating.socket));return InteractionResult.SUCCESS }
             val slot=owner.freeSocket();if(slot==null) { Utils.sendMessage(player,tr("Every socket on this outlet is occupied"));return InteractionResult.SUCCESS }
             ItemNbt.edit(held) { it.put("cordSelection",owner.anchor(slot).write()) }

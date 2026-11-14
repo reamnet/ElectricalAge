@@ -11,9 +11,8 @@ import mods.eln.node.transparent.PowerCabinetDescriptor
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 
-class UpsDescriptor(name: String,wallMounted: Boolean=false,val compact: Boolean=false) : PowerCabinetDescriptor(name,UpsElement::class.java,UpsRender::class.java,wallMounted) {
+class UpsDescriptor(name: String,wallMounted: Boolean=false,val compact: Boolean=false) : PowerCabinetDescriptor(name,if(compact)CompactUpsElement::class.java else UpsElement::class.java,UpsRender::class.java,wallMounted) {
     private val model=requireNotNull(Eln.obj.getObj(if(compact)"compactups" else if(wallMounted)"wallups" else "programmableups"))
-    init { require(!compact) { "Plug-in UPS awaits the appliance cord/outlet adapter" } }
     fun draw(front: Direction, state: UpsDisplay?=null)=run {
         GL11.glPushMatrix()
         front.inverse.glRotateZnRef()

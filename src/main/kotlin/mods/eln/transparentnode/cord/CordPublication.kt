@@ -11,7 +11,7 @@ object CordPublication {
     @JvmStatic fun has(owner: Any)=CordSupport.device(owner)?.cord?.anchor!=null
     @JvmStatic fun write(owner: Any,s: DataOutputStream) {
         val c=requireNotNull(CordSupport.device(owner)).cord;val a=requireNotNull(c.anchor)
-        s.writeLong(a.pos.asLong());s.writeByte(a.front.int);s.writeByte(a.rating.ordinal);s.writeByte(a.socket);s.writeBoolean(a.horizontal);s.writeBoolean(a.strip);s.writeBoolean(a.recessed)
+        s.writeLong(a.pos.asLong());s.writeByte(a.front.int);s.writeByte(a.rating.ordinal);s.writeByte(a.socket);s.writeBoolean(a.horizontal);s.writeBoolean(a.strip);s.writeBoolean(a.recessed);s.writeBoolean(a.cabinet)
         val entry=when(owner) {
             is FabricatorElement->Vec3(0.0,-.35,-.45)
             is TransparentNodeElement->CordGeometry.world(owner.front,Vec3(0.0,-.43,-.25))
