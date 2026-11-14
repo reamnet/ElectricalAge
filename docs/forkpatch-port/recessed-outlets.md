@@ -103,6 +103,23 @@ actual counts, artifact checks and remaining limitations. Initial test failures
 identified light occlusion properties and fixture support/permission assumptions;
 those were corrected without weakening the electrical or persistence checks.
 
+## Final validation
+
+Production implementation: `f5e867bb1ad9d26939d20552edd25be474374796`.
+
+- Full root build: 674 selected, 671 passed, three optional previews skipped,
+  zero failures/errors; default 200-case fluid corpus included.
+- CAD: all 15 tests pass.
+- Focused recessed suite: all 35 native cases pass.
+- Unfiltered native: 1,179 of 1,181 pass, including all 715 ForkPatch cases.
+  Only `golden_descriptors` and `golden_slots` fail; all 467 historical failed
+  assertions remain visible with unchanged expectations and existing tolerances.
+- Provenance: all 545 ledger entries pass.
+- JAR integrity: all 2,634 primary Java/Kotlin outputs and 4,951 processed
+  resources match. SHA-256: `6c43cad5d39b645222aa7108eee21447195fbdf9225c2a27de7a32c460976165`.
+- Pinned source checkout, registry identities, generated resources, Gradle and
+  wrapper files remain unchanged. The development artifact is not a full-port release.
+
 ## Visible client checks
 
 The local display uses verified Debian Mesa software Vulkan (llvmpipe), with
