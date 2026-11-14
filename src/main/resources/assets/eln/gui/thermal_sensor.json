@@ -1,72 +1,62 @@
 {
- "column": [
-  {
-   "text": "title",
-   "sample": "Thermal Probe"
-  },
-  {
-   "row": [
+  "source": "ForkPatch b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "width": 176,
+  "height": 166,
+  "absolute": [
     {
-     "button": "power",
-     "sample": "Power",
-     "fill": true
+      "button": "power",
+      "rect": [
+        8,
+        8,
+        70,
+        20
+      ]
     },
     {
-     "button": "temperature",
-     "sample": "Temperature",
-     "fill": true
+      "button": "temperature",
+      "rect": [
+        98,
+        8,
+        70,
+        20
+      ]
+    },
+    {
+      "button": "validate",
+      "rect": [
+        75,
+        46,
+        50,
+        20
+      ]
+    },
+    {
+      "field": "high",
+      "rect": [
+        21,
+        42,
+        50,
+        12
+      ]
+    },
+    {
+      "field": "low",
+      "rect": [
+        21,
+        57,
+        50,
+        12
+      ]
+    },
+    {
+      "inventory": true,
+      "rect": [
+        7,
+        83,
+        162,
+        76
+      ]
     }
-   ],
-   "fill": true
-  },
-  {
-   "row": [
-    {
-     "column": [
-      {
-       "row": [
-        {
-         "text": "hl",
-         "sample": "100%"
-        },
-        {
-         "field": "high",
-         "chars": 7
-        }
-       ]
-      },
-      {
-       "row": [
-        {
-         "text": "ll",
-         "sample": "0%"
-        },
-        {
-         "field": "low",
-         "chars": 7
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "button": "validate",
-     "sample": "Validate"
-    },
-    {
-     "space": 0,
-     "fill": true
-    }
-   ],
-   "fill": true
-  },
-  {
-   "text": "inventory",
-   "sample": "Inventory"
-  },
-  {
-   "inventory": true
-  }
- ],
- "gap": 4
+  ],
+  "sourceGui": "src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorGui.java"
 }

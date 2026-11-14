@@ -1,86 +1,80 @@
 {
- "column": [
-  {
-   "text": "title",
-   "sample": "Electrical Probe"
-  },
-  {
-   "row": [
+  "source": "ForkPatch b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "width": 176,
+  "height": 166,
+  "absolute": [
     {
-     "column": [
-      {
-       "button": "voltage",
-       "sample": "Voltage",
-       "fill": true
-      },
-      {
-       "button": "current",
-       "sample": "Current",
-       "fill": true
-      },
-      {
-       "button": "power",
-       "sample": "Power",
-       "fill": true
-      },
-      {
-       "button": "dir",
-       "sample": [
-        "A <=> B"
-       ],
-       "fill": true
-      }
-     ],
-     "gap": 2
+      "button": "voltage",
+      "rect": [
+        8,
+        8,
+        50,
+        20
+      ]
     },
     {
-     "column": [
-      {
-       "row": [
-        {
-         "text": "hl",
-         "sample": "100%"
-        },
-        {
-         "field": "high",
-         "chars": 7
-        }
-       ]
-      },
-      {
-       "row": [
-        {
-         "text": "ll",
-         "sample": "0%"
-        },
-        {
-         "field": "low",
-         "chars": 7
-        }
-       ]
-      },
-      {
-       "button": "validate",
-       "sample": "Validate",
-       "fill": true
-      }
-     ],
-     "gap": 4
+      "button": "current",
+      "rect": [
+        8,
+        32,
+        50,
+        20
+      ]
     },
     {
-     "space": 0,
-     "fill": true
+      "button": "power",
+      "rect": [
+        8,
+        56,
+        50,
+        20
+      ]
+    },
+    {
+      "button": "dir",
+      "rect": [
+        62,
+        56,
+        50,
+        20
+      ]
+    },
+    {
+      "button": "validate",
+      "rect": [
+        116,
+        20,
+        50,
+        20
+      ]
+    },
+    {
+      "field": "high",
+      "rect": [
+        62,
+        16,
+        50,
+        12
+      ]
+    },
+    {
+      "field": "low",
+      "rect": [
+        62,
+        32,
+        50,
+        12
+      ]
+    },
+    {
+      "inventory": true,
+      "rect": [
+        7,
+        83,
+        162,
+        76
+      ]
     }
-   ],
-   "fill": true
-  },
-  {
-   "text": "inventory",
-   "sample": "Inventory"
-  },
-  {
-   "inventory": true
-  }
- ],
- "gap": 4
+  ],
+  "sourceGui": "src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorGui.java"
 }

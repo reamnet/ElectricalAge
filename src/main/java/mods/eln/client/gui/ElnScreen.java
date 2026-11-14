@@ -61,12 +61,14 @@ public class ElnScreen extends net.minecraft.client.gui.screens.inventory.Abstra
     protected net.minecraft.client.gui.components.Button button(String id, java.util.function.Supplier<String> label, Runnable press,
                                                                 String... tooltip) {
         var r = rect("button", id);
-        return button(r.x(), r.y(), r.w(), label, press, tooltip);
+        var b = button(r.x(), r.y(), r.w(), label, press, tooltip);
+        b.setHeight(r.h());
+        return b;
     }
 
     protected EaField field(String id, java.util.function.Supplier<String> value, java.util.function.Consumer<String> commit, String... tooltip) {
         var r = rect("field", id);
-        return field(r.x(), r.y(), r.w(), value, commit, tooltip);
+        return field(r.x(), r.y(), r.w(), r.h(), value, commit, tooltip);
     }
 
     protected EaSlider slider(String id, double min, double max, double step, double initial,
@@ -74,7 +76,7 @@ public class ElnScreen extends net.minecraft.client.gui.screens.inventory.Abstra
         var r = rect("slider", id);
         // a text line of the same id above the slider takes the label (the knob would cover it)
         var t = layout.get("text", id);
-        EaSlider s = addRenderableWidget(new EaSlider(leftPos + r.x(), topPos + r.y(), r.w(), min, max, step, initial,
+        EaSlider s = addRenderableWidget(new EaSlider(leftPos + r.x(), topPos + r.y(), r.w(), r.h(), layout.sourceLayout() && r.h() > r.w(), min, max, step, initial,
             t == null ? label : v -> Component.empty(), commit));
         if (t != null) drawers.add(() -> drawing.text(font, label.apply(s.get()), leftPos + t.x(), topPos + t.y(), LABEL, false));
         return s;
@@ -121,6 +123,7 @@ public class ElnScreen extends net.minecraft.client.gui.screens.inventory.Abstra
     }
 
     protected void text(String id, java.util.function.Supplier<String> s, java.util.function.IntSupplier color) {
+        if (layout != null && layout.sourceLayout() && layout.get("text", id) == null) return;
         var r = rect("text", id);
         drawers.add(() -> drawing.text(font, s.get(), leftPos + r.x(), topPos + r.y(), color.getAsInt(), false));
     }
@@ -181,7 +184,12 @@ public class ElnScreen extends net.minecraft.client.gui.screens.inventory.Abstra
     /** A text box committing on Enter / focus loss, following the device while not edited. */
     protected EaField field(int x, int y, int w, java.util.function.Supplier<String> value, java.util.function.Consumer<String> commit,
                             String... tooltip) {
-        EaField f = new EaField(leftPos + x, topPos + y, w, value.get(), commit);
+        return field(x, y, w, 18, value, commit, tooltip);
+    }
+
+    protected EaField field(int x, int y, int w, int h, java.util.function.Supplier<String> value, java.util.function.Consumer<String> commit,
+                            String... tooltip) {
+        EaField f = new EaField(leftPos + x, topPos + y, w, h, value.get(), commit);
         if (tooltip.length > 0) f.setTooltip(net.minecraft.client.gui.components.Tooltip.create(Component.literal(String.join("\n", tooltip))));
         addRenderableWidget(f);
         refreshers.add(() -> f.setFromDevice(value.get()));

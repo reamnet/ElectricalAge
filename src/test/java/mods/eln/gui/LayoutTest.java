@@ -70,6 +70,40 @@ class LayoutTest {
         assertEquals(2, r.problems().size());
     }
 
+    @Test
+    void sourceCoordinatesIgnoreFontMetricsAndMinimumPanelWidth() {
+        String json = """
+            {"width":62,"height":72,"absolute":[
+                {"button":"reset","rect":[6,6,50,20]},
+                {"field":"time","rect":[6,54,50,12]}]}
+            """;
+        var r = lay(json);
+        assertTrue(r.sourceLayout());
+        assertEquals(62, r.width());
+        assertEquals(72, r.height());
+        assertEquals(new Layout.Rect(6,54,50,12), r.get("field","time"));
+        assertEquals(r, Layout.layout(JsonParser.parseString(json).getAsJsonObject(), text -> 999));
+        assertTrue(r.problems().isEmpty());
+    }
+
+    @Test
+    void sourceLayoutsRejectAmbiguousAndInvalidRectangles() {
+        assertThrows(IllegalArgumentException.class, () -> lay("""
+            {"width":62,"height":72,"absolute":[
+                {"field":"time","rect":[6,54,50,12]},
+                {"field":"time","rect":[6,6,50,12]}]}
+            """));
+        assertThrows(IllegalArgumentException.class, () -> lay("""
+            {"width":62,"height":72,"absolute":[{"field":"time","rect":[6,6,0,12]}]}
+            """));
+        assertThrows(IllegalArgumentException.class, () -> lay("""
+            {"width":62,"height":72,"absolute":[{"row":[] ,"rect":[6,6,50,12]}]}
+            """));
+        assertEquals(1, lay("""
+            {"width":62,"height":72,"absolute":[{"field":"time","rect":[6,65,50,12]}]}
+            """).problems().size());
+    }
+
     /** Every layout shipped in assets/eln/gui must be sound with the fixed-width measure. */
     @Test
     void everyShippedLayoutIsSound() throws IOException {

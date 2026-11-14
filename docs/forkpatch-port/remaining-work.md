@@ -7,6 +7,10 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 
 ## Current continuation
 
+The [GUI matching first batch](gui-parity.md) restores source coordinates for
+13 classic layout variants. Larger device screens and the remaining classic
+panels still need visual review; universal GUI parity is not complete.
+
 The [rated lamp-supply adapters](rated-lamp-supplies.md) add explicit 120/240 V
 cord inputs to the existing native three-channel supply system, preserving the
 generic native supply at lookup 4160. Source 120 V lookup 4160 maps explicitly

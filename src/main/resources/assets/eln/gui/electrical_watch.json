@@ -1,28 +1,26 @@
 {
- "column": [
-  {
-   "row": [
+  "source": "ForkPatch b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "width": 176,
+  "height": 114,
+  "absolute": [
     {
-     "text": "title",
-     "sample": "Digital Watch"
+      "slot": "0",
+      "rect": [
+        79,
+        7,
+        18,
+        18
+      ]
     },
     {
-     "space": 0,
-     "fill": true
-    },
-    {
-     "slot": "0"
+      "inventory": true,
+      "rect": [
+        7,
+        31,
+        162,
+        76
+      ]
     }
-   ],
-   "fill": true
-  },
-  {
-   "text": "inventory",
-   "sample": "Inventory"
-  },
-  {
-   "inventory": true
-  }
- ],
- "gap": 4
+  ],
+  "sourceGui": "src/main/java/mods/eln/sixnode/electricalwatch/ElectricalWatchGui.java"
 }
