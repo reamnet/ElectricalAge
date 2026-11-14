@@ -262,6 +262,7 @@ public abstract class NodeBase {
     }
 
     public static void tryConnectTwoNode(NodeBase nodeA, Direction directionA, LRDU lrduA, NodeBase nodeB, Direction directionB, LRDU lrduB) {
+        if (!mods.eln.transparentnode.cord.OutletWiring.permits(nodeA, nodeB)) return;
         if (!mods.eln.utility.WideMeterWiring.permits(nodeA,directionA,lrduA,nodeB,directionB,lrduB)) return;
         if (compareConnectionMask(nodeA.getSideConnectionMask(directionA, lrduA), nodeB.getSideConnectionMask(directionB, lrduB))) {
             ElectricalConnection eCon = null;
@@ -358,6 +359,7 @@ public abstract class NodeBase {
         }
 
         mods.eln.utility.WideMeterWiring.connect(this);
+        mods.eln.transparentnode.cord.OutletWiring.connect(this);
     }
 
     /**

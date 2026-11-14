@@ -37,6 +37,8 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
 
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
+        var recessed = mods.eln.transparentnode.cord.OutletWall.use(this, ctx);
+        if (recessed != null) return recessed;
         Level world = ctx.getLevel();
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         BlockPos pos = ctx.getClickedPos().relative(ctx.getClickedFace());
@@ -44,6 +46,11 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
         boolean ok = placeAt(ctx.getItemInHand(), ctx.getPlayer(), world, pos, direction) != null;
         if (ok && ctx.getPlayer() != null && !ctx.getPlayer().isCreative()) ctx.getItemInHand().shrink(1);
         return ok ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+    }
+
+    public net.minecraft.world.level.block.state.BlockState outletPlacedState(Level world, BlockPos pos, Direction front) {
+        Block b = block.get();
+        return ((TransparentNodeBlock) b).placedState(front, world, pos);
     }
 
     /** 1.12 placeBlockAt; returns the node, or null if it can't be placed. */

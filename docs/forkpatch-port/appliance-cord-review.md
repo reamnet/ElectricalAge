@@ -226,7 +226,13 @@ No compact UPS registration or native compact-device runtime coverage is claimed
 by this review.
 
 
-## Remaining recessed-wall integration
+## Recessed-wall integration contract
+
+The subsequent [native recessed adapter](recessed-outlets.md) now implements the
+centered wall-terminal, placement, restoration and rendering contracts. The
+analysis below retains the original source/native design boundaries; current
+commands and results live in [recessed validation](recessed-validation.json).
+
 
 The pinned source `node/transparent/TransparentNodeItem.kt` replaces the clicked
 wall cell only for non-strip outlets clicked on a vertical face. Its eligibility
@@ -280,7 +286,13 @@ appearance and multiplayer remain separate validation. No recessed registration
 or runtime coverage is claimed by this review.
 
 
-## Remaining fixed consumers
+## Fixed-consumer audit
+
+The subsequent [extended consumers](extended-consumers.md) and
+[miner/transporter adapter](ghost-consumers.md) implement the inherited families
+in the table below. The motor and remaining source-specific equipment boundaries
+still apply.
+
 
 The pinned source `MachineCordSupport` also selects consumers beyond the five
 families implemented here. Native inherited classes exist for several, but they

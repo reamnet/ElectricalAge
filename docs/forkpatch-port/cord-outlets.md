@@ -1,5 +1,8 @@
 # Native surface outlets and fixed-machine cords
 
+Later continuation: [recessed wall ownership, cable routing and client checks](recessed-outlets.md).
+The original surface-checkpoint evidence below is retained separately.
+
 Nine source connector ratings retain their source lookups and passive behavior:
 120/240 V household, 24/48/200/480/800/3200 V machine/industrial, and the distinct
 240 V 30 A dryer connector. Ten native outlet/strip devices and nine cord items

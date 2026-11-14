@@ -3721,5 +3721,103 @@
     "sourceSha256": "56ab215b9b2cbfc3753ad8f66e1c263bf98431455c651557006cd18ac12e3ba6",
     "mode": "native-auxiliary-consumer-cord-lifecycle-adapter",
     "status": "see-continuation-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNodeItem.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletWall.kt",
+    "sourceSha256": "452c8bf175f22f1b2cc1f58c4ee99653ba1760b07374c76f2df3719bbde1c6f5",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/node/transparent/TransparentNodeItem.kt",
+    "target": "src/main/java/mods/eln/node/transparent/TransparentNodeItem.java",
+    "sourceSha256": "452c8bf175f22f1b2cc1f58c4ee99653ba1760b07374c76f2df3719bbde1c6f5",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletWiring.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletWiring.kt",
+    "sourceSha256": "81ca3c3d96fcb487aff2218caed9c79ced4e29d6c04c508d6fa5afa70075706e",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletWiring.kt",
+    "target": "src/main/java/mods/eln/node/voxel/VoxelNode.java",
+    "sourceSha256": "81ca3c3d96fcb487aff2218caed9c79ced4e29d6c04c508d6fa5afa70075706e",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletWall.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletBlock.kt",
+    "sourceSha256": "5c53109526022136861ffed6b59e1c42d6415e59dee1b9721bd033fe41661d30",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletWall.kt",
+    "target": "src/main/java/mods/eln/client/render/WallBlockModels.java",
+    "sourceSha256": "5c53109526022136861ffed6b59e1c42d6415e59dee1b9721bd033fe41661d30",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletWall.kt",
+    "target": "src/main/java/mods/eln/client/render/GlSubmit.java",
+    "sourceSha256": "5c53109526022136861ffed6b59e1c42d6415e59dee1b9721bd033fe41661d30",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletElement.kt",
+    "sourceSha256": "44d3c3f2d0b86ca7dce4f1ea0e367f5170a2ea48d5dbd08167aaf63cccdb795b",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/OutletRender.kt",
+    "sourceSha256": "44d3c3f2d0b86ca7dce4f1ea0e367f5170a2ea48d5dbd08167aaf63cccdb795b",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/ApplianceCord.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordState.kt",
+    "sourceSha256": "12edb238daccb5a81d5bfa052869bce874855738025057c09a6a8cd79ad7c50c",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/ApplianceCord.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordPublication.kt",
+    "sourceSha256": "12edb238daccb5a81d5bfa052869bce874855738025057c09a6a8cd79ad7c50c",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordGeometry.kt",
+    "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordInteraction.kt",
+    "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordDisplay.kt",
+    "sourceSha256": "de9210466d0f047d941fba52813abe339085ed3264145d06158728d607e03b98",
+    "mode": "native-recessed-wall-transaction-topology-and-render-adapter",
+    "status": "see-recessed-validation.json"
   }
 ]

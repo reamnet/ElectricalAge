@@ -31,6 +31,11 @@ public class TransparentNodeRender implements BlockEntityRenderer<TransparentNod
                                    ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(be, state, partialTicks, cameraPosition, breakProgress);
         state.render = be.elementRender;
+        if (state.render instanceof mods.eln.transparentnode.cord.OutletRender outlet
+                && !outlet.getWallState().isAir() && outlet.front != null && be.getLevel() != null) {
+            state.lightCoords = mods.eln.transparentnode.cord.OutletWall.faceLight(
+                be.getLevel(), be.getBlockPos(), outlet.front, state.lightCoords);
+        }
     }
 
     @Override

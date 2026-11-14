@@ -15,6 +15,7 @@ class CordDisplay {
     var socket=0;private set
     var horizontal=false;private set
     var strip=false;private set
+    var recessed=false;private set
     var entry=Vec3.ZERO;private set
     var state="UNPLUGGED";private set
     private var points=emptyList<Vec3>()
@@ -26,15 +27,15 @@ class CordDisplay {
     fun read(s: DataInputStream) {
         val p=BlockPos.of(s.readLong());val f=Direction.fromInt(s.readUnsignedByte()) ?: throw IOException("Invalid cord facing")
         val r=CordRating.entries.getOrNull(s.readUnsignedByte()) ?: throw IOException("Invalid cord rating")
-        val index=s.readUnsignedByte();val h=s.readBoolean();val st=s.readBoolean();val e=Vec3(s.readDouble(),s.readDouble(),s.readDouble());val status=s.readUTF()
-        if(f.isY || index !in 0 until (if(st)6 else 2) || !e.x.isFinite() || !e.y.isFinite() || !e.z.isFinite() || e.lengthSqr()>4)throw IOException("Invalid cord endpoint")
-        if(endpoint!=p || front!=f || rating!=r || socket!=index || horizontal!=h || strip!=st || entry!=e) { points=emptyList();mesh=DoubleArray(0);next=0 }
-        endpoint=p;front=f;rating=r;socket=index;horizontal=h;strip=st;entry=e;state=status
+        val index=s.readUnsignedByte();val h=s.readBoolean();val st=s.readBoolean();val rc=s.readBoolean();val e=Vec3(s.readDouble(),s.readDouble(),s.readDouble());val status=s.readUTF()
+        if(st && rc || f.isY || index !in 0 until (if(st)6 else 2) || !e.x.isFinite() || !e.y.isFinite() || !e.z.isFinite() || e.lengthSqr()>4)throw IOException("Invalid cord endpoint")
+        if(endpoint!=p || front!=f || rating!=r || socket!=index || horizontal!=h || strip!=st || recessed!=rc || entry!=e) { points=emptyList();mesh=DoubleArray(0);next=0 }
+        endpoint=p;front=f;rating=r;socket=index;horizontal=h;strip=st;recessed=rc;entry=e;state=status
     }
     fun bounds(pos: BlockPos,base: AABB)=endpoint?.let { base.minmax(AABB(it).inflate(1.0)) } ?: base
     fun draw(world: Level?,pos: BlockPos) {
         val target=endpoint ?: return;if(world==null)return
-        val origin=Vec3.atCenterOf(pos);val start=Vec3.atCenterOf(target).add(CordGeometry.world(front,CordGeometry.tip(socket,horizontal,strip)));val end=origin.add(entry)
+        val origin=Vec3.atCenterOf(pos);val start=Vec3.atCenterOf(target).add(CordGeometry.world(front,CordGeometry.tip(socket,horizontal,strip,recessed)));val end=origin.add(entry)
         if(start.distanceTo(end)>10)return
         if(points.isEmpty() || world.gameTime>=next) {
             next=world.gameTime+20

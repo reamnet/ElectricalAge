@@ -65,6 +65,8 @@ public final class ElnClient {
         modBus.addListener(net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent.class,
             e -> e.register(net.minecraft.resources.Identifier.fromNamespaceAndPath("eln", "device"),
                 mods.eln.client.render.ElnItemRenderer.Unbaked.MAP_CODEC));
+        modBus.addListener(net.neoforged.neoforge.client.event.AddClientReloadListenersEvent.class,
+            mods.eln.client.render.WallBlockModels::onAddReloadListeners);
         modBus.addListener(net.neoforged.neoforge.client.event.RegisterBlockStateModels.class,
             e -> e.registerModel(mods.eln.client.render.VoxelModel.ID, mods.eln.client.render.VoxelModel.Unbaked.CODEC));
         modBus.addListener(net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent.class,

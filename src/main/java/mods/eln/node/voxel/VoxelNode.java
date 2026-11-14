@@ -1272,6 +1272,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             }
             else for (LRDU lrdu : LRDU.values()) tryConnectTwoNode(this, dir, lrdu, other, dir.getInverse(), lrdu.inverseIfLR());
         }
+        mods.eln.transparentnode.cord.OutletWiring.connect(this);
         // only blocks with pipes in the fluid world (it steps every device every tick)
         if (hasFluid()) FluidWorld.add(this);
         else FluidWorld.remove(this);
@@ -1625,6 +1626,37 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
 
     /** The cable conductor taking EA's (side, edge) connection, or null: see connectJob. Not for voxel neighbours
      *  (exact points) nor through air (no outer-corner wraps). */
+    /** Narrow reconnect scan: non-electrical faces never need wall-outlet lookups. */
+    public int outletWallMounts() {
+        int mask = 0;
+        for (CableNet.Conductor k : cables.live())
+            if (k.face >= 0 && k.face < 6 && k.load != null && (k.mask() & maskElectricalPower) != 0)
+                mask |= 1 << Direction.fromEnumFacing(net.minecraft.core.Direction.from3DDataValue(k.face)).getInt();
+        return mask;
+    }
+
+    public record OutletWallPort(mods.eln.sim.ElectricalLoad load, int mask) {}
+
+    /** A real electrical cable boundary midpoint on a mounting face. No device-pin fallback,
+     * neighbour lookup or chunk load: the cell in front of the outlet may be empty. */
+    public OutletWallPort outletWallPort(Direction mount, Direction side) {
+        int mf = mount.toEnumFacing().get3DDataValue(), sf = side.toEnumFacing().get3DDataValue();
+        int ma = CablePart.normalAxis(mf), sa = CablePart.normalAxis(sf);
+        if (ma == sa) return null;
+        OutletWallPort found = null;
+        for (CableNet.Conductor k : cables.live()) {
+            if (k.face != mf || k.load == null || (k.mask() & maskElectricalPower) == 0) continue;
+            for (CablePart part : k.parts) for (CablePart.Port p : part.cablePorts()) {
+                if (p.face() != sf) continue;
+                int[] v = {p.x(), p.y(), p.z()};
+                if (v[3 - ma - sa] != 8) continue;
+                if (found != null && found.load() != k.load) return null;
+                found = new OutletWallPort(k.load, k.mask());
+            }
+        }
+        return found;
+    }
+
     private CableNet.Conductor legacy(Direction side, LRDU lrdu) {
         mods.eln.node.NodeBase other = getNeighbor(side);
         if (other == null || other instanceof VoxelNode) return null;

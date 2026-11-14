@@ -74,6 +74,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ForkPatchWireMachineCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchFabricatorCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchCordCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchRecessedCases.cases());
         l.add(new mods.eln.gametest.cases.ForkPatchSolarSamplingCases());
         l.addAll(mods.eln.gametest.cases.ForkPatchVariableInductorCases.cases());
         mods.eln.gametest.cases.Wp9aCases.addTo(l);

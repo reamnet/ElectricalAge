@@ -1,0 +1,40 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "previousCheckpoint": "b033290c1de4cef6ae11c97bbeb4071c87220b28",
+  "status": "final-focused-and-visible-client-passed-full-production-commit-validation-pending",
+  "focusedNative": {
+    "selected": 35,
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0,
+    "report": "/workspace/setup/recessed-focused-final.xml"
+  },
+  "client": {
+    "backend": "Vulkan",
+    "driver": "Mesa 25.0.7 llvmpipe Vulkan 1.4.305",
+    "resolution": [
+      1280,
+      720
+    ],
+    "guiScale": "automatic",
+    "survivalPlacement": true,
+    "horizontalRotation": true,
+    "separateJvmReload": true,
+    "resourceReload": true,
+    "compactControlsVisible": true,
+    "wallPropertiesRestored": true,
+    "accessibleSingleOutletReturn": true,
+    "returnedItemData": {
+      "outletHorizontal": true
+    },
+    "wallDataInReturnedItem": false
+  },
+  "fullValidation": {
+    "status": "pending-after-implementation-commit"
+  },
+  "limitations": [
+    "Two historical descriptor/slot golden failures remain; no expected snapshots or existing skips/tolerances were changed.",
+    "One local software-Vulkan client; no hardware OpenGL/Vulkan, multiplayer, audio or universal resource-pack/tint parity claim.",
+    "Source-world conversion, carry and compact UPS remain unfinished."
+  ]
+}

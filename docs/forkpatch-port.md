@@ -17,10 +17,12 @@ be used on 26.3.
 
 ## Conflict policy
 
-Current continuation: [miner/transporter auxiliary cord inputs](forkpatch-port/ghost-consumers.md).
-The previously blocked [extended consumer checkpoint](forkpatch-port/extended-consumers.md)
-now compiles and its fifteen native cases pass. Current commands, test results
-and artifact evidence are recorded in [continuation validation](forkpatch-port/continuation-validation.json).
+Current continuation: [recessed wall outlets](forkpatch-port/recessed-outlets.md).
+Native original-wall transactions, passive legacy/voxel terminals, client light,
+compact controls and owner teardown are recorded in
+[recessed validation](forkpatch-port/recessed-validation.json). The preceding
+[miner/transporter and extended-consumer checkpoint](forkpatch-port/continuation-validation.json)
+remains historical passing evidence.
 
 The existing 26.3 port is the platform foundation. A shared file/class name does
 not establish compatible behavior. Keep its working registry, save, networking,

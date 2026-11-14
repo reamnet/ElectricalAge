@@ -71,6 +71,24 @@ public class TransparentNode extends Node {
 
     }
 
+    /** Recessed device drops must not be trapped inside the wall restored immediately afterward. */
+    @Override
+    public void dropItem(ItemStack stack) {
+        if (element instanceof mods.eln.transparentnode.cord.OutletElement outlet && outlet.getRecessed()) {
+            var world = coordonate.world();
+            if (!Utils.isEmpty(stack) && world instanceof net.minecraft.server.level.ServerLevel server
+                    && server.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.BLOCK_DROPS))
+                net.minecraft.world.level.block.Block.popResourceFromFace(world, coordonate.pos(), outlet.front.toEnumFacing(), stack);
+            return;
+        }
+        super.dropItem(stack);
+    }
+
+    @Override
+    public void physicalSelfDestruction(float strength) {
+        if (!mods.eln.transparentnode.cord.OutletWall.restore(this, false)) super.physicalSelfDestruction(strength);
+    }
+
     @Override
     public void onBreakBlock() {
 

@@ -32,6 +32,12 @@ public class NodeConnection {
 
     }
 
+    /** Exact bidirectional identity, for virtual wall ports without duplicate parallel links. */
+    public boolean matches(NodeBase a, Direction sa, LRDU ea, NodeBase b, Direction sb, LRDU eb) {
+        return N1 == a && dir1 == sa && lrdu1 == ea && N2 == b && dir2 == sb && lrdu2 == eb
+            || N2 == a && dir2 == sa && lrdu2 == ea && N1 == b && dir1 == sb && lrdu1 == eb;
+    }
+
     public void destroy() {
         Eln.simulator.removeElectricalComponent(EC);
         for (var e : extra) Eln.simulator.removeElectricalComponent(e);

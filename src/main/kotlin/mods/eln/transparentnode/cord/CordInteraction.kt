@@ -30,7 +30,7 @@ object CordInteraction {
         val device=owner?.let(CordSupport::device)
         if(player.isShiftKeyDown) {
             if(owner is OutletElement) {
-                val slot=(0 until owner.capacity).filter(owner::occupied).minByOrNull { i->net.minecraft.world.phys.Vec3.atCenterOf(hit.blockPos).add(CordGeometry.world(owner.front,CordGeometry.tip(i,owner.horizontal,owner.desc.strip))).distanceToSqr(hit.location) }
+                val slot=(0 until owner.capacity).filter(owner::occupied).minByOrNull { i->net.minecraft.world.phys.Vec3.atCenterOf(hit.blockPos).add(CordGeometry.world(owner.front,CordGeometry.tip(i,owner.horizontal,owner.desc.strip,owner.recessed))).distanceToSqr(hit.location) }
                 if(slot!=null)owner.disconnectSocket(slot,player)
                 return InteractionResult.SUCCESS
             }

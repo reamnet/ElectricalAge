@@ -15,6 +15,17 @@ class CordStateTest {
         val t=a.write();t.putString("rating","future");assertNull(CordAnchor.read(t));t.putString("rating","V240_30");t.putInt("socket",6);assertNull(CordAnchor.read(t))
         t.putInt("socket",0);t.putInt("facing",Direction.YP.int);assertNull(CordAnchor.read(t));assertNull(CordAnchor.read(CompoundTag()))
     }
+    @Test fun recessedAnchorsRetainTheirPhysicalPlaneAndRejectImpossibleSocketKinds() {
+        for(front in listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP)) {
+            val anchor=CordAnchor(0,BlockPos(12,64,-8),UUID.randomUUID(),front,CordRating.V200,1,recessed=true)
+            assertEquals(anchor,CordAnchor.read(anchor.write()))
+            val delta=CordGeometry.world(front,CordGeometry.tip(1,false,false,true)).subtract(CordGeometry.world(front,CordGeometry.tip(1,false,false,false)))
+            assertTrue(delta.distanceTo(Vec3.atLowerCornerOf(front.toEnumFacing().unitVec3i))<1e-12)
+            assertNull(CordAnchor.read(anchor.write().apply { putBoolean("strip",true) }))
+            assertNull(CordAnchor.read(anchor.write().apply { putBoolean("cabinet",true) }))
+            assertNull(CordAnchor.read(anchor.write().apply { putInt("socket",2) }))
+        }
+    }
     @Test fun ratingsRejectNonfiniteAndWrongNominalVoltage() {
         assertEquals(9,CordRating.entries.size)
         for(r in CordRating.entries) { assertTrue(r.accepts(r.volts));assertFalse(r.accepts(Double.NaN));assertFalse(r.accepts(Double.POSITIVE_INFINITY));assertFalse(r.accepts(r.volts+1)) }

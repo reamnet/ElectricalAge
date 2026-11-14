@@ -10,6 +10,8 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.entity.player.Player
 
 class OutletDescriptor(val rating: CordRating,val strip: Boolean=false): PowerCabinetDescriptor(if(strip)mods.eln.i18n.I18N.TR_NAME(mods.eln.i18n.I18N.Type.NONE,"Six Socket Power Strip") else rating.outletName,OutletElement::class.java,OutletRender::class.java,true) {
+    override fun blockProperties(p: net.minecraft.world.level.block.state.BlockBehaviour.Properties)=
+        if(strip)super.blockProperties(p) else p.mapColor(net.minecraft.world.level.material.MapColor.METAL).strength(1f,1f).sound(net.minecraft.world.level.block.SoundType.METAL).dynamicShape()
     override fun newBlock(p: net.minecraft.world.level.block.state.BlockBehaviour.Properties)=OutletBlock(p,this)
     val sockets get()=if(strip)6 else 2
     private val model=requireNotNull(Eln.obj.getObj(when { strip->"sixsocketpowerstrip";rating==CordRating.V240_30->"dryeroutlet30";rating.industrial->"industrialmachineoutlet";rating==CordRating.V120->"appliancewalloutlet";else->"walloutlet240" }))
