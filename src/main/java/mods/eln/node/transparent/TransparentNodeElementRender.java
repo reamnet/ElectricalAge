@@ -73,6 +73,7 @@ public abstract class TransparentNodeElementRender {
 
     /** The element burnt out (see TransparentNodeElement.burn); TransparentNodeRender scorches it. */
     public boolean burnt;
+    public final mods.eln.transparentnode.cord.CordDisplay cordDisplay = new mods.eln.transparentnode.cord.CordDisplay();
 
     public void networkUnserialize(DataInputStream stream) {
         try {
@@ -80,6 +81,8 @@ public abstract class TransparentNodeElementRender {
             front = Direction.fromInt(b & 0x7);
             grounded = (b & 8) != 0;
             burnt = (b & TransparentNodeElement.HEADER_BURNT) != 0;
+            if ((b & TransparentNodeElement.HEADER_CORD) != 0) cordDisplay.read(stream);
+            else cordDisplay.clear();
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -269,6 +272,7 @@ public abstract class TransparentNodeElementRender {
 
 
     public void destructor() {
+        cordDisplay.clear();
         for (mods.eln.sound.LoopedSound l : loopedSounds) l.setActive(false);
     }
 

@@ -1,0 +1,69 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Source Variable inductor6179 with native solver/voxel infrastructure; existing fixed inductor6178 preserved.",
+  "root": {
+    "suites": 117,
+    "tests": 641,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "rootCommand": "./gradlew --no-daemon --max-workers=2 :test cad:test runClientData",
+  "rootLog": "session3-inductor-root-datagen.log",
+  "native": {
+    "selected": 343,
+    "passed": 343,
+    "failed": 0,
+    "skipped": 0,
+    "variableInductorCases": 8,
+    "filter": "eln:forkpatch_*",
+    "report": "/tmp/eln26-inductor-port-final.xml",
+    "log": "session3-inductor-port-final.log"
+  },
+  "datagen": {
+    "identities": 638,
+    "previousIdentities": 637,
+    "changedPreviousIdentities": [],
+    "englishEntries": 936,
+    "previousEnglishEntries": 935,
+    "changedPreviousEnglishEntries": [],
+    "nativeTextureReferences": 454,
+    "missingTextures": []
+  },
+  "sourceParameters": {
+    "id": 6179,
+    "coreSlot": 0,
+    "coreLimit": 1,
+    "maximumEquivalentTurns": 19,
+    "series": "E6(-1)",
+    "minimumHenries": 0.1,
+    "maximumHenries": 100
+  },
+  "borrowedNativeIcon": {
+    "source": "src/main/resources/assets/eln/textures/item/power_inductor.png",
+    "target": "src/main/resources/assets/eln/textures/item/variable_inductor.png",
+    "sha256": "5e36bdba6de3e6ad22c02224705641c1aaf6a7d749944182a0f9bb3c8303f6cc"
+  },
+  "coverage": [
+    "All19 source E6 levels, nearest-turn thresholds and monotonic mapping",
+    "Fixed-L native backward-Euler RL current across five source levels",
+    "Actual controlled RL circuits on all six mounting faces",
+    "1000 stable quantized updates retain valid native LU stamps",
+    "Actual server menu core insertion, invalid-core rejection and field clearing on removal",
+    "Saved current/inductance survive before signal reconnection and actual owner reload retains inventory",
+    "Actual client publication, signal/power stubs and winding drawing"
+  ],
+  "limitations": [
+    "Source simplified changing-inductance semantics do not model mechanical work or field-collapse voltage spikes.",
+    "Interactive GPU and multiplayer UI checks remain pending.",
+    "The unfiltered historical two-golden discrepancy has not been waived or rebaselined."
+  ]
+}

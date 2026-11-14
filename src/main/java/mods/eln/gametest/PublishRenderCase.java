@@ -58,7 +58,7 @@ final class PublishRenderCase implements TestCase {
     /** Devices with no render class in the port yet (Modbus RTU: modbus is off, the device unregistered). */
     static final java.util.Set<String> NO_RENDER_YET = java.util.Set.of("Modbus RTU");
     /** Need a setting this box can't give (water; a 3x3x4 free volume beside the floor): drawn in the gallery instead. */
-    static final java.util.Set<String> NOT_HERE = java.util.Set.of("Water Turbine", "Experimental Transporter");
+    static final java.util.Set<String> NOT_HERE = java.util.Set.of("Water Turbine", "Experimental Transporter", "Utility Wind Turbine 3.2kV", "Large Watermill 3.2kV");
 
     public void measure(TestContext ctx) {
         mods.eln.client.ClientRenders.registerAll();
@@ -115,7 +115,13 @@ final class PublishRenderCase implements TestCase {
                 ctx.floor(p.below());
                 if (d instanceof mods.eln.oil.SubmersiblePumpDescriptor)   // (it goes in water)
                     ctx.level().setBlock(p, net.minecraft.world.level.block.Blocks.WATER.defaultBlockState(), 2);
-                node = ctx.placeTransparent(e.getKey(), p).node;
+                if (d.mustHaveWallFrontInverse()) {
+                    ctx.floor(p.south()); ctx.floor(p.south().above());
+                    ctx.floor(p.south().east()); ctx.floor(p.south().west());
+                    var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);
+                    node = ((mods.eln.node.transparent.TransparentNodeItem)d.parentItem).placeAt(d.newItemStack(), player, level, p, Direction.ZP);
+                    if (node == null) throw new IllegalStateException("Wall rendering fixture could not be placed: " + d.name);
+                } else node = ctx.placeTransparent(e.getKey(), p).node;
             } catch (RuntimeException ex) {
                 ctx.check("publish " + d.name + " placed", false, ex.getMessage());
                 GoldenSlotsCase.clear(ctx);

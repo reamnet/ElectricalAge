@@ -67,6 +67,11 @@ public class AutoMinerElement extends TransparentNodeElement {
         slowProcessList.add(voltageWatchdog.set(inPowerLoad).setUNominal(this.descriptor.nominalVoltage).set(exp));
     }
 
+    /** The native inlet and its auxiliary terminals remain owned by this machine. */
+    public NbtElectricalLoad cordInput() { return inPowerLoad; }
+    public double cordNominalVoltage() { return descriptor.nominalVoltage; }
+    public java.util.List<AutoMinerPowerNode> cordPowerNodes() { return java.util.Collections.unmodifiableList(powerNodeList); }
+
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
         return inPowerLoad;

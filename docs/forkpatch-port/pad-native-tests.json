@@ -1,0 +1,274 @@
+{
+  "sourceVersion": "3.0.77",
+  "portCommit": "aa4c7564",
+  "task": "runGameTestServer",
+  "selector": "eln:forkpatch_*",
+  "tests": 52,
+  "passed": 52,
+  "failures": 0,
+  "errors": 0,
+  "newPadCases": 6,
+  "existingCases": 46,
+  "cases": [
+    {
+      "classname": "eln:floor_3x4x3",
+      "name": "eln:forkpatch_converter_ticks",
+      "time": "1.459"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_standby_fuel_transactions",
+      "time": "0.882"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_cell_inventory",
+      "time": "0.946"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_floor",
+      "time": "1.867"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_hybrid_floor",
+      "time": "1.509"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_wall",
+      "time": "1.518"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_hybrid_wall",
+      "time": "1.525"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_floor_export",
+      "time": "1.535"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank16",
+      "time": "1.542"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank32",
+      "time": "1.537"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank48",
+      "time": "1.554"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank64",
+      "time": "1.564"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall16",
+      "time": "1.568"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall32",
+      "time": "1.574"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall48",
+      "time": "1.58"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall64",
+      "time": "1.585"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_inverter",
+      "time": "1.588"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_mppt",
+      "time": "1.588"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_ac_charger",
+      "time": "1.599"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_combiner",
+      "time": "1.603"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_disconnect",
+      "time": "1.601"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_relay_paired_leak_reset",
+      "time": "1.614"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_relay_wired_trip",
+      "time": "1.4"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_relay_overcurrent",
+      "time": "1.404"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_small",
+      "time": "1.883"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_medium",
+      "time": "1.788"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_large",
+      "time": "1.799"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_extra_large",
+      "time": "1.804"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_extreme",
+      "time": "1.808"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_145a_secondary",
+      "time": "1.595"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_core_guard",
+      "time": "1.592"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_primary_fuse_replace",
+      "time": "1.497"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_200a_short",
+      "time": "1.519"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_split_service_sag",
+      "time": "1.524"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_shared_service_guard",
+      "time": "1.53"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_floor_backup",
+      "time": "1.986"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_empty_unloaded",
+      "time": "1.973"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_wall_xn",
+      "time": "1.983"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_wall_xp",
+      "time": "1.989"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_wall_zn",
+      "time": "1.992"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_wall_zp",
+      "time": "1.995"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_shedder_headroom_retry",
+      "time": "1.908"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_ats_floor",
+      "time": "2.241"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_ats_wall",
+      "time": "2.237"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_shedder_wired_inhibit",
+      "time": "1.958"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_shedder_voltage_restore",
+      "time": "2.048"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_linked_reset_corrected_load",
+      "time": "2.428"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_linked_reset_still_faulted",
+      "time": "2.425"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_ups_standby_stop_restart",
+      "time": "2.449"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_ups_standby_empty_start",
+      "time": "2.457"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_isolated_transformer_open",
+      "time": "0.129"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_isolated_transformer_loaded",
+      "time": "0.073"
+    }
+  ]
+}

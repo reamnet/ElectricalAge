@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "I": "minecraft:iron_chain",
+    "M": "eln:machine_block",
+    "S": "eln:16_kwh_lifepo4_cell_stack"
+  },
+  "pattern": [
+    "SIS",
+    "CMC",
+    "SIS"
+  ],
+  "result": {
+    "id": "eln:64_kwh_wall_mounted_lifepo4_battery"
+  }
+}

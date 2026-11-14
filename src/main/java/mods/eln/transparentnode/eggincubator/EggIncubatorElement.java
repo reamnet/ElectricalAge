@@ -73,6 +73,10 @@ public class EggIncubatorElement extends TransparentNodeElement {
         return chicken;
     }
 
+    /** The cord feeds the existing power inlet; signal/thermal terminals remain independent. */
+    public NbtElectricalLoad cordInput() { return powerLoad; }
+    public double cordNominalVoltage() { return descriptor.nominalVoltage; }
+
     class EggIncubatorProcess implements IProcess, INBTTReady {
 
         double energy = 5000;

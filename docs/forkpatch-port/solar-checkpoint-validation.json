@@ -1,0 +1,50 @@
+{
+  "tests": 341,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 338,
+  "suites": 83,
+  "portCommit": "11fbdb68",
+  "scope": "Destination regression selection after solar cabinet integration",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "nativeSolarTests": 8,
+  "nativeSolarReport": "solar-cabinet-native-tests.json",
+  "datagen": {
+    "task": "runClientData",
+    "passed": true,
+    "newRecipes": 4,
+    "newAdvancements": 4,
+    "newItemDefinitions": 4,
+    "newBlockstates": 4,
+    "newItemModels": 8,
+    "newEnglishKeys": 8
+  },
+  "skippedCases": [
+    {
+      "name": "safetyValveAndSensor()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "time": "0.001",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "junctionsAndAdapters()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "time": "0.001",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "bikes()",
+      "classname": "mods.eln.client.entity.BikePreviewTest",
+      "time": "0.008",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    }
+  ],
+  "limits": [
+    "Default 200-case fluid corpus not run",
+    "Client geometry recorded through native facade; no interactive GPU screenshot",
+    "Configuration tool and source terrain-body batching remain pending",
+    "Full ForkPatch migration remains in progress"
+  ]
+}

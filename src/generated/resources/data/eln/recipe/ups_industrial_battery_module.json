@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:ups_lifepo4_battery_cell",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "PPP",
+    "BBB",
+    "PPP"
+  ],
+  "result": {
+    "id": "eln:ups_industrial_battery_module"
+  }
+}

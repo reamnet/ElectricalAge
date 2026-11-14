@@ -90,6 +90,8 @@ public final class Wp10aCases {
         cases.add(new ProtectedEmptyBatteryCase());
         cases.add(new LowVoltageDisconnectCase(false));
         cases.add(new TransformerCase());
+        cases.add(new TransformerCase(true, false));
+        cases.add(new TransformerCase(true, true));
         cases.add(new TransformerIncompleteCase());
         cases.add(new CapacitorCase());
         cases.add(new InductorCase());
@@ -759,12 +761,16 @@ public final class Wp10aCases {
      * U2 = U1 * n2/n1 = 25 V. Without a core both windings are open: only the primary side is checked.
      */
     static final class TransformerCase implements TestCase {
+        private final boolean isolated, loaded;
+        private mods.eln.sim.mna.component.Resistor testLoad;
+        TransformerCase() { this(false, false); }
+        TransformerCase(boolean isolated, boolean loaded) { this.isolated = isolated; this.loaded = loaded; }
         TransformerElement tr;
         SixNodeElement primary, secondary;
         boolean core;
 
         public String name() {
-            return "wp10a transformer";
+            return isolated ? "forkpatch isolated transformer " + (loaded ? "loaded" : "open") : "wp10a transformer";
         }
 
         public void build(TestContext ctx) {
@@ -779,6 +785,12 @@ public final class Wp10aCases {
             core = !c.isEmpty();
             if (core) tr.getInventory().setItem(TransformerContainer.ferromagneticSlotId, c);
             tr.getInventory().setChanged();
+            if (isolated) tr.networkUnserialize(ctx.stream(out -> out.writeByte(TransformerElement.toogleIsIsolator)));
+            if (loaded) {
+                testLoad = new mods.eln.sim.mna.component.Resistor(tr.getElectricalLoad(tr.front.right(), mods.eln.misc.LRDU.Down), null).setR(100);
+                tr.electricalComponentList.add(testLoad);
+                Eln.simulator.addElectricalComponent(testLoad);
+            }
         }
 
         public void measure(TestContext ctx) {
@@ -787,7 +799,8 @@ public final class Wp10aCases {
                 ctx.line("SKIP wp10a transformer ratio: Cheap Ferromagnetic Core not registered (wp12)");
                 return;
             }
-            ctx.checkValue("wp10a transformer secondary open-circuit voltage [V] (U1 * 1/2)", loadU(secondary), U / 2);
+            ctx.checkValue("wp10a transformer secondary voltage [V] (U1 * 1/2)", loadU(secondary), U / 2);
+            if (loaded) ctx.check("isolated transformer: real load receives power", testLoad.getP() > 5.0, "P=" + testLoad.getP());
         }
     }
 

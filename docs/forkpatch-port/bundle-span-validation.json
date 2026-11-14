@@ -1,0 +1,42 @@
+{
+  "nativeTests": 110,
+  "passed": 110,
+  "failures": 0,
+  "errors": 0,
+  "newBundleCases": 5,
+  "previousCases": 105,
+  "routingTests": 6,
+  "scope": "Matching multicore overhead jacket payment, per-core physical heat, reloads, damaged refunds, mismatched-core rejection, duplicate and creative clicks, explicit new length marker and legacy unmarked records.",
+  "cases": [
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_bundle_span_jacket_payment_reload_refund",
+      "time": "0.07"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_bundle_span_independent_power_and_heat",
+      "time": "0.069"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_bundle_span_rejects_mismatched_cores_without_payment",
+      "time": "0.073"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_bundle_span_old_payment_interpretation",
+      "time": "0.068"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_bundle_span_creative_payment",
+      "time": "0.1"
+    }
+  ],
+  "limits": [
+    "Service bundles retain three native scalar circuit equivalents.",
+    "Source wire manufacture, phase distribution hardware, advanced span appearance and complete source-world migration remain pending.",
+    "Full destination regressions will be rerun after the following distribution checkpoint."
+  ]
+}

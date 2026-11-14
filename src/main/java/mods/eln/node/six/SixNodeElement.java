@@ -124,6 +124,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
     public double ambient;
 
     public void connectJob() {
+        mods.eln.transparentnode.cord.CordSupport.beforeConnect(this);
         // If we are about to destruct ourselves, do not add any elements to the simulation anymore.
         if (sixNode != null && sixNode.isDestructing()) return;
 
@@ -184,6 +185,23 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
         sixNode.preparePacketForClient(stream, this);
     }
 
+    private mods.eln.transparentnode.cord.MachineCordDevice machineCord;
+    private boolean machineCordChecked;
+    public final mods.eln.transparentnode.cord.MachineCordDevice machineCord() {
+        if (!machineCordChecked) {
+            machineCordChecked = true;
+            machineCord = mods.eln.transparentnode.cord.CordSupport.create(this);
+        }
+        return machineCord;
+    }
+    /** Native voxel and legacy connections share the same plugged-inlet policy. */
+    public final ElectricalLoad connectionElectricalLoad(LRDU edge) {
+        return mods.eln.transparentnode.cord.CordSupport.load(this, getElectricalLoad(edge));
+    }
+    public final int connectionMask(LRDU edge) {
+        return mods.eln.transparentnode.cord.CordSupport.mask(this, getElectricalLoad(edge), getConnectionMask(edge));
+    }
+
     public abstract ElectricalLoad getElectricalLoad(LRDU lrdu);
 
     public abstract ThermalLoad getThermalLoad(LRDU lrdu);
@@ -199,12 +217,15 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
     private int itemStackDamageId;
 
     /** Bit in the header byte of networkSerialize: the element is burnt out. */
+    public static final int HEADER_CORD = 0x80;
     public static final int HEADER_BURNT = 0x40;
 
     public void networkSerialize(DataOutputStream stream) {
 
         try {
-            stream.writeByte(stubMask().mask + (front.dir << 4) + (isBurnt() ? HEADER_BURNT : 0));
+            boolean hasCord = mods.eln.transparentnode.cord.CordPublication.has(this);
+            stream.writeByte(stubMask().mask + (front.dir << 4) + (isBurnt() ? HEADER_BURNT : 0) + (hasCord ? HEADER_CORD : 0));
+            if (hasCord) mods.eln.transparentnode.cord.CordPublication.write(this, stream);
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -242,6 +263,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
     }
 
     public void destroy(ServerPlayer entityPlayer) {
+        mods.eln.transparentnode.cord.CordSupport.broken(this);
         if (useUuid()) {
             stop(uuid);
         }
@@ -284,6 +306,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
     }
 
     public void readFromNBT(CompoundTag nbt) {
+        mods.eln.transparentnode.cord.CordSupport.read(this, nbt);
         front = front.readFromNBT(nbt, "sixFront");
         burnt = nbt.contains("burnt") ? FailureCause.fromOrdinal(nbt.getByteOr("burnt", (byte) 0) - 1) : null;
         burntKind = burnt != null ? Failure.Kind.fromOrdinal(nbt.getByteOr("burntKind", (byte) 0)) : null;
@@ -299,6 +322,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
     }
 
     public void writeToNBT(CompoundTag nbt) {
+        mods.eln.transparentnode.cord.CordSupport.write(this, nbt);
         front.writeToNBT(nbt, "sixFront");
         if (burnt != null) {
             nbt.putByte("burnt", (byte) (burnt.ordinal() + 1));
@@ -324,6 +348,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
     }
 
     public void disconnectJob() {
+        mods.eln.transparentnode.cord.CordSupport.beforeDisconnect(this);
         Eln.simulator.removeAllElectricalComponent(electricalComponentList);
         Eln.simulator.removeAllThermalConnection(thermalConnectionList);
 
@@ -424,6 +449,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
      * should stop doing useful things).
      */
     public void connectBurntJob() {
+        mods.eln.transparentnode.cord.CordSupport.beforeDisconnect(this);
         if (sixNode != null && sixNode.isDestructing()) return;
         ambient = mods.eln.sim.Ambient.relative(sixNode.coordonate);
         mods.eln.sim.Ambient.stamp(thermalLoadList, ambient);

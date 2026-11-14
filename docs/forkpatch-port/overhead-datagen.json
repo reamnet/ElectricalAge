@@ -1,0 +1,14 @@
+{
+  "newBlockstates": 4,
+  "newItemDefinitions": 4,
+  "newItemModels": 8,
+  "newAdvancements": 4,
+  "newRecipes": 4,
+  "task": "runClientData",
+  "passed": true,
+  "newEnglishKeys": 8,
+  "existingIdentitiesRetained": 410,
+  "newIdentities": 4,
+  "existingModelsRetained": 187,
+  "newModels": 4
+}

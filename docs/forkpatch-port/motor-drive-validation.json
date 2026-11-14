@@ -1,0 +1,67 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Native scalar V/Hz motor drive; preserves native ServiceTap/LU solver, output impedance and actual winding heat. No AC phasor, appliance cord, source-world conversion or interactive client claims.",
+  "sourceIdentity": 8069,
+  "registryName": "variable_frequency_motor_drive",
+  "focused": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "command": "./gradlew --no-daemon --max-workers=2 :test --tests '*ForkPatchMotorDriveTest'"
+  },
+  "root": {
+    "tests": 598,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "suites": 110
+  },
+  "cad": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": 3
+  },
+  "fluidCases": 200,
+  "rootCommand": "./gradlew --no-daemon --max-workers=2 :test cad:test",
+  "native": {
+    "selected": 259,
+    "passed": 259,
+    "failed": 0,
+    "skipped": 0,
+    "filter": "eln:forkpatch_*",
+    "newEquipmentCases": 7,
+    "newFactoryCases": 1,
+    "command": "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_* --report /tmp/eln26-drive-all.xml --universe /workspace/ElectricalAge/run/drive-all'"
+  },
+  "datagen": {
+    "command": "./gradlew --no-daemon --max-workers=2 runClientData",
+    "identities": 629,
+    "priorIdentities": 628,
+    "changedExisting": [],
+    "englishEntries": 917,
+    "priorEnglishEntries": 915,
+    "changedEnglish": [],
+    "textureReferences": 445,
+    "missingTextures": []
+  },
+  "coverage": [
+    "Physical frequency ramp, stop and inhibit",
+    "Nominal short-circuit current bound from real impedance",
+    "Input sag, loaded voltage drop, forward/reverse power balance",
+    "Exact accepted winding heat and consumed energy, including last trip interval",
+    "Hot thermal latch cannot be reset by enabling; explicit cool reset",
+    "Saved settings/heat/latch and safe zero-frequency reload",
+    "Steady native LU reuse",
+    "Atomic invalid/truncated packets and settings-tool isolation",
+    "Four placed orientations, actual native factories, display, menu, geometry and node reload"
+  ],
+  "limitations": [
+    "Scalar V/Hz, not AC waveforms or an ideal current clamp",
+    "Appliance cords and full source-world conversion pending",
+    "Interactive GPU/audio/multiplayer checks pending",
+    "Historical unfiltered golden snapshot reconciliation pending"
+  ]
+}

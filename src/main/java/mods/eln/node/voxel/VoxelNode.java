@@ -1272,6 +1272,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             }
             else for (LRDU lrdu : LRDU.values()) tryConnectTwoNode(this, dir, lrdu, other, dir.getInverse(), lrdu.inverseIfLR());
         }
+        mods.eln.transparentnode.cord.OutletWiring.connect(this);
         // only blocks with pipes in the fluid world (it steps every device every tick)
         if (hasFluid()) FluidWorld.add(this);
         else FluidWorld.remove(this);
@@ -1318,11 +1319,11 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                     int along = fs.applyLRDU(l.left()).toEnumFacing().get3DDataValue();
                     int[] q = c.clone();
                     q[CablePart.normalAxis(along)] = 8 + (along % 2 == 0 ? -p.offset() : p.offset());
-                    out.add(new End(q[0], q[1], q[2], dv, p.mask(), burnt ? null : p.load(), null, f, l,
+                    out.add(new End(q[0], q[1], q[2], dv, mods.eln.transparentnode.cord.CordSupport.mask(e, p.load(), p.mask()), burnt ? null : mods.eln.transparentnode.cord.CordSupport.load(e, p.load()), null, f, l,
                         p.mask() == maskRs485 ? e.busPort(l) : null));
                 }
                 if (!pinned)
-                    out.add(new End(c[0], c[1], c[2], dv, e.getConnectionMask(l), burnt ? null : e.getElectricalLoad(l), burnt ? null : e.getThermalLoad(l), f, l,
+                    out.add(new End(c[0], c[1], c[2], dv, e.connectionMask(l), burnt ? null : e.connectionElectricalLoad(l), burnt ? null : e.getThermalLoad(l), f, l,
                         e.busPort(l)));
             }
         }
@@ -1356,12 +1357,12 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     static List<Pin> pins(mods.eln.node.six.SixNodeElement e) {
         List<Pin> out = new ArrayList<>();
         for (LRDU l : LRDU.values()) {
-            int mask = e.getConnectionMask(l);
+            int mask = e.connectionMask(l);
             if (mask == 0) continue;
             int[][] g = pinGeometry(e.sixNodeElementDescriptor, e.side, e.front, e.ox, e.oy, e.oz, l);
             int dv = e.side.applyLRDU(l).toEnumFacing().get3DDataValue();
             boolean burnt = e.isBurnt();
-            out.add(new Pin(e.slot, l, g[0], g[1], g[2], dv, mask, burnt ? null : e.getElectricalLoad(l), burnt ? null : e.getThermalLoad(l),
+            out.add(new Pin(e.slot, l, g[0], g[1], g[2], dv, mask, burnt ? null : e.connectionElectricalLoad(l), burnt ? null : e.getThermalLoad(l),
                 e.busPort(l)));
         }
         return out;
@@ -1376,9 +1377,10 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         return java.util.Arrays.equals(p.tip, q.tip) && q.out == (p.out ^ 1);
     }
 
-    private void link(ElectricalLoad a, ElectricalLoad b, ThermalLoad ta, ThermalLoad tb) {
-        if (a != null && b != null) {
-            var e = new mods.eln.sim.ElectricalConnection(a, b);
+    private void link(ElectricalLoad a, ElectricalLoad b, ThermalLoad ta, ThermalLoad tb) { link(a,b,ta,tb,0,0); }
+
+    private void link(ElectricalLoad a, ElectricalLoad b, ThermalLoad ta, ThermalLoad tb, int ma, int mb) {
+        for (var e : mods.eln.sixnode.electricalcable.CableConnections.create(a,ma,b,mb)) {
             Eln.simulator.addElectricalComponent(e);
             elementLinksE.add(e);
         }
@@ -1401,14 +1403,14 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                 for (CablePart c : k.parts) for (int[] b : c.boxes()) touch |= overlaps(b, p.contact);
                 if (!touch) continue;
                 sideElementList[p.slot].slotMask.set(p.lrdu, true);
-                link(p.load, k.load, p.thermal, k.thermal);
+                link(p.load, k.load, p.thermal, k.thermal,p.mask,k.mask());
                 mods.eln.bus.BusNet.link(p.bus, k.port);
             }
             for (Pin q : all) {
                 if (q.slot <= p.slot || !meet(p, q) || !compareConnectionMask(p.mask, q.mask)) continue;
                 sideElementList[p.slot].slotMask.set(p.lrdu, true);
                 sideElementList[q.slot].slotMask.set(q.lrdu, true);
-                link(p.load, q.load, p.thermal, q.thermal);
+                link(p.load, q.load, p.thermal, q.thermal,p.mask,q.mask);
                 mods.eln.bus.BusNet.link(p.bus, q.bus);
             }
         }
@@ -1428,7 +1430,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             var e = sideElementList[i];
             if (e == null) continue;
             int m = 0;
-            for (LRDU l : LRDU.values()) if (e.getConnectionMask(l) != 0) m |= 1 << l.toInt();
+            for (LRDU l : LRDU.values()) if (e.connectionMask(l) != 0) m |= 1 << l.toInt();
             sig = sig * 31 + i * 16L + m;
         }
         if (sig == publishedPins) return;
@@ -1481,9 +1483,10 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                 lrduElementMask.set(Direction.fromInt(a.elSide), a.lrdu, true);
                 mods.eln.bus.BusNet.link(a.bus, b.bus);
                 if (a.load == null || b.load == null) continue;
-                var e = new mods.eln.sim.ElectricalConnection(a.load, b.load);
-                Eln.simulator.addElectricalComponent(e);
-                elementLinksE.add(e);
+                for (var e : mods.eln.sixnode.electricalcable.CableConnections.create(a.load,a.mask,b.load,b.mask)) {
+                    Eln.simulator.addElectricalComponent(e);
+                    elementLinksE.add(e);
+                }
                 if (a.thermal != null && b.thermal != null) {
                     var t = new mods.eln.sim.ThermalConnection(a.thermal, b.thermal);
                     Eln.simulator.addThermalConnection(t);
@@ -1523,7 +1526,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                 sideElementList[p.slot].slotMask.set(p.lrdu, true);
                 v.sideElementList[q.slot].slotMask.set(q.lrdu, true);
                 if (p.bus != null && q.bus != null) mods.eln.bus.BusNet.link(p.bus, q.bus);
-                else across(dir, v, p.load, q.load, p.thermal, q.thermal);
+                else across(dir, v, p.load, q.load, p.thermal, q.thermal,p.mask,q.mask);
             }
         }
     }
@@ -1537,24 +1540,23 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             a.sideElementList[p.slot].slotMask.set(p.lrdu, true);
             // a bus pin on a bus cable: a bus link, not a NodeConnection (that would merge fault networks)
             if (p.bus != null && k.port != null) mods.eln.bus.BusNet.link(p.bus, k.port);
-            else if (a == this) across(dir, b, p.load, k.load, p.thermal, k.thermal);
-            else across(dir.getInverse(), a, k.load, p.load, k.thermal, p.thermal);
+            else if (a == this) across(dir, b, p.load, k.load, p.thermal, k.thermal,p.mask,k.mask());
+            else across(dir.getInverse(), a, k.load, p.load, k.thermal, p.thermal,k.mask(),p.mask);
         }
     }
 
     /** A link to the neighbour v toward dir, kept by both nodes (dropped when either disconnects). */
-    private void across(Direction dir, VoxelNode v, ElectricalLoad a, ElectricalLoad b, ThermalLoad ta, ThermalLoad tb) {
+    private void across(Direction dir, VoxelNode v, ElectricalLoad a, ElectricalLoad b, ThermalLoad ta, ThermalLoad tb,int ma,int mb) {
         mods.eln.sim.ElectricalConnection e = null;
         mods.eln.sim.ThermalConnection t = null;
-        if (a != null && b != null) {
-            e = new mods.eln.sim.ElectricalConnection(a, b);
-            Eln.simulator.addElectricalComponent(e);
-        }
         if (ta != null && tb != null) {
             t = new mods.eln.sim.ThermalConnection(ta, tb);
             Eln.simulator.addThermalConnection(t);
         }
         var c = new mods.eln.node.NodeConnection(this, dir, LRDU.Up, v, dir.getInverse(), LRDU.Up, e, t);
+        for (var connection : mods.eln.sixnode.electricalcable.CableConnections.create(a,ma,b,mb)) {
+            Eln.simulator.addElectricalComponent(connection);c.addElectricalConnection(connection);
+        }
         nodeConnectionList.add(c);
         v.nodeConnectionList.add(c);
         v.setNeedPublish(true);
@@ -1578,15 +1580,14 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                 }
                 mods.eln.sim.ElectricalConnection e = null;
                 mods.eln.sim.ThermalConnection t = null;
-                if (a.load != null && b.load != null) {
-                    e = new mods.eln.sim.ElectricalConnection(a.load, b.load);
-                    Eln.simulator.addElectricalComponent(e);
-                }
                 if (a.thermal != null && b.thermal != null) {
                     t = new mods.eln.sim.ThermalConnection(a.thermal, b.thermal);
                     Eln.simulator.addThermalConnection(t);
                 }
                 var c = new mods.eln.node.NodeConnection(this, dir, LRDU.Up, v, dir.getInverse(), LRDU.Up, e, t);
+                for (var connection : mods.eln.sixnode.electricalcable.CableConnections.create(a.load,a.mask,b.load,b.mask)) {
+                    Eln.simulator.addElectricalComponent(connection);c.addElectricalConnection(connection);
+                }
                 nodeConnectionList.add(c);
                 v.nodeConnectionList.add(c);
                 v.setNeedPublish(true);
@@ -1625,6 +1626,37 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
 
     /** The cable conductor taking EA's (side, edge) connection, or null: see connectJob. Not for voxel neighbours
      *  (exact points) nor through air (no outer-corner wraps). */
+    /** Narrow reconnect scan: non-electrical faces never need wall-outlet lookups. */
+    public int outletWallMounts() {
+        int mask = 0;
+        for (CableNet.Conductor k : cables.live())
+            if (k.face >= 0 && k.face < 6 && k.load != null && (k.mask() & maskElectricalPower) != 0)
+                mask |= 1 << Direction.fromEnumFacing(net.minecraft.core.Direction.from3DDataValue(k.face)).getInt();
+        return mask;
+    }
+
+    public record OutletWallPort(mods.eln.sim.ElectricalLoad load, int mask) {}
+
+    /** A real electrical cable boundary midpoint on a mounting face. No device-pin fallback,
+     * neighbour lookup or chunk load: the cell in front of the outlet may be empty. */
+    public OutletWallPort outletWallPort(Direction mount, Direction side) {
+        int mf = mount.toEnumFacing().get3DDataValue(), sf = side.toEnumFacing().get3DDataValue();
+        int ma = CablePart.normalAxis(mf), sa = CablePart.normalAxis(sf);
+        if (ma == sa) return null;
+        OutletWallPort found = null;
+        for (CableNet.Conductor k : cables.live()) {
+            if (k.face != mf || k.load == null || (k.mask() & maskElectricalPower) == 0) continue;
+            for (CablePart part : k.parts) for (CablePart.Port p : part.cablePorts()) {
+                if (p.face() != sf) continue;
+                int[] v = {p.x(), p.y(), p.z()};
+                if (v[3 - ma - sa] != 8) continue;
+                if (found != null && found.load() != k.load) return null;
+                found = new OutletWallPort(k.load, k.mask());
+            }
+        }
+        return found;
+    }
+
     private CableNet.Conductor legacy(Direction side, LRDU lrdu) {
         mods.eln.node.NodeBase other = getNeighbor(side);
         if (other == null || other instanceof VoxelNode) return null;

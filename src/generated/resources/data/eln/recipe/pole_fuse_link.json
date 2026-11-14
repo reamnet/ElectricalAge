@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " C ",
+    " P ",
+    " C "
+  ],
+  "result": {
+    "count": 3,
+    "id": "eln:pole_fuse_link"
+  }
+}

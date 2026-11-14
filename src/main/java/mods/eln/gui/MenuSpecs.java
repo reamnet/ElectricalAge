@@ -101,6 +101,8 @@ public final class MenuSpecs {
                 MEDIUM, tr("Copper cable slot"), tr("(Increases inductance)")),
             descriptor(mods.eln.sixnode.powerinductorsix.PowerInductorSixContainer.coreId, 132 + 20, 8, 1,
                 FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot"))).panel(176, 112, 8, 30));
+        put(mods.eln.sixnode.variableinductor.VariableInductorDescriptor.class, d -> MenuSpec.of(
+            descriptor(0, 132, 8, 1, FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot"))).panel(176, 112, 8, 30));
         put(mods.eln.sixnode.powersocket.PowerSocketDescriptor.class, d -> MenuSpec.of().panel(176, 144, 8, 60));
         put(mods.eln.sixnode.resistor.ResistorDescriptor.class, d -> resistor());
         // the thermal probe: built-in Copper Thermal Cable; the temperature probe: an optional mode slot
@@ -119,6 +121,45 @@ public final class MenuSpecs {
             descriptor(0, 184 / 2 - 12, 8, 1, BatteryItem.class, MEDIUM, tr("Portable battery slot"))) : MenuSpec.SCREEN_ONLY);
 
         // ---- transparent-node devices
+        put(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,278,0,0));
+        put(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
+        put(mods.eln.utility.DistributionPoleDescriptor.class,d->(d.getKind().getTwinLight()?MenuSpec.of(
+            filter(0,16,332,1,stack->false,MEDIUM,tr("Recover former transformer")),
+            filter(1,40,332,1,stack->false,MEDIUM,tr("Recover former fuse"))).publishing(1).panel(368,442,104,360)
+            :d.getKind().getTransformer()?MenuSpec.of(
+            filter(0,16,332,1,stack->mods.eln.utility.PoleHardware.INSTANCE.transformerWatts(stack)!=null,MEDIUM,tr("Installed pole transformer"))).publishing(1).panel(368,442,104,360)
+            :MenuSpec.SCREEN_ONLY.publishing(1).panel(368,d.getKind().getUnderground()?330:350,0,0)));
+        put(mods.eln.utility.HouseServiceDescriptor.class,d->(d.getMeter()?MenuSpec.of(
+            filter(0,8,42,1,stack->{var part=mods.eln.utility.UtilityItems.INSTANCE.part(stack);return part!=null && (part==1 || part==2);},MEDIUM,tr("Analog or smart service meter")))
+            :MenuSpec.SCREEN_ONLY).publishing(1).panel(320,240,80,158));
+        put(mods.eln.transparentnode.industrial.PadTransformerDescriptor.class,d->MenuSpec.of(
+            descriptor(0,16,180,1,mods.eln.utility.PoleTransformerDescriptor.class,MEDIUM,tr("Physical transformer capacity")),
+            filter(1,16,204,1,stack->{var fuse=mods.eln.utility.PoleHardware.INSTANCE.fuse(stack);return fuse!=null && !fuse.getSpent();},MEDIUM,tr("Primary fuse cartridge"))
+        ).publishing(1).panel(368,326,104,244));
+        put(mods.eln.transparentnode.industrial.MotorDriveDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
+        put(mods.eln.transparentnode.industrial.ScadaDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
+        put(mods.eln.transparentnode.industrial.SurgeArresterDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
+        put(mods.eln.transparentnode.industrial.WelderDescriptor.class,d->MenuSpec.of(
+            filter(0,24,164,64,stack->mods.eln.transparentnode.industrial.WelderInventory.Companion.workpiece(stack),MEDIUM,tr("Iron ingot or damaged tool")),
+            filter(1,60,164,64,stack->stack.is(net.minecraft.world.item.Items.IRON_INGOT),MEDIUM,tr("Iron ingot")),output(2,114,164,MEDIUM)).publishing(1).panel(368,350,104,260));
+        put(mods.eln.transparentnode.industrial.ChargerDescriptor.class,d->MenuSpec.of(
+            filter(0,24,164,1,stack->mods.eln.transparentnode.industrial.ChargerInventory.Companion.battery(stack)!=null,MEDIUM,tr("Removable battery"))).publishing(1).panel(368,350,104,260));
+        put(mods.eln.transparentnode.industrial.LoadBankDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
+        put(mods.eln.transparentnode.industrial.IndustrialDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,292,0,0));
+        put(mods.eln.transparentnode.ups.UpsDescriptor.class, d -> {
+            if(d.getCompact()) {
+                SlotSpec[] cells=new SlotSpec[4];
+                for(int i=0;i<4;i++)cells[i]=filter(i,16+i*18,130,1,stack -> mods.eln.transparentnode.ups.UpsBatteryBankKt.upsBattery(stack)!=null,MEDIUM,tr("Portable battery or larger UPS cell"));
+                return MenuSpec.of(cells).publishing(1).panel(320,240,80,158);
+            }
+            SlotSpec[] cells=new SlotSpec[48];
+            for(int i=0;i<48;i++)cells[i]=filter(i,16+(i%8)*18+(i/24)*144,154+(i%24/8)*18,1,
+                stack -> mods.eln.transparentnode.ups.UpsBatteryBankKt.upsBattery(stack)!=null,MEDIUM,tr("Portable battery or larger UPS cell"));
+            return MenuSpec.of(cells).publishing(1).panel(320,314,80,232);
+        });
+        put(mods.eln.transparentnode.standby.BackupDescriptor.class, d -> MenuSpec.SCREEN_ONLY.publishing(1).panel(320, 256, 0, 0));
+        put(mods.eln.transparentnode.offgrid.OffGridDescriptor.class, d -> MenuSpec.SCREEN_ONLY.publishing(1).panel(320, 240, 0, 0));
+        put(mods.eln.transparentnode.renewable.RenewableDescriptor.class, d -> MenuSpec.SCREEN_ONLY.publishing(1).panel(300, 238, 0, 0));
         put(mods.eln.transparentnode.autominer.AutoMinerDescriptor.class, d -> MenuSpec.of(
             descriptor(mods.eln.transparentnode.autominer.AutoMinerContainer.electricalDrillSlotId, 134, 8, 1,
                 ElectricalDrillDescriptor.class, MEDIUM, tr("Drill slot")),
@@ -191,6 +232,14 @@ public final class MenuSpecs {
         put(mods.eln.transparentnode.solarpanel.SolarPanelDescriptor.class, d -> !d.canRotate ? MenuSpec.SCREEN_ONLY : MenuSpec.of(
             descriptor(mods.eln.transparentnode.solarpanel.SolarPanelContainer.trackerSlotId, 176 / 2 - 20, 35, 1,
                 SolarTrackerDescriptor.class, MEDIUM, tr("Solar tracker slot"))).publishing(0));
+        put(mods.eln.transparentnode.wiremachine.WireMachineDescriptor.class, mods.eln.transparentnode.wiremachine.WireMachineMenus::spec);
+        put(mods.eln.transparentnode.cord.OutletDescriptor.class,d -> MenuSpec.SCREEN_ONLY.panel(300,176,0,0));
+        put(mods.eln.transparentnode.fabricator.FabricatorDescriptor.class, mods.eln.transparentnode.fabricator.FabricatorMenus::spec);
+        put(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, d -> MenuSpec.of(
+            filter(0, 16, 158, 16, st -> mods.eln.transparentnode.converter.DcDcWinding.of(st) != null, MEDIUM, tr("Primary winding")),
+            filter(1, 40, 158, 16, st -> mods.eln.transparentnode.converter.DcDcWinding.of(st) != null, MEDIUM, tr("Secondary winding")),
+            descriptor(2, 64, 158, 1, FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot")),
+            descriptor(3, 88, 158, 1, CaseItemDescriptor.class, MEDIUM, tr("Casing slot"))).panel(368, 294, 8, 210));
         put(mods.eln.transparentnode.transformer.TransformerDescriptor.class, d -> MenuSpec.of(
             six(mods.eln.transparentnode.transformer.TransformerContainer.primaryCableSlotId, 58, 30, 4, CABLE, MEDIUM,
                 tr("Electrical cable slot")),

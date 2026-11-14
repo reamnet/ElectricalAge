@@ -69,13 +69,15 @@ public class TransparentNodeBlock extends NodeBlock implements net.minecraft.wor
         return shape;
     }
 
-    /** Its model's hitbox turned to the device's front (read from the block entity, as SixNodeBlock reads its faces),
+    /** Its descriptor's native shape turned to the device's front (read from the block entity, as SixNodeBlock reads its faces),
      *  if it has one and the front is known; else shape(). */
     net.minecraft.world.phys.shapes.VoxelShape shape(net.minecraft.world.level.BlockGetter level, BlockPos pos) {
-        ModelHitbox h = descriptor.modelHitbox();
-        if (h != null && level.getBlockEntity(pos) instanceof TransparentNodeEntity e) {
+        if (descriptor.hasOrientedShape() && level.getBlockEntity(pos) instanceof TransparentNodeEntity e) {
             mods.eln.misc.Direction front = e.front();
-            if (front != null) return h.shape(front);
+            if (front != null) {
+                var oriented = descriptor.orientedShape(front);
+                if (oriented != null) return oriented;
+            }
         }
         return shape();
     }

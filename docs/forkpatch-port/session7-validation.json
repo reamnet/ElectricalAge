@@ -1,0 +1,77 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Native surface outlets/strips and nine cord ratings, passive fixed-machine inputs, paid item ownership and native voxel isolation; recessed walls, portable carry and compact UPS pending",
+  "root": {
+    "suites": 122,
+    "tests": 673,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "native": {
+    "selected": 1123,
+    "passed": 1121,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 657,
+      "failed": 0
+    }
+  },
+  "historicalGoldenAssertions": 467,
+  "catalog": {
+    "identities": 677,
+    "englishEntries": 995,
+    "resolvedNativeItemTextures": 493,
+    "previousIdentityCount": 658,
+    "previousEnglishCount": 966,
+    "previousIdentitiesChanged": [],
+    "previousEnglishEntriesChanged": []
+  },
+  "artifact": {
+    "path": "build/libs/eln-26.3-0.1.0-port.jar",
+    "bytes": 30815059,
+    "sha256": "5350ab2faff80e52adca39f2d644dffe7d093d98a427c5d29ecbef4d7a797935",
+    "allPrimaryOutputFilesChecked": {
+      "java": 1770,
+      "kotlin": 832
+    },
+    "scopedOutputFilesChecked": 48,
+    "processedResourcesChecked": 4951,
+    "allCheckedBytesMatch": true
+  },
+  "sourceUnchanged": true,
+  "gradleAndWrapperUnchanged": true,
+  "commands": [
+    "./gradlew --no-daemon --max-workers=2 :build cad:test runClientData runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_cord_* --report /tmp/eln26-session7-cord8.xml --universe /workspace/ElectricalAge/run/session7-cord8'",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report /tmp/eln26-session7-all-final2.xml --universe /workspace/ElectricalAge/run/session7-all-final2'",
+    "python3 tools/port/audit_imports.py --source ../ELN1.21.1ForkPatch"
+  ],
+  "rootLog": "session7-final-build2.log",
+  "nativeLog": "session7-all-native-final2.log",
+  "limitations": [
+    "Unfiltered historical descriptor and slot goldens still fail; no expected references, skip lists or tolerances changed.",
+    "Full source-world conversion, remaining equipment/integrations and shared-code parity remain pending.",
+    "Headless native/mesh/server checks do not establish interactive client/GPU/audio/multiplayer, JEI runtime or whole-mod comparative performance.",
+    "Development artifact integrity verified; this is not a finished release."
+  ],
+  "focusedNative": {
+    "selected": 52,
+    "passed": 52,
+    "report": "/tmp/eln26-session7-cord8.xml",
+    "log": "/workspace/.cloud-setup/session7-final-build2.log"
+  },
+  "productionCommit": "43715fdc384e9953a09fd9d4772d2b7192053d6a",
+  "productionTrees": {
+    "src/main": "40fd982a251d793959f42300ad48cf92096dcc36",
+    "src/generated": "9ac1b63746a42a8aa9e7965e2ee5864c9c822c1b"
+  }
+}

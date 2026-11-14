@@ -26,6 +26,7 @@ public abstract class SixNodeElementRender {
     public LRDUMask connectedSide = new LRDUMask();
     /** The element burnt out (see SixNodeElement.burn); SixNodeRender scorches it. */
     public boolean burnt;
+    public final mods.eln.transparentnode.cord.CordDisplay cordDisplay = new mods.eln.transparentnode.cord.CordDisplay();
     int glList, cableList[];
     boolean cableListReady[] = {false, false, false, false};
     boolean glListReady = false;
@@ -250,6 +251,8 @@ public abstract class SixNodeElementRender {
             connectedSide.set(b & 0xF);
             front = front.fromInt((b >> 4) & 0x3);
             burnt = (b & SixNodeElement.HEADER_BURNT) != 0;
+            if ((b & SixNodeElement.HEADER_CORD) != 0) cordDisplay.read(stream);
+            else cordDisplay.clear();
 
             needRedraw = true;
 
@@ -284,6 +287,7 @@ public abstract class SixNodeElementRender {
     }
 
     public void destructor() {
+        cordDisplay.clear();
         for (mods.eln.sound.LoopedSound l : loopedSounds) l.setActive(false);
         if (glListEnable()) {
             UtilsClient.glDeleteListsSafe(glList);

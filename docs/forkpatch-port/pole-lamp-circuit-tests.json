@@ -1,0 +1,23 @@
+{
+  "tests": 10,
+  "passed": 10,
+  "errors": 0,
+  "failures": 0,
+  "cases": [
+    "manualOffOpensTheLoadAndExtinguishesLight",
+    "enabledLampDrawsItsActualSeventyWatts",
+    "sourceUtilityLampSettingsRoundTripAndRejectBadAim",
+    "malformedSavedAimIsClampedToValidDefaults",
+    "heightYawAndPitchUseTheSameFixturePivotAsTheLightPosition",
+    "voltageSagDimsTheLampAndReducesPower",
+    "sourceTransformerLampKeysRemainReadable",
+    "unpoweredLampCannotInventLight",
+    "duskControlOnlyConsumesPowerAtNight",
+    "nativeLuFactorsStayCachedWhileBrightnessIsSteady"
+  ],
+  "limits": [
+    "Paid streetlight attachments currently support the adapted distribution poles. Legacy ElectricalPole/Transmission attachment adapters remain pending.",
+    "Five hidden source built-in lamp variants are retained for older worlds and deliberately have no new crafting recipes.",
+    "Adaptive service-rack alignment, remaining ten source pole variants, source-world migration and interactive GPU validation remain pending."
+  ]
+}

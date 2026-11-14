@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eln:item/16_kwh_lifepo4_cell_stack"
+  }
+}

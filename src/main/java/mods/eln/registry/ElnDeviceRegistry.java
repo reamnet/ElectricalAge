@@ -74,9 +74,68 @@ public final class ElnDeviceRegistry {
         registerGround(2);
         registerElectricalSource(3);
         registerElectricalCable(32);
+        mods.eln.sixnode.electricalcable.UtilityCables.register();
+        for (var kind : mods.eln.transparentnode.wiremachine.WireMachineKind.values()) transparentNodeItem.addDescriptor(kind.getId(), new mods.eln.transparentnode.wiremachine.WireMachineDescriptor(TR_NAME(Type.NONE,kind.getTitle()),kind));
+        sharedItem.addElement(7552,new mods.eln.item.wiremachine.RollerWheelDescriptor(TR_NAME(Type.NONE,"Iron Roller Wheel"),"ironrollerwheel"));
+        sharedItem.addElement(7553,new mods.eln.item.wiremachine.RollerWheelDescriptor(TR_NAME(Type.NONE,"Steel Roller Wheel"),"steelrollerwheel"));
+        sharedItem.addElement(7554,new mods.eln.item.wiremachine.RollerWheelDescriptor(TR_NAME(Type.NONE,"Aluminum Roller Wheel"),"aluminumrollerwheel"));
+        var bundle=new mods.eln.item.wiremachine.WoundWireBundleDescriptor(TR_NAME(Type.NONE,"Wound Wire Bundle"));
+        sharedItem.addElement(7556,bundle);mods.eln.transparentnode.wiremachine.WireProduction.INSTANCE.setBundle(bundle);
+
+        sharedItem.addElement(mods.eln.item.wiresnips.WireSnipsDescriptor.ID, new mods.eln.item.wiresnips.WireSnipsDescriptor(TR_NAME(Type.NONE, "Wire Snips")));
         // resistors (96): Wp9aContent.registerPassiveComponent, with the rest of that group
+        transparentNodeItem.addDescriptor(4480,new mods.eln.transparentnode.fabricator.FabricatorDescriptor(TR_NAME(Type.NONE,"Fabricator")));
+        String[] fabricationParts={"Silicon Wafer","Transistor","NTC Thermistor","Nibble Memory Chip","Arithmetic Logic Unit"};
+        for(int i=0;i<fabricationParts.length;i++) sharedItem.addElement(8064+i,new mods.eln.generic.GenericItemUsingDamageDescriptor(TR_NAME(Type.NONE,fabricationParts[i]),fabricationParts[i]));
+        transparentNodeItem.addDescriptor(7968, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V120, false));
+        sharedItem.addElement(7874, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"Flexible Appliance Cord"), mods.eln.transparentnode.cord.CordRating.V120));
+        transparentNodeItem.addDescriptor(7969, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V240, false));
+        sharedItem.addElement(7875, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"240 V Appliance Cord"), mods.eln.transparentnode.cord.CordRating.V240));
+        transparentNodeItem.addDescriptor(8000, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V24, false));
+        sharedItem.addElement(8000, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"24 V Machine Cord"), mods.eln.transparentnode.cord.CordRating.V24));
+        transparentNodeItem.addDescriptor(8001, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V48, false));
+        sharedItem.addElement(8001, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"48 V Machine Cord"), mods.eln.transparentnode.cord.CordRating.V48));
+        transparentNodeItem.addDescriptor(8002, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V200, false));
+        sharedItem.addElement(8002, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"200 V Workshop Cord"), mods.eln.transparentnode.cord.CordRating.V200));
+        transparentNodeItem.addDescriptor(8003, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V480, false));
+        sharedItem.addElement(8003, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"480 V Industrial Cord"), mods.eln.transparentnode.cord.CordRating.V480));
+        transparentNodeItem.addDescriptor(8004, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V800, false));
+        sharedItem.addElement(8004, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"800 V Industrial Cord"), mods.eln.transparentnode.cord.CordRating.V800));
+        transparentNodeItem.addDescriptor(8005, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V3200, false));
+        sharedItem.addElement(8005, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"3.2 kV Industrial Cord"), mods.eln.transparentnode.cord.CordRating.V3200));
+        transparentNodeItem.addDescriptor(8012, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V240_30, false));
+        sharedItem.addElement(8006, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"240 V 30 A Dryer Cord"), mods.eln.transparentnode.cord.CordRating.V240_30));
+        transparentNodeItem.addDescriptor(7991, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V120, true));
         registerBattery(16);
         registerSolarPanel(48);
+        registerForkPatchSolar();
+        registerForkPatchStandby();
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.ID,new mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor());
+        for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values())transparentNodeItem.addDescriptor((125<<6)+kind.getSubId(),new mods.eln.transparentnode.switchgear.SwitchgearDescriptor(kind));
+        mods.eln.utility.DistributionPoles.register();
+        transparentNodeItem.addDescriptor(50+(124<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false,mods.eln.utility.ServiceMastStyle.STANDARD));
+        int mastIndex=0;
+        for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK))
+            transparentNodeItem.addDescriptor(28+mastIndex+++(125<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false,mast));
+        transparentNodeItem.addDescriptor(51+(124<<6),new mods.eln.utility.HouseServiceDescriptor(true,false,false));
+        transparentNodeItem.addDescriptor(56+(124<<6),new mods.eln.utility.HouseServiceDescriptor(false,true,false));
+        transparentNodeItem.addDescriptor(0+(127<<6),new mods.eln.utility.HouseServiceDescriptor(true,false,true));
+        transparentNodeItem.addDescriptor(1+(127<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false));
+        transparentNodeItem.addDescriptor(2+(127<<6),new mods.eln.utility.UndergroundHandholeDescriptor());
+        transparentNodeItem.addDescriptor(4+(126<<6),new mods.eln.transparentnode.industrial.PadTransformerDescriptor());
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.MotorDriveDescriptor.ID,new mods.eln.transparentnode.industrial.MotorDriveDescriptor());
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.ScadaDescriptor.ID,new mods.eln.transparentnode.industrial.ScadaDescriptor());
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.SurgeArresterDescriptor.ID,new mods.eln.transparentnode.industrial.SurgeArresterDescriptor());
+        mods.eln.transparentnode.industrial.WorkshopParts.INSTANCE.register();
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.WelderDescriptor.ID,new mods.eln.transparentnode.industrial.WelderDescriptor());
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.ChargerDescriptor.ID,new mods.eln.transparentnode.industrial.ChargerDescriptor());
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.LoadBankDescriptor.ID,new mods.eln.transparentnode.industrial.LoadBankDescriptor());
+        for(var kind: java.util.List.of(mods.eln.transparentnode.industrial.IndustrialKind.RELAY,mods.eln.transparentnode.industrial.IndustrialKind.SHEDDER))
+            transparentNodeItem.addDescriptor((126<<6)+kind.ordinal(),new mods.eln.transparentnode.industrial.IndustrialDescriptor(kind));
+        transparentNodeItem.addDescriptor((124<<6)+11,new mods.eln.transparentnode.ups.UpsDescriptor(TR_NAME(Type.NONE,"Programmable UPS"),false,false));
+        transparentNodeItem.addDescriptor((126<<6)+12,new mods.eln.transparentnode.ups.UpsDescriptor(TR_NAME(Type.NONE,"Four Cell Plug-in UPS"),false,true));
+        transparentNodeItem.addDescriptor((124<<6)+17,new mods.eln.transparentnode.ups.UpsDescriptor(TR_NAME(Type.NONE,"Wall-mounted Programmable UPS"),true,false));
+        mods.eln.transparentnode.offgrid.OffGridDevices.INSTANCE.register();
         registerLampSocket(64);
         registerLampSupply(65);
         registerLampItem(4);
@@ -468,22 +527,41 @@ public final class ElnDeviceRegistry {
     }
 
     /** From 1.12 Wp10bContent. */
+    /** Source 3.0.77 identities, unused in the destination's existing registry. */
+    private static void registerForkPatchStandby() {
+        transparentNodeItem.addDescriptor((124<<6)+6,new mods.eln.transparentnode.standby.BackupDescriptor(TR_NAME(Type.NONE,"Automatic Transfer Switch"),false,false,mods.eln.transparentnode.standby.GeneratorTier.SMALL));
+        transparentNodeItem.addDescriptor((124<<6)+14,new mods.eln.transparentnode.standby.BackupDescriptor(TR_NAME(Type.NONE,"Wall-mounted Automatic Transfer Switch"),false,true,mods.eln.transparentnode.standby.GeneratorTier.SMALL));
+        for(var tier:mods.eln.transparentnode.standby.GeneratorTier.values()) {
+            int id=(tier==mods.eln.transparentnode.standby.GeneratorTier.SMALL?124:125)<<6;
+            transparentNodeItem.addDescriptor(id+tier.getSubId(),new mods.eln.transparentnode.standby.BackupDescriptor(tier.getTitle(),true,false,tier));
+        }
+    }
+
+    private static void registerForkPatchSolar() {
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.renewable.LargeRenewableDescriptor.WIND_ID,new mods.eln.transparentnode.renewable.LargeRenewableDescriptor(false));
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.renewable.LargeRenewableDescriptor.WATER_ID,new mods.eln.transparentnode.renewable.LargeRenewableDescriptor(true));
+        int base = 124 << 6;
+        transparentNodeItem.addDescriptor(base + 8, new mods.eln.transparentnode.renewable.RenewableDescriptor(
+            TR_NAME(Type.NONE, "MPPT Solar Controller"), mods.eln.transparentnode.renewable.RenewableKind.MPPT, false));
+        transparentNodeItem.addDescriptor(base + 9, new mods.eln.transparentnode.renewable.RenewableDescriptor(
+            TR_NAME(Type.NONE, "Hybrid Solar Inverter"), mods.eln.transparentnode.renewable.RenewableKind.HYBRID, false));
+        transparentNodeItem.addDescriptor(base + 15, new mods.eln.transparentnode.renewable.RenewableDescriptor(
+            TR_NAME(Type.NONE, "Wall-mounted MPPT Solar Controller"), mods.eln.transparentnode.renewable.RenewableKind.MPPT, true));
+        transparentNodeItem.addDescriptor(base + 16, new mods.eln.transparentnode.renewable.RenewableDescriptor(
+            TR_NAME(Type.NONE, "Wall-mounted Hybrid Solar Inverter"), mods.eln.transparentnode.renewable.RenewableKind.HYBRID, true));
+    }
+
     public static void registerSolarPanel(int id) {
         int subId, completId;
         GhostGroup ghostGroup;
         String name;
 
-        FunctionTable diodeIfUBase;
-        diodeIfUBase = new FunctionTableYProtect(new double[]{0.0, 0.002,
-            0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04, 0.045,
-            0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.13, 1.0},
-            1.0, 0, 1.0);
-
-        FunctionTable solarIfSBase;
-        solarIfSBase = new FunctionTable(new double[]{0.0, 0.1, 0.4, 0.6,
-            0.8, 1.0}, 1);
-
-        double LVSolarU = 59;
+        // ForkPatch 3.0.77: a small module and a 3-series / 2-parallel large module.
+        // Keep the destination's configured generation multiplier on the currents.
+        double smallVoc = 37, smallVmp = 30;
+        double smallImp = 8 * solarPanelPowerFactor, smallIsc = 8.6 * solarPanelPowerFactor;
+        double largeVoc = 111, largeVmp = 90;
+        double largeImp = 16 * solarPanelPowerFactor, largeIsc = 17.2 * solarPanelPowerFactor;
 
         {
             subId = 1;
@@ -498,7 +576,7 @@ public final class ElnDeviceRegistry {
                 // solarOffsetX,int solarOffsetY,int
                 // solarOffsetZ,
                 // FunctionTable solarIfSBase,
-                null, LVSolarU / 4, 65.0 * solarPanelPowerFactor,// double electricalUmax,double
+                null, smallVoc, smallVmp, smallImp, smallIsc,// double electricalUmax,double
                 // electricalPmax,
                 0.01,// ,double electricalDropFactor
                 Math.PI / 2, Math.PI / 2 // alphaMin alphaMax
@@ -519,7 +597,7 @@ public final class ElnDeviceRegistry {
                 // solarOffsetX,int solarOffsetY,int
                 // solarOffsetZ,
                 // FunctionTable solarIfSBase,
-                null, LVSolarU / 4, solarPanelBasePower * solarPanelPowerFactor,// double electricalUmax,double
+                null, smallVoc, smallVmp, smallImp, smallIsc,// double electricalUmax,double
                 // electricalPmax,
                 0.01,// ,double electricalDropFactor
                 Math.PI / 4, Math.PI / 4 * 3 // alphaMin alphaMax
@@ -540,7 +618,7 @@ public final class ElnDeviceRegistry {
                 obj.getObj("bigSolarPanel"), meduimVoltageCableDescriptor.render,
                 ghostGroup, 1, 1, 0,
                 groundCoordinate,
-                LVSolarU * 2, solarPanelBasePower * solarPanelPowerFactor * 8,
+                largeVoc, largeVmp, largeImp, largeIsc,
                 0.01,
                 Math.PI / 2, Math.PI / 2
             );
@@ -561,7 +639,7 @@ public final class ElnDeviceRegistry {
                 obj.getObj("bigSolarPanelrot"), meduimVoltageCableDescriptor.render,
                 ghostGroup, 1, 1, 1,
                 groundCoordinate,
-                LVSolarU * 2, solarPanelBasePower * solarPanelPowerFactor * 8,
+                largeVoc, largeVmp, largeImp, largeIsc,
                 0.01,
                 Math.PI / 8 * 3, Math.PI / 8 * 5
             );

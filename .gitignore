@@ -14,6 +14,7 @@ eclipse
 # gradle
 .gradle
 .gradle/
+.kotlin/
 # idea
 .idea
 *.iml
@@ -25,6 +26,7 @@ eclipse
 !golden/**/*.json
 !src/generated/**/*.json
 !tools/**/*.json
+!docs/forkpatch-port/**/*.json
 # kate
 *.kate-swp
 *.launch

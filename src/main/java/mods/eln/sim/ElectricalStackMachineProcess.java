@@ -59,6 +59,13 @@ public class ElectricalStackMachineProcess implements IProcess {
         setResistorValue(resistorValue);
     }
 
+    /** Only a solved electrical step can pay work; changing readiness/resistance cannot sample old voltages. */
+    public void acceptedElectricalStep(double time) {
+        if (!smeltInProcess || !Double.isFinite(time) || time <= 0) return;
+        double power = getPower();
+        if (Double.isFinite(power) && power > 0) energyCounter += power * time;
+    }
+
     @Override
     public void process(double time) {
         ItemStack itemStackIn = inventory.getItem(inputSlotId);
@@ -73,7 +80,6 @@ public class ElectricalStackMachineProcess implements IProcess {
         }
 
         if (smeltInProcess) {
-            energyCounter += getPower() * time;
             if (energyCounter > energyNeeded) {
                 energyCounter -= energyNeeded;
                 smeltItem();

@@ -1,0 +1,113 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "previousCheckpoint": "b033290c1de4cef6ae11c97bbeb4071c87220b28",
+  "status": "production-build-root-cad-focused-and-all715-port-native-cases-pass-two-historical-goldens-remain",
+  "focusedNative": {
+    "selected": 35,
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0,
+    "report": "/workspace/setup/recessed-focused-final.xml"
+  },
+  "client": {
+    "backend": "Vulkan",
+    "driver": "Mesa 25.0.7 llvmpipe Vulkan 1.4.305",
+    "resolution": [
+      1280,
+      720
+    ],
+    "guiScale": "automatic",
+    "survivalPlacement": true,
+    "horizontalRotation": true,
+    "separateJvmReload": true,
+    "resourceReload": true,
+    "compactControlsVisible": true,
+    "wallPropertiesRestored": true,
+    "accessibleSingleOutletReturn": true,
+    "returnedItemData": {
+      "outletHorizontal": true
+    },
+    "wallDataInReturnedItem": false,
+    "originalUnplacedOutletsAfterRemoval": 3,
+    "recoveredOutletsAfterRemoval": 1,
+    "totalOutletsAfterRemoval": 4
+  },
+  "limitations": [
+    "Two historical descriptor/slot golden failures remain; no expected snapshots or existing skips/tolerances were changed.",
+    "One local software-Vulkan client; no hardware OpenGL/Vulkan, multiplayer, audio or universal resource-pack/tint parity claim.",
+    "Source-world conversion, carry and compact UPS remain unfinished."
+  ],
+  "productionCommit": "f5e867bb1ad9d26939d20552edd25be474374796",
+  "productionTrees": {
+    "src/main": "3fd3f4521a3e206d23c4163244496a40553ddaf7",
+    "src/generated": "9ac1b63746a42a8aa9e7965e2ee5864c9c822c1b",
+    "src/test": "bafdb9af37d0d55bb554bc3ecf3a4f323c8b8069"
+  },
+  "root": {
+    "tests": 674,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "suites": 122,
+    "passed": 671
+  },
+  "cad": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": 3,
+    "passed": 15
+  },
+  "native": {
+    "selected": 1181,
+    "passed": 1179,
+    "failed": 2,
+    "failedCases": [
+      "eln:golden_descriptors",
+      "eln:golden_slots"
+    ],
+    "skipped": 0,
+    "portCases": {
+      "selected": 715,
+      "passed": 715,
+      "failed": 0
+    },
+    "report": "/workspace/setup/recessed-production-all.xml"
+  },
+  "historicalGoldenFailedAssertions": 467,
+  "artifact": {
+    "path": "build/libs/eln-26.3-0.1.0-port.jar",
+    "bytes": 30925612,
+    "sha256": "6c43cad5d39b645222aa7108eee21447195fbdf9225c2a27de7a32c460976165",
+    "checkedFiles": {
+      "java": 1774,
+      "kotlin": 860,
+      "resources": 4951
+    },
+    "allCheckedBytesMatch": true
+  },
+  "sourceUnchanged": true,
+  "gradleAndWrapperUnchanged": true,
+  "registryAndGeneratedResourcesUnchanged": true,
+  "fluidCases": 200,
+  "provenance": {
+    "ledgerEntries": 545,
+    "passed": true,
+    "report": "/workspace/setup/recessed-production-import-audit.json"
+  },
+  "commands": [
+    "source /workspace/setup/activate.sh",
+    "./gradlew --no-daemon --max-workers=2 :build :cad:test",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_recessed_* --report /workspace/setup/recessed-focused-final.xml --universe /workspace/ElectricalAge/run/recessed-focused-final'",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report /workspace/setup/recessed-production-all.xml --universe /workspace/ElectricalAge/run/recessed-production-all'",
+    "python3 tools/port/audit_imports.py --source ../ELN1.21.1ForkPatch --output /workspace/setup/recessed-production-import-audit.json",
+    "git diff --check"
+  ],
+  "logs": {
+    "root": "/workspace/setup/recessed-production-build.log",
+    "native": "/workspace/setup/recessed-production-all.log",
+    "client": "/workspace/setup/recessed-client6.log",
+    "resourceReloadClient": "/workspace/setup/recessed-client4.log"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "tests": 461,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 458,
+  "suites": 94,
+  "portCommit": "234329e6",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "wireCircuitTests": 23,
+  "nativeTests": 94,
+  "newWireCases": 9,
+  "limits": [
+    "New spools are creative-accessible; source wire-processing machines and survival manufacturing recipes remain pending.",
+    "Multicore ids 2268..2327 remain reserved; independent multicore topology is not registered as a placeholder.",
+    "Device-inventory cable trimming, snips/config-copy integration, player-contact shock hooks, room coupling and advanced span appearance remain pending.",
+    "Default 200-case fluid corpus and interactive client GPU/audio validation were not run.",
+    "New distribution poles, remaining industrial/appliance/vehicle hardware and complete source-world migration remain in progress."
+  ]
+}

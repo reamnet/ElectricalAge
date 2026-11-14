@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eln:item/single_phase_automatic_voltage_regulator_pole"
+  }
+}

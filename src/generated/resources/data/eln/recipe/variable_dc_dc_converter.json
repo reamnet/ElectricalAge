@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "#c:circuits/basic",
+    "C": "eln:copper_cable",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "CBC",
+    "III"
+  ],
+  "result": {
+    "id": "eln:variable_dc_dc_converter"
+  }
+}

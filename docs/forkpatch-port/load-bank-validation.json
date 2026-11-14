@@ -1,0 +1,63 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Native programmable resistive load bank only; no appliance cords, full source-world conversion or interactive GPU/audio claims.",
+  "focused": {
+    "tests": 9,
+    "failures": 0,
+    "skipped": 0,
+    "command": "./gradlew --no-daemon --max-workers=2 :test --tests '*ForkPatchLoadBankTest'"
+  },
+  "root": {
+    "suites": 109,
+    "tests": 589,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "fluidCases": 20,
+  "rootCommand": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20 cad:test",
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "native": {
+    "selected": 251,
+    "failed": 0,
+    "skipped": 0,
+    "filter": "eln:forkpatch_*",
+    "newEquipmentCases": 6,
+    "newFactoryCases": 1,
+    "command": "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_* --report /tmp/eln26-loadbank-final.xml --universe /workspace/ElectricalAge/run/loadbank-final'",
+    "report": "/tmp/eln26-loadbank-final.xml"
+  },
+  "datagen": {
+    "command": "./gradlew --no-daemon --max-workers=2 runClientData",
+    "identities": 628,
+    "previousIdentities": 627,
+    "changedPreviousIdentities": [],
+    "englishEntries": 915,
+    "previousEnglishEntries": 913,
+    "changedPreviousEnglishEntries": [],
+    "nativeTextureReferences": 444,
+    "missingTextures": []
+  },
+  "coverage": [
+    "Nominal, sag, reverse polarity, disabled, inhibit and loaded-chunk gates",
+    "Accepted resistor energy and heat once per physical interval",
+    "Source fan cooling, hot-case recovery and overvoltage disconnect/recovery",
+    "Steady LU factor reuse; no converter probes",
+    "Atomic settings packets, invalid/truncated data, settings-tool isolation",
+    "Four native orientations, real placed-node reload and actual client factory publication",
+    "Source-compatible low trip terminal; registered fan event and real native loop volume/pitch"
+  ],
+  "sourceIdentity": 8064,
+  "registryName": "programmable_load_bank",
+  "limitations": [
+    "Reduced 20-case fluid run at this checkpoint; complete default corpus follows final work-block changes",
+    "Historical unfiltered golden snapshot validation remains pending",
+    "Appliance cord integration and interactive audio/GPU checks remain pending"
+  ]
+}

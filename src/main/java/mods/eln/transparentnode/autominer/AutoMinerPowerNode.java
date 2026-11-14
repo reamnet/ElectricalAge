@@ -22,10 +22,10 @@ public class AutoMinerPowerNode extends GhostNode {
 
     @Override
     public int getSideConnectionMask(Direction directionA, LRDU lrduA) {
-        if (element == null) return 0;
+        if (element == null || !mods.eln.transparentnode.cord.CordSupport.active(element) || element.isBurnt()) return 0;
         if (directionA != front) return 0;
         if (lrduA != LRDU.Down) return 0;
-        return maskElectricalPower;
+        return mods.eln.transparentnode.cord.CordSupport.mask(element, element.cordInput(), maskElectricalPower);
     }
 
     @Override
@@ -35,8 +35,8 @@ public class AutoMinerPowerNode extends GhostNode {
 
     @Override
     public ElectricalLoad getElectricalLoad(Direction directionB, LRDU lrduB) {
-        if (element == null) return null;
-        return element.inPowerLoad;
+        if (element == null || !mods.eln.transparentnode.cord.CordSupport.active(element) || element.isBurnt()) return null;
+        return mods.eln.transparentnode.cord.CordSupport.load(element, element.cordInput());
     }
 
     @Override

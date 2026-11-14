@@ -37,6 +37,12 @@ public class ElnLang extends LanguageProvider {
         add("container.eln.electric_bike", "Bike Trunk");
         add("message.eln.electric_bike.no_battery", "No battery: pedalling only");
         add("message.eln.electric_bike.flat_battery", "The battery is flat: pedalling only");
+        add("entity.eln.electric_forklift","Electric Forklift");
+        add("entity.eln.equipment_pallet","Warehouse Equipment Pallet");
+        add("key.categories.eln.vehicles","Electrical Age vehicles");
+        add("key.eln.forklift.raise","Forklift: raise forks");
+        add("key.eln.forklift.lower","Forklift: lower forks");
+        add("key.eln.forklift.cargo","Forklift: load or unload pallet");
         add("key.eln.wrench", "Wrench (hold: a switch's screen on click; the chisel's brush menu)");
         add("key.eln.headlamp", "Lights on/off (headlamp, flashlights in hand)");
         add("eln.headlamp.none", "No headlamp worn, no flashlight in hand");
@@ -128,7 +134,7 @@ public class ElnLang extends LanguageProvider {
         add(ElnRegistry.LIGHT_BLOCK.get(), "Electrical Age Light");
         for (var b : ElnRegistry.TRANSPARENT_BLOCKS) {
             var d = b.get().descriptor;
-            add(b.get(), d.name);
+            add(b.get(), descriptorName(d));
         }
         add("itemGroup.eln", "Electrical Age");
         add("death.attack.eln.scald", "%1$s was scalded by steam");
@@ -148,6 +154,7 @@ public class ElnLang extends LanguageProvider {
     }
 
     static String descriptorName(Object d) {
+        if (d instanceof mods.eln.transparentnode.cord.OutletDescriptor o && o.getRating() == mods.eln.transparentnode.cord.CordRating.V120 && !o.getStrip()) return "120 V Wall Outlet";
         if (d instanceof mods.eln.generic.GenericItemUsingDamageDescriptor g) return g.name;
         if (d instanceof mods.eln.generic.GenericItemBlockUsingDamageDescriptor g) return g.name;
         if (d instanceof mods.eln.misc.DescriptorBase b) return b.descriptorKey;

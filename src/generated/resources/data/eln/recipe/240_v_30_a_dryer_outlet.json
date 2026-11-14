@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:240_v_wall_outlet",
+    "eln:copper_cable",
+    "eln:iron_plate"
+  ],
+  "result": {
+    "id": "eln:240_v_30_a_dryer_outlet"
+  }
+}

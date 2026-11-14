@@ -64,6 +64,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
 
         electricalLoadList.add(electricalLoad);
         electricalComponentList.add(electricalResistor);
+        electricalProcessList.add(slowRefreshProcess::acceptedElectricalStep);
         slowProcessList.add(slowRefreshProcess);
         slowProcessList.add(slowProcess);
         slowProcessList.add(fieldSpeedProcess);
@@ -84,6 +85,9 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
     public boolean hasGui() {
         return true;
     }
+
+    public NbtElectricalLoad cordInput() { return electricalLoad; }
+    public double cordNominalVoltage() { return descriptor.nominalU; }
 
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {

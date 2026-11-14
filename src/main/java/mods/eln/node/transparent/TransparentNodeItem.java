@@ -37,6 +37,8 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
 
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
+        var recessed = mods.eln.transparentnode.cord.OutletWall.use(this, ctx);
+        if (recessed != null) return recessed;
         Level world = ctx.getLevel();
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         BlockPos pos = ctx.getClickedPos().relative(ctx.getClickedFace());
@@ -46,6 +48,11 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
         return ok ? InteractionResult.SUCCESS : InteractionResult.FAIL;
     }
 
+    public net.minecraft.world.level.block.state.BlockState outletPlacedState(Level world, BlockPos pos, Direction front) {
+        Block b = block.get();
+        return ((TransparentNodeBlock) b).placedState(front, world, pos);
+    }
+
     /** 1.12 placeBlockAt; returns the node, or null if it can't be placed. */
     public TransparentNode placeAt(ItemStack stack, Player player, Level world, BlockPos pos, Direction direction) {
         Direction front = descriptor.getFrontFromPlace(direction, player);
@@ -53,6 +60,7 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
         front.rotateFromXN(v);
         BlockPos at = pos.offset(v[0], v[1], v[2]);
         if (!world.getBlockState(at).canBeReplaced()) return null;
+        front = descriptor.mountingFront(world, at, front);
         Coordonate coord = new Coordonate(at, world);
 
         String error;
@@ -61,7 +69,7 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
             return null;
         }
 
-        GhostGroup ghostgroup = descriptor.getGhostGroup(front);
+        GhostGroup ghostgroup = descriptor.getGhostGroupAt(coord, front);
         if (ghostgroup != null) ghostgroup.plot(coord, coord, descriptor.getGhostGroupUuid());
 
         TransparentNode node = new TransparentNode();

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "I": "eln:iron_plate",
+    "P": "minecraft:comparator",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "IPI",
+    "RCR",
+    "IPI"
+  ],
+  "result": {
+    "id": "eln:automatic_transfer_switch"
+  }
+}

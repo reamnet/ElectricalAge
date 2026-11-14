@@ -2,12 +2,14 @@ package mods.eln.sim.mna.component;
 
 import mods.eln.sim.mna.SubSystem;
 import mods.eln.sim.mna.misc.ISubSystemProcessI;
+import mods.eln.sim.mna.misc.ISubSystemProcessFlush;
 
-public class Delay extends Bipole implements ISubSystemProcessI {
+public class Delay extends Bipole implements ISubSystemProcessI, ISubSystemProcessFlush {
 
     double impedance, conductance;
 
     double oldIa, oldIb;
+    private double pendingIa, pendingIb;
 
     public Delay set(double impedance) {
         this.impedance = impedance;
@@ -18,7 +20,8 @@ public class Delay extends Bipole implements ISubSystemProcessI {
     @Override
     public void addedTo(SubSystem s) {
         super.addedTo(s);
-        s.addProcess(this);
+        s.addProcess((ISubSystemProcessI) this);
+        s.addProcess((ISubSystemProcessFlush) this);
     }
 
     @Override
@@ -51,8 +54,22 @@ public class Delay extends Bipole implements ISubSystemProcessI {
         s.addToI(aPin, -aPinI);
         s.addToI(bPin, -bPinI);
 
-        oldIa = aPinI;
-        oldIb = bPinI;
+        if (!s.isCheckedProbeActive()) {
+            pendingIa = aPinI;
+            pendingIb = bPinI;
+        }
+    }
+
+    @Override
+    public void simProcessFlush() {
+        oldIa = pendingIa; oldIb = pendingIb;
+    }
+
+    @Override
+    public void quitSubSystem() {
+        subSystem.removeProcess((ISubSystemProcessI) this);
+        subSystem.removeProcess((ISubSystemProcessFlush) this);
+        super.quitSubSystem();
     }
 
     @Override

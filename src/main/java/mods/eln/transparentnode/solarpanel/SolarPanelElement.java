@@ -13,11 +13,10 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.DiodeProcess;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.VoltageSource;
-import mods.eln.sim.mna.process.PowerSourceBipole;
+import mods.eln.sim.mna.component.CurrentSource;
+import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -37,16 +36,15 @@ public class SolarPanelElement extends TransparentNodeElement {
     SolarPanelDescriptor descriptor;
     NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
     NbtElectricalLoad negativeLoad = new NbtElectricalLoad("negativeLoad");
-    VoltageSource positiveSrc = new VoltageSource("posSrc", positiveLoad, null);
-    VoltageSource negativeSrc = new VoltageSource("negSrc", negativeLoad, null);
-
-    //ElectricalCurrentSource currentSource;
-    DiodeProcess diode;
-    PowerSourceBipole powerSource;
+    CurrentSource panelSrc = new CurrentSource("panelSrc", positiveLoad, negativeLoad);
+    Resistor panelShunt = new Resistor(positiveLoad, negativeLoad);
+    SolarPanelPowerProcess powerSource;
 
     SolarPannelSlowProcess slowProcess = new SolarPannelSlowProcess(this);
 
     public double panelAlpha = Math.PI / 2;
+    public SolarRoofMount roofMount = new SolarRoofMount(null);
+    public boolean roofMountKnown;
     private GhostPowerNode groundNode = null;
 
     public SolarPanelElement(TransparentNode transparentNode,
@@ -56,26 +54,18 @@ public class SolarPanelElement extends TransparentNodeElement {
 
         grounded = false;
 
-		/*if(this.descriptor.basicModel == false)
-		{
-			currentSource = new ElectricalCurrentSource(positiveLoad,negativeLoad);
-			diode = new DiodeProcess(positiveLoad, negativeLoad);
-			electricalProcessList.add(currentSource);
-			electricalProcessList.add(diode);
-		}
-		else*/
-        {
-            powerSource = new PowerSourceBipole(positiveLoad, negativeLoad, positiveSrc, negativeSrc);
+        powerSource = new SolarPanelPowerProcess(positiveLoad, negativeLoad, panelSrc, panelShunt,
+            this.descriptor.openCircuitVoltage, this.descriptor.optimumVoltage,
+            this.descriptor.optimumCurrent, this.descriptor.shortCircuitCurrent);
 
-
-        }
 
         electricalLoadList.add(positiveLoad);
         electricalLoadList.add(negativeLoad);
 
 
-        electricalComponentList.add(positiveSrc);
-        electricalComponentList.add(negativeSrc);
+        electricalComponentList.add(panelSrc);
+        electricalComponentList.add(panelShunt);
+        electricalComponentList.add(new Resistor(negativeLoad, null).pullDown());
 
         slowProcessList.add(slowProcess);
     }
@@ -125,7 +115,8 @@ public class SolarPanelElement extends TransparentNodeElement {
 
     @Override
     public String multiMeterString(Direction side) {
-        return Utils.plotUIP(positiveLoad.getU() - negativeLoad.getU(), positiveLoad.getCurrent());
+        double volts = positiveLoad.getU() - negativeLoad.getU();
+        return Utils.plotUIP(volts, powerSource.getGeneratedCurrent(Math.max(0.0, volts)));
     }
 
     @Override
@@ -135,14 +126,15 @@ public class SolarPanelElement extends TransparentNodeElement {
 
     @Override
     public void initialize() {
-        powerSource.setUmax(this.descriptor.electricalUmax);
-        powerSource.setImax(this.descriptor.electricalPmax / this.descriptor.electricalUmax * 1.5);
-
+        if (!roofMountKnown) {
+            roofMount = SolarRoofMount.fromSupport(node.coordonate.world(), node.coordonate.pos());
+            roofMountKnown = true;
+        }
         descriptor.applyTo(positiveLoad);
         descriptor.applyTo(negativeLoad);
 
         if (descriptor.groundCoordinate != null) {
-            GhostPowerNode n = new GhostPowerNode(node.coordonate, front, descriptor.groundCoordinate, negativeLoad);
+            GhostPowerNode n = new GhostPowerNode(node.coordonate, front, roofMount.groundOffset(descriptor.groundCoordinate), negativeLoad);
             n.initialize();
             groundNode = n;
         }
@@ -167,13 +159,18 @@ public class SolarPanelElement extends TransparentNodeElement {
         super.writeToNBT(nbt);
         powerSource.writeToNBT(nbt, "powerSource");
         nbt.putDouble("panelAlpha", panelAlpha);
+        if (roofMountKnown) nbt.putInt("roofUphill", roofMount.getUphill() == null ? -1 : roofMount.getUphill().get3DDataValue());
     }
 
     @Override
     public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
         powerSource.readFromNBT(nbt, "powerSource");
-        panelAlpha = nbt.getDoubleOr("panelAlpha", 0.0);
+        double savedAngle = nbt.getDoubleOr("panelAlpha", Math.PI / 2);
+        panelAlpha = descriptor.alphaTrunk(Double.isFinite(savedAngle) ? savedAngle : Math.PI / 2);
+        // Global node restore must not sample supports or request unloaded chunks. Old saves are flat.
+        roofMount = SolarRoofMount.fromId(nbt.getIntOr("roofUphill", -1));
+        roofMountKnown = true;
     }
 
 
@@ -183,6 +180,7 @@ public class SolarPanelElement extends TransparentNodeElement {
             stream.writeBoolean(!Utils.isEmpty(getInventory().getItem(trackerSlotId)));
             stream.writeFloat((float) panelAlpha);
             node.lrduCubeMask.getTranslate(Direction.YN).serialize(stream);
+            stream.writeByte(roofMount.getUphill() == null ? -1 : roofMount.getUphill().get3DDataValue());
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -197,8 +195,11 @@ public class SolarPanelElement extends TransparentNodeElement {
         try {
             switch (packetType) {
                 case unserializePannelAlpha:
-                    panelAlpha = stream.readFloat();
-                    needPublish();
+                    float requested = stream.readFloat();
+                    if (Float.isFinite(requested)) {
+                        panelAlpha = descriptor.alphaTrunk(requested);
+                        needPublish();
+                    }
                     break;
 
                 default:
@@ -232,7 +233,7 @@ public class SolarPanelElement extends TransparentNodeElement {
         info.put(I18N.tr("Panel angle"), Utils.plotValue((panelAlpha * (180 / Math.PI)) - 90, "\u00B0"));
         info.put(I18N.tr("Producing energy"), (slowProcess.getSolarLight() != 0 ? "Yes" : "No"));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getP()));
+            info.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getPower()));
         }
         return info;
     }

@@ -1,0 +1,12 @@
+{
+  "tests": 66,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "scope": "MNA, ForkPatch controller/solar/probe regressions and HighVoltageReferenceTest",
+  "suites": 13,
+  "referenceCorpus": {
+    "deterministicChecks": 51,
+    "seededPropertyTrials": 12000
+  }
+}

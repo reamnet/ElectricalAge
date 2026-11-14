@@ -45,6 +45,8 @@ public final class ElnRegistry {
     /** Every EA device GUI (P4): ElnNodeMenu, rebuilt on the client from its open data. */
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.gui.ElnNodeMenu>> NODE_MENU =
         MENUS.register("node", () -> net.neoforged.neoforge.common.extensions.IMenuTypeExtension.create(mods.eln.gui.ElnNodeMenu::fromNetwork));
+    public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.item.wiresnips.WireSnipsMenu>> WIRE_SNIPS_MENU =
+        MENUS.register("wire_snips", () -> new net.minecraft.world.inventory.MenuType<>(mods.eln.item.wiresnips.WireSnipsMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.item.belt.BeltMenu>> BELT_MENU =
         MENUS.register("battery_belt", () -> new net.minecraft.world.inventory.MenuType<>(mods.eln.item.belt.BeltMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.item.xray.XRayScannerMenu>> XRAY_MENU =
@@ -210,6 +212,21 @@ public final class ElnRegistry {
     public static final DeferredItem<mods.eln.bike.ElectricBikeItem> TERRAIN_BIKE =
         registerListed("terrain_bike", p -> new mods.eln.bike.ElectricBikeItem(p, mods.eln.bike.BikeType.TERRAIN), p -> p.stacksTo(1));
 
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>, net.minecraft.world.entity.EntityType<mods.eln.transparentnode.industrial.ForkliftEntity>> ELECTRIC_FORKLIFT =
+        ENTITY_TYPES.register("electric_forklift", () -> net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.transparentnode.industrial.ForkliftEntity>of(mods.eln.transparentnode.industrial.ForkliftEntity::new, net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1.1f,2.1f).clientTrackingRange(8).updateInterval(2)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"electric_forklift"))));
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>, net.minecraft.world.entity.EntityType<mods.eln.transparentnode.industrial.PalletEntity>> EQUIPMENT_PALLET =
+        ENTITY_TYPES.register("equipment_pallet", () -> net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.transparentnode.industrial.PalletEntity>of(mods.eln.transparentnode.industrial.PalletEntity::new, net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1f,.85f).clientTrackingRange(8).updateInterval(3)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"equipment_pallet"))));
+    static {
+        mods.eln.transparentnode.industrial.ForkliftEntity.TYPE=ELECTRIC_FORKLIFT;
+        mods.eln.transparentnode.industrial.PalletEntity.TYPE=EQUIPMENT_PALLET;
+    }
+
     /** 1.12 dropped a vanilla spawn egg tagged eln:replicator; 26.x eggs are per entity type. */
     public static final DeferredItem<net.minecraft.world.item.SpawnEggItem> REPLICATOR_SPAWN_EGG =
         registerListed("replicator_spawn_egg", net.minecraft.world.item.SpawnEggItem::new, p -> p.spawnEgg(REPLICATOR.get()));
@@ -263,7 +280,7 @@ public final class ElnRegistry {
                 d.parentItemDamage = id;
                 Eln.itemsByName.putIfAbsent(d.name, item); // first wins: "Signal Switch" is 6081 (gate source) as in 1.12
                 return item;
-            }, p -> p.stacksTo(stack)));
+            }, p -> d.itemProperties(p.stacksTo(stack))));
         }
     }
 
@@ -279,7 +296,7 @@ public final class ElnRegistry {
                 d.parentItemDamage = id;
                 Eln.itemsByName.putIfAbsent(d.name, item); // first wins: "Signal Switch" is 6081 (gate source) as in 1.12
                 return item;
-            }));
+            }, d::itemProperties));
         }
         for (Map.Entry<Integer, mods.eln.node.transparent.TransparentNodeDescriptor> e : Eln.transparentNodeItem.all().entrySet()) {
             int id = e.getKey();
@@ -290,6 +307,7 @@ public final class ElnRegistry {
             TRANSPARENT_BLOCKS.add(block);
             ALL_ITEMS.add(ITEMS.registerItem(name, p -> {
                 mods.eln.node.transparent.TransparentNodeItem item = new mods.eln.node.transparent.TransparentNodeItem(p, d, block::get);
+                if (d instanceof mods.eln.transparentnode.cord.OutletDescriptor o && o.getRating() == mods.eln.transparentnode.cord.CordRating.V120 && !o.getStrip()) Eln.itemsByName.putIfAbsent("120 V Wall Outlet", item);
                 d.parentItem = item;
                 d.parentItemDamage = id;
                 Eln.itemsByName.putIfAbsent(d.name, item); // first wins: "Signal Switch" is 6081 (gate source) as in 1.12
@@ -347,7 +365,10 @@ public final class ElnRegistry {
             .title(Component.literal("Electrical Age"))
             .icon(() -> new ItemStack(tabIcon.get()))
             .displayItems((params, out) -> ALL_ITEMS.forEach(i -> {
-                if (i != tabIcon && !mods.eln.node.DescriptorRegistry.isHiddenItem(i.get())) out.accept(i.get()); // 1.12 addWithoutRegistry
+                if (i != tabIcon && !mods.eln.node.DescriptorRegistry.isHiddenItem(i.get())) {
+                    if(i.get() instanceof SixNodeItem six && six.descriptor instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor cable) out.accept(cable.creativeStack());
+                    else out.accept(i.get());
+                } // 1.12 addWithoutRegistry
             }))
             .build());
         BLOCKS.register(modBus);

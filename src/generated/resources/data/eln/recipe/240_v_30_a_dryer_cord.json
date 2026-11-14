@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:240_v_appliance_cord",
+    "eln:copper_cable",
+    "eln:rubber"
+  ],
+  "result": {
+    "id": "eln:240_v_30_a_dryer_cord"
+  }
+}

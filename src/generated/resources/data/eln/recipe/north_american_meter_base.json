@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "P P",
+    "PCP",
+    "P P"
+  ],
+  "result": {
+    "id": "eln:north_american_meter_base"
+  }
+}

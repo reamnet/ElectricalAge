@@ -31,6 +31,11 @@ public class TransparentNodeRender implements BlockEntityRenderer<TransparentNod
                                    ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(be, state, partialTicks, cameraPosition, breakProgress);
         state.render = be.elementRender;
+        if (state.render instanceof mods.eln.transparentnode.cord.OutletRender outlet
+                && !outlet.getWallState().isAir() && outlet.front != null && be.getLevel() != null) {
+            state.lightCoords = mods.eln.transparentnode.cord.OutletWall.faceLight(
+                be.getLevel(), be.getBlockPos(), outlet.front, state.lightCoords);
+        }
     }
 
     @Override
@@ -43,6 +48,7 @@ public class TransparentNodeRender implements BlockEntityRenderer<TransparentNod
             GL11.glPushMatrix();
             state.render.draw();
             GL11.glPopMatrix();
+            state.render.cordDisplay.draw(state.render.tileEntity.getLevel(), state.render.tileEntity.getBlockPos());
             if (state.render.burnt) {
                 frame.soot = true;
                 UtilsClient.glDefaultColor();
@@ -61,7 +67,7 @@ public class TransparentNodeRender implements BlockEntityRenderer<TransparentNod
     @Override
     public AABB getRenderBoundingBox(TransparentNodeEntity be) {
         var r = be.elementRender == null ? null : be.elementRender.renderBounds();
-        if (r != null) return r;
-        return new AABB(be.getBlockPos()).inflate(3);
+        AABB box = r != null ? r : new AABB(be.getBlockPos()).inflate(3);
+        return be.elementRender == null ? box : be.elementRender.cordDisplay.bounds(be.getBlockPos(), box);
     }
 }
