@@ -40,6 +40,20 @@ class CordStateTest {
         assertEquals(4,tips.toSet().size)
         assertTrue(tips.all { it.z>.49 && it.z<.5 })
     }
+    @Test fun cabinetCordLeavesItsFrontFaceBeforeSamplingItsOwnCollisionCell() {
+        for(front in listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP)) {
+            val center=Vec3(.5,64.5,.5)
+            val start=center.add(CordGeometry.world(front,CompactSocketGeometry.tip(0)))
+            val end=center.add(CordGeometry.world(front,Vec3(3.0,-.43,-.25)))
+            val ground={ x: Double,z: Double,_: Double->if(x>=0 && x<1 && z>=0 && z<1)65.0 else 64.0 }
+            val direct=CordPath.samples(start,end,ground)
+            assertTrue(direct.any { it.y>65.0 },"fixture must reproduce the cord climbing its own enclosure")
+            val path=CordPath.socketSamples(start,end,front,true,ground)
+            assertEquals(start,path.first());assertEquals(end,path.last())
+            assertTrue(path.all { it.y<64.5 },"$front: a front cord must descend toward the floor")
+            assertEquals(direct,CordPath.socketSamples(start,end,front,false,ground))
+        }
+    }
     @Test fun ratingsRejectNonfiniteAndWrongNominalVoltage() {
         assertEquals(9,CordRating.entries.size)
         for(r in CordRating.entries) { assertTrue(r.accepts(r.volts));assertFalse(r.accepts(Double.NaN));assertFalse(r.accepts(Double.POSITIVE_INFINITY));assertFalse(r.accepts(r.volts+1)) }

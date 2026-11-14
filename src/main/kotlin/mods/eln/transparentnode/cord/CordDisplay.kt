@@ -40,7 +40,7 @@ class CordDisplay {
         if(start.distanceTo(end)>10)return
         if(points.isEmpty() || world.gameTime>=next) {
             next=world.gameTime+20
-            val sampled=CordPath.samples(start,end) { x,z,y->CordPath.floor(world,x,z,y,pos) }
+            val sampled=CordPath.socketSamples(start,end,front,cabinet) { x,z,y->CordPath.floor(world,x,z,y,pos) }
             if(sampled!=points) {
                 points=sampled;rebuilds++
                 val rings=CordPath.rings(sampled,.018);val vertices=ArrayList<Double>()

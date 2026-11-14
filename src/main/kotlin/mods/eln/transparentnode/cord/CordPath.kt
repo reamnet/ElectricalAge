@@ -10,6 +10,12 @@ import kotlin.math.*
 
 /** A loose, terrain-following visual; no blocks are placed for the cord itself. */
 object CordPath {
+    /** Cabinet sockets exit in front of their own collision cell before following terrain. */
+    fun socketSamples(start: Vec3,end: Vec3,front: Direction,cabinet: Boolean,ground: (Double,Double,Double)->Double): List<Vec3> {
+        val exit=if(cabinet)start.add(CordGeometry.world(front,Vec3(0.0,0.0,.2))) else start
+        val path=samples(exit,end,ground)
+        return if(path.isEmpty())path else if(cabinet)listOf(start)+path else path
+    }
     fun samples(start: Vec3,end: Vec3,ground: (Double,Double,Double)->Double): List<Vec3> {
         val dx=end.x-start.x;val dz=end.z-start.z;val length=hypot(dx,dz)
         if(!length.isFinite() || !start.y.isFinite() || !end.y.isFinite())return emptyList()
