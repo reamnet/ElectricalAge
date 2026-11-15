@@ -9,7 +9,9 @@ import org.junit.Test
 
 class DecorativeLampGeometryTest {
     @Test fun explicitSourceIdsLeaveUnportedFixturesReserved() {
+        assertEquals(4118,DecorativeLampStyle.DESK.lookup)
         assertEquals(4119,DecorativeLampStyle.RECESSED.lookup)
+        assertEquals(4121,DecorativeLampStyle.DOT.lookup)
         assertEquals(4145,DecorativeLampStyle.OUTDOOR_POST.lookup)
         assertEquals(4352,DecorativeLampStyle.WINDOW_CANDLE.lookup)
         assertEquals(4365,DecorativeLampStyle.HEAVY_BULKHEAD.lookup)
@@ -18,6 +20,9 @@ class DecorativeLampGeometryTest {
         assertEquals(4368,DecorativeLampStyle.HEAVY_YARD.lookup)
         assertEquals(4369,DecorativeLampStyle.RIG_CAGE.lookup)
         assertEquals(4370,DecorativeLampStyle.RIG_LINEAR.lookup)
+        assertEquals(4137,DecorativeLampStyle.TABLE_DRUM.lookup)
+        assertEquals(4138,DecorativeLampStyle.TABLE_BANKER.lookup)
+        assertEquals(4139,DecorativeLampStyle.TABLE_TASK.lookup)
         assertEquals(4374,DecorativeLampStyle.CHRISTMAS_FAIRY.lookup)
         assertEquals(4375,DecorativeLampStyle.CHRISTMAS_COLOR.lookup)
         assertEquals(4376,DecorativeLampStyle.CHRISTMAS_ICICLE.lookup)
@@ -47,7 +52,7 @@ class DecorativeLampGeometryTest {
         assertEquals(4492,DecorativeLampStyle.STONE_SLOT.lookup)
         assertEquals(4493,DecorativeLampStyle.STONE_SQUARE.lookup)
         assertEquals(4494,DecorativeLampStyle.STONE_WASH.lookup)
-        assertEquals(68,DecorativeLampStyle.entries.map { it.lookup }.toSet().size)
+        assertEquals(73,DecorativeLampStyle.entries.map { it.lookup }.toSet().size)
         assertFalse(DecorativeLampStyle.entries.any { it.lookup==4126 }) // motion sensor is separate work
     }
     @Test fun ceilingFixtureHeadsStayBelowTheirMount() {

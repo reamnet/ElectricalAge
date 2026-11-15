@@ -4,6 +4,7 @@ advancedenergymeter/advancedenergymeter.obj
 alarmmedium/alarmmedium.obj
 analogchips/analogchips.obj
 anemometer/anemometer.obj
+articulatedtablelamp/articulatedtablelamp.obj
 appliancewalloutlet/appliancewalloutlet.obj
 archedwalkwaylight/archedwalkwaylight.obj
 armoredbulkheadlight/armoredbulkheadlight.obj
@@ -11,6 +12,7 @@ automatictransferswitch/automatictransferswitch.obj
 autominer/autominer.obj
 basicchandelier/basicchandelier.obj
 basiclampholder/basiclampholder.obj
+bankerstablelamp/bankerstablelamp.obj
 battery_disconnect/battery_disconnect.obj
 batterybig/batterybig.obj
 batterybig/batterybighv.obj
@@ -18,6 +20,7 @@ batterychargera/batterychargera.obj
 batterychargerb/batterychargerb.obj
 boiler/boiler.obj
 cagewallsconce/cagewallsconce.obj
+ceramicdrumtablelamp/ceramicdrumtablelamp.obj
 candlefoyerchandelier/candlefoyerchandelier.obj
 candlewallsconce/candlewallsconce.obj
 capacitorbank/capacitorbank.obj
@@ -85,6 +88,7 @@ halloweenpumpkinstring/halloweenpumpkinstring.obj
 handdrill/handdrill.obj
 hangingfactorylight/hangingfactorylight.obj
 harborgooseneck/harborgooseneck.obj
+householddesklamp/householddesklamp.obj
 heatexchanger/heatexchanger.obj
 highcapacitybattery/highcapacitybattery.obj
 highcurrentbattery/highcurrentbattery.obj
@@ -136,6 +140,7 @@ mediumvoltageswitch/mediumvoltageswitch.obj
 modernbladewalklight/modernbladewalklight.obj
 multicolorchristmaslights/multicolorchristmaslights.obj
 mushroompathlight/mushroompathlight.obj
+minidotspotlight/minidotspotlight.obj
 nauticalpierbollard/nauticalpierbollard.obj
 nema1030plug/nema1030plug.obj
 nema520plug/nema520plug.obj

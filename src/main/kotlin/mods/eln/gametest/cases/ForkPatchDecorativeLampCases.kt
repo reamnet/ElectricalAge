@@ -19,7 +19,7 @@ import kotlin.math.abs
 
 /** Real placement, electrical simulation, publication and saved owners for every fixed fixture. */
 object ForkPatchDecorativeLampCases {
-    @JvmStatic fun cases(): List<TestCase> = DecorativeLampStyle.entries.map(::Fixture) + listOf(Insertion(),Recipes(),Wireless(DecorativeLampStyle.CHANDELIER,120),Wireless(DecorativeLampStyle.POT_BAFFLE,240))
+    @JvmStatic fun cases(): List<TestCase> = DecorativeLampStyle.entries.map(::Fixture) + listOf(Insertion(),Recipes(),Wireless(DecorativeLampStyle.CHANDELIER,120),Wireless(DecorativeLampStyle.POT_BAFFLE,240),Wireless(DecorativeLampStyle.DOT,240))
     private open class Base: TestCase {
         override fun id()="forkpatch_decorative_base"
         override fun width()=24;override fun height()=12;override fun depth()=24;override fun floorDepth()=24

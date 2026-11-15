@@ -4103,6 +4103,12 @@
   "kind": "transparent_node",
   "name": "230_kv_three_phase_cable_riser_tower"
  },
+ "eln:six_node@4118": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Household Desk Lamp",
+  "kind": "six_node",
+  "name": "household_desk_lamp"
+ },
  "eln:six_node@4119": {
   "descriptor": "DecorativeLampDescriptor",
   "display": "Round Recessed Ceiling Light",
@@ -4114,6 +4120,12 @@
   "display": "Basic Chandelier",
   "kind": "six_node",
   "name": "basic_chandelier"
+ },
+ "eln:six_node@4121": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Dot Spotlight",
+  "kind": "six_node",
+  "name": "mini_dot_spotlight"
  },
  "eln:six_node@4122": {
   "descriptor": "DecorativeLampDescriptor",
@@ -4198,6 +4210,24 @@
   "display": "Double Candle Wall Sconce",
   "kind": "six_node",
   "name": "double_candle_wall_sconce"
+ },
+ "eln:six_node@4137": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Ceramic Drum Table Lamp",
+  "kind": "six_node",
+  "name": "ceramic_drum_table_lamp"
+ },
+ "eln:six_node@4138": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Green Banker Table Lamp",
+  "kind": "six_node",
+  "name": "green_banker_table_lamp"
+ },
+ "eln:six_node@4139": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Articulated Task Table Lamp",
+  "kind": "six_node",
+  "name": "articulated_task_table_lamp"
  },
  "eln:six_node@4140": {
   "descriptor": "DecorativeLampDescriptor",

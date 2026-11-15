@@ -18,12 +18,12 @@ behavioral completion.
 
 ## Current continuation
 
-The [first decorative lighting batch](decorative-lighting.md) adds 68 fixed
+The [first decorative lighting batch](decorative-lighting.md) adds 73 fixed
 fixtures with original meshes/icons, shared multi-bulb power and native saves,
 source-sized controls and loaded-only light patterns. Source 120/240 V LED
 ratings use explicit native lookups 302/303, preserving the old 50/200 V bulbs.
-All 46 new native cases and all 893 ForkPatch cases pass; the full build passes
-690 tests plus 15 CAD tests (three existing previews skipped). The other 40
+All 52 new native cases and all 899 ForkPatch cases pass; the full build passes
+690 tests plus 15 CAD tests (three existing previews skipped). The other 35
 source decorative styles, source technology configuration, partial
 mounting and portable lighting/carry remain unfinished. See the
 [lighting evidence](decorative-lighting-validation.json) for current checks.
@@ -163,10 +163,10 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The latest completed code checkpoint passes **1,357 of 1,359** native cases;
-  all **893 ForkPatch cases** pass. Only descriptor and slot goldens fail.
-  The [lighting delta](decorative-lighting-golden-delta.json) records 631 failed
-  assertions, preserving all 601 prior non-aggregate assertions and explicitly
+- The latest completed code checkpoint passes **1,363 of 1,365** native cases;
+  all **899 ForkPatch cases** pass. Only descriptor and slot goldens fail.
+  The [lighting delta](decorative-lighting-golden-delta.json) records 641 failed
+  assertions, preserving all 631 prior non-aggregate assertions and explicitly
   recording the new bulb-acceptance/aggregate differences. Review the
   [historical differences](native-suite-review.md) before reconciling expectations;
   no snapshot, existing assertion, skip or tolerance is relaxed. See

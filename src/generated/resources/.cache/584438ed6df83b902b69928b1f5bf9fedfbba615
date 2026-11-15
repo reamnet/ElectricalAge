@@ -1,4 +1,4 @@
-// 26.3	2026-11-15T09:13:21.958761926	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-15T11:55:13.060433	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -138,6 +138,7 @@ deef8d780422f077177f1d8075d975640f319ae2 data/eln/advancement/recipes/misc/analo
 8adbb5fbd9a464b1637d56c80bac249461b0b459 data/eln/advancement/recipes/misc/and_chip.json
 9d88219c37e884c57072d6522173a6259b65b7ac data/eln/advancement/recipes/misc/animal_filter.json
 d8115fda4936e31a595936ef1d42a3dc4683655b data/eln/advancement/recipes/misc/armored_oval_bulkhead_light.json
+6a7369cea5efa3a4a3334d26b4ec415fae4a1c40 data/eln/advancement/recipes/misc/articulated_task_table_lamp.json
 e397443c98e6b42bdb11364d1b6ce472b87c0a04 data/eln/advancement/recipes/misc/auto_miner.json
 60dda393535fbe75390de9b0f0db5ff5945f97d6 data/eln/advancement/recipes/misc/automatic_load_shedding_controller.json
 8956fc4b0f3d9d0ee79590bbe4cb0cc02226a092 data/eln/advancement/recipes/misc/automatic_transfer_switch.json
@@ -158,6 +159,7 @@ b85823dd74834547255b7d60faa1cc1280c8c423 data/eln/advancement/recipes/misc/boile
 721b24687736891e1289922bce10b7a2f728030f data/eln/advancement/recipes/misc/capacitor_cell.json
 727ff8c6105794cf50890d21503562ad91ba5af3 data/eln/advancement/recipes/misc/capacity_oriented_battery.json
 9fcd80d4de5e8f37f7005751e6fb2b566937432a data/eln/advancement/recipes/misc/casing.json
+d3aeacc162b4647b21c8fb4a4c6d72ff3ce98384 data/eln/advancement/recipes/misc/ceramic_drum_table_lamp.json
 51678bd91fdf0fd4d45cf8945f27a844441ef9c4 data/eln/advancement/recipes/misc/charcoal.json
 c1c02f926058e1a5bf383be49d8fad52eb0c9dff data/eln/advancement/recipes/misc/charcoal_nugget.json
 2c691f10bb24f194337257bb610a228ff40c59ec data/eln/advancement/recipes/misc/cheap_chip.json
@@ -244,6 +246,7 @@ ee74ad8d287d097110454c4fa06e08a0965e522a data/eln/advancement/recipes/misc/grand
 8842d05cfaa1e555daee7e4f5959a797451a9efb data/eln/advancement/recipes/misc/grand_empire_chandelier.json
 6f7ca87df38c85fdb0f0681405e71950570d9a60 data/eln/advancement/recipes/misc/grand_halo_ring_chandelier.json
 3206c8a83c23437655d503a29cdf6acb090766cf data/eln/advancement/recipes/misc/gray_brush.json
+49b426100272a67dc0c0b6e3e1659c717c3f5de4 data/eln/advancement/recipes/misc/green_banker_table_lamp.json
 a0d612bd4f26061b5e9c15aa0f3000b426037fd0 data/eln/advancement/recipes/misc/green_brush.json
 709c3ad72af1a1da0bec74750a7fa8a8e408e3ef data/eln/advancement/recipes/misc/grid_control_console.json
 c14117c6913e1bb9562e34acda9dbe02383521d8 data/eln/advancement/recipes/misc/ground_cable.json
@@ -256,6 +259,7 @@ ca934f46f64dec6fbd4c555a9257f3af2dfa465f data/eln/advancement/recipes/misc/high_
 edc2bcc3b8068e76bf62b210f537e3fe57fa4ee4 data/eln/advancement/recipes/misc/high_voltage_cable.json
 adff65b0e3b516752580628470a82e029fef2c0c data/eln/advancement/recipes/misc/high_voltage_relay.json
 8f00d7507ab7a4ea43fc11b9334e3e9bfa687dab data/eln/advancement/recipes/misc/high_voltage_switch.json
+5ed1c40a3f3fe98fb30378e2adce89bf5ab742ea data/eln/advancement/recipes/misc/household_desk_lamp.json
 389625a0b3068699697a055e47fdab9352df0ec2 data/eln/advancement/recipes/misc/hub.json
 3ad8a26e80a9e2efb1423f71476772dce3c567da data/eln/advancement/recipes/misc/hybrid_solar_inverter.json
 66103a82763e2f5be503d9a4251d7ff65b7a29d8 data/eln/advancement/recipes/misc/improved_flashlight.json
@@ -313,6 +317,7 @@ c6cfbc14fab7d31db43be7cd8b0772b371a445f0 data/eln/advancement/recipes/misc/mediu
 1c75f94ce791b4ab416fc9afe31ea1407b98c2d5 data/eln/advancement/recipes/misc/medium_voltage_cable.json
 6721ab576c3e255d8d4d1949cdaada1c3bb9d286 data/eln/advancement/recipes/misc/medium_voltage_relay.json
 a27e31349b09577ad4c188f22d768cc06e79fa07 data/eln/advancement/recipes/misc/medium_voltage_switch.json
+de8f10b0de19fe5e62738e968a70568a4542573a data/eln/advancement/recipes/misc/mini_dot_spotlight.json
 98da9648d64bf589e3ce99d343283e22da74bb47 data/eln/advancement/recipes/misc/mining_pipe.json
 506b211d1956b2734af347c65b3fe0b6f4fa0490 data/eln/advancement/recipes/misc/modern_data_logger.json
 dd1242cd6b9ff29ba81aac774e1b969ec8f0ec6b data/eln/advancement/recipes/misc/modern_sputnik_foyer_chandelier.json
@@ -692,6 +697,7 @@ f8bb79bdca45cf72f71e9c34109d2cd1f0ea3f7c data/eln/recipe/analog_watch.json
 f08a17f8c96555319fad60d61b2788c122fbf087 data/eln/recipe/and_chip.json
 805798fa44f9f1beb943bfdbbcaf390d5e5a0861 data/eln/recipe/animal_filter.json
 52abff43fc4128bdba5ad42c18a9aec49c2f00eb data/eln/recipe/armored_oval_bulkhead_light.json
+73ee0a885022d27b956b73101c1f6ae35d12f657 data/eln/recipe/articulated_task_table_lamp.json
 e1b3870485515b24146953a51d534596cf57c58d data/eln/recipe/auto_miner.json
 1075840e489cabf0f6fa0bbae5c86ac397043062 data/eln/recipe/automatic_load_shedding_controller.json
 e06a8b286866aad23751495565a94926aad2f8b4 data/eln/recipe/automatic_transfer_switch.json
@@ -712,6 +718,7 @@ bd83f8e28296e360fafeb22cf8cab8536161a42c data/eln/recipe/blasting_raw_tungsten_2
 50b17ae4822cc8fe7f74e6b92a4e7bbc84ab9af8 data/eln/recipe/capacitor_cell.json
 2654bb694e4ec304ddc307586afb15f0bfdbe5d4 data/eln/recipe/capacity_oriented_battery.json
 6642247514f8b88b66706cab4b85fe4cc818527e data/eln/recipe/casing.json
+2163302b43a14b98ac7da9cc8102883e94cb849d data/eln/recipe/ceramic_drum_table_lamp.json
 56412ab86155c5379106a743c5f67611b5ed06c1 data/eln/recipe/charcoal.json
 3dda76ae8f0f3575454b313488ed551b28f72428 data/eln/recipe/charcoal_nugget.json
 622bc1964dde3ca540d6499d7117580000bad27d data/eln/recipe/cheap_chip.json
@@ -798,6 +805,7 @@ a3490c55657a25c1a3472ba0cb062e62c8b9a612 data/eln/recipe/glass_globe_wall_sconce
 7867b3058df7b9b25b382b6d4770558cb5555585 data/eln/recipe/grand_empire_chandelier.json
 87403ba047c1a251ed6ca928c92383d41843ed8f data/eln/recipe/grand_halo_ring_chandelier.json
 6807bca5810c43c53a541f3192a05744bb3b73f2 data/eln/recipe/gray_brush.json
+761bb87157e0b0e45dabe6638548161f25ad54c4 data/eln/recipe/green_banker_table_lamp.json
 1fd7392f8f3c4443adbf0499d84396c5da56090d data/eln/recipe/green_brush.json
 9fea350da7727347e458880b872c9ffc283ee3a3 data/eln/recipe/grid_control_console.json
 15ba4c1dcda12e30a0ba2f80409862bb6d81569f data/eln/recipe/ground_cable.json
@@ -810,6 +818,7 @@ ec1c71c9afafaaa642f942a67c2b7b1a7ba962e9 data/eln/recipe/halloween_pumpkin_strin
 7b9640f35930954e8ec1cd07e6f911c5f2da5381 data/eln/recipe/high_voltage_cable.json
 f5679cc391f2220f4ded632779e68dd632c895c0 data/eln/recipe/high_voltage_relay.json
 d7a54c89e137b00cf2d50b95480ddaf28591370f data/eln/recipe/high_voltage_switch.json
+5189c0fba19d3a43c1b072ea8132430ef54fc981 data/eln/recipe/household_desk_lamp.json
 7100a4afa0e935888c7e32607d2c279f16d69cdf data/eln/recipe/hub.json
 7f807cc1d3a90ca97be78e3e3d2f7e516a901498 data/eln/recipe/hybrid_solar_inverter.json
 820d044aff444868e33966e505a7ee17af71055b data/eln/recipe/improved_flashlight.json
@@ -867,6 +876,7 @@ d241b43d22321e1dc49a61a53e25ae058ca4f789 data/eln/recipe/medium_standby_gasoline
 1be3dbd842ea55e9462c2fa7d41fd69bee0d1685 data/eln/recipe/medium_voltage_cable.json
 f7c4f3be00d786839b6407f2bf638026f0cf199e data/eln/recipe/medium_voltage_relay.json
 52e43c527876f47e66605d1fb97a03efbc5df18e data/eln/recipe/medium_voltage_switch.json
+b18a58a99b20d9fb055a574e69b6ffed1edb3b97 data/eln/recipe/mini_dot_spotlight.json
 558880aced4411806541403ba6354fbfa72e78e7 data/eln/recipe/mining_pipe.json
 ebd63e9a5f900366c5a0004356905112cd008098 data/eln/recipe/modern_data_logger.json
 a6770f74cf9548ef82ab69701135f0fe59828f06 data/eln/recipe/modern_sputnik_foyer_chandelier.json

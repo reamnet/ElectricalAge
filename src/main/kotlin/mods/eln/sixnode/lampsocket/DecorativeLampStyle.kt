@@ -10,10 +10,14 @@ import kotlin.math.*
 enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val itemName: String,
     val bulbs: Int, val depth: Double, val range: Int, val heads: List<Vec3>, val beam: Vec3,
     val wirelessOnly: Boolean = false) {
+    DESK(2, "householddesklamp", I18N.TR_NAME(I18N.Type.NONE, "Household Desk Lamp"), 1, .8, 0,
+        listOf(Vec3(.49,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
     RECESSED(3, "roundrecessedlight", I18N.TR_NAME(I18N.Type.NONE, "Round Recessed Ceiling Light"), 1, .6, 3,
         listOf(Vec3(.05,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
     CHANDELIER(4, "basicchandelier", I18N.TR_NAME(I18N.Type.NONE, "Basic Chandelier"), 5, 1.0, 0,
         (0..4).map { Vec3(.68,.34*cos(it*2*PI/5),.34*sin(it*2*PI/5)) },Vec3(1.0,0.0,0.0)),
+    DOT(5, "minidotspotlight", I18N.TR_NAME(I18N.Type.NONE, "Mini Dot Spotlight"), 1, .24, 8,
+        listOf(Vec3(.215,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
     PORCH(6, "porchlanternsconce", I18N.TR_NAME(I18N.Type.NONE, "Porch Lantern Sconce"), 1, .8, 0,
         listOf(Vec3(.31,-.06,0.0)),Vec3(1.0,0.0,0.0)),
     HOLDER(7, "basiclampholder", I18N.TR_NAME(I18N.Type.NONE, "Basic Lamp Holder"), 1, .34, 0,
@@ -42,6 +46,12 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
         listOf(Vec3(.24,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     SCONCE_CANDLE(20, "candlewallsconce", I18N.TR_NAME(I18N.Type.NONE, "Double Candle Wall Sconce"), 2, .9, 0,
         listOf(Vec3(.30,.04,-.23),Vec3(.30,.04,.23)),Vec3(1.0,0.0,0.0)),
+    TABLE_DRUM(21, "ceramicdrumtablelamp", I18N.TR_NAME(I18N.Type.NONE, "Ceramic Drum Table Lamp"), 1, .92, 0,
+        listOf(Vec3(.65,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    TABLE_BANKER(22, "bankerstablelamp", I18N.TR_NAME(I18N.Type.NONE, "Green Banker Table Lamp"), 1, .65, 0,
+        listOf(Vec3(.47,.10,0.0)),Vec3(-1.0,0.0,0.0)),
+    TABLE_TASK(23, "articulatedtablelamp", I18N.TR_NAME(I18N.Type.NONE, "Articulated Task Table Lamp"), 1, .98, 4,
+        listOf(Vec3(.72,.27,0.0)),Vec3(-1.0,.35,0.0)),
     POT_BAFFLE(24, "deepbafflepotlight", I18N.TR_NAME(I18N.Type.NONE, "Deep Baffle Recessed Light"), 1, .40, 5,
         listOf(Vec3(.06,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
     POT_TRIMLESS(25, "trimlesspotlight", I18N.TR_NAME(I18N.Type.NONE, "Trimless Recessed Downlight"), 1, .38, 4,
@@ -154,10 +164,10 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     val foyer get() = this in CANDLE..SPUTNIK
     val luxury get() = this in LUXURY_RINGS..LUXURY_EMPIRE
     val ceiling get() = foyer || luxury || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED, HEAVY_CANOPY, RIG_CAGE, RIG_LINEAR)
-    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM || this == WINDOW_CANDLE || this == HALLOWEEN_JACK || this == PARTY_TIKI || this == PARTY_LANTERN || this == DECK_POST_CAP
+    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM || this == WINDOW_CANDLE || this == HALLOWEEN_JACK || this == PARTY_TIKI || this == PARTY_LANTERN || this == DECK_POST_CAP || this == DESK || this == TABLE_DRUM || this == TABLE_BANKER || this == TABLE_TASK
     /** Pier and walkway bollards/posts stand on floor faces like the source outdoorFloor registration. */
     val outdoorFloor get() = this in listOf(PIER_BOLLARD,PIER_LANTERN,PATH_LOUVER,PATH_SHIELDED,PATH_BLADE,PATH_MUSHROOM,PATH_ARCH)
-    val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM, WINDOW_CANDLE, HALLOWEEN_JACK, PARTY_FESTOON, PARTY_TIKI, PARTY_GLOBE, PARTY_LANTERN, DECK_POST_CAP)
+    val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM, WINDOW_CANDLE, HALLOWEEN_JACK, PARTY_FESTOON, PARTY_TIKI, PARTY_GLOBE, PARTY_LANTERN, DECK_POST_CAP, DESK, TABLE_DRUM, TABLE_BANKER, TABLE_TASK)
     /** Seasonal string lights drape two blocks past their mount face, like the source registration. */
     val seasonalString get() = this in listOf(CHRISTMAS_FAIRY,CHRISTMAS_COLOR,CHRISTMAS_ICICLE,HALLOWEEN_PUMPKIN,HALLOWEEN_GHOST)
     /** Party string fixtures drape like the seasonal strings: wall mount with clearance past the face. */

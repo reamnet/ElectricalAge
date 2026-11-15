@@ -291,6 +291,16 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("Poolside Party Lantern"),findItemStack("Porch Lantern Sconce"),dye(12));
         addShapelessRecipe(findItemStack("Deck Post Cap Light"),findItemStack("Basic Lamp Holder"),vanilla("oak_slab"));
         addShapelessRecipe(findItemStack("Deck Step Riser Light"),findItemStack("Flat Lamp Socket"),vanilla("spruce_slab"));
+        addRecipe(findItemStack("Household Desk Lamp"), "WWW"," L "," P ",
+            'W',wool(0),'L',findItemStack("Lamp Socket A"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Mini Dot Spotlight",2), " I ","GLG",
+            'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket B Projector"));
+        addRecipe(findItemStack("Ceramic Drum Table Lamp"), "WWW"," L "," B ",
+            'W',wool(0),'L',findItemStack("Basic Lamp Holder"),'B',Blocks.TERRACOTTA);
+        addRecipe(findItemStack("Green Banker Table Lamp"), "GGG"," L "," P ",
+            'G',vanilla("green_stained_glass"),'L',findItemStack("Basic Lamp Holder"),'P',Items.COPPER_INGOT);
+        addRecipe(findItemStack("Articulated Task Table Lamp"), " IL"," I "," P ",
+            'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"),'P',findItemStack("Iron Plate"));
     }
 
     public static void recipeLampSocket() {
