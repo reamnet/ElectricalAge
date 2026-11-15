@@ -1,11 +1,11 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "previousCheckpoint": "79fc9605d4cd33f1a3c2f5b49b221b90c4d7bdc1",
+  "previousCheckpoint": "0a50fdff3a301efc3267bd9607a61613d79e4ea3",
   "branch": "port/forkpatch-3.0.77-26.3",
   "pr": 1,
   "sourceStyles": 108,
-  "registeredFixedStyles": 47,
-  "unregisteredStyles": 61,
+  "registeredFixedStyles": 53,
+  "unregisteredStyles": 55,
   "ratedLedNativeLookups": [
     302,
     303
@@ -38,33 +38,37 @@
     "passed": 15
   },
   "focusedNative": {
-    "selected": 25,
-    "passed": 25,
-    "log": "/tmp/eln-lighting-focused-final.log",
-    "report": "/tmp/eln-lighting-focused-final.xml"
+    "selected": 31,
+    "passed": 31,
+    "log": "/tmp/gametest-party-deck2.log",
+    "report": "/tmp/eln-golden-party-deck.xml"
   },
   "native": {
-    "selected": 1338,
-    "passed": 1336,
+    "selected": 1344,
+    "passed": 1342,
     "failed": 2,
     "skipped": 0,
     "portCases": {
-      "selected": 872,
+      "selected": 878,
       "failed": 0
     },
-    "nativeLog": "/tmp/gametest-4374-4381b.log",
-    "nativeReport": "/tmp/eln-golden-4374-4381b.xml"
+    "nativeLog": "/tmp/gametest-party-deck2.log",
+    "nativeReport": "/tmp/eln-golden-party-deck.xml"
   },
   "nativeFailureNames": [
     "eln:golden_descriptors",
     "eln:golden_slots"
   ],
-  "nativeLog": "/tmp/gametest-4374-4381b.log",
-  "nativeReport": "/tmp/eln-golden-4374-4381b.xml",
+  "nativeLog": "/tmp/gametest-party-deck2.log",
+  "nativeReport": "/tmp/eln-golden-party-deck.xml",
   "goldenDelta": "decorative-lighting-golden-delta.json",
   "allCatalogPublicationAndDrawing": {
-    "selected": 519,
-    "passed": 519
+    "selected": 533,
+    "passed": 533,
+    "itemDraw": {
+      "selected": 322,
+      "passed": 322
+    }
   },
   "geometryTests": {
     "selected": 8,
@@ -73,7 +77,7 @@
   "fullFluidCorpus": 200,
   "datagen": {
     "repeatedWrittenFiles": 0,
-    "log": "/tmp/datagen-batchA.log"
+    "log": "/tmp/dclientdata-party-deck-v2.log"
   },
   "provenance": {
     "entries": 680,
@@ -82,16 +86,16 @@
   },
   "retainedData": {
     "src/main/resources/eln-ids.json": {
-      "previous": 725,
-      "current": 733,
+      "previous": 733,
+      "current": 739,
       "retainedExact": true,
-      "added": 8
+      "added": 6
     },
     "src/generated/resources/assets/eln/lang/en_us.json": {
-      "previous": 1048,
-      "current": 1056,
+      "previous": 1056,
+      "current": 1062,
       "retainedExact": true,
-      "added": 8
+      "added": 6
     }
   },
   "runtime": {
@@ -138,7 +142,7 @@
     "Whole-catalog setup lifts hanging-fixture clearance above its test floor; all 501 devices remain included."
   ],
   "limitations": [
-    "Other 61 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
+    "Other 55 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
     "Original model/icon bytes and source controls/palette are retained; universal pixel-for-pixel or hardware-GPU parity is not established.",
     "The static client exhibit is unpowered; delivered work and loaded-only beam rules are covered by production/native regressions.",
     "One loopback network client is checked; no simultaneous multi-client campaign or audio/hardware-GPU campaign.",
@@ -157,7 +161,9 @@
     "buildMarker": "3451e318d78c",
     "cleanBuild": true,
     "assembleLog": "/tmp/eln-lighting-clean-artifact.log",
-    "allBuildOutputsMatchJarEntries": true
+    "allBuildOutputsMatchJarEntries": true,
+    "stale": true,
+    "staleNote": "Predates the 4352, 4353-4363, 4365-4370, 4374-4381, 4401, 4402 and 4404-4407 style batches; rebuild before relying on this artifact."
   },
   "testedBytesRetainedAfterCommentCorrection": true
 }

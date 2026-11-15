@@ -152,7 +152,13 @@ object ForkPatchDecorativeLampCases {
                 "Halloween Ghost String Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.white())),
                 "Christmas Star Wall Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.GOLD_NUGGET)),
                 "Halloween Bat Wall Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.DYE.black())),
-                "Jack O Lantern Table Lamp" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.CARVED_PUMPKIN)))
+                "Jack O Lantern Table Lamp" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.CARVED_PUMPKIN)),
+                "Patio Festoon Party Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.orange())),
+                "Electric Poolside Tiki Light" to listOf(Eln.findItemStack("Traditional Lantern Post Light",1),ItemStack(Items.BAMBOO)),
+                "Poolside Globe String Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.GLASS_BOTTLE)),
+                "Poolside Party Lantern" to listOf(Eln.findItemStack("Porch Lantern Sconce",1),ItemStack(Items.DYE.lightBlue())),
+                "Deck Post Cap Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(net.minecraft.world.level.block.Blocks.OAK_SLAB.asItem())),
+                "Deck Step Riser Light" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(net.minecraft.world.level.block.Blocks.SPRUCE_SLAB.asItem())))
             for((name,ingredients) in stripPairs){
                 val grid=CraftingInput.of(2,2,listOf(ingredients[0],ItemStack.EMPTY,ItemStack.EMPTY,ingredients[1]))
                 val crafted=c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,grid,c.level()).map { it.value().assemble(grid) }.orElse(ItemStack.EMPTY)

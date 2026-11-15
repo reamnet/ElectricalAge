@@ -4385,6 +4385,42 @@
   "kind": "six_node",
   "name": "jack_o_lantern_table_lamp"
  },
+ "eln:six_node@4401": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Patio Festoon Party Lights",
+  "kind": "six_node",
+  "name": "patio_festoon_party_lights"
+ },
+ "eln:six_node@4402": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Electric Poolside Tiki Light",
+  "kind": "six_node",
+  "name": "electric_poolside_tiki_light"
+ },
+ "eln:six_node@4404": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Poolside Globe String Lights",
+  "kind": "six_node",
+  "name": "poolside_globe_string_lights"
+ },
+ "eln:six_node@4405": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Poolside Party Lantern",
+  "kind": "six_node",
+  "name": "poolside_party_lantern"
+ },
+ "eln:six_node@4406": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Deck Post Cap Light",
+  "kind": "six_node",
+  "name": "deck_post_cap_light"
+ },
+ "eln:six_node@4407": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Deck Step Riser Light",
+  "kind": "six_node",
+  "name": "deck_step_riser_light"
+ },
  "eln:shared_item@302": {
   "descriptor": "LampDescriptor",
   "display": "120V LED Light Bulb",

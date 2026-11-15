@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:traditional_lantern_post_light",
+    "minecraft:bamboo"
+  ],
+  "result": {
+    "id": "eln:electric_poolside_tiki_light"
+  }
+}

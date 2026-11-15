@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_six",
+  "textures": {
+    "particle": "eln:item/electric_poolside_tiki_light"
+  }
+}

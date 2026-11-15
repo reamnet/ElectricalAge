@@ -1,90 +1,70 @@
 {
-  "previousAssertions": 573,
-  "currentAssertions": 589,
-  "unchangedExactAssertions": 573,
+  "previousAssertions": 589,
+  "currentAssertions": 601,
+  "unchangedExactAssertions": 589,
   "addedExactAssertions": [
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4374: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4401: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4375: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4402: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4376: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4404: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4377: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4405: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4378: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4406: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4379: known in 1.12: no such item in golden/1.12/inventory.json",
-      "count": 1
-    },
-    {
-      "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4380: known in 1.12: no such item in golden/1.12/inventory.json",
-      "count": 1
-    },
-    {
-      "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4381: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4407: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Warm White Christmas Fairy Lights has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Patio Festoon Party Lights has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Multicolor Christmas String Lights has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Electric Poolside Tiki Light has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Christmas Icicle Lights has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Poolside Globe String Lights has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Halloween Pumpkin String Lights has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Poolside Party Lantern has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Halloween Ghost String Lights has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Deck Post Cap Light has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Christmas Star Wall Light has no 1.12 container: spec from DecorativeLampDescriptor",
-      "count": 1
-    },
-    {
-      "case": "golden_slots",
-      "assertion": "golden slots: Halloween Bat Wall Light has no 1.12 container: spec from DecorativeLampDescriptor",
-      "count": 1
-    },
-    {
-      "case": "golden_slots",
-      "assertion": "golden slots: Jack O Lantern Table Lamp has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Deck Step Riser Light has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     }
   ],
   "replacedPreviousAssertions": [],
   "referencesModified": false,
-  "explanation": "The seven window/heavy/rig fixtures (4352, 4365-4370) add seven absent-from-1.12 descriptor identities and seven absent-from-1.12 container menus. All 559 previous failed assertions remain exact and the aggregate matching-slot count stays 112 of 137. Original expectations, tolerances and skips are unchanged. The eight seasonal fixtures (4374-4381) add eight absent-from-1.12 descriptor identities and eight absent-from-1.12 container menus. All previous failed assertions remain exact; original expectations, tolerances and skips are unchanged."
+  "explanation": "The six party/deck fixtures (4401, 4402, 4404-4407) add six absent-from-1.12 descriptor identities and six absent-from-1.12 container menus. All 589 previous failed assertions remain exact and the aggregate matching-slot count stays 112 of 137. Original expectations, tolerances and skips are unchanged."
 }

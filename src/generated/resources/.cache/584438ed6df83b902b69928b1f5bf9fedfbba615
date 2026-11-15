@@ -1,4 +1,4 @@
-// 26.3	2026-11-15T08:28:29.062432059	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-15T09:13:21.958761926	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -180,6 +180,8 @@ dbbb12bd98f307467cefd19fa6a0ec1f7271eaa5 data/eln/advancement/recipes/misc/cyan_
 00fa837c4a13e0176ea6eded44c13316368cbb97 data/eln/advancement/recipes/misc/d_flip_flop_chip.json
 075c3a8de538d2e8e46ea5f0ec5945d6f04e6180 data/eln/advancement/recipes/misc/data_logger.json
 0a5773dde2644fd61c0d60a9774b3417c747f731 data/eln/advancement/recipes/misc/dc_dc_converter.json
+f8e40900fe9fc2842b1dd66ac903cbece524fa0b data/eln/advancement/recipes/misc/deck_post_cap_light.json
+3e57fdf1b8f0982d1270a39ee6cdb7a23eb962e3 data/eln/advancement/recipes/misc/deck_step_riser_light.json
 3b9835d4b736df1bd531d82237ab7ca5d3773703 data/eln/advancement/recipes/misc/deep_baffle_recessed_light.json
 ac2011fba37a0aed61ad00c01aebe821b0cdf556 data/eln/advancement/recipes/misc/digital_watch.json
 0d7dcb5584c3b26f927ec60d795c6d92c8996395 data/eln/advancement/recipes/misc/double_candle_wall_sconce.json
@@ -189,6 +191,7 @@ ac2011fba37a0aed61ad00c01aebe821b0cdf556 data/eln/advancement/recipes/misc/digit
 725d0cb22deeba21bcac49e1001afc544813d90f data/eln/advancement/recipes/misc/e_coal_leggings.json
 e8229001b2e6f5f4cd0f4162a618ac5b42cd108d data/eln/advancement/recipes/misc/electric_bike.json
 facef22351b140fc9379e663c3efb4dc5b5c3518 data/eln/advancement/recipes/misc/electric_forklift.json
+8a14593cc77ac0c7f892ab130b29409467255170 data/eln/advancement/recipes/misc/electric_poolside_tiki_light.json
 1909fe845b2e91e94777fdb6a948fe25ae83e6fd data/eln/advancement/recipes/misc/electric_welding_station.json
 cd57f474f8d1480acb959a2c973a132bec70d432 data/eln/advancement/recipes/misc/electrical_anemometer_sensor.json
 53b3b053fd7f58fa7cd711c6fcc548710a4c8d83 data/eln/advancement/recipes/misc/electrical_anvil.json
@@ -341,6 +344,7 @@ a7ec87d7df2857bee7cb762f948868f4ec098ff8 data/eln/advancement/recipes/misc/ore_s
 f040a0f74d9a8ed301c5e1180778e4413fd87668 data/eln/advancement/recipes/misc/overvoltage_protection.json
 c5a247c7eda09b0ba52771500a3dd665134a5401 data/eln/advancement/recipes/misc/pad_mounted_neighbourhood_transformer.json
 33fede72ebcfffbf0ab2ef073240b9cb4538478c data/eln/advancement/recipes/misc/pal_chip.json
+1458d5b6aaeb008f9e21c46c9e04b9d3c02ee955 data/eln/advancement/recipes/misc/patio_festoon_party_lights.json
 b4965ce3977f71a9aa0d7f115ad9fc6106661373 data/eln/advancement/recipes/misc/pid_regulator.json
 c15d5c0cc610b6749034d53b6fe5c87c72a784c3 data/eln/advancement/recipes/misc/pink_brush.json
 c22c87bd08ed65c2308e22e1978b06ec035c7d0b data/eln/advancement/recipes/misc/plant_steam_condenser.json
@@ -348,6 +352,8 @@ c22c87bd08ed65c2308e22e1978b06ec035c7d0b data/eln/advancement/recipes/misc/plant
 e6947c2110c1bbf48fd4818708c4420062b3eab1 data/eln/advancement/recipes/misc/pole_fuse_link.json
 60e0a673caea5a0042b7b9c2fb3d7ca350bdd993 data/eln/advancement/recipes/misc/pole_streetlight_attachment.json
 03859d7d0762c177355b0c0ede08ee485d119220 data/eln/advancement/recipes/misc/pole_surge_arrester.json
+8e9c21452fbbdc46c4db69a99a21712031c0a164 data/eln/advancement/recipes/misc/poolside_globe_string_lights.json
+9c13d5fb5a44b3b5bf02f4e09e9d865f9f55edb3 data/eln/advancement/recipes/misc/poolside_party_lantern.json
 b8ba14c2a8828aa93368a2e475e8e3f607fc8157 data/eln/advancement/recipes/misc/porch_lantern_sconce.json
 af15506bbf1df0708de0892e348079db76cd76b6 data/eln/advancement/recipes/misc/portable_battery.json
 7c8367399d01fd66c86922ca2985f609d7ce06e0 data/eln/advancement/recipes/misc/portable_condensator.json
@@ -728,6 +734,8 @@ e70d02238ffa719c088ac138dab88c1d69bfd4d5 data/eln/recipe/cyan_brush.json
 c40890deab3ed13bca080d4d8684932603c57add data/eln/recipe/d_flip_flop_chip.json
 994ec4a50ae5086f8820bdd7bef2ddda90892dd4 data/eln/recipe/data_logger.json
 e0f38bc4eb3608f2f34e79e22d8e2b7999b3f5ea data/eln/recipe/dc_dc_converter.json
+c04502c59c68b53e72d3aed8f041735a0f8b0263 data/eln/recipe/deck_post_cap_light.json
+dbff6be7118b66a336ae8ba988419c9fb262e601 data/eln/recipe/deck_step_riser_light.json
 9dd4dd46dd9d7525f5600427e4616e84b4ae4590 data/eln/recipe/deep_baffle_recessed_light.json
 58b2964af5b266fa8c333b8769473063e53b694e data/eln/recipe/digital_watch.json
 331a09c3f6759c1784fd09ea65a42a0cb6508deb data/eln/recipe/double_candle_wall_sconce.json
@@ -737,6 +745,7 @@ e0f38bc4eb3608f2f34e79e22d8e2b7999b3f5ea data/eln/recipe/dc_dc_converter.json
 5fd7652fd6f4163bd70e90c8dba4ff7bcbcc61ba data/eln/recipe/e_coal_leggings.json
 011105395c8876f42483b267e81a390f6a3254fc data/eln/recipe/electric_bike.json
 f5f1f6eca75f9ebef501bff8219758cb4304b5ed data/eln/recipe/electric_forklift.json
+1885e0abe868edce9839770b20472eb41f42f8e5 data/eln/recipe/electric_poolside_tiki_light.json
 58ba004ce17f92defb0f9b3cdd6328af7ce8cb5e data/eln/recipe/electric_welding_station.json
 8b9ee2b8504e1b559b8e3feea2996c631270b84e data/eln/recipe/electrical_anemometer_sensor.json
 be0a10d4046f40ee2ad142cbb7193146b1a520b0 data/eln/recipe/electrical_anvil.json
@@ -889,6 +898,7 @@ bf528ceabda211c42878a565139d3114c1da1119 data/eln/recipe/oscillator_chip.json
 64627eb832e80100e8183290402ef92c2aa081e3 data/eln/recipe/overvoltage_protection.json
 9b7769ed3cd8a3cb1b64494f08067fed4d70f811 data/eln/recipe/pad_mounted_neighbourhood_transformer.json
 93b891c67b99090f4e687a2ab2eb61a71c09e438 data/eln/recipe/pal_chip.json
+df196265d18dfd4c3f9b521db8fcfd4b1810d881 data/eln/recipe/patio_festoon_party_lights.json
 c5b8082a0f4371b3a9d0d19015a5cb184cc23fcd data/eln/recipe/pid_regulator.json
 c31f1c59279d00c829341217db7ecf75091cf6fa data/eln/recipe/pink_brush.json
 6ea63de7579029a939062d12a7c7930d2b78a4fc data/eln/recipe/plant_steam_condenser.json
@@ -896,6 +906,8 @@ c31f1c59279d00c829341217db7ecf75091cf6fa data/eln/recipe/pink_brush.json
 0e803994d3a7e894af1d6d822976bec076cc7673 data/eln/recipe/pole_fuse_link.json
 5cc60c7b577b45920ee62be05755e3cc3f8894ac data/eln/recipe/pole_streetlight_attachment.json
 a3973ba41804b0406fddbd86c78220c95aa51c42 data/eln/recipe/pole_surge_arrester.json
+b5a30963d25d980ab6e09f55f175e7f18419c46a data/eln/recipe/poolside_globe_string_lights.json
+3d17090149e60ed2b30c9659fa5cc910423b74ef data/eln/recipe/poolside_party_lantern.json
 3d24f8f89f4dbe3601703ad30b53e1d5951aa2f4 data/eln/recipe/porch_lantern_sconce.json
 e98466c835a24561de034c981fcb9142a1a9d70f data/eln/recipe/portable_battery.json
 6e1ebfac271ea15d5682ebba74d6e3f58b01d1ab data/eln/recipe/portable_condensator.json

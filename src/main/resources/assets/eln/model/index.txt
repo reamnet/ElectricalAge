@@ -39,6 +39,8 @@ crystaltierchandelier/crystaltierchandelier.obj
 cylinderwallsconce/cylinderwallsconce.obj
 dataloggercrtfloor/dataloggercrtfloor.obj
 daylightsensor/daylightsensor.obj
+deckpostcaplight/deckpostcaplight.obj
+decksteplight/decksteplight.obj
 deepbafflepotlight/deepbafflepotlight.obj
 digitalwallclock/digitalwallclock.obj
 distributionboard/distributionboard.obj
@@ -138,11 +140,15 @@ offshorecagedwellglass/offshorecagedwellglass.obj
 offshoresealedlinearlight/offshoresealedlinearlight.obj
 oilpump200v/oilpump200v.obj
 oilpump50v/oilpump50v.obj
+partyfestoonlights/partyfestoonlights.obj
 passivethermaldissipatora/passivethermaldissipatora.obj
+patioglobestring/patioglobestring.obj
 plantcondenser/plantcondenser.obj
 platemachinea/platemachinea.obj
 platemachineb/platemachineb.obj
 poletransformer/poletransformer.obj
+poolsidepartylantern/poolsidepartylantern.obj
+poolsidetikilight/poolsidetikilight.obj
 porchlanternsconce/porchlanternsconce.obj
 powerelectricprimitives/powerelectricprimitives.obj
 powerpole/downlink.obj

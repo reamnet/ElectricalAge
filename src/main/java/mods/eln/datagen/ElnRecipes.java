@@ -285,6 +285,12 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("Christmas Star Wall Light"),findItemStack("Basic Lamp Holder"),Items.GOLD_NUGGET);
         addShapelessRecipe(findItemStack("Halloween Bat Wall Light"),findItemStack("Basic Lamp Holder"),dye(0));
         addShapelessRecipe(findItemStack("Jack O Lantern Table Lamp"),findItemStack("Basic Lamp Holder"),Items.CARVED_PUMPKIN);
+        addShapelessRecipe(findItemStack("Patio Festoon Party Lights"),findItemStack("Flexible Neon LED Strip"),dye(14));
+        addShapelessRecipe(findItemStack("Electric Poolside Tiki Light"),findItemStack("Traditional Lantern Post Light"),Items.BAMBOO);
+        addShapelessRecipe(findItemStack("Poolside Globe String Lights"),findItemStack("Flexible Neon LED Strip"),Items.GLASS_BOTTLE);
+        addShapelessRecipe(findItemStack("Poolside Party Lantern"),findItemStack("Porch Lantern Sconce"),dye(12));
+        addShapelessRecipe(findItemStack("Deck Post Cap Light"),findItemStack("Basic Lamp Holder"),vanilla("oak_slab"));
+        addShapelessRecipe(findItemStack("Deck Step Riser Light"),findItemStack("Flat Lamp Socket"),vanilla("spruce_slab"));
     }
 
     public static void recipeLampSocket() {
