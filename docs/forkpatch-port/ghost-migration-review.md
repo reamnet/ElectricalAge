@@ -11,7 +11,7 @@ walls or battery shapes.
 | Floor plate | 1 | 1 |
 | Ladder | 2 | 2 |
 | Clearance | 3 | 8 for native clearance collision; selection behavior needs review |
-| Lamp clearance | 4 | No dedicated native lamp variant; review the lighting adapter |
+| Lamp clearance | 4 | The first 21 decorative adapters use native empty clearance 8; dedicated source outline/picking parity and source-world mapping remain open |
 | Wall extension, front north | 5 | 5 |
 | Wall extension, front south | 6 | 6 |
 | Wall extension, front east | 7 | 4 |

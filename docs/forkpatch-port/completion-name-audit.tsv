@@ -1,0 +1,782 @@
+sourceLiteralName	sourceFiles	nativeExactDisplayKeys	review
+1 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7884	runtime-registration-and-semantic-review
+10 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7889	runtime-registration-and-semantic-review
+10 kW Pole Transformer	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7879	runtime-registration-and-semantic-review
+100 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7893	runtime-registration-and-semantic-review
+100 A Vehicle Charging Lead	src/main/kotlin/mods/eln/vehicle/VehicleCharger.kt		runtime-registration-and-semantic-review
+100 kW Pole Transformer	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7883	runtime-registration-and-semantic-review
+100A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+100A Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+10A Diode	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6144	runtime-registration-and-semantic-review
+10A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+10A Lead Fuse	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+12.5 kV Cable Feed Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+12.5 kV Line Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+12.5kV Single Phase Fused Underground Feeder	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8033	runtime-registration-and-semantic-review
+12.5kV Single Phase Fused Underground Feeder with Street Light	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8035	runtime-registration-and-semantic-review
+12.5kV Three Phase Fused Underground Feeder	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8034	runtime-registration-and-semantic-review
+12.5kV Three Phase Fused Underground Feeder with Street Light	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8036	runtime-registration-and-semantic-review
+120 V Wall Outlet	src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt		runtime-registration-and-semantic-review
+120/240V Secondary Street Light Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7979	runtime-registration-and-semantic-review
+120/240V Secondary Utility Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7978	runtime-registration-and-semantic-review
+120/240V Service Weatherhead	src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt	eln:transparent_node@7986	runtime-registration-and-semantic-review
+120/240V Underground Service Handhole	src/main/kotlin/mods/eln/utility/UndergroundHandhole.kt	eln:transparent_node@8130	runtime-registration-and-semantic-review
+120V Basic Floodlight	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+120V Battery Charger	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+120V Carbon Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+120V Emergency Lamp	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+120V Farming Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+120V Fast Battery Charger	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+120V Fluorescent Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+120V Halogen Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+120V Incandescent Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+120V LED Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@302	runtime-registration-and-semantic-review
+120V Lamp Supply	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4162	runtime-registration-and-semantic-review
+125A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+12V Carbon Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+12V Control Relay 100A	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+12V Control Relay 20A	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+12V Control Relay 50A	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+12V Farming Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+12V Fluorescent Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+12V Halogen Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+12V Incandescent Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+12V LDO Regulator Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+12V LED Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+15A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+15A Lead Fuse	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+16 kWh LiFePO4 Battery Cabinet	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8192	runtime-registration-and-semantic-review
+16 kWh LiFePO4 Cell Stack	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:shared_item@7495	runtime-registration-and-semantic-review
+16 kWh Wall-mounted LiFePO4 Battery	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8196	runtime-registration-and-semantic-review
+2 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7885	runtime-registration-and-semantic-review
+20 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7890	runtime-registration-and-semantic-review
+200 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7894	runtime-registration-and-semantic-review
+200 V Workshop Cord	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@8002	runtime-registration-and-semantic-review
+200 V Workshop Outlet	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:transparent_node@8002	runtime-registration-and-semantic-review
+200A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+20A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+20A Lead Fuse	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+20A Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+230 kV Cable Feed Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+230 kV Line Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+230 kV Steel Transmission Tower	src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt	eln:transparent_node@8015	runtime-registration-and-semantic-review
+230 kV Three Phase Cable Riser Tower	src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt	eln:transparent_node@8021	runtime-registration-and-semantic-review
+230 kV Three Phase Substation Disconnect	src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt		runtime-registration-and-semantic-review
+230 kV to 69 kV Substation Transformer	src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt		runtime-registration-and-semantic-review
+24 V Machine Cord	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@8000	runtime-registration-and-semantic-review
+24 V Machine Outlet	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:transparent_node@8000	runtime-registration-and-semantic-review
+240 V 100 A Vehicle Charger	src/main/kotlin/mods/eln/vehicle/VehicleClient.kt		runtime-registration-and-semantic-review
+240 V 30 A Dryer Cord	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@8006	runtime-registration-and-semantic-review
+240 V 30 A Dryer Outlet	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:transparent_node@8012	runtime-registration-and-semantic-review
+240 V Appliance Cord	src/main/kotlin/mods/eln/registration/ItemRegistration.kt;src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@7875	runtime-registration-and-semantic-review
+240 V Wall Outlet	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:transparent_node@7969	runtime-registration-and-semantic-review
+240V Active Thermal Dissipator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Battery Charger	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Carbon Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+240V Compressor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Copper Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+240V Emergency Lamp	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Evaporative Heat Sink	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Farming Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+240V Fluorescent Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+240V Fuel Generator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Halogen Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+240V Incandescent Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+240V Iron Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+240V LED Light Bulb	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@303	runtime-registration-and-semantic-review
+240V Lamp Supply	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4161	runtime-registration-and-semantic-review
+240V Macerator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Magnetizer	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Motorized Floodlight	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Plate Machine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Tungsten Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+240V Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Type E Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+240V Type J Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+24V Egg Incubator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+24V Small Active Thermal Dissipator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+25 kW Pole Transformer	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7880	runtime-registration-and-semantic-review
+25A Diode	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6145	runtime-registration-and-semantic-review
+2x Graphite Rods	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+2x3 Rotating Solar Panel	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@3076	runtime-registration-and-semantic-review
+2x3 Solar Panel	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@3075	runtime-registration-and-semantic-review
+3 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7886	runtime-registration-and-semantic-review
+3.2 kV Cable Feed Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+3.2 kV Industrial Cord	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@8005	runtime-registration-and-semantic-review
+3.2 kV Industrial Outlet	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:transparent_node@8005	runtime-registration-and-semantic-review
+3.2 kV Line Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+3.3V Boost Regulator Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+3.3V LDO Regulator Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+30 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7891	runtime-registration-and-semantic-review
+30A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+30A Lead Fuse	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+32 kWh LiFePO4 Battery Cabinet	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8193	runtime-registration-and-semantic-review
+32 kWh Wall-mounted LiFePO4 Battery	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8197	runtime-registration-and-semantic-review
+3x Graphite Rods	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+400 A DC Battery Disconnect	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8204	runtime-registration-and-semantic-review
+400A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+40A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+48 V 20 kWh Traction Battery	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt	eln:shared_item_stack_one@7488	runtime-registration-and-semantic-review
+48 V Machine Cord	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@8001	runtime-registration-and-semantic-review
+48 V Machine Outlet	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:transparent_node@8001	runtime-registration-and-semantic-review
+48 kWh LiFePO4 Battery Cabinet	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8194	runtime-registration-and-semantic-review
+48 kWh Wall-mounted LiFePO4 Battery	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8198	runtime-registration-and-semantic-review
+480 V Industrial Cord	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@8003	runtime-registration-and-semantic-review
+480 V Industrial Fluid Pump	src/main/kotlin/mods/eln/transparentnode/pump/IndustrialPumpClient.kt		runtime-registration-and-semantic-review
+480 V Industrial Outlet	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:transparent_node@8003	runtime-registration-and-semantic-review
+480V Defence Turret	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+480V Heavy Tungsten Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+480V Tungsten Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+48V Compressor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+48V Copper Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+48V Fuel Generator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+48V Iron Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+48V Macerator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+48V Magnetizer	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+48V Plate Machine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+48V Tungsten Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+48V Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+4x Graphite Rods	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+5 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7887	runtime-registration-and-semantic-review
+50 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7892	runtime-registration-and-semantic-review
+50 kW Pole Transformer	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7881	runtime-registration-and-semantic-review
+50A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+50A Lead Fuse	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+50A Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+5A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+5A Lead Fuse	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+5A Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+5V Boost Regulator Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+5V Control Relay 10A	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+5V LDO Regulator Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+60A Electrical Breaker	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+64 kWh LiFePO4 Battery Cabinet	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8195	runtime-registration-and-semantic-review
+64 kWh Wall-mounted LiFePO4 Battery	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8199	runtime-registration-and-semantic-review
+69 kV Cable Feed Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+69 kV Line Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+69 kV Steel Transmission Pole	src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt	eln:transparent_node@8014	runtime-registration-and-semantic-review
+69 kV Three Phase Cable Riser Pole	src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt	eln:transparent_node@8020	runtime-registration-and-semantic-review
+69 kV Three Phase Substation Disconnect	src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt		runtime-registration-and-semantic-review
+69 kV to 12.5 kV Substation Transformer	src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt		runtime-registration-and-semantic-review
+75 kW Pole Transformer	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7882	runtime-registration-and-semantic-review
+8 A Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7888	runtime-registration-and-semantic-review
+800 V Cable Feed Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+800 V Industrial Cord	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@8004	runtime-registration-and-semantic-review
+800 V Industrial Outlet	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:transparent_node@8004	runtime-registration-and-semantic-review
+800 V Line Insulator	src/main/kotlin/mods/eln/utility/insulator/LineInsulator.kt		runtime-registration-and-semantic-review
+800V Arc Furnace	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+AC LiFePO4 Battery Charger	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8202	runtime-registration-and-semantic-review
+AND Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7553	runtime-registration-and-semantic-review
+Adjustable Gimbal Recessed Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Adjustable Suspended Warehouse Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Advanced Chip	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7681	runtime-registration-and-semantic-review
+Advanced Electrical Motor	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@641	runtime-registration-and-semantic-review
+Advanced Energy Meter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6277	runtime-registration-and-semantic-review
+Advanced Machine Block	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7703	runtime-registration-and-semantic-review
+Advanced Magnet	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7709	runtime-registration-and-semantic-review
+AllMeter	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Alloy Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@9	runtime-registration-and-semantic-review
+Alloy Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@519	runtime-registration-and-semantic-review
+Alloy Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7691	runtime-registration-and-semantic-review
+Alloy Turbine Blade	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Aluminum Roller Wheel	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7554	runtime-registration-and-semantic-review
+Amplifier	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7940	runtime-registration-and-semantic-review
+Analog Glass Service Meter	src/main/kotlin/mods/eln/utility/UtilityItems.kt	eln:shared_item@7877	runtime-registration-and-semantic-review
+Analog Watch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Analog vuMeter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Analogic Regulator	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@200	runtime-registration-and-semantic-review
+Animal Filter	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7722	runtime-registration-and-semantic-review
+Arc Clay Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Arc Metal Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Arc Runner Coupe	src/main/kotlin/mods/eln/vehicle/RoadVehicles.kt		runtime-registration-and-semantic-review
+Arched Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Arithmetic Logic Unit	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@8068	runtime-registration-and-semantic-review
+Armored Oval Bulkhead Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Articulated Task Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Aura Five Blade Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Auto Miner	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@2688	runtime-registration-and-semantic-review
+Automatic Load Shedding Controller	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8070	runtime-registration-and-semantic-review
+Automatic Transfer Switch	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7942	runtime-registration-and-semantic-review
+Average Electrical Drill	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@961	runtime-registration-and-semantic-review
+Average Ferromagnetic Core	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@449	runtime-registration-and-semantic-review
+Basic Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4120	runtime-registration-and-semantic-review
+Basic Lamp Holder	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4123	runtime-registration-and-semantic-review
+Basic Magnet	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7708	runtime-registration-and-semantic-review
+Big Fuel Burner	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7938	runtime-registration-and-semantic-review
+Black Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7616	runtime-registration-and-semantic-review
+Blown Lead Fuse	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:shared_item@6283	runtime-registration-and-semantic-review
+Blown Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7895	runtime-registration-and-semantic-review
+Blue Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7620	runtime-registration-and-semantic-review
+Boulevard Lantern Street Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Brown Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7619	runtime-registration-and-semantic-review
+Candle Arm Foyer Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4127	runtime-registration-and-semantic-review
+Canister of Arc Water	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Canister of Water	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Capacity Oriented Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@1025	runtime-registration-and-semantic-review
+Casing	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7733	runtime-registration-and-semantic-review
+Ceiling Color Segregated Cable Tray	src/main/kotlin/mods/eln/utility/ColorCableTray.kt		runtime-registration-and-semantic-review
+Ceramic Drum Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Cheap Chip	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7680	runtime-registration-and-semantic-review
+Cheap Electrical Drill	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@960	runtime-registration-and-semantic-review
+Cheap Ferromagnetic Core	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@448	runtime-registration-and-semantic-review
+Christmas Icicle Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Christmas Star Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Christmas Tree	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Cinnabar Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@10	runtime-registration-and-semantic-review
+Cinnabar Ore	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:ore@6	runtime-registration-and-semantic-review
+Classic Box Fan	src/main/kotlin/mods/eln/transparentnode/fan/FanType.kt		runtime-registration-and-semantic-review
+Classic Four Blade Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Classic Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Climate Controlled Growing Bed	src/main/kotlin/mods/eln/transparentnode/growing/GrowingBedClient.kt		runtime-registration-and-semantic-review
+Clutch	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Clutch Pin	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Coal Clutch Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Coal Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@8	runtime-registration-and-semantic-review
+Coal Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7692	runtime-registration-and-semantic-review
+Combustion Chamber	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@384	runtime-registration-and-semantic-review
+Compact Desktop Box Fan	src/main/kotlin/mods/eln/transparentnode/fan/FanType.kt		runtime-registration-and-semantic-review
+Compact Side Entry Service Mast	src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt	eln:transparent_node@8028	runtime-registration-and-semantic-review
+Conduit	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Config Copy Tool	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Configurable summing unit	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7942	runtime-registration-and-semantic-review
+Copper Axe	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:copper_axe@0	runtime-registration-and-semantic-review
+Copper Boots	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:copper_boots@0	runtime-registration-and-semantic-review
+Copper Cable	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4160	runtime-registration-and-semantic-review
+Copper Chestplate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:copper_chestplate@0	runtime-registration-and-semantic-review
+Copper Clutch Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Copper Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@577	runtime-registration-and-semantic-review
+Copper Helmet	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:copper_helmet@0	runtime-registration-and-semantic-review
+Copper Hoe	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:copper_hoe@0	runtime-registration-and-semantic-review
+Copper Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@513	runtime-registration-and-semantic-review
+Copper Leggings	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:copper_leggings@0	runtime-registration-and-semantic-review
+Copper Ore	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:ore@1	runtime-registration-and-semantic-review
+Copper Pickaxe	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:copper_pickaxe@0	runtime-registration-and-semantic-review
+Copper Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7686	runtime-registration-and-semantic-review
+Copper Shovel	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:copper_shovel@0	runtime-registration-and-semantic-review
+Copper Sword	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:copper_sword@0	runtime-registration-and-semantic-review
+Copper Thermal Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@3073	runtime-registration-and-semantic-review
+Corner Fireplace TV Stand	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
+Cost Oriented Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@1024	runtime-registration-and-semantic-review
+Countertop Blender	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Crank Shaft	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Create Shaft Adapter	src/main/kotlin/mods/eln/integration/create/CreateIntegration.kt		runtime-registration-and-semantic-review
+Creative Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Creative Power Capacitor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Creative Power Inductor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Creative Power Resistor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Crystal Tier Foyer Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4128	runtime-registration-and-semantic-review
+Current Oriented Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@1027	runtime-registration-and-semantic-review
+Current Source	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Cyan Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7622	runtime-registration-and-semantic-review
+D Flip Flop Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7561	runtime-registration-and-semantic-review
+DC-DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@128	runtime-registration-and-semantic-review
+Data Logger	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@5952	runtime-registration-and-semantic-review
+Data Logger Print	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7712	runtime-registration-and-semantic-review
+Deck Post Cap Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Deck Step Riser Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Deep Baffle Recessed Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4140	runtime-registration-and-semantic-review
+Diamond Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Dielectric	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7732	runtime-registration-and-semantic-review
+Digital Display	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Digital Watch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7493	runtime-registration-and-semantic-review
+Direct Utility Pole	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Double Candle Wall Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4136	runtime-registration-and-semantic-review
+Dual Gumdrop Sidewalk Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+E-Coal Boots	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:e_coal_boots@0	runtime-registration-and-semantic-review
+E-Coal Chestplate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:e_coal_chestplate@0	runtime-registration-and-semantic-review
+E-Coal Helmet	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:e_coal_helmet@0	runtime-registration-and-semantic-review
+E-Coal Leggings	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:e_coal_leggings@0	runtime-registration-and-semantic-review
+EAReplicator	src/main/kotlin/mods/eln/registration/EntityRegistration.kt		runtime-registration-and-semantic-review
+ELN to CEE Power Bridge	src/main/kotlin/mods/eln/integration/electroenergetics/CeeBridgeClient.kt		runtime-registration-and-semantic-review
+Electric Coffee Maker	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Electric Dryer	src/main/kotlin/mods/eln/transparentnode/laundry/MatterMachineKind.kt		runtime-registration-and-semantic-review
+Electric Forklift	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt	eln:shared_item_stack_one@7490	runtime-registration-and-semantic-review
+Electric Golf Cart	src/main/kotlin/mods/eln/vehicle/RoadVehicles.kt		runtime-registration-and-semantic-review
+Electric Kettle	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Electric Microwave	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Electric Minecart	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Electric Mini Fridge	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Electric Mini Oven	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Electric Patio Heater	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
+Electric Poolside Tiki Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Electric Refrigerator	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Electric Rice Cooker	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Electric Toaster	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Electric Washing Machine	src/main/kotlin/mods/eln/transparentnode/laundry/MatterMachineKind.kt		runtime-registration-and-semantic-review
+Electric Welding Station	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8072	runtime-registration-and-semantic-review
+Electrical Anemometer Sensor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6664	runtime-registration-and-semantic-review
+Electrical Daylight Sensor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6656	runtime-registration-and-semantic-review
+Electrical Entity Sensor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6668	runtime-registration-and-semantic-review
+Electrical Fire Buzzer	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6670	runtime-registration-and-semantic-review
+Electrical Fire Detector	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6669	runtime-registration-and-semantic-review
+Electrical Furnace	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@2048	runtime-registration-and-semantic-review
+Electrical Fuse Holder	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6278	runtime-registration-and-semantic-review
+Electrical Light Sensor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6657	runtime-registration-and-semantic-review
+Electrical Motor	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@640	runtime-registration-and-semantic-review
+Electrical Probe	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6400	runtime-registration-and-semantic-review
+Electrical Probe Chip	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7683	runtime-registration-and-semantic-review
+Electrical Source	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@192	runtime-registration-and-semantic-review
+Electrical Timer	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6976	runtime-registration-and-semantic-review
+Electrical Weather Sensor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6660	runtime-registration-and-semantic-review
+Energy Meter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6276	runtime-registration-and-semantic-review
+Experimental Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Experimental Transporter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4160	runtime-registration-and-semantic-review
+Experimental Wall Outlet	src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:transparent_node@7968	runtime-registration-and-semantic-review
+Extra Large Standby Gasoline Generator	src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt	eln:transparent_node@8026	runtime-registration-and-semantic-review
+Extreme Standby Gasoline Generator	src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt	eln:transparent_node@8027	runtime-registration-and-semantic-review
+Fabric Shade Wall Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4133	runtime-registration-and-semantic-review
+Fabricator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4480	runtime-registration-and-semantic-review
+Falstad Import Tool	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Farmhouse Fireplace TV Stand	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
+Fast Electrical Drill	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@962	runtime-registration-and-semantic-review
+Ferrite Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@518	runtime-registration-and-semantic-review
+Fire Alarm Bell	src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmKind.kt		runtime-registration-and-semantic-review
+Fire Alarm Control Panel	src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmKind.kt		runtime-registration-and-semantic-review
+Fire Alarm Heat Detector	src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmKind.kt		runtime-registration-and-semantic-review
+Fire Alarm Horn Strobe	src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmKind.kt		runtime-registration-and-semantic-review
+Fire Alarm Pull Station	src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmKind.kt		runtime-registration-and-semantic-review
+Fire Alarm Smoke Detector	src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmKind.kt		runtime-registration-and-semantic-review
+Fire Alarm Strobe	src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmKind.kt		runtime-registration-and-semantic-review
+Fixed Shaft	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Flat Electric Cooktop	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Flat Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4101	runtime-registration-and-semantic-review
+Flexible Appliance Cord	src/main/kotlin/mods/eln/registration/ItemRegistration.kt;src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@7874	runtime-registration-and-semantic-review
+Flexible Neon LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Fluorescent Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4103	runtime-registration-and-semantic-review
+Flywheel	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@270	runtime-registration-and-semantic-review
+Four Cell Plug-in UPS	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@8076	runtime-registration-and-semantic-review
+Four Pole Changeover Relay	src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt	eln:transparent_node@8040	runtime-registration-and-semantic-review
+Fresh Coffee	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenFoods.kt		runtime-registration-and-semantic-review
+Fruit Smoothie	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenFoods.kt		runtime-registration-and-semantic-review
+Fuel Heat Furnace	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@193	runtime-registration-and-semantic-review
+Fused PV Combiner and Disconnect	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8203	runtime-registration-and-semantic-review
+Fused Underground 120/240V Service Pedestal	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8032	runtime-registration-and-semantic-review
+Fusion Matter Reactor	src/main/kotlin/mods/eln/transparentnode/laundry/MatterMachineKind.kt		runtime-registration-and-semantic-review
+Garden Bollard Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4143	runtime-registration-and-semantic-review
+Gas Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@267	runtime-registration-and-semantic-review
+Gasoline Construction Work Light	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Generator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@266	runtime-registration-and-semantic-review
+Glass Globe Wall Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4134	runtime-registration-and-semantic-review
+Gold Clutch Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Gold Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7	runtime-registration-and-semantic-review
+Gold Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7688	runtime-registration-and-semantic-review
+Gooseneck Barn Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4144	runtime-registration-and-semantic-review
+Gooseneck Service Mast	src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt	eln:transparent_node@8030	runtime-registration-and-semantic-review
+Grand Crystal Cascade Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Grand Empire Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Grand Halo Ring Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Graphite Rod	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Gray Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7624	runtime-registration-and-semantic-review
+Green Banker Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Green Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7618	runtime-registration-and-semantic-review
+Grid Control Console	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8065	runtime-registration-and-semantic-review
+Grid DC-DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Grid Switch	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Ground Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@128	runtime-registration-and-semantic-review
+Gumdrop Sidewalk Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Halloween Bat Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Halloween Ghost String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Halloween Pumpkin String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Harbor Gooseneck Pier Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Heavy Duty Stadium Wall Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Heavy Winding	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+High Current Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+High Current Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+High Power Receiver Antenna	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@453	runtime-registration-and-semantic-review
+High Power Transmitter Antenna	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@452	runtime-registration-and-semantic-review
+High Voltage Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@2060	runtime-registration-and-semantic-review
+High Voltage Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6018	runtime-registration-and-semantic-review
+High Voltage Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6208	runtime-registration-and-semantic-review
+Holiday Candle	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Hot Water	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenFoods.kt		runtime-registration-and-semantic-review
+Household Desk Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Hub	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@136	runtime-registration-and-semantic-review
+Humidity Sensor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Hybrid Solar Inverter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7945	runtime-registration-and-semantic-review
+Improved Flashlight	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7745	runtime-registration-and-semantic-review
+Indirect Cove LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Industrial Cage Wall Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4135	runtime-registration-and-semantic-review
+Industrial Create Shaft Adapter	src/main/kotlin/mods/eln/integration/create/CreateIntegration.kt		runtime-registration-and-semantic-review
+Industrial Data Logger	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@5954	runtime-registration-and-semantic-review
+Industrial Five Block Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Industrial Five Block Fan	src/main/kotlin/mods/eln/transparentnode/fan/FanType.kt		runtime-registration-and-semantic-review
+Industrial Wall Pack Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Industrial Yard Area Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Inert Canister	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Iron Cable	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4161	runtime-registration-and-semantic-review
+Iron Clutch Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Iron Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@578	runtime-registration-and-semantic-review
+Iron Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7687	runtime-registration-and-semantic-review
+Iron Roller Wheel	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7552	runtime-registration-and-semantic-review
+Iron Turbine Blade	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Irresponsible Electrical Drill	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Isolation Transformer	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+JK Flip Flop Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7563	runtime-registration-and-semantic-review
+Jack O Lantern Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Joint	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@268	runtime-registration-and-semantic-review
+Joint hub	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@269	runtime-registration-and-semantic-review
+Jukebox Ceiling Speaker	src/main/kotlin/mods/eln/api/media/MediaAddonProvider.kt		runtime-registration-and-semantic-review
+Jukebox Standing Speaker	src/main/kotlin/mods/eln/api/media/MediaAddonProvider.kt		runtime-registration-and-semantic-review
+LED vuMeter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6536	runtime-registration-and-semantic-review
+Lantern Cage Foyer Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4130	runtime-registration-and-semantic-review
+Lapis Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Large Area Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Large Flywheel	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Large Gas Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Large Generator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Large Rheostat	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@6183	runtime-registration-and-semantic-review
+Large Shaft Motor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Large Standby Gasoline Generator	src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt	eln:transparent_node@8025	runtime-registration-and-semantic-review
+Large Steam Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Large Watermill 3.2kV	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@16383	runtime-registration-and-semantic-review
+Large Wind Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Lead Clutch Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Lead Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@5	runtime-registration-and-semantic-review
+Lead Fuse for high voltage cables	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:shared_item@6281	runtime-registration-and-semantic-review
+Lead Fuse for low voltage cables	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:shared_item@6279	runtime-registration-and-semantic-review
+Lead Fuse for medium voltage cables	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:shared_item@6280	runtime-registration-and-semantic-review
+Lead Fuse for very high voltage cables	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:shared_item@6282	runtime-registration-and-semantic-review
+Lead Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@516	runtime-registration-and-semantic-review
+Lead Ore	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:ore@4	runtime-registration-and-semantic-review
+Lead Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7689	runtime-registration-and-semantic-review
+Legacy DC-DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Legacy Signal Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+LiFePO4 MPPT Charge Controller	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8201	runtime-registration-and-semantic-review
+Life Oriented Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@1028	runtime-registration-and-semantic-review
+Light Blue Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7628	runtime-registration-and-semantic-review
+Lime Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7626	runtime-registration-and-semantic-review
+Linear Pool Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Long Suspended Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4109	runtime-registration-and-semantic-review
+Long Suspended Lamp Socket (No Swing)	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Louvered Walkway Bollard	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Low Current Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Low Current Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Low Power Receiver Antenna	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@449	runtime-registration-and-semantic-review
+Low Power Transmitter Antenna	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@448	runtime-registration-and-semantic-review
+Low Profile Dock Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Low Voltage Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@2052	runtime-registration-and-semantic-review
+Low Voltage Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6016	runtime-registration-and-semantic-review
+Low Voltage Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6209	runtime-registration-and-semantic-review
+Lowpass filter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7944	runtime-registration-and-semantic-review
+MPPT Solar Controller	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7944	runtime-registration-and-semantic-review
+MQTT Energy Meter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+MQTT Signal Controller	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Machine Block	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7682	runtime-registration-and-semantic-review
+Machine Booster	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7702	runtime-registration-and-semantic-review
+Magenta Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7629	runtime-registration-and-semantic-review
+Mains Step-down Unit	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7882	runtime-registration-and-semantic-review
+Marine Pier Bulkhead Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Medium Current Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Medium Current Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Medium Fuel Burner	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7937	runtime-registration-and-semantic-review
+Medium Power Receiver Antenna	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@451	runtime-registration-and-semantic-review
+Medium Power Transmitter Antenna	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@450	runtime-registration-and-semantic-review
+Medium Standby Gasoline Generator	src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt	eln:transparent_node@8024	runtime-registration-and-semantic-review
+Medium Voltage Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@2056	runtime-registration-and-semantic-review
+Medium Voltage Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6017	runtime-registration-and-semantic-review
+Medium Voltage Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6210	runtime-registration-and-semantic-review
+Mercury	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@520	runtime-registration-and-semantic-review
+Metal Shop Box Fan	src/main/kotlin/mods/eln/transparentnode/fan/FanType.kt		runtime-registration-and-semantic-review
+Mini Bezel Dot Spotlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Mini Deep Baffle Dot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Mini Dot Spotlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Mini Eyeball Dot Spotlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Mini Pinhole Dot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Mini Twin Dot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Mining Pipe	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@1088	runtime-registration-and-semantic-review
+Modbus RTU	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Modern Blade Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Modern Data Logger	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@5953	runtime-registration-and-semantic-review
+Modern Fireplace TV Stand	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
+Modern LED Street Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Modern Sputnik Foyer Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4131	runtime-registration-and-semantic-review
+Modern Three Blade Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Monster Filter	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7721	runtime-registration-and-semantic-review
+Motor Cowling	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+MultiMeter	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Multicolor Christmas String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Multicolor Deck Globe String Lights	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Multicolor Fairy Lights on Green Wire	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Multicolor LED vuMeter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Multicolor Party Wash Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Mushroom Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+NAND Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7554	runtime-registration-and-semantic-review
+NOR Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7556	runtime-registration-and-semantic-review
+NOT Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7552	runtime-registration-and-semantic-review
+NTC Thermistor	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@8066	runtime-registration-and-semantic-review
+Nautical Pier Bollard Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Nibble Memory Chip	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@8067	runtime-registration-and-semantic-review
+Nixie Tube	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+North American Meter Base	src/main/kotlin/mods/eln/utility/HouseServiceClient.kt	eln:transparent_node@7987	runtime-registration-and-semantic-review
+Nuclear Alarm	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6592	runtime-registration-and-semantic-review
+OR Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7555	runtime-registration-and-semantic-review
+Off-grid Inverter Charger	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8200	runtime-registration-and-semantic-review
+Offset Twin Arm Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Offshore Caged Wellglass Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Offshore Platform Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Offshore Sealed Linear Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Old 480V Arc Furnace	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+On/OFF Regulator 1 Percent	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+On/OFF Regulator 10 Percent	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+One-way Boost vDC/DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@132	runtime-registration-and-semantic-review
+One-way Boost/Buck vDC/DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@134	runtime-registration-and-semantic-review
+One-way Buck vDC/DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@133	runtime-registration-and-semantic-review
+One-way DC-DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@131	runtime-registration-and-semantic-review
+OpAmp	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7936	runtime-registration-and-semantic-review
+Optimal Ferromagnetic Core	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@450	runtime-registration-and-semantic-review
+Orange Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7630	runtime-registration-and-semantic-review
+Ore Scanner	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@1024	runtime-registration-and-semantic-review
+Oscillator Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7562	runtime-registration-and-semantic-review
+Outdoor Motion Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Overhead Lines	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Overheating Protection	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@320	runtime-registration-and-semantic-review
+Overvoltage Protection	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@321	runtime-registration-and-semantic-review
+PAL Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7559	runtime-registration-and-semantic-review
+PID Regulator	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7937	runtime-registration-and-semantic-review
+Pad Mounted Neighbourhood Transformer	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8068	runtime-registration-and-semantic-review
+Patio Electric Grill	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
+Patio Festoon Party Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Pier Lantern Post Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Pink Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7625	runtime-registration-and-semantic-review
+Player Filter	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7720	runtime-registration-and-semantic-review
+Polarized Shaft Generator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Polarized Shaft Motor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Pole Fuse Link	src/main/kotlin/mods/eln/utility/UtilityItems.kt	eln:shared_item@7876	runtime-registration-and-semantic-review
+Pole Streetlight Attachment	src/main/kotlin/mods/eln/utility/UtilityItems.kt	eln:shared_item@7896	runtime-registration-and-semantic-review
+Pole Surge Arrester	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8067	runtime-registration-and-semantic-review
+Pool Corner Wash Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Pool Step Marker Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Poolside Globe String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Poolside Party Lantern	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Porch Lantern Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4122	runtime-registration-and-semantic-review
+Portable Battery	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7808	runtime-registration-and-semantic-review
+Portable Battery Pack	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7809	runtime-registration-and-semantic-review
+Portable Condensator	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Portable Condensator Pack	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Portable Electric Space Heater	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
+Portable Electrical Axe	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7756	runtime-registration-and-semantic-review
+Portable Electrical Mining Drill	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7752	runtime-registration-and-semantic-review
+Portable NaN	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Power Capacitor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6176	runtime-registration-and-semantic-review
+Power Inductor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6178	runtime-registration-and-semantic-review
+Power Resistor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6180	runtime-registration-and-semantic-review
+Power capacitor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@84	runtime-registration-and-semantic-review
+Power inductor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@80	runtime-registration-and-semantic-review
+Powered Browser Television	src/main/kotlin/mods/eln/api/media/MediaAddonProvider.kt		runtime-registration-and-semantic-review
+Powered Web Jukebox	src/main/kotlin/mods/eln/api/media/MediaAddonProvider.kt		runtime-registration-and-semantic-review
+Programmable EV Pack Charger	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8071	runtime-registration-and-semantic-review
+Programmable Load Bank	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8064	runtime-registration-and-semantic-review
+Programmable UPS	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7947	runtime-registration-and-semantic-review
+Protective Relay Cabinet	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8066	runtime-registration-and-semantic-review
+Purple Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7621	runtime-registration-and-semantic-review
+Quad Head Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Radial Motor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Recessed Brick Patio Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Recessed LED Channel	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Recessed Square Patio Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Red Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7617	runtime-registration-and-semantic-review
+Red Handle Service Disconnect	src/main/kotlin/mods/eln/utility/HouseServiceClient.kt	eln:transparent_node@7992	runtime-registration-and-semantic-review
+Redstone-to-Voltage Converter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6912	runtime-registration-and-semantic-review
+Reinforced Shaft	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Rheostat	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6181	runtime-registration-and-semantic-review
+Robust Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4100	runtime-registration-and-semantic-review
+Rolling Shaft 	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Round Canopy Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Round Niche Pool Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Round Recessed Ceiling Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4119	runtime-registration-and-semantic-review
+Round Stone Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Rubber	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4097	runtime-registration-and-semantic-review
+Rugged Outdoor Canopy Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Sample and hold	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7943	runtime-registration-and-semantic-review
+Scanner	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6671	runtime-registration-and-semantic-review
+Schmitt Trigger Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7560	runtime-registration-and-semantic-review
+Sconce Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4105	runtime-registration-and-semantic-review
+Sculptural Branch Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Shaft Motor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Shielded Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Shoebox Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Signal 20H inductor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6160	runtime-registration-and-semantic-review
+Signal Antenna	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7713	runtime-registration-and-semantic-review
+Signal Bus Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Signal Button	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6088	runtime-registration-and-semantic-review
+Signal Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@2048	runtime-registration-and-semantic-review
+Signal Diode	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6152	runtime-registration-and-semantic-review
+Signal Processor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6980	runtime-registration-and-semantic-review
+Signal Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6020	runtime-registration-and-semantic-review
+Signal Source	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@193	runtime-registration-and-semantic-review
+Signal Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6081;eln:six_node@6211	runtime-registration-and-semantic-review
+Signal Switch with LED	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6216	runtime-registration-and-semantic-review
+Signal Trimmer	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6080	runtime-registration-and-semantic-review
+Silicon Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7696	runtime-registration-and-semantic-review
+Silicon Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7697	runtime-registration-and-semantic-review
+Silicon Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7690	runtime-registration-and-semantic-review
+Silicon Wafer	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@8064	runtime-registration-and-semantic-review
+Silver Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7623	runtime-registration-and-semantic-review
+Simple Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4102	runtime-registration-and-semantic-review
+Single Phase Automatic Voltage Regulator Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7981	runtime-registration-and-semantic-review
+Single Phase Fused Cutout Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7975	runtime-registration-and-semantic-review
+Single Phase Secondary Fed Street Light Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7989	runtime-registration-and-semantic-review
+Single Phase Transformer Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7972	runtime-registration-and-semantic-review
+Single Phase Transformer Pole with Underground Service Riser	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8133	runtime-registration-and-semantic-review
+Single Phase Transformer Street Light Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7984	runtime-registration-and-semantic-review
+Single Phase Underground Feeder Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8131	runtime-registration-and-semantic-review
+Single Phase Underground Feeder Pole with Secondary Fed Street Light	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8132	runtime-registration-and-semantic-review
+Single Phase Utility Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7970	runtime-registration-and-semantic-review
+Single Pole Contactor	src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt	eln:transparent_node@8037	runtime-registration-and-semantic-review
+Single-use Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@1029	runtime-registration-and-semantic-review
+Six Socket Power Strip	src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt	eln:transparent_node@7991	runtime-registration-and-semantic-review
+Slotted Patio Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Small 240V Copper Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Small 240V Iron Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Small 240V Tungsten Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Small 480V Heavy Tungsten Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Small 480V Tungsten Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Small 48V Copper Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Small 48V Iron Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Small 48V Tungsten Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Small Flashlight	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7744	runtime-registration-and-semantic-review
+Small Fuel Burner	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7936	runtime-registration-and-semantic-review
+Small Passive Thermal Dissipator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4096	runtime-registration-and-semantic-review
+Small Rotating Solar Panel	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@3074	runtime-registration-and-semantic-review
+Small Solar Panel	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@3073	runtime-registration-and-semantic-review
+Smart Digital Service Meter	src/main/kotlin/mods/eln/utility/UtilityItems.kt	eln:shared_item@7878	runtime-registration-and-semantic-review
+Solar Tracker	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@704	runtime-registration-and-semantic-review
+Solid State Relay	src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt	eln:transparent_node@8041	runtime-registration-and-semantic-review
+Spiral Rain Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Spot Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Square Recessed Pool Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Standard Alarm	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6593	runtime-registration-and-semantic-review
+Standby Gasoline Generator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt;src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt	eln:transparent_node@7943	runtime-registration-and-semantic-review
+Standing Drum Floor Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Steam Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@265	runtime-registration-and-semantic-review
+Steamed Grains	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenFoods.kt		runtime-registration-and-semantic-review
+Steel Roller Wheel	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7553	runtime-registration-and-semantic-review
+Steel Turbine Blade	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Stone Heat Furnace	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@192	runtime-registration-and-semantic-review
+Stone Wall Wash Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+StreetLightWall	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Streetlight	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4104	runtime-registration-and-semantic-review
+String Lights	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Surface Linear LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Suspended Factory Fluorescent Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4125	runtime-registration-and-semantic-review
+Suspended Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4108	runtime-registration-and-semantic-review
+Suspended Lamp Socket (No Swing)	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Synthetic Diamond	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+T1 Transmission Cable	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+T2 Transmission Cable	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Tachometer	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@271	runtime-registration-and-semantic-review
+Temperature Probe	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6465	runtime-registration-and-semantic-review
+The Nope Wand	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Thermal Heat Exchanger	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Thermal Insulation	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@385	runtime-registration-and-semantic-review
+Thermal Probe	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6464	runtime-registration-and-semantic-review
+Thermal Probe Chip	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7684	runtime-registration-and-semantic-review
+Thermistor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6182	runtime-registration-and-semantic-review
+Thermometer	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@897	runtime-registration-and-semantic-review
+Thermometer Sensor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Thin Fluorescent Shop Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4124	runtime-registration-and-semantic-review
+Three Arm Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Three Phase Automatic Voltage Regulator Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7982	runtime-registration-and-semantic-review
+Three Phase Fused Cutout Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7976	runtime-registration-and-semantic-review
+Three Phase Fused Tap Secondary Fed Street Light Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8022	runtime-registration-and-semantic-review
+Three Phase Gang Operated Air Break Switch Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7983	runtime-registration-and-semantic-review
+Three Phase Pole Mounted Capacitor Bank	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7980	runtime-registration-and-semantic-review
+Three Phase Pole with Fused Single Phase Tap	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7993	runtime-registration-and-semantic-review
+Three Phase Recloser Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7977	runtime-registration-and-semantic-review
+Three Phase Secondary Fed Street Light Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7990	runtime-registration-and-semantic-review
+Three Phase Transformer Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7973	runtime-registration-and-semantic-review
+Three Phase Transformer Street Light Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7985	runtime-registration-and-semantic-review
+Three Phase Transformer Street Light Pole with Fused Single Phase Tap	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8023	runtime-registration-and-semantic-review
+Three Phase Underground Feeder Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7974	runtime-registration-and-semantic-review
+Three Phase Utility Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7971	runtime-registration-and-semantic-review
+Three Pole Contactor	src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt	eln:transparent_node@8038	runtime-registration-and-semantic-review
+Three Pole Solid State Relay	src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt	eln:transparent_node@8042	runtime-registration-and-semantic-review
+Through Roof Service Mast	src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt	eln:transparent_node@8029	runtime-registration-and-semantic-review
+Toasted Bread	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenFoods.kt		runtime-registration-and-semantic-review
+Traditional Lantern Post Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4145	runtime-registration-and-semantic-review
+Transistor	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@8065	runtime-registration-and-semantic-review
+Transmission Tower	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Tree Resin	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4096	runtime-registration-and-semantic-review
+Tree Resin Collector	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7424	runtime-registration-and-semantic-review
+Trimless Recessed Downlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4141	runtime-registration-and-semantic-review
+Tropical Patio Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Tungsten Cable	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4162	runtime-registration-and-semantic-review
+Tungsten Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@6	runtime-registration-and-semantic-review
+Tungsten Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@517	runtime-registration-and-semantic-review
+Tungsten Ore	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:ore@5	runtime-registration-and-semantic-review
+Tungsten Turbine Blade	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Turbine Blade Set	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4164	runtime-registration-and-semantic-review
+Turbo Electrical Drill	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Tutorial Sign	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7496	runtime-registration-and-semantic-review
+Twelve Circuit American Breaker Panel	src/main/kotlin/mods/eln/utility/BreakerPanelClient.kt		runtime-registration-and-semantic-review
+Twin Adjustable Eave Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Twin Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Twin Wide Area Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Two Pole Changeover Relay	src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt	eln:transparent_node@8039	runtime-registration-and-semantic-review
+UPS AGM Battery Cell	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7810	runtime-registration-and-semantic-review
+UPS Industrial Battery Module	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7812	runtime-registration-and-semantic-review
+UPS LiFePO4 Battery Cell	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7811	runtime-registration-and-semantic-review
+Under Cabinet LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Under Track Power	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Underground Service Entrance Riser	src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt	eln:transparent_node@8129	runtime-registration-and-semantic-review
+Up Down Cylinder Wall Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4132	runtime-registration-and-semantic-review
+Utility Pole	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7876	runtime-registration-and-semantic-review
+Utility Pole Cobrahead Street Light	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Utility Pole Street Light	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Utility Pole Twin LED Street Light	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7949	runtime-registration-and-semantic-review
+Utility Pole w/DC-DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7877	runtime-registration-and-semantic-review
+Utility Wind Turbine 3.2kV	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7946	runtime-registration-and-semantic-review
+Variable DC-DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@129	runtime-registration-and-semantic-review
+Variable Frequency Motor Drive	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8069	runtime-registration-and-semantic-review
+Variable inductor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6179	runtime-registration-and-semantic-review
+Very High Voltage Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@2064	runtime-registration-and-semantic-review
+Very High Voltage Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6019	runtime-registration-and-semantic-review
+Very High Voltage Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6212	runtime-registration-and-semantic-review
+Voltage Oriented Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@1026	runtime-registration-and-semantic-review
+Voltage Probe	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6401	runtime-registration-and-semantic-review
+Voltage controlled amplifier	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7941	runtime-registration-and-semantic-review
+Voltage controlled sawtooth 	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Voltage controlled sine 	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Voltage-to-Redstone Converter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6913	runtime-registration-and-semantic-review
+Wagon Wheel Foyer Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4129	runtime-registration-and-semantic-review
+Wall-mounted Automatic Transfer Switch	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7950	runtime-registration-and-semantic-review
+Wall-mounted Browser Television	src/main/kotlin/mods/eln/api/media/MediaAddonProvider.kt		runtime-registration-and-semantic-review
+Wall-mounted Hybrid Solar Inverter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7952	runtime-registration-and-semantic-review
+Wall-mounted MPPT Solar Controller	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7951	runtime-registration-and-semantic-review
+Wall-mounted Mini-split Air Conditioner	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
+Wall-mounted Programmable UPS	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7953	runtime-registration-and-semantic-review
+Warehouse Equipment Pallet	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt	eln:shared_item_stack_one@7491	runtime-registration-and-semantic-review
+Warehouse Wall Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Warm White Christmas Fairy Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Warm White Deck Globe String Lights	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Water Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@3152	runtime-registration-and-semantic-review
+Welded Machine Frame	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt	eln:shared_item@7489	runtime-registration-and-semantic-review
+Wet Equipment	src/main/kotlin/mods/eln/transparentnode/laundry/WetEquipment.kt		runtime-registration-and-semantic-review
+White Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7631	runtime-registration-and-semantic-review
+White Fairy Lights on Green Wire	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
+Wide Underground Meter Socket	src/main/kotlin/mods/eln/utility/HouseServiceClient.kt	eln:transparent_node@8128	runtime-registration-and-semantic-review
+Wind Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@3136	runtime-registration-and-semantic-review
+Window Air Conditioner	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
+Window Candle Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Wire Combiner	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4610	runtime-registration-and-semantic-review
+Wire Insulator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4609	runtime-registration-and-semantic-review
+Wire Roller	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4608	runtime-registration-and-semantic-review
+Wire Scraps	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7872	runtime-registration-and-semantic-review
+Wire Snips	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7873	runtime-registration-and-semantic-review
+Wireless Analyser	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+Wireless Button	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6092	runtime-registration-and-semantic-review
+Wireless Paddle Button	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Wireless Paddle Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Wireless Signal Receiver	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@5888	runtime-registration-and-semantic-review
+Wireless Signal Repeater	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@5904	runtime-registration-and-semantic-review
+Wireless Signal Transmitter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@5896	runtime-registration-and-semantic-review
+Wireless Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6096	runtime-registration-and-semantic-review
+Wireless Toggle Button	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Wireless Toggle Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
+Wound Wire Bundle	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7556	runtime-registration-and-semantic-review
+Wrench	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7728	runtime-registration-and-semantic-review
+X-Ray Scanner	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7840	runtime-registration-and-semantic-review
+XNOR Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7558	runtime-registration-and-semantic-review
+XOR Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7557	runtime-registration-and-semantic-review
+Yellow	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
+unreleasedium	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review

@@ -1,5 +1,11 @@
 # Distribution continuation after all thirty adapters
 
+This is the distribution checkpoint review. Later steel-pole and wire-manufacturing
+work is recorded in [the current backlog](remaining-work.md); use
+[the detailed completion plan](port-completion-plan.md#distribution) for current
+implementation tasks and acceptance checks. The dated counts below remain
+historical evidence.
+
 All eighteen current construction variants and twelve hidden legacy variants now
 have production adapters. The final twin LED pole and standalone Mains Step-down
 Unit passed 99 focused regressions and 210 selected native server cases. Data
@@ -16,7 +22,8 @@ checkpoint. See [current validation](large-renewable-validation.json).
   (`LegacyPolePorts.kt` and `ElectricalPoleElement`); never use an HV load as LV.
 - Adaptive primary/service alignment, transformer/rack clearance routing and
   height/surge attachments.
-- Wire manufacturing, inventory trimming and remaining cable tools.
+- Remaining cable tools and whole-chain parity; wire Roller/Insulator/Combiner and
+  Wire Snips now have separate completed adapter checkpoints.
 - Full source-world/save migration. The native round trips and twin hardware
   recovery cases do not implement general 1.21.1 save conversion.
 - Interactive client graphics/audio validation and historical 1.12 golden descriptor/slot

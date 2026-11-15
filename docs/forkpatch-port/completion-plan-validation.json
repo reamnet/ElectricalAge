@@ -1,0 +1,32 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "targetObservedCommit": "8b222f5a73a961d165b323662860ce5fb3e775cc",
+  "sourceTrackedFiles": 7132,
+  "allTrackedPathsAccountedForOnce": true,
+  "allIndexedSourceHashesVerified": true,
+  "nativeCandidateHashesAndAdapterPathsVerified": true,
+  "workstreams": 37,
+  "workstreamReferencesAndDependencyGraphChecked": true,
+  "changedMarkdownLinksAndSourceAnchorsChecked": true,
+  "deterministicRegeneration": true,
+  "outputSha256": {
+    "completion-source-audit.tsv": "2264ff2e36701f1e5ded91117d259ac367f40ae39263f28ea67603cb1971e029",
+    "completion-resource-audit.tsv": "1b0915124f4cf07031ed0bd399ca0fea68b10b510f26f9f8c955ba134ca29a18",
+    "completion-test-audit.tsv": "e60e63b75720450de5f90e4800b7c5a49d56a324c78ecb796e23a88c7f9651ad",
+    "completion-support-audit.tsv": "15f36ae2df88fe59558d2692fc3e8a7a6441290cbb530ad87bd4e8b99644d787",
+    "completion-name-audit.tsv": "7fc91fede4b07381feacb9d49caf46bd1bae967bc89d776d112e245731ff559a",
+    "completion-audit.json": "c56b8e6b932d1c6e8d267b6fc724bf316470642ced76b15aa4fa6dfb04adf25e",
+    "port-completion-plan.md": "d8277c366db32909d08e88d89af42bdad1f0b8752bd1a8eb16b2af927e4faadf",
+    "lighting-port-matrix.md": "66f3ddeb19dae909ff688f28c738c79156adf2fea41093e8bc9bc63eb5122d2f"
+  },
+  "generatorSha256": "2cfcee545b6ff9ad101512262bdc484f7c2a6b54648ad434ed96b567c606a2b8",
+  "definitionSha256": "32a709830626f8f433d82944a2cf87a6ad975057acb15da9971234ea46d0ca03",
+  "provenanceAudit": {
+    "entries": 680,
+    "passed": true
+  },
+  "productionCodeResourcesTestsAndGradlePinsUnchanged": true,
+  "runtimeTestsRerun": false,
+  "runtimeEvidence": "decorative-lighting-validation.json",
+  "scope": "Documentation/tooling validation. File coverage and hash matches do not certify behavioral parity; open work is explicit in the plan."
+}

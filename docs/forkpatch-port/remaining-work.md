@@ -3,7 +3,18 @@
 Source baseline: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. This is a feature
 backlog, not a count of missing files or a statement that every inherited class
 has been reviewed. The [source inventory](source-inventory.json) retains that
-file-by-file review surface; the [import audit](import-audit.json) checks provenance.
+file-by-file historical baseline; the [import audit](import-audit.json) checks provenance.
+
+The [whole-fork completion plan](port-completion-plan.md) is the current detailed
+work breakdown: 37 streams with dependencies, native foundations, concrete
+implementation tasks and completion checks. Its refreshed [audit](completion-audit.json)
+accounts for all 1,277 source main files (1,264 build-active, 13 excluded),
+2,460 main resources, 262 test files and the other 3,133 tracked generated-data/
+tooling/reference/build files (including 2,496 generated runtime data files).
+All 7,132 tracked source-repository files are accounted for. The [lighting matrix](lighting-port-matrix.md)
+lists all 108 fixtures and 18 source bulb registrations. These indexes track
+review obligations; matching names, copied assets and file counts do not certify
+behavioral completion.
 
 ## Current continuation
 
@@ -98,7 +109,7 @@ optional previews skipped (673 selected), all **15 CAD tests**, and all
 fluid corpus is included. The full native run passes 1121 cases; only the historical
 descriptor and slot goldens fail, retaining 467 individual assertions for review.
 No expected references, skip lists or tolerances changed. See the
-[complete current evidence and artifact](session7-validation.json).
+[historical surface-cord evidence and artifact](session7-validation.json).
 
 All 658 preceding identities and 966 English entries remain unchanged. That checkpoint
 catalog has 677 identities, 995 English entries and 493 resolved native item
@@ -136,7 +147,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 | Kitchen/laundry | Source kitchen and laundry/matter-machine families, food/process inventories, recipes, temperature/heat behavior, appliance controls and graphics. |
 | Climate and fans | Heating/cooling/humidity controls, fans, evaporative cooling and water handling, building/room thermal changes and integration with the destination fluid systems. |
 | Pumps and growing | Industrial/world-intake pumps, fluid-port integration, growing-bed cycle and associated inventory/render/UI behavior. |
-| Lighting/decor | Remaining street/flood/work lights, festive/fairy lights/tree/candle devices, fire alarms and their networks, optics, damage, controls and audio. |
+| Lighting/decor | 21 of 108 decorative fixtures are adapted; the other 87, per-head aim/motion, fan/suspension/waterlogged-light behavior, additional bulb technologies and portable fixtures remain. See the [complete fixture/bulb matrix](lighting-port-matrix.md) and [implementation gates](port-completion-plan.md#lighting). Standalone flood/work/festive equipment and fire alarm networks are separate streams. |
 | Chip fabrication | Interactive graphics/JEI and broader basic-component integration remain pending. Fabricator 4480 and components 8064–8068 now have paid native processing/bootstrap checks; see [fabrication](chip-fabrication.md). |
 | Other mechanics/processes | Source shaft/generator/turbine, fusion reactor and other machine/process changes not already covered by an adapter checkpoint; reconcile with existing native mechanical/fluid implementations. |
 | Tools and integration | Remaining probes, configuration interactions, wireless/control channels, diagnostics/metrics, guides and optional-mod bridges. SCADA endpoint integration for the still-unadapted source 12-circuit breaker panel and media addon remains pending. A source file already present in 26.3 still needs conflict review. |
@@ -152,11 +163,14 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The latest unfiltered run passes 1285 of 1287 cases; descriptor and slot
-  goldens still fail. The [latest delta](power-poles-golden-delta.json)
-  preserves every earlier failed assertion; review the [historical differences](native-suite-review.md), then
-  rerun after explicitly reconciling the historical expectations. The wind/watermill
-  fixture now restores shared test-player facing, fixing two order-dependent layouts.
+- The latest completed code checkpoint passes **1,310 of 1,312** native cases;
+  all **846 ForkPatch cases** pass. Only descriptor and slot goldens fail.
+  The [lighting delta](decorative-lighting-golden-delta.json) records 537 failed
+  assertions, preserving all 481 prior non-aggregate assertions and explicitly
+  recording the new bulb-acceptance/aggregate differences. Review the
+  [historical differences](native-suite-review.md) before reconciling expectations;
+  no snapshot, existing assertion, skip or tolerance is relaxed. See
+  [current code evidence](decorative-lighting-validation.json).
 - Perform interactive client/GPU/audio and multiplayer checks, including geometry,
   animations, transparent vehicle windows, pitched roof selection/collision, screen interactions and resource reloads.
   Review tall legacy pole/span culling bounds and source mesh display/status parts
@@ -165,3 +179,19 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
   especially solar arrays, coupled converter banks, wiring and mechanical/fluid networks.
 - Build and review release artifacts only after the intended release scope passes;
   the development branch and draft PR are not a finished full-fork release.
+
+## Additional source-wide review obligations
+
+The earlier family table is not the whole completion checklist. The detailed plan
+also covers [MQTT/Modbus and optional bridges](port-completion-plan.md#integrations),
+[railroad/replicator entities](port-completion-plan.md#entities),
+[world generation/progression/guides](port-completion-plan.md#world-content),
+[bootstrap/configuration/mixins](port-completion-plan.md#build-compat), and all
+[inherited classic behavior](port-completion-plan.md#classic),
+[shared support code](port-completion-plan.md#review-remainder) and
+[source test/oracle mappings](port-completion-plan.md#verification).
+The 12-circuit panel is an [unimplemented adapter](port-completion-plan.md#panel),
+not covered by the existing three-channel lamp supplies. The road vehicle physics
+helper likewise does not register the cart/coupe entities. Full source-world
+conversion, all-screen reference comparison and representative loaded-world
+performance remain explicit completion gates.
