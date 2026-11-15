@@ -124,6 +124,18 @@ object ForkPatchDecorativeLampCases {
             val input=CraftingInput.of(3,2,listOf(ItemStack.EMPTY,ItemStack(Items.COPPER_INGOT),ItemStack.EMPTY,ItemStack.EMPTY,Eln.findItemStack("Iron Plate",1),ItemStack.EMPTY))
             val result=c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,input,c.level()).map { it.value().assemble(input) }.orElse(ItemStack.EMPTY)
             c.check("decorative: paid source holder recipe retains its two-item yield",result.item===Eln.findItemStack("Basic Lamp Holder",1).item && result.count==2,result.toString())
+            val stripPairs=listOf(
+                "Standing Drum Floor Lamp" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.IRON_INGOT)),
+                "Under Cabinet LED Strip" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.IRON_NUGGET)),
+                "Recessed LED Channel" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.QUARTZ)),
+                "Indirect Cove LED Strip" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.DYE.white())),
+                "Surface Linear LED Strip" to listOf(Eln.findItemStack("Thin Fluorescent Shop Light",1),ItemStack(Items.IRON_INGOT)),
+                "Flexible Neon LED Strip" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.SLIME_BALL)))
+            for((name,ingredients) in stripPairs){
+                val grid=CraftingInput.of(2,2,listOf(ingredients[0],ItemStack.EMPTY,ItemStack.EMPTY,ingredients[1]))
+                val crafted=c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,grid,c.level()).map { it.value().assemble(grid) }.orElse(ItemStack.EMPTY)
+                c.check("decorative: the paid shapeless $name recipe resolves from its source pair",crafted.item===Eln.findItemStack(name,1).item,"$name: $crafted")
+            }
             c.check("decorative bulbs: occupied source IDs keep both existing native bulb identities",(Eln.sharedItem.getDescriptor(293) as LampDescriptor).nominalU==50.0 && (Eln.sharedItem.getDescriptor(294) as LampDescriptor).nominalU==200.0 && RatedLampBulbs.destinationIdForSource(293)==302 && RatedLampBulbs.destinationIdForSource(294)==303,"")
             for(volts in listOf(120,240)) {
                 val rated=Eln.findItemStack("${volts}V LED Light Bulb",1)

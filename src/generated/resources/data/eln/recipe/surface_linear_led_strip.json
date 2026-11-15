@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:thin_fluorescent_shop_light",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "eln:surface_linear_led_strip"
+  }
+}

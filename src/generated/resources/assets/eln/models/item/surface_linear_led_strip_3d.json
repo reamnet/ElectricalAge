@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_six",
+  "textures": {
+    "particle": "eln:item/surface_linear_led_strip"
+  }
+}

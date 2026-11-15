@@ -4229,6 +4229,42 @@
   "kind": "six_node",
   "name": "traditional_lantern_post_light"
  },
+ "eln:six_node@4353": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Standing Drum Floor Lamp",
+  "kind": "six_node",
+  "name": "standing_drum_floor_lamp"
+ },
+ "eln:six_node@4354": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Under Cabinet LED Strip",
+  "kind": "six_node",
+  "name": "under_cabinet_led_strip"
+ },
+ "eln:six_node@4355": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Recessed LED Channel",
+  "kind": "six_node",
+  "name": "recessed_led_channel"
+ },
+ "eln:six_node@4356": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Indirect Cove LED Strip",
+  "kind": "six_node",
+  "name": "indirect_cove_led_strip"
+ },
+ "eln:six_node@4357": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Surface Linear LED Strip",
+  "kind": "six_node",
+  "name": "surface_linear_led_strip"
+ },
+ "eln:six_node@4358": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Flexible Neon LED Strip",
+  "kind": "six_node",
+  "name": "flexible_neon_led_strip"
+ },
  "eln:shared_item@302": {
   "descriptor": "LampDescriptor",
   "display": "120V LED Light Bulb",

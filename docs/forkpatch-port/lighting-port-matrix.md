@@ -4,7 +4,7 @@ Pinned source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. The source enum order
 
 **Before appending styles:** extend the current first-range lookup helper. Source ordinals 0–29 map to 4116–4145; 30–87 map to 4352–4409; 88–107 map to 4480–4499. Using `4116 + sourceOrdinal` for later styles would collide with native lamp supplies, including 4160. Use the source ordinal, not the ordinal of a smaller native subset.
 
-The first 21 adapters retain shared cross-cutting review work. Every other row is unregistered; minimum work below is a starting contract, not a claim that other source rules can be omitted.
+The first 27 adapters retain shared cross-cutting review work. Every other row is unregistered; minimum work below is a starting contract, not a claim that other source rules can be omitted.
 
 | Source lookup (six-node) | Symbol / fixture | Bulbs / beam range | Model asset path | Native state | Minimum work |
 |---|---|---|---|---|---|
@@ -39,12 +39,12 @@ The first 21 adapters retain shared cross-cutting review work. Every other row i
 | 4144 | `OUTDOOR_BARN` — Gooseneck Barn Light | 1 / 7 blocks | `gooseneckbarnlight` (native files present) | Adapter registered; shared checks remain | implemented adapter; shared parity, partial-support and technology/configuration review |
 | 4145 | `OUTDOOR_POST` — Traditional Lantern Post Light | 1 / 0 blocks | `traditionallanternpost` (native files present) | Adapter registered; shared checks remain | implemented adapter; shared parity, partial-support and technology/configuration review |
 | 4352 | `WINDOW_CANDLE` — Window Candle Light | 1 / 0 blocks | `windowcandlelamp` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks; portable/carry and cord ownership |
-| 4353 | `FLOOR_DRUM` — Standing Drum Floor Lamp | 1 / 0 blocks | `standingdrumfloorlamp` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks |
-| 4354 | `STRIP_CABINET` — Under Cabinet LED Strip | 2 / 2 blocks | `undercabinetledstrip` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks |
-| 4355 | `STRIP_RECESSED` — Recessed LED Channel | 2 / 3 blocks | `recessedledchannel` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks |
-| 4356 | `STRIP_COVE` — Indirect Cove LED Strip | 2 / 3 blocks | `coveledstrip` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks |
-| 4357 | `STRIP_SURFACE` — Surface Linear LED Strip | 4 / 4 blocks | `surfacelinearledstrip` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks |
-| 4358 | `STRIP_NEON` — Flexible Neon LED Strip | 3 / 1 blocks | `flexneonledstrip` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks |
+| 4353 | `FLOOR_DRUM` — Standing Drum Floor Lamp | 1 / 0 blocks | `standingdrumfloorlamp` (native files present) | Adapter registered; shared checks remain | implemented adapter; shared parity, partial-support and technology/configuration review |
+| 4354 | `STRIP_CABINET` — Under Cabinet LED Strip | 2 / 2 blocks | `undercabinetledstrip` (native files present) | Adapter registered; shared checks remain | implemented adapter; shared parity, partial-support and technology/configuration review |
+| 4355 | `STRIP_RECESSED` — Recessed LED Channel | 2 / 3 blocks | `recessedledchannel` (native files present) | Adapter registered; shared checks remain | implemented adapter; shared parity, partial-support and technology/configuration review |
+| 4356 | `STRIP_COVE` — Indirect Cove LED Strip | 2 / 3 blocks | `coveledstrip` (native files present) | Adapter registered; shared checks remain | implemented adapter; shared parity, partial-support and technology/configuration review |
+| 4357 | `STRIP_SURFACE` — Surface Linear LED Strip | 4 / 4 blocks | `surfacelinearledstrip` (native files present) | Adapter registered; shared checks remain | implemented adapter; shared parity, partial-support and technology/configuration review |
+| 4358 | `STRIP_NEON` — Flexible Neon LED Strip | 3 / 1 blocks | `flexneonledstrip` (native files present) | Adapter registered; shared checks remain | implemented adapter; shared parity, partial-support and technology/configuration review |
 | 4359 | `LUXURY_RINGS` — Grand Halo Ring Chandelier | 16 / 2 blocks | `grandhalochandelier` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks; large/tall reservation, picking and render reach |
 | 4360 | `LUXURY_CASCADE` — Grand Crystal Cascade Chandelier | 20 / 2 blocks | `crystalcascadechandelier` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks; large/tall reservation, picking and render reach |
 | 4361 | `LUXURY_BRANCH` — Sculptural Branch Chandelier | 18 / 2 blocks | `sculpturalbranchchandelier` (source-only at this path) | Unregistered | fixed data, exact placement/clearance, recipe/assets and shared parity checks; large/tall reservation, picking and render reach |

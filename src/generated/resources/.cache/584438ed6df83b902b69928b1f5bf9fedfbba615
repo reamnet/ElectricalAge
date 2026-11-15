@@ -1,4 +1,4 @@
-// 26.3	2026-11-15T00:05:26.170801174	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-15T04:41:08.225275148	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -214,6 +214,7 @@ e6626b81782dcf21944212f0e22b7ebca4a2ce5b data/eln/advancement/recipes/misc/fast_
 a7ff3268fc3ae3ad11defa593f5a837359306cab data/eln/advancement/recipes/misc/flare_stack.json
 154a4ef09cc9ac5d53ce9cf792a69f016610ce11 data/eln/advancement/recipes/misc/flat_lamp_socket.json
 a96e19cb6d546b02a41ad04c2c929047c61e228b data/eln/advancement/recipes/misc/flexible_appliance_cord.json
+b885ffd7eb8938da0da7ea867fab435c322f305a data/eln/advancement/recipes/misc/flexible_neon_led_strip.json
 2e185699c3874a3467dccd5da7b635d3eb802814 data/eln/advancement/recipes/misc/fluorescent_lamp_socket.json
 192d3d8e0d4035a6d58da9cb46f76f84b50f02ba data/eln/advancement/recipes/misc/flywheel.json
 e2cb3091961dfe55dcfef7cefa65e36b9f71a5d9 data/eln/advancement/recipes/misc/four_cell_plug_in_ups.json
@@ -246,6 +247,7 @@ adff65b0e3b516752580628470a82e029fef2c0c data/eln/advancement/recipes/misc/high_
 389625a0b3068699697a055e47fdab9352df0ec2 data/eln/advancement/recipes/misc/hub.json
 3ad8a26e80a9e2efb1423f71476772dce3c567da data/eln/advancement/recipes/misc/hybrid_solar_inverter.json
 66103a82763e2f5be503d9a4251d7ff65b7a29d8 data/eln/advancement/recipes/misc/improved_flashlight.json
+88c5f352d72c0c45898e00334693c7a69903d80a data/eln/advancement/recipes/misc/indirect_cove_led_strip.json
 7618923dd55bf93d1c10ce1e82140bf3d257e358 data/eln/advancement/recipes/misc/industrial_cage_wall_sconce.json
 26baca3846cf3c09885134d3b1f92feb7bf65a5a data/eln/advancement/recipes/misc/industrial_data_logger.json
 23e7e1a3c03fa30b6de61225a6f5a79bb8c48b5e data/eln/advancement/recipes/misc/iron_cable.json
@@ -345,6 +347,7 @@ d72b9284ffc6b2b950b7b9d2f8bac66e3042a5b7 data/eln/advancement/recipes/misc/progr
 5ee595537e294e51e983137eb9aa95560464750c data/eln/advancement/recipes/misc/programmable_ups.json
 8b800372571f70cbd5660634e289a63b8de05d35 data/eln/advancement/recipes/misc/protective_relay_cabinet.json
 5eda5d07f297d694c57d5ce56807a80dc7db2c40 data/eln/advancement/recipes/misc/purple_brush.json
+4f4beedf2b7fe3ade026711ead260e55c2d1b55d data/eln/advancement/recipes/misc/recessed_led_channel.json
 1e879bd3da5eabb33eb0f2ee6f2b3c1d9d9e9588 data/eln/advancement/recipes/misc/red_brush.json
 60de5e25544bc07dae23b4a7d152a3ee43b9d3f6 data/eln/advancement/recipes/misc/red_handle_service_disconnect.json
 f7528c010eae2ecb1d9b8df30858589d7a331a88 data/eln/advancement/recipes/misc/redstone_to_voltage_converter.json
@@ -413,6 +416,7 @@ d745c0a06786c255ec7cf4ebac2a0bd8da10121b data/eln/advancement/recipes/misc/solar
 b543af9e89eece4380acfd9643136d14e61d91db data/eln/advancement/recipes/misc/solid_state_relay.json
 91ecd892a2a111989dbc8ae5cd7292830389e96f data/eln/advancement/recipes/misc/standard_alarm.json
 b7e85d11917337f73315c634c58119771bd3c8e6 data/eln/advancement/recipes/misc/standby_gasoline_generator.json
+ef0eb8516b64e9439964d88f30470b8b2b82f422 data/eln/advancement/recipes/misc/standing_drum_floor_lamp.json
 35aadf92ce0cd908191a2b23fa5db29821d21129 data/eln/advancement/recipes/misc/steam_condenser.json
 febda46518aac7a1a3b44f912d4bf97add471642 data/eln/advancement/recipes/misc/steam_injection_wellhead.json
 3b3894bb499e10bccea06d0524264277edaa9371 data/eln/advancement/recipes/misc/steam_oven.json
@@ -423,6 +427,7 @@ ca2f8a0f26291613f84a226e9e99d0312ac72383 data/eln/advancement/recipes/misc/steam
 dbca10a656ed06ee0a3c054db8cf76844d00330e data/eln/advancement/recipes/misc/steel_roller_wheel.json
 64db41bd58f33e20ba7b082b4a155fa8b5980d4a data/eln/advancement/recipes/misc/stone_heat_furnace.json
 6eb149d68fe73de4c46fa56fc4ad01e8303f8d49 data/eln/advancement/recipes/misc/street_light.json
+fc137d7d5ebccc7928e8ffc0b6646a8557cdc57a data/eln/advancement/recipes/misc/surface_linear_led_strip.json
 1dce20debaeb1c44db815198b22cbbc5df6243bd data/eln/advancement/recipes/misc/suspended_factory_fluorescent_light.json
 8c7779a14aa260ae9e6e6fd490c679ba77c96e9f data/eln/advancement/recipes/misc/suspended_lamp_socket.json
 cd249cd9cc2d5f0682bd91cba7bbc7732797f160 data/eln/advancement/recipes/misc/tachometer.json
@@ -455,6 +460,7 @@ e4bdc0ed1b47684ab03ef7865dd8049bb67137fc data/eln/advancement/recipes/misc/triml
 36537e9727f2e9657a1580b66d45dac30567da2f data/eln/advancement/recipes/misc/tungsten_cable.json
 06f7d6a9098a138ce5181dc3148a749c93e4233e data/eln/advancement/recipes/misc/turbine_blade_set.json
 39d0b0a0b07aea6aeb6aae5720ee1a599d69d7cd data/eln/advancement/recipes/misc/two_pole_changeover_relay.json
+f8098fc035e72f8f012d2e5188193c9b8c8151f4 data/eln/advancement/recipes/misc/under_cabinet_led_strip.json
 5fc9cd5f9fb44da0d8563df540998a55e6a098d7 data/eln/advancement/recipes/misc/underground_service_entrance_riser.json
 dc9174bd48b67c452a3f4a97d6b112d7d9523344 data/eln/advancement/recipes/misc/up_down_cylinder_wall_sconce.json
 bf8348a28f32ca7b23c9752646b97e5ef12ef005 data/eln/advancement/recipes/misc/ups_agm_battery_cell.json
@@ -736,6 +742,7 @@ c69701fc0715e23ae06919546a43dbd77b2991b2 data/eln/recipe/field_bus_cable.json
 cb117cca2d60183ceb605b7c516744be0b07ec15 data/eln/recipe/flare_stack.json
 566930bc1d495eba2162396b25dc0a79d0919023 data/eln/recipe/flat_lamp_socket.json
 06ae39993c5f3de54a060ff7a740bdc8b7755d87 data/eln/recipe/flexible_appliance_cord.json
+898f5f291e9a7cdd6896a8de185526d0b6806496 data/eln/recipe/flexible_neon_led_strip.json
 dcac5b388078066d6313cefb6951a595b5afe2dd data/eln/recipe/fluorescent_lamp_socket.json
 d6f7bffa2f89a8f70b83ca846b9e79c8d9de798b data/eln/recipe/flywheel.json
 be011a299374570cb7d4852acd9349341dfeb4a8 data/eln/recipe/four_cell_plug_in_ups.json
@@ -768,6 +775,7 @@ d7a54c89e137b00cf2d50b95480ddaf28591370f data/eln/recipe/high_voltage_switch.jso
 7100a4afa0e935888c7e32607d2c279f16d69cdf data/eln/recipe/hub.json
 7f807cc1d3a90ca97be78e3e3d2f7e516a901498 data/eln/recipe/hybrid_solar_inverter.json
 820d044aff444868e33966e505a7ee17af71055b data/eln/recipe/improved_flashlight.json
+82b528ff3f4fcc35de9eb7849ba8ca783c9b6d2c data/eln/recipe/indirect_cove_led_strip.json
 26f40030f1a38571ab68cc503ea2b0eee558fc0a data/eln/recipe/industrial_cage_wall_sconce.json
 4a6c0ad115aeb7f8a62cb0fab925aac8786d0226 data/eln/recipe/industrial_data_logger.json
 441236a83e9903671ee085ecd8705c19a822f2ac data/eln/recipe/iron_cable.json
@@ -867,6 +875,7 @@ a84d1d1c8f5fd09ceaefe475d62a8a2034826f14 data/eln/recipe/programmable_ev_pack_ch
 a2c262d7c285ad32512bc2abc4e6ece1e4fb7750 data/eln/recipe/programmable_ups.json
 8c9291b93cd626d2f691a0f94156e3f93575750b data/eln/recipe/protective_relay_cabinet.json
 52a0411cfab0a219bd72692e72568b43848930e3 data/eln/recipe/purple_brush.json
+045ac89ed1e5f305837e5eee13e36e158c203fa5 data/eln/recipe/recessed_led_channel.json
 00d438d0450731bc201193aef8acef83c879d8d9 data/eln/recipe/red_brush.json
 cd9af7097473c7fae168d254e0dff78353e1aca5 data/eln/recipe/red_handle_service_disconnect.json
 9c5c6e47e7f3d04b13fc71c6b5ddfc3182ee73e2 data/eln/recipe/redstone_to_voltage_converter.json
@@ -935,6 +944,7 @@ f8d98570968cecc459a14f0cd820a44af3560cf9 data/eln/recipe/smelting_tungsten_dust.
 624e7549bdc894afecac3aa322532491e6d1ff00 data/eln/recipe/solid_state_relay.json
 4ab93d287ce3eeee14c2bf3bb7c860f4ebacbd27 data/eln/recipe/standard_alarm.json
 2f40bddf8890ebca5947a80dca4ffa3e82c9f8ad data/eln/recipe/standby_gasoline_generator.json
+d2c2f3d11321f3495c2fad0a313ed9e9c2e1981f data/eln/recipe/standing_drum_floor_lamp.json
 c4a92d71ecc73f59ecdd4e92dba9ace4eaf4260b data/eln/recipe/steam_condenser.json
 de6b0d86f1b6a83a630f6f99c80a28f8adcf17e5 data/eln/recipe/steam_injection_wellhead.json
 ad38d8978faeb5e64094fb9e2d5f61f950b2a9c1 data/eln/recipe/steam_oven.json
@@ -945,6 +955,7 @@ d73dbee890e5b032106e12119ea9857489e8714d data/eln/recipe/steam_turbine.json
 52853901e24676cdd8805a4dfaa551feb33c6845 data/eln/recipe/steel_roller_wheel.json
 3f4a24c3fb4412d21f208ff458e45f74a002f7ed data/eln/recipe/stone_heat_furnace.json
 f4f9406ede6ea92137dd5caf98a20da982804e2e data/eln/recipe/street_light.json
+b81eb6e3e107c73b9052ee04415765420920ea5a data/eln/recipe/surface_linear_led_strip.json
 6d6486703a471357d64922ecf4922dbca1236c2c data/eln/recipe/suspended_factory_fluorescent_light.json
 2dd44bbf82dca6fe077678b44dfae6276ea32cf7 data/eln/recipe/suspended_lamp_socket.json
 bc6f705dcd98d0320791535c98937a868e5c2998 data/eln/recipe/tachometer.json
@@ -977,6 +988,7 @@ ba6171c46cdef5e54d351d3d002ee195daae0359 data/eln/recipe/tilted_terminal_logger.
 a704b9c15054e9a198a998bb306bf5ce8407501a data/eln/recipe/tungsten_cable.json
 a0578d3014c4046035c4bb4b86acfcd0233f31ac data/eln/recipe/turbine_blade_set.json
 3e14750b8ebdfa4c5840d6975fcb081ff6c71829 data/eln/recipe/two_pole_changeover_relay.json
+e991563bb71e667ab4fac000229a753101a25503 data/eln/recipe/under_cabinet_led_strip.json
 a8abed9fd46a8b1cba9872c57b2c4c425c4d9596 data/eln/recipe/underground_service_entrance_riser.json
 4f556c0e80e970841090f396c36545a112ae8cc7 data/eln/recipe/up_down_cylinder_wall_sconce.json
 c29034602df442dfb455ac2e3ceefbfe007ca27c data/eln/recipe/ups_agm_battery_cell.json

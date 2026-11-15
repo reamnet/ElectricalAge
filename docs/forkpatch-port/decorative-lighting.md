@@ -3,7 +3,7 @@
 Reviewed source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` in
 `../ELN1.21.1ForkPatch`. Continued from native checkpoint `7f5497f4` after
 checking the remote branch. The source catalog contains **108 decorative styles**;
-this batch registers **21 fixed fixtures**, leaving the other 87 unregistered.
+this batch registers **27 fixed fixtures**, leaving the other 81 unregistered.
 
 The original OBJ/MTL files and inventory icons are copied byte for byte. One shared
 renderer retains their mesh parts, source palette, absent-bulb visibility, lit lenses,
@@ -66,11 +66,19 @@ project both upwards and downwards.
 | 4143 | Garden Bollard Light | 1 |
 | 4144 | Gooseneck Barn Light | 1 |
 | 4145 | Traditional Lantern Post Light | 1 |
+| 4353 | Standing Drum Floor Lamp | 1 |
+| 4354 | Under Cabinet LED Strip | 2 |
+| 4355 | Recessed LED Channel | 2 |
+| 4356 | Indirect Cove LED Strip | 2 |
+| 4357 | Surface Linear LED Strip | 4 |
+| 4358 | Flexible Neon LED Strip | 3 |
 
-All 21 fixture patterns and yields follow the reviewed source. Recipe ingredients
+All 27 fixture patterns and yields follow the reviewed source. Recipe ingredients
 use the existing native equivalents: Classic Lamp Socket → Lamp Socket A,
 Spot Lamp Socket → Lamp Socket B Projector, and the source copper ingot → vanilla
-copper. Existing native recipes keep their outputs.
+copper. The Standing Drum Floor Lamp's source base, the Ceramic Drum Table Lamp,
+is unregistered, so its paid shapeless recipe uses the Basic Lamp Holder plus an
+iron ingot instead. Existing native recipes keep their outputs.
 
 The source LED lookups 293/294 conflict with the established 50/200 V bulbs.
 Explicit mapping moves the new 120/240 V LEDs to **302/303**, preserving both old
@@ -81,7 +89,7 @@ ambiguous recipe. This avoids converting used bulbs into fresh ones.
 
 ## Remaining lighting work
 
-The other **87 decorative styles** remain separate work: additional strips,
+The other **81 decorative styles** remain separate work:
 seasonal/party/pool/outdoor families, adjustable flood/parking/street heads,
 motion detection, suspended warehouse adjustment, fan motors/rotors/hazards and
 portable table/carry adapters. Partial-block mounting and source-world conversion
@@ -112,7 +120,7 @@ Validation and any runtime limitations are recorded in
 The full build passes **690 of 693 root tests**, retaining the same three optional
 preview skips, and all **15 CAD tests**. The full default 200-case fluid corpus
 remains included. All **25 new native lighting cases** pass. Unfiltered native
-selects **1,312 tests: 1,310 pass**, with no skips; all **846 ForkPatch cases** pass.
+selects **1,312 tests: 1,310 pass**, with no skips; all **852 ForkPatch cases** pass.
 Both whole-catalog publication/drawing checks retain all **501 devices**.
 Repeated data generation writes zero files. All **680 provenance entries** pass;
 all 684 preceding identities and 1,007 English entries keep their exact values.
@@ -121,12 +129,14 @@ There are 23 new identities and 23 new English entries.
 Only the historical `golden_descriptors` and `golden_slots` tests fail. The original
 expectations are unchanged. The new identities/containers/spec add 45 differences;
 the two new bulbs naturally expand acceptance in ten existing socket menus.
-The [exact delta](decorative-lighting-golden-delta.json) records **537 failed
-assertions**, all 481 previous non-aggregate assertions unchanged, and the matching
-slot summary changing from 122/137 to 112/137. No tolerance, assertion or skip was
-relaxed.
+The [exact delta](decorative-lighting-golden-delta.json) records **549 failed
+assertions**, all 537 previous non-aggregate assertions unchanged; the matching
+slot summary remains 112/137 and the six new styles add twelve absent-from-1.12
+differences. No tolerance, assertion or skip was relaxed.
 
 The clean development JAR at code commit `3451e318d78c` matches all **1,774 Java
 classes, 933 Kotlin classes, one Kotlin module file and 5,215 processed resources**.
 All tested class bytes remain exact; only the build marker changes from the tested
 working tree to the clean code commit. SHA-256: `2fc8759d0e12aa390518e1d3e0affc28c3313c1223b25ef90423ba0eb33936ba`.
+This artifact predates the 4353–4358 batch; extending the parity record to the
+current branch HEAD would require a fresh clean build.

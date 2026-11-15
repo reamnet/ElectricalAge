@@ -255,6 +255,14 @@ public final class ElnRecipes extends ElnRecipesBase {
             'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'L',findItemStack("Flat Lamp Socket"));
         addRecipe(findItemStack("Basic Chandelier"), " I ", "LIL", "LLL",
             'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket A"));
+        // Source shapes are shapeless pairs; the ceramic drum table base is unported, so the native
+        // holder stands in for it.
+        addShapelessRecipe(findItemStack("Standing Drum Floor Lamp"),findItemStack("Basic Lamp Holder"),Items.IRON_INGOT);
+        addShapelessRecipe(findItemStack("Under Cabinet LED Strip"),findItemStack("Flat Lamp Socket"),Items.IRON_NUGGET);
+        addShapelessRecipe(findItemStack("Recessed LED Channel"),findItemStack("Flat Lamp Socket"),Items.QUARTZ);
+        addShapelessRecipe(findItemStack("Indirect Cove LED Strip"),findItemStack("Flat Lamp Socket"),dye(15));
+        addShapelessRecipe(findItemStack("Surface Linear LED Strip"),findItemStack("Thin Fluorescent Shop Light"),Items.IRON_INGOT);
+        addShapelessRecipe(findItemStack("Flexible Neon LED Strip"),findItemStack("Flat Lamp Socket"),Items.SLIME_BALL);
     }
 
     public static void recipeLampSocket() {

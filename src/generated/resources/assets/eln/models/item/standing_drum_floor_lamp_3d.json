@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_six",
+  "textures": {
+    "particle": "eln:item/standing_drum_floor_lamp"
+  }
+}

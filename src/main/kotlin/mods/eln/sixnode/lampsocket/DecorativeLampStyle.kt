@@ -51,12 +51,30 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     OUTDOOR_BARN(28, "gooseneckbarnlight", I18N.TR_NAME(I18N.Type.NONE, "Gooseneck Barn Light"), 1, .96, 7,
         listOf(Vec3(.63,-.04,0.0)),Vec3(.3,-1.0,0.0)),
     OUTDOOR_POST(29, "traditionallanternpost", I18N.TR_NAME(I18N.Type.NONE, "Traditional Lantern Post Light"), 1, 2.6, 0,
-        listOf(Vec3(2.06,0.0,0.0)),Vec3(1.0,0.0,0.0));
-    val lookup get() = (64 shl 6) + 20 + sourceOrdinal
+        listOf(Vec3(2.06,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    FLOOR_DRUM(31, "standingdrumfloorlamp", I18N.TR_NAME(I18N.Type.NONE, "Standing Drum Floor Lamp"), 1, 2.0, 0,
+        listOf(Vec3(1.66,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    STRIP_CABINET(32, "undercabinetledstrip", I18N.TR_NAME(I18N.Type.NONE, "Under Cabinet LED Strip"), 2, 1.0, 2,
+        listOf(Vec3(.045,0.0,-.23),Vec3(.045,0.0,.23)),Vec3(1.0,0.0,0.0)),
+    STRIP_RECESSED(33, "recessedledchannel", I18N.TR_NAME(I18N.Type.NONE, "Recessed LED Channel"), 2, 1.0, 3,
+        listOf(Vec3(.025,0.0,-.23),Vec3(.025,0.0,.23)),Vec3(1.0,0.0,0.0)),
+    STRIP_COVE(34, "coveledstrip", I18N.TR_NAME(I18N.Type.NONE, "Indirect Cove LED Strip"), 2, 1.0, 3,
+        listOf(Vec3(.08,.14,-.23),Vec3(.08,.14,.23)),Vec3(.4,1.0,0.0)),
+    STRIP_SURFACE(35, "surfacelinearledstrip", I18N.TR_NAME(I18N.Type.NONE, "Surface Linear LED Strip"), 4, 2.0, 4,
+        (0..3).map { Vec3(.075,0.0,-.72+it*.48) },Vec3(1.0,0.0,0.0)),
+    STRIP_NEON(36, "flexneonledstrip", I18N.TR_NAME(I18N.Type.NONE, "Flexible Neon LED Strip"), 3, 1.0, 1,
+        (0..2).map { Vec3(.06,.12*cos(it*PI/2),-.32+it*.32) },Vec3(1.0,0.0,0.0));
+    val lookup get() = when {
+        sourceOrdinal in 0..29 -> (64 shl 6) + 20 + sourceOrdinal
+        sourceOrdinal in 30..87 -> (68 shl 6) + sourceOrdinal - 30
+        else -> (70 shl 6) + sourceOrdinal - 88
+    }
     val foyer get() = this in CANDLE..SPUTNIK
-    val ceiling get() = foyer || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS)
-    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST
-    val exposedBulbs get() = foyer || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST)
+    val ceiling get() = foyer || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED)
+    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM
+    val exposedBulbs get() = foyer || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM)
+    /** Under-cabinet, cove, surface and neon strips mount on any supporting face. */
+    val anyFace get() = this in listOf(STRIP_CABINET, STRIP_COVE, STRIP_SURFACE, STRIP_NEON)
     fun localFacing(v: Vec3, front: LRDU) = front.rotateOnXnLeft(v.xRot((-PI/2).toFloat()))
     fun worldPoint(origin: Vec3, side: Direction, front: LRDU, local: Vec3): Vec3 =
         origin.add(side.rotateFromXN(localFacing(local,front).add(-.5,0.0,0.0)))

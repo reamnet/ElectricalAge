@@ -4,8 +4,8 @@
   "branch": "port/forkpatch-3.0.77-26.3",
   "pr": 1,
   "sourceStyles": 108,
-  "registeredFixedStyles": 21,
-  "unregisteredStyles": 87,
+  "registeredFixedStyles": 27,
+  "unregisteredStyles": 81,
   "ratedLedNativeLookups": [
     302,
     303
@@ -49,7 +49,7 @@
     "failed": 2,
     "skipped": 0,
     "portCases": {
-      "selected": 846,
+      "selected": 852,
       "failed": 0
     }
   },
@@ -136,7 +136,7 @@
     "Whole-catalog setup lifts hanging-fixture clearance above its test floor; all 501 devices remain included."
   ],
   "limitations": [
-    "Other 87 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
+    "Other 81 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
     "Original model/icon bytes and source controls/palette are retained; universal pixel-for-pixel or hardware-GPU parity is not established.",
     "The static client exhibit is unpowered; delivered work and loaded-only beam rules are covered by production/native regressions.",
     "One loopback network client is checked; no simultaneous multi-client campaign or audio/hardware-GPU campaign.",

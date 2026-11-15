@@ -29,6 +29,7 @@ compressora/compressora.obj
 compressorb/compressorb.obj
 condenser200v/condenser200v.obj
 condenser50v/condenser50v.obj
+coveledstrip/coveledstrip.obj
 crystaltierchandelier/crystaltierchandelier.obj
 cylinderwallsconce/cylinderwallsconce.obj
 dataloggercrtfloor/dataloggercrtfloor.obj
@@ -58,6 +59,7 @@ firedetector/firedetector.obj
 flarestack/flarestack.obj
 flatlamp/flatlamp.obj
 flatscreenmonitor/flatscreenmonitor.obj
+flexneonledstrip/flexneonledstrip.obj
 fluorescentlamp/fluorescentlamp.obj
 fuelgenerator200v/fuelgenerator200v.obj
 fuelgenerator50v/fuelgenerator50v.obj
@@ -134,6 +136,7 @@ powersocket/powersocket.obj
 programmableups/programmableups.obj
 proximitysensor/proximitysensor.obj
 pv_combiner/pv_combiner.obj
+recessedledchannel/recessedledchannel.obj
 redhandleservicedisconnect/redhandleservicedisconnect.obj
 redtoele/redtoele.obj
 relay800/relay800.obj
@@ -177,6 +180,7 @@ standbygenerator_extra_large/standbygenerator_extra_large.obj
 standbygenerator_extreme/standbygenerator_extreme.obj
 standbygenerator_large/standbygenerator_large.obj
 standbygenerator_medium/standbygenerator_medium.obj
+standingdrumfloorlamp/standingdrumfloorlamp.obj
 steamoven/steamoven.obj
 steamturbine200v/steamturbine200v.obj
 steamturbine50v/steamturbine50v.obj
@@ -189,6 +193,7 @@ stonefurnace/stonefurnace.obj
 streetlight/streetlight.obj
 submersiblepump200v/submersiblepump200v.obj
 submersiblepump50v/submersiblepump50v.obj
+surfacelinearledstrip/surfacelinearledstrip.obj
 switchgear_contactor/switchgear_contactor.obj
 switchgear_contactor_three/switchgear_contactor_three.obj
 switchgear_relay_four/switchgear_relay_four.obj
@@ -228,6 +233,7 @@ turbinesteam/tachometer.obj
 turbinesteam/turbine.obj
 turret/turret.obj
 tutoplate/tutoplate.obj
+undercabinetledstrip/undercabinetledstrip.obj
 undergroundfused1/undergroundfused1.obj
 undergroundfused1light/undergroundfused1light.obj
 undergroundfused3/undergroundfused3.obj

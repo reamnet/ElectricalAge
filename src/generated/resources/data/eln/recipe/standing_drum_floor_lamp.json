@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:basic_lamp_holder",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "eln:standing_drum_floor_lamp"
+  }
+}
