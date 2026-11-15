@@ -5,6 +5,7 @@ alarmmedium/alarmmedium.obj
 analogchips/analogchips.obj
 anemometer/anemometer.obj
 appliancewalloutlet/appliancewalloutlet.obj
+archedwalkwaylight/archedwalkwaylight.obj
 armoredbulkheadlight/armoredbulkheadlight.obj
 automatictransferswitch/automatictransferswitch.obj
 autominer/autominer.obj
@@ -83,6 +84,7 @@ halloweenghoststring/halloweenghoststring.obj
 halloweenpumpkinstring/halloweenpumpkinstring.obj
 handdrill/handdrill.obj
 hangingfactorylight/hangingfactorylight.obj
+harborgooseneck/harborgooseneck.obj
 heatexchanger/heatexchanger.obj
 highcapacitybattery/highcapacitybattery.obj
 highcurrentbattery/highcurrentbattery.obj
@@ -117,18 +119,24 @@ lifepo_wall/lifepo_wall.obj
 lightsensor/lightsensor.obj
 logicgates/logicgates.obj
 longlifebattery/longlifebattery.obj
+louveredpathbollard/louveredpathbollard.obj
 lowcostbattery/lowcostbattery.obj
 lowcostbattery2/lowcostbattery2.obj
 lowpowerreceiverantenna/lowpowerreceiverantenna.obj
 lowpowertransmitterantenna/lowpowertransmitterantenna.obj
+lowprofiledocklight/lowprofiledocklight.obj
 lowvoltageswitch/lowvoltageswitch.obj
 macerator50v/macerator50v.obj
 maceratora/maceratora.obj
 maceratorb/maceratorb.obj
 magnetizera/magnetizera.obj
 magnetizerb/magnetizerb.obj
+marinepierbulkhead/marinepierbulkhead.obj
 mediumvoltageswitch/mediumvoltageswitch.obj
+modernbladewalklight/modernbladewalklight.obj
 multicolorchristmaslights/multicolorchristmaslights.obj
+mushroompathlight/mushroompathlight.obj
+nauticalpierbollard/nauticalpierbollard.obj
 nema1030plug/nema1030plug.obj
 nema520plug/nema520plug.obj
 nema620plug/nema620plug.obj
@@ -143,6 +151,7 @@ oilpump50v/oilpump50v.obj
 partyfestoonlights/partyfestoonlights.obj
 passivethermaldissipatora/passivethermaldissipatora.obj
 patioglobestring/patioglobestring.obj
+pierlanternpost/pierlanternpost.obj
 plantcondenser/plantcondenser.obj
 platemachinea/platemachinea.obj
 platemachineb/platemachineb.obj
@@ -158,6 +167,7 @@ powersocket/powersocket.obj
 programmableups/programmableups.obj
 proximitysensor/proximitysensor.obj
 pv_combiner/pv_combiner.obj
+recessedbrickwalllight/recessedbrickwalllight.obj
 recessedledchannel/recessedledchannel.obj
 redhandleservicedisconnect/redhandleservicedisconnect.obj
 redtoele/redtoele.obj
@@ -168,6 +178,7 @@ robustlamp/robustlamp.obj
 robustlampsuspended/robustlampsuspended.obj
 roofservicemast/roofservicemast.obj
 roundrecessedlight/roundrecessedlight.obj
+roundstonewalllight/roundstonewalllight.obj
 rtu/rtu.obj
 ruggedcanopylight/ruggedcanopylight.obj
 scanner/scanner.obj
@@ -184,11 +195,13 @@ shaftmotor/shaftmotor.obj
 shaftsteamhp/shaftsteamhp.obj
 shaftsteamlp/shaftsteamlp.obj
 shafttacho/shafttacho.obj
+shieldedpathlight/shieldedpathlight.obj
 signalprocessor/signalprocessor.obj
 signalsource/signalsource.obj
 signalsourcepot/signalsourcepot.obj
 simplelamp/simplelamp.obj
 sixsocketpowerstrip/sixsocketpowerstrip.obj
+slottedstonewalllight/slottedstonewalllight.obj
 smallsolarpannel/smallsolarpannel.obj
 smallsolarpannelrot/smallsolarpannelrot.obj
 smallwaterwheel/smallwaterwheel.obj
@@ -200,6 +213,7 @@ solarpanel2x3/bigsolarpanel.obj
 solarpanel2x3/bigsolarpanelrot.obj
 spiralrainchandelier/spiralrainchandelier.obj
 sputnikchandelier/sputnikchandelier.obj
+squarestonewalllight/squarestonewalllight.obj
 standbygenerator/standbygenerator.obj
 standbygenerator_extra_large/standbygenerator_extra_large.obj
 standbygenerator_extreme/standbygenerator_extreme.obj
@@ -215,6 +229,7 @@ steeltransmission230/steeltransmission230.obj
 steeltransmission69/steeltransmission69.obj
 stonecache/stonecache.obj
 stonefurnace/stonefurnace.obj
+stonewallwashlight/stonewallwashlight.obj
 streetlight/streetlight.obj
 submersiblepump200v/submersiblepump200v.obj
 submersiblepump50v/submersiblepump50v.obj

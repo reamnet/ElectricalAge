@@ -4421,6 +4421,97 @@
   "kind": "six_node",
   "name": "deck_step_riser_light"
  },
+ "eln:six_node@4480": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Nautical Pier Bollard Light",
+  "kind": "six_node",
+  "name": "nautical_pier_bollard_light"
+ },
+ "eln:six_node@4481": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Marine Pier Bulkhead Light",
+  "kind": "six_node",
+  "name": "marine_pier_bulkhead_light"
+ },
+ "eln:six_node@4482": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Harbor Gooseneck Pier Light",
+  "kind": "six_node",
+  "name": "harbor_gooseneck_pier_light"
+ },
+ "eln:six_node@4483": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Pier Lantern Post Light",
+  "kind": "six_node",
+  "name": "pier_lantern_post_light"
+ },
+ "eln:six_node@4484": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Low Profile Dock Light",
+  "kind": "six_node",
+  "name": "low_profile_dock_light"
+ },
+ "eln:six_node@4485": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Louvered Walkway Bollard",
+  "kind": "six_node",
+  "name": "louvered_walkway_bollard"
+ },
+ "eln:six_node@4486": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Shielded Walkway Light",
+  "kind": "six_node",
+  "name": "shielded_walkway_light"
+ },
+ "eln:six_node@4487": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Modern Blade Walkway Light",
+  "kind": "six_node",
+  "name": "modern_blade_walkway_light"
+ },
+ "eln:six_node@4488": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mushroom Walkway Light",
+  "kind": "six_node",
+  "name": "mushroom_walkway_light"
+ },
+ "eln:six_node@4489": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Arched Walkway Light",
+  "kind": "six_node",
+  "name": "arched_walkway_light"
+ },
+ "eln:six_node@4490": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Recessed Brick Patio Wall Light",
+  "kind": "six_node",
+  "name": "recessed_brick_patio_wall_light"
+ },
+ "eln:six_node@4491": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Round Stone Wall Light",
+  "kind": "six_node",
+  "name": "round_stone_wall_light"
+ },
+ "eln:six_node@4492": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Slotted Patio Wall Light",
+  "kind": "six_node",
+  "name": "slotted_patio_wall_light"
+ },
+ "eln:six_node@4493": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Recessed Square Patio Wall Light",
+  "kind": "six_node",
+  "name": "recessed_square_patio_wall_light"
+ },
+ "eln:six_node@4494": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Stone Wall Wash Light",
+  "kind": "six_node",
+  "name": "stone_wall_wash_light"
+ },
+
  "eln:shared_item@302": {
   "descriptor": "LampDescriptor",
   "display": "120V LED Light Bulb",

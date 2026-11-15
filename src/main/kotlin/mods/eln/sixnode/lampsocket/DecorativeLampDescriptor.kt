@@ -15,7 +15,7 @@ class DecorativeLampDescriptor(val style: DecorativeLampStyle) : LampSocketDescr
         modelName = style.model
         setPlaceDirection(when {
             style.ceiling -> arrayOf(Direction.YP)
-            style.floor -> arrayOf(Direction.YN)
+            style.floor || style.outdoorFloor -> arrayOf(Direction.YN)
             style.anyFace || style == DecorativeLampStyle.HOLDER -> Direction.values()
             else -> arrayOf(Direction.XN, Direction.XP, Direction.ZN, Direction.ZP)
         })
@@ -31,6 +31,7 @@ class DecorativeLampDescriptor(val style: DecorativeLampStyle) : LampSocketDescr
             style == DecorativeLampStyle.STRIP_SURFACE -> { add(0,0,-1); add(0,0,1) }
             style == DecorativeLampStyle.RIG_LINEAR -> { add(0,0,-1); add(0,0,1) }
             style == DecorativeLampStyle.PARTY_TIKI -> add(1,0,0)
+            style.outdoorFloor -> if(style.depth>1) for(x in 1 until ceil(style.depth).toInt()) add(x,0,0)
             style.seasonalString || style.partyString -> { add(0,0,-1); add(0,0,1) }
             style.foyer -> for(y in -1..1) for(z in -1..1) add(1,y,z)
             style.luxury -> for(x in 1..ceil(style.depth).toInt()) for(y in -2..2) for(z in -2..2) add(x,y,z)

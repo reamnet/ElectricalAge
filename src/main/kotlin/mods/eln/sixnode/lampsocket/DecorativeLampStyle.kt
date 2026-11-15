@@ -115,7 +115,37 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     DECK_POST_CAP(84, "deckpostcaplight", I18N.TR_NAME(I18N.Type.NONE, "Deck Post Cap Light"), 1, .32, 2,
         listOf(Vec3(.20,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     DECK_STEP(85, "decksteplight", I18N.TR_NAME(I18N.Type.NONE, "Deck Step Riser Light"), 1, .12, 3,
-        listOf(Vec3(.07,-.02,0.0)),Vec3(.5,-.866,0.0));
+        listOf(Vec3(.07,-.02,0.0)),Vec3(.5,-.866,0.0)),
+    PIER_BOLLARD(88, "nauticalpierbollard", I18N.TR_NAME(I18N.Type.NONE, "Nautical Pier Bollard Light"), 1, 1.1, 0,
+        listOf(Vec3(.88,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
+    PIER_BULKHEAD(89, "marinepierbulkhead", I18N.TR_NAME(I18N.Type.NONE, "Marine Pier Bulkhead Light"), 1, .7, 4,
+        listOf(Vec3(.16,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    PIER_GOOSE(90, "harborgooseneck", I18N.TR_NAME(I18N.Type.NONE, "Harbor Gooseneck Pier Light"), 1, 1.0, 4,
+        listOf(Vec3(.60,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    PIER_LANTERN(91, "pierlanternpost", I18N.TR_NAME(I18N.Type.NONE, "Pier Lantern Post Light"), 1, 2.4, 0,
+        listOf(Vec3(2.05,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
+    PIER_DOCK(92, "lowprofiledocklight", I18N.TR_NAME(I18N.Type.NONE, "Low Profile Dock Light"), 1, .55, 4,
+        listOf(Vec3(.10,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    PATH_LOUVER(93, "louveredpathbollard", I18N.TR_NAME(I18N.Type.NONE, "Louvered Walkway Bollard"), 1, .9, 0,
+        listOf(Vec3(.74,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
+    PATH_SHIELDED(94, "shieldedpathlight", I18N.TR_NAME(I18N.Type.NONE, "Shielded Walkway Light"), 1, .85, 4,
+        listOf(Vec3(.64,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
+    PATH_BLADE(95, "modernbladewalklight", I18N.TR_NAME(I18N.Type.NONE, "Modern Blade Walkway Light"), 1, 1.2, 4,
+        listOf(Vec3(1.0,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
+    PATH_MUSHROOM(96, "mushroompathlight", I18N.TR_NAME(I18N.Type.NONE, "Mushroom Walkway Light"), 1, .75, 4,
+        listOf(Vec3(.62,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
+    PATH_ARCH(97, "archedwalkwaylight", I18N.TR_NAME(I18N.Type.NONE, "Arched Walkway Light"), 1, 1.1, 4,
+        listOf(Vec3(.86,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
+    STONE_BRICK(98, "recessedbrickwalllight", I18N.TR_NAME(I18N.Type.NONE, "Recessed Brick Patio Wall Light"), 1, .65, 4,
+        listOf(Vec3(.065,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    STONE_ROUND(99, "roundstonewalllight", I18N.TR_NAME(I18N.Type.NONE, "Round Stone Wall Light"), 1, .5, 4,
+        listOf(Vec3(.055,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    STONE_SLOT(100, "slottedstonewalllight", I18N.TR_NAME(I18N.Type.NONE, "Slotted Patio Wall Light"), 1, .7, 4,
+        listOf(Vec3(.065,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    STONE_SQUARE(101, "squarestonewalllight", I18N.TR_NAME(I18N.Type.NONE, "Recessed Square Patio Wall Light"), 1, .6, 4,
+        listOf(Vec3(.065,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    STONE_WASH(102, "stonewallwashlight", I18N.TR_NAME(I18N.Type.NONE, "Stone Wall Wash Light"), 1, .7, 4,
+        listOf(Vec3(.10,0.0,0.0)),Vec3(1.0,0.0,0.0));
     val lookup get() = when {
         sourceOrdinal in 0..29 -> (64 shl 6) + 20 + sourceOrdinal
         sourceOrdinal in 30..87 -> (68 shl 6) + sourceOrdinal - 30
@@ -125,6 +155,8 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     val luxury get() = this in LUXURY_RINGS..LUXURY_EMPIRE
     val ceiling get() = foyer || luxury || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED, HEAVY_CANOPY, RIG_CAGE, RIG_LINEAR)
     val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM || this == WINDOW_CANDLE || this == HALLOWEEN_JACK || this == PARTY_TIKI || this == PARTY_LANTERN || this == DECK_POST_CAP
+    /** Pier and walkway bollards/posts stand on floor faces like the source outdoorFloor registration. */
+    val outdoorFloor get() = this in listOf(PIER_BOLLARD,PIER_LANTERN,PATH_LOUVER,PATH_SHIELDED,PATH_BLADE,PATH_MUSHROOM,PATH_ARCH)
     val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM, WINDOW_CANDLE, HALLOWEEN_JACK, PARTY_FESTOON, PARTY_TIKI, PARTY_GLOBE, PARTY_LANTERN, DECK_POST_CAP)
     /** Seasonal string lights drape two blocks past their mount face, like the source registration. */
     val seasonalString get() = this in listOf(CHRISTMAS_FAIRY,CHRISTMAS_COLOR,CHRISTMAS_ICICLE,HALLOWEEN_PUMPKIN,HALLOWEEN_GHOST)

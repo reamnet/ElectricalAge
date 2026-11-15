@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_six",
+  "textures": {
+    "particle": "eln:item/low_profile_dock_light"
+  }
+}

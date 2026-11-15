@@ -3,7 +3,7 @@
 Reviewed source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` in
 `../ELN1.21.1ForkPatch`. Continued from native checkpoint `7f5497f4` after
 checking the remote branch. The source catalog contains **108 decorative styles**;
-this batch registers **53 fixed fixtures**, leaving the other 55 unregistered.
+this batch registers **68 fixed fixtures**, leaving the other 40 unregistered.
 
 The original OBJ/MTL files and inventory icons are copied byte for byte. One shared
 renderer retains their mesh parts, source palette, absent-bulb visibility, lit lenses,
@@ -98,8 +98,23 @@ project both upwards and downwards.
 | 4405 | Poolside Party Lantern | 1 |
 | 4406 | Deck Post Cap Light | 1 |
 | 4407 | Deck Step Riser Light | 1 |
+| 4480 | Nautical Pier Bollard Light | 1 |
+| 4481 | Marine Pier Bulkhead Light | 1 |
+| 4482 | Harbor Gooseneck Pier Light | 1 |
+| 4483 | Pier Lantern Post Light | 1 |
+| 4484 | Low Profile Dock Light | 1 |
+| 4485 | Louvered Walkway Bollard | 1 |
+| 4486 | Shielded Walkway Light | 1 |
+| 4487 | Modern Blade Walkway Light | 1 |
+| 4488 | Mushroom Walkway Light | 1 |
+| 4489 | Arched Walkway Light | 1 |
+| 4490 | Recessed Brick Patio Wall Light | 1 |
+| 4491 | Round Stone Wall Light | 1 |
+| 4492 | Slotted Patio Wall Light | 1 |
+| 4493 | Recessed Square Patio Wall Light | 1 |
+| 4494 | Stone Wall Wash Light | 1 |
 
-All 53 fixture patterns and yields follow the reviewed source. Recipe ingredients
+All 68 fixture patterns and yields follow the reviewed source, except the fifteen pier/path/stone fixtures (4480\u20134494): the reviewed source defines no crafting recipes for them, so this batch adds no recipe changes for that family. Recipe ingredients
 use the existing native equivalents: Classic Lamp Socket → Lamp Socket A,
 Spot Lamp Socket → Lamp Socket B Projector, and the source copper ingot → vanilla
 copper. The Standing Drum Floor Lamp's source base, the Ceramic Drum Table Lamp,
@@ -115,7 +130,7 @@ ambiguous recipe. This avoids converting used bulbs into fresh ones.
 
 ## Remaining lighting work
 
-The other **55 decorative styles** remain separate work:
+The other **40 decorative styles** remain separate work:
 the remaining party wash, pier/path/stone/sidewalk outdoor families, adjustable flood/parking/street heads,
 motion detection, suspended warehouse adjustment, fan motors/rotors/hazards and
 portable table/carry adapters. Partial-block mounting and source-world conversion
@@ -145,23 +160,24 @@ Validation and any runtime limitations are recorded in
 
 The full build passes **690 of 693 root tests**, retaining the same three optional
 preview skips, and all **15 CAD tests**. The full default 200-case fluid corpus
-remains included. All **31 new native lighting cases** pass. Unfiltered native
-selects **1,344 tests: 1,342 pass**, with no skips; all **878 ForkPatch cases** pass.
-Both whole-catalog publication/drawing checks retain all **533 devices**; the item
-drawing check covers all **322 items**.
+remains included. All **46 new native lighting cases** pass. Unfiltered native
+selects **1,359 tests: 1,357 pass**, with no skips; all **893 ForkPatch cases** pass.
+Both whole-catalog publication/drawing checks retain all **548 devices**; the item
+drawing check covers all **337 items**.
 Repeated data generation writes zero files. All **680 provenance entries** pass;
-all 733 preceding identities and 1,056 English entries keep their exact values.
-There are 6 new identities and 6 new English entries in this batch.
+all 739 preceding identities and 1,062 English entries keep their exact values.
+There are 15 new identities and 15 new English entries in this batch.
 
 Only the historical `golden_descriptors` and `golden_slots` tests fail. The original
 expectations are unchanged; the two new bulbs naturally expand acceptance in ten
 existing socket menus.
-The [exact delta](decorative-lighting-golden-delta.json) records **601 failed
+The [exact delta](decorative-lighting-golden-delta.json) records **631 failed
 assertions**; the 537 pre-batch failures, the twelve added by the six
 4353–4358 styles, the ten added by the five luxury chandeliers, the fourteen
 added by the seven 4352, 4365–4370 styles, the sixteen added by the eight
-4374–4381 seasonal styles and the final twelve added by the six 4401, 4402,
-4404–4407 party/deck fixtures all remain exact. The matching slot summary
+4374–4381 seasonal styles, the twelve added by the six 4401, 4402,
+4404–4407 party/deck fixtures and the thirty added by the fifteen
+4480–4494 pier/path/stone fixtures all remain exact. The matching slot summary
 remains 112/137. No
 tolerance, assertion or skip was relaxed.
 
@@ -169,6 +185,6 @@ The clean development JAR at code commit `3451e318d78c` matches all **1,774 Java
 classes, 933 Kotlin classes, one Kotlin module file and 5,215 processed resources**.
 All tested class bytes remain exact; only the build marker changes from the tested
 working tree to the clean code commit. SHA-256: `2fc8759d0e12aa390518e1d3e0affc28c3313c1223b25ef90423ba0eb33936ba`.
-This artifact predates the 4352, 4353–4363, 4365–4370, 4374–4381 and
-4401, 4402, 4404–4407 batches; extending the parity record to the current
+This artifact predates the 4352, 4353–4363, 4365–4370, 4374–4381,
+4401, 4402, 4404–4407 and 4480–4494 batches; extending the parity record to the current
 branch HEAD would require a fresh clean build.

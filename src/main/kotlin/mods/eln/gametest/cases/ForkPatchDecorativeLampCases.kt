@@ -29,7 +29,7 @@ object ForkPatchDecorativeLampCases {
             // Ceiling fixtures hang ceil(depth) blocks below their mount; keep that clearance fully above the room floor.
             val y=if(style.ceiling)kotlin.math.ceil(style.depth).toInt()+1 else 5
             val pos=c.at(8,y,8)
-            val side=if(style.ceiling)Direction.YP else if(style.floor)Direction.YN else Direction.XN
+            val side=if(style.ceiling)Direction.YP else if(style.floor||style.outdoorFloor)Direction.YN else Direction.XN
             c.floor(pos.relative(side.toEnumFacing()))
             return c.placeSix(style.lookup,pos,side) as DecorativeLampElement
         }
