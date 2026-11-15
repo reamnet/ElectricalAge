@@ -141,5 +141,21 @@
     "The static client exhibit is unpowered; delivered work and loaded-only beam rules are covered by production/native regressions.",
     "One loopback network client is checked; no simultaneous multi-client campaign or audio/hardware-GPU campaign.",
     "Only the two historical golden tests fail. Expectations, existing assertions, skips and tolerances remain unchanged."
-  ]
+  ],
+  "artifact": {
+    "codeCommit": "3451e318d78c8fae0c1830e836b20b6c794050f2",
+    "path": "build/libs/eln-26.3-0.1.0-port.jar",
+    "sha256": "2fc8759d0e12aa390518e1d3e0affc28c3313c1223b25ef90423ba0eb33936ba",
+    "javaClasses": 1774,
+    "kotlinClasses": 933,
+    "kotlinModuleFiles": 1,
+    "processedResources": 5215,
+    "allTestedClassBytesRetained": true,
+    "onlyResourceChangeFromTestedBuild": "eln-build.properties",
+    "buildMarker": "3451e318d78c",
+    "cleanBuild": true,
+    "assembleLog": "/tmp/eln-lighting-clean-artifact.log",
+    "allBuildOutputsMatchJarEntries": true
+  },
+  "testedBytesRetainedAfterCommentCorrection": true
 }

@@ -125,3 +125,8 @@ The [exact delta](decorative-lighting-golden-delta.json) records **537 failed
 assertions**, all 481 previous non-aggregate assertions unchanged, and the matching
 slot summary changing from 122/137 to 112/137. No tolerance, assertion or skip was
 relaxed.
+
+The clean development JAR at code commit `3451e318d78c` matches all **1,774 Java
+classes, 933 Kotlin classes, one Kotlin module file and 5,215 processed resources**.
+All tested class bytes remain exact; only the build marker changes from the tested
+working tree to the clean code commit. SHA-256: `2fc8759d0e12aa390518e1d3e0affc28c3313c1223b25ef90423ba0eb33936ba`.
