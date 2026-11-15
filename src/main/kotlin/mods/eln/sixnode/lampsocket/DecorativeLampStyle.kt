@@ -87,7 +87,23 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     RIG_CAGE(47, "offshorecagedwellglass", I18N.TR_NAME(I18N.Type.NONE, "Offshore Caged Wellglass Light"), 1, 1.1, 4,
         listOf(Vec3(.64,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     RIG_LINEAR(48, "offshoresealedlinearlight", I18N.TR_NAME(I18N.Type.NONE, "Offshore Sealed Linear Light"), 2, 2.0, 5,
-        listOf(Vec3(.20,0.0,-.45),Vec3(.20,0.0,.45)),Vec3(1.0,0.0,0.0));
+        listOf(Vec3(.20,0.0,-.45),Vec3(.20,0.0,.45)),Vec3(1.0,0.0,0.0)),
+    CHRISTMAS_FAIRY(52, "christmasfairylights", I18N.TR_NAME(I18N.Type.NONE, "Warm White Christmas Fairy Lights"), 6, 2.0, 0,
+        (0..5).map { Vec3(.08,-.07,-.80+it*.32) },Vec3(1.0,0.0,0.0)),
+    CHRISTMAS_COLOR(53, "multicolorchristmaslights", I18N.TR_NAME(I18N.Type.NONE, "Multicolor Christmas String Lights"), 6, 2.0, 0,
+        (0..5).map { Vec3(.08,-.07,-.80+it*.32) },Vec3(1.0,0.0,0.0)),
+    CHRISTMAS_ICICLE(54, "christmasiciclelights", I18N.TR_NAME(I18N.Type.NONE, "Christmas Icicle Lights"), 6, 2.0, 0,
+        (0..5).map { Vec3(.08,-.12-(it%3)*.12,-.80+it*.32) },Vec3(1.0,0.0,0.0)),
+    CHRISTMAS_STAR(55, "christmasstarlight", I18N.TR_NAME(I18N.Type.NONE, "Christmas Star Wall Light"), 1, 1.0, 0,
+        listOf(Vec3(.06,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    HALLOWEEN_PUMPKIN(56, "halloweenpumpkinstring", I18N.TR_NAME(I18N.Type.NONE, "Halloween Pumpkin String Lights"), 4, 2.0, 0,
+        (0..3).map { Vec3(.10,-.12,-.72+it*.48) },Vec3(1.0,0.0,0.0)),
+    HALLOWEEN_GHOST(57, "halloweenghoststring", I18N.TR_NAME(I18N.Type.NONE, "Halloween Ghost String Lights"), 4, 2.0, 0,
+        (0..3).map { Vec3(.10,-.12,-.72+it*.48) },Vec3(1.0,0.0,0.0)),
+    HALLOWEEN_BAT(58, "halloweenbatlight", I18N.TR_NAME(I18N.Type.NONE, "Halloween Bat Wall Light"), 1, 1.0, 0,
+        listOf(Vec3(.07,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    HALLOWEEN_JACK(59, "jackolanternlamp", I18N.TR_NAME(I18N.Type.NONE, "Jack O Lantern Table Lamp"), 1, .8, 0,
+        listOf(Vec3(.42,0.0,0.0)),Vec3(1.0,0.0,0.0));
     val lookup get() = when {
         sourceOrdinal in 0..29 -> (64 shl 6) + 20 + sourceOrdinal
         sourceOrdinal in 30..87 -> (68 shl 6) + sourceOrdinal - 30
@@ -96,8 +112,10 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     val foyer get() = this in CANDLE..SPUTNIK
     val luxury get() = this in LUXURY_RINGS..LUXURY_EMPIRE
     val ceiling get() = foyer || luxury || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED, HEAVY_CANOPY, RIG_CAGE, RIG_LINEAR)
-    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM || this == WINDOW_CANDLE
-    val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM, WINDOW_CANDLE)
+    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM || this == WINDOW_CANDLE || this == HALLOWEEN_JACK
+    val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM, WINDOW_CANDLE, HALLOWEEN_JACK)
+    /** Seasonal string lights drape two blocks past their mount face, like the source registration. */
+    val seasonalString get() = this in listOf(CHRISTMAS_FAIRY,CHRISTMAS_COLOR,CHRISTMAS_ICICLE,HALLOWEEN_PUMPKIN,HALLOWEEN_GHOST)
     /** Under-cabinet, cove, surface and neon strips mount on any supporting face. */
     val anyFace get() = this in listOf(STRIP_CABINET, STRIP_COVE, STRIP_SURFACE, STRIP_NEON)
     fun localFacing(v: Vec3, front: LRDU) = front.rotateOnXnLeft(v.xRot((-PI/2).toFloat()))

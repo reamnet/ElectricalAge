@@ -1,4 +1,4 @@
-// 26.3	2026-11-15T07:16:54.860752585	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-15T08:28:29.062432059	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -163,6 +163,8 @@ c1c02f926058e1a5bf383be49d8fad52eb0c9dff data/eln/advancement/recipes/misc/charc
 2c691f10bb24f194337257bb610a228ff40c59ec data/eln/advancement/recipes/misc/cheap_chip.json
 f996e81fb80e515548a6e7a7c20e6807ff52a339 data/eln/advancement/recipes/misc/cheap_electrical_drill.json
 20786f52964ac84ab2f8e645c40b6af3e0d499dd data/eln/advancement/recipes/misc/cheap_ferromagnetic_core.json
+396d34aacc6376568f007cce319e26cd8ba70f4a data/eln/advancement/recipes/misc/christmas_icicle_lights.json
+51beb8fedd8136539255209062832f23ba04cdbc data/eln/advancement/recipes/misc/christmas_star_wall_light.json
 495dad7ca040158c03dae28e27b0da45f191dc33 data/eln/advancement/recipes/misc/combustion_chamber.json
 083b94981390838b2cfffae637313aade05199db data/eln/advancement/recipes/misc/compact_side_entry_service_mast.json
 a7d17767a5dbba27b8cc1a46625e6e20c8a94f1d data/eln/advancement/recipes/misc/configurable_summing_unit.json
@@ -242,6 +244,9 @@ ee74ad8d287d097110454c4fa06e08a0965e522a data/eln/advancement/recipes/misc/grand
 a0d612bd4f26061b5e9c15aa0f3000b426037fd0 data/eln/advancement/recipes/misc/green_brush.json
 709c3ad72af1a1da0bec74750a7fa8a8e408e3ef data/eln/advancement/recipes/misc/grid_control_console.json
 c14117c6913e1bb9562e34acda9dbe02383521d8 data/eln/advancement/recipes/misc/ground_cable.json
+83ec41d13e72f66bd9383954a36f993bda37f5e4 data/eln/advancement/recipes/misc/halloween_bat_wall_light.json
+5dae0c20f5504834bfa7210e62946238152d252f data/eln/advancement/recipes/misc/halloween_ghost_string_lights.json
+b6f62181583b10d4036963d7a1da00b8158bec76 data/eln/advancement/recipes/misc/halloween_pumpkin_string_lights.json
 fc128c4105f2c92ee05a3405c45a32a3d9656fb9 data/eln/advancement/recipes/misc/headlamp.json
 ca934f46f64dec6fbd4c555a9257f3af2dfa465f data/eln/advancement/recipes/misc/high_power_receiver_antenna.json
 3db2f7e8d0d048e8b8a35415ac6c3b8a3b9b4276 data/eln/advancement/recipes/misc/high_power_transmitter_antenna.json
@@ -259,6 +264,7 @@ adff65b0e3b516752580628470a82e029fef2c0c data/eln/advancement/recipes/misc/high_
 23e7e1a3c03fa30b6de61225a6f5a79bb8c48b5e data/eln/advancement/recipes/misc/iron_cable.json
 36911902b55011201994746f5173dbebfd92709b data/eln/advancement/recipes/misc/iron_roller_wheel.json
 caa773201e3270ec7194fa6ad69acb7e3b4f7c13 data/eln/advancement/recipes/misc/iron_tank.json
+6a26c06938e94c225e1b74416500a4a26616bb3b data/eln/advancement/recipes/misc/jack_o_lantern_table_lamp.json
 74456d14bc1de3c51ca612ecc6e5b67ec8d20996 data/eln/advancement/recipes/misc/jk_flip_flop_chip.json
 898d97ed54ccf9a038e21587c74511817611f4ce data/eln/advancement/recipes/misc/joint.json
 ff770d82fed48e779e22e4fd14615d03adb00d06 data/eln/advancement/recipes/misc/joint_hub.json
@@ -309,6 +315,7 @@ a27e31349b09577ad4c188f22d768cc06e79fa07 data/eln/advancement/recipes/misc/mediu
 dd1242cd6b9ff29ba81aac774e1b969ec8f0ec6b data/eln/advancement/recipes/misc/modern_sputnik_foyer_chandelier.json
 610c33e376abf2f1d751476431a162f19c57bd8b data/eln/advancement/recipes/misc/monster_filter.json
 046dfec5a4294d393fbddb41d68841e7ccdeeed4 data/eln/advancement/recipes/misc/mppt_solar_controller.json
+f50ab593f03dba000f7c079a9444fdeaf1045c28 data/eln/advancement/recipes/misc/multicolor_christmas_string_lights.json
 c212ab04301e827265d0e3361f91fb4211732103 data/eln/advancement/recipes/misc/multimeter.json
 1196464f2fb1ff0e8a9e7e0f8db5ef00bb7f2040 data/eln/advancement/recipes/misc/nand_chip.json
 524e2572a2e04111a2fe6e7a0a00597ea57df809 data/eln/advancement/recipes/misc/nor_chip.json
@@ -500,6 +507,7 @@ f47b2c16d3aff37b8460e39245249fda40531f50 data/eln/advancement/recipes/misc/wall_
 d0603e241f2719f195a0cfb63fab42351aba2f7c data/eln/advancement/recipes/misc/wall_mounted_mppt_solar_controller.json
 cbe8363c51452156f28ddfc6f640a8e1e3d4ca3f data/eln/advancement/recipes/misc/wall_mounted_programmable_ups.json
 fb555afc6d64901dc09dcbd3d210d2607b0724a3 data/eln/advancement/recipes/misc/warehouse_equipment_pallet.json
+b7c067ec64f6f12c8cfde041bf4d7ca6afe45d95 data/eln/advancement/recipes/misc/warm_white_christmas_fairy_lights.json
 5b4fba0cf4d8239e3cbce33bed6955b18b51f1be data/eln/advancement/recipes/misc/water_turbine.json
 db60d69221acdb19adf4acbf846d3c9cc1e7138b data/eln/advancement/recipes/misc/weak_50v_battery_charger.json
 cd1801fc1dc5360002e4ef5278cc0cdf93ca0226 data/eln/advancement/recipes/misc/well_casing.json
@@ -703,6 +711,8 @@ bd83f8e28296e360fafeb22cf8cab8536161a42c data/eln/recipe/blasting_raw_tungsten_2
 622bc1964dde3ca540d6499d7117580000bad27d data/eln/recipe/cheap_chip.json
 afa583372447fddaf5707f783a659b8429a6b5d5 data/eln/recipe/cheap_electrical_drill.json
 ab676e2387186148a3df59b088cf2d1f4c3a15f4 data/eln/recipe/cheap_ferromagnetic_core.json
+00d2b2fe7f6bc1154c75839fcfe0a5c6250b0c5c data/eln/recipe/christmas_icicle_lights.json
+be175aa326bd7ae68664e871ed28d3d574e84ebc data/eln/recipe/christmas_star_wall_light.json
 10859b043b2f46648ba82294d9dd0461b0bd7cc2 data/eln/recipe/combustion_chamber.json
 2c1b2da92db115ded11ac17d16c7c0345ea9dacd data/eln/recipe/compact_side_entry_service_mast.json
 e6d592a04e3a3543405fc3038e0c4d99be342217 data/eln/recipe/configurable_summing_unit.json
@@ -782,6 +792,9 @@ a3490c55657a25c1a3472ba0cb062e62c8b9a612 data/eln/recipe/glass_globe_wall_sconce
 1fd7392f8f3c4443adbf0499d84396c5da56090d data/eln/recipe/green_brush.json
 9fea350da7727347e458880b872c9ffc283ee3a3 data/eln/recipe/grid_control_console.json
 15ba4c1dcda12e30a0ba2f80409862bb6d81569f data/eln/recipe/ground_cable.json
+6ccbb1aaf190d5a7df32965592f84efbad5c6d47 data/eln/recipe/halloween_bat_wall_light.json
+64709a267ddf046f7651dbb452844d2bc3dc72b1 data/eln/recipe/halloween_ghost_string_lights.json
+ec1c71c9afafaaa642f942a67c2b7b1a7ba962e9 data/eln/recipe/halloween_pumpkin_string_lights.json
 2a2690f54fe15a7783bdbfb8481c7334cbf4d7bf data/eln/recipe/headlamp.json
 947048bf74e986c940e07879841e888c3a75df68 data/eln/recipe/high_power_receiver_antenna.json
 72d99145ed8ef404b149ba6b07a7011236f1e36d data/eln/recipe/high_power_transmitter_antenna.json
@@ -799,6 +812,7 @@ d7a54c89e137b00cf2d50b95480ddaf28591370f data/eln/recipe/high_voltage_switch.jso
 441236a83e9903671ee085ecd8705c19a822f2ac data/eln/recipe/iron_cable.json
 ff4c3c82db840e1dfc23de8ff0fe6bcd767ee0a0 data/eln/recipe/iron_roller_wheel.json
 4b9f9ef5fa11f713b714c8dd328c65558f315235 data/eln/recipe/iron_tank.json
+6461535e96ef9fd4c98b2c4f36c6ac47479dc24c data/eln/recipe/jack_o_lantern_table_lamp.json
 06a223dc3fee3d2f1bc82751b232279336ff98fb data/eln/recipe/jk_flip_flop_chip.json
 e6776792e8a688b133e4ee88f8ec981d5c41d46e data/eln/recipe/joint.json
 01f5a5ba283195a3c2b59c8d98912eb14fa609dd data/eln/recipe/joint_hub.json
@@ -849,6 +863,7 @@ ebd63e9a5f900366c5a0004356905112cd008098 data/eln/recipe/modern_data_logger.json
 a6770f74cf9548ef82ab69701135f0fe59828f06 data/eln/recipe/modern_sputnik_foyer_chandelier.json
 b937a3eff0a8f08a2d43f6bc97d126a15a5689fa data/eln/recipe/monster_filter.json
 23bad57c57984cae1127203c1bd744942a95323d data/eln/recipe/mppt_solar_controller.json
+faec6878055affe1c7292eabf394d6750258e3df data/eln/recipe/multicolor_christmas_string_lights.json
 8d83f9c1dee7864768cf6ca50fb939e1a46589e2 data/eln/recipe/multimeter.json
 98d357e0e3bb9c3b4f91a0301d5901f9a928265c data/eln/recipe/nand_chip.json
 2d6aaedb23ad30856db9e2788c70b180151f0b34 data/eln/recipe/nor_chip.json
@@ -1040,6 +1055,7 @@ ee25b424184f89566f1fbc582aeb39569da6fba3 data/eln/recipe/wall_mounted_hybrid_sol
 655adfb11b9a89a42e6a6648445468ded01d9b53 data/eln/recipe/wall_mounted_mppt_solar_controller.json
 9410999b18c55a94badd1deb7988130ac0d79940 data/eln/recipe/wall_mounted_programmable_ups.json
 1d29b67d41b74e9f3b6e5695252176a8dc986009 data/eln/recipe/warehouse_equipment_pallet.json
+a9656217ff7b4f0009e1fcdd661c6f3adc0fffa3 data/eln/recipe/warm_white_christmas_fairy_lights.json
 2eef55cb3770ba6e558dcb7b2078bdec640bcbf2 data/eln/recipe/water_turbine.json
 7d2fe631dadef77994ea6da566a582f8a513ec22 data/eln/recipe/weak_50v_battery_charger.json
 eeb00d96bd5e748eb1d0b827dc5d3ff52fcbe137 data/eln/recipe/well_casing.json

@@ -3,7 +3,7 @@
 Reviewed source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` in
 `../ELN1.21.1ForkPatch`. Continued from native checkpoint `7f5497f4` after
 checking the remote branch. The source catalog contains **108 decorative styles**;
-this batch registers **39 fixed fixtures**, leaving the other 69 unregistered.
+this batch registers **47 fixed fixtures**, leaving the other 61 unregistered.
 
 The original OBJ/MTL files and inventory icons are copied byte for byte. One shared
 renderer retains their mesh parts, source palette, absent-bulb visibility, lit lenses,
@@ -84,13 +84,21 @@ project both upwards and downwards.
 | 4368 | Industrial Yard Area Light | 2 |
 | 4369 | Offshore Caged Wellglass Light | 1 |
 | 4370 | Offshore Sealed Linear Light | 2 |
+| 4374 | Warm White Christmas Fairy Lights | 6 |
+| 4375 | Multicolor Christmas String Lights | 6 |
+| 4376 | Christmas Icicle Lights | 6 |
+| 4377 | Christmas Star Wall Light | 1 |
+| 4378 | Halloween Pumpkin String Lights | 4 |
+| 4379 | Halloween Ghost String Lights | 4 |
+| 4380 | Halloween Bat Wall Light | 1 |
+| 4381 | Jack O Lantern Table Lamp | 1 |
 
-All 39 fixture patterns and yields follow the reviewed source. Recipe ingredients
+All 47 fixture patterns and yields follow the reviewed source. Recipe ingredients
 use the existing native equivalents: Classic Lamp Socket → Lamp Socket A,
 Spot Lamp Socket → Lamp Socket B Projector, and the source copper ingot → vanilla
 copper. The Standing Drum Floor Lamp's source base, the Ceramic Drum Table Lamp,
 is unregistered, so its paid shapeless recipe uses the Basic Lamp Holder plus an
-iron ingot instead. The five luxury chandeliers craft from their registered foyer chandelier bases plus the source material: Grand Halo Ring from Modern Sputnik plus gold, Grand Crystal Cascade from Crystal Tier plus diamond, Sculptural Branch from Modern Sputnik plus copper, Spiral Rain from Crystal Tier plus an iron chain, and Grand Empire from Candle Arm plus gold. The seven window/heavy/offshore fixtures craft from their registered bases plus source materials: Window Candle Light from the Basic Lamp Holder plus honeycomb, Armored Oval Bulkhead Light from the Robust Lamp Socket plus iron bars, Industrial Wall Pack Light from the Robust Lamp Socket plus an iron ingot (the source crafts it from the unported Warehouse Wall Floodlight, so this stand-in base is documented), Rugged Outdoor Canopy Light from the Robust Lamp Socket plus an iron block, Industrial Yard Area Light from the Gooseneck Barn Light plus an iron ingot, Offshore Caged Wellglass Light from the Robust Lamp Socket plus yellow dye, and Offshore Sealed Linear Light from the Thin Fluorescent Shop Light plus yellow dye. Existing native recipes keep their outputs.
+iron ingot instead. The five luxury chandeliers craft from their registered foyer chandelier bases plus the source material: Grand Halo Ring from Modern Sputnik plus gold, Grand Crystal Cascade from Crystal Tier plus diamond, Sculptural Branch from Modern Sputnik plus copper, Spiral Rain from Crystal Tier plus an iron chain, and Grand Empire from Candle Arm plus gold. The seven window/heavy/offshore fixtures craft from their registered bases plus source materials: Window Candle Light from the Basic Lamp Holder plus honeycomb, Armored Oval Bulkhead Light from the Robust Lamp Socket plus iron bars, Industrial Wall Pack Light from the Robust Lamp Socket plus an iron ingot (the source crafts it from the unported Warehouse Wall Floodlight, so this stand-in base is documented), Rugged Outdoor Canopy Light from the Robust Lamp Socket plus an iron block, Industrial Yard Area Light from the Gooseneck Barn Light plus an iron ingot, Offshore Caged Wellglass Light from the Robust Lamp Socket plus yellow dye, and Offshore Sealed Linear Light from the Thin Fluorescent Shop Light plus yellow dye. The eight seasonal fixtures craft from their registered strip or holder bases plus source seasonals: Warm White Christmas Fairy Lights, Multicolor Christmas String Lights, Christmas Icicle Lights and Halloween Ghost String Lights from the Flexible Neon LED Strip plus yellow, red, light blue or white dye respectively, Halloween Pumpkin String Lights from the Flexible Neon LED Strip plus a pumpkin, Christmas Star Wall Light from the Basic Lamp Holder plus a gold nugget, Halloween Bat Wall Light from the Basic Lamp Holder plus black dye, and Jack O Lantern Table Lamp from the Basic Lamp Holder plus a carved pumpkin. Existing native recipes keep their outputs.
 
 The source LED lookups 293/294 conflict with the established 50/200 V bulbs.
 Explicit mapping moves the new 120/240 V LEDs to **302/303**, preserving both old
@@ -101,7 +109,7 @@ ambiguous recipe. This avoids converting used bulbs into fresh ones.
 
 ## Remaining lighting work
 
-The other **69 decorative styles** remain separate work:
+The other **61 decorative styles** remain separate work:
 seasonal/party/pool/outdoor families, adjustable flood/parking/street heads,
 motion detection, suspended warehouse adjustment, fan motors/rotors/hazards and
 portable table/carry adapters. Partial-block mounting and source-world conversion
@@ -141,15 +149,17 @@ There are 7 new identities and 7 new English entries.
 Only the historical `golden_descriptors` and `golden_slots` tests fail. The original
 expectations are unchanged; the two new bulbs naturally expand acceptance in ten
 existing socket menus.
-The [exact delta](decorative-lighting-golden-delta.json) records **573 failed
+The [exact delta](decorative-lighting-golden-delta.json) records **589 failed
 assertions**; the 549 previous non-aggregate assertions remain unchanged, the
 six 4353–4358 styles add twelve absent-from-1.12 differences, the five luxury
-chandeliers add ten more, and the seven 4352, 4365–4370 styles add fourteen more. The matching slot summary remains 112/137. No
+chandeliers add ten more, the seven 4352, 4365–4370 styles add fourteen more, and
+the eight 4374–4381 seasonal styles add sixteen more. The matching slot summary
+remains 112/137. No
 tolerance, assertion or skip was relaxed.
 
 The clean development JAR at code commit `3451e318d78c` matches all **1,774 Java
 classes, 933 Kotlin classes, one Kotlin module file and 5,215 processed resources**.
 All tested class bytes remain exact; only the build marker changes from the tested
 working tree to the clean code commit. SHA-256: `2fc8759d0e12aa390518e1d3e0affc28c3313c1223b25ef90423ba0eb33936ba`.
-This artifact predates the 4352, 4353–4363 and 4365–4370 batches; extending the parity record to the
+This artifact predates the 4352, 4353–4363, 4365–4370 and 4374–4381 batches; extending the parity record to the
 current branch HEAD would require a fresh clean build.

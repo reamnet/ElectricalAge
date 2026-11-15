@@ -1,11 +1,11 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "previousCheckpoint": "2e3caab7a04dfc388679e4cc284a0cb845d0aa2f",
+  "previousCheckpoint": "79fc9605d4cd33f1a3c2f5b49b221b90c4d7bdc1",
   "branch": "port/forkpatch-3.0.77-26.3",
   "pr": 1,
   "sourceStyles": 108,
-  "registeredFixedStyles": 39,
-  "unregisteredStyles": 69,
+  "registeredFixedStyles": 47,
+  "unregisteredStyles": 61,
   "ratedLedNativeLookups": [
     302,
     303
@@ -44,23 +44,23 @@
     "report": "/tmp/eln-lighting-focused-final.xml"
   },
   "native": {
-    "selected": 1330,
-    "passed": 1328,
+    "selected": 1338,
+    "passed": 1336,
     "failed": 2,
     "skipped": 0,
     "portCases": {
-      "selected": 864,
+      "selected": 872,
       "failed": 0
     },
-    "nativeLog": "/tmp/gametest-batchA.log",
-    "nativeReport": "/tmp/gametest-batchA.log (no separate XML report produced on this run; test failures enumerated in the log)"
+    "nativeLog": "/tmp/gametest-4374-4381b.log",
+    "nativeReport": "/tmp/eln-golden-4374-4381b.xml"
   },
   "nativeFailureNames": [
     "eln:golden_descriptors",
     "eln:golden_slots"
   ],
-  "nativeLog": "/tmp/gametest-wip.log",
-  "nativeReport": "/tmp/eln-lighting-final2-native.xml",
+  "nativeLog": "/tmp/gametest-4374-4381b.log",
+  "nativeReport": "/tmp/eln-golden-4374-4381b.xml",
   "goldenDelta": "decorative-lighting-golden-delta.json",
   "allCatalogPublicationAndDrawing": {
     "selected": 519,
@@ -82,16 +82,16 @@
   },
   "retainedData": {
     "src/main/resources/eln-ids.json": {
-      "previous": 718,
-      "current": 725,
+      "previous": 725,
+      "current": 733,
       "retainedExact": true,
-      "added": 7
+      "added": 8
     },
     "src/generated/resources/assets/eln/lang/en_us.json": {
-      "previous": 1041,
-      "current": 1048,
+      "previous": 1048,
+      "current": 1056,
       "retainedExact": true,
-      "added": 7
+      "added": 8
     }
   },
   "runtime": {
@@ -138,7 +138,7 @@
     "Whole-catalog setup lifts hanging-fixture clearance above its test floor; all 501 devices remain included."
   ],
   "limitations": [
-    "Other 69 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
+    "Other 61 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
     "Original model/icon bytes and source controls/palette are retained; universal pixel-for-pixel or hardware-GPU parity is not established.",
     "The static client exhibit is unpowered; delivered work and loaded-only beam rules are covered by production/native regressions.",
     "One loopback network client is checked; no simultaneous multi-client campaign or audio/hardware-GPU campaign.",

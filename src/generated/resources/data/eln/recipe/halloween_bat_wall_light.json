@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:basic_lamp_holder",
+    "minecraft:black_dye"
+  ],
+  "result": {
+    "id": "eln:halloween_bat_wall_light"
+  }
+}

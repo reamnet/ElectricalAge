@@ -30,6 +30,7 @@ class DecorativeLampDescriptor(val style: DecorativeLampStyle) : LampSocketDescr
             }
             style == DecorativeLampStyle.STRIP_SURFACE -> { add(0,0,-1); add(0,0,1) }
             style == DecorativeLampStyle.RIG_LINEAR -> { add(0,0,-1); add(0,0,1) }
+            style.seasonalString -> { add(0,0,-1); add(0,0,1) }
             style.foyer -> for(y in -1..1) for(z in -1..1) add(1,y,z)
             style.luxury -> for(x in 1..ceil(style.depth).toInt()) for(y in -2..2) for(z in -2..2) add(x,y,z)
         }

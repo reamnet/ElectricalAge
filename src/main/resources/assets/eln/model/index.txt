@@ -20,6 +20,9 @@ cagewallsconce/cagewallsconce.obj
 candlefoyerchandelier/candlefoyerchandelier.obj
 candlewallsconce/candlewallsconce.obj
 capacitorbank/capacitorbank.obj
+christmasfairylights/christmasfairylights.obj
+christmasiciclelights/christmasiciclelights.obj
+christmasstarlight/christmasstarlight.obj
 classiclampsocket/classiclampsocket.obj
 columnbase/columnbase.obj
 columnsegment/columnsegment.obj
@@ -73,6 +76,9 @@ gooseneckservicemast/gooseneckservicemast.obj
 grandempirechandelier/grandempirechandelier.obj
 grandhalochandelier/grandhalochandelier.obj
 groundcable/groundcable.obj
+halloweenbatlight/halloweenbatlight.obj
+halloweenghoststring/halloweenghoststring.obj
+halloweenpumpkinstring/halloweenpumpkinstring.obj
 handdrill/handdrill.obj
 hangingfactorylight/hangingfactorylight.obj
 heatexchanger/heatexchanger.obj
@@ -98,6 +104,7 @@ industrialpanel/industrialpanel.obj
 industrialwallpacklight/industrialwallpacklight.obj
 industrialyardlight/industrialyardlight.obj
 inlinepump200v/inlinepump200v.obj
+jackolanternlamp/jackolanternlamp.obj
 lampsupply/lampsupply.obj
 lanternfoyerchandelier/lanternfoyerchandelier.obj
 largerheostat/largerheostat.obj
@@ -119,6 +126,7 @@ maceratorb/maceratorb.obj
 magnetizera/magnetizera.obj
 magnetizerb/magnetizerb.obj
 mediumvoltageswitch/mediumvoltageswitch.obj
+multicolorchristmaslights/multicolorchristmaslights.obj
 nema1030plug/nema1030plug.obj
 nema520plug/nema520plug.obj
 nema620plug/nema620plug.obj

@@ -276,6 +276,15 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("Industrial Yard Area Light"),findItemStack("Gooseneck Barn Light"),Items.IRON_INGOT);
         addShapelessRecipe(findItemStack("Offshore Caged Wellglass Light"),findItemStack("Robust Lamp Socket"),dye(11));
         addShapelessRecipe(findItemStack("Offshore Sealed Linear Light"),findItemStack("Thin Fluorescent Shop Light"),dye(11));
+        // Source seasonal strings use the unported transparent "String Lights" node; Flexible Neon LED Strip stands in (Batch A precedent).
+        addShapelessRecipe(findItemStack("Warm White Christmas Fairy Lights"),findItemStack("Flexible Neon LED Strip"),dye(11));
+        addShapelessRecipe(findItemStack("Multicolor Christmas String Lights"),findItemStack("Flexible Neon LED Strip"),dye(1));
+        addShapelessRecipe(findItemStack("Christmas Icicle Lights"),findItemStack("Flexible Neon LED Strip"),dye(12));
+        addShapelessRecipe(findItemStack("Halloween Pumpkin String Lights"),findItemStack("Flexible Neon LED Strip"),Items.PUMPKIN);
+        addShapelessRecipe(findItemStack("Halloween Ghost String Lights"),findItemStack("Flexible Neon LED Strip"),dye(15));
+        addShapelessRecipe(findItemStack("Christmas Star Wall Light"),findItemStack("Basic Lamp Holder"),Items.GOLD_NUGGET);
+        addShapelessRecipe(findItemStack("Halloween Bat Wall Light"),findItemStack("Basic Lamp Holder"),dye(0));
+        addShapelessRecipe(findItemStack("Jack O Lantern Table Lamp"),findItemStack("Basic Lamp Holder"),Items.CARVED_PUMPKIN);
     }
 
     public static void recipeLampSocket() {

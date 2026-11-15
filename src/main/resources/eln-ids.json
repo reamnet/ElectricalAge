@@ -4337,6 +4337,54 @@
   "kind": "six_node",
   "name": "offshore_sealed_linear_light"
  },
+ "eln:six_node@4374": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Warm White Christmas Fairy Lights",
+  "kind": "six_node",
+  "name": "warm_white_christmas_fairy_lights"
+ },
+ "eln:six_node@4375": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Multicolor Christmas String Lights",
+  "kind": "six_node",
+  "name": "multicolor_christmas_string_lights"
+ },
+ "eln:six_node@4376": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Christmas Icicle Lights",
+  "kind": "six_node",
+  "name": "christmas_icicle_lights"
+ },
+ "eln:six_node@4377": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Christmas Star Wall Light",
+  "kind": "six_node",
+  "name": "christmas_star_wall_light"
+ },
+ "eln:six_node@4378": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Halloween Pumpkin String Lights",
+  "kind": "six_node",
+  "name": "halloween_pumpkin_string_lights"
+ },
+ "eln:six_node@4379": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Halloween Ghost String Lights",
+  "kind": "six_node",
+  "name": "halloween_ghost_string_lights"
+ },
+ "eln:six_node@4380": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Halloween Bat Wall Light",
+  "kind": "six_node",
+  "name": "halloween_bat_wall_light"
+ },
+ "eln:six_node@4381": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Jack O Lantern Table Lamp",
+  "kind": "six_node",
+  "name": "jack_o_lantern_table_lamp"
+ },
  "eln:shared_item@302": {
   "descriptor": "LampDescriptor",
   "display": "120V LED Light Bulb",

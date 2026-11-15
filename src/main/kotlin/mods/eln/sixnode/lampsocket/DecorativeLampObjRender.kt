@@ -49,7 +49,8 @@ class DecorativeLampObjRender(val style: DecorativeLampStyle) : LampSocketObjRen
             model.getPart("Metal")?.drawNoBind()
             GL11.glColor3f(.65f,.68f,.71f)
             model.getPart("Trim")?.drawNoBind()
-            GL11.glColor3f(.88f,.79f,.62f)
+            if(style == DecorativeLampStyle.HALLOWEEN_GHOST) GL11.glColor3f(.93f,.94f,.96f)
+            else GL11.glColor3f(.88f,.79f,.62f)
             GL11.glPushAttrib(-1)
             try { GL11.glDisable(GL11.GL_CULL_FACE); model.getPart("Shade")?.drawNoBind() }
             finally { GL11.glPopAttrib() }
@@ -64,6 +65,17 @@ class DecorativeLampObjRender(val style: DecorativeLampStyle) : LampSocketObjRen
                         bulb==null || bulb.type==LampDescriptor.Type.LED || bulb.type==LampDescriptor.Type.eco -> GL11.glColor3f(.90f,.96f,1f)
                         bulb.vegetableGrowRate>0 -> GL11.glColor3f(1f,.78f,.92f)
                         else -> GL11.glColor3f(1f,.90f,.65f)
+                    }
+                    when(style) {
+                        DecorativeLampStyle.CHRISTMAS_FAIRY -> GL11.glColor3f(1f,.76f,.35f)
+                        DecorativeLampStyle.CHRISTMAS_COLOR -> when(i%4) {
+                            0->GL11.glColor3f(1f,.10f,.05f);1->GL11.glColor3f(.12f,1f,.20f);2->GL11.glColor3f(.15f,.35f,1f);else->GL11.glColor3f(1f,.72f,.08f)
+                        }
+                        DecorativeLampStyle.CHRISTMAS_ICICLE,DecorativeLampStyle.HALLOWEEN_GHOST -> GL11.glColor3f(.65f,.80f,1f)
+                        DecorativeLampStyle.CHRISTMAS_STAR -> GL11.glColor3f(1f,.80f,.20f)
+                        DecorativeLampStyle.HALLOWEEN_PUMPKIN,DecorativeLampStyle.HALLOWEEN_JACK -> GL11.glColor3f(1f,.40f,.035f)
+                        DecorativeLampStyle.HALLOWEEN_BAT -> GL11.glColor3f(.68f,.15f,1f)
+                        else -> Unit
                     }
                     model.getPart("Light$i")?.drawNoBind()
                     UtilsClient.enableLight()

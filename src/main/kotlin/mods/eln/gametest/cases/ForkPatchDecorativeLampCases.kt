@@ -144,7 +144,15 @@ object ForkPatchDecorativeLampCases {
                 "Rugged Outdoor Canopy Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.IRON_BLOCK)),
                 "Industrial Yard Area Light" to listOf(Eln.findItemStack("Gooseneck Barn Light",1),ItemStack(Items.IRON_INGOT)),
                 "Offshore Caged Wellglass Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.DYE.yellow())),
-                "Offshore Sealed Linear Light" to listOf(Eln.findItemStack("Thin Fluorescent Shop Light",1),ItemStack(Items.DYE.yellow())))
+                "Offshore Sealed Linear Light" to listOf(Eln.findItemStack("Thin Fluorescent Shop Light",1),ItemStack(Items.DYE.yellow())),
+                "Warm White Christmas Fairy Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.yellow())),
+                "Multicolor Christmas String Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.red())),
+                "Christmas Icicle Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.lightBlue())),
+                "Halloween Pumpkin String Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.PUMPKIN)),
+                "Halloween Ghost String Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.white())),
+                "Christmas Star Wall Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.GOLD_NUGGET)),
+                "Halloween Bat Wall Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.DYE.black())),
+                "Jack O Lantern Table Lamp" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.CARVED_PUMPKIN)))
             for((name,ingredients) in stripPairs){
                 val grid=CraftingInput.of(2,2,listOf(ingredients[0],ItemStack.EMPTY,ItemStack.EMPTY,ingredients[1]))
                 val crafted=c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,grid,c.level()).map { it.value().assemble(grid) }.orElse(ItemStack.EMPTY)

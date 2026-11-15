@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ingredient": {
+      "conditions": {
+        "items": [
+          {
+            "items": "eln:flexible_neon_led_strip"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "eln:warm_white_christmas_fairy_lights"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ingredient"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "eln:warm_white_christmas_fairy_lights"
+    ]
+  }
+}
