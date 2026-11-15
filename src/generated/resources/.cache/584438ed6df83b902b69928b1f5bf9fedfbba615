@@ -1,4 +1,4 @@
-// 26.3	2026-11-14T14:08:53.495890822	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-14T19:36:05.49754877	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -41,6 +41,8 @@ f3200f6d5cda5edc04414e9f5ed32c9310cb1540 data/eln/advancement/recipes/misc/200v_
 0a5df19babf77af85a8355a565bc7ce232529590 data/eln/advancement/recipes/misc/200v_tar_sand_separator.json
 d874405c2f0b96e6269c1dcb75a4bbdd7005544d data/eln/advancement/recipes/misc/200v_tungsten_heating_corp.json
 2046a4b8df8500c753e77008f4c3a44cc2acf89e data/eln/advancement/recipes/misc/20_a_pole_fuse.json
+dbeba0b8475b7812766abcf24e9050887b67c15c data/eln/advancement/recipes/misc/230_kv_steel_transmission_tower.json
+a371b28c37a0fb40833517c9a7e9ac730f1025fa data/eln/advancement/recipes/misc/230_kv_three_phase_cable_riser_tower.json
 4a95b1a49849fd4fa42d5178fa38f46fc17b4e38 data/eln/advancement/recipes/misc/240_v_30_a_dryer_cord.json
 b28c4113102e1003d8d5eb0df00b16221d5b507a data/eln/advancement/recipes/misc/240_v_30_a_dryer_outlet.json
 fcd0659b88d2bf9321eaf7d63543a5ad0264e6c6 data/eln/advancement/recipes/misc/240_v_appliance_cord.json
@@ -104,6 +106,8 @@ e66dc6bbecb715722e880e211fe59913fadcbedb data/eln/advancement/recipes/misc/50v_s
 ac57aa35b1ccd6c149f55265afa654f6b741da32 data/eln/advancement/recipes/misc/5_a_pole_fuse.json
 d853ffb918340da4ad7f308e65129ca5e14d45cf data/eln/advancement/recipes/misc/64_kwh_lifepo4_battery_cabinet.json
 8ca8b4c80e407d6806f843b4cb57e36e4e36d068 data/eln/advancement/recipes/misc/64_kwh_wall_mounted_lifepo4_battery.json
+992553a36dacb1bee20b0fd04928ede1c4cb99f6 data/eln/advancement/recipes/misc/69_kv_steel_transmission_pole.json
+2f7d78f0a486f524e69f2f47f953c40804e2dbf9 data/eln/advancement/recipes/misc/69_kv_three_phase_cable_riser_pole.json
 7d32b4fb6d9873d71d9dc3a4207fb5d102588ffd data/eln/advancement/recipes/misc/75_kw_pole_transformer.json
 f35bee39f03c94d07cac1c4d42de48cc194fe3da data/eln/advancement/recipes/misc/800_v_industrial_cord.json
 1521209b9c581430e361f51ce9b34b924c86d9c1 data/eln/advancement/recipes/misc/800_v_industrial_outlet.json
@@ -536,6 +540,8 @@ e25333ec84e2f843591d15dc724e02fd024fe100 data/eln/recipe/200v_submersible_pump.j
 8679563ab6e0e1e5d10c076891217a5ba2d08c9a data/eln/recipe/200v_tar_sand_separator.json
 9a75db92f399405442866f5db3fff39496170f65 data/eln/recipe/200v_tungsten_heating_corp.json
 9b0d1fa98fa3701abc618cea285baf7bfa2abe20 data/eln/recipe/20_a_pole_fuse.json
+9add6371c758ec14a9691bc7d5e7aceb3da90119 data/eln/recipe/230_kv_steel_transmission_tower.json
+99cc2d4b24f9ab05951b6692448459b234bd1514 data/eln/recipe/230_kv_three_phase_cable_riser_tower.json
 521426147ded526c3b295f8d5d53cbad13a1f8a8 data/eln/recipe/240_v_30_a_dryer_cord.json
 e648f6e62c5e7891f857c0793ce8b8e64d6dddd9 data/eln/recipe/240_v_30_a_dryer_outlet.json
 39722f326594ea24680384fe7995101db08c423b data/eln/recipe/240_v_appliance_cord.json
@@ -599,6 +605,8 @@ a2699653d83e94fba3176fed07eb9bc947098d52 data/eln/recipe/50v_submersible_pump.js
 0bcb68bb6870d10095fa35befd18089e43ea5ccd data/eln/recipe/5_a_pole_fuse.json
 27c1fa19b96ad28f5b652e120fb59b17f08d1007 data/eln/recipe/64_kwh_lifepo4_battery_cabinet.json
 43e301dc8e0a9b9a9e09243e9f7c29bb4155181b data/eln/recipe/64_kwh_wall_mounted_lifepo4_battery.json
+68221606bcadae69422c4015387bc198f3a0393a data/eln/recipe/69_kv_steel_transmission_pole.json
+d424709201fbff83f59e4c6bc4495224432ddfe0 data/eln/recipe/69_kv_three_phase_cable_riser_pole.json
 708c6e4f6c864a65b01e5767d110039c1ccc4735 data/eln/recipe/75_kw_pole_transformer.json
 143c3902bdf95f77581991132af1e50e379eaffa data/eln/recipe/800_v_industrial_cord.json
 bebcc444fc50530860659c555c0d75d4bf64bfa9 data/eln/recipe/800_v_industrial_outlet.json

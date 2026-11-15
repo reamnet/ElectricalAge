@@ -7,6 +7,14 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 
 ## Current continuation
 
+The [steel transmission poles and risers](power-poles.md) add source lookups
+8014, 8015, 8020 and 8021, independent primary/service circuits, paid spans,
+primary alignment, native base cable entries, tall rendering and removable
+streetlights. All 63 new pole cases and all 821 ForkPatch cases pass in the
+1,287-case native run. The [validation](power-poles-validation.json) records the
+unchanged historical failures and the [nine added golden differences](power-poles-golden-delta.json).
+The source substation transformers/disconnects remain separate work.
+
 The [GUI matching first batch](gui-parity.md) restores source coordinates for
 13 classic layout variants. Larger device screens and the remaining classic
 panels still need visual review; universal GUI parity is not complete.
@@ -49,6 +57,9 @@ remain implemented; older counts below are historical checkpoint evidence.
 - Service weatherheads, meter bases and wide underground socket, meter registers,
   manual disconnect, buried entries and handholes with thin wall collision.
 - Single/multicore placed utility wiring, overhead paid spans and cached catenaries.
+- 69 kV / 230 kV steel transmission poles and cable risers, automatic primary
+  alignment with independent secondary suspension, real base cable routing,
+  tall/span visibility and paid removable 70 W streetlights.
 - All 30 distribution variants (18 current, 12 hidden legacy), physical transformer
   hardware, independent fuses/phases, regulator/recloser/capacitor/switch functions.
 - Removable distribution streetlights, selected 120/240 V lighting, twin LED pole
@@ -105,7 +116,8 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 | Ghost collision parity | Remaining owner-specific ghost picking/collision and source import mappings; fixed flat solar reservations now have their own state and scheduled native-save upgrade. |
 | Shared mounting | Source partial-support insets, cable rises and matching selection/render transforms beyond the registered stair roofs; preserve native voxel geometry and resident-only queries. See the [mounting review](mounting-review.md). |
 | Other power electronics | Development-only floating isolation135 and broader inherited transformer/capacitor/regulated-supply changes; fixed130 and grounded one-way131–134 are registered; broader inherited changes still need review against the destination solver. See the [identity/control/winding review](power-electronics-review.md). |
-| Utility attachments | Legacy non-distribution pole streetlight ports, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
+| Utility attachments | Legacy non-distribution pole streetlight ports outside the new steel family, pole height attachments, adaptive primary/service rack alignment and associated clearance/lead routing. Hidden standalone utility light variants need their own recovery/parity review. |
+| Transmission substations | Source 69/230 kV substation transformers and disconnects (8016–8019), associated controls/nameplates and complete upstream/downstream transmission campaigns. The four new steel poles/risers have their own native adapter. |
 | Utility manufacturing | Remaining wire/cable tools and source parity/integration review. Roller4608, Insulator 4609, Combiner 4610 and their wheels/bundles now pass paid native production checks; see [manufacturing](wire-manufacturing.md). |
 | Industrial devices | Appliance cord/outlet integration and interactive client/audio parity for the registered industrial families. |
 | Industrial transport | Interactive client controls, audio and multiplayer parity of the registered forklift/pallet adapters. Road vehicles remain a separate adapter group. |
@@ -130,8 +142,8 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 - Reconcile historical 1.12 descriptor/slot golden snapshots with source additions
   and intentional native changes. Do not waive differences by simply regenerating
   expected snapshots from the implementation.
-- The latest unfiltered run passes 1222 of 1224 cases; descriptor and slot
-  goldens still fail. The [latest delta](rated-lamp-supplies-golden-delta.json)
+- The latest unfiltered run passes 1285 of 1287 cases; descriptor and slot
+  goldens still fail. The [latest delta](power-poles-golden-delta.json)
   preserves every earlier failed assertion; review the [historical differences](native-suite-review.md), then
   rerun after explicitly reconciling the historical expectations. The wind/watermill
   fixture now restores shared test-player facing, fixing two order-dependent layouts.

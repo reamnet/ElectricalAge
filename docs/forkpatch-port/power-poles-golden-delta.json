@@ -1,0 +1,17 @@
+{
+  "previousFailedAssertions": 473,
+  "currentFailedAssertions": 482,
+  "removedPreviousFailures": [],
+  "addedFailedAssertions": [
+    "[golden_descriptors] FAIL golden eln:transparent_node@8014: known in 1.12: no such item in golden/1.12/inventory.json",
+    "[golden_descriptors] FAIL golden eln:transparent_node@8015: known in 1.12: no such item in golden/1.12/inventory.json",
+    "[golden_descriptors] FAIL golden eln:transparent_node@8020: known in 1.12: no such item in golden/1.12/inventory.json",
+    "[golden_descriptors] FAIL golden eln:transparent_node@8021: known in 1.12: no such item in golden/1.12/inventory.json",
+    "[golden_slots] FAIL golden slots: 69 kV Steel Transmission Pole has no 1.12 container: spec from TransmissionDescriptor",
+    "[golden_slots] FAIL golden slots: 230 kV Steel Transmission Tower has no 1.12 container: spec from TransmissionDescriptor",
+    "[golden_slots] FAIL golden slots: 69 kV Three Phase Cable Riser Pole has no 1.12 container: spec from TransmissionDescriptor",
+    "[golden_slots] FAIL golden slots: 230 kV Three Phase Cable Riser Tower has no 1.12 container: spec from TransmissionDescriptor",
+    "[golden_slots] FAIL golden slots: TransmissionDescriptor in the 1.12 dump: spec without a 1.12 container"
+  ],
+  "expectedReferencesChanged": false
+}

@@ -3910,5 +3910,194 @@
     "sourceSha256": "2771a277a769b30b58ba408f9df2c9d6b12005e8f497b7f1c73af0414e0a2061",
     "mode": "native-lamp-supply-bounded-controls-and-saved-channel-decoding",
     "status": "see-rated-lamp-supplies-validation.json"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionKind.kt",
+    "sourceSha256": "854570d01f3c253e7c7724d4cef5fef5d8c6d3deda85e57196c73da613efe624",
+    "mode": "adapted-native-26.3-four-pole-subset",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionElement.kt",
+    "sourceSha256": "854570d01f3c253e7c7724d4cef5fef5d8c6d3deda85e57196c73da613efe624",
+    "mode": "adapted-native-26.3-four-pole-subset",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionDescriptor.kt",
+    "sourceSha256": "41a1e972ddf22a7f5816847b675368dbecb3009f32e5512fc066fc4658567158",
+    "mode": "adapted-native-26.3-four-pole-subset",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionRender.kt",
+    "sourceSha256": "41a1e972ddf22a7f5816847b675368dbecb3009f32e5512fc066fc4658567158",
+    "mode": "adapted-native-26.3-four-pole-subset",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionScreen.kt",
+    "sourceSha256": "41a1e972ddf22a7f5816847b675368dbecb3009f32e5512fc066fc4658567158",
+    "mode": "adapted-native-26.3-four-pole-subset",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steeltransmission69/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/steeltransmission69/equipment_finish.mtl",
+    "sourceSha256": "2cbe7c8a6136b41e62a356935af0cbcabb79bf49801747390b2015076600956c",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steeltransmission69/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/steeltransmission69/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steeltransmission69/steeltransmission69.obj",
+    "target": "src/main/resources/assets/eln/model/steeltransmission69/steeltransmission69.obj",
+    "sourceSha256": "295afc9836a170925569e74d8f8dcd6d29000dca192e94f2a8d2a25ce9685aad",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steeltransmission230/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/steeltransmission230/equipment_finish.mtl",
+    "sourceSha256": "2cbe7c8a6136b41e62a356935af0cbcabb79bf49801747390b2015076600956c",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steeltransmission230/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/steeltransmission230/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steeltransmission230/steeltransmission230.obj",
+    "target": "src/main/resources/assets/eln/model/steeltransmission230/steeltransmission230.obj",
+    "sourceSha256": "958a2a8ee3bc901925a51000b8b8ff30a2cf499be078c7bd0be437df721957e3",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steelriser69/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/steelriser69/equipment_finish.mtl",
+    "sourceSha256": "2cbe7c8a6136b41e62a356935af0cbcabb79bf49801747390b2015076600956c",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steelriser69/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/steelriser69/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steelriser69/steelriser69.obj",
+    "target": "src/main/resources/assets/eln/model/steelriser69/steelriser69.obj",
+    "sourceSha256": "6d79569841586c15d6e7e69f1c0fb6cc364690870be0cfd705a3d185b018a432",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steelriser230/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/steelriser230/equipment_finish.mtl",
+    "sourceSha256": "2cbe7c8a6136b41e62a356935af0cbcabb79bf49801747390b2015076600956c",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steelriser230/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/steelriser230/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/steelriser230/steelriser230.obj",
+    "target": "src/main/resources/assets/eln/model/steelriser230/steelriser230.obj",
+    "sourceSha256": "3d52fefdcdbb7dce7e38249d9e989401aa45aae4a2b2b44aa3808900b208f420",
+    "mode": "verbatim",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/catalog/69kvsteeltransmissionpole.png",
+    "target": "src/main/resources/assets/eln/textures/item/69_kv_steel_transmission_pole.png",
+    "sourceSha256": "72cd6f28fad58253c4f5d12dfebd9b5e17c468a2c14e68bf135d70cc1055b432",
+    "mode": "verbatim-renamed",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/catalog/230kvsteeltransmissiontower.png",
+    "target": "src/main/resources/assets/eln/textures/item/230_kv_steel_transmission_tower.png",
+    "sourceSha256": "82638fde3d95e51cd9af2703cbcb1cf06e11e7467864586096ef8cc8cd9497f8",
+    "mode": "verbatim-renamed",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/catalog/69kvthreephasecableriserpole.png",
+    "target": "src/main/resources/assets/eln/textures/item/69_kv_three_phase_cable_riser_pole.png",
+    "sourceSha256": "a497dddbd6c5f90baba5a6167d0f55dc167929b58150eb434cba137586dfc868",
+    "mode": "verbatim-renamed",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/catalog/230kvthreephasecablerisertower.png",
+    "target": "src/main/resources/assets/eln/textures/item/230_kv_three_phase_cable_riser_tower.png",
+    "sourceSha256": "fc05bc88767745616d9cb58d1b65d61e2f23ba8d5fe4b27fead7835c49e3ca52",
+    "mode": "verbatim-renamed",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightAttachment.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionElement.kt",
+    "sourceSha256": "f2803d10717aa3ddcc984f5bccedcc58f5ad40b60fb2c02409974b3b94b8df57",
+    "mode": "adapted-native-26.3-steel-pole-attachment",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightAttachment.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionLampDisplay.kt",
+    "sourceSha256": "f2803d10717aa3ddcc984f5bccedcc58f5ad40b60fb2c02409974b3b94b8df57",
+    "mode": "adapted-native-26.3-steel-pole-attachment",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionLampScreen.kt",
+    "sourceSha256": "51af87e4425a6dc72a9b895a209d9147ffaac98e374fc30a870c69b669a6df9c",
+    "mode": "adapted-native-26.3-steel-pole-attachment",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/PoleStreetlightClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionPoleVisual.kt",
+    "sourceSha256": "51af87e4425a6dc72a9b895a209d9147ffaac98e374fc30a870c69b669a6df9c",
+    "mode": "adapted-native-26.3-steel-pole-attachment",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/LegacyPolePorts.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionPoleVisual.kt",
+    "sourceSha256": "52c885d74d1a25877b94f08330ab601814da1ecad629dd4be410352762f266ec",
+    "mode": "adapted-native-26.3-steel-pole-attachment",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/GridElement.kt",
+    "target": "src/main/kotlin/mods/eln/utility/TransmissionElement.kt",
+    "sourceSha256": "996feffb80fabf7a9e059b80b5e185735f9bbd634fd598dcc4588c2fb6fbf1f4",
+    "mode": "adapted-native-26.3-primary-span-fit-only",
+    "status": "native-poles-and-whole-catalog-regressions-passed"
   }
 ]

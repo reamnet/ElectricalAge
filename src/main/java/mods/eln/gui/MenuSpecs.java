@@ -123,6 +123,7 @@ public final class MenuSpecs {
         // ---- transparent-node devices
         put(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,278,0,0));
         put(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
+        put(mods.eln.utility.TransmissionDescriptor.class,d->MenuSpec.of().publishing(1).panel(240,230,8,148));
         put(mods.eln.utility.DistributionPoleDescriptor.class,d->(d.getKind().getTwinLight()?MenuSpec.of(
             filter(0,16,332,1,stack->false,MEDIUM,tr("Recover former transformer")),
             filter(1,40,332,1,stack->false,MEDIUM,tr("Recover former fuse"))).publishing(1).panel(368,442,104,360)

@@ -310,7 +310,9 @@ final class GoldenSlotsCase implements TestCase {
 
     static void clear(TestContext ctx) {
         ServerLevel w = ctx.level();
-        // removeBlock intentionally retains a waterlogged device's fluid; fixtures need actual air.
-        for (BlockPos q : BlockPos.betweenClosed(ctx.at(-4, 1, -4), ctx.at(12, 10, 12))) if (!w.getBlockState(q).isAir()) w.setBlock(q, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+        // Include tall catalog devices and their spawn offsets; a short cleanup box
+        // can leave an obstruction above the next pole's placement. Assertions and
+        // catalog coverage remain unchanged. Fixtures need actual air, including fluids.
+        for (BlockPos q : BlockPos.betweenClosed(ctx.at(-4, 1, -4), ctx.at(12, 32, 12))) if (!w.getBlockState(q).isAir()) w.setBlock(q, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
     }
 }

@@ -4078,5 +4078,29 @@
   "display": "240V Lamp Supply",
   "kind": "six_node",
   "name": "240v_lamp_supply"
+ },
+ "eln:transparent_node@8014": {
+  "descriptor": "TransmissionDescriptor",
+  "display": "69 kV Steel Transmission Pole",
+  "kind": "transparent_node",
+  "name": "69_kv_steel_transmission_pole"
+ },
+ "eln:transparent_node@8015": {
+  "descriptor": "TransmissionDescriptor",
+  "display": "230 kV Steel Transmission Tower",
+  "kind": "transparent_node",
+  "name": "230_kv_steel_transmission_tower"
+ },
+ "eln:transparent_node@8020": {
+  "descriptor": "TransmissionDescriptor",
+  "display": "69 kV Three Phase Cable Riser Pole",
+  "kind": "transparent_node",
+  "name": "69_kv_three_phase_cable_riser_pole"
+ },
+ "eln:transparent_node@8021": {
+  "descriptor": "TransmissionDescriptor",
+  "display": "230 kV Three Phase Cable Riser Tower",
+  "kind": "transparent_node",
+  "name": "230_kv_three_phase_cable_riser_tower"
  }
 }

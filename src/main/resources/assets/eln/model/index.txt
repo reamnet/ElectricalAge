@@ -163,6 +163,10 @@ standbygenerator_medium/standbygenerator_medium.obj
 steamoven/steamoven.obj
 steamturbine200v/steamturbine200v.obj
 steamturbine50v/steamturbine50v.obj
+steelriser230/steelriser230.obj
+steelriser69/steelriser69.obj
+steeltransmission230/steeltransmission230.obj
+steeltransmission69/steeltransmission69.obj
 stonecache/stonecache.obj
 stonefurnace/stonefurnace.obj
 streetlight/streetlight.obj

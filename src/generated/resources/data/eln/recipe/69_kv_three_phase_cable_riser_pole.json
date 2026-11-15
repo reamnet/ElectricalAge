@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:69_kv_steel_transmission_pole",
+    "eln:copper_cable",
+    "eln:copper_cable",
+    "eln:copper_cable"
+  ],
+  "result": {
+    "id": "eln:69_kv_three_phase_cable_riser_pole"
+  }
+}

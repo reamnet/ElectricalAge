@@ -31,6 +31,7 @@ final class ClientScreens {
         ElnScreens.register(mods.eln.transparentnode.fabricator.FabricatorDescriptor.class, mods.eln.transparentnode.fabricator.FabricatorScreen::new);
         ElnScreens.register(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, mods.eln.transparentnode.converter.VariableDcDcScreen::new);
         ElnScreens.register(mods.eln.transparentnode.renewable.RenewableDescriptor.class, mods.eln.transparentnode.renewable.SolarScreen::new);
+        ElnScreens.register(mods.eln.utility.TransmissionDescriptor.class, mods.eln.utility.TransmissionScreen::new);
         // screen layouts (assets/eln/gui/<name>.json)
         layout("transparentnode.electricalfurnace.ElectricalFurnaceDescriptor", "electrical_furnace");
         layout("transparentnode.smelter.SmelterDescriptor", "smelter");

@@ -1132,6 +1132,10 @@ public final class ElnRecipes extends ElnRecipesBase {
             if(previous!=null)addRecipe(findItemStack(kind.getTitle()),kind.getPoles()==4?"R R":"RRR","PWP",'R',findItemStack(previous),'P',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
             else addRecipe(findItemStack(kind.getTitle())," C ","PRP","IWI",'C',findItemStack(kind.getSolidState()?"Silicon Plate":"Cheap Ferromagnetic Core"),'P',Items.IRON_NUGGET,'R',findItemStack(kind.getSolidState()?"Signal Relay":"Low Voltage Relay"),'I',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
         }
+        addRecipe(findItemStack("69 kV Steel Transmission Pole"),"I I","IPI","I I",'I',Blocks.IRON_BARS,'P',findItemStack("Three Phase Utility Pole"));
+        addRecipe(findItemStack("230 kV Steel Transmission Tower"),"IPI","PBP","I I",'I',Blocks.IRON_BLOCK,'P',findItemStack("69 kV Steel Transmission Pole"),'B',Blocks.IRON_BARS);
+        for (var kind : mods.eln.utility.TransmissionKind.values()) if (kind.getRiser())
+            addShapelessRecipe(findItemStack(kind.getTitle()),findItemStack(kind.getVolts()>100000?"230 kV Steel Transmission Tower":"69 kV Steel Transmission Pole"),findItemStack("Copper Cable"),findItemStack("Copper Cable"),findItemStack("Copper Cable"));
         mods.eln.utility.DistributionPoles.recipes((out,args)->{addShapelessRecipe(out,args);return kotlin.Unit.INSTANCE;});
         addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
         int mastIndex=0;

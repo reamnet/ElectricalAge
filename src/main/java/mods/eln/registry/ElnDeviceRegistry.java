@@ -113,6 +113,7 @@ public final class ElnDeviceRegistry {
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.ID,new mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor());
         for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values())transparentNodeItem.addDescriptor((125<<6)+kind.getSubId(),new mods.eln.transparentnode.switchgear.SwitchgearDescriptor(kind));
         mods.eln.utility.DistributionPoles.register();
+        for (var kind : mods.eln.utility.TransmissionKind.values()) transparentNodeItem.addDescriptor(kind.getId(),new mods.eln.utility.TransmissionDescriptor(kind));
         transparentNodeItem.addDescriptor(50+(124<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false,mods.eln.utility.ServiceMastStyle.STANDARD));
         int mastIndex=0;
         for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK))

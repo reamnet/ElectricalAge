@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack
 /** Paid, replaceable fuse links; remaining utility hardware is not registered yet. */
 class UtilityPartDescriptor(name: String,val part: Int): GenericItemUsingDamageDescriptor(name,if(part==3)"polestreetlightattachment" else if(part==1)"analogservicemeter" else "smartservicemeter") {
     override fun addInformation(stack: ItemStack?,player: net.minecraft.world.entity.player.Player?,list: MutableList<Any?>,advanced: Boolean) {
-        if(part==3) { list.add(mods.eln.i18n.I18N.tr("Install on a distribution pole; uses only its 120/240 V secondary"));list.add(mods.eln.i18n.I18N.tr("Open the pole menu for supply, dusk, aiming and removal controls"));return }
+        if(part==3) { list.add(mods.eln.i18n.I18N.tr("Also fits 69 kV and 230 kV steel transmission poles"));list.add(mods.eln.i18n.I18N.tr("Install on a distribution pole; uses only its 120/240 V secondary"));list.add(mods.eln.i18n.I18N.tr("Open the pole menu for supply, dusk, aiming and removal controls"));return }
         list.add(mods.eln.i18n.I18N.tr("Fits compact and wide service sockets; readings and serial stay with this meter"))
         ServiceMeters.data(stack ?: ItemStack.EMPTY)?.let {
             list.add(mods.eln.i18n.I18N.tr("Serial: %1$",it.getStringOr("serial","")))

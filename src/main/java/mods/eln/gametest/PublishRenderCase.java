@@ -38,7 +38,7 @@ final class PublishRenderCase implements TestCase {
     }
 
     public int height() {
-        return 7;
+        return 32; // Room for the complete tall-pole catalog, without excluding any new device.
     }
 
     public int depth() {

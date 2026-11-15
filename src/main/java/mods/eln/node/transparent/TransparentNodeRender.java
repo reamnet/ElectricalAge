@@ -63,6 +63,12 @@ public class TransparentNodeRender implements BlockEntityRenderer<TransparentNod
         GlSubmit.submit(frame, poseStack, collector, state.lightCoords);
     }
 
+    @Override
+    public boolean shouldRender(TransparentNodeEntity be, Vec3 camera) {
+        if (be.elementRender instanceof mods.eln.utility.TransmissionRender pole) return pole.visibleFrom(camera);
+        return BlockEntityRenderer.super.shouldRender(be, camera);
+    }
+
     /** Multiblock devices (turbines, solar panels, poles) reach past their block: don't cull them by it. */
     @Override
     public AABB getRenderBoundingBox(TransparentNodeEntity be) {
