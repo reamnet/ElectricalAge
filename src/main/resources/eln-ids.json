@@ -4102,5 +4102,143 @@
   "display": "230 kV Three Phase Cable Riser Tower",
   "kind": "transparent_node",
   "name": "230_kv_three_phase_cable_riser_tower"
+ },
+ "eln:six_node@4119": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Round Recessed Ceiling Light",
+  "kind": "six_node",
+  "name": "round_recessed_ceiling_light"
+ },
+ "eln:six_node@4120": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Basic Chandelier",
+  "kind": "six_node",
+  "name": "basic_chandelier"
+ },
+ "eln:six_node@4122": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Porch Lantern Sconce",
+  "kind": "six_node",
+  "name": "porch_lantern_sconce"
+ },
+ "eln:six_node@4123": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Basic Lamp Holder",
+  "kind": "six_node",
+  "name": "basic_lamp_holder"
+ },
+ "eln:six_node@4124": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Thin Fluorescent Shop Light",
+  "kind": "six_node",
+  "name": "thin_fluorescent_shop_light"
+ },
+ "eln:six_node@4125": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Suspended Factory Fluorescent Light",
+  "kind": "six_node",
+  "name": "suspended_factory_fluorescent_light"
+ },
+ "eln:six_node@4127": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Candle Arm Foyer Chandelier",
+  "kind": "six_node",
+  "name": "candle_arm_foyer_chandelier"
+ },
+ "eln:six_node@4128": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Crystal Tier Foyer Chandelier",
+  "kind": "six_node",
+  "name": "crystal_tier_foyer_chandelier"
+ },
+ "eln:six_node@4129": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Wagon Wheel Foyer Chandelier",
+  "kind": "six_node",
+  "name": "wagon_wheel_foyer_chandelier"
+ },
+ "eln:six_node@4130": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Lantern Cage Foyer Chandelier",
+  "kind": "six_node",
+  "name": "lantern_cage_foyer_chandelier"
+ },
+ "eln:six_node@4131": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Modern Sputnik Foyer Chandelier",
+  "kind": "six_node",
+  "name": "modern_sputnik_foyer_chandelier"
+ },
+ "eln:six_node@4132": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Up Down Cylinder Wall Sconce",
+  "kind": "six_node",
+  "name": "up_down_cylinder_wall_sconce"
+ },
+ "eln:six_node@4133": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Fabric Shade Wall Sconce",
+  "kind": "six_node",
+  "name": "fabric_shade_wall_sconce"
+ },
+ "eln:six_node@4134": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Glass Globe Wall Sconce",
+  "kind": "six_node",
+  "name": "glass_globe_wall_sconce"
+ },
+ "eln:six_node@4135": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Industrial Cage Wall Sconce",
+  "kind": "six_node",
+  "name": "industrial_cage_wall_sconce"
+ },
+ "eln:six_node@4136": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Double Candle Wall Sconce",
+  "kind": "six_node",
+  "name": "double_candle_wall_sconce"
+ },
+ "eln:six_node@4140": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Deep Baffle Recessed Light",
+  "kind": "six_node",
+  "name": "deep_baffle_recessed_light"
+ },
+ "eln:six_node@4141": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Trimless Recessed Downlight",
+  "kind": "six_node",
+  "name": "trimless_recessed_downlight"
+ },
+ "eln:six_node@4143": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Garden Bollard Light",
+  "kind": "six_node",
+  "name": "garden_bollard_light"
+ },
+ "eln:six_node@4144": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Gooseneck Barn Light",
+  "kind": "six_node",
+  "name": "gooseneck_barn_light"
+ },
+ "eln:six_node@4145": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Traditional Lantern Post Light",
+  "kind": "six_node",
+  "name": "traditional_lantern_post_light"
+ },
+ "eln:shared_item@302": {
+  "descriptor": "LampDescriptor",
+  "display": "120V LED Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_led_light_bulb"
+ },
+ "eln:shared_item@303": {
+  "descriptor": "LampDescriptor",
+  "display": "240V LED Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_led_light_bulb"
  }
 }

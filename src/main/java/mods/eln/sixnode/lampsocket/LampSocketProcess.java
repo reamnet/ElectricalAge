@@ -82,7 +82,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
             if (best != null && best.element.getChannelState(best.id)) {
                 if (!Utils.isEmpty(lampStack)) {
                     LampDescriptor lampDescriptor = (LampDescriptor) ((GenericItemUsingDamageDescriptor) Utils.getItemObject(lampStack));
-                    best.element.addToRp(lampDescriptor.getR());
+                    best.element.addToRp(lamp.getLampResistance(lampDescriptor));
                 }
                 lamp.positiveLoad.state = best.element.powerLoad.state;
                 oldLampSupply = best.element;
@@ -214,7 +214,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
 			/*
              * double overFactor = (lamp.electricalLoad.Uc-lampDescriptor.minimalU) /(lampDescriptor.nominalU-lampDescriptor.minimalU);
 			 */
-            double overFactor = (lamp.lampResistor.getP()) / (lampDescriptor.nominalP);
+            double overFactor = (lamp.lampResistor.getP()) / (lamp.getNominalLampPower(lampDescriptor));
             if (overFactor < 0)
                 overFactor = 0;
 

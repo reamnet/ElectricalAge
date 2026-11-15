@@ -1,0 +1,229 @@
+{
+  "scope": "Dedicated server cold-load of the saved local exhibit and one actual loopback network client; no simultaneous multi-client campaign.",
+  "before": [
+    {
+      "position": [
+        -56,
+        64,
+        -100
+      ],
+      "lookup": 4145,
+      "slot": 2,
+      "front": 4,
+      "channel": "Lighting port",
+      "poweredByLampSupply": true,
+      "inventory": [
+        {
+          "item": {
+            "components": {
+              "minecraft:custom_data": {
+                "life": 1.3173707142179998
+              }
+            },
+            "count": 1,
+            "id": "eln:120v_led_light_bulb"
+          },
+          "Slot": 0
+        }
+      ]
+    },
+    {
+      "position": [
+        -48,
+        68,
+        -100
+      ],
+      "lookup": 4120,
+      "slot": 3,
+      "front": 4,
+      "channel": "Lighting port",
+      "poweredByLampSupply": true,
+      "inventory": [
+        {
+          "item": {
+            "components": {
+              "minecraft:custom_data": {
+                "life": 1.409650581616548
+              }
+            },
+            "count": 5,
+            "id": "eln:120v_led_light_bulb"
+          },
+          "Slot": 0
+        }
+      ]
+    },
+    {
+      "position": [
+        -40,
+        65,
+        -101
+      ],
+      "lookup": 4122,
+      "slot": 5,
+      "front": 7,
+      "channel": "Lighting port",
+      "poweredByLampSupply": true,
+      "inventory": [
+        {
+          "item": {
+            "components": {
+              "minecraft:custom_data": {
+                "life": 0.9800039711716328
+              }
+            },
+            "count": 1,
+            "id": "eln:120v_led_light_bulb"
+          },
+          "Slot": 0
+        }
+      ]
+    },
+    {
+      "position": [
+        -32,
+        68,
+        -100
+      ],
+      "lookup": 4124,
+      "slot": 3,
+      "front": 4,
+      "channel": "Lighting port",
+      "poweredByLampSupply": true,
+      "inventory": [
+        {
+          "item": {
+            "components": {
+              "minecraft:custom_data": {
+                "life": 1.2607694785134729
+              }
+            },
+            "count": 2,
+            "id": "eln:120v_led_light_bulb"
+          },
+          "Slot": 0
+        }
+      ]
+    }
+  ],
+  "after": [
+    {
+      "position": [
+        -56,
+        64,
+        -100
+      ],
+      "lookup": 4145,
+      "slot": 2,
+      "front": 4,
+      "channel": "Lighting network",
+      "poweredByLampSupply": true,
+      "inventory": [
+        {
+          "item": {
+            "components": {
+              "minecraft:custom_data": {
+                "life": 1.3173707142179998
+              }
+            },
+            "count": 1,
+            "id": "eln:120v_led_light_bulb"
+          },
+          "Slot": 0
+        }
+      ]
+    },
+    {
+      "position": [
+        -48,
+        68,
+        -100
+      ],
+      "lookup": 4120,
+      "slot": 3,
+      "front": 4,
+      "channel": "Lighting port",
+      "poweredByLampSupply": true,
+      "inventory": [
+        {
+          "item": {
+            "components": {
+              "minecraft:custom_data": {
+                "life": 1.409650581616548
+              }
+            },
+            "count": 5,
+            "id": "eln:120v_led_light_bulb"
+          },
+          "Slot": 0
+        }
+      ]
+    },
+    {
+      "position": [
+        -40,
+        65,
+        -101
+      ],
+      "lookup": 4122,
+      "slot": 5,
+      "front": 7,
+      "channel": "Lighting port",
+      "poweredByLampSupply": true,
+      "inventory": [
+        {
+          "item": {
+            "components": {
+              "minecraft:custom_data": {
+                "life": 0.9800039711716328
+              }
+            },
+            "count": 1,
+            "id": "eln:120v_led_light_bulb"
+          },
+          "Slot": 0
+        }
+      ]
+    },
+    {
+      "position": [
+        -32,
+        68,
+        -100
+      ],
+      "lookup": 4124,
+      "slot": 3,
+      "front": 4,
+      "channel": "Lighting port",
+      "poweredByLampSupply": true,
+      "inventory": [
+        {
+          "item": {
+            "components": {
+              "minecraft:custom_data": {
+                "life": 1.2607694785134729
+              }
+            },
+            "count": 2,
+            "id": "eln:120v_led_light_bulb"
+          },
+          "Slot": 0
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "fourOwnersRestored": true,
+    "exactBulbStacksRetained": true,
+    "orientationsRetained": true,
+    "powerModesRetained": true,
+    "exactlyOneRemoteChannelChange": true,
+    "remoteChannelSaved": true
+  },
+  "clientExit": 0,
+  "serverExit": 0,
+  "logs": [
+    "/tmp/eln-lighting-client-network.log",
+    "/tmp/eln-lighting-dedicated.log"
+  ]
+}

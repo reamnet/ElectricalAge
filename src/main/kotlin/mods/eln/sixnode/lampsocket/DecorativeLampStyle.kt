@@ -1,0 +1,64 @@
+package mods.eln.sixnode.lampsocket
+
+import mods.eln.i18n.I18N
+import mods.eln.misc.Direction
+import mods.eln.misc.LRDU
+import net.minecraft.world.phys.Vec3
+import kotlin.math.*
+
+/** First fixed-fixture batch. Explicit source ordinals keep unported styles' IDs reserved. */
+enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val itemName: String,
+    val bulbs: Int, val depth: Double, val range: Int, val heads: List<Vec3>, val beam: Vec3,
+    val wirelessOnly: Boolean = false) {
+    RECESSED(3, "roundrecessedlight", I18N.TR_NAME(I18N.Type.NONE, "Round Recessed Ceiling Light"), 1, .6, 3,
+        listOf(Vec3(.05,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
+    CHANDELIER(4, "basicchandelier", I18N.TR_NAME(I18N.Type.NONE, "Basic Chandelier"), 5, 1.0, 0,
+        (0..4).map { Vec3(.68,.34*cos(it*2*PI/5),.34*sin(it*2*PI/5)) },Vec3(1.0,0.0,0.0)),
+    PORCH(6, "porchlanternsconce", I18N.TR_NAME(I18N.Type.NONE, "Porch Lantern Sconce"), 1, .8, 0,
+        listOf(Vec3(.31,-.06,0.0)),Vec3(1.0,0.0,0.0)),
+    HOLDER(7, "basiclampholder", I18N.TR_NAME(I18N.Type.NONE, "Basic Lamp Holder"), 1, .34, 0,
+        listOf(Vec3(.20,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    SHOP(8, "thinshoplight", I18N.TR_NAME(I18N.Type.NONE, "Thin Fluorescent Shop Light"), 2, 2.5, 4,
+        listOf(Vec3(.12,-.07,0.0),Vec3(.12,.07,0.0)),Vec3(1.0,0.0,0.0)),
+    FACTORY(9, "hangingfactorylight", I18N.TR_NAME(I18N.Type.NONE, "Suspended Factory Fluorescent Light"), 4, 2.5, 4,
+        (0..3).map { Vec3(1.24,-.21+it*.14,0.0) },Vec3(1.0,0.0,0.0)),
+    CANDLE(11, "candlefoyerchandelier", I18N.TR_NAME(I18N.Type.NONE, "Candle Arm Foyer Chandelier"), 6, 1.7, 1,
+        (0..5).map { Vec3(1.02,.60*cos(it*PI/3),.60*sin(it*PI/3)) },Vec3(1.0,0.0,0.0)),
+    CRYSTAL(12, "crystaltierchandelier", I18N.TR_NAME(I18N.Type.NONE, "Crystal Tier Foyer Chandelier"), 6, 1.9, 1,
+        (0..5).map { Vec3(1.04,.40*cos(it*PI/3),.40*sin(it*PI/3)) },Vec3(1.0,0.0,0.0)),
+    WAGON(13, "wagonwheelchandelier", I18N.TR_NAME(I18N.Type.NONE, "Wagon Wheel Foyer Chandelier"), 8, 1.9, 1,
+        (0..7).map { Vec3(.99,.77*cos(it*PI/4),.77*sin(it*PI/4)) },Vec3(1.0,0.0,0.0)),
+    LANTERN(14, "lanternfoyerchandelier", I18N.TR_NAME(I18N.Type.NONE, "Lantern Cage Foyer Chandelier"), 4, 1.8, 1,
+        (0..3).map { Vec3(1.05,.23*cos(it*PI/2),.23*sin(it*PI/2)) },Vec3(1.0,0.0,0.0)),
+    SPUTNIK(15, "sputnikchandelier", I18N.TR_NAME(I18N.Type.NONE, "Modern Sputnik Foyer Chandelier"), 8, 1.9, 1,
+        (0..7).map { Vec3(1.05+if(it%2==0) -.25 else .25,.70*cos(it*PI/4),.70*sin(it*PI/4)) },Vec3(1.0,0.0,0.0)),
+    SCONCE_CYLINDER(16, "cylinderwallsconce", I18N.TR_NAME(I18N.Type.NONE, "Up Down Cylinder Wall Sconce"), 2, .65, 4,
+        listOf(Vec3(.21,.28,0.0),Vec3(.21,-.28,0.0)),Vec3(.15,1.0,0.0)),
+    SCONCE_FABRIC(17, "fabricwallsconce", I18N.TR_NAME(I18N.Type.NONE, "Fabric Shade Wall Sconce"), 1, .8, 0,
+        listOf(Vec3(.28,.05,0.0)),Vec3(1.0,0.0,0.0)),
+    SCONCE_GLOBE(18, "globewallsconce", I18N.TR_NAME(I18N.Type.NONE, "Glass Globe Wall Sconce"), 1, .65, 0,
+        listOf(Vec3(.32,.03,0.0)),Vec3(1.0,0.0,0.0)),
+    SCONCE_CAGE(19, "cagewallsconce", I18N.TR_NAME(I18N.Type.NONE, "Industrial Cage Wall Sconce"), 1, .8, 0,
+        listOf(Vec3(.24,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    SCONCE_CANDLE(20, "candlewallsconce", I18N.TR_NAME(I18N.Type.NONE, "Double Candle Wall Sconce"), 2, .9, 0,
+        listOf(Vec3(.30,.04,-.23),Vec3(.30,.04,.23)),Vec3(1.0,0.0,0.0)),
+    POT_BAFFLE(24, "deepbafflepotlight", I18N.TR_NAME(I18N.Type.NONE, "Deep Baffle Recessed Light"), 1, .40, 5,
+        listOf(Vec3(.06,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
+    POT_TRIMLESS(25, "trimlesspotlight", I18N.TR_NAME(I18N.Type.NONE, "Trimless Recessed Downlight"), 1, .38, 4,
+        listOf(Vec3(.025,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
+    OUTDOOR_BOLLARD(27, "gardenbollardlight", I18N.TR_NAME(I18N.Type.NONE, "Garden Bollard Light"), 1, 1.1, 0,
+        listOf(Vec3(.83,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    OUTDOOR_BARN(28, "gooseneckbarnlight", I18N.TR_NAME(I18N.Type.NONE, "Gooseneck Barn Light"), 1, .96, 7,
+        listOf(Vec3(.63,-.04,0.0)),Vec3(.3,-1.0,0.0)),
+    OUTDOOR_POST(29, "traditionallanternpost", I18N.TR_NAME(I18N.Type.NONE, "Traditional Lantern Post Light"), 1, 2.6, 0,
+        listOf(Vec3(2.06,0.0,0.0)),Vec3(1.0,0.0,0.0));
+    val lookup get() = (64 shl 6) + 20 + sourceOrdinal
+    val foyer get() = this in CANDLE..SPUTNIK
+    val ceiling get() = foyer || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS)
+    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST
+    val exposedBulbs get() = foyer || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST)
+    fun localFacing(v: Vec3, front: LRDU) = front.rotateOnXnLeft(v.xRot((-PI/2).toFloat()))
+    fun worldPoint(origin: Vec3, side: Direction, front: LRDU, local: Vec3): Vec3 =
+        origin.add(side.rotateFromXN(localFacing(local,front).add(-.5,0.0,0.0)))
+    fun worldDirection(side: Direction, front: LRDU, local: Vec3) = side.rotateFromXN(localFacing(local,front)).normalize()
+}

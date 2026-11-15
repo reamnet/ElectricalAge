@@ -62,6 +62,7 @@ public final class ClientRenders {
         ElnRenders.six(mods.eln.sixnode.energymeter.EnergyMeterDescriptor.class, mods.eln.sixnode.energymeter.EnergyMeterRender::new);
         ElnRenders.six(mods.eln.sixnode.groundcable.GroundCableDescriptor.class, mods.eln.sixnode.groundcable.GroundCableRender::new);
         ElnRenders.six(mods.eln.sixnode.hub.HubDescriptor.class, mods.eln.sixnode.hub.HubRender::new);
+        ElnRenders.six(mods.eln.sixnode.lampsocket.DecorativeLampDescriptor.class, mods.eln.sixnode.lampsocket.DecorativeLampRender::new);
         ElnRenders.six(mods.eln.sixnode.lampsocket.LampSocketDescriptor.class, mods.eln.sixnode.lampsocket.LampSocketRender::new);
         ElnRenders.six(mods.eln.sixnode.lampsupply.LampSupplyDescriptor.class, mods.eln.sixnode.lampsupply.LampSupplyRender::new);
         ElnRenders.six(mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixDescriptor.class, mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixRender::new);

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:iron_chain",
+    "G": "minecraft:gold_ingot",
+    "L": "eln:lamp_socket_a"
+  },
+  "pattern": [
+    " C ",
+    "GLG",
+    "LLL"
+  ],
+  "result": {
+    "id": "eln:candle_arm_foyer_chandelier"
+  }
+}

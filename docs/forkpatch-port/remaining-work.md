@@ -7,6 +7,16 @@ file-by-file review surface; the [import audit](import-audit.json) checks proven
 
 ## Current continuation
 
+The [first decorative lighting batch](decorative-lighting.md) adds 21 fixed
+fixtures with original meshes/icons, shared multi-bulb power and native saves,
+source-sized controls and loaded-only light patterns. Source 120/240 V LED
+ratings use explicit native lookups 302/303, preserving the old 50/200 V bulbs.
+All 25 new native cases and all 846 ForkPatch cases pass; the full build passes
+690 tests plus 15 CAD tests (three existing previews skipped). The other 87
+source decorative styles, source technology configuration, partial
+mounting and portable lighting/carry remain unfinished. See the
+[lighting evidence](decorative-lighting-validation.json) for current checks.
+
 The [steel transmission poles and risers](power-poles.md) add source lookups
 8014, 8015, 8020 and 8021, independent primary/service circuits, paid spans,
 primary alignment, native base cable entries, tall rendering and removable

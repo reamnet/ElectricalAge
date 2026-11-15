@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": "minecraft:glass",
+    "L": "eln:basic_lamp_holder",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " G ",
+    "GLG",
+    " P "
+  ],
+  "result": {
+    "id": "eln:glass_globe_wall_sconce"
+  }
+}

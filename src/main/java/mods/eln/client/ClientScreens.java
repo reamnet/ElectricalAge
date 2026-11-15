@@ -112,6 +112,8 @@ final class ClientScreens {
         reg(mods.eln.transparentnode.eggincubator.EggIncubatorDescriptor.class, mods.eln.transparentnode.eggincubator.EggIncubatorScreen::new);
         reg(mods.eln.transparentnode.electricalmachine.ElectricalMachineDescriptor.class, mods.eln.transparentnode.electricalmachine.ElectricalMachineScreen::new);
         // S1d
+        ElnScreens.register(mods.eln.sixnode.lampsocket.DecorativeLampDescriptor.class, mods.eln.sixnode.lampsocket.DecorativeLampScreen::new);
+        mods.eln.client.gui.ElnLayouts.register(mods.eln.sixnode.lampsocket.DecorativeLampDescriptor.class, d -> "decorative_lamp");
         reg(mods.eln.sixnode.lampsocket.LampSocketDescriptor.class, mods.eln.sixnode.lampsocket.LampSocketScreen::new);
         reg(mods.eln.sixnode.lampsupply.LampSupplyDescriptor.class, mods.eln.sixnode.lampsupply.LampSupplyScreen::new);
         reg(mods.eln.sixnode.hub.HubDescriptor.class, mods.eln.sixnode.hub.HubScreen::new);

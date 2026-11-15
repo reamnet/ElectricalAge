@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:low_voltage_cable",
+    "G": "minecraft:glass_pane",
+    "P": "eln:iron_plate",
+    "S": "eln:silicon_ingot"
+  },
+  "pattern": [
+    "GGG",
+    "SSS",
+    "PCP"
+  ],
+  "result": {
+    "count": 2,
+    "id": "eln:120v_led_light_bulb"
+  }
+}

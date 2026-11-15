@@ -81,7 +81,12 @@ final class PublishRenderCase implements TestCase {
             String why = null;
             for (Direction tryside : new Direction[]{Direction.YN, Direction.XN, Direction.YP}) {
                 try {
-                    if (tryside != Direction.YN) ctx.floor(p.relative(tryside.toEnumFacing()));
+                    // Hanging fixtures need their reserved cells above the stone floor as well as a ceiling.
+                    // Keep every fixture in the catalog rather than excluding models with downward clearance.
+                    var ghosts = d.getGhostGroup(tryside, mods.eln.misc.LRDU.Up);
+                    int lowest = ghosts == null ? 0 : ghosts.elementList.stream().mapToInt(g -> g.y).min().orElse(0);
+                    p = ctx.at(4, 1 - Math.min(0, lowest), 1);
+                    if (tryside != Direction.YN || p.getY() != ctx.at(4, 1, 1).getY()) ctx.floor(p.relative(tryside.toEnumFacing()));
                     node = ctx.placeSix(e.getKey(), p, tryside).sixNode;
                     side = tryside;
                     break;
@@ -106,6 +111,7 @@ final class PublishRenderCase implements TestCase {
             }
             GoldenSlotsCase.clear(ctx);
         }
+        p = ctx.at(4, 1, 1);
         for (var e : Eln.transparentNodeItem.all().entrySet()) {
             TransparentNodeDescriptor d = e.getValue();
             if (ElnRenders.transparent(d) == null || seen.put(d, true) != null || NOT_HERE.contains(d.name)) continue;

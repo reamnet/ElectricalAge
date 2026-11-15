@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": "minecraft:glass_pane",
+    "I": "minecraft:iron_ingot",
+    "L": "eln:lamp_socket_a",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " I ",
+    "GLG",
+    " P "
+  ],
+  "result": {
+    "id": "eln:porch_lantern_sconce"
+  }
+}

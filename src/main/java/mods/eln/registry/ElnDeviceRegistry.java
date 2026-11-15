@@ -138,8 +138,10 @@ public final class ElnDeviceRegistry {
         transparentNodeItem.addDescriptor((124<<6)+17,new mods.eln.transparentnode.ups.UpsDescriptor(TR_NAME(Type.NONE,"Wall-mounted Programmable UPS"),true,false));
         mods.eln.transparentnode.offgrid.OffGridDevices.INSTANCE.register();
         registerLampSocket(64);
+        mods.eln.sixnode.lampsocket.DecorativeLampDescriptor.register();
         registerLampSupply(65);
         registerLampItem(4);
+        mods.eln.sixnode.lampsocket.RatedLampBulbs.register();
         registerMeter(14);
     }
 

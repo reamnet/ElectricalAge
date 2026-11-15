@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "L": "eln:lamp_socket_a"
+  },
+  "pattern": [
+    " I ",
+    "LIL",
+    "LLL"
+  ],
+  "result": {
+    "id": "eln:basic_chandelier"
+  }
+}

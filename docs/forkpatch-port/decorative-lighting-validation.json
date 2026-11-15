@@ -1,0 +1,145 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "previousCheckpoint": "7f5497f4e8199472e174bef19c1540c66913629c",
+  "branch": "port/forkpatch-3.0.77-26.3",
+  "pr": 1,
+  "sourceStyles": 108,
+  "registeredFixedStyles": 21,
+  "unregisteredStyles": 87,
+  "ratedLedNativeLookups": [
+    302,
+    303
+  ],
+  "baseline": {
+    "root": {
+      "selected": 685,
+      "passed": 682,
+      "skipped": 3,
+      "failed": 0
+    },
+    "cad": {
+      "selected": 15,
+      "passed": 15
+    },
+    "log": "/tmp/eln-lighting-baseline-build.log"
+  },
+  "root": {
+    "tests": 693,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "passed": 690
+  },
+  "cad": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 15
+  },
+  "focusedNative": {
+    "selected": 25,
+    "passed": 25,
+    "log": "/tmp/eln-lighting-focused-final.log",
+    "report": "/tmp/eln-lighting-focused-final.xml"
+  },
+  "native": {
+    "selected": 1312,
+    "passed": 1310,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 846,
+      "failed": 0
+    }
+  },
+  "nativeFailureNames": [
+    "eln:golden_descriptors",
+    "eln:golden_slots"
+  ],
+  "nativeLog": "/tmp/eln-lighting-final2-native.log",
+  "nativeReport": "/tmp/eln-lighting-final2-native.xml",
+  "goldenDelta": "decorative-lighting-golden-delta.json",
+  "allCatalogPublicationAndDrawing": {
+    "selected": 501,
+    "passed": 501
+  },
+  "geometryTests": {
+    "selected": 8,
+    "passed": 8
+  },
+  "fullFluidCorpus": 200,
+  "datagen": {
+    "repeatedWrittenFiles": 0,
+    "log": "/tmp/eln-lighting-prepare-final.log"
+  },
+  "provenance": {
+    "entries": 680,
+    "passed": true,
+    "report": "import-audit.json"
+  },
+  "retainedData": {
+    "src/main/resources/eln-ids.json": {
+      "previous": 684,
+      "current": 707,
+      "retainedExact": true,
+      "added": 23
+    },
+    "src/generated/resources/assets/eln/lang/en_us.json": {
+      "previous": 1007,
+      "current": 1030,
+      "retainedExact": true,
+      "added": 23
+    }
+  },
+  "runtime": {
+    "renderer": "llvmpipe (LLVM 21.1.8, 256 bits), Mesa 26.0.8",
+    "resolution": [
+      1280,
+      720
+    ],
+    "localClientRuns": 2,
+    "localClientExits": [
+      0,
+      0
+    ],
+    "freshJvmOwnersAndMenus": true,
+    "resourceReload": true,
+    "dedicatedServerAndOneNetworkClient": true,
+    "savedOwners": "decorative-lighting-saved-owners.json",
+    "exhibitPowered": false,
+    "screenshots": {
+      "docs/forkpatch-port/evidence/decorative-lighting/after-resource-reload.png": "7ebf8b22330f1721eec0d4ff96d16a309e4e939a883a641b5dada290006331ac",
+      "docs/forkpatch-port/evidence/decorative-lighting/dedicated-five-bulb-chandelier.png": "a99be5b8631fa563d8377fd5e8ee2ef067ef99cde476b8a355b885a7035ff318",
+      "docs/forkpatch-port/evidence/decorative-lighting/dedicated-post-channel.png": "4bdf329b54d2b0d10e9f9809fa8843d7e4cd50024aa1765b465d734e9bc29eb9",
+      "docs/forkpatch-port/evidence/decorative-lighting/five-bulb-chandelier.png": "3b1b3272f6099c0279556480cc7aee4f1f2262f99b14dbeba97bd293fa9da1ee",
+      "docs/forkpatch-port/evidence/decorative-lighting/fresh-client-gallery.png": "c1794f9eed11f6dea1f133fb46c4e6c497b86ad071abaa6e9e3de88b99097b69",
+      "docs/forkpatch-port/evidence/decorative-lighting/post-cable-controls.png": "6fc446c51cfe65b44811be391508628613f5972102dbd4abaeea88264bec036c",
+      "docs/forkpatch-port/evidence/decorative-lighting/post-saved-channel.png": "a6d045f1c0b6bd092fcf1ed2310d0819011ae0d1a5692e7d39cc2dff9a53d1a1",
+      "docs/forkpatch-port/evidence/decorative-lighting/shop-light-close.png": "dc367c7dfd9cbe4f30101158b20eb254c2a3dba3670867f4b591126c43a9e310"
+    },
+    "dedicatedExitCodes": {
+      "client": 0,
+      "server": 0
+    }
+  },
+  "toolchains": {
+    "java21": "Temurin 21.0.13+9",
+    "java25": "Temurin 25.0.5+8",
+    "gradle": "9.2.1",
+    "neoForge": "26.3.0.75-beta",
+    "pinnedConfigurationModified": false
+  },
+  "completedFixes": [
+    "Parallel bulb conductance and per-bulb aging normalization retain legacy single-bulb defaults.",
+    "Source channel and ground controls share one mutually exclusive occupied region; no overlap-check relaxation.",
+    "Whole-catalog setup lifts hanging-fixture clearance above its test floor; all 501 devices remain included."
+  ],
+  "limitations": [
+    "Other 87 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
+    "Original model/icon bytes and source controls/palette are retained; universal pixel-for-pixel or hardware-GPU parity is not established.",
+    "The static client exhibit is unpowered; delivered work and loaded-only beam rules are covered by production/native regressions.",
+    "One loopback network client is checked; no simultaneous multi-client campaign or audio/hardware-GPU campaign.",
+    "Only the two historical golden tests fail. Expectations, existing assertions, skips and tolerances remain unchanged."
+  ]
+}

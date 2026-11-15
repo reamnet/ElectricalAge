@@ -86,6 +86,8 @@ public final class MenuSpecs {
             cableSlot(1, 176 / 2 - 80 / 2 - 20, 134 / 2 - 9, 1),
             cableSlot(2, 176 / 2 - 9, 134 / 2 + 80 / 2 + 2, 1),
             cableSlot(3, 176 / 2 - 9, 134 / 2 - 80 / 2 - 20, 1)).panel(176, 216, 8, 134));
+        put(mods.eln.sixnode.lampsocket.DecorativeLampDescriptor.class, d -> MenuSpec.of(
+            lamp(0, 17, 60, d.getStyle().getBulbs(), d.socketType)));
         put(mods.eln.sixnode.lampsocket.LampSocketDescriptor.class, d -> MenuSpec.of(
             lamp(mods.eln.sixnode.lampsocket.LampSocketContainer.lampSlotId, 70, 57, 1, d.socketType)));
         put(mods.eln.sixnode.lampsupply.LampSupplyDescriptor.class, d -> MenuSpec.of(

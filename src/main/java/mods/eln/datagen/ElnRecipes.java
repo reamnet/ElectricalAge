@@ -35,6 +35,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeElectricalSource", ElnRecipes::recipeElectricalSource);
         run("recipeElectricalCable", ElnRecipes::recipeElectricalCable);
         run("recipeThermalCable", ElnRecipes::recipeThermalCable);
+        run("recipeDecorativeLamps", ElnRecipes::recipeDecorativeLamps);
         run("recipeLampSocket", ElnRecipes::recipeLampSocket);
         run("recipeLampSupply", ElnRecipes::recipeLampSupply);
         run("recipePowerSocket", ElnRecipes::recipePowerSocket);
@@ -204,6 +205,56 @@ public final class ElnRecipes extends ElnRecipesBase {
             "C",
             'S', stack(Blocks.COBBLESTONE),
             'C', findItemStack("Copper Cable"));
+    }
+
+    public static void recipeDecorativeLamps() {
+        // Original LED patterns still produce legacy bulbs. Distinct paid patterns add both source ratings.
+        addRecipe(findItemStack("120V LED Light Bulb",2),"GGG","SSS","PCP",
+            'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',findItemStack("Low Voltage Cable"));
+        addRecipe(findItemStack("240V LED Light Bulb",2),"GGG","SSS","PCP",
+            'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',findItemStack("Medium Voltage Cable"));
+        addRecipe(findItemStack("Up Down Cylinder Wall Sconce"), " L ", "IPI", " L ",
+            'L',findItemStack("Lamp Socket B Projector"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Fabric Shade Wall Sconce"), "WWW", " L ", " P ",
+            'W',wool(0),'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Glass Globe Wall Sconce"), " G ", "GLG", " P ",
+            'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Industrial Cage Wall Sconce"), "III", "ILI", " P ",
+            'I',Blocks.IRON_BARS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Double Candle Wall Sconce"), "L L", " G ", " P ",
+            'L',findItemStack("Basic Lamp Holder"),'G',Items.GOLD_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Deep Baffle Recessed Light",2), " I ", "BLB",
+            'I',findItemStack("Iron Plate"),'B',dye(0),'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Trimless Recessed Downlight",2), " W ", "GLG",
+            'W',dye(15),'G',Blocks.GLASS_PANE,'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Garden Bollard Light"), " G ", "ILI", " P ",
+            'G',Blocks.GLASS,'I',Items.IRON_INGOT,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Gooseneck Barn Light"), "IIL", "P  ",
+            'I',Items.IRON_INGOT,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Traditional Lantern Post Light"), " L ", " I ", " P ",
+            'L',findItemStack("Porch Lantern Sconce"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Thin Fluorescent Shop Light"), "PPP", "LLL",
+            'P',findItemStack("Iron Plate"),'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Suspended Factory Fluorescent Light"), "C C", "PPP", "LLL",
+            'C',Items.IRON_CHAIN,'P',findItemStack("Iron Plate"),'L',findItemStack("Thin Fluorescent Shop Light"));
+        addRecipe(findItemStack("Candle Arm Foyer Chandelier"), " C ", "GLG", "LLL",
+            'C',Items.IRON_CHAIN,'G',Items.GOLD_INGOT,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Crystal Tier Foyer Chandelier"), " C ", "GLG", "GGG",
+            'C',Items.IRON_CHAIN,'G',Blocks.GLASS_PANE,'L',findItemStack("Candle Arm Foyer Chandelier"));
+        addRecipe(findItemStack("Wagon Wheel Foyer Chandelier"), "CCC", "LPL", "LLL",
+            'C',Items.IRON_CHAIN,'P',Blocks.DARK_OAK_PLANKS,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Lantern Cage Foyer Chandelier"), " C ", "ILI", "ILI",
+            'C',Items.IRON_CHAIN,'I',Blocks.IRON_BARS,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Modern Sputnik Foyer Chandelier"), " L ", "LGL", " L ",
+            'G',Items.GOLD_INGOT,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Basic Lamp Holder",2), " C ", " P ",
+            'C',Items.COPPER_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Porch Lantern Sconce"), " I ", "GLG", " P ",
+            'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket A"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Round Recessed Ceiling Light",2), " P ", "GLG",
+            'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Basic Chandelier"), " I ", "LIL", "LLL",
+            'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket A"));
     }
 
     public static void recipeLampSocket() {
