@@ -232,11 +232,11 @@ Existing native save compatibility is required throughout. Full source-world con
 
 **Assessment:** partial. **Prerequisites:** mounting, registry.
 
-**Reuse:** The 32 fixed-fixture adapter, original meshes, shared multi-bulb loads, loaded-only projections and native menus.
+**Reuse:** The 39 fixed-fixture adapter, original meshes, shared multi-bulb loads, loaded-only projections and native menus.
 
 **Needed:**
 
-- Port the remaining 76 explicit styles using lighting-port-matrix.md. Extend lookup selection before appending styles: source ordinals 0–29 use group 64+20, 30–87 group 68, and 88+ group 70; the current helper only covers the first range.
+- Port the remaining 69 explicit styles using lighting-port-matrix.md. Extend lookup selection before appending styles: source ordinals 0–29 use group 64+20, 30–87 group 68, and 88+ group 70; the current helper only covers the first range.
 - Transfer exact per-style placement, clearance, head positions, beam widths, item poses, colors and exposed-bulb rules. Large chandeliers and strings need their complete source reservation/render bounds.
 - Implement per-head pan/tilt and axial parking/street aiming in physical light origins and rendering with matching save/packet validation. Add motion detection, 30-second hold and mode controls using physical time.
 - Integrate ceiling fan motors/rotors/hazards, 0–7 m warehouse suspension and portable fixtures through their dependent adapters. Pool fittings require water-preserving light leases; native air-only leases cannot supply that behavior.
@@ -875,7 +875,7 @@ For every implementation batch record: pinned source files/hashes, source behavi
 
 Use the established full JDKs outside tracked files: JDK 21 for the pinned source and JDK 25 for the target. Keep both projects’ pinned Gradle configuration. Do not compile changed main classes while a client/test JVM reads the same build outputs. Commit code first, assemble from that clean code commit, verify packaged class/resource bytes and record its marker/checksum in an evidence-only follow-up.
 
-The current production evidence is [the lighting checkpoint](decorative-lighting-validation.json): 690 root passes, three existing optional preview skips, 15 CAD passes, and 1,321/1,323 native passes with all 857 ForkPatch cases passing. Only the two historical goldens fail; [their exact delta](decorative-lighting-golden-delta.json) remains open. This documentation audit does not rerun or extend that runtime claim.
+The current production evidence is [the lighting checkpoint](decorative-lighting-validation.json): 690 root passes, three existing optional preview skips, 15 CAD passes, and 1,328/1,330 native passes with all 864 ForkPatch cases passing. Only the two historical goldens fail; [their exact delta](decorative-lighting-golden-delta.json) remains open. This documentation audit does not rerun or extend that runtime claim.
 
 Regenerate the indexes after a feature batch and review status manually; the generator never marks a stream complete:
 

@@ -52,6 +52,8 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
         listOf(Vec3(.63,-.04,0.0)),Vec3(.3,-1.0,0.0)),
     OUTDOOR_POST(29, "traditionallanternpost", I18N.TR_NAME(I18N.Type.NONE, "Traditional Lantern Post Light"), 1, 2.6, 0,
         listOf(Vec3(2.06,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    WINDOW_CANDLE(30, "windowcandlelamp", I18N.TR_NAME(I18N.Type.NONE, "Window Candle Light"), 1, .52, 0,
+        listOf(Vec3(.39,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     FLOOR_DRUM(31, "standingdrumfloorlamp", I18N.TR_NAME(I18N.Type.NONE, "Standing Drum Floor Lamp"), 1, 2.0, 0,
         listOf(Vec3(1.66,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     STRIP_CABINET(32, "undercabinetledstrip", I18N.TR_NAME(I18N.Type.NONE, "Under Cabinet LED Strip"), 2, 1.0, 2,
@@ -73,7 +75,19 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     LUXURY_SPIRAL(40, "spiralrainchandelier", I18N.TR_NAME(I18N.Type.NONE, "Spiral Rain Chandelier"), 20, 5.5, 2,
         (0..19).map { Vec3(1.6+it*.18,1.7*cos(it*PI/5),1.7*sin(it*PI/5)) },Vec3(1.0,0.0,0.0)),
     LUXURY_EMPIRE(41, "grandempirechandelier", I18N.TR_NAME(I18N.Type.NONE, "Grand Empire Chandelier"), 16, 4.8, 2,
-        (0..15).map { Vec3(if(it<8)1.8 else 3.0,(if(it<8)1.9 else 1.2)*cos(it*PI/4),(if(it<8)1.9 else 1.2)*sin(it*PI/4)) },Vec3(1.0,0.0,0.0));
+        (0..15).map { Vec3(if(it<8)1.8 else 3.0,(if(it<8)1.9 else 1.2)*cos(it*PI/4),(if(it<8)1.9 else 1.2)*sin(it*PI/4)) },Vec3(1.0,0.0,0.0)),
+    HEAVY_BULKHEAD(43, "armoredbulkheadlight", I18N.TR_NAME(I18N.Type.NONE, "Armored Oval Bulkhead Light"), 1, .55, 3,
+        listOf(Vec3(.22,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    HEAVY_WALLPACK(44, "industrialwallpacklight", I18N.TR_NAME(I18N.Type.NONE, "Industrial Wall Pack Light"), 2, .8, 8,
+        listOf(Vec3(.36,-.14,-.18),Vec3(.36,-.14,.18)),Vec3(.6,-.8,0.0)),
+    HEAVY_CANOPY(45, "ruggedcanopylight", I18N.TR_NAME(I18N.Type.NONE, "Rugged Outdoor Canopy Light"), 4, 1.0, 6,
+        (0..3).map { Vec3(.17,-.2+(it/2)*.4,-.2+(it%2)*.4) },Vec3(1.0,0.0,0.0)),
+    HEAVY_YARD(46, "industrialyardlight", I18N.TR_NAME(I18N.Type.NONE, "Industrial Yard Area Light"), 2, 1.4, 12,
+        listOf(Vec3(.85,.1,-.22),Vec3(.85,.1,.22)),Vec3(.5,-.86,0.0)),
+    RIG_CAGE(47, "offshorecagedwellglass", I18N.TR_NAME(I18N.Type.NONE, "Offshore Caged Wellglass Light"), 1, 1.1, 4,
+        listOf(Vec3(.64,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    RIG_LINEAR(48, "offshoresealedlinearlight", I18N.TR_NAME(I18N.Type.NONE, "Offshore Sealed Linear Light"), 2, 2.0, 5,
+        listOf(Vec3(.20,0.0,-.45),Vec3(.20,0.0,.45)),Vec3(1.0,0.0,0.0));
     val lookup get() = when {
         sourceOrdinal in 0..29 -> (64 shl 6) + 20 + sourceOrdinal
         sourceOrdinal in 30..87 -> (68 shl 6) + sourceOrdinal - 30
@@ -81,9 +95,9 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     }
     val foyer get() = this in CANDLE..SPUTNIK
     val luxury get() = this in LUXURY_RINGS..LUXURY_EMPIRE
-    val ceiling get() = foyer || luxury || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED)
-    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM
-    val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM)
+    val ceiling get() = foyer || luxury || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED, HEAVY_CANOPY, RIG_CAGE, RIG_LINEAR)
+    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM || this == WINDOW_CANDLE
+    val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM, WINDOW_CANDLE)
     /** Under-cabinet, cove, surface and neon strips mount on any supporting face. */
     val anyFace get() = this in listOf(STRIP_CABINET, STRIP_COVE, STRIP_SURFACE, STRIP_NEON)
     fun localFacing(v: Vec3, front: LRDU) = front.rotateOnXnLeft(v.xRot((-PI/2).toFloat()))

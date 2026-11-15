@@ -1,60 +1,80 @@
 {
-  "previousAssertions": 549,
-  "currentAssertions": 559,
-  "unchangedExactAssertions": 549,
+  "previousAssertions": 559,
+  "currentAssertions": 573,
+  "unchangedExactAssertions": 559,
   "addedExactAssertions": [
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4359: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4352: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4360: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4365: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4361: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4366: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4362: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4367: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4363: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4368: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4369: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4370: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Grand Halo Ring Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Window Candle Light has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Grand Crystal Cascade Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Armored Oval Bulkhead Light has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Sculptural Branch Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Industrial Wall Pack Light has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Spiral Rain Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Rugged Outdoor Canopy Light has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Grand Empire Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Industrial Yard Area Light has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Offshore Caged Wellglass Light has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Offshore Sealed Linear Light has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     }
   ],
   "replacedPreviousAssertions": [],
   "referencesModified": false,
-  "explanation": "The five luxury chandeliers (4359-4363) add five absent-from-1.12 descriptor identities and five absent-from-1.12 container menus. All 549 previous failed assertions remain exact and the aggregate matching-slot count stays 112 of 137. Original expectations, tolerances and skips are unchanged."
+  "explanation": "The seven window/heavy/rig fixtures (4352, 4365-4370) add seven absent-from-1.12 descriptor identities and seven absent-from-1.12 container menus. All 559 previous failed assertions remain exact and the aggregate matching-slot count stays 112 of 137. Original expectations, tolerances and skips are unchanged."
 }

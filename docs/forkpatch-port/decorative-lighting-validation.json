@@ -1,11 +1,11 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "previousCheckpoint": "8110d39bbc964d96b1b27570d0d7bea141aec543",
+  "previousCheckpoint": "2e3caab7a04dfc388679e4cc284a0cb845d0aa2f",
   "branch": "port/forkpatch-3.0.77-26.3",
   "pr": 1,
   "sourceStyles": 108,
-  "registeredFixedStyles": 32,
-  "unregisteredStyles": 76,
+  "registeredFixedStyles": 39,
+  "unregisteredStyles": 69,
   "ratedLedNativeLookups": [
     302,
     303
@@ -44,14 +44,16 @@
     "report": "/tmp/eln-lighting-focused-final.xml"
   },
   "native": {
-    "selected": 1323,
-    "passed": 1321,
+    "selected": 1330,
+    "passed": 1328,
     "failed": 2,
     "skipped": 0,
     "portCases": {
-      "selected": 857,
+      "selected": 864,
       "failed": 0
-    }
+    },
+    "nativeLog": "/tmp/gametest-batchA.log",
+    "nativeReport": "/tmp/gametest-batchA.log (no separate XML report produced on this run; test failures enumerated in the log)"
   },
   "nativeFailureNames": [
     "eln:golden_descriptors",
@@ -61,8 +63,8 @@
   "nativeReport": "/tmp/eln-lighting-final2-native.xml",
   "goldenDelta": "decorative-lighting-golden-delta.json",
   "allCatalogPublicationAndDrawing": {
-    "selected": 512,
-    "passed": 512
+    "selected": 519,
+    "passed": 519
   },
   "geometryTests": {
     "selected": 8,
@@ -71,7 +73,7 @@
   "fullFluidCorpus": 200,
   "datagen": {
     "repeatedWrittenFiles": 0,
-    "log": "/tmp/eln-lighting-prepare-final.log"
+    "log": "/tmp/datagen-batchA.log"
   },
   "provenance": {
     "entries": 680,
@@ -80,16 +82,16 @@
   },
   "retainedData": {
     "src/main/resources/eln-ids.json": {
-      "previous": 684,
-      "current": 718,
+      "previous": 718,
+      "current": 725,
       "retainedExact": true,
-      "added": 34
+      "added": 7
     },
     "src/generated/resources/assets/eln/lang/en_us.json": {
-      "previous": 1007,
-      "current": 1041,
+      "previous": 1041,
+      "current": 1048,
       "retainedExact": true,
-      "added": 34
+      "added": 7
     }
   },
   "runtime": {
@@ -136,7 +138,7 @@
     "Whole-catalog setup lifts hanging-fixture clearance above its test floor; all 501 devices remain included."
   ],
   "limitations": [
-    "Other 76 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
+    "Other 69 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
     "Original model/icon bytes and source controls/palette are retained; universal pixel-for-pixel or hardware-GPU parity is not established.",
     "The static client exhibit is unpowered; delivered work and loaded-only beam rules are covered by production/native regressions.",
     "One loopback network client is checked; no simultaneous multi-client campaign or audio/hardware-GPU campaign.",

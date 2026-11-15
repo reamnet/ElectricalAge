@@ -1,4 +1,4 @@
-// 26.3	2026-11-15T05:26:37.343978252	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-15T07:16:54.860752585	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -137,6 +137,7 @@ b212cca0dd14ced77939d219b39336d3c698ee0f data/eln/advancement/recipes/misc/analo
 deef8d780422f077177f1d8075d975640f319ae2 data/eln/advancement/recipes/misc/analogic_regulator.json
 8adbb5fbd9a464b1637d56c80bac249461b0b459 data/eln/advancement/recipes/misc/and_chip.json
 9d88219c37e884c57072d6522173a6259b65b7ac data/eln/advancement/recipes/misc/animal_filter.json
+d8115fda4936e31a595936ef1d42a3dc4683655b data/eln/advancement/recipes/misc/armored_oval_bulkhead_light.json
 e397443c98e6b42bdb11364d1b6ce472b87c0a04 data/eln/advancement/recipes/misc/auto_miner.json
 60dda393535fbe75390de9b0f0db5ff5945f97d6 data/eln/advancement/recipes/misc/automatic_load_shedding_controller.json
 8956fc4b0f3d9d0ee79590bbe4cb0cc02226a092 data/eln/advancement/recipes/misc/automatic_transfer_switch.json
@@ -253,6 +254,8 @@ adff65b0e3b516752580628470a82e029fef2c0c data/eln/advancement/recipes/misc/high_
 88c5f352d72c0c45898e00334693c7a69903d80a data/eln/advancement/recipes/misc/indirect_cove_led_strip.json
 7618923dd55bf93d1c10ce1e82140bf3d257e358 data/eln/advancement/recipes/misc/industrial_cage_wall_sconce.json
 26baca3846cf3c09885134d3b1f92feb7bf65a5a data/eln/advancement/recipes/misc/industrial_data_logger.json
+45b6b7ff9ba925c8bfa1d81ea7cf85045b105324 data/eln/advancement/recipes/misc/industrial_wall_pack_light.json
+510c69c77d486e291186517b9353f7dd37203f79 data/eln/advancement/recipes/misc/industrial_yard_area_light.json
 23e7e1a3c03fa30b6de61225a6f5a79bb8c48b5e data/eln/advancement/recipes/misc/iron_cable.json
 36911902b55011201994746f5173dbebfd92709b data/eln/advancement/recipes/misc/iron_roller_wheel.json
 caa773201e3270ec7194fa6ad69acb7e3b4f7c13 data/eln/advancement/recipes/misc/iron_tank.json
@@ -313,6 +316,8 @@ c212ab04301e827265d0e3361f91fb4211732103 data/eln/advancement/recipes/misc/multi
 703ffb6ea8945986ce700e548603b5ef5b1ef339 data/eln/advancement/recipes/misc/not_chip.json
 b4326dd5965cc5affa39c7894205a3d6ff268395 data/eln/advancement/recipes/misc/nuclear_alarm.json
 d79ed2482bcbdabc3cfefe1b8b0c629cdff13f53 data/eln/advancement/recipes/misc/off_grid_inverter_charger.json
+1f9c40b827ef1db65dbeb73e6e36dc1186f4e2a0 data/eln/advancement/recipes/misc/offshore_caged_wellglass_light.json
+1a2abf57663518b346233b6aac42fb2630400796 data/eln/advancement/recipes/misc/offshore_sealed_linear_light.json
 64f0418eef262ed30539a691f6af7c5d33ac6d82 data/eln/advancement/recipes/misc/on_off_regulator_10_percent.json
 6361e58a3e43bbc1eb59863240b72c7380b2bf6e data/eln/advancement/recipes/misc/on_off_regulator_1_percent.json
 f5f697a4c2d85094e0eb6a100965165a590bbafa data/eln/advancement/recipes/misc/one_way_boost_buck_vdc_dc_converter.json
@@ -357,6 +362,7 @@ f7528c010eae2ecb1d9b8df30858589d7a331a88 data/eln/advancement/recipes/misc/redst
 ca7cfdd304c9a3c3e92938e08f882f303d2159ee data/eln/advancement/recipes/misc/rheostat.json
 756cda9979b715dfdbcb744accbfa92136fd22bb data/eln/advancement/recipes/misc/robust_lamp_socket.json
 aecaa5757846fd511c961577c2dee8d1677fff7d data/eln/advancement/recipes/misc/round_recessed_ceiling_light.json
+7c6d0259ae1eaf4d77b2295a0655e02f15df5c34 data/eln/advancement/recipes/misc/rugged_outdoor_canopy_light.json
 c3b894f60c00346800570928b4de8ca5e9c8114d data/eln/advancement/recipes/misc/sample_and_hold.json
 b24b6bafabb4fecdf57c23a1499fe7ee2dadba82 data/eln/advancement/recipes/misc/scanner.json
 967dfd8caa482125fd9e966799de55343c3b1b79 data/eln/advancement/recipes/misc/schmitt_trigger_chip.json
@@ -517,6 +523,7 @@ dee9ed6f5239ead97624b1ad3ca0f4d29463f581 data/eln/advancement/recipes/misc/white
 e09d1b9d948c76f8434972d8523bd95bcf3cb817 data/eln/advancement/recipes/misc/wide_underground_meter_socket.json
 a2d541b9d5289ce78da711fe051954194dd8785e data/eln/advancement/recipes/misc/wind_turbine.json
 bf80438ac83c6586e86959ad11a986dd228cbb53 data/eln/advancement/recipes/misc/winding_dc_dc_converter.json
+34d6d785ce3cd81463339ab70794748158e63ae3 data/eln/advancement/recipes/misc/window_candle_light.json
 21205fadc56821605cc7c2cb589a35b4cef15bf1 data/eln/advancement/recipes/misc/wire_combiner.json
 baeadf4bf6f1e64df58c7f9f922ef64e364b3f4e data/eln/advancement/recipes/misc/wire_insulator.json
 c87859e4e4005ff548002d8a8fbe1fbec6d2539b data/eln/advancement/recipes/misc/wire_roller.json
@@ -670,6 +677,7 @@ f8bb79bdca45cf72f71e9c34109d2cd1f0ea3f7c data/eln/recipe/analog_watch.json
 8fd7923bf8a68d3d9b30fe0eb4eb4ba90ee7d117 data/eln/recipe/analogic_regulator.json
 f08a17f8c96555319fad60d61b2788c122fbf087 data/eln/recipe/and_chip.json
 805798fa44f9f1beb943bfdbbcaf390d5e5a0861 data/eln/recipe/animal_filter.json
+52abff43fc4128bdba5ad42c18a9aec49c2f00eb data/eln/recipe/armored_oval_bulkhead_light.json
 e1b3870485515b24146953a51d534596cf57c58d data/eln/recipe/auto_miner.json
 1075840e489cabf0f6fa0bbae5c86ac397043062 data/eln/recipe/automatic_load_shedding_controller.json
 e06a8b286866aad23751495565a94926aad2f8b4 data/eln/recipe/automatic_transfer_switch.json
@@ -786,6 +794,8 @@ d7a54c89e137b00cf2d50b95480ddaf28591370f data/eln/recipe/high_voltage_switch.jso
 82b528ff3f4fcc35de9eb7849ba8ca783c9b6d2c data/eln/recipe/indirect_cove_led_strip.json
 26f40030f1a38571ab68cc503ea2b0eee558fc0a data/eln/recipe/industrial_cage_wall_sconce.json
 4a6c0ad115aeb7f8a62cb0fab925aac8786d0226 data/eln/recipe/industrial_data_logger.json
+788fb3be40d5d195a5ea77ede5620f71f82182f9 data/eln/recipe/industrial_wall_pack_light.json
+85717d9de23351e5c6669007de9b3f37b748652c data/eln/recipe/industrial_yard_area_light.json
 441236a83e9903671ee085ecd8705c19a822f2ac data/eln/recipe/iron_cable.json
 ff4c3c82db840e1dfc23de8ff0fe6bcd767ee0a0 data/eln/recipe/iron_roller_wheel.json
 4b9f9ef5fa11f713b714c8dd328c65558f315235 data/eln/recipe/iron_tank.json
@@ -846,6 +856,8 @@ b937a3eff0a8f08a2d43f6bc97d126a15a5689fa data/eln/recipe/monster_filter.json
 11cc97c623a3b67aaf6e7d785ffedf176c92c6f7 data/eln/recipe/not_chip.json
 6a8443ff46feb21355c0ec89ee3589657f29157b data/eln/recipe/nuclear_alarm.json
 5dc6735ee65d54a1cb8b7c49c655fbb73928986a data/eln/recipe/off_grid_inverter_charger.json
+a1453ed3a4849348b4f4ebb879c310544fe18b9a data/eln/recipe/offshore_caged_wellglass_light.json
+c2c8acdb17c8884835c39c2cd240ecc2ce4936c2 data/eln/recipe/offshore_sealed_linear_light.json
 5d09df78c6b1742f9347b3725cd4b2b9fa5fb9ee data/eln/recipe/on_off_regulator_10_percent.json
 e1002b490861ef609fd891be5541cbe66a1dee3b data/eln/recipe/on_off_regulator_1_percent.json
 3eeb52fc4a07d49960a2b1251f57b9a38a06c8c1 data/eln/recipe/one_way_boost_buck_vdc_dc_converter.json
@@ -890,6 +902,7 @@ cd9af7097473c7fae168d254e0dff78353e1aca5 data/eln/recipe/red_handle_service_disc
 d8732e9aa7d5b669948f47f5e99893da8e957c5e data/eln/recipe/rheostat.json
 523703af721f00a1c538f3d0517b58c5d417367a data/eln/recipe/robust_lamp_socket.json
 c233d82f6bf419078b27ca968c520f5628ae8079 data/eln/recipe/round_recessed_ceiling_light.json
+9b9a519a230d51a9317940360d0c198b16ee20f3 data/eln/recipe/rugged_outdoor_canopy_light.json
 adad48cd9d9f462c2e3a5dcf4cf01bdfc515cb0e data/eln/recipe/sample_and_hold.json
 7e1409acba56e3791f862ac41f87c67789397242 data/eln/recipe/scanner.json
 2f85d1235efcb5debc796eb156537d8cab3ba3a8 data/eln/recipe/schmitt_trigger_chip.json
@@ -1050,6 +1063,7 @@ a9bbb61c125ab264a33d2bd66ddcabd59537e5fb data/eln/recipe/white_brush_2.json
 83577b0c7020f97ed82900b8a100889fda27518a data/eln/recipe/wide_underground_meter_socket.json
 16b47b45ef3d7541477d98acad4146520e81c0bc data/eln/recipe/wind_turbine.json
 3fbebe4256ec3bf3a2d8050be4115cd6d39710ec data/eln/recipe/winding_dc_dc_converter.json
+4daae0afc1924d73213a94b6253bf31f83acfad5 data/eln/recipe/window_candle_light.json
 24f085b595441593c96ad3994d6253b5f7e2db20 data/eln/recipe/wire_combiner.json
 3af964cba365008f9312915dd4a6ca5ffb7a76ab data/eln/recipe/wire_insulator.json
 f53101aadc360204fef8fbf7f982178aeb4c44b0 data/eln/recipe/wire_roller.json

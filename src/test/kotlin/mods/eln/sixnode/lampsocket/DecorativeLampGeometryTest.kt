@@ -11,7 +11,14 @@ class DecorativeLampGeometryTest {
     @Test fun explicitSourceIdsLeaveUnportedFixturesReserved() {
         assertEquals(4119,DecorativeLampStyle.RECESSED.lookup)
         assertEquals(4145,DecorativeLampStyle.OUTDOOR_POST.lookup)
-        assertEquals(32,DecorativeLampStyle.entries.map { it.lookup }.toSet().size)
+        assertEquals(4352,DecorativeLampStyle.WINDOW_CANDLE.lookup)
+        assertEquals(4365,DecorativeLampStyle.HEAVY_BULKHEAD.lookup)
+        assertEquals(4366,DecorativeLampStyle.HEAVY_WALLPACK.lookup)
+        assertEquals(4367,DecorativeLampStyle.HEAVY_CANOPY.lookup)
+        assertEquals(4368,DecorativeLampStyle.HEAVY_YARD.lookup)
+        assertEquals(4369,DecorativeLampStyle.RIG_CAGE.lookup)
+        assertEquals(4370,DecorativeLampStyle.RIG_LINEAR.lookup)
+        assertEquals(39,DecorativeLampStyle.entries.map { it.lookup }.toSet().size)
         assertFalse(DecorativeLampStyle.entries.any { it.lookup==4126 }) // motion sensor is separate work
     }
     @Test fun ceilingFixtureHeadsStayBelowTheirMount() {

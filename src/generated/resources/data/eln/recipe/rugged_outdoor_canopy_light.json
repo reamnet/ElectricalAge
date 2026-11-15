@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:robust_lamp_socket",
+    "minecraft:iron_block"
+  ],
+  "result": {
+    "id": "eln:rugged_outdoor_canopy_light"
+  }
+}

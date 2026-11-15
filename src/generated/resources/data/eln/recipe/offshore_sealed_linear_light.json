@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:thin_fluorescent_shop_light",
+    "minecraft:yellow_dye"
+  ],
+  "result": {
+    "id": "eln:offshore_sealed_linear_light"
+  }
+}

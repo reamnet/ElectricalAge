@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:robust_lamp_socket",
+    "minecraft:iron_bars"
+  ],
+  "result": {
+    "id": "eln:armored_oval_bulkhead_light"
+  }
+}

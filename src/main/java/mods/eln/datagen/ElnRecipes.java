@@ -268,6 +268,14 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("Sculptural Branch Chandelier"),findItemStack("Modern Sputnik Foyer Chandelier"),Items.COPPER_INGOT);
         addShapelessRecipe(findItemStack("Spiral Rain Chandelier"),findItemStack("Crystal Tier Foyer Chandelier"),Items.IRON_CHAIN);
         addShapelessRecipe(findItemStack("Grand Empire Chandelier"),findItemStack("Candle Arm Foyer Chandelier"),Items.GOLD_INGOT);
+        addShapelessRecipe(findItemStack("Window Candle Light"),findItemStack("Basic Lamp Holder"),Items.HONEYCOMB);
+        addShapelessRecipe(findItemStack("Armored Oval Bulkhead Light"),findItemStack("Robust Lamp Socket"),Items.IRON_BARS);
+        // Source Wall Pack uses unported "Warehouse Wall Floodlight"; Robust Lamp Socket stands in (pair is unique).
+        addShapelessRecipe(findItemStack("Industrial Wall Pack Light"),findItemStack("Robust Lamp Socket"),Items.IRON_INGOT);
+        addShapelessRecipe(findItemStack("Rugged Outdoor Canopy Light"),findItemStack("Robust Lamp Socket"),Items.IRON_BLOCK);
+        addShapelessRecipe(findItemStack("Industrial Yard Area Light"),findItemStack("Gooseneck Barn Light"),Items.IRON_INGOT);
+        addShapelessRecipe(findItemStack("Offshore Caged Wellglass Light"),findItemStack("Robust Lamp Socket"),dye(11));
+        addShapelessRecipe(findItemStack("Offshore Sealed Linear Light"),findItemStack("Thin Fluorescent Shop Light"),dye(11));
     }
 
     public static void recipeLampSocket() {

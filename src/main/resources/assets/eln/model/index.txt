@@ -5,6 +5,7 @@ alarmmedium/alarmmedium.obj
 analogchips/analogchips.obj
 anemometer/anemometer.obj
 appliancewalloutlet/appliancewalloutlet.obj
+armoredbulkheadlight/armoredbulkheadlight.obj
 automatictransferswitch/automatictransferswitch.obj
 autominer/autominer.obj
 basicchandelier/basicchandelier.obj
@@ -94,6 +95,8 @@ industrial_welder/industrial_welder.obj
 industrialmachineoutlet/industrialmachineoutlet.obj
 industrialmachineplug/industrialmachineplug.obj
 industrialpanel/industrialpanel.obj
+industrialwallpacklight/industrialwallpacklight.obj
+industrialyardlight/industrialyardlight.obj
 inlinepump200v/inlinepump200v.obj
 lampsupply/lampsupply.obj
 lanternfoyerchandelier/lanternfoyerchandelier.obj
@@ -123,6 +126,8 @@ northamericanmeterbase/northamericanmeterbase.obj
 offgrid_charger/offgrid_charger.obj
 offgrid_inverter/offgrid_inverter.obj
 offgrid_mppt/offgrid_mppt.obj
+offshorecagedwellglass/offshorecagedwellglass.obj
+offshoresealedlinearlight/offshoresealedlinearlight.obj
 oilpump200v/oilpump200v.obj
 oilpump50v/oilpump50v.obj
 passivethermaldissipatora/passivethermaldissipatora.obj
@@ -150,6 +155,7 @@ robustlampsuspended/robustlampsuspended.obj
 roofservicemast/roofservicemast.obj
 roundrecessedlight/roundrecessedlight.obj
 rtu/rtu.obj
+ruggedcanopylight/ruggedcanopylight.obj
 scanner/scanner.obj
 sconcelamp/sconcelamp.obj
 sculpturalbranchchandelier/sculpturalbranchchandelier.obj
@@ -260,6 +266,7 @@ wallmppt/wallmppt.obj
 walloutlet240/walloutlet240.obj
 wallups/wallups.obj
 wideundergroundmetersocket/wideundergroundmetersocket.obj
+windowcandlelamp/windowcandlelamp.obj
 windturbinemini/windturbinemini.obj
 wirelesssignalrepeater/wirelesssignalrepeater.obj
 wirelesssignalrx/wirelesssignalrx.obj

@@ -137,7 +137,14 @@ object ForkPatchDecorativeLampCases {
                 "Grand Crystal Cascade Chandelier" to listOf(Eln.findItemStack("Crystal Tier Foyer Chandelier",1),ItemStack(Items.DIAMOND)),
                 "Sculptural Branch Chandelier" to listOf(Eln.findItemStack("Modern Sputnik Foyer Chandelier",1),ItemStack(Items.COPPER_INGOT)),
                 "Spiral Rain Chandelier" to listOf(Eln.findItemStack("Crystal Tier Foyer Chandelier",1),ItemStack(Items.IRON_CHAIN)),
-                "Grand Empire Chandelier" to listOf(Eln.findItemStack("Candle Arm Foyer Chandelier",1),ItemStack(Items.GOLD_INGOT)))
+                "Grand Empire Chandelier" to listOf(Eln.findItemStack("Candle Arm Foyer Chandelier",1),ItemStack(Items.GOLD_INGOT)),
+                "Window Candle Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.HONEYCOMB)),
+                "Armored Oval Bulkhead Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.IRON_BARS)),
+                "Industrial Wall Pack Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.IRON_INGOT)),
+                "Rugged Outdoor Canopy Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.IRON_BLOCK)),
+                "Industrial Yard Area Light" to listOf(Eln.findItemStack("Gooseneck Barn Light",1),ItemStack(Items.IRON_INGOT)),
+                "Offshore Caged Wellglass Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.DYE.yellow())),
+                "Offshore Sealed Linear Light" to listOf(Eln.findItemStack("Thin Fluorescent Shop Light",1),ItemStack(Items.DYE.yellow())))
             for((name,ingredients) in stripPairs){
                 val grid=CraftingInput.of(2,2,listOf(ingredients[0],ItemStack.EMPTY,ItemStack.EMPTY,ingredients[1]))
                 val crafted=c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,grid,c.level()).map { it.value().assemble(grid) }.orElse(ItemStack.EMPTY)

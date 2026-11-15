@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:gooseneck_barn_light",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "eln:industrial_yard_area_light"
+  }
+}

@@ -4229,6 +4229,12 @@
   "kind": "six_node",
   "name": "traditional_lantern_post_light"
  },
+ "eln:six_node@4352": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Window Candle Light",
+  "kind": "six_node",
+  "name": "window_candle_light"
+ },
  "eln:six_node@4353": {
   "descriptor": "DecorativeLampDescriptor",
   "display": "Standing Drum Floor Lamp",
@@ -4294,6 +4300,42 @@
   "display": "Grand Empire Chandelier",
   "kind": "six_node",
   "name": "grand_empire_chandelier"
+ },
+ "eln:six_node@4365": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Armored Oval Bulkhead Light",
+  "kind": "six_node",
+  "name": "armored_oval_bulkhead_light"
+ },
+ "eln:six_node@4366": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Industrial Wall Pack Light",
+  "kind": "six_node",
+  "name": "industrial_wall_pack_light"
+ },
+ "eln:six_node@4367": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Rugged Outdoor Canopy Light",
+  "kind": "six_node",
+  "name": "rugged_outdoor_canopy_light"
+ },
+ "eln:six_node@4368": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Industrial Yard Area Light",
+  "kind": "six_node",
+  "name": "industrial_yard_area_light"
+ },
+ "eln:six_node@4369": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Offshore Caged Wellglass Light",
+  "kind": "six_node",
+  "name": "offshore_caged_wellglass_light"
+ },
+ "eln:six_node@4370": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Offshore Sealed Linear Light",
+  "kind": "six_node",
+  "name": "offshore_sealed_linear_light"
  },
  "eln:shared_item@302": {
   "descriptor": "LampDescriptor",

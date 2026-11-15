@@ -45,6 +45,7 @@ class DecorativeLampObjRender(val style: DecorativeLampStyle) : LampSocketObjRen
                 in DecorativeLampStyle.LUXURY_RINGS..DecorativeLampStyle.LUXURY_EMPIRE -> GL11.glColor3f(.77f,.58f,.28f)
                 else -> GL11.glColor3f(.26f,.29f,.32f)
             }
+            if(style == DecorativeLampStyle.RIG_CAGE || style == DecorativeLampStyle.RIG_LINEAR) GL11.glColor3f(.82f,.64f,.12f)
             model.getPart("Metal")?.drawNoBind()
             GL11.glColor3f(.65f,.68f,.71f)
             model.getPart("Trim")?.drawNoBind()
