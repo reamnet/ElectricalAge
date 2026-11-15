@@ -118,6 +118,11 @@ world after a close request but returned exit 143, as recorded in the evidence.
 ![Models and spans after resource reload](screenshots/power-poles/after-resource-reload.png)
 ![Attachment controls on the separate dedicated server](screenshots/power-poles/dedicated-server-controls.png)
 
+The clean development JAR was built from `bb962e12e7156dd8d97ccedfc68c9c724fe05799`.
+It matches all 1,774 Java classes, 916 Kotlin classes and 5,015 processed resources.
+SHA-256: `12d3049f13a9a858c342e997b07326b64add8856c26617260ced1764da8d3a65`.
+The follow-up evidence commit changes documentation only.
+
 ## Remaining scope
 
 The source's 69/230 kV substation transformers and disconnects (lookups 8016–8019)
