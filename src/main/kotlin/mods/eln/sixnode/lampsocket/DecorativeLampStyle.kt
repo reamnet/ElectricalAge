@@ -63,16 +63,27 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     STRIP_SURFACE(35, "surfacelinearledstrip", I18N.TR_NAME(I18N.Type.NONE, "Surface Linear LED Strip"), 4, 2.0, 4,
         (0..3).map { Vec3(.075,0.0,-.72+it*.48) },Vec3(1.0,0.0,0.0)),
     STRIP_NEON(36, "flexneonledstrip", I18N.TR_NAME(I18N.Type.NONE, "Flexible Neon LED Strip"), 3, 1.0, 1,
-        (0..2).map { Vec3(.06,.12*cos(it*PI/2),-.32+it*.32) },Vec3(1.0,0.0,0.0));
+        (0..2).map { Vec3(.06,.12*cos(it*PI/2),-.32+it*.32) },Vec3(1.0,0.0,0.0)),
+    LUXURY_RINGS(37, "grandhalochandelier", I18N.TR_NAME(I18N.Type.NONE, "Grand Halo Ring Chandelier"), 16, 4.2, 2,
+        (0..15).map { Vec3(1.8+(it/8)*1.25,(if(it<8)1.9 else 1.2)*cos(it*PI/4),(if(it<8)1.9 else 1.2)*sin(it*PI/4)) },Vec3(1.0,0.0,0.0)),
+    LUXURY_CASCADE(38, "crystalcascadechandelier", I18N.TR_NAME(I18N.Type.NONE, "Grand Crystal Cascade Chandelier"), 20, 5.0, 2,
+        (0..19).map { Vec3(1.6+(it%5)*.65,(1.8-(it%5)*.22)*cos(it*PI/2),(1.8-(it%5)*.22)*sin(it*PI/2)) },Vec3(1.0,0.0,0.0)),
+    LUXURY_BRANCH(39, "sculpturalbranchchandelier", I18N.TR_NAME(I18N.Type.NONE, "Sculptural Branch Chandelier"), 18, 3.8, 2,
+        (0..17).map { Vec3(2.0+(it%3)*.45,(.75+(it%3)*.65)*cos(it*PI/3),(.75+(it%3)*.65)*sin(it*PI/3)) },Vec3(1.0,0.0,0.0)),
+    LUXURY_SPIRAL(40, "spiralrainchandelier", I18N.TR_NAME(I18N.Type.NONE, "Spiral Rain Chandelier"), 20, 5.5, 2,
+        (0..19).map { Vec3(1.6+it*.18,1.7*cos(it*PI/5),1.7*sin(it*PI/5)) },Vec3(1.0,0.0,0.0)),
+    LUXURY_EMPIRE(41, "grandempirechandelier", I18N.TR_NAME(I18N.Type.NONE, "Grand Empire Chandelier"), 16, 4.8, 2,
+        (0..15).map { Vec3(if(it<8)1.8 else 3.0,(if(it<8)1.9 else 1.2)*cos(it*PI/4),(if(it<8)1.9 else 1.2)*sin(it*PI/4)) },Vec3(1.0,0.0,0.0));
     val lookup get() = when {
         sourceOrdinal in 0..29 -> (64 shl 6) + 20 + sourceOrdinal
         sourceOrdinal in 30..87 -> (68 shl 6) + sourceOrdinal - 30
         else -> (70 shl 6) + sourceOrdinal - 88
     }
     val foyer get() = this in CANDLE..SPUTNIK
-    val ceiling get() = foyer || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED)
+    val luxury get() = this in LUXURY_RINGS..LUXURY_EMPIRE
+    val ceiling get() = foyer || luxury || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED)
     val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM
-    val exposedBulbs get() = foyer || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM)
+    val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM)
     /** Under-cabinet, cove, surface and neon strips mount on any supporting face. */
     val anyFace get() = this in listOf(STRIP_CABINET, STRIP_COVE, STRIP_SURFACE, STRIP_NEON)
     fun localFacing(v: Vec3, front: LRDU) = front.rotateOnXnLeft(v.xRot((-PI/2).toFloat()))

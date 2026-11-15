@@ -1,11 +1,11 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "previousCheckpoint": "7f5497f4e8199472e174bef19c1540c66913629c",
+  "previousCheckpoint": "8110d39bbc964d96b1b27570d0d7bea141aec543",
   "branch": "port/forkpatch-3.0.77-26.3",
   "pr": 1,
   "sourceStyles": 108,
-  "registeredFixedStyles": 27,
-  "unregisteredStyles": 81,
+  "registeredFixedStyles": 32,
+  "unregisteredStyles": 76,
   "ratedLedNativeLookups": [
     302,
     303
@@ -44,12 +44,12 @@
     "report": "/tmp/eln-lighting-focused-final.xml"
   },
   "native": {
-    "selected": 1312,
-    "passed": 1310,
+    "selected": 1323,
+    "passed": 1321,
     "failed": 2,
     "skipped": 0,
     "portCases": {
-      "selected": 852,
+      "selected": 857,
       "failed": 0
     }
   },
@@ -57,12 +57,12 @@
     "eln:golden_descriptors",
     "eln:golden_slots"
   ],
-  "nativeLog": "/tmp/eln-lighting-final2-native.log",
+  "nativeLog": "/tmp/gametest-wip.log",
   "nativeReport": "/tmp/eln-lighting-final2-native.xml",
   "goldenDelta": "decorative-lighting-golden-delta.json",
   "allCatalogPublicationAndDrawing": {
-    "selected": 501,
-    "passed": 501
+    "selected": 512,
+    "passed": 512
   },
   "geometryTests": {
     "selected": 8,
@@ -81,15 +81,15 @@
   "retainedData": {
     "src/main/resources/eln-ids.json": {
       "previous": 684,
-      "current": 707,
+      "current": 718,
       "retainedExact": true,
-      "added": 23
+      "added": 34
     },
     "src/generated/resources/assets/eln/lang/en_us.json": {
       "previous": 1007,
-      "current": 1030,
+      "current": 1041,
       "retainedExact": true,
-      "added": 23
+      "added": 34
     }
   },
   "runtime": {
@@ -136,7 +136,7 @@
     "Whole-catalog setup lifts hanging-fixture clearance above its test floor; all 501 devices remain included."
   ],
   "limitations": [
-    "Other 81 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
+    "Other 76 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
     "Original model/icon bytes and source controls/palette are retained; universal pixel-for-pixel or hardware-GPU parity is not established.",
     "The static client exhibit is unpowered; delivered work and loaded-only beam rules are covered by production/native regressions.",
     "One loopback network client is checked; no simultaneous multi-client campaign or audio/hardware-GPU campaign.",

@@ -1,4 +1,4 @@
-// 26.3	2026-11-15T04:44:00.828406218	eln-global/EA models
+// 26.3	2026-11-15T05:26:37.33245195	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -626,6 +626,9 @@ e3b656b742ded2c9707ddec5a87f39fffc40fa34 assets/eln/items/gold_dust.json
 c5bec09b544a1b17e38e0199fc64d913404e29b6 assets/eln/items/gold_plate.json
 86fe3fa2e0b8f6513d81758bae85235b273279fe assets/eln/items/gooseneck_barn_light.json
 c7f9e26b775d9707b8295727599f3db0ec172123 assets/eln/items/gooseneck_service_mast.json
+61ebb1e4f6bbe4d9ef74adbca78ffa9894d7afbe assets/eln/items/grand_crystal_cascade_chandelier.json
+8cd3079c9a161d05e50cf7c5eb48c9491146e2c0 assets/eln/items/grand_empire_chandelier.json
+316edf9b34d334f9cada26a6bbfb466e5091f969 assets/eln/items/grand_halo_ring_chandelier.json
 12d8fcfd796a694035bd05fdd7dce7da9163aa76 assets/eln/items/gray_brush.json
 69b0f5a9932f8a27ea63cded262a9a9976c7c64c assets/eln/items/green_brush.json
 4937b4b4455242cc01b9bb1be054731de9dbcdfb assets/eln/items/grid_control_console.json
@@ -778,6 +781,7 @@ bf27dade280a10d80ba2d244cd6621c759d5c30c assets/eln/items/rubber.json
 e70961ae2b17b7bbac994416af77d22b445aa1a2 assets/eln/items/scanner.json
 b4ae54de8e8ed458de4a0bd10b994b75d6b22af2 assets/eln/items/schmitt_trigger_chip.json
 f0c58d7b21d2f01e8c8e999f63ab1c66971088f6 assets/eln/items/sconce_lamp_socket.json
+71610ba007774e4a1a37cffe954d8e552ee7da31 assets/eln/items/sculptural_branch_chandelier.json
 9b6d42a61cbec48129bbc91bbe64b02a2e888cec assets/eln/items/signal_20h_inductor.json
 c6b60c32e04456af1ff5d3f7ffa83aaf0919a542 assets/eln/items/signal_antenna.json
 22e04ed46a4441373e2b9b97832cfa102a687d44 assets/eln/items/signal_button.json
@@ -828,6 +832,7 @@ ed6ce7898a940acef66e71d81e1642a5c64e236f assets/eln/items/smart_digital_service_
 f8750fe216f0ad07571216fdd59b94264a744d04 assets/eln/items/smelter.json
 c45e46494ad77465a8c06bb56e58edf1d6a747db assets/eln/items/solar_tracker.json
 1e12df4dce4b270a920056aebf555eda2a98e53c assets/eln/items/solid_state_relay.json
+15c6323ba397f13b6ff868aabf5adcae8ca64aa1 assets/eln/items/spiral_rain_chandelier.json
 e0ac63120912b77188f74155e43fa17b38d38223 assets/eln/items/standard_alarm.json
 9a051fbe5c605d830e587e17996f9c0079d94d65 assets/eln/items/standby_gasoline_generator.json
 ace404b358b0d51b5b4a4f727d7c989fd87e2d86 assets/eln/items/standing_drum_floor_lamp.json
@@ -1482,6 +1487,12 @@ be00cf09f5e32caa01a84ebaccb8c241d03f42e8 assets/eln/models/item/gooseneck_barn_l
 be8cec940b0f4be9ab0f073576d5f89730211812 assets/eln/models/item/gooseneck_barn_light_3d.json
 2d5b512ead125b824f31a909b88eff0363ea30a0 assets/eln/models/item/gooseneck_service_mast.json
 9dd9065d68d14621cc80318f1861b483fa5ebd03 assets/eln/models/item/gooseneck_service_mast_3d.json
+609b75f2b681c2ff1c20c4b84a38c87a46c89443 assets/eln/models/item/grand_crystal_cascade_chandelier.json
+4b5834c2ba2ce507780c3b4c8f06de6044469af3 assets/eln/models/item/grand_crystal_cascade_chandelier_3d.json
+adf6879fb712577a83c92654ada96bbf10e82b24 assets/eln/models/item/grand_empire_chandelier.json
+8e8b92ef492a252b96efaf02c166aea5a7d6e5a6 assets/eln/models/item/grand_empire_chandelier_3d.json
+733e5ac98070cadb9077da923b20815b6792f4d1 assets/eln/models/item/grand_halo_ring_chandelier.json
+6f4ab2d6669e17aae2b21e0a8efba02464a269f9 assets/eln/models/item/grand_halo_ring_chandelier_3d.json
 a226cf403dbdfeeb44c3bf58de0c6cf852269566 assets/eln/models/item/gray_brush.json
 f7d7b0915063be54ce1e56e3bbebdf8d27e71cae assets/eln/models/item/green_brush.json
 6f187fa2d3839502a0a5d5cfc611debdeef3caec assets/eln/models/item/grid_control_console.json
@@ -1707,6 +1718,8 @@ a55fe12754098bf1293f72cb8f522d2507b6f158 assets/eln/models/item/schmitt_trigger_
 fa0e5c7b415d28e32dfe4429f52f234c3d0ac208 assets/eln/models/item/schmitt_trigger_chip_3d.json
 06d04538bc6c66d4c5b35850c5109809dba89117 assets/eln/models/item/sconce_lamp_socket.json
 bf3b00e8440ad11b7e65a176e31782e048dd4839 assets/eln/models/item/sconce_lamp_socket_3d.json
+2d884ccd15ef6736dcccec4d6160029bbf57d6fd assets/eln/models/item/sculptural_branch_chandelier.json
+2cd5a4127a2523b730180c44de5e71472dd93fe6 assets/eln/models/item/sculptural_branch_chandelier_3d.json
 b0100b52061090269ab1d500aba102ea33c25f58 assets/eln/models/item/signal_20h_inductor.json
 edf4ce6a3bfd4d27d1ac593ad229916404145470 assets/eln/models/item/signal_antenna.json
 68614ddbcee32d03505a26baad11c078114237db assets/eln/models/item/signal_button.json
@@ -1786,6 +1799,8 @@ ab4ccf32ae822a3b82f3f003b145d622fcf8a8a0 assets/eln/models/item/smelter_3d.json
 005372c73b7a9a304aa77f9f676fe124f1b31d8e assets/eln/models/item/solar_tracker.json
 4b6aa0a50a8e3c2ab0969851a05192f533fb40f8 assets/eln/models/item/solid_state_relay.json
 22e552876c2b4f0a397aa53d7038a8b0e011916b assets/eln/models/item/solid_state_relay_3d.json
+7d277a90bbae883725d544fbda66b78a868629c9 assets/eln/models/item/spiral_rain_chandelier.json
+bbeb9e907acc2ad80f954fe9d6b8552040550eb2 assets/eln/models/item/spiral_rain_chandelier_3d.json
 32399a008ed75e65341ade5b864871dc9bf680f2 assets/eln/models/item/standard_alarm.json
 a125e471bfb6effc571f726e1993643a16652ef6 assets/eln/models/item/standard_alarm_3d.json
 f6c487b99757d4b7b25d2e2b97c975bbc5062edb assets/eln/models/item/standby_gasoline_generator.json

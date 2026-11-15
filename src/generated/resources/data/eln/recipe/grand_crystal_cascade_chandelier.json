@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:crystal_tier_foyer_chandelier",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "eln:grand_crystal_cascade_chandelier"
+  }
+}

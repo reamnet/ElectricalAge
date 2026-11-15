@@ -1,4 +1,4 @@
-// 26.3	2026-11-15T04:41:08.225275148	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-15T05:26:37.343978252	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -234,6 +234,9 @@ a39938c4e0204b6626d2678f78657d83d72f3732 data/eln/advancement/recipes/misc/gas_t
 6d915f7cf6c936e0bcb40100f02b15dfe1330707 data/eln/advancement/recipes/misc/glass_globe_wall_sconce.json
 46a4877284c51c61639821292591ca4ab71a0266 data/eln/advancement/recipes/misc/gooseneck_barn_light.json
 85f830ec807c625f73305ecde729017bc8b2eb20 data/eln/advancement/recipes/misc/gooseneck_service_mast.json
+ee74ad8d287d097110454c4fa06e08a0965e522a data/eln/advancement/recipes/misc/grand_crystal_cascade_chandelier.json
+8842d05cfaa1e555daee7e4f5959a797451a9efb data/eln/advancement/recipes/misc/grand_empire_chandelier.json
+6f7ca87df38c85fdb0f0681405e71950570d9a60 data/eln/advancement/recipes/misc/grand_halo_ring_chandelier.json
 3206c8a83c23437655d503a29cdf6acb090766cf data/eln/advancement/recipes/misc/gray_brush.json
 a0d612bd4f26061b5e9c15aa0f3000b426037fd0 data/eln/advancement/recipes/misc/green_brush.json
 709c3ad72af1a1da0bec74750a7fa8a8e408e3ef data/eln/advancement/recipes/misc/grid_control_console.json
@@ -358,6 +361,7 @@ c3b894f60c00346800570928b4de8ca5e9c8114d data/eln/advancement/recipes/misc/sampl
 b24b6bafabb4fecdf57c23a1499fe7ee2dadba82 data/eln/advancement/recipes/misc/scanner.json
 967dfd8caa482125fd9e966799de55343c3b1b79 data/eln/advancement/recipes/misc/schmitt_trigger_chip.json
 fad549b494b884027c37c9ce86bef8d20daf92ee data/eln/advancement/recipes/misc/sconce_lamp_socket.json
+c533bfb86a721c205b131fa2cca6b1a5f5ab13b9 data/eln/advancement/recipes/misc/sculptural_branch_chandelier.json
 07608aa3e11b0b7b91641411b86252318206a2a5 data/eln/advancement/recipes/misc/signal_antenna.json
 83de940301722992ea77f1b5b1ade32d270fb500 data/eln/advancement/recipes/misc/signal_button.json
 ab4847f73790968a91aa4f849fd84b789956ac48 data/eln/advancement/recipes/misc/signal_cable.json
@@ -414,6 +418,7 @@ b43e6f120770a4553d1701c48b9f1154042abb57 data/eln/advancement/recipes/misc/smart
 fe7580a5cab94e3b2a53fc81c07fc52050eb51e3 data/eln/advancement/recipes/misc/smelting_tungsten_ore.json
 d745c0a06786c255ec7cf4ebac2a0bd8da10121b data/eln/advancement/recipes/misc/solar_tracker.json
 b543af9e89eece4380acfd9643136d14e61d91db data/eln/advancement/recipes/misc/solid_state_relay.json
+f592302aeb58cf5f71b470e0b25b8d3c3db4adea data/eln/advancement/recipes/misc/spiral_rain_chandelier.json
 91ecd892a2a111989dbc8ae5cd7292830389e96f data/eln/advancement/recipes/misc/standard_alarm.json
 b7e85d11917337f73315c634c58119771bd3c8e6 data/eln/advancement/recipes/misc/standby_gasoline_generator.json
 ef0eb8516b64e9439964d88f30470b8b2b82f422 data/eln/advancement/recipes/misc/standing_drum_floor_lamp.json
@@ -762,6 +767,9 @@ fba92b279dcb49c9afc3d15ccfd4ba7e4bd9f112 data/eln/recipe/garden_bollard_light.js
 a3490c55657a25c1a3472ba0cb062e62c8b9a612 data/eln/recipe/glass_globe_wall_sconce.json
 63c5458cbd330776898ac3791a39fdec6ac1031b data/eln/recipe/gooseneck_barn_light.json
 2853689a112cb5b3d708ea8ca9abcc22ef3a8fc5 data/eln/recipe/gooseneck_service_mast.json
+54f7238a7f2a377eac51e75c62c3b478d511fc11 data/eln/recipe/grand_crystal_cascade_chandelier.json
+7867b3058df7b9b25b382b6d4770558cb5555585 data/eln/recipe/grand_empire_chandelier.json
+87403ba047c1a251ed6ca928c92383d41843ed8f data/eln/recipe/grand_halo_ring_chandelier.json
 6807bca5810c43c53a541f3192a05744bb3b73f2 data/eln/recipe/gray_brush.json
 1fd7392f8f3c4443adbf0499d84396c5da56090d data/eln/recipe/green_brush.json
 9fea350da7727347e458880b872c9ffc283ee3a3 data/eln/recipe/grid_control_console.json
@@ -886,6 +894,7 @@ adad48cd9d9f462c2e3a5dcf4cf01bdfc515cb0e data/eln/recipe/sample_and_hold.json
 7e1409acba56e3791f862ac41f87c67789397242 data/eln/recipe/scanner.json
 2f85d1235efcb5debc796eb156537d8cab3ba3a8 data/eln/recipe/schmitt_trigger_chip.json
 5ef7603dd6104268396da90edac572c5080fc2ea data/eln/recipe/sconce_lamp_socket.json
+ee817dbd2c370f16d815803f549b7b1c0fe9afd2 data/eln/recipe/sculptural_branch_chandelier.json
 8a4e0436293a872c87ff3fa260b4825d3811b626 data/eln/recipe/signal_antenna.json
 0d1d0b73320ae6877437909abf163135c8ee41a2 data/eln/recipe/signal_button.json
 75b59dcfe9f86c321f54d8828bd75916795d974e data/eln/recipe/signal_cable.json
@@ -942,6 +951,7 @@ f8d98570968cecc459a14f0cd820a44af3560cf9 data/eln/recipe/smelting_tungsten_dust.
 7021b95b0c11d5bc733cc073169c93ec0ff815c5 data/eln/recipe/smelting_tungsten_ore.json
 5bfee752b7a7f8c89009a59ae6e95f13ce11aacc data/eln/recipe/solar_tracker.json
 624e7549bdc894afecac3aa322532491e6d1ff00 data/eln/recipe/solid_state_relay.json
+72f66b1cfdfbca558ba19028caf4cf3dbf720d4a data/eln/recipe/spiral_rain_chandelier.json
 4ab93d287ce3eeee14c2bf3bb7c860f4ebacbd27 data/eln/recipe/standard_alarm.json
 2f40bddf8890ebca5947a80dca4ffa3e82c9f8ad data/eln/recipe/standby_gasoline_generator.json
 d2c2f3d11321f3495c2fad0a313ed9e9c2e1981f data/eln/recipe/standing_drum_floor_lamp.json

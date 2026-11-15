@@ -263,6 +263,11 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("Indirect Cove LED Strip"),findItemStack("Flat Lamp Socket"),dye(15));
         addShapelessRecipe(findItemStack("Surface Linear LED Strip"),findItemStack("Thin Fluorescent Shop Light"),Items.IRON_INGOT);
         addShapelessRecipe(findItemStack("Flexible Neon LED Strip"),findItemStack("Flat Lamp Socket"),Items.SLIME_BALL);
+        addShapelessRecipe(findItemStack("Grand Halo Ring Chandelier"),findItemStack("Modern Sputnik Foyer Chandelier"),Items.GOLD_INGOT);
+        addShapelessRecipe(findItemStack("Grand Crystal Cascade Chandelier"),findItemStack("Crystal Tier Foyer Chandelier"),Items.DIAMOND);
+        addShapelessRecipe(findItemStack("Sculptural Branch Chandelier"),findItemStack("Modern Sputnik Foyer Chandelier"),Items.COPPER_INGOT);
+        addShapelessRecipe(findItemStack("Spiral Rain Chandelier"),findItemStack("Crystal Tier Foyer Chandelier"),Items.IRON_CHAIN);
+        addShapelessRecipe(findItemStack("Grand Empire Chandelier"),findItemStack("Candle Arm Foyer Chandelier"),Items.GOLD_INGOT);
     }
 
     public static void recipeLampSocket() {

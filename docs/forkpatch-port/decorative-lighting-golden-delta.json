@@ -1,70 +1,60 @@
 {
-  "previousAssertions": 537,
-  "currentAssertions": 549,
-  "unchangedExactAssertions": 537,
+  "previousAssertions": 549,
+  "currentAssertions": 559,
+  "unchangedExactAssertions": 549,
   "addedExactAssertions": [
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4353: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4359: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4354: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4360: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4355: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4361: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4356: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4362: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4357: known in 1.12: no such item in golden/1.12/inventory.json",
-      "count": 1
-    },
-    {
-      "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4358: known in 1.12: no such item in golden/1.12/inventory.json",
+      "assertion": "golden eln:six_node@4363: known in 1.12: no such item in golden/1.12/inventory.json",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Standing Drum Floor Lamp has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Grand Halo Ring Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Under Cabinet LED Strip has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Grand Crystal Cascade Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Recessed LED Channel has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Sculptural Branch Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Indirect Cove LED Strip has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Spiral Rain Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     },
     {
       "case": "golden_slots",
-      "assertion": "golden slots: Surface Linear LED Strip has no 1.12 container: spec from DecorativeLampDescriptor",
-      "count": 1
-    },
-    {
-      "case": "golden_slots",
-      "assertion": "golden slots: Flexible Neon LED Strip has no 1.12 container: spec from DecorativeLampDescriptor",
+      "assertion": "golden slots: Grand Empire Chandelier has no 1.12 container: spec from DecorativeLampDescriptor",
       "count": 1
     }
   ],
   "replacedPreviousAssertions": [],
   "referencesModified": false,
-  "explanation": "The six new styles (4353-4358) add six absent-from-1.12 descriptor identities and six absent-from-1.12 container menus. All 537 previous failed assertions remain exact and the aggregate matching-slot count stays 112 of 137. Original expectations, tolerances and skips are unchanged."
+  "explanation": "The five luxury chandeliers (4359-4363) add five absent-from-1.12 descriptor identities and five absent-from-1.12 container menus. All 549 previous failed assertions remain exact and the aggregate matching-slot count stays 112 of 137. Original expectations, tolerances and skips are unchanged."
 }

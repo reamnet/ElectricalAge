@@ -42,6 +42,7 @@ class DecorativeLampObjRender(val style: DecorativeLampStyle) : LampSocketObjRen
                 DecorativeLampStyle.CANDLE,DecorativeLampStyle.CRYSTAL,DecorativeLampStyle.SPUTNIK -> GL11.glColor3f(.66f,.45f,.16f)
                 DecorativeLampStyle.WAGON,DecorativeLampStyle.LANTERN -> GL11.glColor3f(.12f,.13f,.14f)
                 DecorativeLampStyle.SHOP,DecorativeLampStyle.FACTORY -> GL11.glColor3f(.75f,.77f,.78f)
+                in DecorativeLampStyle.LUXURY_RINGS..DecorativeLampStyle.LUXURY_EMPIRE -> GL11.glColor3f(.77f,.58f,.28f)
                 else -> GL11.glColor3f(.26f,.29f,.32f)
             }
             model.getPart("Metal")?.drawNoBind()

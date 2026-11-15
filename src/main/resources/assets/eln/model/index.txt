@@ -30,6 +30,7 @@ compressorb/compressorb.obj
 condenser200v/condenser200v.obj
 condenser50v/condenser50v.obj
 coveledstrip/coveledstrip.obj
+crystalcascadechandelier/crystalcascadechandelier.obj
 crystaltierchandelier/crystaltierchandelier.obj
 cylinderwallsconce/cylinderwallsconce.obj
 dataloggercrtfloor/dataloggercrtfloor.obj
@@ -68,6 +69,8 @@ gardenbollardlight/gardenbollardlight.obj
 globewallsconce/globewallsconce.obj
 gooseneckbarnlight/gooseneckbarnlight.obj
 gooseneckservicemast/gooseneckservicemast.obj
+grandempirechandelier/grandempirechandelier.obj
+grandhalochandelier/grandhalochandelier.obj
 groundcable/groundcable.obj
 handdrill/handdrill.obj
 hangingfactorylight/hangingfactorylight.obj
@@ -149,6 +152,7 @@ roundrecessedlight/roundrecessedlight.obj
 rtu/rtu.obj
 scanner/scanner.obj
 sconcelamp/sconcelamp.obj
+sculpturalbranchchandelier/sculpturalbranchchandelier.obj
 serviceweatherhead/serviceweatherhead.obj
 shaftflywheel/shaftflywheel.obj
 shaftgas/shaftgas.obj
@@ -174,6 +178,7 @@ solarmppt/solarmppt.obj
 solarpanel2x2/solarpanel2x2.obj
 solarpanel2x3/bigsolarpanel.obj
 solarpanel2x3/bigsolarpanelrot.obj
+spiralrainchandelier/spiralrainchandelier.obj
 sputnikchandelier/sputnikchandelier.obj
 standbygenerator/standbygenerator.obj
 standbygenerator_extra_large/standbygenerator_extra_large.obj

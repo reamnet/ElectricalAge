@@ -4265,6 +4265,36 @@
   "kind": "six_node",
   "name": "flexible_neon_led_strip"
  },
+ "eln:six_node@4359": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Grand Halo Ring Chandelier",
+  "kind": "six_node",
+  "name": "grand_halo_ring_chandelier"
+ },
+ "eln:six_node@4360": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Grand Crystal Cascade Chandelier",
+  "kind": "six_node",
+  "name": "grand_crystal_cascade_chandelier"
+ },
+ "eln:six_node@4361": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Sculptural Branch Chandelier",
+  "kind": "six_node",
+  "name": "sculptural_branch_chandelier"
+ },
+ "eln:six_node@4362": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Spiral Rain Chandelier",
+  "kind": "six_node",
+  "name": "spiral_rain_chandelier"
+ },
+ "eln:six_node@4363": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Grand Empire Chandelier",
+  "kind": "six_node",
+  "name": "grand_empire_chandelier"
+ },
  "eln:shared_item@302": {
   "descriptor": "LampDescriptor",
   "display": "120V LED Light Bulb",

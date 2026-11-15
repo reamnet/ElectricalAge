@@ -26,7 +26,9 @@ object ForkPatchDecorativeLampCases {
         override fun build(c: TestContext) {}
         override fun measure(c: TestContext) {}
         fun place(c: TestContext, style: DecorativeLampStyle): DecorativeLampElement {
-            val pos=c.at(8,5,8)
+            // Ceiling fixtures hang ceil(depth) blocks below their mount; keep that clearance fully above the room floor.
+            val y=if(style.ceiling)kotlin.math.ceil(style.depth).toInt()+1 else 5
+            val pos=c.at(8,y,8)
             val side=if(style.ceiling)Direction.YP else if(style.floor)Direction.YN else Direction.XN
             c.floor(pos.relative(side.toEnumFacing()))
             return c.placeSix(style.lookup,pos,side) as DecorativeLampElement
@@ -130,7 +132,12 @@ object ForkPatchDecorativeLampCases {
                 "Recessed LED Channel" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.QUARTZ)),
                 "Indirect Cove LED Strip" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.DYE.white())),
                 "Surface Linear LED Strip" to listOf(Eln.findItemStack("Thin Fluorescent Shop Light",1),ItemStack(Items.IRON_INGOT)),
-                "Flexible Neon LED Strip" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.SLIME_BALL)))
+                "Flexible Neon LED Strip" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.SLIME_BALL)),
+                "Grand Halo Ring Chandelier" to listOf(Eln.findItemStack("Modern Sputnik Foyer Chandelier",1),ItemStack(Items.GOLD_INGOT)),
+                "Grand Crystal Cascade Chandelier" to listOf(Eln.findItemStack("Crystal Tier Foyer Chandelier",1),ItemStack(Items.DIAMOND)),
+                "Sculptural Branch Chandelier" to listOf(Eln.findItemStack("Modern Sputnik Foyer Chandelier",1),ItemStack(Items.COPPER_INGOT)),
+                "Spiral Rain Chandelier" to listOf(Eln.findItemStack("Crystal Tier Foyer Chandelier",1),ItemStack(Items.IRON_CHAIN)),
+                "Grand Empire Chandelier" to listOf(Eln.findItemStack("Candle Arm Foyer Chandelier",1),ItemStack(Items.GOLD_INGOT)))
             for((name,ingredients) in stripPairs){
                 val grid=CraftingInput.of(2,2,listOf(ingredients[0],ItemStack.EMPTY,ItemStack.EMPTY,ingredients[1]))
                 val crafted=c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,grid,c.level()).map { it.value().assemble(grid) }.orElse(ItemStack.EMPTY)
