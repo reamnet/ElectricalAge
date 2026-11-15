@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:mini_dot_spotlight",
+    "eln:iron_plate",
+    "minecraft:gold_nugget"
+  ],
+  "result": {
+    "id": "eln:mini_bezel_dot_spotlight"
+  }
+}

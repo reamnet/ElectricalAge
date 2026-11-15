@@ -10,6 +10,8 @@ import kotlin.math.*
 enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val itemName: String,
     val bulbs: Int, val depth: Double, val range: Int, val heads: List<Vec3>, val beam: Vec3,
     val wirelessOnly: Boolean = false) {
+    WAREHOUSE(1, "warehousewalllight", I18N.TR_NAME(I18N.Type.NONE, "Warehouse Wall Floodlight"), 1, 1.0, 12,
+        listOf(Vec3(.57,-.03,0.0)),Vec3(cos(25.0*PI/180.0),-sin(25.0*PI/180.0),0.0)),
     DESK(2, "householddesklamp", I18N.TR_NAME(I18N.Type.NONE, "Household Desk Lamp"), 1, .8, 0,
         listOf(Vec3(.49,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
     RECESSED(3, "roundrecessedlight", I18N.TR_NAME(I18N.Type.NONE, "Round Recessed Ceiling Light"), 1, .6, 3,
@@ -86,6 +88,8 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
         (0..19).map { Vec3(1.6+it*.18,1.7*cos(it*PI/5),1.7*sin(it*PI/5)) },Vec3(1.0,0.0,0.0)),
     LUXURY_EMPIRE(41, "grandempirechandelier", I18N.TR_NAME(I18N.Type.NONE, "Grand Empire Chandelier"), 16, 4.8, 2,
         (0..15).map { Vec3(if(it<8)1.8 else 3.0,(if(it<8)1.9 else 1.2)*cos(it*PI/4),(if(it<8)1.9 else 1.2)*sin(it*PI/4)) },Vec3(1.0,0.0,0.0)),
+    HEAVY_FLOOD(42, "stadiumwallfloodlight", I18N.TR_NAME(I18N.Type.NONE, "Heavy Duty Stadium Wall Floodlight"), 4, 1.2, 14,
+        (0..3).map { Vec3(.62,-.15+(it/2)*.3,-.3+(it%2)*.6) },Vec3(.94,-.34,0.0)),
     HEAVY_BULKHEAD(43, "armoredbulkheadlight", I18N.TR_NAME(I18N.Type.NONE, "Armored Oval Bulkhead Light"), 1, .55, 3,
         listOf(Vec3(.22,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     HEAVY_WALLPACK(44, "industrialwallpacklight", I18N.TR_NAME(I18N.Type.NONE, "Industrial Wall Pack Light"), 2, .8, 8,
@@ -98,6 +102,8 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
         listOf(Vec3(.64,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     RIG_LINEAR(48, "offshoresealedlinearlight", I18N.TR_NAME(I18N.Type.NONE, "Offshore Sealed Linear Light"), 2, 2.0, 5,
         listOf(Vec3(.20,0.0,-.45),Vec3(.20,0.0,.45)),Vec3(1.0,0.0,0.0)),
+    RIG_FLOOD(49, "offshoreplatformfloodlight", I18N.TR_NAME(I18N.Type.NONE, "Offshore Platform Floodlight"), 2, 1.2, 16,
+        listOf(Vec3(.63,0.0,-.28),Vec3(.63,0.0,.28)),Vec3(.94,-.34,0.0)),
     CHRISTMAS_FAIRY(52, "christmasfairylights", I18N.TR_NAME(I18N.Type.NONE, "Warm White Christmas Fairy Lights"), 6, 2.0, 0,
         (0..5).map { Vec3(.08,-.07,-.80+it*.32) },Vec3(1.0,0.0,0.0)),
     CHRISTMAS_COLOR(53, "multicolorchristmaslights", I18N.TR_NAME(I18N.Type.NONE, "Multicolor Christmas String Lights"), 6, 2.0, 0,
@@ -114,6 +120,18 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
         listOf(Vec3(.07,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     HALLOWEEN_JACK(59, "jackolanternlamp", I18N.TR_NAME(I18N.Type.NONE, "Jack O Lantern Table Lamp"), 1, .8, 0,
         listOf(Vec3(.42,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    DOT_PINHOLE(60, "minipinholedot", I18N.TR_NAME(I18N.Type.NONE, "Mini Pinhole Dot Light"), 1, .16, 6,
+        listOf(Vec3(.10,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
+    DOT_BEZEL(61, "minibezeldot", I18N.TR_NAME(I18N.Type.NONE, "Mini Bezel Dot Spotlight"), 1, .23, 8,
+        listOf(Vec3(.18,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
+    DOT_EYEBALL(62, "minieyeballdot", I18N.TR_NAME(I18N.Type.NONE, "Mini Eyeball Dot Spotlight"), 1, .24, 8,
+        listOf(Vec3(.17,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
+    DOT_DEEP(63, "minideepbaffledot", I18N.TR_NAME(I18N.Type.NONE, "Mini Deep Baffle Dot Light"), 1, .18, 7,
+        listOf(Vec3(.10,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
+    DOT_TWIN(64, "minitwindot", I18N.TR_NAME(I18N.Type.NONE, "Mini Twin Dot Light"), 2, .24, 8,
+        listOf(Vec3(.17,0.0,-.09),Vec3(.17,0.0,.09)),Vec3(1.0,0.0,0.0),true),
+    AREA_FLOOD(70, "wideareafloodlight", I18N.TR_NAME(I18N.Type.NONE, "Large Area Floodlight"), 4, 1.6, 18,
+        (0..3).map { Vec3(.75,if(it<2)-.22 else .22,if(it%2==0)-.42 else .42) },Vec3(.94,-.34,0.0)),
     PARTY_FESTOON(79, "partyfestoonlights", I18N.TR_NAME(I18N.Type.NONE, "Patio Festoon Party Lights"), 5, 2.0, 1,
         (0..4).map { Vec3(.12,-.12,-.8+it*.4) },Vec3(1.0,0.0,0.0)),
     PARTY_TIKI(80, "poolsidetikilight", I18N.TR_NAME(I18N.Type.NONE, "Electric Poolside Tiki Light"), 1, 1.8, 2,
@@ -166,6 +184,7 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     val ceiling get() = foyer || luxury || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED, HEAVY_CANOPY, RIG_CAGE, RIG_LINEAR)
     val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM || this == WINDOW_CANDLE || this == HALLOWEEN_JACK || this == PARTY_TIKI || this == PARTY_LANTERN || this == DECK_POST_CAP || this == DESK || this == TABLE_DRUM || this == TABLE_BANKER || this == TABLE_TASK
     /** Pier and walkway bollards/posts stand on floor faces like the source outdoorFloor registration. */
+    val miniDot get() = this in DOT_PINHOLE..DOT_TWIN
     val outdoorFloor get() = this in listOf(PIER_BOLLARD,PIER_LANTERN,PATH_LOUVER,PATH_SHIELDED,PATH_BLADE,PATH_MUSHROOM,PATH_ARCH)
     val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM, WINDOW_CANDLE, HALLOWEEN_JACK, PARTY_FESTOON, PARTY_TIKI, PARTY_GLOBE, PARTY_LANTERN, DECK_POST_CAP, DESK, TABLE_DRUM, TABLE_BANKER, TABLE_TASK)
     /** Seasonal string lights drape two blocks past their mount face, like the source registration. */

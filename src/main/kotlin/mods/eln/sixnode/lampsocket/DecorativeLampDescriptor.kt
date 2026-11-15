@@ -17,7 +17,7 @@ class DecorativeLampDescriptor(val style: DecorativeLampStyle) : LampSocketDescr
             style.ceiling -> arrayOf(Direction.YP)
             style.floor || style.outdoorFloor -> arrayOf(Direction.YN)
             style.anyFace || style == DecorativeLampStyle.HOLDER -> Direction.values()
-            style == DecorativeLampStyle.DOT -> arrayOf(Direction.YP, Direction.XN, Direction.XP, Direction.ZN, Direction.ZP)
+            style == DecorativeLampStyle.DOT || style.miniDot -> arrayOf(Direction.YP, Direction.XN, Direction.XP, Direction.ZN, Direction.ZP)
             else -> arrayOf(Direction.XN, Direction.XP, Direction.ZN, Direction.ZP)
         })
         val clearance = GhostGroup()

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:mini_dot_spotlight",
+    "eln:iron_plate",
+    "minecraft:glass_pane"
+  ],
+  "result": {
+    "id": "eln:mini_twin_dot_light"
+  }
+}

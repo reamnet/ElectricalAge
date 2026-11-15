@@ -1,60 +1,100 @@
 {
-  "previousAssertions": 631,
-  "currentAssertions": 641,
-  "unchangedExactAssertions": 631,
-  "addedExactAssertions": [
-    {
-      "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4118: known in 1.12: no such item in golden/1.12/inventory.json",
-      "count": 1
-    },
-    {
-      "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4121: known in 1.12: no such item in golden/1.12/inventory.json",
-      "count": 1
-    },
-    {
-      "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4137: known in 1.12: no such item in golden/1.12/inventory.json",
-      "count": 1
-    },
-    {
-      "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4138: known in 1.12: no such item in golden/1.12/inventory.json",
-      "count": 1
-    },
-    {
-      "case": "golden_descriptors",
-      "assertion": "golden eln:six_node@4139: known in 1.12: no such item in golden/1.12/inventory.json",
-      "count": 1
-    },
-    {
-      "case": "golden_slots",
-      "assertion": "golden slots: Household Desk Lamp has no 1.12 container: spec from DecorativeLampDescriptor",
-      "count": 1
-    },
-    {
-      "case": "golden_slots",
-      "assertion": "golden slots: Mini Dot Spotlight has no 1.12 container: spec from DecorativeLampDescriptor",
-      "count": 1
-    },
-    {
-      "case": "golden_slots",
-      "assertion": "golden slots: Ceramic Drum Table Lamp has no 1.12 container: spec from DecorativeLampDescriptor",
-      "count": 1
-    },
-    {
-      "case": "golden_slots",
-      "assertion": "golden slots: Green Banker Table Lamp has no 1.12 container: spec from DecorativeLampDescriptor",
-      "count": 1
-    },
-    {
-      "case": "golden_slots",
-      "assertion": "golden slots: Articulated Task Table Lamp has no 1.12 container: spec from DecorativeLampDescriptor",
-      "count": 1
-    }
-  ],
-  "replacedPreviousAssertions": [],
-  "referencesModified": false,
-  "explanation": "The five desk/dot/table fixtures (4118, 4121, 4137-4139) add five absent-from-1.12 descriptor identities and five absent-from-1.12 container menus. All 631 previous failed assertions remain exact. Original expectations, tolerances and skips are unchanged."
+ "previousAssertions": 641,
+ "currentAssertions": 659,
+ "unchangedExactAssertions": 641,
+ "addedExactAssertions": [
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4117: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4364: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4371: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4382: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4383: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4384: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4385: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4386: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4392: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Warehouse Wall Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Heavy Duty Stadium Wall Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Offshore Platform Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Mini Pinhole Dot Light has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Mini Bezel Dot Spotlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Mini Eyeball Dot Spotlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Mini Deep Baffle Dot Light has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Mini Twin Dot Light has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Large Area Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  }
+ ],
+ "replacedPreviousAssertions": [],
+ "referencesModified": false,
+ "explanation": "The nine warehouse/flood/dot fixtures (4117, 4364, 4371, 4382-4386, 4392) add nine absent-from-1.12 descriptor identities and nine absent-from-1.12 container menus. All 641 previous failed assertions remain exact. Original expectations, tolerances and skips are unchanged."
 }

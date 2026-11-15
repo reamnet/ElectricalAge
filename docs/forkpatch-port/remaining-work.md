@@ -18,12 +18,12 @@ behavioral completion.
 
 ## Current continuation
 
-The [first decorative lighting batch](decorative-lighting.md) adds 73 fixed
+The [first decorative lighting batch](decorative-lighting.md) adds 82 fixed
 fixtures with original meshes/icons, shared multi-bulb power and native saves,
 source-sized controls and loaded-only light patterns. Source 120/240 V LED
 ratings use explicit native lookups 302/303, preserving the old 50/200 V bulbs.
 All 52 new native cases and all 899 ForkPatch cases pass; the full build passes
-690 tests plus 15 CAD tests (three existing previews skipped). The other 35
+690 tests plus 15 CAD tests (three existing previews skipped). The other 26
 source decorative styles, source technology configuration, partial
 mounting and portable lighting/carry remain unfinished. See the
 [lighting evidence](decorative-lighting-validation.json) for current checks.

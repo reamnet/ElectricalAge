@@ -4103,6 +4103,12 @@
   "kind": "transparent_node",
   "name": "230_kv_three_phase_cable_riser_tower"
  },
+ "eln:six_node@4117": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Warehouse Wall Floodlight",
+  "kind": "six_node",
+  "name": "warehouse_wall_floodlight"
+ },
  "eln:six_node@4118": {
   "descriptor": "DecorativeLampDescriptor",
   "display": "Household Desk Lamp",
@@ -4331,6 +4337,12 @@
   "kind": "six_node",
   "name": "grand_empire_chandelier"
  },
+ "eln:six_node@4364": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Heavy Duty Stadium Wall Floodlight",
+  "kind": "six_node",
+  "name": "heavy_duty_stadium_wall_floodlight"
+ },
  "eln:six_node@4365": {
   "descriptor": "DecorativeLampDescriptor",
   "display": "Armored Oval Bulkhead Light",
@@ -4360,6 +4372,12 @@
   "display": "Offshore Caged Wellglass Light",
   "kind": "six_node",
   "name": "offshore_caged_wellglass_light"
+ },
+ "eln:six_node@4371": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Offshore Platform Floodlight",
+  "kind": "six_node",
+  "name": "offshore_platform_floodlight"
  },
  "eln:six_node@4370": {
   "descriptor": "DecorativeLampDescriptor",
@@ -4414,6 +4432,42 @@
   "display": "Jack O Lantern Table Lamp",
   "kind": "six_node",
   "name": "jack_o_lantern_table_lamp"
+ },
+ "eln:six_node@4382": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Pinhole Dot Light",
+  "kind": "six_node",
+  "name": "mini_pinhole_dot_light"
+ },
+ "eln:six_node@4383": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Bezel Dot Spotlight",
+  "kind": "six_node",
+  "name": "mini_bezel_dot_spotlight"
+ },
+ "eln:six_node@4384": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Eyeball Dot Spotlight",
+  "kind": "six_node",
+  "name": "mini_eyeball_dot_spotlight"
+ },
+ "eln:six_node@4385": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Deep Baffle Dot Light",
+  "kind": "six_node",
+  "name": "mini_deep_baffle_dot_light"
+ },
+ "eln:six_node@4386": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Twin Dot Light",
+  "kind": "six_node",
+  "name": "mini_twin_dot_light"
+ },
+ "eln:six_node@4392": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Large Area Floodlight",
+  "kind": "six_node",
+  "name": "large_area_floodlight"
  },
  "eln:six_node@4401": {
   "descriptor": "DecorativeLampDescriptor",

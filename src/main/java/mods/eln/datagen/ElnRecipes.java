@@ -301,6 +301,19 @@ public final class ElnRecipes extends ElnRecipesBase {
             'G',vanilla("green_stained_glass"),'L',findItemStack("Basic Lamp Holder"),'P',Items.COPPER_INGOT);
         addRecipe(findItemStack("Articulated Task Table Lamp"), " IL"," I "," P ",
             'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Warehouse Wall Floodlight"), "IPI", "GLG", " I ",
+            'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket B Projector"));
+        addRecipe(findItemStack("Heavy Duty Stadium Wall Floodlight"), " D ","DLD"," P ",
+            'D',Blocks.IRON_BLOCK,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offshore Platform Floodlight"), " D ","DLD"," P ",
+            'D',dye(11),'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Large Area Floodlight"), " D ","DLD"," P ",
+            'D',Items.DIAMOND,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Mini Pinhole Dot Light"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.IRON_NUGGET);
+        addShapelessRecipe(findItemStack("Mini Bezel Dot Spotlight"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.GOLD_NUGGET);
+        addShapelessRecipe(findItemStack("Mini Eyeball Dot Spotlight"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.LEVER);
+        addShapelessRecipe(findItemStack("Mini Deep Baffle Dot Light"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),dye(0));
+        addShapelessRecipe(findItemStack("Mini Twin Dot Light"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.GLASS_PANE);
     }
 
     public static void recipeLampSocket() {

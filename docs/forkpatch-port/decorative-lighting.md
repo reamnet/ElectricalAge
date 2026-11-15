@@ -3,7 +3,7 @@
 Reviewed source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` in
 `../ELN1.21.1ForkPatch`. Continued from native checkpoint `7f5497f4` after
 checking the remote branch. The source catalog contains **108 decorative styles**;
-this batch registers **73 fixed fixtures**, leaving the other 35 unregistered.
+this batch registers **82 fixed fixtures**, leaving the other 26 unregistered.
 
 The original OBJ/MTL files and inventory icons are copied byte for byte. One shared
 renderer retains their mesh parts, source palette, absent-bulb visibility, lit lenses,
@@ -45,6 +45,7 @@ project both upwards and downwards.
 
 | Native/source lookup | Fixture | Bulbs |
 |---|---|---|
+| 4117 | Warehouse Wall Floodlight | 1 |
 | 4118 | Household Desk Lamp | 1 |
 | 4119 | Round Recessed Ceiling Light | 1 |
 | 4120 | Basic Chandelier | 5 |
@@ -83,12 +84,14 @@ project both upwards and downwards.
 | 4361 | Sculptural Branch Chandelier | 18 |
 | 4362 | Spiral Rain Chandelier | 20 |
 | 4363 | Grand Empire Chandelier | 16 |
+| 4364 | Heavy Duty Stadium Wall Floodlight | 4 |
 | 4365 | Armored Oval Bulkhead Light | 1 |
 | 4366 | Industrial Wall Pack Light | 2 |
 | 4367 | Rugged Outdoor Canopy Light | 4 |
 | 4368 | Industrial Yard Area Light | 2 |
 | 4369 | Offshore Caged Wellglass Light | 1 |
 | 4370 | Offshore Sealed Linear Light | 2 |
+| 4371 | Offshore Platform Floodlight | 2 |
 | 4374 | Warm White Christmas Fairy Lights | 6 |
 | 4375 | Multicolor Christmas String Lights | 6 |
 | 4376 | Christmas Icicle Lights | 6 |
@@ -97,6 +100,12 @@ project both upwards and downwards.
 | 4379 | Halloween Ghost String Lights | 4 |
 | 4380 | Halloween Bat Wall Light | 1 |
 | 4381 | Jack O Lantern Table Lamp | 1 |
+| 4382 | Mini Pinhole Dot Light | 1 |
+| 4383 | Mini Bezel Dot Spotlight | 1 |
+| 4384 | Mini Eyeball Dot Spotlight | 1 |
+| 4385 | Mini Deep Baffle Dot Light | 1 |
+| 4386 | Mini Twin Dot Light | 2 |
+| 4392 | Large Area Floodlight | 4 |
 | 4401 | Patio Festoon Party Lights | 5 |
 | 4402 | Electric Poolside Tiki Light | 1 |
 | 4404 | Poolside Globe String Lights | 4 |
@@ -119,12 +128,18 @@ project both upwards and downwards.
 | 4493 | Recessed Square Patio Wall Light | 1 |
 | 4494 | Stone Wall Wash Light | 1 |
 
-All 73 fixture patterns and yields follow the reviewed source, except the fifteen pier/path/stone fixtures (4480\u20134494): the reviewed source defines no crafting recipes for them, so this batch adds no recipe changes for that family. Recipe ingredients
+All 82 fixture patterns and yields follow the reviewed source, except the fifteen pier/path/stone fixtures (4480\u20134494): the reviewed source defines no crafting recipes for them, so this batch adds no recipe changes for that family. Recipe ingredients
 use the existing native equivalents: Classic Lamp Socket → Lamp Socket A,
 Spot Lamp Socket → Lamp Socket B Projector, and the source copper ingot → vanilla
 copper. The Standing Drum Floor Lamp's source base, the Ceramic Drum Table Lamp,
 is unregistered, so its paid shapeless recipe uses the Basic Lamp Holder plus an
 iron ingot instead. The five luxury chandeliers craft from their registered foyer chandelier bases plus the source material: Grand Halo Ring from Modern Sputnik plus gold, Grand Crystal Cascade from Crystal Tier plus diamond, Sculptural Branch from Modern Sputnik plus copper, Spiral Rain from Crystal Tier plus an iron chain, and Grand Empire from Candle Arm plus gold. The seven window/heavy/offshore fixtures craft from their registered bases plus source materials: Window Candle Light from the Basic Lamp Holder plus honeycomb, Armored Oval Bulkhead Light from the Robust Lamp Socket plus iron bars, Industrial Wall Pack Light from the Robust Lamp Socket plus an iron ingot (the source crafts it from the unported Warehouse Wall Floodlight, so this stand-in base is documented), Rugged Outdoor Canopy Light from the Robust Lamp Socket plus an iron block, Industrial Yard Area Light from the Gooseneck Barn Light plus an iron ingot, Offshore Caged Wellglass Light from the Robust Lamp Socket plus yellow dye, and Offshore Sealed Linear Light from the Thin Fluorescent Shop Light plus yellow dye. The eight seasonal fixtures craft from their registered strip or holder bases plus source seasonals: Warm White Christmas Fairy Lights, Multicolor Christmas String Lights, Christmas Icicle Lights and Halloween Ghost String Lights from the Flexible Neon LED Strip plus yellow, red, light blue or white dye respectively, Halloween Pumpkin String Lights from the Flexible Neon LED Strip plus a pumpkin, Christmas Star Wall Light from the Basic Lamp Holder plus a gold nugget, Halloween Bat Wall Light from the Basic Lamp Holder plus black dye, and Jack O Lantern Table Lamp from the Basic Lamp Holder plus a carved pumpkin. The six party/deck fixtures craft from their registered bases plus source materials: Patio Festoon Party Lights from the Flexible Neon LED Strip plus orange dye, Electric Poolside Tiki Light from the Traditional Lantern Post Light plus bamboo, Poolside Globe String Lights from the Flexible Neon LED Strip plus a glass bottle, Poolside Party Lantern from the Porch Lantern Sconce plus light blue dye, Deck Post Cap Light from the Basic Lamp Holder plus an oak slab, and Deck Step Riser Light from the Flat Lamp Socket plus a spruce slab. The five desk/dot/table fixtures craft from their registered bases plus source materials: Household Desk Lamp from the Lamp Socket A plus white wool and an iron plate, Mini Dot Spotlight (two) from the Lamp Socket B Projector plus an iron ingot and glass panes, Ceramic Drum Table Lamp from the Basic Lamp Holder plus white wool and terracotta, Green Banker Table Lamp from the Basic Lamp Holder plus green stained glass and a copper ingot, and Articulated Task Table Lamp from the Lamp Socket B Projector plus an iron ingot and an iron plate. Existing native recipes keep their outputs.
+The nine warehouse/stadium/offshore/area/mini-dot fixtures craft from their registered bases: the
+Warehouse Wall Floodlight from an iron ingot, an iron plate, glass panes and the Lamp Socket B
+Projector; the Heavy Duty Stadium Wall Floodlight, the Offshore Platform Floodlight and the Large
+Area Floodlight from the Warehouse Wall Floodlight plus an iron block, yellow dye or a diamond;
+and the five mini dot lights from the Mini Dot Spotlight plus an iron plate and an iron nugget, a
+gold nugget, a lever, black dye or a glass pane.
 
 The source LED lookups 293/294 conflict with the established 50/200 V bulbs.
 Explicit mapping moves the new 120/240 V LEDs to **302/303**, preserving both old
@@ -135,7 +150,7 @@ ambiguous recipe. This avoids converting used bulbs into fresh ones.
 
 ## Remaining lighting work
 
-The other **35 decorative styles** remain separate work:
+The other **26 decorative styles** remain separate work:
 the remaining dot/flood/warehouse/pool/party-wash outdoor families, the parking and street heads,
 motion detection, suspended warehouse adjustment, fan motors/rotors/hazards and
 portable table/carry adapters. Partial-block mounting and source-world conversion
@@ -165,25 +180,27 @@ Validation and any runtime limitations are recorded in
 
 The full build passes **690 of 693 root tests**, retaining the same three optional
 preview skips, and all **15 CAD tests**. The full default 200-case fluid corpus
-remains included. All **52 new native lighting cases** pass. Unfiltered native
-selects **1,365 tests: 1,363 pass**, with no skips; all **899 ForkPatch cases** pass.
-Both whole-catalog publication/drawing checks retain all **553 devices**; the item
-drawing check covers all **342 items**.
+remains included. All **61 new native lighting cases** pass. Unfiltered native
+selects **1,374 tests: 1,372 pass**, with no skips; all **908 ForkPatch cases** pass.
+Both whole-catalog publication/drawing checks retain all **562 devices**; the item
+drawing check covers all **351 items**.
 Repeated data generation writes zero files. All **680 provenance entries** pass;
-all 754 preceding identities and 1,077 English entries keep their exact values.
-There are 5 new identities and 5 new English entries in this batch.
+all 759 preceding identities and 1,082 English entries keep their exact values.
+There are 9 new identities and 9 new English entries in this batch.
 
 Only the historical `golden_descriptors` and `golden_slots` tests fail. The original
 expectations are unchanged; the two new bulbs naturally expand acceptance in ten
 existing socket menus.
-The [exact delta](decorative-lighting-golden-delta.json) records **641 failed
+The [exact delta](decorative-lighting-golden-delta.json) records **659 failed
 assertions**; the 537 pre-batch failures, the twelve added by the six
 4353–4358 styles, the ten added by the five luxury chandeliers, the fourteen
 added by the seven 4352, 4365–4370 styles, the sixteen added by the eight
 4374–4381 seasonal styles, the twelve added by the six 4401, 4402,
 4404–4407 party/deck fixtures and the thirty added by the fifteen
 4480–4494 pier/path/stone fixtures and the ten added by the five
-4118, 4121, 4137–4139 desk/dot/table fixtures all remain exact. The matching slot summary
+4118, 4121, 4137–4139 desk/dot/table fixtures and the eighteen
+added by the nine 4117, 4364, 4371, 4382–4386, 4392
+warehouse/flood/dot fixtures all remain exact. The matching slot summary
 remains 112/137. No
 tolerance, assertion or skip was relaxed.
 
@@ -192,5 +209,5 @@ classes, 933 Kotlin classes, one Kotlin module file and 5,215 processed resource
 All tested class bytes remain exact; only the build marker changes from the tested
 working tree to the clean code commit. SHA-256: `2fc8759d0e12aa390518e1d3e0affc28c3313c1223b25ef90423ba0eb33936ba`.
 This artifact predates the 4352, 4353–4363, 4365–4370, 4374–4381,
-4401, 4402, 4404–4407, 4480–4494 and 4118, 4121, 4137–4139 batches; extending the parity record to the current
+4401, 4402, 4404–4407, 4480–4494, 4118, 4121, 4137–4139 and 4117, 4364, 4371, 4382–4386, 4392 batches; extending the parity record to the current
 branch HEAD would require a fresh clean build.
