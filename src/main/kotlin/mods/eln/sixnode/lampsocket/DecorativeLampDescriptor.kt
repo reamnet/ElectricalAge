@@ -17,7 +17,7 @@ class DecorativeLampDescriptor(val style: DecorativeLampStyle) : LampSocketDescr
             style.ceiling -> arrayOf(Direction.YP)
             style.floor || style.outdoorFloor -> arrayOf(Direction.YN)
             style.anyFace || style == DecorativeLampStyle.HOLDER -> Direction.values()
-            style == DecorativeLampStyle.DOT || style.miniDot -> arrayOf(Direction.YP, Direction.XN, Direction.XP, Direction.ZN, Direction.ZP)
+            style == DecorativeLampStyle.DOT || style.miniDot || style == DecorativeLampStyle.EAVE_TWIN -> arrayOf(Direction.YP, Direction.XN, Direction.XP, Direction.ZN, Direction.ZP)
             else -> arrayOf(Direction.XN, Direction.XP, Direction.ZN, Direction.ZP)
         })
         val clearance = GhostGroup()
@@ -32,6 +32,9 @@ class DecorativeLampDescriptor(val style: DecorativeLampStyle) : LampSocketDescr
             style == DecorativeLampStyle.STRIP_SURFACE -> { add(0,0,-1); add(0,0,1) }
             style == DecorativeLampStyle.RIG_LINEAR -> { add(0,0,-1); add(0,0,1) }
             style == DecorativeLampStyle.PARTY_TIKI -> add(1,0,0)
+            style == DecorativeLampStyle.PARKING -> { for(x in 1..4) add(x,0,0); for(y in -1..1) for(z in -1..1) add(5,y,z) }
+            style.parking -> { for(x in 1..4) add(x,0,0); for(x in 5..6) for(y in -2..2) for(z in -2..2) add(x,y,z) }
+            style.street -> { val firstHead = if(style==DecorativeLampStyle.STREET_BOULEVARD) 4 else 5; for(x in 1 until firstHead) add(x,0,0); for(x in firstHead..5) for(y in -1..1) for(z in -1..1) add(x,y,z) }
             style.outdoorFloor -> if(style.depth>1) for(x in 1 until ceil(style.depth).toInt()) add(x,0,0)
             style.seasonalString || style.partyString -> { add(0,0,-1); add(0,0,1) }
             style.foyer -> for(y in -1..1) for(z in -1..1) add(1,y,z)

@@ -61,7 +61,20 @@ class DecorativeLampGeometryTest {
         assertEquals(4385,DecorativeLampStyle.DOT_DEEP.lookup)
         assertEquals(4386,DecorativeLampStyle.DOT_TWIN.lookup)
         assertEquals(4392,DecorativeLampStyle.AREA_FLOOD.lookup)
-        assertEquals(82,DecorativeLampStyle.entries.map { it.lookup }.toSet().size)
+        assertEquals(4116,DecorativeLampStyle.PARKING.lookup)
+        assertEquals(4142,DecorativeLampStyle.POT_GIMBAL.lookup)
+        assertEquals(4372,DecorativeLampStyle.STREET_LED.lookup)
+        assertEquals(4373,DecorativeLampStyle.STREET_BOULEVARD.lookup)
+        assertEquals(4387,DecorativeLampStyle.EAVE_TWIN.lookup)
+        assertEquals(4393,DecorativeLampStyle.PARKING_QUAD.lookup)
+        assertEquals(4394,DecorativeLampStyle.PARKING_ROUND.lookup)
+        assertEquals(4395,DecorativeLampStyle.PARKING_OFFSET.lookup)
+        assertEquals(4495,DecorativeLampStyle.PARKING_SHOEBOX.lookup)
+        assertEquals(4496,DecorativeLampStyle.PARKING_TWIN_AREA.lookup)
+        assertEquals(4497,DecorativeLampStyle.PARKING_TRI_ARM.lookup)
+        assertEquals(4498,DecorativeLampStyle.SIDEWALK_GUMDROP.lookup)
+        assertEquals(4499,DecorativeLampStyle.SIDEWALK_DUAL_GUMDROP.lookup)
+        assertEquals(95,DecorativeLampStyle.entries.map { it.lookup }.toSet().size)
         assertFalse(DecorativeLampStyle.entries.any { it.lookup==4126 }) // motion sensor is separate work
     }
     @Test fun ceilingFixtureHeadsStayBelowTheirMount() {

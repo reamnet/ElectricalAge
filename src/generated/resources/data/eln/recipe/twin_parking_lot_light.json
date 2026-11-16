@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "L": "eln:robust_lamp_socket",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "L L",
+    " I ",
+    " P "
+  ],
+  "result": {
+    "id": "eln:twin_parking_lot_light"
+  }
+}

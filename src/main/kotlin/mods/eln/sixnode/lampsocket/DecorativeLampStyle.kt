@@ -10,6 +10,8 @@ import kotlin.math.*
 enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val itemName: String,
     val bulbs: Int, val depth: Double, val range: Int, val heads: List<Vec3>, val beam: Vec3,
     val wirelessOnly: Boolean = false) {
+    PARKING(0, "twinparkinglight", I18N.TR_NAME(I18N.Type.NONE, "Twin Parking Lot Light"), 2, 5.5, 6,
+        listOf(Vec3(5.15,-.8,0.0),Vec3(5.15,.8,0.0)),Vec3(-1.0,0.0,0.0)),
     WAREHOUSE(1, "warehousewalllight", I18N.TR_NAME(I18N.Type.NONE, "Warehouse Wall Floodlight"), 1, 1.0, 12,
         listOf(Vec3(.57,-.03,0.0)),Vec3(cos(25.0*PI/180.0),-sin(25.0*PI/180.0),0.0)),
     DESK(2, "householddesklamp", I18N.TR_NAME(I18N.Type.NONE, "Household Desk Lamp"), 1, .8, 0,
@@ -58,6 +60,8 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
         listOf(Vec3(.06,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
     POT_TRIMLESS(25, "trimlesspotlight", I18N.TR_NAME(I18N.Type.NONE, "Trimless Recessed Downlight"), 1, .38, 4,
         listOf(Vec3(.025,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
+    POT_GIMBAL(26, "gimbalpotlight", I18N.TR_NAME(I18N.Type.NONE, "Adjustable Gimbal Recessed Light"), 1, .46, 8,
+        listOf(Vec3(.085,0.0,0.0)),Vec3(.94,.34,0.0),true),
     OUTDOOR_BOLLARD(27, "gardenbollardlight", I18N.TR_NAME(I18N.Type.NONE, "Garden Bollard Light"), 1, 1.1, 0,
         listOf(Vec3(.83,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     OUTDOOR_BARN(28, "gooseneckbarnlight", I18N.TR_NAME(I18N.Type.NONE, "Gooseneck Barn Light"), 1, .96, 7,
@@ -104,6 +108,10 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
         listOf(Vec3(.20,0.0,-.45),Vec3(.20,0.0,.45)),Vec3(1.0,0.0,0.0)),
     RIG_FLOOD(49, "offshoreplatformfloodlight", I18N.TR_NAME(I18N.Type.NONE, "Offshore Platform Floodlight"), 2, 1.2, 16,
         listOf(Vec3(.63,0.0,-.28),Vec3(.63,0.0,.28)),Vec3(.94,-.34,0.0)),
+    STREET_LED(50, "modernledstreetlight", I18N.TR_NAME(I18N.Type.NONE, "Modern LED Street Light"), 1, 5.8, 10,
+        listOf(Vec3(5.35,-1.05,0.0)),Vec3(-1.0,0.0,0.0)),
+    STREET_BOULEVARD(51, "boulevardlanternstreetlight", I18N.TR_NAME(I18N.Type.NONE, "Boulevard Lantern Street Light"), 2, 5.4, 4,
+        listOf(Vec3(4.8,-.72,0.0),Vec3(4.8,.72,0.0)),Vec3(-1.0,0.0,0.0)),
     CHRISTMAS_FAIRY(52, "christmasfairylights", I18N.TR_NAME(I18N.Type.NONE, "Warm White Christmas Fairy Lights"), 6, 2.0, 0,
         (0..5).map { Vec3(.08,-.07,-.80+it*.32) },Vec3(1.0,0.0,0.0)),
     CHRISTMAS_COLOR(53, "multicolorchristmaslights", I18N.TR_NAME(I18N.Type.NONE, "Multicolor Christmas String Lights"), 6, 2.0, 0,
@@ -130,8 +138,16 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
         listOf(Vec3(.10,0.0,0.0)),Vec3(1.0,0.0,0.0),true),
     DOT_TWIN(64, "minitwindot", I18N.TR_NAME(I18N.Type.NONE, "Mini Twin Dot Light"), 2, .24, 8,
         listOf(Vec3(.17,0.0,-.09),Vec3(.17,0.0,.09)),Vec3(1.0,0.0,0.0),true),
+    EAVE_TWIN(65, "twineavefloodlight", I18N.TR_NAME(I18N.Type.NONE, "Twin Adjustable Eave Floodlight"), 2, .60, 12,
+        listOf(Vec3(.38,0.0,-.20),Vec3(.38,0.0,.20)),Vec3(.94,-.34,0.0)),
     AREA_FLOOD(70, "wideareafloodlight", I18N.TR_NAME(I18N.Type.NONE, "Large Area Floodlight"), 4, 1.6, 18,
         (0..3).map { Vec3(.75,if(it<2)-.22 else .22,if(it%2==0)-.42 else .42) },Vec3(.94,-.34,0.0)),
+    PARKING_QUAD(71, "quadparkinglight", I18N.TR_NAME(I18N.Type.NONE, "Quad Head Parking Lot Light"), 4, 6.0, 12,
+        (0..3).map { Vec3(5.65,1.10*cos(it*PI/2),1.10*sin(it*PI/2)) },Vec3(-1.0,0.0,0.0)),
+    PARKING_ROUND(72, "roundparkinglight", I18N.TR_NAME(I18N.Type.NONE, "Round Canopy Parking Lot Light"), 4, 5.8, 12,
+        (0..3).map { Vec3(5.35,.45*cos(it*PI/2),.45*sin(it*PI/2)) },Vec3(-1.0,0.0,0.0)),
+    PARKING_OFFSET(73, "offsetparkinglight", I18N.TR_NAME(I18N.Type.NONE, "Offset Twin Arm Parking Lot Light"), 2, 6.0, 12,
+        listOf(Vec3(5.65,-1.1,-.45),Vec3(5.65,1.1,.45)),Vec3(-1.0,0.0,0.0)),
     PARTY_FESTOON(79, "partyfestoonlights", I18N.TR_NAME(I18N.Type.NONE, "Patio Festoon Party Lights"), 5, 2.0, 1,
         (0..4).map { Vec3(.12,-.12,-.8+it*.4) },Vec3(1.0,0.0,0.0)),
     PARTY_TIKI(80, "poolsidetikilight", I18N.TR_NAME(I18N.Type.NONE, "Electric Poolside Tiki Light"), 1, 1.8, 2,
@@ -173,7 +189,17 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     STONE_SQUARE(101, "squarestonewalllight", I18N.TR_NAME(I18N.Type.NONE, "Recessed Square Patio Wall Light"), 1, .6, 4,
         listOf(Vec3(.065,0.0,0.0)),Vec3(1.0,0.0,0.0)),
     STONE_WASH(102, "stonewallwashlight", I18N.TR_NAME(I18N.Type.NONE, "Stone Wall Wash Light"), 1, .7, 4,
-        listOf(Vec3(.10,0.0,0.0)),Vec3(1.0,0.0,0.0));
+        listOf(Vec3(.10,0.0,0.0)),Vec3(1.0,0.0,0.0)),
+    PARKING_SHOEBOX(103, "shoeboxparkinglight", I18N.TR_NAME(I18N.Type.NONE, "Shoebox Parking Lot Light"), 1, 6.0, 12,
+        listOf(Vec3(5.65,.92,0.0)),Vec3(-1.0,0.0,0.0)),
+    PARKING_TWIN_AREA(104, "twinareaparkinglight", I18N.TR_NAME(I18N.Type.NONE, "Twin Wide Area Parking Lot Light"), 2, 6.0, 12,
+        listOf(Vec3(5.65,-.95,0.0),Vec3(5.65,.95,0.0)),Vec3(-1.0,0.0,0.0)),
+    PARKING_TRI_ARM(105, "triarmparkinglight", I18N.TR_NAME(I18N.Type.NONE, "Three Arm Parking Lot Light"), 3, 6.0, 12,
+        (0..2).map { Vec3(5.65,1.1*cos(it*2*PI/3),1.1*sin(it*2*PI/3)) },Vec3(-1.0,0.0,0.0)),
+    SIDEWALK_GUMDROP(106, "gumdropsidewalklight", I18N.TR_NAME(I18N.Type.NONE, "Gumdrop Sidewalk Light"), 1, 3.9, 7,
+        listOf(Vec3(3.50,0.0,0.0)),Vec3(-1.0,0.0,0.0)),
+    SIDEWALK_DUAL_GUMDROP(107, "dualgumdropsidewalklight", I18N.TR_NAME(I18N.Type.NONE, "Dual Gumdrop Sidewalk Light"), 2, 3.9, 7,
+        listOf(Vec3(3.50,-.63,0.0),Vec3(3.50,.63,0.0)),Vec3(-1.0,0.0,0.0));
     val lookup get() = when {
         sourceOrdinal in 0..29 -> (64 shl 6) + 20 + sourceOrdinal
         sourceOrdinal in 30..87 -> (68 shl 6) + sourceOrdinal - 30
@@ -181,12 +207,15 @@ enum class DecorativeLampStyle(val sourceOrdinal: Int, val model: String, val it
     }
     val foyer get() = this in CANDLE..SPUTNIK
     val luxury get() = this in LUXURY_RINGS..LUXURY_EMPIRE
-    val ceiling get() = foyer || luxury || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, STRIP_RECESSED, HEAVY_CANOPY, RIG_CAGE, RIG_LINEAR)
-    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM || this == WINDOW_CANDLE || this == HALLOWEEN_JACK || this == PARTY_TIKI || this == PARTY_LANTERN || this == DECK_POST_CAP || this == DESK || this == TABLE_DRUM || this == TABLE_BANKER || this == TABLE_TASK
+    val ceiling get() = foyer || luxury || this in listOf(RECESSED, CHANDELIER, SHOP, FACTORY, POT_BAFFLE, POT_TRIMLESS, POT_GIMBAL, STRIP_RECESSED, HEAVY_CANOPY, RIG_CAGE, RIG_LINEAR)
+    val floor get() = this == OUTDOOR_BOLLARD || this == OUTDOOR_POST || this == FLOOR_DRUM || this == WINDOW_CANDLE || this == HALLOWEEN_JACK || this == PARTY_TIKI || this == PARTY_LANTERN || this == DECK_POST_CAP || this == DESK || this == TABLE_DRUM || this == TABLE_BANKER || this == TABLE_TASK || this.parking || this.street
     /** Pier and walkway bollards/posts stand on floor faces like the source outdoorFloor registration. */
     val miniDot get() = this in DOT_PINHOLE..DOT_TWIN
-    val outdoorFloor get() = this in listOf(PIER_BOLLARD,PIER_LANTERN,PATH_LOUVER,PATH_SHIELDED,PATH_BLADE,PATH_MUSHROOM,PATH_ARCH)
-    val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM, WINDOW_CANDLE, HALLOWEEN_JACK, PARTY_FESTOON, PARTY_TIKI, PARTY_GLOBE, PARTY_LANTERN, DECK_POST_CAP, DESK, TABLE_DRUM, TABLE_BANKER, TABLE_TASK)
+    val outdoorFloor get() = this in listOf(PIER_BOLLARD,PIER_LANTERN,PATH_LOUVER,PATH_SHIELDED,PATH_BLADE,PATH_MUSHROOM,PATH_ARCH,SIDEWALK_GUMDROP,SIDEWALK_DUAL_GUMDROP)
+    val exposedBulbs get() = foyer || luxury || this in listOf(CHANDELIER, PORCH, HOLDER, SCONCE_CANDLE, SCONCE_CAGE, SCONCE_GLOBE, OUTDOOR_POST, FLOOR_DRUM, WINDOW_CANDLE, HALLOWEEN_JACK, PARTY_FESTOON, PARTY_TIKI, PARTY_GLOBE, PARTY_LANTERN, DECK_POST_CAP, DESK, TABLE_DRUM, TABLE_BANKER, TABLE_TASK, STREET_BOULEVARD)
+    /** Parking and street fixtures stand on floor faces with arm clearance, like the source registration. */
+    val parking get() = this==PARKING || this in PARKING_QUAD..PARKING_OFFSET || this in PARKING_SHOEBOX..PARKING_TRI_ARM
+    val street get() = this==STREET_LED || this==STREET_BOULEVARD
     /** Seasonal string lights drape two blocks past their mount face, like the source registration. */
     val seasonalString get() = this in listOf(CHRISTMAS_FAIRY,CHRISTMAS_COLOR,CHRISTMAS_ICICLE,HALLOWEEN_PUMPKIN,HALLOWEEN_GHOST)
     /** Party string fixtures drape like the seasonal strings: wall mount with clearance past the face. */

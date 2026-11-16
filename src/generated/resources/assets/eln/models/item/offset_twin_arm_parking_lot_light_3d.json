@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_six",
+  "textures": {
+    "particle": "eln:item/offset_twin_arm_parking_lot_light"
+  }
+}

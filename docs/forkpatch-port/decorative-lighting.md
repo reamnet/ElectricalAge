@@ -3,7 +3,7 @@
 Reviewed source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` in
 `../ELN1.21.1ForkPatch`. Continued from native checkpoint `7f5497f4` after
 checking the remote branch. The source catalog contains **108 decorative styles**;
-this batch registers **82 fixed fixtures**, leaving the other 26 unregistered.
+this batch registers **95 fixed fixtures**, leaving the other 13 unregistered.
 
 The original OBJ/MTL files and inventory icons are copied byte for byte. One shared
 renderer retains their mesh parts, source palette, absent-bulb visibility, lit lenses,
@@ -45,6 +45,7 @@ project both upwards and downwards.
 
 | Native/source lookup | Fixture | Bulbs |
 |---|---|---|
+| 4116 | Twin Parking Lot Light | 2 |
 | 4117 | Warehouse Wall Floodlight | 1 |
 | 4118 | Household Desk Lamp | 1 |
 | 4119 | Round Recessed Ceiling Light | 1 |
@@ -69,6 +70,7 @@ project both upwards and downwards.
 | 4139 | Articulated Task Table Lamp | 1 |
 | 4140 | Deep Baffle Recessed Light | 1 |
 | 4141 | Trimless Recessed Downlight | 1 |
+| 4142 | Adjustable Gimbal Recessed Light | 1 |
 | 4143 | Garden Bollard Light | 1 |
 | 4144 | Gooseneck Barn Light | 1 |
 | 4145 | Traditional Lantern Post Light | 1 |
@@ -92,6 +94,8 @@ project both upwards and downwards.
 | 4369 | Offshore Caged Wellglass Light | 1 |
 | 4370 | Offshore Sealed Linear Light | 2 |
 | 4371 | Offshore Platform Floodlight | 2 |
+| 4372 | Modern LED Street Light | 1 |
+| 4373 | Boulevard Lantern Street Light | 2 |
 | 4374 | Warm White Christmas Fairy Lights | 6 |
 | 4375 | Multicolor Christmas String Lights | 6 |
 | 4376 | Christmas Icicle Lights | 6 |
@@ -105,7 +109,11 @@ project both upwards and downwards.
 | 4384 | Mini Eyeball Dot Spotlight | 1 |
 | 4385 | Mini Deep Baffle Dot Light | 1 |
 | 4386 | Mini Twin Dot Light | 2 |
+| 4387 | Twin Adjustable Eave Floodlight | 2 |
 | 4392 | Large Area Floodlight | 4 |
+| 4393 | Quad Head Parking Lot Light | 4 |
+| 4394 | Round Canopy Parking Lot Light | 4 |
+| 4395 | Offset Twin Arm Parking Lot Light | 2 |
 | 4401 | Patio Festoon Party Lights | 5 |
 | 4402 | Electric Poolside Tiki Light | 1 |
 | 4404 | Poolside Globe String Lights | 4 |
@@ -127,8 +135,13 @@ project both upwards and downwards.
 | 4492 | Slotted Patio Wall Light | 1 |
 | 4493 | Recessed Square Patio Wall Light | 1 |
 | 4494 | Stone Wall Wash Light | 1 |
+| 4495 | Shoebox Parking Lot Light | 1 |
+| 4496 | Twin Wide Area Parking Lot Light | 2 |
+| 4497 | Three Arm Parking Lot Light | 3 |
+| 4498 | Gumdrop Sidewalk Light | 1 |
+| 4499 | Dual Gumdrop Sidewalk Light | 2 |
 
-All 82 fixture patterns and yields follow the reviewed source, except the fifteen pier/path/stone fixtures (4480\u20134494): the reviewed source defines no crafting recipes for them, so this batch adds no recipe changes for that family. Recipe ingredients
+All 95 fixture patterns and yields follow the reviewed source, except the fifteen pier/path/stone fixtures (4480\u20134494): the reviewed source defines no crafting recipes for them, so this batch adds no recipe changes for that family. Recipe ingredients
 use the existing native equivalents: Classic Lamp Socket → Lamp Socket A,
 Spot Lamp Socket → Lamp Socket B Projector, and the source copper ingot → vanilla
 copper. The Standing Drum Floor Lamp's source base, the Ceramic Drum Table Lamp,
@@ -141,6 +154,21 @@ Area Floodlight from the Warehouse Wall Floodlight plus an iron block, yellow dy
 and the five mini dot lights from the Mini Dot Spotlight plus an iron plate and an iron nugget, a
 gold nugget, a lever, black dye or a glass pane.
 
+The eight parking/street/eave/sidewalk fixtures craft from their registered bases: the
+Twin Parking Lot Light (base for the three parking upgrades; the source Spot Lamp Socket
+maps to the Lamp Socket B Projector) from the Robust Lamp Socket plus two iron ingots and
+an iron plate; the Modern LED Street Light from the Street Light plus two iron ingots and
+an iron plate; the Boulevard Lantern Street Light from the Traditional Lantern Post Light
+plus two iron chains and an iron plate; the Quad Head Parking Lot Light from the Twin
+Parking Lot Light plus an iron block and an iron plate; the Round Canopy Parking Lot Light
+from the Twin Parking Lot Light plus two quartz and an iron plate; the Offset Twin Arm
+Parking Lot Light from the Twin Parking Lot Light plus two copper ingots and an iron plate;
+the Adjustable Gimbal Recessed Light (two) from the Lamp Socket B Projector plus four iron
+ingots; and the Twin Adjustable Eave Floodlight from the Mini Bezel Dot Spotlight plus an
+iron plate. The source defines no crafting recipes for the Shoebox Parking Lot Light, the
+Twin Wide Area Parking Lot Light, the Three Arm Parking Lot Light or either Gumdrop
+sidewalk light, so these five remain uncraftable here to match the source.
+
 The source LED lookups 293/294 conflict with the established 50/200 V bulbs.
 Explicit mapping moves the new 120/240 V LEDs to **302/303**, preserving both old
 identities and all their data. Their original three-glass/three-silicon/cable
@@ -150,10 +178,11 @@ ambiguous recipe. This avoids converting used bulbs into fresh ones.
 
 ## Remaining lighting work
 
-The other **26 decorative styles** remain separate work:
-the remaining dot/flood/warehouse/pool/party-wash outdoor families, the parking and street heads,
-motion detection, suspended warehouse adjustment, fan motors/rotors/hazards and
-portable table/carry adapters. Partial-block mounting and source-world conversion
+The other **13 decorative styles** remain separate work:
+the ceiling fans 4388–4391, the Tropical Patio Ceiling Fan 4408 and the
+Adjustable Suspended Warehouse Light 4409, the pool lights 4396–4400, the
+Multicolor Party Wash 4403 and the Outdoor Motion Floodlight 4126, plus motion
+detection, suspended-warehouse adjustment and portable table/carry adapters. Partial-block mounting and source-world conversion
 need their own adapters. The rest of the source bulb technologies and their
 per-technology lifetime/configuration controls are not registered by this batch.
 The original native golden references, assertions, tolerances and skips are retained.
@@ -180,18 +209,18 @@ Validation and any runtime limitations are recorded in
 
 The full build passes **690 of 693 root tests**, retaining the same three optional
 preview skips, and all **15 CAD tests**. The full default 200-case fluid corpus
-remains included. All **61 new native lighting cases** pass. Unfiltered native
-selects **1,374 tests: 1,372 pass**, with no skips; all **908 ForkPatch cases** pass.
-Both whole-catalog publication/drawing checks retain all **562 devices**; the item
-drawing check covers all **351 items**.
+remains included. All **74 new native lighting cases** pass. Unfiltered native
+selects **1,387 tests: 1,385 pass**, with no skips; all **921 ForkPatch cases** pass.
+Both whole-catalog publication/drawing checks retain all **575 devices**; the item
+drawing check covers all **364 items**.
 Repeated data generation writes zero files. All **680 provenance entries** pass;
-all 759 preceding identities and 1,082 English entries keep their exact values.
-There are 9 new identities and 9 new English entries in this batch.
+all 768 preceding identities and 1,091 English entries keep their exact values.
+There are 13 new identities and 13 new English entries in this batch.
 
 Only the historical `golden_descriptors` and `golden_slots` tests fail. The original
 expectations are unchanged; the two new bulbs naturally expand acceptance in ten
 existing socket menus.
-The [exact delta](decorative-lighting-golden-delta.json) records **659 failed
+The [exact delta](decorative-lighting-golden-delta.json) records **685 failed
 assertions**; the 537 pre-batch failures, the twelve added by the six
 4353–4358 styles, the ten added by the five luxury chandeliers, the fourteen
 added by the seven 4352, 4365–4370 styles, the sixteen added by the eight
@@ -200,7 +229,9 @@ added by the seven 4352, 4365–4370 styles, the sixteen added by the eight
 4480–4494 pier/path/stone fixtures and the ten added by the five
 4118, 4121, 4137–4139 desk/dot/table fixtures and the eighteen
 added by the nine 4117, 4364, 4371, 4382–4386, 4392
-warehouse/flood/dot fixtures all remain exact. The matching slot summary
+warehouse/flood/dot fixtures and the twenty-six added by the thirteen
+4116, 4142, 4372–4373, 4387, 4393–4395, 4495–4499
+parking/street/eave/sidewalk fixtures all remain exact. The matching slot summary
 remains 112/137. No
 tolerance, assertion or skip was relaxed.
 
@@ -209,5 +240,6 @@ classes, 933 Kotlin classes, one Kotlin module file and 5,215 processed resource
 All tested class bytes remain exact; only the build marker changes from the tested
 working tree to the clean code commit. SHA-256: `2fc8759d0e12aa390518e1d3e0affc28c3313c1223b25ef90423ba0eb33936ba`.
 This artifact predates the 4352, 4353–4363, 4365–4370, 4374–4381,
-4401, 4402, 4404–4407, 4480–4494, 4118, 4121, 4137–4139 and 4117, 4364, 4371, 4382–4386, 4392 batches; extending the parity record to the current
+4401, 4402, 4404–4407, 4480–4494, 4118, 4121, 4137–4139 and 4117, 4364, 4371, 4382–4386, 4392,
+4116, 4142, 4372–4373, 4387, 4393–4395, 4495–4499 batches; extending the parity record to the current
 branch HEAD would require a fresh clean build.

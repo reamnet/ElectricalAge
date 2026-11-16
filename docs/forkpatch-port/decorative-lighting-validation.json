@@ -4,8 +4,8 @@
  "branch": "port/forkpatch-3.0.77-26.3",
  "pr": 1,
  "sourceStyles": 108,
- "registeredFixedStyles": 82,
- "unregisteredStyles": 26,
+ "registeredFixedStyles": 95,
+ "unregisteredStyles": 13,
  "ratedLedNativeLookups": [
   302,
   303
@@ -44,12 +44,12 @@
   "report": "/tmp/eln-golden-party-deck.xml"
  },
  "native": {
-  "selected": 1374,
-  "passed": 1372,
+  "selected": 1387,
+  "passed": 1385,
   "failed": 2,
   "skipped": 0,
   "portCases": {
-   "selected": 908,
+   "selected": 921,
    "failed": 0
   },
   "nativeLog": "/tmp/gametest1.log",
@@ -63,11 +63,11 @@
  "nativeReport": "/tmp/eln-golden-batchA2.xml",
  "goldenDelta": "decorative-lighting-golden-delta.json",
  "allCatalogPublicationAndDrawing": {
-  "selected": 562,
-  "passed": 562,
+  "selected": 575,
+  "passed": 575,
   "itemDraw": {
-   "selected": 351,
-   "passed": 351
+   "selected": 364,
+   "passed": 364
   }
  },
  "geometryTests": {
@@ -77,7 +77,7 @@
  "fullFluidCorpus": 200,
  "datagen": {
   "repeatedWrittenFiles": 0,
-  "log": "/tmp/dclientdata-party-deck-v2.log"
+  "log": "/tmp/dg13.log"
  },
  "provenance": {
   "entries": 680,
@@ -86,16 +86,16 @@
  },
  "retainedData": {
   "src/main/resources/eln-ids.json": {
-   "previous": 759,
-   "current": 768,
+   "previous": 768,
+   "current": 781,
    "retainedExact": true,
-   "added": 9
+   "added": 13
   },
   "src/generated/resources/assets/eln/lang/en_us.json": {
-   "previous": 1082,
-   "current": 1091,
+   "previous": 1091,
+   "current": 1104,
    "retainedExact": true,
-   "added": 9
+   "added": 13
   }
  },
  "runtime": {
@@ -142,7 +142,7 @@
   "Whole-catalog setup lifts hanging-fixture clearance above its test floor; all 501 devices remain included."
  ],
  "limitations": [
-  "Other 26 decorative styles, additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
+  "Other 13 decorative styles (ceiling fans 4388-4391, Tropical Patio Ceiling Fan 4408, Adjustable Suspended Warehouse Light 4409, pool lights 4396-4400, Multicolor Party Wash 4403, Outdoor Motion Floodlight 4126), additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
   "Original model/icon bytes and source controls/palette are retained; universal pixel-for-pixel or hardware-GPU parity is not established.",
   "The static client exhibit is unpowered; delivered work and loaded-only beam rules are covered by production/native regressions.",
   "One loopback network client is checked; no simultaneous multi-client campaign or audio/hardware-GPU campaign.",
@@ -163,7 +163,7 @@
   "assembleLog": "/tmp/eln-lighting-clean-artifact.log",
   "allBuildOutputsMatchJarEntries": true,
   "stale": true,
-  "staleNote": "Predates the 4352, 4353-4363, 4365-4370, 4374-4381, 4401, 4402 and 4404-4407 style batches and 4117, 4364, 4371, 4382-4386, 4392; rebuild before relying on this artifact."
+  "staleNote": "Predates the 4352, 4353-4363, 4365-4370, 4374-4381, 4401, 4402 and 4404-4407 style batches and 4117, 4364, 4371, 4382-4386, 4392 and 4116, 4142, 4372-4373, 4387, 4393-4395, 4495-4499; rebuild before relying on this artifact."
  },
  "testedBytesRetainedAfterCommentCorrection": true
 }

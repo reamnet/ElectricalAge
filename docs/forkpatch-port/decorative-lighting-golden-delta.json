@@ -1,100 +1,140 @@
 {
- "previousAssertions": 641,
- "currentAssertions": 659,
- "unchangedExactAssertions": 641,
+ "previousAssertions": 659,
+ "currentAssertions": 685,
+ "unchangedExactAssertions": 659,
  "addedExactAssertions": [
   {
    "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4117: known in 1.12: no such item in golden/1.12/inventory.json",
+   "assertion": "golden eln:six_node@4116: known in 1.12: no such item in golden/1.12/inventory.json",
    "count": 1
   },
   {
    "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4364: known in 1.12: no such item in golden/1.12/inventory.json",
+   "assertion": "golden eln:six_node@4142: known in 1.12: no such item in golden/1.12/inventory.json",
    "count": 1
   },
   {
    "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4371: known in 1.12: no such item in golden/1.12/inventory.json",
+   "assertion": "golden eln:six_node@4372: known in 1.12: no such item in golden/1.12/inventory.json",
    "count": 1
   },
   {
    "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4382: known in 1.12: no such item in golden/1.12/inventory.json",
+   "assertion": "golden eln:six_node@4373: known in 1.12: no such item in golden/1.12/inventory.json",
    "count": 1
   },
   {
    "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4383: known in 1.12: no such item in golden/1.12/inventory.json",
+   "assertion": "golden eln:six_node@4387: known in 1.12: no such item in golden/1.12/inventory.json",
    "count": 1
   },
   {
    "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4384: known in 1.12: no such item in golden/1.12/inventory.json",
+   "assertion": "golden eln:six_node@4393: known in 1.12: no such item in golden/1.12/inventory.json",
    "count": 1
   },
   {
    "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4385: known in 1.12: no such item in golden/1.12/inventory.json",
+   "assertion": "golden eln:six_node@4394: known in 1.12: no such item in golden/1.12/inventory.json",
    "count": 1
   },
   {
    "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4386: known in 1.12: no such item in golden/1.12/inventory.json",
+   "assertion": "golden eln:six_node@4395: known in 1.12: no such item in golden/1.12/inventory.json",
    "count": 1
   },
   {
    "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4392: known in 1.12: no such item in golden/1.12/inventory.json",
+   "assertion": "golden eln:six_node@4495: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4496: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4497: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4498: known in 1.12: no such item in golden/1.12/inventory.json",
+   "count": 1
+  },
+  {
+   "case": "golden_descriptors",
+   "assertion": "golden eln:six_node@4499: known in 1.12: no such item in golden/1.12/inventory.json",
    "count": 1
   },
   {
    "case": "golden_slots",
-   "assertion": "golden slots: Warehouse Wall Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "assertion": "golden slots: Adjustable Gimbal Recessed Light has no 1.12 container: spec from DecorativeLampDescriptor",
    "count": 1
   },
   {
    "case": "golden_slots",
-   "assertion": "golden slots: Heavy Duty Stadium Wall Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "assertion": "golden slots: Boulevard Lantern Street Light has no 1.12 container: spec from DecorativeLampDescriptor",
    "count": 1
   },
   {
    "case": "golden_slots",
-   "assertion": "golden slots: Offshore Platform Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "assertion": "golden slots: Dual Gumdrop Sidewalk Light has no 1.12 container: spec from DecorativeLampDescriptor",
    "count": 1
   },
   {
    "case": "golden_slots",
-   "assertion": "golden slots: Mini Pinhole Dot Light has no 1.12 container: spec from DecorativeLampDescriptor",
+   "assertion": "golden slots: Gumdrop Sidewalk Light has no 1.12 container: spec from DecorativeLampDescriptor",
    "count": 1
   },
   {
    "case": "golden_slots",
-   "assertion": "golden slots: Mini Bezel Dot Spotlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "assertion": "golden slots: Modern LED Street Light has no 1.12 container: spec from DecorativeLampDescriptor",
    "count": 1
   },
   {
    "case": "golden_slots",
-   "assertion": "golden slots: Mini Eyeball Dot Spotlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "assertion": "golden slots: Offset Twin Arm Parking Lot Light has no 1.12 container: spec from DecorativeLampDescriptor",
    "count": 1
   },
   {
    "case": "golden_slots",
-   "assertion": "golden slots: Mini Deep Baffle Dot Light has no 1.12 container: spec from DecorativeLampDescriptor",
+   "assertion": "golden slots: Quad Head Parking Lot Light has no 1.12 container: spec from DecorativeLampDescriptor",
    "count": 1
   },
   {
    "case": "golden_slots",
-   "assertion": "golden slots: Mini Twin Dot Light has no 1.12 container: spec from DecorativeLampDescriptor",
+   "assertion": "golden slots: Round Canopy Parking Lot Light has no 1.12 container: spec from DecorativeLampDescriptor",
    "count": 1
   },
   {
    "case": "golden_slots",
-   "assertion": "golden slots: Large Area Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "assertion": "golden slots: Shoebox Parking Lot Light has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Three Arm Parking Lot Light has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Twin Adjustable Eave Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Twin Parking Lot Light has no 1.12 container: spec from DecorativeLampDescriptor",
+   "count": 1
+  },
+  {
+   "case": "golden_slots",
+   "assertion": "golden slots: Twin Wide Area Parking Lot Light has no 1.12 container: spec from DecorativeLampDescriptor",
    "count": 1
   }
  ],
  "replacedPreviousAssertions": [],
  "referencesModified": false,
- "explanation": "The nine warehouse/flood/dot fixtures (4117, 4364, 4371, 4382-4386, 4392) add nine absent-from-1.12 descriptor identities and nine absent-from-1.12 container menus. All 641 previous failed assertions remain exact. Original expectations, tolerances and skips are unchanged."
+ "explanation": "The thirteen parking/street/eave/sidewalk fixtures (4116, 4142, 4372-4373, 4387, 4393-4395, 4495-4499) add thirteen absent-from-1.12 descriptor identities and thirteen absent-from-1.12 container menus. All 659 previous failed assertions remain exact. Original expectations, tolerances and skips are unchanged."
 }

@@ -4103,6 +4103,12 @@
   "kind": "transparent_node",
   "name": "230_kv_three_phase_cable_riser_tower"
  },
+ "eln:six_node@4116": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Twin Parking Lot Light",
+  "kind": "six_node",
+  "name": "twin_parking_lot_light"
+ },
  "eln:six_node@4117": {
   "descriptor": "DecorativeLampDescriptor",
   "display": "Warehouse Wall Floodlight",
@@ -4247,6 +4253,12 @@
   "kind": "six_node",
   "name": "trimless_recessed_downlight"
  },
+ "eln:six_node@4142": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Adjustable Gimbal Recessed Light",
+  "kind": "six_node",
+  "name": "adjustable_gimbal_recessed_light"
+ },
  "eln:six_node@4143": {
   "descriptor": "DecorativeLampDescriptor",
   "display": "Garden Bollard Light",
@@ -4385,6 +4397,18 @@
   "kind": "six_node",
   "name": "offshore_sealed_linear_light"
  },
+ "eln:six_node@4372": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Modern LED Street Light",
+  "kind": "six_node",
+  "name": "modern_led_street_light"
+ },
+ "eln:six_node@4373": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Boulevard Lantern Street Light",
+  "kind": "six_node",
+  "name": "boulevard_lantern_street_light"
+ },
  "eln:six_node@4374": {
   "descriptor": "DecorativeLampDescriptor",
   "display": "Warm White Christmas Fairy Lights",
@@ -4463,11 +4487,35 @@
   "kind": "six_node",
   "name": "mini_twin_dot_light"
  },
+ "eln:six_node@4387": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Twin Adjustable Eave Floodlight",
+  "kind": "six_node",
+  "name": "twin_adjustable_eave_floodlight"
+ },
  "eln:six_node@4392": {
   "descriptor": "DecorativeLampDescriptor",
   "display": "Large Area Floodlight",
   "kind": "six_node",
   "name": "large_area_floodlight"
+ },
+ "eln:six_node@4393": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Quad Head Parking Lot Light",
+  "kind": "six_node",
+  "name": "quad_head_parking_lot_light"
+ },
+ "eln:six_node@4394": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Round Canopy Parking Lot Light",
+  "kind": "six_node",
+  "name": "round_canopy_parking_lot_light"
+ },
+ "eln:six_node@4395": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Offset Twin Arm Parking Lot Light",
+  "kind": "six_node",
+  "name": "offset_twin_arm_parking_lot_light"
  },
  "eln:six_node@4401": {
   "descriptor": "DecorativeLampDescriptor",
@@ -4594,6 +4642,36 @@
   "display": "Stone Wall Wash Light",
   "kind": "six_node",
   "name": "stone_wall_wash_light"
+ },
+ "eln:six_node@4495": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Shoebox Parking Lot Light",
+  "kind": "six_node",
+  "name": "shoebox_parking_lot_light"
+ },
+ "eln:six_node@4496": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Twin Wide Area Parking Lot Light",
+  "kind": "six_node",
+  "name": "twin_wide_area_parking_lot_light"
+ },
+ "eln:six_node@4497": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Three Arm Parking Lot Light",
+  "kind": "six_node",
+  "name": "three_arm_parking_lot_light"
+ },
+ "eln:six_node@4498": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Gumdrop Sidewalk Light",
+  "kind": "six_node",
+  "name": "gumdrop_sidewalk_light"
+ },
+ "eln:six_node@4499": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Dual Gumdrop Sidewalk Light",
+  "kind": "six_node",
+  "name": "dual_gumdrop_sidewalk_light"
  },
 
  "eln:shared_item@302": {

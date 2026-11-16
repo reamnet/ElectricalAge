@@ -314,6 +314,26 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("Mini Eyeball Dot Spotlight"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.LEVER);
         addShapelessRecipe(findItemStack("Mini Deep Baffle Dot Light"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),dye(0));
         addShapelessRecipe(findItemStack("Mini Twin Dot Light"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.GLASS_PANE);
+        // Twin Parking is the base for the quad/round/offset upgrades; the source "Spot Lamp Socket" ingredient
+        // maps to the port's Lamp Socket B Projector (established socket mapping).
+        addRecipe(findItemStack("Twin Parking Lot Light"), "L L", " I ", " P ",
+            'L',findItemStack("Robust Lamp Socket"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Modern LED Street Light"), " D ","DLD"," P ",
+            'D',Items.IRON_INGOT,'L',findItemStack("Street Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Boulevard Lantern Street Light"), " D ","DLD"," P ",
+            'D',Items.IRON_CHAIN,'L',findItemStack("Traditional Lantern Post Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Quad Head Parking Lot Light"), " D ","DLD"," P ",
+            'D',Blocks.IRON_BLOCK,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Round Canopy Parking Lot Light"), " D ","DLD"," P ",
+            'D',Items.QUARTZ,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offset Twin Arm Parking Lot Light"), " D ","DLD"," P ",
+            'D',Items.COPPER_INGOT,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Adjustable Gimbal Recessed Light",2), " I ","ILI",
+            'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"));
+        addRecipe(findItemStack("Twin Adjustable Eave Floodlight"),"L L"," P ",
+            'L',findItemStack("Mini Bezel Dot Spotlight"),'P',findItemStack("Iron Plate"));
+        // Source CraftingRecipes.kt defines no recipes for the Shoebox, Twin Wide Area, Three Arm parking lights
+        // or either Gumdrop sidewalk light; they remain uncraftable here to match source.
     }
 
     public static void recipeLampSocket() {

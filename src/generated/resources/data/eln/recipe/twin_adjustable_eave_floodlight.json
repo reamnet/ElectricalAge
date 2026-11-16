@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": "eln:mini_bezel_dot_spotlight",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "L L",
+    " P "
+  ],
+  "result": {
+    "id": "eln:twin_adjustable_eave_floodlight"
+  }
+}

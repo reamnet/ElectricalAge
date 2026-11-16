@@ -18,14 +18,16 @@ behavioral completion.
 
 ## Current continuation
 
-The [first decorative lighting batch](decorative-lighting.md) adds 82 fixed
+The [first decorative lighting batch](decorative-lighting.md) adds 95 fixed
 fixtures with original meshes/icons, shared multi-bulb power and native saves,
 source-sized controls and loaded-only light patterns. Source 120/240 V LED
 ratings use explicit native lookups 302/303, preserving the old 50/200 V bulbs.
-All 52 new native cases and all 899 ForkPatch cases pass; the full build passes
-690 tests plus 15 CAD tests (three existing previews skipped). The other 26
-source decorative styles, source technology configuration, partial
-mounting and portable lighting/carry remain unfinished. See the
+All 74 new native cases and all 921 ForkPatch cases pass; the full build passes
+690 tests plus 15 CAD tests (three existing previews skipped). The other 13
+source decorative styles (ceiling fans 4388–4391, Tropical Patio Ceiling Fan
+4408, Adjustable Suspended Warehouse Light 4409, pool lights 4396–4400,
+Multicolor Party Wash 4403 and Outdoor Motion Floodlight 4126), source technology
+configuration, partial mounting and portable lighting/carry remain unfinished. See the
 [lighting evidence](decorative-lighting-validation.json) for current checks.
 
 The [steel transmission poles and risers](power-poles.md) add source lookups
@@ -147,7 +149,7 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 | Kitchen/laundry | Source kitchen and laundry/matter-machine families, food/process inventories, recipes, temperature/heat behavior, appliance controls and graphics. |
 | Climate and fans | Heating/cooling/humidity controls, fans, evaporative cooling and water handling, building/room thermal changes and integration with the destination fluid systems. |
 | Pumps and growing | Industrial/world-intake pumps, fluid-port integration, growing-bed cycle and associated inventory/render/UI behavior. |
-| Lighting/decor | 68 of 108 decorative fixtures are adapted; the other 40, per-head aim/motion, fan/suspension/waterlogged-light behavior, additional bulb technologies and portable fixtures remain. See the [complete fixture/bulb matrix](lighting-port-matrix.md) and [implementation gates](port-completion-plan.md#lighting). Standalone flood/work/festive equipment and fire alarm networks are separate streams. |
+| Lighting/decor | 95 of 108 decorative fixtures are adapted; the other 13, per-head aim/motion, fan/suspension/waterlogged-light behavior, additional bulb technologies and portable fixtures remain. See the [complete fixture/bulb matrix](lighting-port-matrix.md) and [implementation gates](port-completion-plan.md#lighting). Standalone flood/work/festive equipment and fire alarm networks are separate streams. |
 | Chip fabrication | Interactive graphics/JEI and broader basic-component integration remain pending. Fabricator 4480 and components 8064–8068 now have paid native processing/bootstrap checks; see [fabrication](chip-fabrication.md). |
 | Other mechanics/processes | Source shaft/generator/turbine, fusion reactor and other machine/process changes not already covered by an adapter checkpoint; reconcile with existing native mechanical/fluid implementations. |
 | Tools and integration | Remaining probes, configuration interactions, wireless/control channels, diagnostics/metrics, guides and optional-mod bridges. SCADA endpoint integration for the still-unadapted source 12-circuit breaker panel and media addon remains pending. A source file already present in 26.3 still needs conflict review. |

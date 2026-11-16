@@ -19,6 +19,7 @@ batterybig/batterybighv.obj
 batterychargera/batterychargera.obj
 batterychargerb/batterychargerb.obj
 boiler/boiler.obj
+boulevardlanternstreetlight/boulevardlanternstreetlight.obj
 cagewallsconce/cagewallsconce.obj
 candlefoyerchandelier/candlefoyerchandelier.obj
 candlewallsconce/candlewallsconce.obj
@@ -50,6 +51,7 @@ digitalwallclock/digitalwallclock.obj
 distributionboard/distributionboard.obj
 distributionpole/distributionpole.obj
 dryeroutlet30/dryeroutlet30.obj
+dualgumdropsidewalklight/dualgumdropsidewalklight.obj
 eggincubator/eggincubator.obj
 electricalanvil/electricalanvil.obj
 electricalbreaker/electricalbreaker.obj
@@ -76,12 +78,14 @@ fuelgenerator200v/fuelgenerator200v.obj
 fuelgenerator50v/fuelgenerator50v.obj
 fuelheater/fuelheater.obj
 gardenbollardlight/gardenbollardlight.obj
+gimbalpotlight/gimbalpotlight.obj
 globewallsconce/globewallsconce.obj
 gooseneckbarnlight/gooseneckbarnlight.obj
 gooseneckservicemast/gooseneckservicemast.obj
 grandempirechandelier/grandempirechandelier.obj
 grandhalochandelier/grandhalochandelier.obj
 groundcable/groundcable.obj
+gumdropsidewalklight/gumdropsidewalklight.obj
 halloweenbatlight/halloweenbatlight.obj
 halloweenghoststring/halloweenghoststring.obj
 halloweenpumpkinstring/halloweenpumpkinstring.obj
@@ -144,6 +148,7 @@ minieyeballdot/minieyeballdot.obj
 minipinholedot/minipinholedot.obj
 minitwindot/minitwindot.obj
 modernbladewalklight/modernbladewalklight.obj
+modernledstreetlight/modernledstreetlight.obj
 multicolorchristmaslights/multicolorchristmaslights.obj
 mushroompathlight/mushroompathlight.obj
 nauticalpierbollard/nauticalpierbollard.obj
@@ -154,6 +159,7 @@ northamericanmeterbase/northamericanmeterbase.obj
 offgrid_charger/offgrid_charger.obj
 offgrid_inverter/offgrid_inverter.obj
 offgrid_mppt/offgrid_mppt.obj
+offsetparkinglight/offsetparkinglight.obj
 offshorecagedwellglass/offshorecagedwellglass.obj
 offshoreplatformfloodlight/offshoreplatformfloodlight.obj
 offshoresealedlinearlight/offshoresealedlinearlight.obj
@@ -178,6 +184,7 @@ powersocket/powersocket.obj
 programmableups/programmableups.obj
 proximitysensor/proximitysensor.obj
 pv_combiner/pv_combiner.obj
+quadparkinglight/quadparkinglight.obj
 recessedbrickwalllight/recessedbrickwalllight.obj
 recessedledchannel/recessedledchannel.obj
 redhandleservicedisconnect/redhandleservicedisconnect.obj
@@ -188,6 +195,7 @@ relaysmall/relaysmall.obj
 robustlamp/robustlamp.obj
 robustlampsuspended/robustlampsuspended.obj
 roofservicemast/roofservicemast.obj
+roundparkinglight/roundparkinglight.obj
 roundrecessedlight/roundrecessedlight.obj
 roundstonewalllight/roundstonewalllight.obj
 rtu/rtu.obj
@@ -207,6 +215,7 @@ shaftsteamhp/shaftsteamhp.obj
 shaftsteamlp/shaftsteamlp.obj
 shafttacho/shafttacho.obj
 shieldedpathlight/shieldedpathlight.obj
+shoeboxparkinglight/shoeboxparkinglight.obj
 signalprocessor/signalprocessor.obj
 signalsource/signalsource.obj
 signalsourcepot/signalsourcepot.obj
@@ -272,6 +281,7 @@ transformator/transformatorcase.obj
 transformator/variabledcdc.obj
 transporter/transporter.obj
 treeresincolector/treeresincolector.obj
+triajmparkinglight/triajmparkinglight.obj
 trimlesspotlight/trimlesspotlight.obj
 turbine50v/turbine50v.obj
 turbineb/turbineb.obj
@@ -283,8 +293,12 @@ turbinesteam/jointhub.obj
 turbinesteam/straightjoint.obj
 turbinesteam/tachometer.obj
 turbinesteam/turbine.obj
+triarmparkinglight/triarmparkinglight.obj
 turret/turret.obj
 tutoplate/tutoplate.obj
+twinareaparkinglight/twinareaparkinglight.obj
+twineavefloodlight/twineavefloodlight.obj
+twinparkinglight/twinparkinglight.obj
 undercabinetledstrip/undercabinetledstrip.obj
 undergroundfused1/undergroundfused1.obj
 undergroundfused1light/undergroundfused1light.obj

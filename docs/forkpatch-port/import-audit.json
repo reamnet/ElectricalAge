@@ -1,6 +1,6 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "3451e318d78c8fae0c1830e836b20b6c794050f2",
+  "targetCommit": "9686c058a0d8e17785130cffaa0d997f5864130e",
   "ledgerEntries": 680,
   "uniqueSourceFiles": 435,
   "uniqueTargetFiles": 633,
@@ -3678,7 +3678,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-source-variable-inductor-crafting-pattern",
       "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
-      "targetSha256": "0d5e13d55a0c4b28f88e046cfdc73f9985d7230aa04e72e636813d450a3a825e",
+      "targetSha256": "a4836a3607cc694988eed2ecf3f57bdcc7f515005d86c35cb90d10c9eb719fdd",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4019,7 +4019,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-dictionary-and-distinct130-recipe-mapping-with-restored-variable-ingredients",
       "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
-      "targetSha256": "0d5e13d55a0c4b28f88e046cfdc73f9985d7230aa04e72e636813d450a3a825e",
+      "targetSha256": "a4836a3607cc694988eed2ecf3f57bdcc7f515005d86c35cb90d10c9eb719fdd",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4316,7 +4316,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-source-iron-rubber-wire-snips-recipe",
       "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
-      "targetSha256": "0d5e13d55a0c4b28f88e046cfdc73f9985d7230aa04e72e636813d450a3a825e",
+      "targetSha256": "a4836a3607cc694988eed2ecf3f57bdcc7f515005d86c35cb90d10c9eb719fdd",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4459,7 +4459,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-source-wire-machine-and-wheel-bootstrap-recipes",
       "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
-      "targetSha256": "0d5e13d55a0c4b28f88e046cfdc73f9985d7230aa04e72e636813d450a3a825e",
+      "targetSha256": "a4836a3607cc694988eed2ecf3f57bdcc7f515005d86c35cb90d10c9eb719fdd",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -4723,7 +4723,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-new-paid-machine-bootstrap-not-an-original-source-recipe",
       "sourceSha256": "cae8aa1d620b27ba9975db45c726e70a6982a112651dba803f050a3a625d1c64",
-      "targetSha256": "0d5e13d55a0c4b28f88e046cfdc73f9985d7230aa04e72e636813d450a3a825e",
+      "targetSha256": "a4836a3607cc694988eed2ecf3f57bdcc7f515005d86c35cb90d10c9eb719fdd",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -5185,7 +5185,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-source-executable-cord-outlet-recipes",
       "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
-      "targetSha256": "0d5e13d55a0c4b28f88e046cfdc73f9985d7230aa04e72e636813d450a3a825e",
+      "targetSha256": "a4836a3607cc694988eed2ecf3f57bdcc7f515005d86c35cb90d10c9eb719fdd",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -5196,7 +5196,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-source-executable-cord-outlet-recipes",
       "sourceSha256": "829cb797d9a7e3039c48d31163c2f766ac6f47f903a333bc05b4cd7252a93027",
-      "targetSha256": "0d5e13d55a0c4b28f88e046cfdc73f9985d7230aa04e72e636813d450a3a825e",
+      "targetSha256": "a4836a3607cc694988eed2ecf3f57bdcc7f515005d86c35cb90d10c9eb719fdd",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -6098,7 +6098,7 @@
       "target": "src/main/java/mods/eln/datagen/ElnRecipes.java",
       "mode": "native-rated-lamp-supply-recipes-preserving-generic",
       "sourceSha256": "a378a28b4ee65e9ab73f01d6bb3bb512cb06787dd1e02b3eba9efe7b41ba3a71",
-      "targetSha256": "0d5e13d55a0c4b28f88e046cfdc73f9985d7230aa04e72e636813d450a3a825e",
+      "targetSha256": "a4836a3607cc694988eed2ecf3f57bdcc7f515005d86c35cb90d10c9eb719fdd",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -6450,7 +6450,7 @@
       "target": "src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt",
       "mode": "adapted-native-26.3-fixed-fixtures-first-batch",
       "sourceSha256": "c52e11ea5c1578a08300281c31e10b41efe5da4cfdc33fb5a2323909ffc1537a",
-      "targetSha256": "10e97766efb0ca0eb6e6fd83c9fe2d55fc84fcd9066c0ef8b48aaf66940c86c6",
+      "targetSha256": "4aeafb1b8567ab748ba6a4e844cbb67e6fc88fdba1dddf1566748c32d0dfda2c",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -6505,7 +6505,7 @@
       "target": "src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampObjRender.kt",
       "mode": "adapted-native-26.3-fixed-fixtures-first-batch",
       "sourceSha256": "a2a280b7141f73fd558064aee5286045c2ca5f56bb68aeeef0db054e3b2b0578",
-      "targetSha256": "9e5f9038be826afd905c778875a7aed8b596c4819bc9777a748f2c6fcb50d926",
+      "targetSha256": "6e855893a3ad48b9b6c236bb871387e74da5215105ea0d9b9b41d75ef2cd0c34",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
@@ -6516,7 +6516,7 @@
       "target": "src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampDescriptor.kt",
       "mode": "adapted-native-26.3-source-fixed-fixture-registration",
       "sourceSha256": "99bfcf3652a40d9f0013acd4ea6bf278aa41606328967f57625335992b5c9ebe",
-      "targetSha256": "0005f23b4cfcb09bb9456cc16c2e5c154473e97332c25672614ca2877e9c7f90",
+      "targetSha256": "c661e9c9b65a687b74711b2452a55da16701191c54e5e854504582810a68ad2a",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false
