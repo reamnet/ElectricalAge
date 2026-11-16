@@ -4721,5 +4721,53 @@
   "display": "240V LED Light Bulb",
   "kind": "shared_item",
   "name": "240v_led_light_bulb"
+ },
+ "eln:six_node@4126": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Outdoor Motion Floodlight",
+  "kind": "six_node",
+  "name": "outdoor_motion_floodlight"
+ },
+ "eln:six_node@4388": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Classic Four Blade Ceiling Fan",
+  "kind": "six_node",
+  "name": "classic_four_blade_ceiling_fan"
+ },
+ "eln:six_node@4389": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Modern Three Blade Ceiling Fan",
+  "kind": "six_node",
+  "name": "modern_three_blade_ceiling_fan"
+ },
+ "eln:six_node@4390": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Industrial Five Block Ceiling Fan",
+  "kind": "six_node",
+  "name": "industrial_five_block_ceiling_fan"
+ },
+ "eln:six_node@4391": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Aura Five Blade Ceiling Fan",
+  "kind": "six_node",
+  "name": "aura_five_blade_ceiling_fan"
+ },
+ "eln:six_node@4408": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Tropical Patio Ceiling Fan",
+  "kind": "six_node",
+  "name": "tropical_patio_ceiling_fan"
+ },
+ "eln:six_node@4409": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Adjustable Suspended Warehouse Light",
+  "kind": "six_node",
+  "name": "adjustable_suspended_warehouse_light"
+ },
+ "eln:transparent_node@4418": {
+  "descriptor": "StringLightsDescriptor",
+  "display": "String Lights",
+  "kind": "transparent_node",
+  "name": "string_lights"
  }
 }

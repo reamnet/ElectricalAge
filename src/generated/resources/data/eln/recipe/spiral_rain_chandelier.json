@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:crystal_tier_foyer_chandelier",
-    "minecraft:iron_chain"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:iron_chain",
+    "L": "eln:crystal_tier_foyer_chandelier",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:spiral_rain_chandelier"

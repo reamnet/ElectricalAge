@@ -87,7 +87,7 @@ public final class MenuSpecs {
             cableSlot(2, 176 / 2 - 9, 134 / 2 + 80 / 2 + 2, 1),
             cableSlot(3, 176 / 2 - 9, 134 / 2 - 80 / 2 - 20, 1)).panel(176, 216, 8, 134));
         put(mods.eln.sixnode.lampsocket.DecorativeLampDescriptor.class, d -> MenuSpec.of(
-            lamp(0, 17, 60, d.getStyle().getBulbs(), d.socketType)));
+            lamp(0, 17, 60, d.getStyle().getBulbs(), d.socketType)).panel(176, d.getPanelHeight(), 8, d.getInventoryY()));
         put(mods.eln.sixnode.lampsocket.LampSocketDescriptor.class, d -> MenuSpec.of(
             lamp(mods.eln.sixnode.lampsocket.LampSocketContainer.lampSlotId, 70, 57, 1, d.socketType)));
         put(mods.eln.sixnode.lampsupply.LampSupplyDescriptor.class, d -> MenuSpec.of(
@@ -123,6 +123,7 @@ public final class MenuSpecs {
             descriptor(0, 184 / 2 - 12, 8, 1, BatteryItem.class, MEDIUM, tr("Portable battery slot"))) : MenuSpec.SCREEN_ONLY);
 
         // ---- transparent-node devices
+        put(mods.eln.transparentnode.festive.StringLightsDescriptor.class,d->MenuSpec.of().publishing(1).panel(176,206,8,124));
         put(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,278,0,0));
         put(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
         put(mods.eln.utility.TransmissionDescriptor.class,d->MenuSpec.of().publishing(1).panel(240,230,8,148));

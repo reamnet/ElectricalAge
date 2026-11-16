@@ -41,6 +41,7 @@ object ForkPatchDecorativeLampCases {
         var source: VoltageSource? = null
         override fun build(c: TestContext) {
             e=place(c,style)
+            if(style==DecorativeLampStyle.MOTION)e.networkUnserialize(c.stream { it.writeByte(DecorativeLampElement.MOTION_MODE);it.writeByte(2) })
             e.inventory.setItem(0,bulb(style.bulbs));e.inventoryChange(e.inventory)
             if(!style.wirelessOnly) {
                 e.networkUnserialize(c.stream { it.writeByte(3) })
@@ -60,6 +61,7 @@ object ForkPatchDecorativeLampCases {
             if(!style.wirelessOnly) {
                 try {
                     c.check("decorative: source pays N bulbs rather than one",abs(e.lampResistor.p-style.bulbs*bd.nominalP)<1e-5,"${style.name}: ${e.lampResistor.p}")
+                    if(style.fan)c.check("decorative fan: source separately pays the real motor as well as the bulbs",abs(e.fanMotor.p-style.fanWatts)<1e-5 && abs(abs(source!!.u*source!!.current)-(style.bulbs*bd.nominalP+style.fanWatts))<1e-5,"${style.name}: motor=${e.fanMotor.p} source=${source!!.u*source!!.current}")
                 }finally { Eln.simulator.removeElectricalComponent(source!!);source!!.breakConnection() }
             } else c.check("decorative: recessed wireless-only fittings expose no cable ports",mods.eln.misc.LRDU.values().all { e.getElectricalLoad(it)==null && e.getConnectionMask(it)==0 },style.name)
             val old=e
@@ -77,7 +79,21 @@ object ForkPatchDecorativeLampCases {
                 try {
                     // Check source mesh emission separately; whole-catalog cases also exercise render.draw().
                     DecorativeLampObjRender(style).draw(requireNotNull(render),0.0)
-                    c.check("decorative: original mesh emits actual geometry",frame.batches().values.sumOf { it.vertices() }>0,style.name)
+                    val emitted=frame.batches().values.sumOf { it.vertices() }
+                    c.check("decorative: original mesh emits actual geometry",emitted>0,style.name)
+                    // Independent geometry oracle: every original OBJ part must appear exactly once.
+                    // This catches lost swivelling housings/rotors even when a base still draws.
+                    val expectedFrame=GlFrame.open()
+                    requireNotNull(Eln.obj.getObj(style.model)).parts().forEach { it.drawNoBind() }
+                    val expected=expectedFrame.batches().values.sumOf { it.vertices() }
+                    c.check("decorative: complete source mesh includes every housing, lens and rotor",emitted==expected,"${style.name}: $emitted / $expected")
+                    for(value in listOf(7,8)) {
+                        requireNotNull(render).serverPacketUnserialize(c.stream { it.writeByte(value) })
+                        val lightingFrame=GlFrame.open()
+                        DecorativeLampObjRender(style).draw(render,0.0)
+                        val luminous=lightingFrame.batches().filterKeys { it.fullBright() }.values.sumOf { it.vertices() }
+                        c.check("decorative: source emissive threshold is exactly eight",if(value==7)luminous==0 else luminous>0,"${style.name}: level=$value luminousVertices=$luminous")
+                    }
                 } finally { GlFrame.close() }
             } finally { client.clientDestroy() }
         }
@@ -126,44 +142,6 @@ object ForkPatchDecorativeLampCases {
             val input=CraftingInput.of(3,2,listOf(ItemStack.EMPTY,ItemStack(Items.COPPER_INGOT),ItemStack.EMPTY,ItemStack.EMPTY,Eln.findItemStack("Iron Plate",1),ItemStack.EMPTY))
             val result=c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,input,c.level()).map { it.value().assemble(input) }.orElse(ItemStack.EMPTY)
             c.check("decorative: paid source holder recipe retains its two-item yield",result.item===Eln.findItemStack("Basic Lamp Holder",1).item && result.count==2,result.toString())
-            val stripPairs=listOf(
-                "Standing Drum Floor Lamp" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.IRON_INGOT)),
-                "Under Cabinet LED Strip" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.IRON_NUGGET)),
-                "Recessed LED Channel" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.QUARTZ)),
-                "Indirect Cove LED Strip" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.DYE.white())),
-                "Surface Linear LED Strip" to listOf(Eln.findItemStack("Thin Fluorescent Shop Light",1),ItemStack(Items.IRON_INGOT)),
-                "Flexible Neon LED Strip" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(Items.SLIME_BALL)),
-                "Grand Halo Ring Chandelier" to listOf(Eln.findItemStack("Modern Sputnik Foyer Chandelier",1),ItemStack(Items.GOLD_INGOT)),
-                "Grand Crystal Cascade Chandelier" to listOf(Eln.findItemStack("Crystal Tier Foyer Chandelier",1),ItemStack(Items.DIAMOND)),
-                "Sculptural Branch Chandelier" to listOf(Eln.findItemStack("Modern Sputnik Foyer Chandelier",1),ItemStack(Items.COPPER_INGOT)),
-                "Spiral Rain Chandelier" to listOf(Eln.findItemStack("Crystal Tier Foyer Chandelier",1),ItemStack(Items.IRON_CHAIN)),
-                "Grand Empire Chandelier" to listOf(Eln.findItemStack("Candle Arm Foyer Chandelier",1),ItemStack(Items.GOLD_INGOT)),
-                "Window Candle Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.HONEYCOMB)),
-                "Armored Oval Bulkhead Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.IRON_BARS)),
-                "Industrial Wall Pack Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.IRON_INGOT)),
-                "Rugged Outdoor Canopy Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.IRON_BLOCK)),
-                "Industrial Yard Area Light" to listOf(Eln.findItemStack("Gooseneck Barn Light",1),ItemStack(Items.IRON_INGOT)),
-                "Offshore Caged Wellglass Light" to listOf(Eln.findItemStack("Robust Lamp Socket",1),ItemStack(Items.DYE.yellow())),
-                "Offshore Sealed Linear Light" to listOf(Eln.findItemStack("Thin Fluorescent Shop Light",1),ItemStack(Items.DYE.yellow())),
-                "Warm White Christmas Fairy Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.yellow())),
-                "Multicolor Christmas String Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.red())),
-                "Christmas Icicle Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.lightBlue())),
-                "Halloween Pumpkin String Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.PUMPKIN)),
-                "Halloween Ghost String Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.white())),
-                "Christmas Star Wall Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.GOLD_NUGGET)),
-                "Halloween Bat Wall Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.DYE.black())),
-                "Jack O Lantern Table Lamp" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(Items.CARVED_PUMPKIN)),
-                "Patio Festoon Party Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.DYE.orange())),
-                "Electric Poolside Tiki Light" to listOf(Eln.findItemStack("Traditional Lantern Post Light",1),ItemStack(Items.BAMBOO)),
-                "Poolside Globe String Lights" to listOf(Eln.findItemStack("Flexible Neon LED Strip",1),ItemStack(Items.GLASS_BOTTLE)),
-                "Poolside Party Lantern" to listOf(Eln.findItemStack("Porch Lantern Sconce",1),ItemStack(Items.DYE.lightBlue())),
-                "Deck Post Cap Light" to listOf(Eln.findItemStack("Basic Lamp Holder",1),ItemStack(net.minecraft.world.level.block.Blocks.OAK_SLAB.asItem())),
-                "Deck Step Riser Light" to listOf(Eln.findItemStack("Flat Lamp Socket",1),ItemStack(net.minecraft.world.level.block.Blocks.SPRUCE_SLAB.asItem())))
-            for((name,ingredients) in stripPairs){
-                val grid=CraftingInput.of(2,2,listOf(ingredients[0],ItemStack.EMPTY,ItemStack.EMPTY,ingredients[1]))
-                val crafted=c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,grid,c.level()).map { it.value().assemble(grid) }.orElse(ItemStack.EMPTY)
-                c.check("decorative: the paid shapeless $name recipe resolves from its source pair",crafted.item===Eln.findItemStack(name,1).item,"$name: $crafted")
-            }
             c.check("decorative bulbs: occupied source IDs keep both existing native bulb identities",(Eln.sharedItem.getDescriptor(293) as LampDescriptor).nominalU==50.0 && (Eln.sharedItem.getDescriptor(294) as LampDescriptor).nominalU==200.0 && RatedLampBulbs.destinationIdForSource(293)==302 && RatedLampBulbs.destinationIdForSource(294)==303,"")
             for(volts in listOf(120,240)) {
                 val rated=Eln.findItemStack("${volts}V LED Light Bulb",1)

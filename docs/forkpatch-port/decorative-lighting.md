@@ -1,260 +1,90 @@
-# Decorative lighting: first fixed-fixture batch
+# ForkPatch decorative lighting on NeoForge 26.3
 
-Reviewed source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` in
-`../ELN1.21.1ForkPatch`. Continued from native checkpoint `7f5497f4` after
-checking the remote branch. The source catalog contains **108 decorative styles**;
-this batch registers **101 fixed fixtures**, leaving the other 7 unregistered.
+The native catalog contains all **108 decorative fixtures** from ForkPatch
+`b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. This includes the five ceiling fans,
+Outdoor Motion Floodlight and Adjustable Suspended Warehouse Light. The
+[fixture matrix](lighting-port-matrix.md) lists every source lookup, model and
+remaining shared review obligation. Original fixture OBJ/MTL meshes and icons
+are byte-identical to the pinned source.
 
-The original OBJ/MTL files and inventory icons are copied byte for byte. One shared
-renderer retains their mesh parts, source palette, absent-bulb visibility, lit lenses,
-glass, mounting rotations and item poses. World render bounds include the complete
-fixture depth. Source reservations use the native empty clearance shape rather than
-solid ghost cubes. Mesh emission is checked for every fixture; this alone does not
-establish pixel-for-pixel parity on every graphics device.
+This completes the fixture registrations and their dedicated adapters; it does
+not complete portable carry, partial-block mounting, all source bulb technologies
+or source-world conversion. See [remaining work](remaining-work.md).
 
 ## Using the fixtures
 
-Place sconces on a wall, chandeliers/recessed/shop/factory lights on a ceiling,
-and bollard/post lights on a floor. The plain holder supports any full supporting
-face. Insert matching bulbs by using them on the fixture or opening its menu.
-A partially filled fixture works with its installed bulbs; unused exposed bulb
-positions stay empty. Use a wrench to turn the fixture.
+Insert bulbs individually or through the fixture menu, up to its source capacity.
+All installed bulbs contribute parallel electrical demand and retain their saved
+quantity and condition. Used bulbs cannot silently merge with fresh bulbs. The
+source-rated 120 V / 15 W and 240 V / 22.5 W LEDs use native IDs 302 and 303.
+Existing 50/200 V bulb identities and recipes are preserved.
 
-The source-sized **176×166** menu retains the power button at `(16,7)`, channel
-field at `(17,37)`, bulb slot at `(17,60)` and player inventory at `(8,84)`.
-Recessed fittings use lamp supplies only. Other fixtures select a lamp-supply
-channel or native cable power. Native built-in cable terminals replace the old
-required cable item slot. Portable cords are not implemented for this batch.
+Fixtures retain the native lamp-supply channel and built-in LV cable modes.
+Wireless-only recessed fixtures do not expose cable terminals. A paid appliance
+cord overrides wireless input while attached; a disconnected or missing outlet
+cannot leave a second wireless input active. Portable carrying remains separate
+work.
 
-Source **120 V / 15 W** and **240 V / 22.5 W** LED bulbs are now available with
-672-hour nominal lifetimes. Use a matching rated lamp supply or actual wired
-voltage. The 50/200 V native bulbs also remain compatible when supplied at their
-own ratings. Each installed bulb contributes its real parallel conductance to
-both wired loads and supply billing; brightness and aging use the per-bulb rating.
-No extra electricity is created by choosing a channel.
+- **Aimed fixtures:** select a head, change pan/tilt in 5° steps, or reset it.
+  Each head keeps its own saved angles. Its visible housing and emitted beam
+  use the same pivot. Parking/street heads retain the source axial pan behavior.
+- **Motion floodlight:** choose night motion, motion at any time, always on or
+  always off. Living entities must be in front, within eight blocks and visible
+  through the actual world geometry. Movement holds the light on for 30 physical
+  seconds; a stationary entity does not keep refreshing that timer.
+- **Ceiling fans:** the fan switch controls a separately paid motor. A physical
+  power lead is required, even when bulbs use a wireless channel. Startup takes
+  five seconds and coasting takes ten seconds. The industrial fan's actual blade
+  disk is hazardous while spinning; the full reserved volume is not a damage box.
+- **Suspended warehouse light:** adjust extra drop from 0–7 m in 0.25 m steps.
+  The model and emitted light move together and the setting survives reload.
+- **Pool fixtures:** projected light leases can occupy source water. They preserve
+  water while lit and restore it when the last lease expires. Light projection
+  never requests missing chunks or replaces other fluids.
 
-Bulb quantity, exact item components/condition, orientation, power mode and channel
-survive native owner reload. Repeated insertion stops at capacity and cannot merge
-fresh bulbs into a used stack. The existing native stack-aging model is retained;
-this is not a rewrite of the source's separate technology/configuration system.
-Light projection uses original head coordinates and beam directions, stops at
-opaque/unloaded cells and refreshes short-lived light leases. Cylinder sconces
-project both upwards and downwards.
+The standard panel is 176×166, aimed panels are 176×242 and suspension panels are
+176×198. Bulb slot and controls follow source coordinates. The native inventory
+and menu are sized together. Identical coordinates and models do not establish
+universal pixel parity across game renderers or resource packs.
 
-## Stable identities and paid crafting
+## Recipes
 
-| Native/source lookup | Fixture | Bulbs |
-|---|---|---|
-| 4116 | Twin Parking Lot Light | 2 |
-| 4117 | Warehouse Wall Floodlight | 1 |
-| 4118 | Household Desk Lamp | 1 |
-| 4119 | Round Recessed Ceiling Light | 1 |
-| 4120 | Basic Chandelier | 5 |
-| 4121 | Mini Dot Spotlight | 1 |
-| 4122 | Porch Lantern Sconce | 1 |
-| 4123 | Basic Lamp Holder | 1 |
-| 4124 | Thin Fluorescent Shop Light | 2 |
-| 4125 | Suspended Factory Fluorescent Light | 4 |
-| 4127 | Candle Arm Foyer Chandelier | 6 |
-| 4128 | Crystal Tier Foyer Chandelier | 6 |
-| 4129 | Wagon Wheel Foyer Chandelier | 8 |
-| 4130 | Lantern Cage Foyer Chandelier | 4 |
-| 4131 | Modern Sputnik Foyer Chandelier | 8 |
-| 4132 | Up Down Cylinder Wall Sconce | 2 |
-| 4133 | Fabric Shade Wall Sconce | 1 |
-| 4134 | Glass Globe Wall Sconce | 1 |
-| 4135 | Industrial Cage Wall Sconce | 1 |
-| 4136 | Double Candle Wall Sconce | 2 |
-| 4137 | Ceramic Drum Table Lamp | 1 |
-| 4138 | Green Banker Table Lamp | 1 |
-| 4139 | Articulated Task Table Lamp | 1 |
-| 4140 | Deep Baffle Recessed Light | 1 |
-| 4141 | Trimless Recessed Downlight | 1 |
-| 4142 | Adjustable Gimbal Recessed Light | 1 |
-| 4143 | Garden Bollard Light | 1 |
-| 4144 | Gooseneck Barn Light | 1 |
-| 4145 | Traditional Lantern Post Light | 1 |
-| 4352 | Window Candle Light | 1 |
-| 4353 | Standing Drum Floor Lamp | 1 |
-| 4354 | Under Cabinet LED Strip | 2 |
-| 4355 | Recessed LED Channel | 2 |
-| 4356 | Indirect Cove LED Strip | 2 |
-| 4357 | Surface Linear LED Strip | 4 |
-| 4358 | Flexible Neon LED Strip | 3 |
-| 4359 | Grand Halo Ring Chandelier | 16 |
-| 4360 | Grand Crystal Cascade Chandelier | 20 |
-| 4361 | Sculptural Branch Chandelier | 18 |
-| 4362 | Spiral Rain Chandelier | 20 |
-| 4363 | Grand Empire Chandelier | 16 |
-| 4364 | Heavy Duty Stadium Wall Floodlight | 4 |
-| 4365 | Armored Oval Bulkhead Light | 1 |
-| 4366 | Industrial Wall Pack Light | 2 |
-| 4367 | Rugged Outdoor Canopy Light | 4 |
-| 4368 | Industrial Yard Area Light | 2 |
-| 4369 | Offshore Caged Wellglass Light | 1 |
-| 4370 | Offshore Sealed Linear Light | 2 |
-| 4371 | Offshore Platform Floodlight | 2 |
-| 4372 | Modern LED Street Light | 1 |
-| 4373 | Boulevard Lantern Street Light | 2 |
-| 4374 | Warm White Christmas Fairy Lights | 6 |
-| 4375 | Multicolor Christmas String Lights | 6 |
-| 4376 | Christmas Icicle Lights | 6 |
-| 4377 | Christmas Star Wall Light | 1 |
-| 4378 | Halloween Pumpkin String Lights | 4 |
-| 4379 | Halloween Ghost String Lights | 4 |
-| 4380 | Halloween Bat Wall Light | 1 |
-| 4381 | Jack O Lantern Table Lamp | 1 |
-| 4382 | Mini Pinhole Dot Light | 1 |
-| 4383 | Mini Bezel Dot Spotlight | 1 |
-| 4384 | Mini Eyeball Dot Spotlight | 1 |
-| 4385 | Mini Deep Baffle Dot Light | 1 |
-| 4386 | Mini Twin Dot Light | 2 |
-| 4387 | Twin Adjustable Eave Floodlight | 2 |
-| 4392 | Large Area Floodlight | 4 |
-| 4393 | Quad Head Parking Lot Light | 4 |
-| 4394 | Round Canopy Parking Lot Light | 4 |
-| 4395 | Offset Twin Arm Parking Lot Light | 2 |
-| 4396 | Round Niche Pool Light | 1 |
-| 4397 | Linear Pool Wall Light | 3 |
-| 4398 | Square Recessed Pool Light | 1 |
-| 4399 | Pool Corner Wash Light | 2 |
-| 4400 | Pool Step Marker Light | 1 |
-| 4401 | Patio Festoon Party Lights | 5 |
-| 4402 | Electric Poolside Tiki Light | 1 |
-| 4403 | Multicolor Party Wash Light | 3 |
-| 4404 | Poolside Globe String Lights | 4 |
-| 4405 | Poolside Party Lantern | 1 |
-| 4406 | Deck Post Cap Light | 1 |
-| 4407 | Deck Step Riser Light | 1 |
-| 4480 | Nautical Pier Bollard Light | 1 |
-| 4481 | Marine Pier Bulkhead Light | 1 |
-| 4482 | Harbor Gooseneck Pier Light | 1 |
-| 4483 | Pier Lantern Post Light | 1 |
-| 4484 | Low Profile Dock Light | 1 |
-| 4485 | Louvered Walkway Bollard | 1 |
-| 4486 | Shielded Walkway Light | 1 |
-| 4487 | Modern Blade Walkway Light | 1 |
-| 4488 | Mushroom Walkway Light | 1 |
-| 4489 | Arched Walkway Light | 1 |
-| 4490 | Recessed Brick Patio Wall Light | 1 |
-| 4491 | Round Stone Wall Light | 1 |
-| 4492 | Slotted Patio Wall Light | 1 |
-| 4493 | Recessed Square Patio Wall Light | 1 |
-| 4494 | Stone Wall Wash Light | 1 |
-| 4495 | Shoebox Parking Lot Light | 1 |
-| 4496 | Twin Wide Area Parking Lot Light | 2 |
-| 4497 | Three Arm Parking Lot Light | 3 |
-| 4498 | Gumdrop Sidewalk Light | 1 |
-| 4499 | Dual Gumdrop Sidewalk Light | 2 |
+All **108 fixture recipes** now follow the pinned source: 103 shaped recipes and
+five source mini-dot shapeless recipes. The 47 shaped upgrades pay their original
+base, three upgrade materials and an iron plate. All 20 outdoor recipes are
+present, including 4495–4499. Earlier statements that these outdoor recipes were
+absent from the source were incorrect.
 
-All 101 fixture patterns and yields follow the reviewed source, except the fifteen pier/path/stone fixtures (4480\u20134494): the reviewed source defines no crafting recipes for them, so this batch adds no recipe changes for that family. Recipe ingredients
-use the existing native equivalents: Classic Lamp Socket → Lamp Socket A,
-Spot Lamp Socket → Lamp Socket B Projector, and the source copper ingot → vanilla
-copper. The Standing Drum Floor Lamp's source base, the Ceramic Drum Table Lamp,
-is unregistered, so its paid shapeless recipe uses the Basic Lamp Holder plus an
-iron ingot instead. The five luxury chandeliers craft from their registered foyer chandelier bases plus the source material: Grand Halo Ring from Modern Sputnik plus gold, Grand Crystal Cascade from Crystal Tier plus diamond, Sculptural Branch from Modern Sputnik plus copper, Spiral Rain from Crystal Tier plus an iron chain, and Grand Empire from Candle Arm plus gold. The seven window/heavy/offshore fixtures craft from their registered bases plus source materials: Window Candle Light from the Basic Lamp Holder plus honeycomb, Armored Oval Bulkhead Light from the Robust Lamp Socket plus iron bars, Industrial Wall Pack Light from the Robust Lamp Socket plus an iron ingot (the source crafts it from the unported Warehouse Wall Floodlight, so this stand-in base is documented), Rugged Outdoor Canopy Light from the Robust Lamp Socket plus an iron block, Industrial Yard Area Light from the Gooseneck Barn Light plus an iron ingot, Offshore Caged Wellglass Light from the Robust Lamp Socket plus yellow dye, and Offshore Sealed Linear Light from the Thin Fluorescent Shop Light plus yellow dye. The eight seasonal fixtures craft from their registered strip or holder bases plus source seasonals: Warm White Christmas Fairy Lights, Multicolor Christmas String Lights, Christmas Icicle Lights and Halloween Ghost String Lights from the Flexible Neon LED Strip plus yellow, red, light blue or white dye respectively, Halloween Pumpkin String Lights from the Flexible Neon LED Strip plus a pumpkin, Christmas Star Wall Light from the Basic Lamp Holder plus a gold nugget, Halloween Bat Wall Light from the Basic Lamp Holder plus black dye, and Jack O Lantern Table Lamp from the Basic Lamp Holder plus a carved pumpkin. The six party/deck fixtures craft from their registered bases plus source materials: Patio Festoon Party Lights from the Flexible Neon LED Strip plus orange dye, Electric Poolside Tiki Light from the Traditional Lantern Post Light plus bamboo, Poolside Globe String Lights from the Flexible Neon LED Strip plus a glass bottle, Poolside Party Lantern from the Porch Lantern Sconce plus light blue dye, Deck Post Cap Light from the Basic Lamp Holder plus an oak slab, and Deck Step Riser Light from the Flat Lamp Socket plus a spruce slab. The five desk/dot/table fixtures craft from their registered bases plus source materials: Household Desk Lamp from the Lamp Socket A plus white wool and an iron plate, Mini Dot Spotlight (two) from the Lamp Socket B Projector plus an iron ingot and glass panes, Ceramic Drum Table Lamp from the Basic Lamp Holder plus white wool and terracotta, Green Banker Table Lamp from the Basic Lamp Holder plus green stained glass and a copper ingot, and Articulated Task Table Lamp from the Lamp Socket B Projector plus an iron ingot and an iron plate. Existing native recipes keep their outputs.
-The nine warehouse/stadium/offshore/area/mini-dot fixtures craft from their registered bases: the
-Warehouse Wall Floodlight from an iron ingot, an iron plate, glass panes and the Lamp Socket B
-Projector; the Heavy Duty Stadium Wall Floodlight, the Offshore Platform Floodlight and the Large
-Area Floodlight from the Warehouse Wall Floodlight plus an iron block, yellow dye or a diamond;
-and the five mini dot lights from the Mini Dot Spotlight plus an iron plate and an iron nugget, a
-gold nugget, a lever, black dye or a glass pane.
+Standing Drum Floor Lamp uses Ceramic Drum Table Lamp, Industrial Wall Pack
+uses Warehouse Wall Floodlight, and seasonal/party upgrades that name String
+Lights use that actual device. Source String Lights is registered at transparent
+lookup 4418, with its original model, wall mounting, configurable 120/240 V,
+15 W demand, saved controls and paid two-item bootstrap recipe.
 
-The eight parking/street/eave/sidewalk fixtures craft from their registered bases: the
-Twin Parking Lot Light (base for the three parking upgrades; the source Spot Lamp Socket
-maps to the Lamp Socket B Projector) from the Robust Lamp Socket plus two iron ingots and
-an iron plate; the Modern LED Street Light from the Street Light plus two iron ingots and
-an iron plate; the Boulevard Lantern Street Light from the Traditional Lantern Post Light
-plus two iron chains and an iron plate; the Quad Head Parking Lot Light from the Twin
-Parking Lot Light plus an iron block and an iron plate; the Round Canopy Parking Lot Light
-from the Twin Parking Lot Light plus two quartz and an iron plate; the Offset Twin Arm
-Parking Lot Light from the Twin Parking Lot Light plus two copper ingots and an iron plate;
-the Adjustable Gimbal Recessed Light (two) from the Lamp Socket B Projector plus four iron
-ingots; and the Twin Adjustable Eave Floodlight from the Mini Bezel Dot Spotlight plus an
-iron plate. The source defines no crafting recipes for the Shoebox Parking Lot Light, the
-Twin Wide Area Parking Lot Light, the Three Arm Parking Lot Light or either Gumdrop
-sidewalk light, so these five remain uncraftable here to match the source.
+The source LED ingredient costs overlap legacy native bulb recipes. Distinct
+paid recipes retain the additional iron plates already used by this port, so
+neither old bulb recipes nor their output voltages change.
 
-The five pool fixtures craft from their registered bases plus two prismarine
-crystals and an iron plate: Round Niche Pool Light from the Robust Lamp Socket,
-Linear Pool Wall Light from the Thin Fluorescent Shop Light, Square Recessed
-Pool Light from the Flat Lamp Socket, Pool Corner Wash Light from the Lamp
-Socket B Projector and Pool Step Marker Light from the Mini Dot Spotlight. The
-Multicolor Party Wash Light crafts from the Warehouse Wall Floodlight plus two
-magenta dyes and an iron plate.
+## Review and verification
 
-The source LED lookups 293/294 conflict with the established 50/200 V bulbs.
-Explicit mapping moves the new 120/240 V LEDs to **302/303**, preserving both old
-identities and all their data. Their original three-glass/three-silicon/cable
-patterns already craft the old bulbs. The new rated patterns add **two Iron
-Plates**, keeping those materials and the two-bulb yield without creating an
-ambiguous recipe. This avoids converting used bulbs into fresh ones.
+[Review since bb962e1](review-since-bb962e1.md) documents the recipe, rendering,
+underwater, wireless ownership and simulator lifecycle corrections. Runtime
+results, exact commands and limitations are in
+[lighting validation](decorative-lighting-validation.json). Historical golden
+expectations remain unchanged; the observed differences are recorded separately
+in [the golden delta](decorative-lighting-golden-delta.json).
 
-## Remaining lighting work
+The operator-only `/elnlab lamps x y z` builds a reproducible 108-fixture client
+scene using native saved electrical sources, lamp supplies and fan cords.
+`/elnlab lampmenu LOOKUP` opens a resident fixture's real menu for GUI checks.
+These commands create creative-mode lab hardware; they do not establish survival
+material accounting. Native recipe, insertion, solver and ownership tests cover
+that accounting independently.
 
-The other **7 decorative styles** remain separate work:
-the ceiling fans 4388–4391, the Tropical Patio Ceiling Fan 4408, the
-Adjustable Suspended Warehouse Light 4409 and the Outdoor Motion Floodlight
-4126, plus motion
-detection, suspended-warehouse adjustment and portable table/carry adapters. Partial-block mounting and source-world conversion
-need their own adapters. The rest of the source bulb technologies and their
-per-technology lifetime/configuration controls are not registered by this batch.
-The original native golden references, assertions, tolerances and skips are retained.
-The catalog fixture setup now raises hanging models enough to keep their downward
-clearance cells above the test floor; no model is omitted.
-
-[Fresh client gallery](evidence/decorative-lighting/fresh-client-gallery.png),
+Earlier four-owner software-OpenGL evidence remains available:
+[gallery](evidence/decorative-lighting/fresh-client-gallery.png),
 [shop light](evidence/decorative-lighting/shop-light-close.png),
-[saved channel](evidence/decorative-lighting/post-saved-channel.png) and
-[five installed bulbs](evidence/decorative-lighting/five-bulb-chandelier.png)
-show the software-OpenGL exhibit. A dedicated server cold-loads the same four
-owners; a real network client retains the five-bulb stack and changes the post
-channel to `Lighting network`. All saved stacks/condition, orientation and power
-modes remain exact. See [saved-owner checks](decorative-lighting-saved-owners.json).
-Simultaneous multi-client behavior remains unverified.
-The exhibit is unpowered; delivered power and beam rules
-are checked by the production/native regressions.
-
-Validation and any runtime limitations are recorded in
-[the evidence](decorative-lighting-validation.json). Portable carry and the
-[broader backlog](remaining-work.md) remain unfinished.
-
-## Production checks
-
-The full build passes **690 of 693 root tests**, retaining the same three optional
-preview skips, and all **15 CAD tests**. The full default 200-case fluid corpus
-remains included. All **80 new native lighting cases** pass. Unfiltered native
-selects **1,393 tests: 1,391 pass**, with no skips; all **927 ForkPatch cases** pass.
-Both whole-catalog publication/drawing checks retain all **581 devices**; the item
-drawing check covers all **370 items**.
-Repeated data generation writes zero files. All **680 provenance entries** pass;
-all 781 preceding identities and 1,104 English entries keep their exact values.
-There are 19 new identities and 19 new English entries in this batch.
-
-Only the historical `golden_descriptors` and `golden_slots` tests fail. The original
-expectations are unchanged; the two new bulbs naturally expand acceptance in ten
-existing socket menus.
-The [exact delta](decorative-lighting-golden-delta.json) records **697 failed
-assertions**; the 537 pre-batch failures, the twelve added by the six
-4353–4358 styles, the ten added by the five luxury chandeliers, the fourteen
-added by the seven 4352, 4365–4370 styles, the sixteen added by the eight
-4374–4381 seasonal styles, the twelve added by the six 4401, 4402,
-4404–4407 party/deck fixtures and the thirty added by the fifteen
-4480–4494 pier/path/stone fixtures and the ten added by the five
-4118, 4121, 4137–4139 desk/dot/table fixtures and the eighteen
-added by the nine 4117, 4364, 4371, 4382–4386, 4392
-warehouse/flood/dot fixtures and the twenty-six added by the thirteen
-4116, 4142, 4372–4373, 4387, 4393–4395, 4495–4499
-parking/street/eave/sidewalk fixtures and the twelve added by the six
-4396–4400, 4403 pool/party-wash fixtures all remain exact. The matching slot summary
-remains 118/143. No
-tolerance, assertion or skip was relaxed.
-
-The clean development JAR at code commit `3451e318d78c` matches all **1,774 Java
-classes, 933 Kotlin classes, one Kotlin module file and 5,215 processed resources**.
-All tested class bytes remain exact; only the build marker changes from the tested
-working tree to the clean code commit. SHA-256: `2fc8759d0e12aa390518e1d3e0affc28c3313c1223b25ef90423ba0eb33936ba`.
-This artifact predates the 4352, 4353–4363, 4365–4370, 4374–4381,
-4401, 4402, 4404–4407, 4480–4494, 4118, 4121, 4137–4139 and 4117, 4364, 4371, 4382–4386, 4392,
-4116, 4142, 4372–4373, 4387, 4393–4395, 4495–4499 batches; extending the parity record to the current
-branch HEAD would require a fresh clean build.
+[saved channel](evidence/decorative-lighting/post-saved-channel.png),
+[five bulbs](evidence/decorative-lighting/five-bulb-chandelier.png) and
+[saved-owner checks](decorative-lighting-saved-owners.json).
+These are historical observations, not verification of the newly enabled specials.

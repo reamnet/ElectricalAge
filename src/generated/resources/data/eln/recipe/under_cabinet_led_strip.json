@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:flat_lamp_socket",
-    "minecraft:iron_nugget"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:iron_nugget",
+    "L": "eln:flat_lamp_socket",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:under_cabinet_led_strip"

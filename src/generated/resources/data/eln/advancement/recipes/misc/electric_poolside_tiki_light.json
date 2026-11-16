@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "eln:traditional_lantern_post_light"
+            "items": "minecraft:bamboo"
           }
         ]
       },

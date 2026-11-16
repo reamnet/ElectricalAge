@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:modern_sputnik_foyer_chandelier",
-    "minecraft:gold_ingot"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:gold_ingot",
+    "L": "eln:modern_sputnik_foyer_chandelier",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:grand_halo_ring_chandelier"

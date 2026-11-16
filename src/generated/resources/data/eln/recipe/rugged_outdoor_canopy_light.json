@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:robust_lamp_socket",
-    "minecraft:iron_block"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:iron_block",
+    "L": "eln:robust_lamp_socket",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:rugged_outdoor_canopy_light"

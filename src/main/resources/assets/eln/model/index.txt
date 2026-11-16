@@ -335,3 +335,11 @@ wirelesssignalrepeater/wirelesssignalrepeater.obj
 wirelesssignalrx/wirelesssignalrx.obj
 wirelesssignaltx/wirelesssignaltx.obj
 xrayscanner/xrayscanner.obj
+festive_items/christmas_lights.obj
+adjustablewarehousehighbay/adjustablewarehousehighbay.obj
+auraceilingfan/auraceilingfan.obj
+classicceilingfan/classicceilingfan.obj
+industrialceilingfan/industrialceilingfan.obj
+modernceilingfan/modernceilingfan.obj
+patiotropicalfan/patiotropicalfan.obj
+outdoormotionlight/outdoormotionlight.obj

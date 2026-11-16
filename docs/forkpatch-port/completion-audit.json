@@ -1,15 +1,15 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetObservedCommit": "8b222f5a73a961d165b323662860ce5fb3e775cc",
-  "targetMainSourceFingerprint": "de9e438adf364514c9ebbf0efc370016503c17552d986a8895e0770f16b6bd4c",
+  "targetObservedCommit": "973bf4626483452f73d8a130cc86a73709d2968d",
+  "targetMainSourceFingerprint": "a02439456c85542593281682343537ec1d947d9285bdea2d4d4895e3a7035fea",
   "meaning": "Exhaustive file/name observations within the listed directories; no row certifies semantic parity or feature completion.",
   "mainSourceFiles": 1277,
   "sourceBuildActive": 1264,
   "sourceBuildExcluded": 13,
   "observations": {
-    "no-same-identity-candidate": 699,
-    "same-identity-different-bytes": 521,
-    "same-identity-exact-bytes": 57
+    "no-same-identity-candidate": 693,
+    "same-identity-different-bytes": 526,
+    "same-identity-exact-bytes": 58
   },
   "trackedSourceFiles": 7132,
   "supportFiles": 3133,
@@ -23,8 +23,8 @@
   "allTrackedFilesAccountedFor": true,
   "sourceResources": 2460,
   "resourceObservations": {
-    "no-same-path-candidate": 1500,
-    "same-path-exact-bytes": 943,
+    "no-same-path-candidate": 1235,
+    "same-path-exact-bytes": 1208,
     "same-path-different-bytes": 17
   },
   "sourceTestFiles": 262,
@@ -455,8 +455,8 @@
   ],
   "lighting": {
     "sourceStyles": 108,
-    "nativeAdapters": 21,
-    "unregistered": 87,
+    "nativeAdapters": 108,
+    "unregistered": 0,
     "sourceBulbRegistrations": 18
   },
   "excludedScope": "Other repositories/addons and unreferenced assets are not assumed required; build tools, source runtime catalog exports, optional dependencies and release campaigns remain explicit tasks in the plan."

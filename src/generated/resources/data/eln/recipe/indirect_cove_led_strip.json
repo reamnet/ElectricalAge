@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:flat_lamp_socket",
-    "minecraft:white_dye"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:white_dye",
+    "L": "eln:flat_lamp_socket",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:indirect_cove_led_strip"

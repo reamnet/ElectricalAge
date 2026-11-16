@@ -121,7 +121,8 @@ final class PublishRenderCase implements TestCase {
                 ctx.floor(p.below());
                 if (d instanceof mods.eln.oil.SubmersiblePumpDescriptor)   // (it goes in water)
                     ctx.level().setBlock(p, net.minecraft.world.level.block.Blocks.WATER.defaultBlockState(), 2);
-                if (d.mustHaveWallFrontInverse()) {
+                if (d.mustHaveWallFrontInverse() || d.mustHaveWall()) {
+                    // Source wall fixtures also include any-wall supports (e.g. festive String Lights).
                     ctx.floor(p.south()); ctx.floor(p.south().above());
                     ctx.floor(p.south().east()); ctx.floor(p.south().west());
                     var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);

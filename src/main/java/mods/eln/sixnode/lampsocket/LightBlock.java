@@ -22,15 +22,28 @@ import org.jspecify.annotations.Nullable;
  * Invisible air-like block that carries a lamp's light level in its META (0..15) state (1.12 LightBlock). No shape,
  * no drops, replaceable; the light level comes from META (block properties' lightLevel, see ElnRegistry).
  */
-public class LightBlock extends BaseEntityBlock {
+public class LightBlock extends BaseEntityBlock implements net.minecraft.world.level.block.SimpleWaterloggedBlock {
+    public static final net.minecraft.world.level.block.state.properties.BooleanProperty WATERLOGGED = net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
     public LightBlock(Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(BlockMeta.META, 0));
+        registerDefaultState(stateDefinition.any().setValue(BlockMeta.META, 0).setValue(WATERLOGGED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(BlockMeta.META);
+        builder.add(BlockMeta.META, WATERLOGGED);
+    }
+
+    @Override
+    protected net.minecraft.world.level.material.FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? net.minecraft.world.level.material.Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, net.minecraft.world.level.LevelReader level, net.minecraft.world.level.ScheduledTickAccess ticks,
+            BlockPos pos, net.minecraft.core.Direction dir, BlockPos neighborPos, BlockState neighbor, net.minecraft.util.RandomSource random) {
+        if (state.getValue(WATERLOGGED)) ticks.scheduleTick(pos, net.minecraft.world.level.material.Fluids.WATER, net.minecraft.world.level.material.Fluids.WATER.getTickDelay(level));
+        return super.updateShape(state, level, ticks, pos, dir, neighborPos, neighbor, random);
     }
 
     @Override

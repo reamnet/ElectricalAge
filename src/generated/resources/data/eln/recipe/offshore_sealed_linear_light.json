@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:thin_fluorescent_shop_light",
-    "minecraft:yellow_dye"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:yellow_dye",
+    "L": "eln:thin_fluorescent_shop_light",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:offshore_sealed_linear_light"

@@ -213,139 +213,117 @@ public final class ElnRecipes extends ElnRecipesBase {
             'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',findItemStack("Low Voltage Cable"));
         addRecipe(findItemStack("240V LED Light Bulb",2),"GGG","SSS","PCP",
             'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',findItemStack("Medium Voltage Cable"));
-        addRecipe(findItemStack("Up Down Cylinder Wall Sconce"), " L ", "IPI", " L ",
-            'L',findItemStack("Lamp Socket B Projector"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Fabric Shade Wall Sconce"), "WWW", " L ", " P ",
-            'W',wool(0),'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Glass Globe Wall Sconce"), " G ", "GLG", " P ",
-            'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Industrial Cage Wall Sconce"), "III", "ILI", " P ",
-            'I',Blocks.IRON_BARS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Double Candle Wall Sconce"), "L L", " G ", " P ",
-            'L',findItemStack("Basic Lamp Holder"),'G',Items.GOLD_INGOT,'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Deep Baffle Recessed Light",2), " I ", "BLB",
-            'I',findItemStack("Iron Plate"),'B',dye(0),'L',findItemStack("Flat Lamp Socket"));
-        addRecipe(findItemStack("Trimless Recessed Downlight",2), " W ", "GLG",
-            'W',dye(15),'G',Blocks.GLASS_PANE,'L',findItemStack("Flat Lamp Socket"));
-        addRecipe(findItemStack("Garden Bollard Light"), " G ", "ILI", " P ",
-            'G',Blocks.GLASS,'I',Items.IRON_INGOT,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Gooseneck Barn Light"), "IIL", "P  ",
-            'I',Items.IRON_INGOT,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Traditional Lantern Post Light"), " L ", " I ", " P ",
-            'L',findItemStack("Porch Lantern Sconce"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Thin Fluorescent Shop Light"), "PPP", "LLL",
-            'P',findItemStack("Iron Plate"),'L',findItemStack("Flat Lamp Socket"));
-        addRecipe(findItemStack("Suspended Factory Fluorescent Light"), "C C", "PPP", "LLL",
-            'C',Items.IRON_CHAIN,'P',findItemStack("Iron Plate"),'L',findItemStack("Thin Fluorescent Shop Light"));
-        addRecipe(findItemStack("Candle Arm Foyer Chandelier"), " C ", "GLG", "LLL",
-            'C',Items.IRON_CHAIN,'G',Items.GOLD_INGOT,'L',findItemStack("Lamp Socket A"));
-        addRecipe(findItemStack("Crystal Tier Foyer Chandelier"), " C ", "GLG", "GGG",
-            'C',Items.IRON_CHAIN,'G',Blocks.GLASS_PANE,'L',findItemStack("Candle Arm Foyer Chandelier"));
-        addRecipe(findItemStack("Wagon Wheel Foyer Chandelier"), "CCC", "LPL", "LLL",
-            'C',Items.IRON_CHAIN,'P',Blocks.DARK_OAK_PLANKS,'L',findItemStack("Lamp Socket A"));
-        addRecipe(findItemStack("Lantern Cage Foyer Chandelier"), " C ", "ILI", "ILI",
-            'C',Items.IRON_CHAIN,'I',Blocks.IRON_BARS,'L',findItemStack("Lamp Socket A"));
-        addRecipe(findItemStack("Modern Sputnik Foyer Chandelier"), " L ", "LGL", " L ",
-            'G',Items.GOLD_INGOT,'L',findItemStack("Lamp Socket A"));
-        addRecipe(findItemStack("Basic Lamp Holder",2), " C ", " P ",
-            'C',Items.COPPER_INGOT,'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Porch Lantern Sconce"), " I ", "GLG", " P ",
-            'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket A"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Round Recessed Ceiling Light",2), " P ", "GLG",
-            'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'L',findItemStack("Flat Lamp Socket"));
-        addRecipe(findItemStack("Basic Chandelier"), " I ", "LIL", "LLL",
-            'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket A"));
-        // Source shapes are shapeless pairs; the ceramic drum table base is unported, so the native
-        // holder stands in for it.
-        addShapelessRecipe(findItemStack("Standing Drum Floor Lamp"),findItemStack("Basic Lamp Holder"),Items.IRON_INGOT);
-        addShapelessRecipe(findItemStack("Under Cabinet LED Strip"),findItemStack("Flat Lamp Socket"),Items.IRON_NUGGET);
-        addShapelessRecipe(findItemStack("Recessed LED Channel"),findItemStack("Flat Lamp Socket"),Items.QUARTZ);
-        addShapelessRecipe(findItemStack("Indirect Cove LED Strip"),findItemStack("Flat Lamp Socket"),dye(15));
-        addShapelessRecipe(findItemStack("Surface Linear LED Strip"),findItemStack("Thin Fluorescent Shop Light"),Items.IRON_INGOT);
-        addShapelessRecipe(findItemStack("Flexible Neon LED Strip"),findItemStack("Flat Lamp Socket"),Items.SLIME_BALL);
-        addShapelessRecipe(findItemStack("Grand Halo Ring Chandelier"),findItemStack("Modern Sputnik Foyer Chandelier"),Items.GOLD_INGOT);
-        addShapelessRecipe(findItemStack("Grand Crystal Cascade Chandelier"),findItemStack("Crystal Tier Foyer Chandelier"),Items.DIAMOND);
-        addShapelessRecipe(findItemStack("Sculptural Branch Chandelier"),findItemStack("Modern Sputnik Foyer Chandelier"),Items.COPPER_INGOT);
-        addShapelessRecipe(findItemStack("Spiral Rain Chandelier"),findItemStack("Crystal Tier Foyer Chandelier"),Items.IRON_CHAIN);
-        addShapelessRecipe(findItemStack("Grand Empire Chandelier"),findItemStack("Candle Arm Foyer Chandelier"),Items.GOLD_INGOT);
-        addShapelessRecipe(findItemStack("Window Candle Light"),findItemStack("Basic Lamp Holder"),Items.HONEYCOMB);
-        addShapelessRecipe(findItemStack("Armored Oval Bulkhead Light"),findItemStack("Robust Lamp Socket"),Items.IRON_BARS);
-        // Source Wall Pack uses unported "Warehouse Wall Floodlight"; Robust Lamp Socket stands in (pair is unique).
-        addShapelessRecipe(findItemStack("Industrial Wall Pack Light"),findItemStack("Robust Lamp Socket"),Items.IRON_INGOT);
-        addShapelessRecipe(findItemStack("Rugged Outdoor Canopy Light"),findItemStack("Robust Lamp Socket"),Items.IRON_BLOCK);
-        addShapelessRecipe(findItemStack("Industrial Yard Area Light"),findItemStack("Gooseneck Barn Light"),Items.IRON_INGOT);
-        addShapelessRecipe(findItemStack("Offshore Caged Wellglass Light"),findItemStack("Robust Lamp Socket"),dye(11));
-        addShapelessRecipe(findItemStack("Offshore Sealed Linear Light"),findItemStack("Thin Fluorescent Shop Light"),dye(11));
-        // Source seasonal strings use the unported transparent "String Lights" node; Flexible Neon LED Strip stands in (Batch A precedent).
-        addShapelessRecipe(findItemStack("Warm White Christmas Fairy Lights"),findItemStack("Flexible Neon LED Strip"),dye(11));
-        addShapelessRecipe(findItemStack("Multicolor Christmas String Lights"),findItemStack("Flexible Neon LED Strip"),dye(1));
-        addShapelessRecipe(findItemStack("Christmas Icicle Lights"),findItemStack("Flexible Neon LED Strip"),dye(12));
-        addShapelessRecipe(findItemStack("Halloween Pumpkin String Lights"),findItemStack("Flexible Neon LED Strip"),Items.PUMPKIN);
-        addShapelessRecipe(findItemStack("Halloween Ghost String Lights"),findItemStack("Flexible Neon LED Strip"),dye(15));
-        addShapelessRecipe(findItemStack("Christmas Star Wall Light"),findItemStack("Basic Lamp Holder"),Items.GOLD_NUGGET);
-        addShapelessRecipe(findItemStack("Halloween Bat Wall Light"),findItemStack("Basic Lamp Holder"),dye(0));
-        addShapelessRecipe(findItemStack("Jack O Lantern Table Lamp"),findItemStack("Basic Lamp Holder"),Items.CARVED_PUMPKIN);
-        addShapelessRecipe(findItemStack("Patio Festoon Party Lights"),findItemStack("Flexible Neon LED Strip"),dye(14));
-        addShapelessRecipe(findItemStack("Electric Poolside Tiki Light"),findItemStack("Traditional Lantern Post Light"),Items.BAMBOO);
-        addShapelessRecipe(findItemStack("Poolside Globe String Lights"),findItemStack("Flexible Neon LED Strip"),Items.GLASS_BOTTLE);
-        addShapelessRecipe(findItemStack("Poolside Party Lantern"),findItemStack("Porch Lantern Sconce"),dye(12));
-        addShapelessRecipe(findItemStack("Deck Post Cap Light"),findItemStack("Basic Lamp Holder"),vanilla("oak_slab"));
-        addShapelessRecipe(findItemStack("Deck Step Riser Light"),findItemStack("Flat Lamp Socket"),vanilla("spruce_slab"));
-        addRecipe(findItemStack("Household Desk Lamp"), "WWW"," L "," P ",
-            'W',wool(0),'L',findItemStack("Lamp Socket A"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Mini Dot Spotlight",2), " I ","GLG",
-            'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket B Projector"));
-        addRecipe(findItemStack("Ceramic Drum Table Lamp"), "WWW"," L "," B ",
-            'W',wool(0),'L',findItemStack("Basic Lamp Holder"),'B',Blocks.TERRACOTTA);
-        addRecipe(findItemStack("Green Banker Table Lamp"), "GGG"," L "," P ",
-            'G',vanilla("green_stained_glass"),'L',findItemStack("Basic Lamp Holder"),'P',Items.COPPER_INGOT);
-        addRecipe(findItemStack("Articulated Task Table Lamp"), " IL"," I "," P ",
-            'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Warehouse Wall Floodlight"), "IPI", "GLG", " I ",
-            'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket B Projector"));
-        addRecipe(findItemStack("Heavy Duty Stadium Wall Floodlight"), " D ","DLD"," P ",
-            'D',Blocks.IRON_BLOCK,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Offshore Platform Floodlight"), " D ","DLD"," P ",
-            'D',dye(11),'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Large Area Floodlight"), " D ","DLD"," P ",
-            'D',Items.DIAMOND,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
-        addShapelessRecipe(findItemStack("Mini Pinhole Dot Light"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.IRON_NUGGET);
-        addShapelessRecipe(findItemStack("Mini Bezel Dot Spotlight"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.GOLD_NUGGET);
-        addShapelessRecipe(findItemStack("Mini Eyeball Dot Spotlight"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.LEVER);
-        addShapelessRecipe(findItemStack("Mini Deep Baffle Dot Light"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),dye(0));
-        addShapelessRecipe(findItemStack("Mini Twin Dot Light"),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.GLASS_PANE);
-        // Twin Parking is the base for the quad/round/offset upgrades; the source "Spot Lamp Socket" ingredient
-        // maps to the port's Lamp Socket B Projector (established socket mapping).
-        addRecipe(findItemStack("Twin Parking Lot Light"), "L L", " I ", " P ",
-            'L',findItemStack("Robust Lamp Socket"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Modern LED Street Light"), " D ","DLD"," P ",
-            'D',Items.IRON_INGOT,'L',findItemStack("Street Light"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Boulevard Lantern Street Light"), " D ","DLD"," P ",
-            'D',Items.IRON_CHAIN,'L',findItemStack("Traditional Lantern Post Light"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Quad Head Parking Lot Light"), " D ","DLD"," P ",
-            'D',Blocks.IRON_BLOCK,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Round Canopy Parking Lot Light"), " D ","DLD"," P ",
-            'D',Items.QUARTZ,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Offset Twin Arm Parking Lot Light"), " D ","DLD"," P ",
-            'D',Items.COPPER_INGOT,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Round Niche Pool Light"), " D ","DLD"," P ",
-            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Linear Pool Wall Light"), " D ","DLD"," P ",
-            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Thin Fluorescent Shop Light"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Square Recessed Pool Light"), " D ","DLD"," P ",
-            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Pool Corner Wash Light"), " D ","DLD"," P ",
-            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Lamp Socket B Projector"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Pool Step Marker Light"), " D ","DLD"," P ",
-            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Mini Dot Spotlight"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Multicolor Party Wash Light"), " D ","DLD"," P ",
-            'D',Items.DYE.magenta(),'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("Adjustable Gimbal Recessed Light",2), " I ","ILI",
-            'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"));
-        addRecipe(findItemStack("Twin Adjustable Eave Floodlight"),"L L"," P ",
-            'L',findItemStack("Mini Bezel Dot Spotlight"),'P',findItemStack("Iron Plate"));
-        // Source CraftingRecipes.kt defines no recipes for the Shoebox, Twin Wide Area, Three Arm parking lights
-        // or either Gumdrop sidewalk light; they remain uncraftable here to match source.
+        // Source materialString is vanilla string; retain the two-fixture bootstrap yield.
+        addShapelessRecipe(findItemStack("String Lights",2),findItemStack("120V LED Light Bulb"),Items.STRING);
+        // Exact pinned ForkPatch b7444a7 source fixture recipes; native socket names are stable aliases.
+        addRecipe(findItemStack("Twin Parking Lot Light",1),"L L"," I "," P ",'L',findItemStack("Robust Lamp Socket"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Warehouse Wall Floodlight",1),"IPI","GLG"," I ",'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket B Projector"));
+        addRecipe(findItemStack("Household Desk Lamp",1),"WWW"," L "," P ",'W',wool(0),'L',findItemStack("Lamp Socket A"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Round Recessed Ceiling Light",2)," P ","GLG",'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Basic Chandelier",1)," I ","LIL","LLL",'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Mini Dot Spotlight",2)," I ","GLG",'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket B Projector"));
+        addRecipe(findItemStack("Porch Lantern Sconce",1)," I ","GLG"," P ",'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket A"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Basic Lamp Holder",2)," C "," P ",'C',Items.COPPER_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Thin Fluorescent Shop Light",1),"PPP","LLL",'P',findItemStack("Iron Plate"),'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Suspended Factory Fluorescent Light",1),"C C","PPP","LLL",'C',Items.IRON_CHAIN,'P',findItemStack("Iron Plate"),'L',findItemStack("Thin Fluorescent Shop Light"));
+        addRecipe(findItemStack("Outdoor Motion Floodlight",1),"L L"," S "," P ",'L',findItemStack("Lamp Socket B Projector"),'S',findItemStack("Electrical Entity Sensor"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Candle Arm Foyer Chandelier",1)," C ","GLG","LLL",'C',Items.IRON_CHAIN,'G',Items.GOLD_INGOT,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Crystal Tier Foyer Chandelier",1)," C ","GLG","GGG",'C',Items.IRON_CHAIN,'G',Blocks.GLASS_PANE,'L',findItemStack("Candle Arm Foyer Chandelier"));
+        addRecipe(findItemStack("Wagon Wheel Foyer Chandelier",1),"CCC","LPL","LLL",'C',Items.IRON_CHAIN,'P',Blocks.DARK_OAK_PLANKS,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Lantern Cage Foyer Chandelier",1)," C ","ILI","ILI",'C',Items.IRON_CHAIN,'I',Blocks.IRON_BARS,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Modern Sputnik Foyer Chandelier",1)," L ","LGL"," L ",'G',Items.GOLD_INGOT,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Up Down Cylinder Wall Sconce",1)," L ","IPI"," L ",'L',findItemStack("Lamp Socket B Projector"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Fabric Shade Wall Sconce",1),"WWW"," L "," P ",'W',wool(0),'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Glass Globe Wall Sconce",1)," G ","GLG"," P ",'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Industrial Cage Wall Sconce",1),"III","ILI"," P ",'I',Blocks.IRON_BARS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Double Candle Wall Sconce",1),"L L"," G "," P ",'L',findItemStack("Basic Lamp Holder"),'G',Items.GOLD_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Ceramic Drum Table Lamp",1),"WWW"," L "," B ",'W',wool(0),'L',findItemStack("Basic Lamp Holder"),'B',Blocks.TERRACOTTA);
+        addRecipe(findItemStack("Green Banker Table Lamp",1),"GGG"," L "," P ",'G',vanilla("green_stained_glass"),'L',findItemStack("Basic Lamp Holder"),'P',Items.COPPER_INGOT);
+        addRecipe(findItemStack("Articulated Task Table Lamp",1)," IL"," I "," P ",'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Deep Baffle Recessed Light",2)," I ","BLB",'I',findItemStack("Iron Plate"),'B',Items.DYE.black(),'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Trimless Recessed Downlight",2)," W ","GLG",'W',Items.DYE.white(),'G',Blocks.GLASS_PANE,'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Adjustable Gimbal Recessed Light",2)," I ","ILI",'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"));
+        addRecipe(findItemStack("Garden Bollard Light",1)," G ","ILI"," P ",'G',Blocks.GLASS,'I',Items.IRON_INGOT,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Gooseneck Barn Light",1),"IIL","P  ",'I',Items.IRON_INGOT,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Traditional Lantern Post Light",1)," L "," I "," P ",'L',findItemStack("Porch Lantern Sconce"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Window Candle Light",1)," D ","DLD"," P ",'D',Items.HONEYCOMB,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Standing Drum Floor Lamp",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Ceramic Drum Table Lamp"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Under Cabinet LED Strip",1)," D ","DLD"," P ",'D',Items.IRON_NUGGET,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Recessed LED Channel",1)," D ","DLD"," P ",'D',Items.QUARTZ,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Indirect Cove LED Strip",1)," D ","DLD"," P ",'D',Items.DYE.white(),'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Surface Linear LED Strip",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Thin Fluorescent Shop Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Flexible Neon LED Strip",1)," D ","DLD"," P ",'D',Items.SLIME_BALL,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Grand Halo Ring Chandelier",1)," D ","DLD"," P ",'D',Items.GOLD_INGOT,'L',findItemStack("Modern Sputnik Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Grand Crystal Cascade Chandelier",1)," D ","DLD"," P ",'D',Items.DIAMOND,'L',findItemStack("Crystal Tier Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Sculptural Branch Chandelier",1)," D ","DLD"," P ",'D',Items.COPPER_INGOT,'L',findItemStack("Modern Sputnik Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Spiral Rain Chandelier",1)," D ","DLD"," P ",'D',Items.IRON_CHAIN,'L',findItemStack("Crystal Tier Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Grand Empire Chandelier",1)," D ","DLD"," P ",'D',Items.GOLD_INGOT,'L',findItemStack("Candle Arm Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Heavy Duty Stadium Wall Floodlight",1)," D ","DLD"," P ",'D',Items.IRON_BLOCK,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Armored Oval Bulkhead Light",1)," D ","DLD"," P ",'D',Items.IRON_BARS,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Industrial Wall Pack Light",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Rugged Outdoor Canopy Light",1)," D ","DLD"," P ",'D',Items.IRON_BLOCK,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Industrial Yard Area Light",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Gooseneck Barn Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offshore Caged Wellglass Light",1)," D ","DLD"," P ",'D',Items.DYE.yellow(),'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offshore Sealed Linear Light",1)," D ","DLD"," P ",'D',Items.DYE.yellow(),'L',findItemStack("Thin Fluorescent Shop Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offshore Platform Floodlight",1)," D ","DLD"," P ",'D',Items.DYE.yellow(),'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Modern LED Street Light",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Street Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Boulevard Lantern Street Light",1)," D ","DLD"," P ",'D',Items.IRON_CHAIN,'L',findItemStack("Traditional Lantern Post Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Warm White Christmas Fairy Lights",1)," D ","DLD"," P ",'D',Items.DYE.yellow(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Multicolor Christmas String Lights",1)," D ","DLD"," P ",'D',Items.DYE.red(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Christmas Icicle Lights",1)," D ","DLD"," P ",'D',Items.DYE.lightBlue(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Christmas Star Wall Light",1)," D ","DLD"," P ",'D',Items.GOLD_NUGGET,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Halloween Pumpkin String Lights",1)," D ","DLD"," P ",'D',Items.PUMPKIN,'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Halloween Ghost String Lights",1)," D ","DLD"," P ",'D',Items.DYE.white(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Halloween Bat Wall Light",1)," D ","DLD"," P ",'D',Items.DYE.black(),'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Jack O Lantern Table Lamp",1)," D ","DLD"," P ",'D',Items.CARVED_PUMPKIN,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Mini Pinhole Dot Light",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.IRON_NUGGET);
+        addShapelessRecipe(findItemStack("Mini Bezel Dot Spotlight",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.GOLD_NUGGET);
+        addShapelessRecipe(findItemStack("Mini Eyeball Dot Spotlight",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.LEVER);
+        addShapelessRecipe(findItemStack("Mini Deep Baffle Dot Light",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.DYE.black());
+        addShapelessRecipe(findItemStack("Mini Twin Dot Light",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.GLASS_PANE);
+        addRecipe(findItemStack("Twin Adjustable Eave Floodlight",1),"L L"," P ",'L',findItemStack("Mini Bezel Dot Spotlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Classic Four Blade Ceiling Fan",1)," M ","PLP"," P ",'M',findItemStack("Electrical Motor"),'P',Blocks.OAK_PLANKS,'L',findItemStack("Basic Lamp Holder"));
+        addRecipe(findItemStack("Modern Three Blade Ceiling Fan",1)," M ","PLP"," P ",'M',findItemStack("Electrical Motor"),'P',findItemStack("Iron Plate"),'L',findItemStack("Basic Lamp Holder"));
+        addRecipe(findItemStack("Industrial Five Block Ceiling Fan",1),"PMP","MLM","PPP",'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'L',findItemStack("Basic Lamp Holder"));
+        addRecipe(findItemStack("Aura Five Blade Ceiling Fan",1),"PMP","LLL","PPP",'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'L',findItemStack("Basic Lamp Holder"));
+        addRecipe(findItemStack("Large Area Floodlight",1)," D ","DLD"," P ",'D',Items.DIAMOND,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Quad Head Parking Lot Light",1)," D ","DLD"," P ",'D',Items.IRON_BLOCK,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Round Canopy Parking Lot Light",1)," D ","DLD"," P ",'D',Items.QUARTZ,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offset Twin Arm Parking Lot Light",1)," D ","DLD"," P ",'D',Items.COPPER_INGOT,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Round Niche Pool Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Linear Pool Wall Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Thin Fluorescent Shop Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Square Recessed Pool Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Pool Corner Wash Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Lamp Socket B Projector"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Pool Step Marker Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Mini Dot Spotlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Patio Festoon Party Lights",1)," D ","DLD"," P ",'D',Items.DYE.orange(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Electric Poolside Tiki Light",1)," D ","DLD"," P ",'D',Items.BAMBOO,'L',findItemStack("Traditional Lantern Post Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Multicolor Party Wash Light",1)," D ","DLD"," P ",'D',Items.DYE.magenta(),'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Poolside Globe String Lights",1)," D ","DLD"," P ",'D',Items.GLASS_BOTTLE,'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Poolside Party Lantern",1)," D ","DLD"," P ",'D',Items.DYE.lightBlue(),'L',findItemStack("Porch Lantern Sconce"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Deck Post Cap Light",1)," D ","DLD"," P ",'D',Items.OAK_SLAB,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Deck Step Riser Light",1)," D ","DLD"," P ",'D',Items.SPRUCE_SLAB,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Tropical Patio Ceiling Fan",1)," D ","DLD"," P ",'D',Items.JUNGLE_PLANKS,'L',findItemStack("Classic Four Blade Ceiling Fan"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Adjustable Suspended Warehouse Light",1),"CCC","PFP"," C ",'C',Items.IRON_CHAIN,'P',findItemStack("Iron Plate"),'F',findItemStack("Suspended Factory Fluorescent Light"));
+        addRecipe(findItemStack("Nautical Pier Bollard Light",1)," D ","GLG"," P ",'D',Items.DYE.white(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Marine Pier Bulkhead Light",1)," D ","GLG"," P ",'D',Items.DYE.orange(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Harbor Gooseneck Pier Light",1)," D ","GLG"," P ",'D',Items.DYE.magenta(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Pier Lantern Post Light",1)," D ","GLG"," P ",'D',Items.DYE.lightBlue(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Low Profile Dock Light",1)," D ","GLG"," P ",'D',Items.DYE.yellow(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Louvered Walkway Bollard",1)," D ","GLG"," P ",'D',Items.DYE.lime(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Shielded Walkway Light",1)," D ","GLG"," P ",'D',Items.DYE.pink(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Modern Blade Walkway Light",1)," D ","GLG"," P ",'D',Items.DYE.gray(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Mushroom Walkway Light",1)," D ","GLG"," P ",'D',Items.DYE.lightGray(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Arched Walkway Light",1)," D ","GLG"," P ",'D',Items.DYE.cyan(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Recessed Brick Patio Wall Light",1)," D ","GLG"," P ",'D',Items.DYE.purple(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Round Stone Wall Light",1)," D ","GLG"," P ",'D',Items.DYE.blue(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Slotted Patio Wall Light",1)," D ","GLG"," P ",'D',Items.DYE.brown(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Recessed Square Patio Wall Light",1)," D ","GLG"," P ",'D',Items.DYE.green(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Stone Wall Wash Light",1)," D ","GLG"," P ",'D',Items.DYE.red(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Shoebox Parking Lot Light",1)," D ","GLG"," P ",'D',Items.DYE.white(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Twin Wide Area Parking Lot Light",1)," D ","GLG"," P ",'D',Items.DYE.blue(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Three Arm Parking Lot Light",1)," D ","GLG"," P ",'D',Items.DYE.black(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Gumdrop Sidewalk Light",1)," D ","GLG"," P ",'D',Items.DYE.green(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Dual Gumdrop Sidewalk Light",1)," D ","GLG"," P ",'D',Items.DYE.red(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
     }
 
     public static void recipeLampSocket() {

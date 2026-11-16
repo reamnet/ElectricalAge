@@ -8,7 +8,7 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class DecorativeLampGeometryTest {
-    @Test fun explicitSourceIdsLeaveUnportedFixturesReserved() {
+    @Test fun allSourceIdsAreExplicitAndUnique() {
         assertEquals(4118,DecorativeLampStyle.DESK.lookup)
         assertEquals(4119,DecorativeLampStyle.RECESSED.lookup)
         assertEquals(4121,DecorativeLampStyle.DOT.lookup)
@@ -80,8 +80,15 @@ class DecorativeLampGeometryTest {
         assertEquals(4497,DecorativeLampStyle.PARKING_TRI_ARM.lookup)
         assertEquals(4498,DecorativeLampStyle.SIDEWALK_GUMDROP.lookup)
         assertEquals(4499,DecorativeLampStyle.SIDEWALK_DUAL_GUMDROP.lookup)
-        assertEquals(101,DecorativeLampStyle.entries.map { it.lookup }.toSet().size)
-        assertFalse(DecorativeLampStyle.entries.any { it.lookup==4126 }) // motion sensor is separate work
+        assertEquals(108,DecorativeLampStyle.entries.map { it.lookup }.toSet().size)
+        assertEquals(4126,DecorativeLampStyle.MOTION.lookup)
+        assertEquals(4388,DecorativeLampStyle.FAN_CLASSIC.lookup)
+        assertEquals(4389,DecorativeLampStyle.FAN_MODERN.lookup)
+        assertEquals(4390,DecorativeLampStyle.FAN_INDUSTRIAL.lookup)
+        assertEquals(4391,DecorativeLampStyle.FAN_AURA.lookup)
+        assertEquals(4408,DecorativeLampStyle.FAN_PATIO.lookup)
+        assertEquals(4409,DecorativeLampStyle.WAREHOUSE_HIGH_BAY.lookup)
+        assertEquals((0..107).toList(),DecorativeLampStyle.entries.map { it.sourceOrdinal })
     }
     @Test fun ceilingFixtureHeadsStayBelowTheirMount() {
         val origin=Vec3(10.5,20.5,30.5)

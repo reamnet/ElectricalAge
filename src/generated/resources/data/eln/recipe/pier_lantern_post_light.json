@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:light_blue_dye",
+    "G": "minecraft:glass_pane",
+    "L": "eln:basic_lamp_holder",
+    "P": "minecraft:iron_block"
+  },
+  "pattern": [
+    " D ",
+    "GLG",
+    " P "
+  ],
+  "result": {
+    "id": "eln:pier_lantern_post_light"
+  }
+}

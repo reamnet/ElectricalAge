@@ -117,7 +117,14 @@ public class LampSocketElement extends SixNodeElement {
 
     public void networkUnserialize(DataInputStream stream) {
         try {
-            switch (stream.readByte()) {
+            readControl(stream.readUnsignedByte(), stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void readControl(int event, DataInputStream stream) throws IOException {
+            switch (event) {
                 case setGroundedId:
                     grounded = stream.readByte() != 0;
                     computeElectricalLoad();
@@ -138,9 +145,6 @@ public class LampSocketElement extends SixNodeElement {
                     needPublish();
                     break;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void setPoweredByLampSupply(boolean b) {
@@ -158,7 +162,7 @@ public class LampSocketElement extends SixNodeElement {
 
     @Override
     public void connectJob() {
-        if (!poweredByLampSupply) {
+        if (!isWirelessPower()) {
             electricalLoadList.add(positiveLoad);
             electricalComponentList.add(lampResistor);
         }
@@ -182,7 +186,7 @@ public class LampSocketElement extends SixNodeElement {
 
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu) {
-        if (poweredByLampSupply) return null;
+        if (isWirelessPower()) return null;
 
         if (grounded) return positiveLoad;
         return null;
@@ -195,7 +199,7 @@ public class LampSocketElement extends SixNodeElement {
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
-        if (poweredByLampSupply) return 0;
+        if (isWirelessPower()) return 0;
         if (grounded) return NodeBase.maskElectricalPower;
 
         if (front == lrdu) return NodeBase.maskElectricalPower;
@@ -280,6 +284,15 @@ public class LampSocketElement extends SixNodeElement {
 
     public double getLampResistance(LampDescriptor bulb) {
         return bulb.getR();
+    }
+
+    public boolean isWirelessPower() { return poweredByLampSupply; }
+
+    public boolean isLampEnergized() { return true; }
+
+    public double getWirelessResistance() {
+        Object bulb = Utils.getItemObject(getInventory().getItem(0));
+        return bulb instanceof LampDescriptor descriptor ? getLampResistance(descriptor) : Double.POSITIVE_INFINITY;
     }
 
     public double getNominalLampPower(LampDescriptor bulb) {

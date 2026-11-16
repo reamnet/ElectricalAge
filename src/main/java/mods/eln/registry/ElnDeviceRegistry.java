@@ -108,6 +108,7 @@ public final class ElnDeviceRegistry {
         transparentNodeItem.addDescriptor(7991, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V120, true));
         registerBattery(16);
         registerSolarPanel(48);
+        transparentNodeItem.addDescriptor(4418,new mods.eln.transparentnode.festive.StringLightsDescriptor());
         registerForkPatchSolar();
         registerForkPatchStandby();
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.ID,new mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor());

@@ -25,7 +25,7 @@ interface CordDevice {
     val cord: ApplianceCord
     fun acceptsCord(rating: CordRating): Boolean
 }
-class MachineCordDevice(val owner: Any,val input: NbtElectricalLoad,val nominal: ()->Double): CordDevice {
+open class MachineCordDevice(val owner: Any,val input: NbtElectricalLoad,val nominal: ()->Double): CordDevice {
     override val cord by lazy { ApplianceCord(this,owner,input) }
     override fun acceptsCord(rating: CordRating)=rating.accepts(nominal())
 }
@@ -33,7 +33,13 @@ class MachineCordDevice(val owner: Any,val input: NbtElectricalLoad,val nominal:
 /** Explicit consumers only; raw inlets remain owned by their native physics, menus and inventories. */
 object CordSupport {
     @JvmStatic fun create(owner: Any): MachineCordDevice? {
+        if(owner is mods.eln.sixnode.lampsocket.DecorativeLampElement)return object: MachineCordDevice(owner,owner.positiveLoad,{ owner.fanVoltage }) {
+            override fun acceptsCord(rating: CordRating)=mods.eln.sixnode.lampsocket.LampCordCompatibility.accepts(rating,(this.owner as mods.eln.sixnode.lampsocket.DecorativeLampElement).fanVoltage)
+        }
         if(owner is LampSupplyElement && owner.descriptor.nominalVoltage>0)return MachineCordDevice(owner,owner.powerLoad) { owner.descriptor.nominalVoltage }
+        if(owner is mods.eln.transparentnode.festive.StringLightsElement)return object: MachineCordDevice(owner,owner.cordInput(),{ owner.cordNominalVoltage() }) {
+            override fun acceptsCord(rating: CordRating)=rating==CordRating.V120 || rating==CordRating.V240
+        }
         if(owner is BatteryChargerElement)return MachineCordDevice(owner,owner.powerLoad) { owner.descriptor.nominalVoltage }
         if(owner is ElectricalMachineElement)return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
         // Bind explicit power loads, never whichever load happens to be first in a list.
@@ -89,6 +95,7 @@ object CordSupport {
     @JvmStatic fun beforeDisconnect(owner: Any) {
         auxiliaryNodes(owner).forEach { it.disconnect() }
         WirelessOutletPower.disconnectSupply(owner)
+        mods.eln.transparentnode.festive.StringLightsElement.disconnectSupply(owner)
         device(owner)?.cord?.disconnect()
     }
     @JvmStatic fun broken(owner: Any) { device(owner)?.cord?.onBroken() }

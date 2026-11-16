@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:modern_sputnik_foyer_chandelier",
-    "minecraft:copper_ingot"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:copper_ingot",
+    "L": "eln:modern_sputnik_foyer_chandelier",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:sculptural_branch_chandelier"

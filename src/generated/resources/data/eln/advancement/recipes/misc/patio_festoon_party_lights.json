@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "eln:flexible_neon_led_strip"
+            "items": "minecraft:orange_dye"
           }
         ]
       },

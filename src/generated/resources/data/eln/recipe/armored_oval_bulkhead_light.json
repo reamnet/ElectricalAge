@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:robust_lamp_socket",
-    "minecraft:iron_bars"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:iron_bars",
+    "L": "eln:robust_lamp_socket",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:armored_oval_bulkhead_light"

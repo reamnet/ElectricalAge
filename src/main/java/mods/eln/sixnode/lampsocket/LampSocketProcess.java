@@ -58,7 +58,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
     public void process(double time) {
         ItemStack lampStack = lamp.getInventory().getItem(0);
 
-        if (!lamp.poweredByLampSupply) {
+        if (!lamp.isWirelessPower()) {
             lamp.setIsConnectedToLampSupply(false);
             oldLampSupply = null;
         } else {
@@ -71,7 +71,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
                     if (s.element.isBurnt()) continue; // out of the simulation; its powerLoad is stale
                     // 26.x: a supply that isn't simulated (removed without its destroy, e.g. /setblock, or frozen by
                     // Stasis Delvers) would win as the nearest and leave its channel OFF for good (AdventurAgent)
-                    if (s.element.sixNode == null || !s.element.sixNode.isAdded() || s.element.sixNode.isDestructing()) continue;
+                    if (s.element.sixNode == null || !mods.eln.transparentnode.cord.CordSupport.active(s.element) || s.element.sixNode.coordonate.dimention != myCoord.dimention) continue;
                     float distance = (float) s.element.sixNode.coordonate.trueDistanceTo(myCoord);
                     if (distance < bestDistance && distance <= s.element.getRange()) {
                         bestDistance = distance;
@@ -80,10 +80,8 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
                 }
             }
             if (best != null && best.element.getChannelState(best.id)) {
-                if (!Utils.isEmpty(lampStack)) {
-                    LampDescriptor lampDescriptor = (LampDescriptor) ((GenericItemUsingDamageDescriptor) Utils.getItemObject(lampStack));
-                    best.element.addToRp(lamp.getLampResistance(lampDescriptor));
-                }
+                double resistance = lamp.getWirelessResistance();
+                if (Double.isFinite(resistance) && resistance > 0) best.element.addToRp(resistance);
                 lamp.positiveLoad.state = best.element.powerLoad.state;
                 oldLampSupply = best.element;
             } else {
@@ -94,7 +92,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
             lamp.setIsConnectedToLampSupply(best != null);
         }
 
-        if (!Utils.isEmpty(lampStack)) {
+        if (!Utils.isEmpty(lampStack) && lamp.isLampEnergized()) {
             LampDescriptor lampDescriptor = (LampDescriptor) ((GenericItemUsingDamageDescriptor) Utils.getItemObject(lampStack));
 
             if (lamp.getCoordonate().getBlockExist() && lampDescriptor.vegetableGrowRate != 0.0) {
@@ -160,7 +158,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
             stableProb = 0;
         }
 
-        if (!Utils.isEmpty(lampStack)) {
+        if (!Utils.isEmpty(lampStack) && lamp.isLampEnergized()) {
             LampDescriptor lampDescriptor = (LampDescriptor) ((GenericItemUsingDamageDescriptor) Utils.getItemObject(lampStack));
 
             if (stableProb < 0)

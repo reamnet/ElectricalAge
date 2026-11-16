@@ -231,17 +231,20 @@ def lighting_matrix(source, target, output, ids):
         if symbol.startswith(('LUXURY_','PARKING_','STREET_','SIDEWALK_')) or symbol=='PARKING': needs.append('large/tall reservation, picking and render reach')
         if symbol in {'DESK','TABLE_DRUM','TABLE_BANKER','TABLE_TASK','WINDOW_CANDLE','HALLOWEEN_JACK','DECK_POST_CAP'}: needs.append('portable/carry and cord ownership')
         if symbol.startswith(('DOT','PARKING','STREET_')) or symbol in {'POT_GIMBAL','WAREHOUSE','HEAVY_FLOOD','RIG_FLOOD','EAVE_TWIN','AREA_FLOOD','PARTY_WASH'}: needs.append('per-head aim; parking/street axial pan where applicable')
-        if symbol.startswith('SIDEWALK_'): needs.append('review exact source aiming helper before registering')
+        if symbol.startswith('SIDEWALK_'): needs.append('verify exact source aiming helper and item pose')
         model_present = (target / f'src/main/resources/assets/eln/model/{model}').is_dir()
         records.append(dict(symbol=symbol, sourceOrdinal=index, lookup=lookup, name=name, bulbs=int(bulbs), depth=float(depth), range=int(distance), nativeAdapter=registered, model=model, targetIdentityAtSourceLookup=native['display'] if native else None, modelDirectoryPresent=model_present, minimumWork=needs))
     native_text=(target/'src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt').read_text()
     native_symbols=re.findall(r'^    ([A-Z][A-Z_0-9]*)\(\d+,',native_text,re.M)
     assert {r['symbol'] for r in records if r['nativeAdapter']}==set(native_symbols)
-    assert len(records)==108 and sum(r['nativeAdapter'] for r in records)==21
+    assert len(records)==108, 'Pinned source fixture catalog changed; review ordinal mappings'
+    native_ordinals=dict(re.findall(r'^    ([A-Z][A-Z_0-9]*)\((\d+),',native_text,re.M))
+    assert all(int(native_ordinals[r['symbol']])==r['sourceOrdinal'] for r in records if r['nativeAdapter']), 'Native adapter source ordinal mismatch'
+    adapter_count=sum(r['nativeAdapter'] for r in records)
     lines=['# Decorative lighting and bulb completion matrix','',
         'Pinned source: `'+rev(source)+'`. The source enum order supplies the ordinals below; the native manifest supplies registration observations. Model-directory presence alone does not establish drawing, picking or behavior.', '',
-        '**Before appending styles:** extend the current first-range lookup helper. Source ordinals 0–29 map to 4116–4145; 30–87 map to 4352–4409; 88–107 map to 4480–4499. Using `4116 + sourceOrdinal` for later styles would collide with native lamp supplies, including 4160. Use the source ordinal, not the ordinal of a smaller native subset.', '',
-        'The first 21 adapters retain shared cross-cutting review work. Every other row is unregistered; minimum work below is a starting contract, not a claim that other source rules can be omitted.', '',
+        '**Identity mapping:** the native explicit-source-ordinal lookup helper covers all three ranges. Source ordinals 0–29 map to 4116–4145; 30–87 map to 4352–4409; 88–107 map to 4480–4499. Using `4116 + sourceOrdinal` for later styles would collide with native lamp supplies, including 4160. Use the source ordinal, not the ordinal of a smaller native subset.', '',
+        f'{adapter_count} of {len(records)} adapters are registered. Registration does not certify behavior: the current aim/fan/motion/suspension/water implementation awaits its recorded runtime validation. Portable carry/cord ownership, technology/configuration and partial-block support remain open shared work. Minimum work below is an acceptance contract, not a claim of completion.', '',
         '| Source lookup (six-node) | Symbol / fixture | Bulbs / beam range | Model asset path | Native state | Minimum work |','|---|---|---|---|---|---|']
     for r in records:
         state='Adapter registered; shared checks remain' if r['nativeAdapter'] else 'Unregistered'
@@ -252,7 +255,7 @@ def lighting_matrix(source, target, output, ids):
         '- Aim must transform both mesh and emitted light using the same pivot and side/front frame. Allocate nonconflicting native events: source motion event 4 collides with native channel event 4.',
         '- Match exact source place-direction and ghost rules. Strips and pool fittings do not all share a ceiling-only mounting policy. Extend render reach, selection and cached ghost changes for large or moving fixtures.',
         '- The existing fixed panel is 176×166; source aimed panels use 176×242 and warehouse suspension uses 176×198. Adapt server menus and controls together while preserving overlap/slot checks.',
-        '- Air-only native light blocks need an adapter for source waterlogged leases, source-water preservation and expiry before underwater fixtures can have full lighting behavior.',
+        '- The water-preserving lease adapter requires source-water preservation, owner overlap, submerged picking and expiry validation; registration does not establish those behaviors.',
         '- Compare source and native lit/unlit reference views, partial bulb stacks, all facings, obstruction/unload, automation and actual paid source power. Do not register fans, motion or suspension as inert static lamps.', '', '## Source bulb identities','',
         'These are the 18 source registrations, not replacements for established 50/200 V native bulbs. The two LED adapters are implemented at 302/303; the remaining source ratings/technologies require mapping and source behavior/configuration review. Native aging and the source per-technology system still differ.', '',
         '| Source shared lookup | Source bulb | Exact-display native key | Identity currently at source lookup |','|---|---|---|---|']
@@ -290,7 +293,7 @@ def render_plan(config, summary, grouped, output):
         '- [Lighting matrix](lighting-port-matrix.md): all 108 decorative fixtures, their source lookups, minimum special adapters and all 18 source bulb registrations.',
         '- [Audit summary](completion-audit.json) and [curated task definitions](completion-workstreams.json). Existing [adapter backlog/evidence](remaining-work.md) remains the entry point for completed checkpoints.', '',
         '## Recommended implementation order','',
-        'Resolve identities, mounting/ownership and semantic solver differences first. Continue fixed lighting variants while building the aim/motion/underwater/fan/suspension adapters. Portable carry and the generalized panel unlock the remaining appliance families. Room climate/fluid services precede cooling and growing behavior. Road vehicles reuse pack/charger foundations but still require entities and controls. Run GUI, assets, network, migration and source-oracle reviews alongside each family; finish loaded-world and release campaigns after the intended scope is implemented.', '',
+        'Resolve identities, mounting/ownership and semantic solver differences first. Validate the registered108 lighting adapters, including aim/motion/underwater/fan/suspension behavior. Portable carry and the generalized panel unlock the remaining appliance families. Room climate/fluid services precede cooling and growing behavior. Road vehicles reuse pack/charger foundations but still require entities and controls. Run GUI, assets, network, migration and source-oracle reviews alongside each family; finish loaded-world and release campaigns after the intended scope is implemented.', '',
         'Existing native save compatibility is required throughout. Full source-world conversion is a separate deliverable; do not block all feature development on it or claim native save round trips implement it.', '',
         '| Stream | Current assessment | Source files | Prerequisites |','|---|---|---:|---|']
     for work in config['workstreams']:
@@ -310,7 +313,7 @@ def render_plan(config, summary, grouped, output):
     lines += ['', '## Handoff and evidence requirements','',
         'For every implementation batch record: pinned source files/hashes, source behavior and native counterpart, explicit identity/recipe decisions, changed simulation/ownership/render/menu paths, tests with independent expected results, runtime captures and remaining limitations. Keep old native IDs, goldens, tolerances and skips intact. Preserve exact component/condition, energy/heat/material ledgers, cached matrices and resident-only queries.', '',
         'Use the established full JDKs outside tracked files: JDK 21 for the pinned source and JDK 25 for the target. Keep both projects’ pinned Gradle configuration. Do not compile changed main classes while a client/test JVM reads the same build outputs. Commit code first, assemble from that clean code commit, verify packaged class/resource bytes and record its marker/checksum in an evidence-only follow-up.', '',
-        'The current production evidence is [the lighting checkpoint](decorative-lighting-validation.json): 690 root passes, three existing optional preview skips, 15 CAD passes, and 1,310/1,312 native passes with all 846 ForkPatch cases passing. Only the two historical goldens fail; [their exact delta](decorative-lighting-golden-delta.json) remains open. This documentation audit does not rerun or extend that runtime claim.', '',
+        'Runtime evidence is versioned in [the lighting checkpoint](decorative-lighting-validation.json) and [the exact historical golden delta](decorative-lighting-golden-delta.json). Those reports apply only to their recorded source fingerprints/commits; newly indexed adapters remain validation-pending until independently recorded. This documentation audit does not rerun or extend runtime claims.', '',
         'Regenerate the indexes after a feature batch and review status manually; the generator never marks a stream complete:', '',
         '```sh', 'python3 tools/port/plan_completion.py --source ../ELN1.21.1ForkPatch', '```', '',
         'Generated data, build/tool scripts and references in the support index still require the explicit tasks above; that file coverage does not turn them all into runtime port requirements. Optional dependency availability, external EAMedia code and source-world fixture exports require separate review. Hardware tests and behavioral review can reveal further deltas; those remain accountable work rather than an unsupported claim that all unknown issues are solved.', '']

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:blue_dye",
+    "G": "minecraft:glass",
+    "L": "eln:basic_lamp_holder",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "GLG",
+    " P "
+  ],
+  "result": {
+    "id": "eln:twin_wide_area_parking_lot_light"
+  }
+}

@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:flexible_neon_led_strip",
-    "minecraft:pumpkin"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:pumpkin",
+    "L": "eln:string_lights",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:halloween_pumpkin_string_lights"

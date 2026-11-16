@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:120v_led_light_bulb",
+    "minecraft:string"
+  ],
+  "result": {
+    "count": 2,
+    "id": "eln:string_lights"
+  }
+}

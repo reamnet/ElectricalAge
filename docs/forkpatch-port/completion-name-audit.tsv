@@ -167,8 +167,8 @@ sourceLiteralName	sourceFiles	nativeExactDisplayKeys	review
 800V Arc Furnace	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 AC LiFePO4 Battery Charger	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8202	runtime-registration-and-semantic-review
 AND Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7553	runtime-registration-and-semantic-review
-Adjustable Gimbal Recessed Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Adjustable Suspended Warehouse Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Adjustable Gimbal Recessed Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4142	runtime-registration-and-semantic-review
+Adjustable Suspended Warehouse Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4409	runtime-registration-and-semantic-review
 Advanced Chip	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7681	runtime-registration-and-semantic-review
 Advanced Electrical Motor	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@641	runtime-registration-and-semantic-review
 Advanced Energy Meter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6277	runtime-registration-and-semantic-review
@@ -189,11 +189,11 @@ Animal Filter	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shar
 Arc Clay Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Arc Metal Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Arc Runner Coupe	src/main/kotlin/mods/eln/vehicle/RoadVehicles.kt		runtime-registration-and-semantic-review
-Arched Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Arched Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4489	runtime-registration-and-semantic-review
 Arithmetic Logic Unit	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@8068	runtime-registration-and-semantic-review
-Armored Oval Bulkhead Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Articulated Task Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Aura Five Blade Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Armored Oval Bulkhead Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4365	runtime-registration-and-semantic-review
+Articulated Task Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4139	runtime-registration-and-semantic-review
+Aura Five Blade Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4391	runtime-registration-and-semantic-review
 Auto Miner	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@2688	runtime-registration-and-semantic-review
 Automatic Load Shedding Controller	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8070	runtime-registration-and-semantic-review
 Automatic Transfer Switch	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7942	runtime-registration-and-semantic-review
@@ -207,7 +207,7 @@ Black Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared
 Blown Lead Fuse	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:shared_item@6283	runtime-registration-and-semantic-review
 Blown Pole Fuse	src/main/kotlin/mods/eln/utility/PoleHardware.kt	eln:shared_item@7895	runtime-registration-and-semantic-review
 Blue Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7620	runtime-registration-and-semantic-review
-Boulevard Lantern Street Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Boulevard Lantern Street Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4373	runtime-registration-and-semantic-review
 Brown Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7619	runtime-registration-and-semantic-review
 Candle Arm Foyer Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4127	runtime-registration-and-semantic-review
 Canister of Arc Water	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
@@ -215,17 +215,17 @@ Canister of Water	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		run
 Capacity Oriented Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@1025	runtime-registration-and-semantic-review
 Casing	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7733	runtime-registration-and-semantic-review
 Ceiling Color Segregated Cable Tray	src/main/kotlin/mods/eln/utility/ColorCableTray.kt		runtime-registration-and-semantic-review
-Ceramic Drum Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Ceramic Drum Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4137	runtime-registration-and-semantic-review
 Cheap Chip	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7680	runtime-registration-and-semantic-review
 Cheap Electrical Drill	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@960	runtime-registration-and-semantic-review
 Cheap Ferromagnetic Core	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@448	runtime-registration-and-semantic-review
-Christmas Icicle Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Christmas Star Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Christmas Icicle Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4376	runtime-registration-and-semantic-review
+Christmas Star Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4377	runtime-registration-and-semantic-review
 Christmas Tree	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Cinnabar Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@10	runtime-registration-and-semantic-review
 Cinnabar Ore	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:ore@6	runtime-registration-and-semantic-review
 Classic Box Fan	src/main/kotlin/mods/eln/transparentnode/fan/FanType.kt		runtime-registration-and-semantic-review
-Classic Four Blade Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Classic Four Blade Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4388	runtime-registration-and-semantic-review
 Classic Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
 Climate Controlled Growing Bed	src/main/kotlin/mods/eln/transparentnode/growing/GrowingBedClient.kt		runtime-registration-and-semantic-review
 Clutch	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
@@ -272,8 +272,8 @@ D Flip Flop Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	el
 DC-DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@128	runtime-registration-and-semantic-review
 Data Logger	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@5952	runtime-registration-and-semantic-review
 Data Logger Print	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7712	runtime-registration-and-semantic-review
-Deck Post Cap Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Deck Step Riser Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Deck Post Cap Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4406	runtime-registration-and-semantic-review
+Deck Step Riser Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4407	runtime-registration-and-semantic-review
 Deep Baffle Recessed Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4140	runtime-registration-and-semantic-review
 Diamond Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Dielectric	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7732	runtime-registration-and-semantic-review
@@ -281,7 +281,7 @@ Digital Display	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		ru
 Digital Watch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7493	runtime-registration-and-semantic-review
 Direct Utility Pole	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Double Candle Wall Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4136	runtime-registration-and-semantic-review
-Dual Gumdrop Sidewalk Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Dual Gumdrop Sidewalk Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4499	runtime-registration-and-semantic-review
 E-Coal Boots	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:e_coal_boots@0	runtime-registration-and-semantic-review
 E-Coal Chestplate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:e_coal_chestplate@0	runtime-registration-and-semantic-review
 E-Coal Helmet	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:e_coal_helmet@0	runtime-registration-and-semantic-review
@@ -298,7 +298,7 @@ Electric Minecart	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		run
 Electric Mini Fridge	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
 Electric Mini Oven	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
 Electric Patio Heater	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
-Electric Poolside Tiki Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Electric Poolside Tiki Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4402	runtime-registration-and-semantic-review
 Electric Refrigerator	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
 Electric Rice Cooker	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
 Electric Toaster	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
@@ -341,7 +341,7 @@ Fixed Shaft	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt
 Flat Electric Cooktop	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
 Flat Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4101	runtime-registration-and-semantic-review
 Flexible Appliance Cord	src/main/kotlin/mods/eln/registration/ItemRegistration.kt;src/main/kotlin/mods/eln/transparentnode/cord/CordRating.kt	eln:shared_item@7874	runtime-registration-and-semantic-review
-Flexible Neon LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Flexible Neon LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4358	runtime-registration-and-semantic-review
 Fluorescent Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4103	runtime-registration-and-semantic-review
 Flywheel	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@270	runtime-registration-and-semantic-review
 Four Cell Plug-in UPS	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@8076	runtime-registration-and-semantic-review
@@ -362,23 +362,23 @@ Gold Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_i
 Gold Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7688	runtime-registration-and-semantic-review
 Gooseneck Barn Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4144	runtime-registration-and-semantic-review
 Gooseneck Service Mast	src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt	eln:transparent_node@8030	runtime-registration-and-semantic-review
-Grand Crystal Cascade Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Grand Empire Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Grand Halo Ring Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Grand Crystal Cascade Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4360	runtime-registration-and-semantic-review
+Grand Empire Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4363	runtime-registration-and-semantic-review
+Grand Halo Ring Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4359	runtime-registration-and-semantic-review
 Graphite Rod	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Gray Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7624	runtime-registration-and-semantic-review
-Green Banker Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Green Banker Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4138	runtime-registration-and-semantic-review
 Green Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7618	runtime-registration-and-semantic-review
 Grid Control Console	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8065	runtime-registration-and-semantic-review
 Grid DC-DC Converter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Grid Switch	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Ground Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@128	runtime-registration-and-semantic-review
-Gumdrop Sidewalk Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Halloween Bat Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Halloween Ghost String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Halloween Pumpkin String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Harbor Gooseneck Pier Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Heavy Duty Stadium Wall Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Gumdrop Sidewalk Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4498	runtime-registration-and-semantic-review
+Halloween Bat Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4380	runtime-registration-and-semantic-review
+Halloween Ghost String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4379	runtime-registration-and-semantic-review
+Halloween Pumpkin String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4378	runtime-registration-and-semantic-review
+Harbor Gooseneck Pier Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4482	runtime-registration-and-semantic-review
+Heavy Duty Stadium Wall Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4364	runtime-registration-and-semantic-review
 Heavy Winding	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 High Current Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
 High Current Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
@@ -389,19 +389,19 @@ High Voltage Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	
 High Voltage Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6208	runtime-registration-and-semantic-review
 Holiday Candle	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Hot Water	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenFoods.kt		runtime-registration-and-semantic-review
-Household Desk Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Household Desk Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4118	runtime-registration-and-semantic-review
 Hub	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@136	runtime-registration-and-semantic-review
 Humidity Sensor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
 Hybrid Solar Inverter	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7945	runtime-registration-and-semantic-review
 Improved Flashlight	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7745	runtime-registration-and-semantic-review
-Indirect Cove LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Indirect Cove LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4356	runtime-registration-and-semantic-review
 Industrial Cage Wall Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4135	runtime-registration-and-semantic-review
 Industrial Create Shaft Adapter	src/main/kotlin/mods/eln/integration/create/CreateIntegration.kt		runtime-registration-and-semantic-review
 Industrial Data Logger	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@5954	runtime-registration-and-semantic-review
-Industrial Five Block Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Industrial Five Block Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4390	runtime-registration-and-semantic-review
 Industrial Five Block Fan	src/main/kotlin/mods/eln/transparentnode/fan/FanType.kt		runtime-registration-and-semantic-review
-Industrial Wall Pack Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Industrial Yard Area Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Industrial Wall Pack Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4366	runtime-registration-and-semantic-review
+Industrial Yard Area Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4368	runtime-registration-and-semantic-review
 Inert Canister	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Iron Cable	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4161	runtime-registration-and-semantic-review
 Iron Clutch Plate	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
@@ -412,7 +412,7 @@ Iron Turbine Blade	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		ru
 Irresponsible Electrical Drill	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Isolation Transformer	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 JK Flip Flop Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7563	runtime-registration-and-semantic-review
-Jack O Lantern Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Jack O Lantern Table Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4381	runtime-registration-and-semantic-review
 Joint	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@268	runtime-registration-and-semantic-review
 Joint hub	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@269	runtime-registration-and-semantic-review
 Jukebox Ceiling Speaker	src/main/kotlin/mods/eln/api/media/MediaAddonProvider.kt		runtime-registration-and-semantic-review
@@ -420,7 +420,7 @@ Jukebox Standing Speaker	src/main/kotlin/mods/eln/api/media/MediaAddonProvider.k
 LED vuMeter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6536	runtime-registration-and-semantic-review
 Lantern Cage Foyer Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4130	runtime-registration-and-semantic-review
 Lapis Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
-Large Area Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Large Area Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4392	runtime-registration-and-semantic-review
 Large Flywheel	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Large Gas Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Large Generator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
@@ -445,15 +445,15 @@ LiFePO4 MPPT Charge Controller	src/main/kotlin/mods/eln/transparentnode/offgrid/
 Life Oriented Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@1028	runtime-registration-and-semantic-review
 Light Blue Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7628	runtime-registration-and-semantic-review
 Lime Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7626	runtime-registration-and-semantic-review
-Linear Pool Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Linear Pool Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4397	runtime-registration-and-semantic-review
 Long Suspended Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4109	runtime-registration-and-semantic-review
 Long Suspended Lamp Socket (No Swing)	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
-Louvered Walkway Bollard	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Louvered Walkway Bollard	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4485	runtime-registration-and-semantic-review
 Low Current Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
 Low Current Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
 Low Power Receiver Antenna	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@449	runtime-registration-and-semantic-review
 Low Power Transmitter Antenna	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@448	runtime-registration-and-semantic-review
-Low Profile Dock Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Low Profile Dock Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4484	runtime-registration-and-semantic-review
 Low Voltage Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@2052	runtime-registration-and-semantic-review
 Low Voltage Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6016	runtime-registration-and-semantic-review
 Low Voltage Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6209	runtime-registration-and-semantic-review
@@ -465,7 +465,7 @@ Machine Block	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shar
 Machine Booster	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7702	runtime-registration-and-semantic-review
 Magenta Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7629	runtime-registration-and-semantic-review
 Mains Step-down Unit	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7882	runtime-registration-and-semantic-review
-Marine Pier Bulkhead Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Marine Pier Bulkhead Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4481	runtime-registration-and-semantic-review
 Medium Current Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
 Medium Current Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
 Medium Fuel Burner	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7937	runtime-registration-and-semantic-review
@@ -477,44 +477,44 @@ Medium Voltage Relay	src/main/kotlin/mods/eln/registration/SixNodeRegistration.k
 Medium Voltage Switch	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6210	runtime-registration-and-semantic-review
 Mercury	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@520	runtime-registration-and-semantic-review
 Metal Shop Box Fan	src/main/kotlin/mods/eln/transparentnode/fan/FanType.kt		runtime-registration-and-semantic-review
-Mini Bezel Dot Spotlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Mini Deep Baffle Dot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Mini Dot Spotlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Mini Eyeball Dot Spotlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Mini Pinhole Dot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Mini Twin Dot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Mini Bezel Dot Spotlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4383	runtime-registration-and-semantic-review
+Mini Deep Baffle Dot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4385	runtime-registration-and-semantic-review
+Mini Dot Spotlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4121	runtime-registration-and-semantic-review
+Mini Eyeball Dot Spotlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4384	runtime-registration-and-semantic-review
+Mini Pinhole Dot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4382	runtime-registration-and-semantic-review
+Mini Twin Dot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4386	runtime-registration-and-semantic-review
 Mining Pipe	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@1088	runtime-registration-and-semantic-review
 Modbus RTU	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
-Modern Blade Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Modern Blade Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4487	runtime-registration-and-semantic-review
 Modern Data Logger	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@5953	runtime-registration-and-semantic-review
 Modern Fireplace TV Stand	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
-Modern LED Street Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Modern LED Street Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4372	runtime-registration-and-semantic-review
 Modern Sputnik Foyer Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4131	runtime-registration-and-semantic-review
-Modern Three Blade Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Modern Three Blade Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4389	runtime-registration-and-semantic-review
 Monster Filter	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7721	runtime-registration-and-semantic-review
 Motor Cowling	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 MultiMeter	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
-Multicolor Christmas String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Multicolor Christmas String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4375	runtime-registration-and-semantic-review
 Multicolor Deck Globe String Lights	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Multicolor Fairy Lights on Green Wire	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Multicolor LED vuMeter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
-Multicolor Party Wash Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Mushroom Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Multicolor Party Wash Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4403	runtime-registration-and-semantic-review
+Mushroom Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4488	runtime-registration-and-semantic-review
 NAND Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7554	runtime-registration-and-semantic-review
 NOR Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7556	runtime-registration-and-semantic-review
 NOT Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7552	runtime-registration-and-semantic-review
 NTC Thermistor	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@8066	runtime-registration-and-semantic-review
-Nautical Pier Bollard Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Nautical Pier Bollard Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4480	runtime-registration-and-semantic-review
 Nibble Memory Chip	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@8067	runtime-registration-and-semantic-review
 Nixie Tube	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 North American Meter Base	src/main/kotlin/mods/eln/utility/HouseServiceClient.kt	eln:transparent_node@7987	runtime-registration-and-semantic-review
 Nuclear Alarm	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6592	runtime-registration-and-semantic-review
 OR Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7555	runtime-registration-and-semantic-review
 Off-grid Inverter Charger	src/main/kotlin/mods/eln/transparentnode/offgrid/OffGridDevices.kt	eln:transparent_node@8200	runtime-registration-and-semantic-review
-Offset Twin Arm Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Offshore Caged Wellglass Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Offshore Platform Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Offshore Sealed Linear Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Offset Twin Arm Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4395	runtime-registration-and-semantic-review
+Offshore Caged Wellglass Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4369	runtime-registration-and-semantic-review
+Offshore Platform Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4371	runtime-registration-and-semantic-review
+Offshore Sealed Linear Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4370	runtime-registration-and-semantic-review
 Old 480V Arc Furnace	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 On/OFF Regulator 1 Percent	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 On/OFF Regulator 10 Percent	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
@@ -527,7 +527,7 @@ Optimal Ferromagnetic Core	src/main/kotlin/mods/eln/registration/ItemRegistratio
 Orange Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7630	runtime-registration-and-semantic-review
 Ore Scanner	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@1024	runtime-registration-and-semantic-review
 Oscillator Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7562	runtime-registration-and-semantic-review
-Outdoor Motion Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Outdoor Motion Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4126	runtime-registration-and-semantic-review
 Overhead Lines	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Overheating Protection	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@320	runtime-registration-and-semantic-review
 Overvoltage Protection	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@321	runtime-registration-and-semantic-review
@@ -535,8 +535,8 @@ PAL Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_no
 PID Regulator	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7937	runtime-registration-and-semantic-review
 Pad Mounted Neighbourhood Transformer	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8068	runtime-registration-and-semantic-review
 Patio Electric Grill	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt		runtime-registration-and-semantic-review
-Patio Festoon Party Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Pier Lantern Post Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Patio Festoon Party Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4401	runtime-registration-and-semantic-review
+Pier Lantern Post Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4483	runtime-registration-and-semantic-review
 Pink Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7625	runtime-registration-and-semantic-review
 Player Filter	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7720	runtime-registration-and-semantic-review
 Polarized Shaft Generator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
@@ -544,10 +544,10 @@ Polarized Shaft Motor	src/main/kotlin/mods/eln/registration/TransparentNodeRegis
 Pole Fuse Link	src/main/kotlin/mods/eln/utility/UtilityItems.kt	eln:shared_item@7876	runtime-registration-and-semantic-review
 Pole Streetlight Attachment	src/main/kotlin/mods/eln/utility/UtilityItems.kt	eln:shared_item@7896	runtime-registration-and-semantic-review
 Pole Surge Arrester	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8067	runtime-registration-and-semantic-review
-Pool Corner Wash Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Pool Step Marker Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Poolside Globe String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Poolside Party Lantern	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Pool Corner Wash Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4399	runtime-registration-and-semantic-review
+Pool Step Marker Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4400	runtime-registration-and-semantic-review
+Poolside Globe String Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4404	runtime-registration-and-semantic-review
+Poolside Party Lantern	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4405	runtime-registration-and-semantic-review
 Porch Lantern Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4122	runtime-registration-and-semantic-review
 Portable Battery	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7808	runtime-registration-and-semantic-review
 Portable Battery Pack	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7809	runtime-registration-and-semantic-review
@@ -569,11 +569,11 @@ Programmable Load Bank	src/main/kotlin/mods/eln/transparentnode/industrial/Indus
 Programmable UPS	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7947	runtime-registration-and-semantic-review
 Protective Relay Cabinet	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialKind.kt	eln:transparent_node@8066	runtime-registration-and-semantic-review
 Purple Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7621	runtime-registration-and-semantic-review
-Quad Head Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Quad Head Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4393	runtime-registration-and-semantic-review
 Radial Motor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
-Recessed Brick Patio Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Recessed LED Channel	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Recessed Square Patio Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Recessed Brick Patio Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4490	runtime-registration-and-semantic-review
+Recessed LED Channel	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4355	runtime-registration-and-semantic-review
+Recessed Square Patio Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4493	runtime-registration-and-semantic-review
 Red Brush	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7617	runtime-registration-and-semantic-review
 Red Handle Service Disconnect	src/main/kotlin/mods/eln/utility/HouseServiceClient.kt	eln:transparent_node@7992	runtime-registration-and-semantic-review
 Redstone-to-Voltage Converter	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6912	runtime-registration-and-semantic-review
@@ -581,20 +581,20 @@ Reinforced Shaft	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runt
 Rheostat	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6181	runtime-registration-and-semantic-review
 Robust Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4100	runtime-registration-and-semantic-review
 Rolling Shaft 	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
-Round Canopy Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Round Niche Pool Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Round Canopy Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4394	runtime-registration-and-semantic-review
+Round Niche Pool Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4396	runtime-registration-and-semantic-review
 Round Recessed Ceiling Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4119	runtime-registration-and-semantic-review
-Round Stone Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Round Stone Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4491	runtime-registration-and-semantic-review
 Rubber	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4097	runtime-registration-and-semantic-review
-Rugged Outdoor Canopy Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Rugged Outdoor Canopy Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4367	runtime-registration-and-semantic-review
 Sample and hold	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7943	runtime-registration-and-semantic-review
 Scanner	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6671	runtime-registration-and-semantic-review
 Schmitt Trigger Chip	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7560	runtime-registration-and-semantic-review
 Sconce Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4105	runtime-registration-and-semantic-review
-Sculptural Branch Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Sculptural Branch Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4361	runtime-registration-and-semantic-review
 Shaft Motor	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
-Shielded Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Shoebox Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Shielded Walkway Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4486	runtime-registration-and-semantic-review
+Shoebox Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4495	runtime-registration-and-semantic-review
 Signal 20H inductor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6160	runtime-registration-and-semantic-review
 Signal Antenna	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7713	runtime-registration-and-semantic-review
 Signal Bus Cable	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
@@ -625,7 +625,7 @@ Single Phase Utility Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	e
 Single Pole Contactor	src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt	eln:transparent_node@8037	runtime-registration-and-semantic-review
 Single-use Battery	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@1029	runtime-registration-and-semantic-review
 Six Socket Power Strip	src/main/kotlin/mods/eln/transparentnode/cord/OutletClient.kt	eln:transparent_node@7991	runtime-registration-and-semantic-review
-Slotted Patio Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Slotted Patio Wall Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4492	runtime-registration-and-semantic-review
 Small 240V Copper Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Small 240V Iron Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Small 240V Tungsten Heating Element	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
@@ -642,22 +642,22 @@ Small Solar Panel	src/main/kotlin/mods/eln/registration/TransparentNodeRegistrat
 Smart Digital Service Meter	src/main/kotlin/mods/eln/utility/UtilityItems.kt	eln:shared_item@7878	runtime-registration-and-semantic-review
 Solar Tracker	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@704	runtime-registration-and-semantic-review
 Solid State Relay	src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt	eln:transparent_node@8041	runtime-registration-and-semantic-review
-Spiral Rain Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Spiral Rain Chandelier	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4362	runtime-registration-and-semantic-review
 Spot Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
-Square Recessed Pool Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Square Recessed Pool Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4398	runtime-registration-and-semantic-review
 Standard Alarm	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@6593	runtime-registration-and-semantic-review
 Standby Gasoline Generator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt;src/main/kotlin/mods/eln/transparentnode/standby/GeneratorTier.kt	eln:transparent_node@7943	runtime-registration-and-semantic-review
-Standing Drum Floor Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Standing Drum Floor Lamp	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4353	runtime-registration-and-semantic-review
 Steam Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@265	runtime-registration-and-semantic-review
 Steamed Grains	src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenFoods.kt		runtime-registration-and-semantic-review
 Steel Roller Wheel	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@7553	runtime-registration-and-semantic-review
 Steel Turbine Blade	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Stone Heat Furnace	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@192	runtime-registration-and-semantic-review
-Stone Wall Wash Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Stone Wall Wash Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4494	runtime-registration-and-semantic-review
 StreetLightWall	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Streetlight	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4104	runtime-registration-and-semantic-review
-String Lights	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
-Surface Linear LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+String Lights	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4418	runtime-registration-and-semantic-review
+Surface Linear LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4357	runtime-registration-and-semantic-review
 Suspended Factory Fluorescent Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4125	runtime-registration-and-semantic-review
 Suspended Lamp Socket	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@4108	runtime-registration-and-semantic-review
 Suspended Lamp Socket (No Swing)	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
@@ -675,7 +675,7 @@ Thermistor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_
 Thermometer	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@897	runtime-registration-and-semantic-review
 Thermometer Sensor	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt		runtime-registration-and-semantic-review
 Thin Fluorescent Shop Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4124	runtime-registration-and-semantic-review
-Three Arm Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Three Arm Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4497	runtime-registration-and-semantic-review
 Three Phase Automatic Voltage Regulator Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7982	runtime-registration-and-semantic-review
 Three Phase Fused Cutout Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@7976	runtime-registration-and-semantic-review
 Three Phase Fused Tap Secondary Fed Street Light Pole	src/main/kotlin/mods/eln/utility/DistributionPole.kt	eln:transparent_node@8022	runtime-registration-and-semantic-review
@@ -699,7 +699,7 @@ Transmission Tower	src/main/kotlin/mods/eln/registration/TransparentNodeRegistra
 Tree Resin	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4096	runtime-registration-and-semantic-review
 Tree Resin Collector	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7424	runtime-registration-and-semantic-review
 Trimless Recessed Downlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4141	runtime-registration-and-semantic-review
-Tropical Patio Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Tropical Patio Ceiling Fan	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4408	runtime-registration-and-semantic-review
 Tungsten Cable	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@4162	runtime-registration-and-semantic-review
 Tungsten Dust	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@6	runtime-registration-and-semantic-review
 Tungsten Ingot	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item@517	runtime-registration-and-semantic-review
@@ -709,14 +709,14 @@ Turbine Blade Set	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:
 Turbo Electrical Drill	src/main/kotlin/mods/eln/registration/ItemRegistration.kt		runtime-registration-and-semantic-review
 Tutorial Sign	src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt	eln:six_node@7496	runtime-registration-and-semantic-review
 Twelve Circuit American Breaker Panel	src/main/kotlin/mods/eln/utility/BreakerPanelClient.kt		runtime-registration-and-semantic-review
-Twin Adjustable Eave Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Twin Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Twin Wide Area Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Twin Adjustable Eave Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4387	runtime-registration-and-semantic-review
+Twin Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4116	runtime-registration-and-semantic-review
+Twin Wide Area Parking Lot Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4496	runtime-registration-and-semantic-review
 Two Pole Changeover Relay	src/main/kotlin/mods/eln/transparentnode/switchgear/SwitchgearKind.kt	eln:transparent_node@8039	runtime-registration-and-semantic-review
 UPS AGM Battery Cell	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7810	runtime-registration-and-semantic-review
 UPS Industrial Battery Module	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7812	runtime-registration-and-semantic-review
 UPS LiFePO4 Battery Cell	src/main/kotlin/mods/eln/registration/ItemRegistration.kt	eln:shared_item_stack_one@7811	runtime-registration-and-semantic-review
-Under Cabinet LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Under Cabinet LED Strip	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4354	runtime-registration-and-semantic-review
 Under Track Power	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Underground Service Entrance Riser	src/main/kotlin/mods/eln/utility/ServiceMastStyle.kt	eln:transparent_node@8129	runtime-registration-and-semantic-review
 Up Down Cylinder Wall Sconce	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4132	runtime-registration-and-semantic-review
@@ -746,8 +746,8 @@ Wall-mounted MPPT Solar Controller	src/main/kotlin/mods/eln/registration/Transpa
 Wall-mounted Mini-split Air Conditioner	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
 Wall-mounted Programmable UPS	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@7953	runtime-registration-and-semantic-review
 Warehouse Equipment Pallet	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt	eln:shared_item_stack_one@7491	runtime-registration-and-semantic-review
-Warehouse Wall Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
-Warm White Christmas Fairy Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Warehouse Wall Floodlight	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4117	runtime-registration-and-semantic-review
+Warm White Christmas Fairy Lights	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4374	runtime-registration-and-semantic-review
 Warm White Deck Globe String Lights	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt		runtime-registration-and-semantic-review
 Water Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@3152	runtime-registration-and-semantic-review
 Welded Machine Frame	src/main/kotlin/mods/eln/transparentnode/industrial/IndustrialItems.kt	eln:shared_item@7489	runtime-registration-and-semantic-review
@@ -757,7 +757,7 @@ White Fairy Lights on Green Wire	src/main/kotlin/mods/eln/registration/Transpare
 Wide Underground Meter Socket	src/main/kotlin/mods/eln/utility/HouseServiceClient.kt	eln:transparent_node@8128	runtime-registration-and-semantic-review
 Wind Turbine	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@3136	runtime-registration-and-semantic-review
 Window Air Conditioner	src/main/kotlin/mods/eln/transparentnode/climate/ClimateType.kt		runtime-registration-and-semantic-review
-Window Candle Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt		runtime-registration-and-semantic-review
+Window Candle Light	src/main/kotlin/mods/eln/sixnode/lampsocket/DecorativeLampStyle.kt	eln:six_node@4352	runtime-registration-and-semantic-review
 Wire Combiner	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4610	runtime-registration-and-semantic-review
 Wire Insulator	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4609	runtime-registration-and-semantic-review
 Wire Roller	src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt	eln:transparent_node@4608	runtime-registration-and-semantic-review

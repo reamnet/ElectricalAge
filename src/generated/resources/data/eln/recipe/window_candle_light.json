@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:basic_lamp_holder",
-    "minecraft:honeycomb"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:honeycomb",
+    "L": "eln:basic_lamp_holder",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:window_candle_light"

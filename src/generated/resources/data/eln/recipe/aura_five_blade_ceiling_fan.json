@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": "eln:basic_lamp_holder",
+    "M": "eln:electrical_motor",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "PMP",
+    "LLL",
+    "PPP"
+  ],
+  "result": {
+    "id": "eln:aura_five_blade_ceiling_fan"
+  }
+}

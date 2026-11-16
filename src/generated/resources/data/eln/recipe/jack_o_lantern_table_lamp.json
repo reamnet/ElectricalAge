@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:basic_lamp_holder",
-    "minecraft:carved_pumpkin"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:carved_pumpkin",
+    "L": "eln:basic_lamp_holder",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:jack_o_lantern_table_lamp"

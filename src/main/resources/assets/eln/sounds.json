@@ -436,5 +436,13 @@
                 "stream": false
             }
         ]
-    }
+    },
+  "appliance_ceiling_fan": {
+    "sounds": [
+      {
+        "name": "eln:appliance_ceiling_fan",
+        "stream": false
+      }
+    ]
+  }
 }

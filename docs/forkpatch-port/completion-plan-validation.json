@@ -1,32 +1,30 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetObservedCommit": "8b222f5a73a961d165b323662860ce5fb3e775cc",
+  "targetObservedCommit": "973bf4626483452f73d8a130cc86a73709d2968d",
   "sourceTrackedFiles": 7132,
   "allTrackedPathsAccountedForOnce": true,
   "allIndexedSourceHashesVerified": true,
   "nativeCandidateHashesAndAdapterPathsVerified": true,
   "workstreams": 37,
   "workstreamReferencesAndDependencyGraphChecked": true,
-  "changedMarkdownLinksAndSourceAnchorsChecked": true,
   "deterministicRegeneration": true,
   "outputSha256": {
-    "completion-source-audit.tsv": "2264ff2e36701f1e5ded91117d259ac367f40ae39263f28ea67603cb1971e029",
-    "completion-resource-audit.tsv": "1b0915124f4cf07031ed0bd399ca0fea68b10b510f26f9f8c955ba134ca29a18",
+    "completion-source-audit.tsv": "2dc6cb6916e57f1a666e34691ad2c5a74741f2af55569e8bc530174240330790",
+    "completion-resource-audit.tsv": "aa0aa0f40d914c753975d4c020596b0c693c92d013d7ce161949c7d840c6aef3",
     "completion-test-audit.tsv": "e60e63b75720450de5f90e4800b7c5a49d56a324c78ecb796e23a88c7f9651ad",
-    "completion-support-audit.tsv": "15f36ae2df88fe59558d2692fc3e8a7a6441290cbb530ad87bd4e8b99644d787",
-    "completion-name-audit.tsv": "7fc91fede4b07381feacb9d49caf46bd1bae967bc89d776d112e245731ff559a",
-    "completion-audit.json": "c56b8e6b932d1c6e8d267b6fc724bf316470642ced76b15aa4fa6dfb04adf25e",
-    "port-completion-plan.md": "d8277c366db32909d08e88d89af42bdad1f0b8752bd1a8eb16b2af927e4faadf",
-    "lighting-port-matrix.md": "66f3ddeb19dae909ff688f28c738c79156adf2fea41093e8bc9bc63eb5122d2f"
+    "completion-support-audit.tsv": "4e04519658af3aa87c4c25622c17a19276d1bcbd94feb069149834db6c8313af",
+    "completion-name-audit.tsv": "6f17ede26e254e7b5c962aacd76bea1d4780f1515b5f29e4b6d6399d1d575254",
+    "completion-audit.json": "0672abd8034353723356eb4d1fd45d28d35f4d28ebc4ec3b8d4183976913591e",
+    "port-completion-plan.md": "23c29a73105e10918a225f8ad38f0ed7f91eca81724a03e1b01326a37b36ccc9",
+    "lighting-port-matrix.md": "18d0c3a96870d348396f600b85b962ddb22965daa6f870e97276babb204d245f"
   },
-  "generatorSha256": "2cfcee545b6ff9ad101512262bdc484f7c2a6b54648ad434ed96b567c606a2b8",
-  "definitionSha256": "32a709830626f8f433d82944a2cf87a6ad975057acb15da9971234ea46d0ca03",
+  "generatorSha256": "f39e186f12849a4ad5ba467f6ae57ec506064178c0b8a1d78ace2836320e4aed",
+  "definitionSha256": "c7efd8676e012169975143f52db59340334cb75ff8ed306a4e06801d86d5a7ff",
   "provenanceAudit": {
-    "entries": 680,
+    "entries": 1044,
     "passed": true
   },
-  "productionCodeResourcesTestsAndGradlePinsUnchanged": true,
   "runtimeTestsRerun": false,
   "runtimeEvidence": "decorative-lighting-validation.json",
-  "scope": "Documentation/tooling validation. File coverage and hash matches do not certify behavioral parity; open work is explicit in the plan."
+  "scope": "Source coverage/provenance indexes regenerated at wrap-up. Runtime claims are in decorative-lighting-validation.json; final validation is pending."
 }

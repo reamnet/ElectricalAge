@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:basic_lamp_holder",
-    "minecraft:oak_slab"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:oak_slab",
+    "L": "eln:basic_lamp_holder",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:deck_post_cap_light"

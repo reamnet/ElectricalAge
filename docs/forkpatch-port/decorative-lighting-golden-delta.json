@@ -1,70 +1,95 @@
 {
- "previousAssertions": 685,
- "currentAssertions": 697,
- "unchangedExactAssertions": 685,
- "addedExactAssertions": [
-  {
-   "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4396: known in 1.12: no such item in golden/1.12/inventory.json",
-   "count": 1
-  },
-  {
-   "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4397: known in 1.12: no such item in golden/1.12/inventory.json",
-   "count": 1
-  },
-  {
-   "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4398: known in 1.12: no such item in golden/1.12/inventory.json",
-   "count": 1
-  },
-  {
-   "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4399: known in 1.12: no such item in golden/1.12/inventory.json",
-   "count": 1
-  },
-  {
-   "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4400: known in 1.12: no such item in golden/1.12/inventory.json",
-   "count": 1
-  },
-  {
-   "case": "golden_descriptors",
-   "assertion": "golden eln:six_node@4403: known in 1.12: no such item in golden/1.12/inventory.json",
-   "count": 1
-  },
-  {
-   "case": "golden_slots",
-   "assertion": "golden slots: Linear Pool Wall Light has no 1.12 container: spec from DecorativeLampDescriptor",
-   "count": 1
-  },
-  {
-   "case": "golden_slots",
-   "assertion": "golden slots: Multicolor Party Wash Light has no 1.12 container: spec from DecorativeLampDescriptor",
-   "count": 1
-  },
-  {
-   "case": "golden_slots",
-   "assertion": "golden slots: Pool Corner Wash Light has no 1.12 container: spec from DecorativeLampDescriptor",
-   "count": 1
-  },
-  {
-   "case": "golden_slots",
-   "assertion": "golden slots: Pool Step Marker Light has no 1.12 container: spec from DecorativeLampDescriptor",
-   "count": 1
-  },
-  {
-   "case": "golden_slots",
-   "assertion": "golden slots: Round Niche Pool Light has no 1.12 container: spec from DecorativeLampDescriptor",
-   "count": 1
-  },
-  {
-   "case": "golden_slots",
-   "assertion": "golden slots: Square Recessed Pool Light has no 1.12 container: spec from DecorativeLampDescriptor",
-   "count": 1
-  }
- ],
- "replacedPreviousAssertions": [],
- "referencesModified": false,
- "explanation": "The six pool/party-wash fixtures (4396-4400, 4403) add six absent-from-1.12 descriptor identities and six absent-from-1.12 container menus. All 685 previous failed assertions remain exact. Original expectations, tolerances and skips are unchanged."
+  "previousAssertions": 697,
+  "currentAssertions": 714,
+  "unchangedExactAssertions": 697,
+  "addedExactAssertions": [
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4126: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4388: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4389: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4390: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4391: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4408: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4409: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@4418: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Outdoor Motion Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Classic Four Blade Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Modern Three Blade Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Industrial Five Block Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Aura Five Blade Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Tropical Patio Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Adjustable Suspended Warehouse Light has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: String Lights has no 1.12 container: spec from StringLightsDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: StringLightsDescriptor in the 1.12 dump: spec without a 1.12 container",
+      "count": 1
+    }
+  ],
+  "removedExactAssertions": [],
+  "observedLog": "/tmp/eln-lamps-native-all-v4.log",
+  "scope": "Completed intermediate run v4; expectations unchanged. Latest v6 pending; confirm exact delta after it finishes."
 }

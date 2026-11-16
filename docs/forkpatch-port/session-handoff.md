@@ -1,0 +1,141 @@
+# Handoff — lamp completion and review since bb962e1
+
+User requested wrapping up and pushing all work on 2026-11-16. Continue in draft
+PR #1 on `reamnet/ElectricalAge`, branch `port/forkpatch-3.0.77-26.3`, base
+`ports/26.3`. Keep PR title/base/draft unchanged. Use the GitHub connector as
+**reamnet**; its profile was verified. Local gh authentication is broken.
+Fetch and inspect the current HEAD and local edits before doing anything.
+
+Repository: `/home/matthew/projects/electrical-age-port/ElectricalAge`.
+Pinned read-only source: `../ELN1.21.1ForkPatch` at
+`b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Source remains clean.
+Starting HEAD this session was `973bf4626483452f73d8a130cc86a73709d2968d`;
+there were no newer remote commits at the final fetch before publication.
+Initial untracked fan/suspension models/icons were preserved and incorporated.
+
+## Read first
+
+- `review-since-bb962e1.md`: findings across all 14 commits / 935 files / 20 code files.
+- `decorative-lighting.md`, `decorative-lighting-validation.json`.
+- `remaining-work.md`, `port-completion-plan.md`, `lighting-port-matrix.md`.
+- `compact-ups.md`, `imports.json`, `import-audit.json`.
+
+## Implemented this session
+
+- All 108 decorative fixture registrations, including motion4126, fans4388–4391
+  and4408, adjustable warehouse4409. IDs use explicit source ordinals/ranges.
+- Source LightAim, per-head housing/beam transforms, wide beams, original item
+  poses, banker/party/rig colors and complete models. Emissive threshold is8.
+- Motion modes with nonconflicting event16, real resident living-entity/LOS
+  sensing and physical30s hold. Native event4 remains the channel string.
+- Separate paid fan motors; physical lead required; startup/coast, rotor sound,
+  industrial blade hazard, save/publication. Motors attach to solver pins only
+  while registered, preventing an orphan-component reload crash found in testing.
+- Warehouse0–7m quarter-metre suspension, matching source-sized menus/controls.
+- Water-preserving native light leases with loaded-only/build-height guards.
+- Corrected all108 source recipes:103 shaped+5 mini-dot shapeless, including47
+  full upgrades and all20 outdoor recipes. Earlier uncraftable-outdoor claims
+  were wrong. Independent recipe expectations reject ingredient underpayment.
+- Actual source String Lights4418, paid15W120/240V, original assets, wall pose,
+  source-sized GUI/inventory, saves and real wireless electrical connection.
+  Source disconnect synchronously removes receiver links. Nearest-OFF source
+  blocks a farther enabled source. Paid cords auto-select their120/240V rating.
+- Decorative fixture cord input and exact source household plug compatibility;
+  physical input suppresses wireless double-billing. Portable carry remains open.
+- Shared wireless supply selection now rejects foreign dimensions/stale owners.
+- Completion generator repaired; all7132 source paths /37 workstreams retained.
+  Import ledger1044 entries passes, including all432 fixture models/icons.
+
+## Validation: do not confuse completed and pending runs
+
+Completed baseline at973bf462:
+- Root693 selected690passed3existing optional skips; CAD15/15.
+- Native1393 selected1391passed0skips; all927 ForkPatch cases passed.
+- Historical goldens alone failed, with697 exact failed assertions.
+
+Completed intermediate full build this session:
+- `/tmp/eln-lamps-full-build2.log`: root700 selected697passed3same optional
+  skips; CAD15/15. This predates the last GUI/cord-test/lifecycle refinements.
+- Datagen repeated writes zero files, including the current validation invocation.
+
+Completed intermediate native run:
+- `/tmp/eln-lamps-native-all-v4.xml` and `/tmp/eln-lamps-native-all-v4.log`:
+  1413selected1407passed6failed0skips;947ForkPatch cases,4failed.
+- All589 catalog devices publish/draw; all246 server menus pass.
+- Two failures are unchanged historical golden tests:714assertions, preserving
+  every prior697 exactly and adding17 for seven fixtures+String Lights.
+- Other failures: missing4x4x4/10x6x10 test templates prevented exact-recipe and
+  two String Lights tests from starting; added templates fix their setup.
+  New fan-coast test timer was appended after connect and never registered;
+  fixed explicit slow-process registration/removal without relaxing assertions.
+- The earlier focused run crashed on the orphan fan component. Its production
+  fix is in place; v4 ran fully without that crash. Do not count crashed runs as passes.
+
+LATEST VALIDATION WAS STILL RUNNING WHEN WRAP-UP WAS REQUESTED:
+```
+source /tmp/eln-port-java-env.sh
+./gradlew --no-daemon --max-workers=2 :build :cad:test runClientData runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report /tmp/eln-lamps-native-all-v6.xml --universe /tmp/eln-lamps-native-all-v6-world'
+```
+Log: `/tmp/eln-lamps-all-validation-v6.log`; Gradle shell PID142029, launcher142031
+at preparation time; execution session9385 if retained. It includes701 root
+cases and the new cord/native sensor/safety cases. First inspect the log, native
+XML and `build/test-results/test` / `cad/build/test-results/test` for final results.
+Do not compile changed main classes while these JVMs read the shared build outputs.
+
+Run `tools/port/review_native_results.py` on the final XML+log. Resolve any
+non-golden failure, retaining every assertion/tolerance/skip. Update the lighting
+validation/golden delta and PR body with actual final counts. New recipe, sensor,
+cord and String tests must really execute; structure-placement failures are failures.
+
+## GUI / real game tests are NOT completed this session
+
+The prior session's helper scripts and worlds are missing locally. A private
+virtual X display was prepared at `DISPLAY=:97`, with screenshot tool`scrot`
+and input tool`xdotool`; no public TCP listener. Xvfb and extracted dependencies
+are under`/tmp/eln-lamps-xvfb`; its local binary only redirects the missing
+xkbcomp path to`/tmp/xkb`. No system binaries/project pins were changed.
+
+A server directory/properties/EULA were prepared at`/tmp/eln-lamps-server`,
+loopback port26035, offline creative flat world; launcher init script
+`/tmp/eln-lamps-server.init.gradle` sets its workingDir and console stdin.
+Client options are`/tmp/eln-lamps-client/options.txt`, GUI scale2,1280×720 intent.
+Neither game server nor client was launched before wrap-up. No new GUI screenshot
+or interactive-client/multiplayer/audio parity is claimed.
+
+Operator tools implemented for the next agent:
+- `/elnlab lamps x y z`: creates108 fixtures with bulbs and native saved electrical
+  sources/supplies, plus real paid fan cords/outlets; writes`eln-lighting-gallery.json`.
+- `/elnlab lampmenu LOOKUP`: teleports an actual player near a resident fixture
+  and opens its real menu. From server console use`execute as PLAYER at @s run ...`.
+- These new scene tools compile but have NOT been exercised in an actual client.
+  Fix any scene setup failure rather than omitting fixtures. Allow chunk publication
+  before judging a menu; opening too soon can fall back to the generic screen.
+
+Next: actual client checks of all108 screens/factories, aim head/reset/pan/tilt,
+fan/motion buttons, suspension bounds, cord-mode labels/hidden channel, String
+voltage/channel/player inventory; real right-click flows, save/restart, water
+illumination and two-client publication. Capture representative evidence.
+
+## Toolchain / publication
+
+`/tmp/eln-port-java-env.sh` points to Java25 and Java21 in`/home/matthew/jdks` and
+Gradle cache`/tmp/eln-port-gradle`. Keep pinned Gradle/wrapper/dependencies intact.
+Use`:test` for root filters, not bare`test` (would also filter CAD).
+
+No new clean artifact certification yet. Existing JARs may have dirty/stale
+markers; do not distribute based on the old3451e318 checksum. After final code
+validation/commit, assemble from clean HEAD, compare packaged tested classes and
+resources (only build marker may differ), then record SHA256+marker in an
+artifact/evidence follow-up commit.
+
+All work is being published to the existing draft branch at user request,
+including clearly marked pending validation. Confirm remote HEAD equals local
+and worktree clean. GitHub git-data tools support blobs/trees/commit/update_ref
+with expected-SHA lease; preserve reamnet authorship and PR metadata.
+
+## Still unfinished beyond fixture adapters
+
+Portable carry, partial-block mounting/picking review, additional bulb technologies
+and source technology/lifetime/configuration, wider save/source-world conversion,
+hardware GPU/audio parity and human playtesting. The37-workstream plan remains
+open;108 registrations do not mean the whole fork is complete.

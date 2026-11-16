@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "eln:basic_lamp_holder"
+            "items": "minecraft:honeycomb"
           }
         ]
       },

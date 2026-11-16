@@ -169,12 +169,12 @@
         "mounting",
         "registry"
       ],
-      "reuse": "The 21 fixed-fixture adapter, original meshes, shared multi-bulb loads, loaded-only projections and native menus.",
+      "reuse": "All108 registered decorative adapters, original meshes, shared multi-bulb loads, loaded-only projections and native menus; newly implemented aim, motion, water, fan and suspension paths await recorded validation.",
       "needed": [
-        "Port the remaining 87 explicit styles using lighting-port-matrix.md. Extend lookup selection before appending styles: source ordinals 0\u201329 use group 64+20, 30\u201387 group 68, and 88+ group 70; the current helper only covers the first range.",
+        "Validate all108 explicit styles using lighting-port-matrix.md. The current explicit source-ordinal helper covers all three ranges:0\u201329 group64+20,30\u201387 group68,and88+ group70; preserve those IDs. Portable carry/cord ownership, technology/configuration and partial-block support remain open.",
         "Transfer exact per-style placement, clearance, head positions, beam widths, item poses, colors and exposed-bulb rules. Large chandeliers and strings need their complete source reservation/render bounds.",
-        "Implement per-head pan/tilt and axial parking/street aiming in physical light origins and rendering with matching save/packet validation. Add motion detection, 30-second hold and mode controls using physical time.",
-        "Integrate ceiling fan motors/rotors/hazards, 0\u20137 m warehouse suspension and portable fixtures through their dependent adapters. Pool fittings require water-preserving light leases; native air-only leases cannot supply that behavior."
+        "Validate implemented per-head pan/tilt and axial parking/street aiming in physical light origins and rendering with matching save/packet validation. Validate motion detection, 30-second hold and mode controls using physical time.",
+        "Validate ceiling fan motors/rotors/hazards, 0\u20137 m warehouse suspension and portable fixtures through their dependent adapters. Validate pool fittings through the new water-preserving lease adapter, including overlap and expiry; registration alone does not certify underwater behavior."
       ],
       "acceptance": [
         "Every one of 108 styles has an explicit stable ID/status and passes allowed/disallowed placement, partial bulb count/power, lease/obstruction/unload and fresh-owner publication checks.",
@@ -350,9 +350,9 @@
         "cords",
         "lighting"
       ],
-      "reuse": "Source mesh assets, native electricity and sound/animation primitives; current fixed lamp logic has no fan motor.",
+      "reuse": "Source mesh assets, native electricity and sound/animation primitives; five decorative ceiling-fan motor adapters are registered with behavior validation pending. Other fan appliances and airflow integration remain open.",
       "needed": [
-        "Adapt industrial, classic, shop and compact standalone fans plus all five decorative ceiling fan styles. Include motor watts, spin-up/coast, controls, airflow effects and industrial blade hazards.",
+        "Adapt industrial, classic, shop and compact standalone fans and validate all five registered decorative ceiling fan styles. Include motor watts, spin-up/coast, controls, airflow effects and industrial blade hazards.",
         "Port evaporative cooler variants, actual water use, humidity/temperature response, tank/port automation and dry/unpowered behavior.",
         "Keep rendered rotor state, collision/hazard radius, sound lifecycle and actual power synchronized across server, client and reload."
       ],

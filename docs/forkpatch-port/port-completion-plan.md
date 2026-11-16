@@ -1,6 +1,6 @@
 # ForkPatch 3.0.77 → NeoForge 26.3 completion plan
 
-Source pin: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Target reviewed: `8b222f5a73a961d165b323662860ce5fb3e775cc`. This is a work breakdown for the whole fork, including shared inherited behavior, assets, optional systems and verification. It does not certify that every implementation has already received a line-by-line semantic review.
+Source pin: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Target reviewed: `973bf4626483452f73d8a130cc86a73709d2968d`. This is a work breakdown for the whole fork, including shared inherited behavior, assets, optional systems and verification. It does not certify that every implementation has already received a line-by-line semantic review.
 
 Every source main file is assigned to an open review stream. Same-name classes, byte-identical files, model directories and import-ledger links are useful evidence locations; none alone proves a feature is ported. Source-excluded scaffolding needs an explicit retain/exclude decision, not automatic registration. Conditional integration status preserves source feature gates and does not authorize silently dropping active source features.
 
@@ -29,7 +29,7 @@ For a first implementation slice, resolve the later lighting ID ranges and stati
 
 ## Recommended implementation order
 
-Resolve identities, mounting/ownership and semantic solver differences first. Continue fixed lighting variants while building the aim/motion/underwater/fan/suspension adapters. Portable carry and the generalized panel unlock the remaining appliance families. Room climate/fluid services precede cooling and growing behavior. Road vehicles reuse pack/charger foundations but still require entities and controls. Run GUI, assets, network, migration and source-oracle reviews alongside each family; finish loaded-world and release campaigns after the intended scope is implemented.
+Resolve identities, mounting/ownership and semantic solver differences first. Validate the registered108 lighting adapters, including aim/motion/underwater/fan/suspension behavior. Portable carry and the generalized panel unlock the remaining appliance families. Room climate/fluid services precede cooling and growing behavior. Road vehicles reuse pack/charger foundations but still require entities and controls. Run GUI, assets, network, migration and source-oracle reviews alongside each family; finish loaded-world and release campaigns after the intended scope is implemented.
 
 Existing native save compatibility is required throughout. Full source-world conversion is a separate deliverable; do not block all feature development on it or claim native save round trips implement it.
 
@@ -232,14 +232,14 @@ Existing native save compatibility is required throughout. Full source-world con
 
 **Assessment:** partial. **Prerequisites:** mounting, registry.
 
-**Reuse:** The 39 fixed-fixture adapter, original meshes, shared multi-bulb loads, loaded-only projections and native menus.
+**Reuse:** All108 registered decorative adapters, original meshes, shared multi-bulb loads, loaded-only projections and native menus; newly implemented aim, motion, water, fan and suspension paths await recorded validation.
 
 **Needed:**
 
-- Port the remaining 69 explicit styles using lighting-port-matrix.md. Extend lookup selection before appending styles: source ordinals 0–29 use group 64+20, 30–87 group 68, and 88+ group 70; the current helper only covers the first range.
+- Validate all108 explicit styles using lighting-port-matrix.md. The current explicit source-ordinal helper covers all three ranges:0–29 group64+20,30–87 group68,and88+ group70; preserve those IDs. Portable carry/cord ownership, technology/configuration and partial-block support remain open.
 - Transfer exact per-style placement, clearance, head positions, beam widths, item poses, colors and exposed-bulb rules. Large chandeliers and strings need their complete source reservation/render bounds.
-- Implement per-head pan/tilt and axial parking/street aiming in physical light origins and rendering with matching save/packet validation. Add motion detection, 30-second hold and mode controls using physical time.
-- Integrate ceiling fan motors/rotors/hazards, 0–7 m warehouse suspension and portable fixtures through their dependent adapters. Pool fittings require water-preserving light leases; native air-only leases cannot supply that behavior.
+- Validate implemented per-head pan/tilt and axial parking/street aiming in physical light origins and rendering with matching save/packet validation. Validate motion detection, 30-second hold and mode controls using physical time.
+- Validate ceiling fan motors/rotors/hazards, 0–7 m warehouse suspension and portable fixtures through their dependent adapters. Validate pool fittings through the new water-preserving lease adapter, including overlap and expiry; registration alone does not certify underwater behavior.
 
 **Completion checks:**
 
@@ -402,11 +402,11 @@ Existing native save compatibility is required throughout. Full source-world con
 
 **Assessment:** implementation-needed. **Prerequisites:** climate, cords, lighting.
 
-**Reuse:** Source mesh assets, native electricity and sound/animation primitives; current fixed lamp logic has no fan motor.
+**Reuse:** Source mesh assets, native electricity and sound/animation primitives; five decorative ceiling-fan motor adapters are registered with behavior validation pending. Other fan appliances and airflow integration remain open.
 
 **Needed:**
 
-- Adapt industrial, classic, shop and compact standalone fans plus all five decorative ceiling fan styles. Include motor watts, spin-up/coast, controls, airflow effects and industrial blade hazards.
+- Adapt industrial, classic, shop and compact standalone fans and validate all five registered decorative ceiling fan styles. Include motor watts, spin-up/coast, controls, airflow effects and industrial blade hazards.
 - Port evaporative cooler variants, actual water use, humidity/temperature response, tank/port automation and dry/unpowered behavior.
 - Keep rendered rotor state, collision/hazard radius, sound lifecycle and actual power synchronized across server, client and reload.
 
@@ -793,7 +793,7 @@ Existing native save compatibility is required throughout. Full source-world con
 **Needed:**
 
 - Map all source unit/property/devtest campaigns to native equivalents. Keep independent source oracles for food/climate, driving, optics, power, acquisition, configuration and interactions; do not replace expectations with implementation output. Review source workflows/scripts, metrics/profiler diagnostics and documentation as independent campaign/export references; their presence does not mean they execute on 26.3.
-- Review the two historical golden failures explicitly: 559 assertions at the current code checkpoint, including preserved older differences and the new bulb acceptance changes.
+- Review the two historical golden failures explicitly: 537 assertions at the current code checkpoint, including preserved older differences and the new bulb acceptance changes.
 - Run representative loaded source/native worlds with arrays, converter banks, wiring, mechanics/fluids and appliances; compare tick percentiles, matrix rebuilds, allocations, caches and unload behavior.
 - Finish hardware GPU/audio, simultaneous multi-client, optional-mod/resource-pack, clean-JAR and release-install campaigns. Keep logs, exact code marker/checksum and stated limitations.
 
@@ -875,7 +875,7 @@ For every implementation batch record: pinned source files/hashes, source behavi
 
 Use the established full JDKs outside tracked files: JDK 21 for the pinned source and JDK 25 for the target. Keep both projects’ pinned Gradle configuration. Do not compile changed main classes while a client/test JVM reads the same build outputs. Commit code first, assemble from that clean code commit, verify packaged class/resource bytes and record its marker/checksum in an evidence-only follow-up.
 
-The current production evidence is [the lighting checkpoint](decorative-lighting-validation.json): 690 root passes, three existing optional preview skips, 15 CAD passes, and 1,328/1,330 native passes with all 864 ForkPatch cases passing. Only the two historical goldens fail; [their exact delta](decorative-lighting-golden-delta.json) remains open. This documentation audit does not rerun or extend that runtime claim.
+Runtime evidence is versioned in [the lighting checkpoint](decorative-lighting-validation.json) and [the exact historical golden delta](decorative-lighting-golden-delta.json). Those reports apply only to their recorded source fingerprints/commits; newly indexed adapters remain validation-pending until independently recorded. This documentation audit does not rerun or extend runtime claims.
 
 Regenerate the indexes after a feature batch and review status manually; the generator never marks a stream complete:
 

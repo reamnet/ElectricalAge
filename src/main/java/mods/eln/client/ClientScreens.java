@@ -11,6 +11,7 @@ final class ClientScreens {
     }
 
     static void registerAll() {
+        ElnScreens.register(mods.eln.transparentnode.festive.StringLightsDescriptor.class,mods.eln.transparentnode.festive.StringLightsScreen::new);
         ElnScreens.register(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,mods.eln.transparentnode.switchgear.SwitchgearScreen::new);
         ElnScreens.register(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,mods.eln.transparentnode.utilitylight.StepDownScreen::new);
         ElnScreens.register(mods.eln.utility.DistributionPoleDescriptor.class,mods.eln.utility.DistributionPoleScreen::new);
@@ -113,7 +114,7 @@ final class ClientScreens {
         reg(mods.eln.transparentnode.electricalmachine.ElectricalMachineDescriptor.class, mods.eln.transparentnode.electricalmachine.ElectricalMachineScreen::new);
         // S1d
         ElnScreens.register(mods.eln.sixnode.lampsocket.DecorativeLampDescriptor.class, mods.eln.sixnode.lampsocket.DecorativeLampScreen::new);
-        mods.eln.client.gui.ElnLayouts.register(mods.eln.sixnode.lampsocket.DecorativeLampDescriptor.class, d -> "decorative_lamp");
+        mods.eln.client.gui.ElnLayouts.register(mods.eln.sixnode.lampsocket.DecorativeLampDescriptor.class, d -> ((mods.eln.sixnode.lampsocket.DecorativeLampDescriptor)d).getLayoutName());
         reg(mods.eln.sixnode.lampsocket.LampSocketDescriptor.class, mods.eln.sixnode.lampsocket.LampSocketScreen::new);
         reg(mods.eln.sixnode.lampsupply.LampSupplyDescriptor.class, mods.eln.sixnode.lampsupply.LampSupplyScreen::new);
         reg(mods.eln.sixnode.hub.HubDescriptor.class, mods.eln.sixnode.hub.HubScreen::new);

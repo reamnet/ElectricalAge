@@ -1,8 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "eln:flexible_neon_led_strip",
-    "minecraft:glass_bottle"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:glass_bottle",
+    "L": "eln:string_lights",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
   ],
   "result": {
     "id": "eln:poolside_globe_string_lights"

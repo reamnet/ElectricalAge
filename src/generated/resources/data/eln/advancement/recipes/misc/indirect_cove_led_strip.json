@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "eln:flat_lamp_socket"
+            "items": "minecraft:white_dye"
           }
         ]
       },
