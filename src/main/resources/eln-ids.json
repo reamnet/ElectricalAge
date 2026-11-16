@@ -4517,6 +4517,36 @@
   "kind": "six_node",
   "name": "offset_twin_arm_parking_lot_light"
  },
+ "eln:six_node@4396": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Round Niche Pool Light",
+  "kind": "six_node",
+  "name": "round_niche_pool_light"
+ },
+ "eln:six_node@4397": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Linear Pool Wall Light",
+  "kind": "six_node",
+  "name": "linear_pool_wall_light"
+ },
+ "eln:six_node@4398": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Square Recessed Pool Light",
+  "kind": "six_node",
+  "name": "square_recessed_pool_light"
+ },
+ "eln:six_node@4399": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Pool Corner Wash Light",
+  "kind": "six_node",
+  "name": "pool_corner_wash_light"
+ },
+ "eln:six_node@4400": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Pool Step Marker Light",
+  "kind": "six_node",
+  "name": "pool_step_marker_light"
+ },
  "eln:six_node@4401": {
   "descriptor": "DecorativeLampDescriptor",
   "display": "Patio Festoon Party Lights",
@@ -4528,6 +4558,12 @@
   "display": "Electric Poolside Tiki Light",
   "kind": "six_node",
   "name": "electric_poolside_tiki_light"
+ },
+ "eln:six_node@4403": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Multicolor Party Wash Light",
+  "kind": "six_node",
+  "name": "multicolor_party_wash_light"
  },
  "eln:six_node@4404": {
   "descriptor": "DecorativeLampDescriptor",

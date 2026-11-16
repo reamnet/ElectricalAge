@@ -328,6 +328,18 @@ public final class ElnRecipes extends ElnRecipesBase {
             'D',Items.QUARTZ,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
         addRecipe(findItemStack("Offset Twin Arm Parking Lot Light"), " D ","DLD"," P ",
             'D',Items.COPPER_INGOT,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Round Niche Pool Light"), " D ","DLD"," P ",
+            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Linear Pool Wall Light"), " D ","DLD"," P ",
+            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Thin Fluorescent Shop Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Square Recessed Pool Light"), " D ","DLD"," P ",
+            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Pool Corner Wash Light"), " D ","DLD"," P ",
+            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Lamp Socket B Projector"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Pool Step Marker Light"), " D ","DLD"," P ",
+            'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Mini Dot Spotlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Multicolor Party Wash Light"), " D ","DLD"," P ",
+            'D',Items.DYE.magenta(),'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
         addRecipe(findItemStack("Adjustable Gimbal Recessed Light",2), " I ","ILI",
             'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"));
         addRecipe(findItemStack("Twin Adjustable Eave Floodlight"),"L L"," P ",

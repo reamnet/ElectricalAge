@@ -1,11 +1,11 @@
 {
  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
- "previousCheckpoint": "0a50fdff3a301efc3267bd9607a61613d79e4ea3",
+ "previousCheckpoint": "93ca842d04713fceb44c881252b0afc78f43de70",
  "branch": "port/forkpatch-3.0.77-26.3",
  "pr": 1,
  "sourceStyles": 108,
- "registeredFixedStyles": 95,
- "unregisteredStyles": 13,
+ "registeredFixedStyles": 101,
+ "unregisteredStyles": 7,
  "ratedLedNativeLookups": [
   302,
   303
@@ -44,30 +44,30 @@
   "report": "/tmp/eln-golden-party-deck.xml"
  },
  "native": {
-  "selected": 1387,
-  "passed": 1385,
+  "selected": 1393,
+  "passed": 1391,
   "failed": 2,
   "skipped": 0,
   "portCases": {
-   "selected": 921,
+   "selected": 927,
    "failed": 0
   },
-  "nativeLog": "/tmp/gametest1.log",
-  "nativeReport": "/tmp/eln-golden-batchA2.xml"
+  "nativeLog": "/tmp/eln-golden-poolwash.log",
+  "nativeReport": "/tmp/eln-golden-poolwash.xml"
  },
  "nativeFailureNames": [
   "eln:golden_descriptors",
   "eln:golden_slots"
  ],
- "nativeLog": "/tmp/gametest1.log",
- "nativeReport": "/tmp/eln-golden-batchA2.xml",
+ "nativeLog": "/tmp/eln-golden-poolwash.log",
+ "nativeReport": "/tmp/eln-golden-poolwash.xml",
  "goldenDelta": "decorative-lighting-golden-delta.json",
  "allCatalogPublicationAndDrawing": {
-  "selected": 575,
-  "passed": 575,
+  "selected": 581,
+  "passed": 581,
   "itemDraw": {
-   "selected": 364,
-   "passed": 364
+   "selected": 370,
+   "passed": 370
   }
  },
  "geometryTests": {
@@ -77,7 +77,7 @@
  "fullFluidCorpus": 200,
  "datagen": {
   "repeatedWrittenFiles": 0,
-  "log": "/tmp/dg13.log"
+  "log": "/tmp/eln-datagen-poolwash.log"
  },
  "provenance": {
   "entries": 680,
@@ -86,16 +86,16 @@
  },
  "retainedData": {
   "src/main/resources/eln-ids.json": {
-   "previous": 768,
-   "current": 781,
+   "previous": 781,
+   "current": 787,
    "retainedExact": true,
-   "added": 13
+   "added": 6
   },
   "src/generated/resources/assets/eln/lang/en_us.json": {
-   "previous": 1091,
-   "current": 1104,
+   "previous": 1104,
+   "current": 1110,
    "retainedExact": true,
-   "added": 13
+   "added": 6
   }
  },
  "runtime": {
@@ -142,7 +142,7 @@
   "Whole-catalog setup lifts hanging-fixture clearance above its test floor; all 501 devices remain included."
  ],
  "limitations": [
-  "Other 13 decorative styles (ceiling fans 4388-4391, Tropical Patio Ceiling Fan 4408, Adjustable Suspended Warehouse Light 4409, pool lights 4396-4400, Multicolor Party Wash 4403, Outdoor Motion Floodlight 4126), additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
+  "Other 7 decorative styles (ceiling fans 4388-4391, Tropical Patio Ceiling Fan 4408, Adjustable Suspended Warehouse Light 4409, Outdoor Motion Floodlight 4126), additional bulb technologies/configuration, partial-block mounting and portable carry/cord lighting remain unfinished.",
   "Original model/icon bytes and source controls/palette are retained; universal pixel-for-pixel or hardware-GPU parity is not established.",
   "The static client exhibit is unpowered; delivered work and loaded-only beam rules are covered by production/native regressions.",
   "One loopback network client is checked; no simultaneous multi-client campaign or audio/hardware-GPU campaign.",

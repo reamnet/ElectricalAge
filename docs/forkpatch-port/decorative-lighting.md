@@ -3,7 +3,7 @@
 Reviewed source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` in
 `../ELN1.21.1ForkPatch`. Continued from native checkpoint `7f5497f4` after
 checking the remote branch. The source catalog contains **108 decorative styles**;
-this batch registers **95 fixed fixtures**, leaving the other 13 unregistered.
+this batch registers **101 fixed fixtures**, leaving the other 7 unregistered.
 
 The original OBJ/MTL files and inventory icons are copied byte for byte. One shared
 renderer retains their mesh parts, source palette, absent-bulb visibility, lit lenses,
@@ -114,8 +114,14 @@ project both upwards and downwards.
 | 4393 | Quad Head Parking Lot Light | 4 |
 | 4394 | Round Canopy Parking Lot Light | 4 |
 | 4395 | Offset Twin Arm Parking Lot Light | 2 |
+| 4396 | Round Niche Pool Light | 1 |
+| 4397 | Linear Pool Wall Light | 3 |
+| 4398 | Square Recessed Pool Light | 1 |
+| 4399 | Pool Corner Wash Light | 2 |
+| 4400 | Pool Step Marker Light | 1 |
 | 4401 | Patio Festoon Party Lights | 5 |
 | 4402 | Electric Poolside Tiki Light | 1 |
+| 4403 | Multicolor Party Wash Light | 3 |
 | 4404 | Poolside Globe String Lights | 4 |
 | 4405 | Poolside Party Lantern | 1 |
 | 4406 | Deck Post Cap Light | 1 |
@@ -141,7 +147,7 @@ project both upwards and downwards.
 | 4498 | Gumdrop Sidewalk Light | 1 |
 | 4499 | Dual Gumdrop Sidewalk Light | 2 |
 
-All 95 fixture patterns and yields follow the reviewed source, except the fifteen pier/path/stone fixtures (4480\u20134494): the reviewed source defines no crafting recipes for them, so this batch adds no recipe changes for that family. Recipe ingredients
+All 101 fixture patterns and yields follow the reviewed source, except the fifteen pier/path/stone fixtures (4480\u20134494): the reviewed source defines no crafting recipes for them, so this batch adds no recipe changes for that family. Recipe ingredients
 use the existing native equivalents: Classic Lamp Socket → Lamp Socket A,
 Spot Lamp Socket → Lamp Socket B Projector, and the source copper ingot → vanilla
 copper. The Standing Drum Floor Lamp's source base, the Ceramic Drum Table Lamp,
@@ -169,6 +175,14 @@ iron plate. The source defines no crafting recipes for the Shoebox Parking Lot L
 Twin Wide Area Parking Lot Light, the Three Arm Parking Lot Light or either Gumdrop
 sidewalk light, so these five remain uncraftable here to match the source.
 
+The five pool fixtures craft from their registered bases plus two prismarine
+crystals and an iron plate: Round Niche Pool Light from the Robust Lamp Socket,
+Linear Pool Wall Light from the Thin Fluorescent Shop Light, Square Recessed
+Pool Light from the Flat Lamp Socket, Pool Corner Wash Light from the Lamp
+Socket B Projector and Pool Step Marker Light from the Mini Dot Spotlight. The
+Multicolor Party Wash Light crafts from the Warehouse Wall Floodlight plus two
+magenta dyes and an iron plate.
+
 The source LED lookups 293/294 conflict with the established 50/200 V bulbs.
 Explicit mapping moves the new 120/240 V LEDs to **302/303**, preserving both old
 identities and all their data. Their original three-glass/three-silicon/cable
@@ -178,10 +192,10 @@ ambiguous recipe. This avoids converting used bulbs into fresh ones.
 
 ## Remaining lighting work
 
-The other **13 decorative styles** remain separate work:
-the ceiling fans 4388–4391, the Tropical Patio Ceiling Fan 4408 and the
-Adjustable Suspended Warehouse Light 4409, the pool lights 4396–4400, the
-Multicolor Party Wash 4403 and the Outdoor Motion Floodlight 4126, plus motion
+The other **7 decorative styles** remain separate work:
+the ceiling fans 4388–4391, the Tropical Patio Ceiling Fan 4408, the
+Adjustable Suspended Warehouse Light 4409 and the Outdoor Motion Floodlight
+4126, plus motion
 detection, suspended-warehouse adjustment and portable table/carry adapters. Partial-block mounting and source-world conversion
 need their own adapters. The rest of the source bulb technologies and their
 per-technology lifetime/configuration controls are not registered by this batch.
@@ -209,18 +223,18 @@ Validation and any runtime limitations are recorded in
 
 The full build passes **690 of 693 root tests**, retaining the same three optional
 preview skips, and all **15 CAD tests**. The full default 200-case fluid corpus
-remains included. All **74 new native lighting cases** pass. Unfiltered native
-selects **1,387 tests: 1,385 pass**, with no skips; all **921 ForkPatch cases** pass.
-Both whole-catalog publication/drawing checks retain all **575 devices**; the item
-drawing check covers all **364 items**.
+remains included. All **80 new native lighting cases** pass. Unfiltered native
+selects **1,393 tests: 1,391 pass**, with no skips; all **927 ForkPatch cases** pass.
+Both whole-catalog publication/drawing checks retain all **581 devices**; the item
+drawing check covers all **370 items**.
 Repeated data generation writes zero files. All **680 provenance entries** pass;
-all 768 preceding identities and 1,091 English entries keep their exact values.
-There are 13 new identities and 13 new English entries in this batch.
+all 781 preceding identities and 1,104 English entries keep their exact values.
+There are 19 new identities and 19 new English entries in this batch.
 
 Only the historical `golden_descriptors` and `golden_slots` tests fail. The original
 expectations are unchanged; the two new bulbs naturally expand acceptance in ten
 existing socket menus.
-The [exact delta](decorative-lighting-golden-delta.json) records **685 failed
+The [exact delta](decorative-lighting-golden-delta.json) records **697 failed
 assertions**; the 537 pre-batch failures, the twelve added by the six
 4353–4358 styles, the ten added by the five luxury chandeliers, the fourteen
 added by the seven 4352, 4365–4370 styles, the sixteen added by the eight
@@ -231,8 +245,9 @@ added by the seven 4352, 4365–4370 styles, the sixteen added by the eight
 added by the nine 4117, 4364, 4371, 4382–4386, 4392
 warehouse/flood/dot fixtures and the twenty-six added by the thirteen
 4116, 4142, 4372–4373, 4387, 4393–4395, 4495–4499
-parking/street/eave/sidewalk fixtures all remain exact. The matching slot summary
-remains 112/137. No
+parking/street/eave/sidewalk fixtures and the twelve added by the six
+4396–4400, 4403 pool/party-wash fixtures all remain exact. The matching slot summary
+remains 118/143. No
 tolerance, assertion or skip was relaxed.
 
 The clean development JAR at code commit `3451e318d78c` matches all **1,774 Java

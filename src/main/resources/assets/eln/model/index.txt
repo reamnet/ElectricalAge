@@ -166,6 +166,7 @@ offshoresealedlinearlight/offshoresealedlinearlight.obj
 oilpump200v/oilpump200v.obj
 oilpump50v/oilpump50v.obj
 partyfestoonlights/partyfestoonlights.obj
+partywashlight/partywashlight.obj
 passivethermaldissipatora/passivethermaldissipatora.obj
 patioglobestring/patioglobestring.obj
 pierlanternpost/pierlanternpost.obj
@@ -173,8 +174,13 @@ plantcondenser/plantcondenser.obj
 platemachinea/platemachinea.obj
 platemachineb/platemachineb.obj
 poletransformer/poletransformer.obj
+poolcornerlight/poolcornerlight.obj
+poollinearlight/poollinearlight.obj
+poolnichelight/poolnichelight.obj
 poolsidepartylantern/poolsidepartylantern.obj
 poolsidetikilight/poolsidetikilight.obj
+poolsquarelight/poolsquarelight.obj
+poolsteplight/poolsteplight.obj
 porchlanternsconce/porchlanternsconce.obj
 powerelectricprimitives/powerelectricprimitives.obj
 powerpole/downlink.obj

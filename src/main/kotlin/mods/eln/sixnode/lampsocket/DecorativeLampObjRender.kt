@@ -68,7 +68,7 @@ class DecorativeLampObjRender(val style: DecorativeLampStyle) : LampSocketObjRen
                     }
                     when(style) {
                         DecorativeLampStyle.CHRISTMAS_FAIRY -> GL11.glColor3f(1f,.76f,.35f)
-                        DecorativeLampStyle.CHRISTMAS_COLOR -> when(i%4) {
+                        DecorativeLampStyle.CHRISTMAS_COLOR,DecorativeLampStyle.PARTY_WASH -> when(i%4) {
                             0->GL11.glColor3f(1f,.10f,.05f);1->GL11.glColor3f(.12f,1f,.20f);2->GL11.glColor3f(.15f,.35f,1f);else->GL11.glColor3f(1f,.72f,.08f)
                         }
                         DecorativeLampStyle.CHRISTMAS_ICICLE,DecorativeLampStyle.HALLOWEEN_GHOST -> GL11.glColor3f(.65f,.80f,1f)

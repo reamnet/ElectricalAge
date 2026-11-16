@@ -1,4 +1,4 @@
-// 26.3	2026-11-15T20:35:24.479766139	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-15T23:06:00.193273233	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -298,6 +298,7 @@ ceb55f6818049de87939b9447a5099d891e290dc data/eln/advancement/recipes/misc/led_v
 231613d4d62b5b5504dfa83f20a327ef2f57c517 data/eln/advancement/recipes/misc/lifepo4_mppt_charge_controller.json
 a0361b0c4e69b76ec0464c62f3c3b1a6b9254794 data/eln/advancement/recipes/misc/light_blue_brush.json
 00587e800a6e444b5b4aefe9264c067dfd2535ea data/eln/advancement/recipes/misc/lime_brush.json
+990d6bac8481960c8c0270c1f73298d046f175e7 data/eln/advancement/recipes/misc/linear_pool_wall_light.json
 d824a825729f0f7b48fa42e68f2d9070b4bc9a84 data/eln/advancement/recipes/misc/long_suspended_lamp_socket.json
 d82e19fb36ddaee5cd8a7f910027a98e9f222af8 data/eln/advancement/recipes/misc/low_power_receiver_antenna.json
 231dc3ce3878d48f3430a11200946b0669218e6d data/eln/advancement/recipes/misc/low_power_transmitter_antenna.json
@@ -334,6 +335,7 @@ dd1242cd6b9ff29ba81aac774e1b969ec8f0ec6b data/eln/advancement/recipes/misc/moder
 610c33e376abf2f1d751476431a162f19c57bd8b data/eln/advancement/recipes/misc/monster_filter.json
 046dfec5a4294d393fbddb41d68841e7ccdeeed4 data/eln/advancement/recipes/misc/mppt_solar_controller.json
 f50ab593f03dba000f7c079a9444fdeaf1045c28 data/eln/advancement/recipes/misc/multicolor_christmas_string_lights.json
+5f60e6a82288cbdc568e258e697358216c6189ff data/eln/advancement/recipes/misc/multicolor_party_wash_light.json
 c212ab04301e827265d0e3361f91fb4211732103 data/eln/advancement/recipes/misc/multimeter.json
 1196464f2fb1ff0e8a9e7e0f8db5ef00bb7f2040 data/eln/advancement/recipes/misc/nand_chip.json
 524e2572a2e04111a2fe6e7a0a00597ea57df809 data/eln/advancement/recipes/misc/nor_chip.json
@@ -369,6 +371,8 @@ c22c87bd08ed65c2308e22e1978b06ec035c7d0b data/eln/advancement/recipes/misc/plant
 e6947c2110c1bbf48fd4818708c4420062b3eab1 data/eln/advancement/recipes/misc/pole_fuse_link.json
 60e0a673caea5a0042b7b9c2fb3d7ca350bdd993 data/eln/advancement/recipes/misc/pole_streetlight_attachment.json
 03859d7d0762c177355b0c0ede08ee485d119220 data/eln/advancement/recipes/misc/pole_surge_arrester.json
+e1a91272aacaa5bbc8fa6e575e6b0d68162e93c1 data/eln/advancement/recipes/misc/pool_corner_wash_light.json
+a7b58ffefaed6692d4370930f54a46be081de9e2 data/eln/advancement/recipes/misc/pool_step_marker_light.json
 8e9c21452fbbdc46c4db69a99a21712031c0a164 data/eln/advancement/recipes/misc/poolside_globe_string_lights.json
 9c13d5fb5a44b3b5bf02f4e09e9d865f9f55edb3 data/eln/advancement/recipes/misc/poolside_party_lantern.json
 b8ba14c2a8828aa93368a2e475e8e3f607fc8157 data/eln/advancement/recipes/misc/porch_lantern_sconce.json
@@ -393,6 +397,7 @@ f7528c010eae2ecb1d9b8df30858589d7a331a88 data/eln/advancement/recipes/misc/redst
 ca7cfdd304c9a3c3e92938e08f882f303d2159ee data/eln/advancement/recipes/misc/rheostat.json
 756cda9979b715dfdbcb744accbfa92136fd22bb data/eln/advancement/recipes/misc/robust_lamp_socket.json
 fcf873c0faf080b7fe59a7808d4f0ba5f2f6830e data/eln/advancement/recipes/misc/round_canopy_parking_lot_light.json
+0aece2bf9ca234549cbeeac4b0ede779b948ea30 data/eln/advancement/recipes/misc/round_niche_pool_light.json
 aecaa5757846fd511c961577c2dee8d1677fff7d data/eln/advancement/recipes/misc/round_recessed_ceiling_light.json
 7c6d0259ae1eaf4d77b2295a0655e02f15df5c34 data/eln/advancement/recipes/misc/rugged_outdoor_canopy_light.json
 c3b894f60c00346800570928b4de8ca5e9c8114d data/eln/advancement/recipes/misc/sample_and_hold.json
@@ -457,6 +462,7 @@ fe7580a5cab94e3b2a53fc81c07fc52050eb51e3 data/eln/advancement/recipes/misc/smelt
 d745c0a06786c255ec7cf4ebac2a0bd8da10121b data/eln/advancement/recipes/misc/solar_tracker.json
 b543af9e89eece4380acfd9643136d14e61d91db data/eln/advancement/recipes/misc/solid_state_relay.json
 f592302aeb58cf5f71b470e0b25b8d3c3db4adea data/eln/advancement/recipes/misc/spiral_rain_chandelier.json
+02adb047eb5a802800f83b95aab694f153caa293 data/eln/advancement/recipes/misc/square_recessed_pool_light.json
 91ecd892a2a111989dbc8ae5cd7292830389e96f data/eln/advancement/recipes/misc/standard_alarm.json
 b7e85d11917337f73315c634c58119771bd3c8e6 data/eln/advancement/recipes/misc/standby_gasoline_generator.json
 ef0eb8516b64e9439964d88f30470b8b2b82f422 data/eln/advancement/recipes/misc/standing_drum_floor_lamp.json
@@ -874,6 +880,7 @@ dae1f3a6acbfed0befa3b5fe34d4db8acb0a8562 data/eln/recipe/led_vumeter_3.json
 3bb6b790d153e275ddb47c50758a04ea8a146c06 data/eln/recipe/lifepo4_mppt_charge_controller.json
 d244c7c13b4520a563baaa80b30f6e5a80880eaf data/eln/recipe/light_blue_brush.json
 d8e2611aa1042a6f6a9521826a9917d1befdf6cd data/eln/recipe/lime_brush.json
+f024f55bf8bb81cca356a22457157dbcda478e6f data/eln/recipe/linear_pool_wall_light.json
 2869c21114ed9e2d7b4e8fe691769b0686c409a0 data/eln/recipe/long_suspended_lamp_socket.json
 9639e37b19847e92307c0ab6544578d6cd5554a1 data/eln/recipe/low_power_receiver_antenna.json
 67dac147f3cb70f6dc532742617cf55ac06316bb data/eln/recipe/low_power_transmitter_antenna.json
@@ -910,6 +917,7 @@ a6770f74cf9548ef82ab69701135f0fe59828f06 data/eln/recipe/modern_sputnik_foyer_ch
 b937a3eff0a8f08a2d43f6bc97d126a15a5689fa data/eln/recipe/monster_filter.json
 23bad57c57984cae1127203c1bd744942a95323d data/eln/recipe/mppt_solar_controller.json
 faec6878055affe1c7292eabf394d6750258e3df data/eln/recipe/multicolor_christmas_string_lights.json
+63440da394dcffe0fef71e82a0f7e2aca76d1fba data/eln/recipe/multicolor_party_wash_light.json
 8d83f9c1dee7864768cf6ca50fb939e1a46589e2 data/eln/recipe/multimeter.json
 98d357e0e3bb9c3b4f91a0301d5901f9a928265c data/eln/recipe/nand_chip.json
 2d6aaedb23ad30856db9e2788c70b180151f0b34 data/eln/recipe/nor_chip.json
@@ -945,6 +953,8 @@ c31f1c59279d00c829341217db7ecf75091cf6fa data/eln/recipe/pink_brush.json
 0e803994d3a7e894af1d6d822976bec076cc7673 data/eln/recipe/pole_fuse_link.json
 5cc60c7b577b45920ee62be05755e3cc3f8894ac data/eln/recipe/pole_streetlight_attachment.json
 a3973ba41804b0406fddbd86c78220c95aa51c42 data/eln/recipe/pole_surge_arrester.json
+dfed4ffe762b3f99684ee3156a8f68bb63a1c47e data/eln/recipe/pool_corner_wash_light.json
+1a76fcde0bdaac1d0d7d13c7b2b24dc4cfa031ec data/eln/recipe/pool_step_marker_light.json
 b5a30963d25d980ab6e09f55f175e7f18419c46a data/eln/recipe/poolside_globe_string_lights.json
 3d17090149e60ed2b30c9659fa5cc910423b74ef data/eln/recipe/poolside_party_lantern.json
 3d24f8f89f4dbe3601703ad30b53e1d5951aa2f4 data/eln/recipe/porch_lantern_sconce.json
@@ -969,6 +979,7 @@ cd9af7097473c7fae168d254e0dff78353e1aca5 data/eln/recipe/red_handle_service_disc
 d8732e9aa7d5b669948f47f5e99893da8e957c5e data/eln/recipe/rheostat.json
 523703af721f00a1c538f3d0517b58c5d417367a data/eln/recipe/robust_lamp_socket.json
 af6ddbe70defc44738d39c6f9807b93aff72d235 data/eln/recipe/round_canopy_parking_lot_light.json
+eef1f5cd48c1fb667b714a174610f724366ad895 data/eln/recipe/round_niche_pool_light.json
 c233d82f6bf419078b27ca968c520f5628ae8079 data/eln/recipe/round_recessed_ceiling_light.json
 9b9a519a230d51a9317940360d0c198b16ee20f3 data/eln/recipe/rugged_outdoor_canopy_light.json
 adad48cd9d9f462c2e3a5dcf4cf01bdfc515cb0e data/eln/recipe/sample_and_hold.json
@@ -1033,6 +1044,7 @@ f8d98570968cecc459a14f0cd820a44af3560cf9 data/eln/recipe/smelting_tungsten_dust.
 5bfee752b7a7f8c89009a59ae6e95f13ce11aacc data/eln/recipe/solar_tracker.json
 624e7549bdc894afecac3aa322532491e6d1ff00 data/eln/recipe/solid_state_relay.json
 72f66b1cfdfbca558ba19028caf4cf3dbf720d4a data/eln/recipe/spiral_rain_chandelier.json
+ff1f01b7ca32f60906aee4f3b9273933d1635873 data/eln/recipe/square_recessed_pool_light.json
 4ab93d287ce3eeee14c2bf3bb7c860f4ebacbd27 data/eln/recipe/standard_alarm.json
 2f40bddf8890ebca5947a80dca4ffa3e82c9f8ad data/eln/recipe/standby_gasoline_generator.json
 d2c2f3d11321f3495c2fad0a313ed9e9c2e1981f data/eln/recipe/standing_drum_floor_lamp.json

@@ -18,15 +18,15 @@ behavioral completion.
 
 ## Current continuation
 
-The [first decorative lighting batch](decorative-lighting.md) adds 95 fixed
+The [first decorative lighting batch](decorative-lighting.md) adds 101 fixed
 fixtures with original meshes/icons, shared multi-bulb power and native saves,
 source-sized controls and loaded-only light patterns. Source 120/240 V LED
 ratings use explicit native lookups 302/303, preserving the old 50/200 V bulbs.
-All 74 new native cases and all 921 ForkPatch cases pass; the full build passes
-690 tests plus 15 CAD tests (three existing previews skipped). The other 13
+All 927 ForkPatch cases pass; the full build passes
+690 tests plus 15 CAD tests (three existing previews skipped). The other 7
 source decorative styles (ceiling fans 4388–4391, Tropical Patio Ceiling Fan
-4408, Adjustable Suspended Warehouse Light 4409, pool lights 4396–4400,
-Multicolor Party Wash 4403 and Outdoor Motion Floodlight 4126), source technology
+4408, Adjustable Suspended Warehouse Light 4409 and Outdoor Motion Floodlight
+4126), source technology
 configuration, partial mounting and portable lighting/carry remain unfinished. See the
 [lighting evidence](decorative-lighting-validation.json) for current checks.
 
