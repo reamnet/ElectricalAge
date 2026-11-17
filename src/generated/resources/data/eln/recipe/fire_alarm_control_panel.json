@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:comparator",
+    "I": "eln:iron_plate",
+    "R": "minecraft:redstone",
+    "W": "eln:signal_cable"
+  },
+  "pattern": [
+    "IRI",
+    "RCR",
+    "IWI"
+  ],
+  "result": {
+    "id": "eln:fire_alarm_control_panel"
+  }
+}

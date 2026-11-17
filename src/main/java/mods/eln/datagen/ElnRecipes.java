@@ -2622,6 +2622,10 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeElectricalBreaker() {
+        net.minecraft.world.item.Item[] alarmParts={Items.COMPARATOR,Items.LEVER,Items.NOTE_BLOCK,Items.BELL,Items.GLOWSTONE_DUST,Items.OBSERVER,Items.BLAZE_POWDER};
+        for(var kind:mods.eln.transparentnode.firealarm.AlarmKind.values())addRecipe(findItemStack(kind.getTitle()),"IRI","RCR","IWI",
+            'I',findItemStack("Iron Plate"),'R',stack(Items.REDSTONE),'C',stack(alarmParts[kind.ordinal()]),'W',findItemStack("Signal Cable"));
+
         addRecipe(findItemStack("Twelve Circuit American Breaker Panel"),"P P","CRC","PPP",
             'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'R',stack(Items.REDSTONE));
         addRecipe(findItemStack("5A Switch"),"  I"," I ","CAC",'A',"itemRubber",'I',findItemStack("Copper Cable"),'C',findItemStack("Copper 20 AWG Cable 300V"));

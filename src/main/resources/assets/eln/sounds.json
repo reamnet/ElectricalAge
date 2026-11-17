@@ -444,5 +444,31 @@
         "stream": false
       }
     ]
-  }
+  },
+    "fire_alarm_horn": {
+        "sounds": [
+            {
+                "name": "eln:fire_alarm_horn",
+                "stream": false,
+                "attenuation_distance": 48
+            }
+        ]
+    },
+    "fire_alarm_bell": {
+        "sounds": [
+            {
+                "name": "eln:fire_alarm_bell",
+                "stream": false,
+                "attenuation_distance": 48
+            }
+        ]
+    },
+    "fire_alarm_trouble": {
+        "sounds": [
+            {
+                "name": "eln:fire_alarm_trouble",
+                "stream": false
+            }
+        ]
+    }
 }

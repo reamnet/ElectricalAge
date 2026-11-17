@@ -12,9 +12,14 @@ entries pass. Golden746 retains all714 old exact assertions, adding32 identities
 menus. Earlier unfiltered1424-case run exposed8 non-golden issues; passing
 subsequent ForkPatch tests cover their fixes. Final unfiltered rerun remains due.
 
-Next: road vehicles/charger/lead and seven fire alarms are NOT yet registered.
-Prepared alarm source translations are in `/tmp/eln-firealarm-slice` outside the
-build tree; review before copying. Source remains pinned/read-only. The previous
+Fire alarms are implemented: see `fire-alarms.md` and
+`fire-alarm-validation.json`. All976 ForkPatch cases pass; root698pass/3skips,
+CAD15/15, datagen repeat0,1085 provenance entries pass. Goldens761 preserves
+all746 earlier assertions. Live GUI remains pending.
+
+Next: road vehicles/charger/lead are NOT yet registered. Prepared native
+translations and client adapters are in `/tmp/eln-road-vehicle-slice`; generator
+is `/tmp/eln-prepare-road-vehicles.py`. They need review, integration and tests. Source remains pinned/read-only. The previous
 Luna worker hit its usage limit and is no longer running. Root continues directly.
 
 Live GUI is pending. RealDISPLAY`:0` works through `tools/mctest/mctest`; do not

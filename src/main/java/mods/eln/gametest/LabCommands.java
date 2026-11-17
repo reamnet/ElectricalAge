@@ -44,6 +44,8 @@ public final class LabCommands {
             Commands.literal("elnlab").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("gallery").then(Commands.argument("pos", BlockPosArgument.blockPos())
                     .executes(c -> gallery(c.getSource(), BlockPosArgument.getLoadedBlockPos(c, "pos")))))
+                .then(Commands.literal("alarms").then(Commands.argument("pos", BlockPosArgument.blockPos())
+                    .executes(c -> AlarmLab.build(c.getSource(), BlockPosArgument.getLoadedBlockPos(c, "pos")))))
                 .then(Commands.literal("panelcarry").then(Commands.argument("pos", BlockPosArgument.blockPos())
                     .executes(c -> PanelCarryLab.build(c.getSource(), BlockPosArgument.getLoadedBlockPos(c, "pos")))))
                 .then(Commands.literal("devicemenu").then(Commands.argument("lookup", IntegerArgumentType.integer(0,65535))

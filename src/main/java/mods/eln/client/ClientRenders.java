@@ -11,6 +11,7 @@ public final class ClientRenders {
     }
 
     public static void registerAll() {
+        ElnRenders.transparent(mods.eln.transparentnode.firealarm.AlarmDescriptor.class,mods.eln.transparentnode.firealarm.AlarmRender::new);
         ElnRenders.transparent(mods.eln.utility.BreakerPanelDescriptor.class,mods.eln.utility.BreakerPanelRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.festive.StringLightsDescriptor.class,mods.eln.transparentnode.festive.StringLightsRender::new);
         // Native publication uses these factories; descriptor RenderClass fields are not a fallback.

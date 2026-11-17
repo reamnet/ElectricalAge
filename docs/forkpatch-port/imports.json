@@ -7389,5 +7389,215 @@
     "sourceSha256": "5f4ec6ac663e316c87a49f924a5269aab709abf6809298d5f6c1bc32e84a4897",
     "mode": "adapted",
     "status": "rated-prerequisite-native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmClient.kt",
+    "sourceSha256": "38b088381b61dfb7dcb5f3492e1ab3973e4fce9c2a5dd8265ea820f047fe056d",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmScreen.kt",
+    "sourceSha256": "38b088381b61dfb7dcb5f3492e1ab3973e4fce9c2a5dd8265ea820f047fe056d",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmKind.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmKind.kt",
+    "sourceSha256": "4e6be6a2c57444ceccfb2f4342ff5c005fbfe7bca171d553da866e8f1155c417",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmElement.kt",
+    "sourceSha256": "0ede95f0507001e5548d2827f74ff5ed16fd118a23255865892c9b714ce25cf7",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmNetwork.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/firealarm/AlarmNetwork.kt",
+    "sourceSha256": "fd4a0066fcbbb1adf8d7d7ea6bf9a24c6ef3fcc207aa280302d76a723e607f11",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/firealarm/FireEnvironment.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/firealarm/FireEnvironment.kt",
+    "sourceSha256": "7d414561e60d3ef2297e745c3c2f9de83e183844704b6878fdad433970fbdc55",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_heat/firealarm_heat.obj",
+    "target": "src/main/resources/assets/eln/model/firealarm_heat/firealarm_heat.obj",
+    "sourceSha256": "af9a2d04b6cbecfd17151893f2f1367bce3a94195a0b80eebeed647b4eb23fba",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_heat/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_heat/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_heat/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_heat/equipment_finish.mtl",
+    "sourceSha256": "048fea7b25a79abb925b90fe3feccab89208ffbb8b35e98f8dc686c51bbb4b1f",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_bell/firealarm_bell.obj",
+    "target": "src/main/resources/assets/eln/model/firealarm_bell/firealarm_bell.obj",
+    "sourceSha256": "fea1d131936ecdc1c4f312e0e6065a27d7a4a7ac8cca7f3e227aa1882e67e11f",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_bell/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_bell/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_bell/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_bell/equipment_finish.mtl",
+    "sourceSha256": "e96fd9f4da7d545777c9103153eb63d9323a5c03277220c6f2e5fc191f6793be",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_horn/firealarm_horn.obj",
+    "target": "src/main/resources/assets/eln/model/firealarm_horn/firealarm_horn.obj",
+    "sourceSha256": "97289b51762ccd236e5728ff563a06afdfb0e75ab4a5d9480b42ae6b1ab302ee",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_horn/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_horn/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_horn/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_horn/equipment_finish.mtl",
+    "sourceSha256": "048fea7b25a79abb925b90fe3feccab89208ffbb8b35e98f8dc686c51bbb4b1f",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_panel/firealarm_panel.obj",
+    "target": "src/main/resources/assets/eln/model/firealarm_panel/firealarm_panel.obj",
+    "sourceSha256": "3b3c1ad6f1b54246804a3c8b3966d473a27b12037ca201b3126f012611800363",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_panel/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_panel/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_panel/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_panel/equipment_finish.mtl",
+    "sourceSha256": "e96fd9f4da7d545777c9103153eb63d9323a5c03277220c6f2e5fc191f6793be",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_strobe/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_strobe/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_strobe/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_strobe/equipment_finish.mtl",
+    "sourceSha256": "e96fd9f4da7d545777c9103153eb63d9323a5c03277220c6f2e5fc191f6793be",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_strobe/firealarm_strobe.obj",
+    "target": "src/main/resources/assets/eln/model/firealarm_strobe/firealarm_strobe.obj",
+    "sourceSha256": "854961655bfc1528e001ff2c0539ac736103d84f0d9e828f55f0f27ccb971d1a",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_smoke/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_smoke/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_smoke/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_smoke/equipment_finish.mtl",
+    "sourceSha256": "048fea7b25a79abb925b90fe3feccab89208ffbb8b35e98f8dc686c51bbb4b1f",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_smoke/firealarm_smoke.obj",
+    "target": "src/main/resources/assets/eln/model/firealarm_smoke/firealarm_smoke.obj",
+    "sourceSha256": "929803f6beaa8ffe9e58e949f0bf22f0a710272f17ad7981ba625dcbdd06af8c",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_pull/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_pull/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_pull/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/firealarm_pull/equipment_finish.mtl",
+    "sourceSha256": "e96fd9f4da7d545777c9103153eb63d9323a5c03277220c6f2e5fc191f6793be",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/firealarm_pull/firealarm_pull.obj",
+    "target": "src/main/resources/assets/eln/model/firealarm_pull/firealarm_pull.obj",
+    "sourceSha256": "85dc0c71fb5a362d49ee62ce75fca56304248f444f9755477ff93be8e66be8bc",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/fire_alarm_horn.ogg",
+    "target": "src/main/resources/assets/eln/sounds/fire_alarm_horn.ogg",
+    "sourceSha256": "039b4a32d7c190484fc4ca71731a4d7ddfb4de8e400f77c0bf3fbc1940b11b73",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/fire_alarm_trouble.ogg",
+    "target": "src/main/resources/assets/eln/sounds/fire_alarm_trouble.ogg",
+    "sourceSha256": "8fc7633b1f62055678acdf15f691b50de54649cdf53908cf89262b11f9d2b965",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/fire_alarm_bell.ogg",
+    "target": "src/main/resources/assets/eln/sounds/fire_alarm_bell.ogg",
+    "sourceSha256": "e53c00ef93d808c096065eeaa990bac1957fa80205a760cbf3da1b37a111b46e",
+    "mode": "verbatim",
+    "status": "native-tested"
   }
 ]

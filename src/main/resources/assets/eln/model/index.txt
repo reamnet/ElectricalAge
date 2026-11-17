@@ -344,3 +344,10 @@ modernceilingfan/modernceilingfan.obj
 patiotropicalfan/patiotropicalfan.obj
 outdoormotionlight/outdoormotionlight.obj
 twelvecircuitpanel/twelvecircuitpanel.obj
+firealarm_panel/firealarm_panel.obj
+firealarm_pull/firealarm_pull.obj
+firealarm_horn/firealarm_horn.obj
+firealarm_bell/firealarm_bell.obj
+firealarm_strobe/firealarm_strobe.obj
+firealarm_smoke/firealarm_smoke.obj
+firealarm_heat/firealarm_heat.obj

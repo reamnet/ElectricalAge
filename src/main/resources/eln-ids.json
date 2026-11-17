@@ -4877,5 +4877,47 @@
   "display": "5A Switch",
   "kind": "six_node",
   "name": "switch_5a"
+ },
+ "eln:transparent_node@8053": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Control Panel",
+  "kind": "transparent_node",
+  "name": "fire_alarm_control_panel"
+ },
+ "eln:transparent_node@8054": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Pull Station",
+  "kind": "transparent_node",
+  "name": "fire_alarm_pull_station"
+ },
+ "eln:transparent_node@8055": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Horn Strobe",
+  "kind": "transparent_node",
+  "name": "fire_alarm_horn_strobe"
+ },
+ "eln:transparent_node@8056": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Bell",
+  "kind": "transparent_node",
+  "name": "fire_alarm_bell"
+ },
+ "eln:transparent_node@8057": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Strobe",
+  "kind": "transparent_node",
+  "name": "fire_alarm_strobe"
+ },
+ "eln:transparent_node@8058": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Smoke Detector",
+  "kind": "transparent_node",
+  "name": "fire_alarm_smoke_detector"
+ },
+ "eln:transparent_node@8059": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Heat Detector",
+  "kind": "transparent_node",
+  "name": "fire_alarm_heat_detector"
  }
 }

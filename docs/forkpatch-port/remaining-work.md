@@ -22,9 +22,9 @@ The [twelve-circuit panel](breaker-panel.md) and existing-family
 [portable carrying](portable-carry.md) now have native implementations and a
 962/962 passing ForkPatch regression. Source-rated breaker/switch/relay recipe
 prerequisites are included. Live GUI verification and the final unfiltered run
-remain pending. Road vehicles with their100A charging station/lead and the seven
-fire-alarm devices are the next active requested systems; they are not yet
-registered. See [requested scope](requested-systems-plan.md) and
+remain pending. The seven [fire-alarm devices](fire-alarms.md) are now registered and pass
+the976-case ForkPatch regression. Road vehicles and their100A charging
+station/lead are the next active systems; they are not yet registered. See [requested scope](requested-systems-plan.md) and
 [validation](panel-carry-validation.json).
 
 The [decorative lighting port](decorative-lighting.md) now registers all 108

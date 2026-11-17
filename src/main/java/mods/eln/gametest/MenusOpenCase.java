@@ -113,8 +113,10 @@ final class MenusOpenCase implements TestCase {
                          net.minecraft.core.Direction face, Vec3 local) {
         try {
             opened = null;
-            // Empty-hand click toggles the disconnect; sneaking is its normal menu gesture.
-            fp.setShiftKeyDown(name.equals("Red Handle Service Disconnect"));
+            // Source action fixtures use an empty-hand click to operate; sneak opens setup.
+            fp.setShiftKeyDown(name.equals("Red Handle Service Disconnect")
+                || node instanceof TransparentNode tn && tn.element instanceof mods.eln.transparentnode.firealarm.AlarmElement alarm
+                    && alarm.getKind()==mods.eln.transparentnode.firealarm.AlarmKind.PULL);
             Vec3 hitAt = new Vec3(at.getX() + local.x, at.getY() + local.y, at.getZ() + local.z);
             fp.setPos(hitAt.x - 1.5, at.getY(), hitAt.z);
             var state = ctx.level().getBlockState(at);

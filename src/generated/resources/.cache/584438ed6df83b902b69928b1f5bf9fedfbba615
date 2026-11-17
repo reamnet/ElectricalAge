@@ -1,4 +1,4 @@
-// 26.3	2026-11-17T01:15:49.781779516	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-17T01:49:35.689995033	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 b2bfdcaca81904f8aebabbdd82b0e57f573870cb data/eln/advancement/recipes/misc/100a_electrical_breaker.json
@@ -243,6 +243,13 @@ c489587306fb77c3b4c1d28fb1b411fe5862b610 data/eln/advancement/recipes/misc/extre
 086c751c02216f1bde74f860e493cad91f6c154d data/eln/advancement/recipes/misc/fabricator.json
 e6626b81782dcf21944212f0e22b7ebca4a2ce5b data/eln/advancement/recipes/misc/fast_electrical_drill.json
 7cc5812c49b47ab69555098d564e91a30828e9d7 data/eln/advancement/recipes/misc/field_bus_cable.json
+89eed8e20702c76517313a3828f917c6e1e00467 data/eln/advancement/recipes/misc/fire_alarm_bell.json
+57f6c97f492b41e0c76e7d33dd4d920993f54fc2 data/eln/advancement/recipes/misc/fire_alarm_control_panel.json
+02fd9ada903c7868251c257e7c27b5885c14ff07 data/eln/advancement/recipes/misc/fire_alarm_heat_detector.json
+0ffa5e32d3056bcceef2be5bff6f4e2fa4ca1fc9 data/eln/advancement/recipes/misc/fire_alarm_horn_strobe.json
+c318e8ba3b500db8c60e4cb56383625e58cb8eb8 data/eln/advancement/recipes/misc/fire_alarm_pull_station.json
+3b49963675a884d9f6859d3929f5fca82a2e5d59 data/eln/advancement/recipes/misc/fire_alarm_smoke_detector.json
+437a91c611e5efefbe3f2ceadf98421e175bdd73 data/eln/advancement/recipes/misc/fire_alarm_strobe.json
 a7ff3268fc3ae3ad11defa593f5a837359306cab data/eln/advancement/recipes/misc/flare_stack.json
 154a4ef09cc9ac5d53ce9cf792a69f016610ce11 data/eln/advancement/recipes/misc/flat_lamp_socket.json
 a96e19cb6d546b02a41ad04c2c929047c61e228b data/eln/advancement/recipes/misc/flexible_appliance_cord.json
@@ -871,6 +878,13 @@ bd50930da857ef199e662908e257fd731183e9f8 data/eln/recipe/extreme_standby_gasolin
 b13cb4968a13618baac1a0b74594a0fc79a51c95 data/eln/recipe/fabricator.json
 578f4c90700882a789008dc7d51958f37b2cd362 data/eln/recipe/fast_electrical_drill.json
 c69701fc0715e23ae06919546a43dbd77b2991b2 data/eln/recipe/field_bus_cable.json
+59acb92a46f2c29fe7071040655a6a75d13195d5 data/eln/recipe/fire_alarm_bell.json
+53719d9098fac2f67bc74ce8d4fdd3977dc06838 data/eln/recipe/fire_alarm_control_panel.json
+43578d8e800a86817330d6911a26f4202966f277 data/eln/recipe/fire_alarm_heat_detector.json
+7a0f7b786721935830cef0a5f27b83cf86967356 data/eln/recipe/fire_alarm_horn_strobe.json
+f2eeb09bb5fdbb4f7cbb53726408272c51b5d406 data/eln/recipe/fire_alarm_pull_station.json
+1bc4357b3a86dfb0dd0f6e06526283fd8d905393 data/eln/recipe/fire_alarm_smoke_detector.json
+a2cd039e4580f27d7cc76de02b4eeb2872f69f93 data/eln/recipe/fire_alarm_strobe.json
 cb117cca2d60183ceb605b7c516744be0b07ec15 data/eln/recipe/flare_stack.json
 566930bc1d495eba2162396b25dc0a79d0919023 data/eln/recipe/flat_lamp_socket.json
 06ae39993c5f3de54a060ff7a740bdc8b7755d87 data/eln/recipe/flexible_appliance_cord.json
