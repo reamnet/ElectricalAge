@@ -1,3 +1,5 @@
+> Final wrap verification:1470 native selected,1468pass,2 historical golden failures; all1004 ForkPatch cases pass. Root698pass/3 existing skips, CAD15pass, datagen repeat0 writes. See `requested-systems-validation.json`.
+
 > **2026-11-17 wrap-up:** See [current handoff](wrap-up-handoff.md) for implemented panel/carrying, all seven alarms, road vehicles/charger/lead, test evidence and remaining difficulty. Historical “not registered” notes below are superseded by that checkpoint; pending live GUI/gameplay checks remain explicit.
 
 # Feature backlog for the 3.0.77 → NeoForge 26.3 port
@@ -20,14 +22,8 @@ behavioral completion.
 
 ## Current continuation
 
-The [twelve-circuit panel](breaker-panel.md) and existing-family
-[portable carrying](portable-carry.md) now have native implementations and a
-962/962 passing ForkPatch regression. Source-rated breaker/switch/relay recipe
-prerequisites are included. Live GUI verification and the final unfiltered run
-remain pending. The seven [fire-alarm devices](fire-alarms.md) are now registered and pass
-the976-case ForkPatch regression. Road vehicles and their100A charging
-station/lead are the next active systems; they are not yet registered. See [requested scope](requested-systems-plan.md) and
-[validation](panel-carry-validation.json).
+The [twelve-circuit panel](breaker-panel.md), supported-family [portable carrying](portable-carry.md), all seven [fire alarms](fire-alarms.md), and [road vehicles/station/lead](road-vehicles.md) are implemented. Road native tests pass28/28; the earlier all-ForkPatch fire checkpoint passes976/976. Current root698pass/3 unchanged skips and CAD15pass. Live GUI/gameplay checks remain pending. See [current handoff](wrap-up-handoff.md) for final whole-run evidence and remaining acceptance gates.
+
 
 The [decorative lighting port](decorative-lighting.md) now registers all 108
 fixtures, including the five fans, motion floodlight and adjustable warehouse
@@ -155,14 +151,14 @@ Earlier checkpoints remain documented in [large renewable validation](large-rene
 | Industrial devices | Appliance cord/outlet integration and interactive client/audio parity for the registered industrial families. |
 | Industrial transport | Interactive client controls, audio and multiplayer parity of the registered forklift/pallet adapters. Road vehicles remain a separate adapter group. |
 | Vehicles | Four-seat golf cart, two-seat electric car, stepping/collision, turn-overload fire/explosion behavior, passengers, storage, six-cell traction pack and in-car charging. Preserve the electric car's clear windows. |
-| Appliance power | Portable consumers/carry and generalized panel channels. Explicit 120/240 V lamp supplies now have [native adapters](rated-lamp-supplies.md); remaining rated lighting/consumer families still need their own review. Compact plug-in UPS now has its own native adapter; portable carry remains separate. Recessed wall placement/restoration and centered legacy/voxel cable terminals now have their own adapter; interactive multi-client and additional resource-pack parity remain to check. Surface outlets/strips and fixed-machine families now use paid native links; see [adapter](cord-outlets.md) and [source review](appliance-cord-review.md). |
+| Appliance power | Portable consumers/carry and generalized panel channels. Explicit 120/240 V lamp supplies now have [native adapters](rated-lamp-supplies.md); remaining rated lighting/consumer families still need their own review. Compact plug-in UPS now has its own native adapter; supported table-lamp/compactUPS carrying is implemented; additional families remain. Recessed wall placement/restoration and centered legacy/voxel cable terminals now have their own adapter; interactive multi-client and additional resource-pack parity remain to check. Surface outlets/strips and fixed-machine families now use paid native links; see [adapter](cord-outlets.md) and [source review](appliance-cord-review.md). |
 | Kitchen/laundry | Source kitchen and laundry/matter-machine families, food/process inventories, recipes, temperature/heat behavior, appliance controls and graphics. |
 | Climate and fans | Heating/cooling/humidity controls, fans, evaporative cooling and water handling, building/room thermal changes and integration with the destination fluid systems. |
 | Pumps and growing | Industrial/world-intake pumps, fluid-port integration, growing-bed cycle and associated inventory/render/UI behavior. |
-| Lighting/decor | All 108 decorative fixtures have adapters, with aiming, motion, fan, suspension and water-preserving leases. Additional bulb technologies/configuration, portable carry, partial-support mounting and full client parity remain. See the [complete fixture/bulb matrix](lighting-port-matrix.md) and [implementation gates](port-completion-plan.md#lighting). Standalone flood/work/festive equipment and fire alarm networks are separate streams. |
+| Lighting/decor | All 108 decorative fixtures have adapters, with aiming, motion, fan, suspension and water-preserving leases. Additional bulb technologies/configuration, carrying for additional families, partial-support mounting and full client parity remain. See the [complete fixture/bulb matrix](lighting-port-matrix.md) and [implementation gates](port-completion-plan.md#lighting). Standalone flood/work/festive equipment and fire alarm networks are separate streams. |
 | Chip fabrication | Interactive graphics/JEI and broader basic-component integration remain pending. Fabricator 4480 and components 8064–8068 now have paid native processing/bootstrap checks; see [fabrication](chip-fabrication.md). |
 | Other mechanics/processes | Source shaft/generator/turbine, fusion reactor and other machine/process changes not already covered by an adapter checkpoint; reconcile with existing native mechanical/fluid implementations. |
-| Tools and integration | Remaining probes, configuration interactions, wireless/control channels, diagnostics/metrics, guides and optional-mod bridges. SCADA endpoint integration for the still-unadapted source 12-circuit breaker panel and media addon remains pending. A source file already present in 26.3 still needs conflict review. |
+| Tools and integration | Remaining probes, configuration interactions, wireless/control channels, diagnostics/metrics, guides and optional-mod bridges. The source12-circuit panel now has a native SCADA endpoint; media-addon integration remains pending. A source file already present in 26.3 still needs conflict review. |
 | Media addon | EAMedia is a separate addon: jukebox/external speakers and Plex/web-interface behavior need a separate platform port and integration validation. |
 
 ## Cross-cutting completion work
@@ -202,8 +198,6 @@ also covers [MQTT/Modbus and optional bridges](port-completion-plan.md#integrati
 [inherited classic behavior](port-completion-plan.md#classic),
 [shared support code](port-completion-plan.md#review-remainder) and
 [source test/oracle mappings](port-completion-plan.md#verification).
-The 12-circuit panel is an [unimplemented adapter](port-completion-plan.md#panel),
-not covered by the existing three-channel lamp supplies. The road vehicle physics
-helper likewise does not register the cart/coupe entities. Full source-world
+The12-circuit panel and cart/coupe entities now have native adapters and tests; live-client acceptance remains due. Full source-world
 conversion, all-screen reference comparison and representative loaded-world
 performance remain explicit completion gates.

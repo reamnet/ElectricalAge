@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "targetCommit": "f4ed2b6c9c742b9b543958e0e5f28b15f263b184",
+  "ledgerEntries": 1099,
+  "uniqueSourceFiles": 845,
+  "uniqueTargetFiles": 1052,
+  "declaredVerbatimEntries": 664,
+  "exactCopies": 677,
+  "passed": true,
+  "problems": [],
+  "scope": "Source hashes, target existence and declared exact copies; not full runtime parity.",
+  "targetCommitNote": "Audit was run with road changes present on top of f4ed2b6c; those source/resource changes were committed as2f9cbefd."
+}

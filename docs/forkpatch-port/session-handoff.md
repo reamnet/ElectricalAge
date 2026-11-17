@@ -1,3 +1,5 @@
+> Final wrap verification:1470 native selected,1468pass,2 historical golden failures; all1004 ForkPatch cases pass. Root698pass/3 existing skips, CAD15pass, datagen repeat0 writes. See `requested-systems-validation.json`.
+
 > **2026-11-17 wrap-up:** See [current handoff](wrap-up-handoff.md) for implemented panel/carrying, all seven alarms, road vehicles/charger/lead, test evidence and remaining difficulty. Historical “not registered” notes below are superseded by that checkpoint; pending live GUI/gameplay checks remain explicit.
 
 # Handoff — lamp completion and review since bb962e1

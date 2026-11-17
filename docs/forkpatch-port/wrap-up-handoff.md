@@ -8,7 +8,7 @@ Repository: `/home/matthew/projects/electrical-age-port/ElectricalAge`. Read `AG
 
 Run `source /tmp/eln-port-java-env.sh`; JDK25 targets the port, JDK21 is for source. Do not change pinned Gradle/wrapper/dependencies. Use `:test` for root filters. Never compile main classes while a client/test JVM reads the same outputs. Never weaken goldens, assertions, tolerances or skips. Preserve paid materials, energy/heat, UUID/owner/save invariants, cached LU factors and resident-only queries.
 
-Recent pushed checkpoints: `dd3cbee2` standalone test tools; `c2a61876` twelve-circuit panel + carrying; `f4ed2b6c` seven fire-alarm devices. Road vehicles and this wrap-up are the following branch commits; use `git log -5` for their exact SHAs. Do not restore prepared `/tmp` vehicle code over the integrated implementation. No coding subagent remains active.
+Recent pushed checkpoints: `dd3cbee2` standalone test tools; `c2a61876` twelve-circuit panel + carrying; `f4ed2b6c` seven fire-alarm devices. Road vehicles and the initial wrap-up were committed/pushed as `2f9cbefd`; later documentation commits record final evidence. Use `git log -5` for exact SHAs. Do not restore prepared `/tmp` vehicle code over the integrated implementation. No coding subagent remains active.
 
 ## Implemented scope and evidence
 
@@ -27,7 +27,7 @@ Native GameTests run Minecraft server code and are real in-engine automated test
 
 ## Validation and release limits
 
-See `requested-systems-validation.json` for the final whole-run outcome, if present; targeted vehicle evidence is committed independently. Prior fire checkpoint: datagen repeated with zero writes,1085 provenance entries pass, historical goldens fail exactly761 assertions (all746 earlier differences retained). Current vehicle import audit:1099 entries pass. Expectations were never regenerated/weakened. An unfiltered run is expected to remain red on historical `golden_descriptors` and `golden_slots`; inspect actual results rather than treating red as automatically approved.
+Final whole-run: **1470 selected,1468 passed,2 failed,zero skips; all1004 ForkPatch cases pass**. Only `golden_descriptors` and `golden_slots` fail. Exactly765 assertions are recorded; all761 prior differences remain and four were added by vehicle-station identity/menu coverage. No non-golden assertions fail. Expectations were never regenerated or weakened. Root701 selected/698pass/3 unchanged optional skips; CAD15/15. Build tasks pass; combined Gradle exits nonzero on the two goldens. Current provenance1099 entries passes; final datagen repeat succeeds with zero writes and zero stale removals. See `requested-systems-validation.json`, `requested-systems-native-review.json`, `requested-systems-golden-delta.json` and `requested-systems-provenance.json`.
 
 Full wrap-run log: `/tmp/eln-requested-systems-all-validation-v1.log`; report: `/tmp/eln-requested-systems-native-all-v1.xml`; private world: `/tmp/eln-requested-systems-native-all-v1-world`. Temporary paths may disappear; committed JSON summaries preserve observed results. The previously certified lamp-only JAR is stale. No new downloadable release or complete artifact certification is claimed.
 

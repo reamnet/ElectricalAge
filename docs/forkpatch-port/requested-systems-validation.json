@@ -1,0 +1,48 @@
+{
+  "implementationCommit": "2f9cbefd",
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "native": {
+    "selected": 1470,
+    "passed": 1468,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 1004,
+      "failed": 0
+    }
+  },
+  "failureCases": [
+    "eln:golden_descriptors",
+    "eln:golden_slots"
+  ],
+  "goldenAssertions": 765,
+  "allPrior761Retained": true,
+  "root": {
+    "selected": 701,
+    "passed": 698,
+    "failed": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "selected": 15,
+    "passed": 15,
+    "failed": 0
+  },
+  "build": "Build/root/CAD tasks passed; combined Gradle command exits nonzero because two historical native golden comparisons fail.",
+  "provenance": {
+    "entries": 1099,
+    "passed": true
+  },
+  "datagenRepeat": {
+    "written": 0,
+    "staleRemoved": 0,
+    "log": "/tmp/eln-requested-systems-datagen-repeat.log"
+  },
+  "log": "/tmp/eln-requested-systems-all-validation-v1.log",
+  "report": "/tmp/eln-requested-systems-native-all-v1.xml",
+  "limitations": [
+    "New panel/carry/alarm/vehicle live client GUI and human gameplay checks pending.",
+    "Vehicle audio/multi-client/fresh-JVM checks pending.",
+    "Prior certified lamp-only JAR is stale; no new artifact certification."
+  ]
+}
