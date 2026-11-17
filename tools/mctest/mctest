@@ -574,7 +574,7 @@ def cmd_server_start(args):
     return 0
 
 
-def cmd_server_stop(_args):
+def cmd_server_stop(args):
     if not process_group("server"):
         print("server not running")
         return 0
