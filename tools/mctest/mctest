@@ -629,15 +629,20 @@ def cmd_client_start(args):
     if process_group("client"):
         print("client already running:", process_group("client"))
         return 0
-    # seed servers.dat with the target address
+    # seed servers.dat with the target address (used for manual join / quickplay)
     ip = args.server_addr
     seed_servers(ip)
-    quick = ip  # --quickPlayMultiplayer takes the address string
-    spawn("client",
-          [str(REPO / "gradlew"), "--no-daemon", "--max-workers=2", "runClient",
-           "--args=--quickPlayMultiplayer %s --username %s" % (quick, args.username)],
-          REPO, "client")
-    print("started dev client (gradle runClient, quick-play to %s); waiting for window..." % quick)
+    argv = [str(REPO / "gradlew"), "--no-daemon", "--max-workers=2", "runClient"]
+    if args.connect:
+        # ModDev/DevLaunch does NOT parse a "--args=" wrapper token; it forwards the
+        # bare program args that follow the `runClient` task into its
+        # "# User Supplied Program Arguments" section.
+        argv += ["--quickPlayMultiplayer", ip, "--username", args.username]
+        note = "quick-play to %s as %s" % (ip, args.username)
+    else:
+        note = "title-screen boot (no connect); use --connect to join %s" % ip
+    spawn("client", argv, REPO, "client")
+    print("started dev client (gradle runClient, %s); waiting for window..." % note)
     deadline = time.time() + args.timeout
     wid = None
     while time.time() < deadline:
@@ -1031,7 +1036,7 @@ def build_parser():
 
     c = sub.add_parser("client", help="dev client management (xdotool/scrot)")
     cs = c.add_subparsers(dest="sub", required=True)
-    a = cs.add_parser("start"); a.add_argument("--server-addr", default=DEFAULT_SERVER_ADDR); a.add_argument("--username", default="mctest"); a.add_argument("--timeout", type=int, default=180); a.set_defaults(fn=cmd_client_start)
+    a = cs.add_parser("start"); a.add_argument("--server-addr", default=DEFAULT_SERVER_ADDR); a.add_argument("--username", default="mctest"); a.add_argument("--connect", action="store_true", help="quick-play join the target server (default: title-screen boot)"); a.add_argument("--timeout", type=int, default=180); a.set_defaults(fn=cmd_client_start)
     a = cs.add_parser("stop"); a.set_defaults(fn=cmd_client_stop)
     a = cs.add_parser("status"); a.set_defaults(fn=cmd_client_status)
     a = cs.add_parser("chat"); a.add_argument("message"); a.set_defaults(fn=cmd_client_chat)

@@ -1,22 +1,24 @@
 {
-  "sourceCommit": "c59e547138e53409f7a1bd282175ec25e16bb74d",
+  "sourceCommit": "d980ab769343ba4c02635fa678a75fe273d9d006",
   "buildTask": "./gradlew --no-daemon --max-workers=2 :jar",
   "result": "BUILD SUCCESSFUL",
   "artifact": "build/libs/eln-26.3-0.1.0-port.jar",
-  "sha256": "c19d8227540b495a9033a404740a33b12c5e7747446fb36a69d6f7b6c223cab8",
-  "embeddedBuildMarker": "c59e547138e5",
+  "sha256": "9fb9ab07423bdb6650182d2474322fbc33e6387e1c31299bff5c6044b5c05270",
+  "embeddedBuildMarker": "d980ab769343-dirty",
   "packagingComparison": {
-    "compiledClassAndResourceEntriesCompared": 8767,
+    "compiledClassAndResourceEntriesCompared": 9087,
     "missing": 0,
     "mismatchedBytes": 0,
     "extraArchiveEntries": [
       "META-INF/MANIFEST.MF",
+      "META-INF/mods.eln_eln.kotlin_module",
+      "META-INF/neoforge.mods.toml",
       "META-INF/jarjar/commons-math3-3.6.1.jar",
       "META-INF/jarjar/kotlin-stdlib-2.4.21.jar",
       "META-INF/jarjar/metadata.json"
     ]
   },
-  "worktreeCleanAtBuild": true,
+  "worktreeCleanAtBuild": false,
   "jarPublished": false,
-  "notes": "The jar was built locally from the published code commit. Its compiled class/resource payload matches build/classes/java/main, build/classes/kotlin/main, and build/resources/main byte for byte, excluding only the generated eln-build.properties commit marker. The jar itself is not included in this evidence commit."
+  "notes": "Built locally from commit d980ab769343ba4c02635fa678a75fe273d9d006. The marker is recorded as 'd980ab769343-dirty' only because two NON-source files were modified in the working tree at build time (OVERNIGHT_PORT_PROGRESS.md and tools/mctest/mctest); neither is compiled into or shipped in the jar. The jar's compiled class/resource payload matches build/classes/java/main, build/classes/kotlin/main and build/resources/main byte for byte (9087 entries, 0 missing, 0 mismatched), excluding only the generated META-INF packaging entries and the eln-build.properties commit marker. The jar is not included in this evidence commit and has not been published. This is a local artifact certification, not a release sign-off."
 }
