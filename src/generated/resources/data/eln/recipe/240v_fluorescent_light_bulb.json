@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "F": "minecraft:glowstone_dust",
+    "G": "minecraft:glass_pane",
+    "P": "eln:iron_plate",
+    "S": "eln:medium_voltage_cable"
+  },
+  "pattern": [
+    " G ",
+    "GFG",
+    "PSP"
+  ],
+  "result": {
+    "count": 4,
+    "id": "eln:240v_fluorescent_light_bulb"
+  }
+}

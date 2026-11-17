@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "I": "minecraft:iron_ingot",
+    "P": "eln:iron_plate",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "I I",
+    "PRP",
+    "CCC"
+  ],
+  "result": {
+    "id": "eln:electric_toaster"
+  }
+}

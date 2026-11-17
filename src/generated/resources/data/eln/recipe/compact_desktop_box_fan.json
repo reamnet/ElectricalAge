@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "M": "eln:electrical_motor",
+    "P": "eln:rubber",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "PPP",
+    "MCM",
+    "PRP"
+  ],
+  "result": {
+    "id": "eln:compact_desktop_box_fan"
+  }
+}

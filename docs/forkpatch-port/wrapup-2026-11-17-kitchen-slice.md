@@ -1,3 +1,5 @@
+> **Expanded systems continuation:** Kitchen/laundry/fusion, substations8016–8019 plus7875 prerequisite, all18 source bulbs, and four standalone fans now have native implementations. See [implementation and acceptance details](appliances-substations-bulbs-fans.md) and `expanded-systems-validation.json` for current evidence; historical not-implemented notes below predate this slice.
+
 # Wrap-up — 2026-11-17 · Kitchen/Laundry/Fusion slice
 
 Repo: /home/matthew/projects/electrical-age-port/ElectricalAge

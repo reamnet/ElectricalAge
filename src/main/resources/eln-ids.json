@@ -4709,7 +4709,6 @@
   "kind": "six_node",
   "name": "dual_gumdrop_sidewalk_light"
  },
-
  "eln:shared_item@302": {
   "descriptor": "LampDescriptor",
   "display": "120V LED Light Bulb",
@@ -4943,5 +4942,239 @@
   "display": "240 V 100 A Vehicle Charger",
   "kind": "transparent_node",
   "name": "240_v_100_a_vehicle_charger"
+ },
+ "eln:shared_item@304": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Incandescent Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_incandescent_light_bulb"
+ },
+ "eln:shared_item@305": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Incandescent Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_incandescent_light_bulb"
+ },
+ "eln:shared_item@306": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Incandescent Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_incandescent_light_bulb"
+ },
+ "eln:shared_item@307": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Carbon Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_carbon_light_bulb"
+ },
+ "eln:shared_item@308": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Carbon Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_carbon_light_bulb"
+ },
+ "eln:shared_item@309": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Carbon Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_carbon_light_bulb"
+ },
+ "eln:shared_item@310": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Fluorescent Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_fluorescent_light_bulb"
+ },
+ "eln:shared_item@311": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Fluorescent Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_fluorescent_light_bulb"
+ },
+ "eln:shared_item@312": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Fluorescent Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_fluorescent_light_bulb"
+ },
+ "eln:shared_item@313": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Farming Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_farming_light_bulb"
+ },
+ "eln:shared_item@314": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Farming Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_farming_light_bulb"
+ },
+ "eln:shared_item@315": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Farming Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_farming_light_bulb"
+ },
+ "eln:shared_item@316": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V LED Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_led_light_bulb"
+ },
+ "eln:shared_item@317": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Halogen Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_halogen_light_bulb"
+ },
+ "eln:shared_item@318": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Halogen Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_halogen_light_bulb"
+ },
+ "eln:shared_item@319": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Halogen Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_halogen_light_bulb"
+ },
+ "eln:transparent_node@7964": {
+  "descriptor": "mods.eln.transparentnode.fan.FanDescriptor",
+  "display": "Industrial Five Block Fan",
+  "kind": "transparent_node",
+  "name": "industrial_five_block_fan"
+ },
+ "eln:transparent_node@7965": {
+  "descriptor": "mods.eln.transparentnode.fan.FanDescriptor",
+  "display": "Classic Box Fan",
+  "kind": "transparent_node",
+  "name": "classic_box_fan"
+ },
+ "eln:transparent_node@7966": {
+  "descriptor": "mods.eln.transparentnode.fan.FanDescriptor",
+  "display": "Metal Shop Box Fan",
+  "kind": "transparent_node",
+  "name": "metal_shop_box_fan"
+ },
+ "eln:transparent_node@7967": {
+  "descriptor": "mods.eln.transparentnode.fan.FanDescriptor",
+  "display": "Compact Desktop Box Fan",
+  "kind": "transparent_node",
+  "name": "compact_desktop_box_fan"
+ },
+ "eln:transparent_node@7937": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Microwave",
+  "kind": "transparent_node",
+  "name": "electric_microwave"
+ },
+ "eln:transparent_node@7938": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Toaster",
+  "kind": "transparent_node",
+  "name": "electric_toaster"
+ },
+ "eln:transparent_node@7939": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Flat Electric Cooktop",
+  "kind": "transparent_node",
+  "name": "flat_electric_cooktop"
+ },
+ "eln:transparent_node@7940": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Refrigerator",
+  "kind": "transparent_node",
+  "name": "electric_refrigerator"
+ },
+ "eln:transparent_node@7941": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Coffee Maker",
+  "kind": "transparent_node",
+  "name": "electric_coffee_maker"
+ },
+ "eln:transparent_node@7954": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Kettle",
+  "kind": "transparent_node",
+  "name": "electric_kettle"
+ },
+ "eln:transparent_node@7955": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Countertop Blender",
+  "kind": "transparent_node",
+  "name": "countertop_blender"
+ },
+ "eln:transparent_node@7956": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Rice Cooker",
+  "kind": "transparent_node",
+  "name": "electric_rice_cooker"
+ },
+ "eln:transparent_node@7963": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Mini Oven",
+  "kind": "transparent_node",
+  "name": "electric_mini_oven"
+ },
+ "eln:transparent_node@7996": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Mini Fridge",
+  "kind": "transparent_node",
+  "name": "electric_mini_fridge"
+ },
+ "eln:transparent_node@7997": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Patio Electric Grill",
+  "kind": "transparent_node",
+  "name": "patio_electric_grill"
+ },
+ "eln:transparent_node@8009": {
+  "descriptor": "mods.eln.transparentnode.laundry.MatterMachineDescriptor",
+  "display": "Electric Washing Machine",
+  "kind": "transparent_node",
+  "name": "electric_washing_machine"
+ },
+ "eln:transparent_node@8010": {
+  "descriptor": "mods.eln.transparentnode.laundry.MatterMachineDescriptor",
+  "display": "Electric Dryer",
+  "kind": "transparent_node",
+  "name": "electric_dryer"
+ },
+ "eln:transparent_node@8011": {
+  "descriptor": "mods.eln.transparentnode.laundry.MatterMachineDescriptor",
+  "display": "Fusion Matter Reactor",
+  "kind": "transparent_node",
+  "name": "fusion_matter_reactor"
+ },
+ "eln:transparent_node@8016": {
+  "descriptor": "mods.eln.utility.SubstationDescriptor",
+  "display": "69 kV to 12.5 kV Substation Transformer",
+  "kind": "transparent_node",
+  "name": "69_kv_to_12_5_kv_substation_transformer"
+ },
+ "eln:transparent_node@8017": {
+  "descriptor": "mods.eln.utility.SubstationDescriptor",
+  "display": "230 kV to 69 kV Substation Transformer",
+  "kind": "transparent_node",
+  "name": "230_kv_to_69_kv_substation_transformer"
+ },
+ "eln:transparent_node@8018": {
+  "descriptor": "mods.eln.utility.SubstationDescriptor",
+  "display": "69 kV Three Phase Substation Disconnect",
+  "kind": "transparent_node",
+  "name": "69_kv_three_phase_substation_disconnect"
+ },
+ "eln:transparent_node@8019": {
+  "descriptor": "mods.eln.utility.SubstationDescriptor",
+  "display": "230 kV Three Phase Substation Disconnect",
+  "kind": "transparent_node",
+  "name": "230_kv_three_phase_substation_disconnect"
+ },
+ "eln:transparent_node@7875": {
+  "descriptor": "mods.eln.utility.GridSourceTransformerDescriptor",
+  "display": "Grid DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "grid_dc_dc_converter"
  }
 }

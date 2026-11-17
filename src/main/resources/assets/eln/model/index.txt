@@ -31,10 +31,12 @@ ceramicdrumtablelamp/ceramicdrumtablelamp.obj
 christmasfairylights/christmasfairylights.obj
 christmasiciclelights/christmasiciclelights.obj
 christmasstarlight/christmasstarlight.obj
+classicboxfan/classicboxfan.obj
 classicceilingfan/classicceilingfan.obj
 classiclampsocket/classiclampsocket.obj
 columnbase/columnbase.obj
 columnsegment/columnsegment.obj
+compactboxfan/compactboxfan.obj
 compactservicemast/compactservicemast.obj
 compactturbine50v/compactturbine50v.obj
 compactups/compactups.obj
@@ -101,6 +103,7 @@ gooseneckbarnlight/gooseneckbarnlight.obj
 gooseneckservicemast/gooseneckservicemast.obj
 grandempirechandelier/grandempirechandelier.obj
 grandhalochandelier/grandhalochandelier.obj
+gridconverter/gridconverter.obj
 groundcable/groundcable.obj
 gumdropsidewalklight/gumdropsidewalklight.obj
 halloweenbatlight/halloweenbatlight.obj
@@ -128,6 +131,7 @@ industrial_scada/industrial_scada.obj
 industrial_shedder/industrial_shedder.obj
 industrial_welder/industrial_welder.obj
 industrialceilingfan/industrialceilingfan.obj
+industrialfloorfan/industrialfloorfan.obj
 industrialmachineoutlet/industrialmachineoutlet.obj
 industrialmachineplug/industrialmachineplug.obj
 industrialpanel/industrialpanel.obj
@@ -169,6 +173,7 @@ magnetizera/magnetizera.obj
 magnetizerb/magnetizerb.obj
 marinepierbulkhead/marinepierbulkhead.obj
 mediumvoltageswitch/mediumvoltageswitch.obj
+metalboxfan/metalboxfan.obj
 minibezeldot/minibezeldot.obj
 minideepbaffledot/minideepbaffledot.obj
 minidotspotlight/minidotspotlight.obj
@@ -291,6 +296,10 @@ stonewallwashlight/stonewallwashlight.obj
 streetlight/streetlight.obj
 submersiblepump200v/submersiblepump200v.obj
 submersiblepump50v/submersiblepump50v.obj
+substation23069/substation23069.obj
+substation69125/substation69125.obj
+substationdisconnect230/substationdisconnect230.obj
+substationdisconnect69/substationdisconnect69.obj
 surfacelinearledstrip/surfacelinearledstrip.obj
 switchgear_contactor/switchgear_contactor.obj
 switchgear_contactor_three/switchgear_contactor_three.obj

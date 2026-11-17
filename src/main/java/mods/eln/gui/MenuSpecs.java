@@ -126,6 +126,11 @@ public final class MenuSpecs {
         put(mods.eln.transparentnode.festive.StringLightsDescriptor.class,d->MenuSpec.of().publishing(1).panel(176,206,8,124));
         put(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,278,0,0));
         put(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));
+        put(mods.eln.transparentnode.fan.FanDescriptor.class,d->MenuSpec.of().publishing(1).panel(176,230,8,148));
+        put(mods.eln.transparentnode.kitchen.KitchenDescriptor.class,mods.eln.transparentnode.kitchen.KitchenMenus::spec);
+        put(mods.eln.transparentnode.laundry.MatterMachineDescriptor.class,mods.eln.transparentnode.laundry.MatterMachineMenus::spec);
+        put(mods.eln.utility.GridSourceTransformerDescriptor.class,d->MenuSpec.of().publishing(1).panel(240,166,8,84));
+        put(mods.eln.utility.SubstationDescriptor.class,d->MenuSpec.of().publishing(1).panel(240,266,8,184));
         put(mods.eln.utility.TransmissionDescriptor.class,d->MenuSpec.of().publishing(1).panel(240,230,8,148));
         put(mods.eln.utility.DistributionPoleDescriptor.class,d->(d.getKind().getTwinLight()?MenuSpec.of(
             filter(0,16,332,1,stack->false,MEDIUM,tr("Recover former transformer")),

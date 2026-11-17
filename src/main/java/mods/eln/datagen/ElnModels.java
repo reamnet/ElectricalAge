@@ -152,12 +152,13 @@ public class ElnModels implements DataProvider {
                 model = "eln:block/" + name;
             } else {
                 String tex = itemTexture(name, item);
+                if (tex == null && java.util.Set.of("hot_water","fruit_smoothie","steamed_grains").contains(name)) tex = "source_food";
                 if (tex == null) {
                     missing.add("item " + name);
                     tex = "items/missing";
                 }
                 // the data-log print had an empty icon (1.12 drew the graph over it): vanilla paper in the GUI
-                String layer = name.equals("data_logger_print") ? "minecraft:item/paper" : "eln:" + tex;
+                String layer = switch(name) { case "data_logger_print" -> "minecraft:item/paper"; case "hot_water" -> "minecraft:item/potion"; case "fruit_smoothie" -> "minecraft:item/honey_bottle"; case "steamed_grains" -> "minecraft:item/mushroom_stew"; default -> "eln:" + tex; };
                 out.add(DataProvider.saveStable(cache, obj("parent", HANDHELD.contains(name) ? "minecraft:item/handheld" : "minecraft:item/generated",
                     "textures", obj("layer0", layer)), assets.resolve("models/item/" + name + ".json")));
             }

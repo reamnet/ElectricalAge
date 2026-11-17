@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/steel"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": "#c:ingots/steel",
+    "m": "eln:advanced_machine_block",
+    "t": "eln:winding_dc_dc_converter"
+  },
+  "pattern": [
+    "i i",
+    "mtm",
+    "imi"
+  ],
+  "result": {
+    "id": "eln:grid_dc_dc_converter"
+  }
+}

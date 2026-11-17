@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "M": "eln:electrical_motor",
+    "P": "minecraft:iron_ingot",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "PPP",
+    "MCM",
+    "PRP"
+  ],
+  "result": {
+    "id": "eln:metal_shop_box_fan"
+  }
+}

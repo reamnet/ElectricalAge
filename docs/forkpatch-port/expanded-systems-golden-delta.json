@@ -1,0 +1,448 @@
+{
+  "previousAssertions": 765,
+  "currentAssertions": 832,
+  "unchangedExactAssertions": 755,
+  "addedExactAssertions": [
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@304: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@305: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@306: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@307: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@308: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@309: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@310: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@311: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@312: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@313: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@314: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@315: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@316: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@317: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@318: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item@319: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7875: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7937: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7938: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7939: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7940: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7941: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7954: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7955: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7956: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7963: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7964: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7965: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7966: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7967: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7996: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7997: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8009: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8010: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8011: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8016: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8017: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8018: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8019: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 230 kV Three Phase Substation Disconnect has no 1.12 container: spec from SubstationDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 230 kV to 69 kV Substation Transformer has no 1.12 container: spec from SubstationDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 69 kV Three Phase Substation Disconnect has no 1.12 container: spec from SubstationDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 69 kV to 12.5 kV Substation Transformer has no 1.12 container: spec from SubstationDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Classic Box Fan has no 1.12 container: spec from FanDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Compact Desktop Box Fan has no 1.12 container: spec from FanDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Countertop Blender has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Coffee Maker has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Dryer has no 1.12 container: spec from MatterMachineDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Kettle has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Microwave has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Mini Fridge has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Mini Oven has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Refrigerator has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Rice Cooker has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Toaster has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Electric Washing Machine has no 1.12 container: spec from MatterMachineDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: FanDescriptor in the 1.12 dump: spec without a 1.12 container",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Flat Electric Cooktop has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Flat Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fluorescent Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fusion Matter Reactor has no 1.12 container: spec from MatterMachineDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Grid DC-DC Converter has no 1.12 container: spec from GridSourceTransformerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: GridSourceTransformerDescriptor in the 1.12 dump: spec without a 1.12 container",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Industrial Five Block Fan has no 1.12 container: spec from FanDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: KitchenDescriptor in the 1.12 dump: spec without a 1.12 container",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Lamp Socket A slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Lamp Socket B Projector slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Long Suspended Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: MatterMachineDescriptor in the 1.12 dump: spec without a 1.12 container",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Metal Shop Box Fan has no 1.12 container: spec from FanDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Patio Electric Grill has no 1.12 container: spec from KitchenDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Robust Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Sconce Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Simple Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Street Light slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: SubstationDescriptor in the 1.12 dump: spec without a 1.12 container",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Suspended Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb, eln:12v_incandescent_light_bulb, eln:120v_incandescent_light_bulb, eln:240v_incandescent_light_bulb, eln:12v_carbon_light_bulb] +12, missing []",
+      "count": 1
+    }
+  ],
+  "removedExactAssertions": [
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Flat Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fluorescent Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Lamp Socket A slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Lamp Socket B Projector slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Long Suspended Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Robust Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Sconce Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Simple Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Street Light slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Suspended Lamp Socket slot 0: index 0 vs 0, limit 1 vs 1, extra [eln:120v_led_light_bulb, eln:240v_led_light_bulb], missing []",
+      "count": 1
+    }
+  ],
+  "explanation": "Ten earlier slot messages expand their extra-bulb set from the two published LEDs to all18 source-rated bulbs; these are expanded acceptance messages, not weakened expectations. Remaining additions identify new devices/menus. All raw differences are retained for review.",
+  "observedLog": "/tmp/eln-expanded-all-v2.log",
+  "nativeXml": "/tmp/eln-expanded-all-v2.xml",
+  "expectationsChanged": false
+}

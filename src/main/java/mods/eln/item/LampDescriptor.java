@@ -117,7 +117,8 @@ public class LampDescriptor extends GenericItemUsingDamageDescriptorUpgrade impl
         list.add(tr("Range: %1$ blocks", (int) (nominalLight * 15)));
         list.add(tr("Power: %1$W", Utils.plotValue(nominalP)));
         list.add(tr("Resistance: %1$\u2126", Utils.plotValue(getR())));
-        list.add(tr("Nominal lifetime: %1$h", serverNominalLife));
+        // Config sync stores seconds; the tooltip promises hours. Server tooltips use the local rating.
+        list.add(tr("Nominal lifetime: %1$h", (serverNominalLife > 0 ? serverNominalLife : nominalLife) / 3600.0));
         if (!Utils.isEmpty(itemStack)) {
             if (!mods.eln.generic.ItemNbt.has(itemStack) || !mods.eln.generic.ItemNbt.get(itemStack).contains("life"))
                 list.add(tr("Condition:") + " " + tr("New"));

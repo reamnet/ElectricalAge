@@ -303,6 +303,8 @@ public final class ElnRegistry {
     }
 
     public static void register(IEventBus modBus) {
+        mods.eln.transparentnode.kitchen.KitchenFoods.register();
+        mods.eln.transparentnode.laundry.WetEquipment.register();
         for (Map.Entry<Integer, SixNodeDescriptor> e : Eln.sixNodeItem.all().entrySet()) {
             int id = e.getKey();
             SixNodeDescriptor d = e.getValue();

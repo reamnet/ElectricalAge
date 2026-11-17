@@ -1,3 +1,5 @@
+> **Expanded systems continuation:** Kitchen/laundry/fusion, substations8016–8019 plus7875 prerequisite, all18 source bulbs, and four standalone fans now have native implementations. See [implementation and acceptance details](appliances-substations-bulbs-fans.md) and `expanded-systems-validation.json` for current evidence; historical not-implemented notes below predate this slice.
+
 # Decorative lighting and bulb completion matrix
 
 Pinned source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. The source enum order supplies the ordinals below; the native manifest supplies registration observations. Model-directory presence alone does not establish drawing, picking or behavior.
@@ -128,27 +130,27 @@ Pinned source: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. The source enum order
 
 ## Source bulb identities
 
-These are the 18 source registrations, not replacements for established 50/200 V native bulbs. The two LED adapters are implemented at 302/303; the remaining source ratings/technologies require mapping and source behavior/configuration review. Native aging and the source per-technology system still differ.
+These are the 18 source registrations, not replacements for established 50/200 V native bulbs. All18 source-rated adapters are implemented. The two published LEDs keep302/303; the other16 use304–319. The explicit mapping below preserves every occupied native identity. Native aging and source per-technology configuration still need broader parity review; see [current implementation](appliances-substations-bulbs-fans.md).
 
 | Source shared lookup | Source bulb | Exact-display native key | Identity currently at source lookup |
 |---|---|---|---|
-| 256 | 12V Incandescent Light Bulb | None observed | Small 50V Incandescent Light Bulb |
-| 257 | 120V Incandescent Light Bulb | None observed | 50V Incandescent Light Bulb |
-| 258 | 240V Incandescent Light Bulb | None observed | 200V Incandescent Light Bulb |
-| 260 | 12V Carbon Light Bulb | None observed | Small 50V Carbon Incandescent Light Bulb |
-| 261 | 120V Carbon Light Bulb | None observed | 50V Carbon Incandescent Light Bulb |
-| 262 | 240V Carbon Light Bulb | None observed | No native identity at this lookup |
-| 272 | 12V Fluorescent Light Bulb | None observed | Small 50V Economic Light Bulb |
-| 273 | 120V Fluorescent Light Bulb | None observed | 50V Economic Light Bulb |
-| 274 | 240V Fluorescent Light Bulb | None observed | 200V Economic Light Bulb |
-| 287 | 12V Farming Light Bulb | None observed | No native identity at this lookup |
-| 288 | 120V Farming Light Bulb | None observed | 50V Farming Lamp |
-| 292 | 240V Farming Light Bulb | None observed | 200V Farming Lamp |
-| 295 | 12V LED Light Bulb | None observed | No native identity at this lookup |
+| 256 | 12V Incandescent Light Bulb | eln:shared_item@304 | Small 50V Incandescent Light Bulb |
+| 257 | 120V Incandescent Light Bulb | eln:shared_item@305 | 50V Incandescent Light Bulb |
+| 258 | 240V Incandescent Light Bulb | eln:shared_item@306 | 200V Incandescent Light Bulb |
+| 260 | 12V Carbon Light Bulb | eln:shared_item@307 | Small 50V Carbon Incandescent Light Bulb |
+| 261 | 120V Carbon Light Bulb | eln:shared_item@308 | 50V Carbon Incandescent Light Bulb |
+| 262 | 240V Carbon Light Bulb | eln:shared_item@309 | No native identity at this lookup |
+| 272 | 12V Fluorescent Light Bulb | eln:shared_item@310 | Small 50V Economic Light Bulb |
+| 273 | 120V Fluorescent Light Bulb | eln:shared_item@311 | 50V Economic Light Bulb |
+| 274 | 240V Fluorescent Light Bulb | eln:shared_item@312 | 200V Economic Light Bulb |
+| 287 | 12V Farming Light Bulb | eln:shared_item@313 | No native identity at this lookup |
+| 288 | 120V Farming Light Bulb | eln:shared_item@314 | 50V Farming Lamp |
+| 292 | 240V Farming Light Bulb | eln:shared_item@315 | 200V Farming Lamp |
+| 295 | 12V LED Light Bulb | eln:shared_item@316 | No native identity at this lookup |
 | 293 | 120V LED Light Bulb | eln:shared_item@302 | 50V LED Bulb |
 | 294 | 240V LED Light Bulb | eln:shared_item@303 | 200V LED Bulb |
-| 299 | 12V Halogen Light Bulb | None observed | No native identity at this lookup |
-| 300 | 120V Halogen Light Bulb | None observed | No native identity at this lookup |
-| 301 | 240V Halogen Light Bulb | None observed | No native identity at this lookup |
+| 299 | 12V Halogen Light Bulb | eln:shared_item@317 | No native identity at this lookup |
+| 300 | 120V Halogen Light Bulb | eln:shared_item@318 | No native identity at this lookup |
+| 301 | 240V Halogen Light Bulb | eln:shared_item@319 | No native identity at this lookup |
 
 Use [the completion plan](port-completion-plan.md#lighting) for dependencies and [current lighting evidence](decorative-lighting-validation.json) for the implemented scope. This table does not replace source registration or a runtime catalog export.

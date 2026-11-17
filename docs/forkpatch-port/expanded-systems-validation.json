@@ -1,0 +1,82 @@
+{
+  "status": "Implemented and native-regression tested; live client/integration acceptance pending",
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "baselineCommit": "cfbad5a720d42279c104c00609963d97c5f8477d",
+  "testedTree": "The complete source/resource working tree committed with this evidence; later documentation-only commits do not change tested production code.",
+  "native": {
+    "selected": 1536,
+    "passed": 1534,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 1070,
+      "failed": 0
+    }
+  },
+  "failureCases": [
+    "eln:golden_descriptors",
+    "eln:golden_slots"
+  ],
+  "expandedCases": {
+    "selected": 66,
+    "passed": 66,
+    "failed": 0
+  },
+  "root": {
+    "selected": 701,
+    "passed": 698,
+    "failed": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "selected": 15,
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0
+  },
+  "goldens": {
+    "assertions": 832,
+    "previousAssertions": 765,
+    "retainedExactAssertions": 755,
+    "expandedPriorSlotMessages": 10,
+    "expectationsChanged": false,
+    "delta": "expanded-systems-golden-delta.json"
+  },
+  "catalog": {
+    "published": 638,
+    "itemDraws": 427,
+    "passed": true
+  },
+  "provenance": {
+    "entries": 1240,
+    "passed": true,
+    "report": "/tmp/eln-expanded-imports-final.json"
+  },
+  "datagen": {
+    "totalFiles": 3855,
+    "written": 0,
+    "removedStale": 0,
+    "log": "/tmp/eln-expanded-all-v2.log"
+  },
+  "firstFull": {
+    "selected": 1536,
+    "passed": 1534,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 1070,
+      "failed": 0
+    },
+    "report": "/tmp/eln-expanded-all-v1.xml",
+    "log": "/tmp/eln-expanded-all-v1.log"
+  },
+  "log": "/tmp/eln-expanded-all-v2.log",
+  "report": "/tmp/eln-expanded-all-v2.xml",
+  "build": "Build/root/CAD tasks pass. Combined Gradle command exits nonzero solely on golden_descriptors/golden_slots.",
+  "limitations": [
+    "Real client GUI/audio/multiplayer checks pending.",
+    "Room-climate and external spoilage bridges remain unported.",
+    "Optional-metal prerequisite crafting is tag-conditioned.",
+    "No new certified release artifact or full source-world migration."
+  ]
+}

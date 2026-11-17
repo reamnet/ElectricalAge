@@ -7697,5 +7697,992 @@
     "sourceSha256": "8650553e77a054702ba4e24f4e0c446d4ae32046fbd7a9e4dab36d1672d423a3",
     "mode": "verbatim",
     "status": "native-tested"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/fusion/value/SimpleGraphMapper.java",
+    "target": "src/main/java/mods/eln/transparentnode/fusion/value/SimpleGraphMapper.java",
+    "sourceSha256": "1189903147b87c9fe46315c74e82a9e3a4dd0acb6325c18264892701e9efa001",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/fusion/value/arithmetic/FullBigFractionArithmetic.java",
+    "target": "src/main/java/mods/eln/transparentnode/fusion/value/arithmetic/FullBigFractionArithmetic.java",
+    "sourceSha256": "e3cc677736653110311f6e8d95bfe4d375e4e2629cdba58762b6fb82cabf542e",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/fusion/value/arithmetic/HiddenBigFractionArithmetic.java",
+    "target": "src/main/java/mods/eln/transparentnode/fusion/value/arithmetic/HiddenBigFractionArithmetic.java",
+    "sourceSha256": "5690273f4f0648b5b7465457f4e4e6a3c090d47d2198252572c14b914ddfa6d6",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/fusion/value/arithmetic/IValueArithmetic.java",
+    "target": "src/main/java/mods/eln/transparentnode/fusion/value/arithmetic/IValueArithmetic.java",
+    "sourceSha256": "1bf567f48b376d7c7edfa5344f46a0e6a833a708463be122cd10f40f651814c8",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/fusion/value/collector/AbstractMappingCollector.java",
+    "target": "src/main/java/mods/eln/transparentnode/fusion/value/collector/AbstractMappingCollector.java",
+    "sourceSha256": "092adaa7e3df6176ab910cafe04fdb410d6681df4637033325c76d98d5531672",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/fusion/value/collector/IExtendedMappingCollector.java",
+    "target": "src/main/java/mods/eln/transparentnode/fusion/value/collector/IExtendedMappingCollector.java",
+    "sourceSha256": "57389d73083155e8dc9baf188ff5d8da5ef322db3a4619b5bd6dbfce45d43500",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/fusion/value/collector/IMappingCollector.java",
+    "target": "src/main/java/mods/eln/transparentnode/fusion/value/collector/IMappingCollector.java",
+    "sourceSha256": "5a579657442a32d814abf4b34d402f024b032c4b5b6dae2a395550a40f41e4f7",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/fusion/value/collector/MappingCollector.java",
+    "target": "src/main/java/mods/eln/transparentnode/fusion/value/collector/MappingCollector.java",
+    "sourceSha256": "24d17f8234e076f8573319dc44e68ef23a7019704655830eedcd9163e6c85b9c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/java/mods/eln/transparentnode/fusion/value/generator/IValueGenerator.java",
+    "target": "src/main/java/mods/eln/transparentnode/fusion/value/generator/IValueGenerator.java",
+    "sourceSha256": "954f95a1d83fd1e6e88512903d75e100c7a30cb54f741883a64b13f70b21fe89",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/lampsocket/LampMounting.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/lampsocket/LampMounting.kt",
+    "sourceSha256": "42982f1ef1518c1e0fb327a13b49f136404116e5aa4524560123b497af026b82",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/fan/FanClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fan/FanClient.kt",
+    "sourceSha256": "20e4dd55b5d4bc142f478a71344495bdc1fa248118a670585404298a3b0f8c51",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/fan/FanElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fan/FanElement.kt",
+    "sourceSha256": "84529ad4ff479fb18352be4cb747427e3a5db9d7903a2d056fc300b801c25426",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/fan/FanType.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fan/FanType.kt",
+    "sourceSha256": "f930b2077dccf5af82ea07f76720bd2fb3ee7c57a871054e7f434079989f1e03",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/fusion/FusionValues.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/fusion/FusionValues.kt",
+    "sourceSha256": "43b49c874051f16dc6208108b9e64e7c25cff2d17df51e581b6d58cb6ff98ca7",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenClient.kt",
+    "sourceSha256": "0b636e987dde88d7a2ad07705c3f24bd8e5419ebf363abbd4ddd2243b9418778",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenElement.kt",
+    "sourceSha256": "38f19dfada52edf1976b7e741bf28140795bf523ca650f164315716679fe0b6b",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenFoods.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenFoods.kt",
+    "sourceSha256": "3791c443308c7bbe13245ba81003c8b236223d46dfa73e3b29f1801745eab311",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenRecipe.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenRecipe.kt",
+    "sourceSha256": "4e2d1688426f55139935a0d3f8d4c4b588f6839a68e99843b85615456c215028",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/kitchen/KitchenType.kt",
+    "sourceSha256": "a638e027ff6af65116968617692ad831a3d26703cbc1d4bb4fdf332cc2bbdc29",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/kitchen/MicrowaveBatteryHeat.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/kitchen/MicrowaveBatteryHeat.kt",
+    "sourceSha256": "88d870f5fd41873c85c19920a08d4c3d51fae5904d27cd441c1935ffc00f8d2a",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/kitchen/RefrigeratorThermal.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/kitchen/RefrigeratorThermal.kt",
+    "sourceSha256": "e451da8556904a9094648a48005ca3974c2593bcc77ae57964655f017ae03bf3",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/laundry/MatterMachineClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/laundry/MatterMachineClient.kt",
+    "sourceSha256": "abc0e1b0010d0c26cf6c9786de45ff8f5ec110e21f1a1aaee1dc2fc2aad8ef2d",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/laundry/MatterMachineElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/laundry/MatterMachineElement.kt",
+    "sourceSha256": "cbde030d2f6efd458660d2dd8e6ef705308785901728ca1c07b821aeec3e824f",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/laundry/MatterMachineKind.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/laundry/MatterMachineKind.kt",
+    "sourceSha256": "8db137845fc8a2bc310655b637ad99d758b616295b93f486c95afe5a51a565f1",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/laundry/WasherWater.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/laundry/WasherWater.kt",
+    "sourceSha256": "e22aacca8c4e1d3081d9ae898978bc696e9cbb2f315350acb15dbd6848db0dca",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/laundry/WetEquipment.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/laundry/WetEquipment.kt",
+    "sourceSha256": "b5d12c397a2d443d3f806f5e5ce4798d3d1e527602e67fe69ec91471398d0cc4",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/classicboxfan/classicboxfan.obj",
+    "target": "src/main/resources/assets/eln/model/classicboxfan/classicboxfan.obj",
+    "sourceSha256": "ad9129aedd6925bf84446afbffee42fdcfb60d1f3447a61c8234ca4816753918",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/classicboxfan/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/classicboxfan/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/classicboxfan/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/classicboxfan/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/compactboxfan/compactboxfan.obj",
+    "target": "src/main/resources/assets/eln/model/compactboxfan/compactboxfan.obj",
+    "sourceSha256": "b48fbb69071fd917afde14005f4292e1750cabf346ae5bd81b02a6e464676b24",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/compactboxfan/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/compactboxfan/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/compactboxfan/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/compactboxfan/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/gridconverter/bez nazwy-1.png",
+    "target": "src/main/resources/assets/eln/model/gridconverter/bez nazwy-1.png",
+    "sourceSha256": "e33548588f38d6666073e8eafede6f2b425585deecf35143640cf6fb59fef7cd",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/gridconverter/elnlogocube.png",
+    "target": "src/main/resources/assets/eln/model/gridconverter/elnlogocube.png",
+    "sourceSha256": "1b20152b533387cb57f3716670eb9db571f192ad1c1c64535ca3cb4c73a8711e",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/gridconverter/gridconverter.mtl",
+    "target": "src/main/resources/assets/eln/model/gridconverter/gridconverter.mtl",
+    "sourceSha256": "cd52364cb408dde9f29c3bd2e69ca2c108832be55aab0314ba05a48f130fda04",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/gridconverter/gridconverter.obj",
+    "target": "src/main/resources/assets/eln/model/gridconverter/gridconverter.obj",
+    "sourceSha256": "fe81b0a97bb49803dbddf81ae18cc4ba4fc37e8d99e3421a67e70e31777e3244",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/gridconverter/gridconverter01.png",
+    "target": "src/main/resources/assets/eln/model/gridconverter/gridconverter01.png",
+    "sourceSha256": "9d9329cbba379a83108f08ca579ff60788a735544e16b682f32d94d32c2dbcfd",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/gridconverter/gridconverter02.png",
+    "target": "src/main/resources/assets/eln/model/gridconverter/gridconverter02.png",
+    "sourceSha256": "49daa482cf151c33e06bb339808a716d55614c2e70549e5aab8284cd5ce04856",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrialfloorfan/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/industrialfloorfan/equipment_finish.mtl",
+    "sourceSha256": "048fea7b25a79abb925b90fe3feccab89208ffbb8b35e98f8dc686c51bbb4b1f",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrialfloorfan/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/industrialfloorfan/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/industrialfloorfan/industrialfloorfan.obj",
+    "target": "src/main/resources/assets/eln/model/industrialfloorfan/industrialfloorfan.obj",
+    "sourceSha256": "fc98f8757370cb5ca6d4718efe3390cd79de1a2c993f4c3a8576ac4f5d85f4e7",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/metalboxfan/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/metalboxfan/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/metalboxfan/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/metalboxfan/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/metalboxfan/metalboxfan.obj",
+    "target": "src/main/resources/assets/eln/model/metalboxfan/metalboxfan.obj",
+    "sourceSha256": "9e13fd2e753ec3b89dda5ecdd30321e184197f65b4f7d26df1cbb88689b57062",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substation23069/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/substation23069/equipment_finish.mtl",
+    "sourceSha256": "630cf495a2804c909d933be55df1e494ffa29237efb6a8f9a29ced1e2f368cf4",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substation23069/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/substation23069/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substation23069/substation23069.obj",
+    "target": "src/main/resources/assets/eln/model/substation23069/substation23069.obj",
+    "sourceSha256": "12d4809a7231266be4640c27a863701f18aad13dbf4f809a8bcc2c16598216a6",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substation69125/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/substation69125/equipment_finish.mtl",
+    "sourceSha256": "630cf495a2804c909d933be55df1e494ffa29237efb6a8f9a29ced1e2f368cf4",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substation69125/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/substation69125/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substation69125/substation69125.obj",
+    "target": "src/main/resources/assets/eln/model/substation69125/substation69125.obj",
+    "sourceSha256": "8516d46f529ed51ad9fc561c2627cae24ccc0fe97efe4ab4f8fb5bf4b8b60e64",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substationdisconnect230/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/substationdisconnect230/equipment_finish.mtl",
+    "sourceSha256": "630cf495a2804c909d933be55df1e494ffa29237efb6a8f9a29ced1e2f368cf4",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substationdisconnect230/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/substationdisconnect230/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substationdisconnect230/substationdisconnect230.obj",
+    "target": "src/main/resources/assets/eln/model/substationdisconnect230/substationdisconnect230.obj",
+    "sourceSha256": "85d889108746e64b4b5c79c59a8fd4deb391d8c923a991671517dafc08a18331",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substationdisconnect69/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/substationdisconnect69/equipment_finish.mtl",
+    "sourceSha256": "630cf495a2804c909d933be55df1e494ffa29237efb6a8f9a29ced1e2f368cf4",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substationdisconnect69/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/substationdisconnect69/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/substationdisconnect69/substationdisconnect69.obj",
+    "target": "src/main/resources/assets/eln/model/substationdisconnect69/substationdisconnect69.obj",
+    "sourceSha256": "a4db2418e966e6009c9a3b31a3acc2b1d80b6b80b66082a244069c83dd035244",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_battery_hiss.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_battery_hiss.ogg",
+    "sourceSha256": "5367234d5cec010e69ec4dab38c6cc3bf12bd2d08e8b0f49c200188e5639a5f4",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_blender.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_blender.ogg",
+    "sourceSha256": "797a865d3e52df72fc9f0e9b60f085c42ed11271f205566ad0f7c621df26b023",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_box_fan.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_box_fan.ogg",
+    "sourceSha256": "e92a886aca726df762123e5ee6b15c6f5fe52d2e060fadf9451bbb40e9b0dc45",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_coffee.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_coffee.ogg",
+    "sourceSha256": "3b9a2dbe3c4dee5048983a60be55d543e05c614ab7374105107c91deb3987044",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_done.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_done.ogg",
+    "sourceSha256": "7cc485b6f6a1e3b9679a5083acbd9cd651e6e7d5ca88a13d4f6202238f886175",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_fridge.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_fridge.ogg",
+    "sourceSha256": "6be8d1aa7a67637413342d0057f60ad20bafa8ba55450d2b3b30f05d65538332",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_heater.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_heater.ogg",
+    "sourceSha256": "e3504ebb7032350734b73685f7a4235b0da1d196181b7bc42a12e65a1d81c33e",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_kettle.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_kettle.ogg",
+    "sourceSha256": "666b2eb39fd6abc4206a323a0b9f81e1f6550d3a75a7018e7bba39e3585e7b31",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_microwave.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_microwave.ogg",
+    "sourceSha256": "2f38023ed8c17d261b1fafb504caa8f409857490cc75f29c485e17a1fbd2195a",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_minisplit.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_minisplit.ogg",
+    "sourceSha256": "44d935a5288b8e8a453bfbfe37f466bd0efbf99403d3e5426d26b40c2d45e761",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_oven.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_oven.ogg",
+    "sourceSha256": "81318bfbab965355766e5055fa664919365c79701861c0f80ea23faacdbdf03e",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_rice.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_rice.ogg",
+    "sourceSha256": "df20fd595cbe6b3e9d042aeca08a886ec618ce86c10d931e913f78e2ee2f060c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_stove.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_stove.ogg",
+    "sourceSha256": "80d83c29bac75de04dcee0f19edc3cc1a4669bd85000aa2788ba4c0ceca66b79",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_toaster.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_toaster.ogg",
+    "sourceSha256": "330e33ad35f2495447f695982e9ea76dccd4032f6af90fd71a070a536472e813",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_toaster_pop.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_toaster_pop.ogg",
+    "sourceSha256": "dec37fa6580de18d4c693a28fcd5d877485de94909a5d86c665bc209f5e249a6",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/sounds/appliance_window_ac.ogg",
+    "target": "src/main/resources/assets/eln/sounds/appliance_window_ac.ogg",
+    "sourceSha256": "0953390a427867d16a8fde29164f4960b2ca50a0e11f7bf1cd0f0df19795e9bc",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/farminglamp.png",
+    "target": "src/main/resources/assets/eln/textures/items/farminglamp.png",
+    "sourceSha256": "f0134514ba66f7767fc01dd6e159f07fb70c3094dd7ff4073dcd931e2eb09094",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/fluorescentlamp.png",
+    "target": "src/main/resources/assets/eln/textures/items/fluorescentlamp.png",
+    "sourceSha256": "61904f4410ebc811f82305e756f1d490fe4c12c832c8c234d6ddea99380abdbd",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/fresh_coffee.png",
+    "target": "src/main/resources/assets/eln/textures/items/fresh_coffee.png",
+    "sourceSha256": "d6c6cc7d2ce5ab04e688d664e0e740b039e5e052d2e56955d272d6353fea4a52",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/halogenlamp.png",
+    "target": "src/main/resources/assets/eln/textures/items/halogenlamp.png",
+    "sourceSha256": "eb47aeee8355a46bef98fb59db2b9d790be6fe791c6b2a5e63ede45615879aaa",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/incandescentcarbonlamp.png",
+    "target": "src/main/resources/assets/eln/textures/items/incandescentcarbonlamp.png",
+    "sourceSha256": "3ccc370f291d735384ab890fcd31540b17388c4036bc4b9c3b98e1df23474a5a",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/incandescentironlamp.png",
+    "target": "src/main/resources/assets/eln/textures/items/incandescentironlamp.png",
+    "sourceSha256": "b66d4ec75c326c87c11004913eaf95429722fe834710c4d8f31b9a215e5bdf1e",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/ledlamp.png",
+    "target": "src/main/resources/assets/eln/textures/items/ledlamp.png",
+    "sourceSha256": "021cf3a4df19a0227f356f465c95009a5ebc7b8fcb60bad4737766e17263182a",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/toasted_bread.png",
+    "target": "src/main/resources/assets/eln/textures/items/toasted_bread.png",
+    "sourceSha256": "1c21ff58770ed029dc1f615f313ff248bcbb46408a58060cc9efa5dece540efd",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/items/wet_equipment.png",
+    "target": "src/main/resources/assets/eln/textures/items/wet_equipment.png",
+    "sourceSha256": "e7f5aa1b1b3d078e3bd4754fea9a46ca63c393dcd3f612126a125635eacfbe5c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/data/eln/fusion_values/defaults.json",
+    "target": "src/main/resources/data/eln/fusion_values/defaults.json",
+    "sourceSha256": "3e4cd493cf72ae22cadbf2d6cbce446b0ad46486410d94f768a3b5401eba75b4",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/data/eln/tags/item/fusion_blacklist.json",
+    "target": "src/main/resources/data/eln/tags/item/fusion_blacklist.json",
+    "sourceSha256": "a2b6611946c4cd1f11a5497c49293a833b592bc31dd88b37b393b8b3888cc3e9",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/licenses/ProjectE.txt",
+    "target": "src/main/resources/assets/eln/licenses/ProjectE.txt",
+    "sourceSha256": "c16196aa7c2337eef3e6e216c36b2cbd5b13e17373da0661ca11799ae3cbf5a6",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt",
+    "target": "src/main/kotlin/mods/eln/utility/SubstationKind.kt",
+    "sourceSha256": "854570d01f3c253e7c7724d4cef5fef5d8c6d3deda85e57196c73da613efe624",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionEquipment.kt",
+    "target": "src/main/kotlin/mods/eln/utility/SubstationElement.kt",
+    "sourceSha256": "854570d01f3c253e7c7724d4cef5fef5d8c6d3deda85e57196c73da613efe624",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/SubstationDescriptor.kt",
+    "sourceSha256": "41a1e972ddf22a7f5816847b675368dbecb3009f32e5512fc066fc4658567158",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/SubstationRender.kt",
+    "sourceSha256": "41a1e972ddf22a7f5816847b675368dbecb3009f32e5512fc066fc4658567158",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/SubstationScreen.kt",
+    "sourceSha256": "41a1e972ddf22a7f5816847b675368dbecb3009f32e5512fc066fc4658567158",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/TransmissionClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/SubstationMarkings.kt",
+    "sourceSha256": "41a1e972ddf22a7f5816847b675368dbecb3009f32e5512fc066fc4658567158",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/transformer/GridTransformerDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/utility/GridSourceTransformer.kt",
+    "sourceSha256": "a084ac53e353ea3c11aec16f8905761174686026c1f64470c021800d748e0c06",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/transformer/GridTransformerElement.kt",
+    "target": "src/main/kotlin/mods/eln/utility/GridSourceTransformer.kt",
+    "sourceSha256": "1a953212223db5c55bcf4b4add707a9f5f4843bbb444881025e6e6a8aa678ecf",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/gridnode/transformer/GridTransformerRender.kt",
+    "target": "src/main/kotlin/mods/eln/utility/GridSourceTransformer.kt",
+    "sourceSha256": "687d115a470c799ce5fce73d2bdd5dd7c20f078787acd8bb734673d2c6a43fae",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/cord/ApplianceCord.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/cord/CordStatus.kt",
+    "sourceSha256": "12edb238daccb5a81d5bfa052869bce874855738025057c09a6a8cd79ad7c50c",
+    "mode": "adapted",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenmicrowave/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenmicrowave/fixture.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenmicrowave/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenmicrowave/equipment_finish.mtl",
+    "sourceSha256": "e9e6c9f0e5d3850a49535ecd82e8b54d690bcd84473caf8fd89b3491375066c2",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenmicrowave/kitchenmicrowave.obj",
+    "target": "src/main/resources/assets/eln/model/kitchenmicrowave/kitchenmicrowave.obj",
+    "sourceSha256": "755cb820ac494b7318ec09273049cb3225b90ed44d04248c06a7f9edb8a5e9f2",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchentoaster/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchentoaster/fixture.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchentoaster/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchentoaster/equipment_finish.mtl",
+    "sourceSha256": "e9e6c9f0e5d3850a49535ecd82e8b54d690bcd84473caf8fd89b3491375066c2",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchentoaster/kitchentoaster.obj",
+    "target": "src/main/resources/assets/eln/model/kitchentoaster/kitchentoaster.obj",
+    "sourceSha256": "ec76bdd440d4e28bd8e0c04573a930e976d7b265a346b139dbb42cfa0105428e",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenflatstove/kitchenflatstove.obj",
+    "target": "src/main/resources/assets/eln/model/kitchenflatstove/kitchenflatstove.obj",
+    "sourceSha256": "4920b95dc63ac492cd1705b5598489a6c01b5614997cca455d771248f90a84a3",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenflatstove/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenflatstove/fixture.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenflatstove/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenflatstove/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenfridge/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenfridge/fixture.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenfridge/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenfridge/equipment_finish.mtl",
+    "sourceSha256": "8bd9af96b714bbcc529a21b6fc1b5268ebb8aeddea058ea471f75f351a579598",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenfridge/kitchenfridge.obj",
+    "target": "src/main/resources/assets/eln/model/kitchenfridge/kitchenfridge.obj",
+    "sourceSha256": "af55c226b92f5bd9cc8a921f026875b8d5cde5ba2c525456267146105706c4af",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchencoffeemaker/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchencoffeemaker/fixture.mtl",
+    "sourceSha256": "208517f12d273dd3fa29c40c4971ffade518ca968fea60238f6658b24f16981c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchencoffeemaker/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchencoffeemaker/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchencoffeemaker/kitchencoffeemaker.obj",
+    "target": "src/main/resources/assets/eln/model/kitchencoffeemaker/kitchencoffeemaker.obj",
+    "sourceSha256": "7d77c19a9f39c3ae381519c000d97da0745e932483e2a443393a6005f4089d53",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenkettle/kitchenkettle.obj",
+    "target": "src/main/resources/assets/eln/model/kitchenkettle/kitchenkettle.obj",
+    "sourceSha256": "69484294035dcec157447f859bfc59ffcb412e74034a94013791bb9fae0895b8",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenkettle/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenkettle/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenkettle/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenkettle/equipment_finish.mtl",
+    "sourceSha256": "e9e6c9f0e5d3850a49535ecd82e8b54d690bcd84473caf8fd89b3491375066c2",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenblender/kitchenblender.obj",
+    "target": "src/main/resources/assets/eln/model/kitchenblender/kitchenblender.obj",
+    "sourceSha256": "6876a121e9485836d5744740ea773ddca132e8224167c22ed4493baa24c38d3d",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenblender/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenblender/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenblender/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenblender/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenricecooker/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenricecooker/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenricecooker/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenricecooker/equipment_finish.mtl",
+    "sourceSha256": "e9e6c9f0e5d3850a49535ecd82e8b54d690bcd84473caf8fd89b3491375066c2",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenricecooker/kitchenricecooker.obj",
+    "target": "src/main/resources/assets/eln/model/kitchenricecooker/kitchenricecooker.obj",
+    "sourceSha256": "94989358ba673a5288ccfa036da273ed12f41b032eee901fbba56a754c587d93",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenminioven/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenminioven/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenminioven/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenminioven/equipment_finish.mtl",
+    "sourceSha256": "e9e6c9f0e5d3850a49535ecd82e8b54d690bcd84473caf8fd89b3491375066c2",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenminioven/kitchenminioven.obj",
+    "target": "src/main/resources/assets/eln/model/kitchenminioven/kitchenminioven.obj",
+    "sourceSha256": "8119573ef6d8574a7b91d3c451f6895521fa2f83d304ecd43f0740067848029d",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenminifridge/kitchenminifridge.obj",
+    "target": "src/main/resources/assets/eln/model/kitchenminifridge/kitchenminifridge.obj",
+    "sourceSha256": "2178ea9e0383d0875b18c385077d36d7c11c30d7beb2b114c26d687b1f6dd9b4",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenminifridge/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenminifridge/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/kitchenminifridge/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/kitchenminifridge/equipment_finish.mtl",
+    "sourceSha256": "8bd9af96b714bbcc529a21b6fc1b5268ebb8aeddea058ea471f75f351a579598",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/deckelectricgrill/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/deckelectricgrill/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/deckelectricgrill/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/deckelectricgrill/equipment_finish.mtl",
+    "sourceSha256": "9cda91747228bff355df21ac6ae34d65851a64115318a20ae4515909490bbd0c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/deckelectricgrill/deckelectricgrill.obj",
+    "target": "src/main/resources/assets/eln/model/deckelectricgrill/deckelectricgrill.obj",
+    "sourceSha256": "a5b245ff8d9fd1afd7d4fcfceb630f8201bdf902dec084c1de05f2b82fee89c5",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/electricwasher/electricwasher.obj",
+    "target": "src/main/resources/assets/eln/model/electricwasher/electricwasher.obj",
+    "sourceSha256": "9e6e96469aa9f5e13b644c0e9066af90f7d673217fcf045850d50f2acf3a8365",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/electricwasher/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/electricwasher/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/electricwasher/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/electricwasher/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/electricdryer/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/electricdryer/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/electricdryer/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/electricdryer/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/electricdryer/electricdryer.obj",
+    "target": "src/main/resources/assets/eln/model/electricdryer/electricdryer.obj",
+    "sourceSha256": "3f999fdda80a7ac3dc22f57f0a9deb747d15eef2dee79700d55b0730250e4f85",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/fusionmatterreactor/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/fusionmatterreactor/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/fusionmatterreactor/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/fusionmatterreactor/equipment_finish.mtl",
+    "sourceSha256": "b7d7e7155f7d3bfd3384cc033b61aa4ae5c08b3afbe014f8157e4e73082154bd",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/fusionmatterreactor/fusionmatterreactor.obj",
+    "target": "src/main/resources/assets/eln/model/fusionmatterreactor/fusionmatterreactor.obj",
+    "sourceSha256": "0b4e2ccd0c1d1f54629a898b400a3e691b87e84853cc0d12c6b2c0988225c1fc",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/transmissionmarkings/labels.png",
+    "target": "src/main/resources/assets/eln/model/transmissionmarkings/labels.png",
+    "sourceSha256": "0a2b973ade926bcc35b53b50c42a99de84dfb3a8540f3847628792f1db3f8864",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/catalog/69kvthreephasesubstationdisconnect.png",
+    "target": "src/main/resources/assets/eln/textures/item/69_kv_three_phase_substation_disconnect.png",
+    "sourceSha256": "2e49f2b1712145ca346e71a6ea8ae498b6505829cb2348c708df9c7c6a297a03",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/catalog/69kvto12.5kvsubstationtransformer.png",
+    "target": "src/main/resources/assets/eln/textures/item/69_kv_to_12_5_kv_substation_transformer.png",
+    "sourceSha256": "694f59b3db26d918a3754a1bf561477280a3848a31d478be44cb16e585b42231",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/catalog/230kvthreephasesubstationdisconnect.png",
+    "target": "src/main/resources/assets/eln/textures/item/230_kv_three_phase_substation_disconnect.png",
+    "sourceSha256": "755a3dca83cd009a2971ded049958a72657fbf3cbdce984e45bc770c235728fc",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/catalog/230kvto69kvsubstationtransformer.png",
+    "target": "src/main/resources/assets/eln/textures/item/230_kv_to_69_kv_substation_transformer.png",
+    "sourceSha256": "92ff6a0855de710a639a9a7b32cd67ea59e0365b1b0cace6b223570a378b352b",
+    "mode": "verbatim",
+    "status": "expanded-native-regression-passed; live-client-parity-pending"
   }
 ]

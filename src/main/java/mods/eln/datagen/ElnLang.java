@@ -18,6 +18,7 @@ import java.util.Map;
 public class ElnLang extends LanguageProvider {
     /** 1.12 TR_NAME of the items that have no descriptor. */
     static final Map<String, String> PLAIN = Map.ofEntries(
+        Map.entry("hot_water","Hot Water"),Map.entry("fruit_smoothie","Fruit Smoothie"),Map.entry("steamed_grains","Steamed Grains"),Map.entry("toasted_bread","Toasted Bread"),Map.entry("fresh_coffee","Fresh Coffee"),Map.entry("wet_equipment","Wet Equipment"),
         Map.entry("e_coal_helmet", "E-Coal Helmet"), Map.entry("e_coal_chestplate", "E-Coal Chestplate"),
         Map.entry("e_coal_leggings", "E-Coal Leggings"), Map.entry("e_coal_boots", "E-Coal Boots"),
         Map.entry("replicator_spawn_egg", "Replicator Spawn Egg"),

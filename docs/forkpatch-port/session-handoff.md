@@ -1,3 +1,7 @@
+> Final expanded-systems verification: 1536 native selected/1534 passed/2 historical golden failures/zero skips; all1070 ForkPatch cases and all66 added cases pass. Root698pass/3 unchanged optional skips; CAD15pass. Datagen repeats with0 writes. Golden832 is recorded without expectation changes. Live GUI/audio/multiplayer acceptance remains pending. See [current feature handoff](appliances-substations-bulbs-fans.md).
+
+> **Expanded systems continuation:** Kitchen/laundry/fusion, substations8016–8019 plus7875 prerequisite, all18 source bulbs, and four standalone fans now have native implementations. See [implementation and acceptance details](appliances-substations-bulbs-fans.md) and `expanded-systems-validation.json` for current evidence; historical not-implemented notes below predate this slice.
+
 > Final wrap verification:1470 native selected,1468pass,2 historical golden failures; all1004 ForkPatch cases pass. Root698pass/3 existing skips, CAD15pass, datagen repeat0 writes. See `requested-systems-validation.json`.
 
 > **2026-11-17 wrap-up:** See [current handoff](wrap-up-handoff.md) for implemented panel/carrying, all seven alarms, road vehicles/charger/lead, test evidence and remaining difficulty. Historical “not registered” notes below are superseded by that checkpoint; pending live GUI/gameplay checks remain explicit.

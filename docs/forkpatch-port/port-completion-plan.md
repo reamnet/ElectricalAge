@@ -1,3 +1,5 @@
+> **Expanded systems continuation:** Kitchen/laundry/fusion, substations8016–8019 plus7875 prerequisite, all18 source bulbs, and four standalone fans now have native implementations. See [implementation and acceptance details](appliances-substations-bulbs-fans.md) and `expanded-systems-validation.json` for current evidence; historical not-implemented notes below predate this slice.
+
 > **2026-11-17 wrap-up:** See [current handoff](wrap-up-handoff.md) for implemented panel/carrying, all seven alarms, road vehicles/charger/lead, test evidence and remaining difficulty. Historical “not registered” notes below are superseded by that checkpoint; pending live GUI/gameplay checks remain explicit.
 
 # ForkPatch 3.0.77 → NeoForge 26.3 completion plan

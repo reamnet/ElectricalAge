@@ -56,6 +56,7 @@ public class ElnNodeMenu extends AbstractContainerMenu implements INodeContainer
         this.descriptorId = descriptorId;
         this.spec = spec;
         this.deviceInventory = deviceInventory;
+        if (kind == TRANSPARENT && (descriptorId == 7940 || descriptorId == 7996)) deviceInventory.startOpen(playerInventory.player);
         this.node = node;
         for (SlotSpec s : spec.slots()) addSlot(new ElnSlot(deviceInventory, s, playerInventory.player.level()));
         deviceSlots = spec.slots().size();
@@ -71,6 +72,12 @@ public class ElnNodeMenu extends AbstractContainerMenu implements INodeContainer
             SlotSpec at = spec.wear().get(i);
             addSlot(wearables.slot(playerInventory.player, this.wearKeys.get(i), at.x(), at.y()));
         }
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        if (kind == TRANSPARENT && (descriptorId == 7940 || descriptorId == 7996)) deviceInventory.stopOpen(player);
     }
 
     /** The end of the player inventory's slots: the worn slots follow, up to slots.size(). */

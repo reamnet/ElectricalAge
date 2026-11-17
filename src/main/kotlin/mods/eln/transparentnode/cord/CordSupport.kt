@@ -107,7 +107,7 @@ object CordSupport {
         if(tag?.contains("carriedAppliance")!=true || device(owner)?.cordPortable!=true)return
         val saved=tag.getCompoundOrEmpty("carriedAppliance")
         when(owner) {
-            is TransparentNodeElement -> { val front=owner.front;owner.readFromNBT(saved);owner.front=front }
+            is TransparentNodeElement -> { val front=owner.front;owner.readFromNBT(saved);owner.front=front;if(owner is mods.eln.transparentnode.fan.FanElement)owner.settleCarried(tag) }
             is SixNodeElement -> { val front=owner.front;owner.readFromNBT(saved);owner.front=front }
         }
     }

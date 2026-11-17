@@ -75,6 +75,12 @@ public final class ElnDeviceRegistry {
         registerElectricalSource(3);
         registerElectricalCable(32);
         mods.eln.sixnode.electricalcable.UtilityCables.register();
+        transparentNodeItem.addDescriptor(7875,new mods.eln.utility.GridSourceTransformerDescriptor());
+        for(var k:mods.eln.utility.SubstationKind.values())transparentNodeItem.addDescriptor(k.getId(),new mods.eln.utility.SubstationDescriptor(k));
+        for(var t:mods.eln.transparentnode.kitchen.KitchenType.values())transparentNodeItem.addDescriptor(7936+t.getSubId(),new mods.eln.transparentnode.kitchen.KitchenDescriptor(t));
+        for(var k:mods.eln.transparentnode.laundry.MatterMachineKind.values())transparentNodeItem.addDescriptor(8000+k.getSubId(),new mods.eln.transparentnode.laundry.MatterMachineDescriptor(k));
+        for(var type:mods.eln.transparentnode.fan.FanType.values())transparentNodeItem.addDescriptor(7964+type.ordinal(),new mods.eln.transparentnode.fan.FanDescriptor(type));
+
         for (var kind : mods.eln.transparentnode.wiremachine.WireMachineKind.values()) transparentNodeItem.addDescriptor(kind.getId(), new mods.eln.transparentnode.wiremachine.WireMachineDescriptor(TR_NAME(Type.NONE,kind.getTitle()),kind));
         sharedItem.addElement(7552,new mods.eln.item.wiremachine.RollerWheelDescriptor(TR_NAME(Type.NONE,"Iron Roller Wheel"),"ironrollerwheel"));
         sharedItem.addElement(7553,new mods.eln.item.wiremachine.RollerWheelDescriptor(TR_NAME(Type.NONE,"Steel Roller Wheel"),"steelrollerwheel"));

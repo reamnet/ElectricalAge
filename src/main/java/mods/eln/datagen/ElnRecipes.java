@@ -208,6 +208,59 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeDecorativeLamps() {
+        for(String metal:new String[]{"Steel","Aluminum","Aluminium"})
+            addRecipe(findItemStack("Grid DC-DC Converter"),"i i","mtm","imi",'i',"ingot"+metal,'t',findItemStack("Winding DC-DC Converter"),'m',findItemStack("Advanced Machine Block"));
+        for(var r:mods.eln.sixnode.lampsocket.RatedLampBulbs.INSTANCE.getRatings()) {
+            if(r.getId()==302||r.getId()==303)continue;
+            var wire=findItemStack(r.getVolts()==12?"Copper Cable":r.getVolts()==120?"Low Voltage Cable":"Medium Voltage Cable");
+            String title=r.getTitle();
+            if(title.contains("Halogen"))addRecipe(findItemStack(title,2),"GGG","CTC","GGG",'G',Blocks.GLASS_PANE,'C',wire,'T',dictTungstenIngot);
+            else if(title.contains("LED"))addRecipe(findItemStack(title,2),"GGG","SSS","PCP",'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',wire);
+            else if(title.contains("Farming"))addRecipe(findItemStack(title,2),"GGG","FFF","PSP",'G',Blocks.GLASS_PANE,'F',dictTungstenIngot,'P',findItemStack("Iron Plate"),'S',wire);
+            else {
+                Object filament=title.contains("Carbon")?Items.COAL:title.contains("Fluorescent")?Items.GLOWSTONE_DUST:dictTungstenIngot;
+                addRecipe(findItemStack(title,4)," G ","GFG","PSP",'G',Blocks.GLASS_PANE,'F',filament,'P',findItemStack("Iron Plate"),'S',wire);
+                if(title.contains("Carbon"))addRecipe(findItemStack(title,4)," G ","GFG","PSP",'G',Blocks.GLASS_PANE,'F',Items.CHARCOAL,'P',findItemStack("Iron Plate"),'S',wire);
+            }
+        }
+        addRecipe(findItemStack("Electric Microwave"), "PPP", "GRC", "PPP",
+            'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'R',Items.REDSTONE,'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Toaster"), "I I", "PRP", "CCC",
+            'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"),'R',Items.REDSTONE,'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Flat Electric Cooktop"), "GGG", "RRR", "PCP",
+            'G',Blocks.STAINED_GLASS.black(),'R',Items.REDSTONE,'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Patio Electric Grill"),"III","RCR","P P",
+            'I',Items.IRON_BARS,'R',Items.REDSTONE,'C',findItemStack("Copper Cable"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Electric Mini Fridge"),"PP","CR","PP",
+            'P',findItemStack("Iron Plate"),'C',Blocks.CHEST,'R',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Washing Machine"),"PBP","MCM","PPP",
+            'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'M',findItemStack("Electrical Motor"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Dryer"),"PPP","MHM","PCP",
+            'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'H',Items.BLAZE_ROD,'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Fusion Matter Reactor"),"NDN","MCM","NDN",
+            'N',Items.NETHERITE_INGOT,'D',Blocks.DIAMOND_BLOCK,'M',findItemStack("Electrical Motor"),
+            'C',Items.NETHER_STAR);
+        addRecipe(findItemStack("Electric Refrigerator"), "PPP", "GCG", "PRP",
+            'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'C',Blocks.CHEST,'R',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Coffee Maker"), " I ", "GBG", "PCP",
+            'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'B',Items.BUCKET,'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Mini Oven"),"PPP","GCG","PRP",
+            'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        addRecipe(findItemStack("Electric Kettle")," P ","BCP"," R ",
+            'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        addRecipe(findItemStack("Countertop Blender"),"G G","GGG","PMC",
+            'G',Blocks.GLASS_PANE,'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Rice Cooker"),"PPP","BCB","PRP",
+            'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        addRecipe(findItemStack("Industrial Five Block Fan"),"PMP","MCM","PMP",'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'C',findItemStack("Copper Cable"));
+        for(var t:mods.eln.transparentnode.fan.FanType.values())if(!t.getIndustrial())
+            addRecipe(findItemStack(t.getTitle()),"PPP","MCM","PRP",'P',t==mods.eln.transparentnode.fan.FanType.SHOP?Items.IRON_INGOT:t==mods.eln.transparentnode.fan.FanType.COMPACT?findItemStack("Rubber"):findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        for(var k:mods.eln.utility.SubstationKind.values()) {
+            var pole=findItemStack(k.getInputVolts()>100000?"230 kV Steel Transmission Tower":"69 kV Steel Transmission Pole");
+            if(k.getTransformer())addRecipe(findItemStack(k.getTitle()),"III","CTC","PBP",'I',Blocks.IRON_BLOCK,'C',findItemStack("Copper Cable"),'T',findItemStack("Grid DC-DC Converter"),'P',findItemStack("Iron Plate"),'B',pole);
+            else addRecipe(findItemStack(k.getTitle()),"CCC","IBI","PPP",'C',findItemStack("Copper Cable"),'I',Blocks.IRON_BARS,'B',pole,'P',findItemStack("Iron Plate"));
+        }
+
         // Original LED patterns still produce legacy bulbs. Distinct paid patterns add both source ratings.
         addRecipe(findItemStack("120V LED Light Bulb",2),"GGG","SSS","PCP",
             'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',findItemStack("Low Voltage Cable"));
