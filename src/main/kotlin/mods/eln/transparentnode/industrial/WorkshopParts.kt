@@ -13,6 +13,9 @@ object WorkshopParts {
     val FORKLIFT=I18N.TR_NAME(I18N.Type.NONE,"Electric Forklift")
     val PALLET=I18N.TR_NAME(I18N.Type.NONE,"Warehouse Equipment Pallet")
     fun register() {
+        Eln.sharedItemStackOne.addElement(4+(117 shl 6),mods.eln.vehicle.RoadVehicleItem(mods.eln.vehicle.RoadVehicleKind.CART))
+        Eln.sharedItemStackOne.addElement(5+(117 shl 6),mods.eln.vehicle.RoadVehicleItem(mods.eln.vehicle.RoadVehicleKind.COUPE))
+        Eln.sharedItemStackOne.addElement(6+(117 shl 6),mods.eln.vehicle.VehicleLeadItem())
         Eln.sharedItemStackOne.addElement(2+(117 shl 6),TransportItem(FORKLIFT,false).apply { setDefaultIcon("electricforklift") })
         Eln.sharedItemStackOne.addElement(3+(117 shl 6),TransportItem(PALLET,true).apply { setDefaultIcon("warehouseequipmentpallet") })
         Eln.sharedItemStackOne.addElement(117 shl 6,TractionBattery())

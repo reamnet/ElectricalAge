@@ -1,3 +1,5 @@
+> **2026-11-17 wrap-up:** See [current handoff](wrap-up-handoff.md) for implemented panel/carrying, all seven alarms, road vehicles/charger/lead, test evidence and remaining difficulty. Historical “not registered” notes below are superseded by that checkpoint; pending live GUI/gameplay checks remain explicit.
+
 # Feature backlog for the 3.0.77 → NeoForge 26.3 port
 
 Source baseline: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. This is a feature

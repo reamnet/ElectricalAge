@@ -1,3 +1,5 @@
+> **2026-11-17 wrap-up:** See [current handoff](wrap-up-handoff.md) for implemented panel/carrying, all seven alarms, road vehicles/charger/lead, test evidence and remaining difficulty. Historical “not registered” notes below are superseded by that checkpoint; pending live GUI/gameplay checks remain explicit.
+
 # ForkPatch 3.0.77 → NeoForge 26.3 completion plan
 
 Source pin: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Target reviewed: `c59e547138e53409f7a1bd282175ec25e16bb74d`. This is a work breakdown for the whole fork, including shared inherited behavior, assets, optional systems and verification. It does not certify that every implementation has already received a line-by-line semantic review.

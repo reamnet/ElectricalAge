@@ -199,3 +199,7 @@ tools/mctest/mctest
 AGENTS.md
 MCTEST_PROGRESS.md
 .gitignore  (mctest state/shots additions)
+
+## Port wrap-up 2026-11-17
+
+Panel model-load blocker resolved by the port implementation. Real native server tests now boot; vehicle suite28/28 passes. This is not live client GUI certification. See `docs/forkpatch-port/wrap-up-handoff.md` for current scope and remaining real-client checks.

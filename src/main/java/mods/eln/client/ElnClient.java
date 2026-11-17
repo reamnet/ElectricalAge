@@ -56,6 +56,8 @@ public final class ElnClient {
             // voxel nodes: parts baked in the chunk mesh by VoxelModel; six-node elements hosted there drawn as in six-node blocks
             e.registerBlockEntityRenderer(ElnRegistry.VOXEL_NODE_ENTITY.get(), ctx -> new SixNodeRender<>());
             // every entity type needs a renderer: the client crashes on one without (thunderstorm replicators)
+            e.registerEntityRenderer(ElnRegistry.ROAD_CART_ENTITY.get(),mods.eln.client.entity.RoadVehicleRenderer::new);
+            e.registerEntityRenderer(ElnRegistry.ROAD_COUPE_ENTITY.get(),mods.eln.client.entity.RoadVehicleRenderer::new);
             e.registerEntityRenderer(ElnRegistry.ELECTRIC_FORKLIFT.get(),ctx -> new mods.eln.client.entity.IndustrialTransportRenderer<>(ctx,false));
             e.registerEntityRenderer(ElnRegistry.EQUIPMENT_PALLET.get(),ctx -> new mods.eln.client.entity.IndustrialTransportRenderer<>(ctx,true));
             e.registerEntityRenderer(ElnRegistry.REPLICATOR.get(), mods.eln.client.entity.ReplicatorRenderer::new);
@@ -127,8 +129,10 @@ public final class ElnClient {
                 e.register(ElnRegistry.XRAY_MENU.get(), mods.eln.client.gui.XRayScannerScreen::new);
                 e.register(ElnRegistry.BELT_MENU.get(), mods.eln.client.gui.BeltScreen::new);
                 e.register(ElnRegistry.WIRE_SNIPS_MENU.get(), mods.eln.client.gui.WireSnipsScreen::new);
+                e.register(ElnRegistry.ROAD_VEHICLE_MENU.get(),mods.eln.vehicle.VehicleScreen::new);
                 e.register(ElnRegistry.BIKE_TRUNK_MENU.get(), mods.eln.client.gui.BikeTrunkScreen::new);
             });
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class,RoadVehicleKeys::tick);
         XRayScan.install();
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.ItemTooltipEvent.class, ItemTooltips::onTooltip);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class, e -> XRayScan.tick());

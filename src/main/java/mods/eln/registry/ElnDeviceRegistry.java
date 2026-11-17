@@ -131,6 +131,7 @@ public final class ElnDeviceRegistry {
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.ScadaDescriptor.ID,new mods.eln.transparentnode.industrial.ScadaDescriptor());
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.SurgeArresterDescriptor.ID,new mods.eln.transparentnode.industrial.SurgeArresterDescriptor());
         mods.eln.transparentnode.industrial.WorkshopParts.INSTANCE.register();
+        transparentNodeItem.addDescriptor(15+(126<<6),new mods.eln.vehicle.VehicleChargerDescriptor());
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.WelderDescriptor.ID,new mods.eln.transparentnode.industrial.WelderDescriptor());
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.ChargerDescriptor.ID,new mods.eln.transparentnode.industrial.ChargerDescriptor());
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.industrial.LoadBankDescriptor.ID,new mods.eln.transparentnode.industrial.LoadBankDescriptor());

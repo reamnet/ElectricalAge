@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:electrical_motor",
+    "I": "eln:iron_plate",
+    "M": "eln:machine_block",
+    "P": "minecraft:redstone",
+    "W": "eln:copper_cable"
+  },
+  "pattern": [
+    "IPI",
+    "WCW",
+    "IMI"
+  ],
+  "result": {
+    "id": "eln:240_v_100_a_vehicle_charger"
+  }
+}

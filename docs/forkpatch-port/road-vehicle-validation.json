@@ -1,0 +1,32 @@
+{
+  "scope": "Observed native results; no golden expectations or production behavior are changed by this tool.",
+  "selected": 28,
+  "passed": 28,
+  "failed": 0,
+  "skipped": 0,
+  "failures": [],
+  "portCases": {
+    "selected": 28,
+    "failed": 0
+  },
+  "golden": {
+    "golden_descriptors": {
+      "failedAssertions": 0,
+      "categories": {},
+      "differences": []
+    },
+    "golden_slots": {
+      "failedAssertions": 0,
+      "categories": {},
+      "differences": []
+    }
+  },
+  "nonGoldenAssertions": {},
+  "command": "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report REPORT.xml --universe NEW_UNIQUE_WORLD'",
+  "report": "/tmp/eln-road-vehicle-native-v3.xml",
+  "log": "/tmp/eln-road-vehicle-native-v3.log",
+  "limitations": [
+    "Failure categories describe observed differences, not approved exceptions.",
+    "Review against pinned ForkPatch source and intentional destination changes before updating historical checks."
+  ]
+}

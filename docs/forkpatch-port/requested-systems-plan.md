@@ -1,3 +1,5 @@
+> **2026-11-17 wrap-up:** See [current handoff](wrap-up-handoff.md) for implemented panel/carrying, all seven alarms, road vehicles/charger/lead, test evidence and remaining difficulty. Historical “not registered” notes below are superseded by that checkpoint; pending live GUI/gameplay checks remain explicit.
+
 # Requested panel, vehicles, alarms and portable carrying
 
 Requested after checkpoint `fbbc6552473cfc72195379345464b8db5b9c2424`.

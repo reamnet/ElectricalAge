@@ -1,3 +1,5 @@
+> **2026-11-17 wrap-up:** See [current handoff](wrap-up-handoff.md) for implemented panel/carrying, all seven alarms, road vehicles/charger/lead, test evidence and remaining difficulty. Historical “not registered” notes below are superseded by that checkpoint; pending live GUI/gameplay checks remain explicit.
+
 # Handoff — lamp completion and review since bb962e1
 
 ## Active requested systems continuation
@@ -17,10 +19,7 @@ Fire alarms are implemented: see `fire-alarms.md` and
 CAD15/15, datagen repeat0,1085 provenance entries pass. Goldens761 preserves
 all746 earlier assertions. Live GUI remains pending.
 
-Next: road vehicles/charger/lead are NOT yet registered. Prepared native
-translations and client adapters are in `/tmp/eln-road-vehicle-slice`; generator
-is `/tmp/eln-prepare-road-vehicles.py`. They need review, integration and tests. Source remains pinned/read-only. The previous
-Luna worker hit its usage limit and is no longer running. Root continues directly.
+Road vehicles, station and lead are integrated and pass28/28 native cases. See `road-vehicles.md`, `road-vehicle-validation.json` and the wrap-up handoff. Do not restore temporary prepared code.
 
 Live GUI is pending. RealDISPLAY`:0` works through `tools/mctest/mctest`; do not
 attemptXvfb in this environment. `/elnlab panelcarry <pos>` constructs paid native

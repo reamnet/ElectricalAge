@@ -4919,5 +4919,29 @@
   "display": "Fire Alarm Heat Detector",
   "kind": "transparent_node",
   "name": "fire_alarm_heat_detector"
+ },
+ "eln:shared_item_stack_one@7492": {
+  "descriptor": "RoadVehicleItem",
+  "display": "Electric Golf Cart",
+  "kind": "shared_item_stack_one",
+  "name": "electric_golf_cart"
+ },
+ "eln:shared_item_stack_one@7493": {
+  "descriptor": "RoadVehicleItem",
+  "display": "Arc Runner Coupe",
+  "kind": "shared_item_stack_one",
+  "name": "arc_runner_coupe"
+ },
+ "eln:shared_item_stack_one@7494": {
+  "descriptor": "VehicleLeadItem",
+  "display": "100 A Vehicle Charging Lead",
+  "kind": "shared_item_stack_one",
+  "name": "100_a_vehicle_charging_lead"
+ },
+ "eln:transparent_node@8079": {
+  "descriptor": "VehicleChargerDescriptor",
+  "display": "240 V 100 A Vehicle Charger",
+  "kind": "transparent_node",
+  "name": "240_v_100_a_vehicle_charger"
  }
 }

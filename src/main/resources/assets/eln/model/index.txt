@@ -351,3 +351,6 @@ firealarm_bell/firealarm_bell.obj
 firealarm_strobe/firealarm_strobe.obj
 firealarm_smoke/firealarm_smoke.obj
 firealarm_heat/firealarm_heat.obj
+electric_golf_cart/electric_golf_cart.obj
+arc_runner_coupe/arc_runner_coupe.obj
+vehicle_charger/vehicle_charger.obj

@@ -80,6 +80,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ForkPatchCordCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchPortableCarryCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchFireAlarmCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchRoadVehicleCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchLampSupplyCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchDecorativeLampCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchDecorativeRecipeCases.cases());

@@ -7599,5 +7599,103 @@
     "sourceSha256": "e53c00ef93d808c096065eeaa990bac1957fa80205a760cbf3da1b37a111b46e",
     "mode": "verbatim",
     "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/vehicle/RoadVehicles.kt",
+    "target": "src/main/kotlin/mods/eln/vehicle/RoadVehicles.kt",
+    "sourceSha256": "55ff484e366373de48e5fc06cc5947ceafe228c2f0f01a284d21e0b4dc6ab309",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/vehicle/VehicleCharger.kt",
+    "target": "src/main/kotlin/mods/eln/vehicle/VehicleCharger.kt",
+    "sourceSha256": "2e1a8d5f7d849391a6da590274cf9020778f7c6bf9e6d6eccdb465a4032c3664",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/vehicle/VehicleClient.kt",
+    "target": "src/main/kotlin/mods/eln/vehicle/VehicleChargerClient.kt",
+    "sourceSha256": "edf997002bc2ca206f41fa71b68d15c221121ba19445f19f4cb2bf26d4e2d72c",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/vehicle/VehicleClient.kt",
+    "target": "src/main/kotlin/mods/eln/vehicle/VehicleModels.kt",
+    "sourceSha256": "edf997002bc2ca206f41fa71b68d15c221121ba19445f19f4cb2bf26d4e2d72c",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/vehicle/VehicleClient.kt",
+    "target": "src/main/kotlin/mods/eln/vehicle/VehicleScreen.kt",
+    "sourceSha256": "edf997002bc2ca206f41fa71b68d15c221121ba19445f19f4cb2bf26d4e2d72c",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/vehicle/VehicleControls.kt",
+    "target": "src/main/java/mods/eln/vehicle/VehicleControls.java",
+    "sourceSha256": "0dc2111c609a0c8bb375653fb8444e9962ca85c0e98e1221dbd86429f8bec6fa",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/vehicle/VehicleClient.kt",
+    "target": "src/main/java/mods/eln/client/entity/RoadVehicleRenderer.java",
+    "sourceSha256": "edf997002bc2ca206f41fa71b68d15c221121ba19445f19f4cb2bf26d4e2d72c",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/vehicle/VehicleClient.kt",
+    "target": "src/main/java/mods/eln/client/RoadVehicleKeys.java",
+    "sourceSha256": "edf997002bc2ca206f41fa71b68d15c221121ba19445f19f4cb2bf26d4e2d72c",
+    "mode": "adapted",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/electric_golf_cart/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/electric_golf_cart/fixture.mtl",
+    "sourceSha256": "f7e1e635cadd27c12b237b0b4040c8a2255c5a7161202451f8455527a2e7c321",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/electric_golf_cart/electric_golf_cart.obj",
+    "target": "src/main/resources/assets/eln/model/electric_golf_cart/electric_golf_cart.obj",
+    "sourceSha256": "d8032c962206e82f717e0f08dcce24406067651e0b51dcbca810022d2597d574",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/arc_runner_coupe/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/arc_runner_coupe/fixture.mtl",
+    "sourceSha256": "f7e1e635cadd27c12b237b0b4040c8a2255c5a7161202451f8455527a2e7c321",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/arc_runner_coupe/arc_runner_coupe.obj",
+    "target": "src/main/resources/assets/eln/model/arc_runner_coupe/arc_runner_coupe.obj",
+    "sourceSha256": "1ccd472dd779a75dd3968cd93ce44502b4c16a7c55b6043ae00e2e694bb4359a",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/vehicle_charger/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/vehicle_charger/fixture.mtl",
+    "sourceSha256": "f7e1e635cadd27c12b237b0b4040c8a2255c5a7161202451f8455527a2e7c321",
+    "mode": "verbatim",
+    "status": "native-tested"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/vehicle_charger/vehicle_charger.obj",
+    "target": "src/main/resources/assets/eln/model/vehicle_charger/vehicle_charger.obj",
+    "sourceSha256": "8650553e77a054702ba4e24f4e0c446d4ae32046fbd7a9e4dab36d1672d423a3",
+    "mode": "verbatim",
+    "status": "native-tested"
   }
 ]

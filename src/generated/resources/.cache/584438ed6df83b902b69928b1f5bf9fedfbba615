@@ -1,5 +1,6 @@
-// 26.3	2026-11-17T01:49:35.689995033	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-17T02:26:38.083654653	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
+4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 b2bfdcaca81904f8aebabbdd82b0e57f573870cb data/eln/advancement/recipes/misc/100a_electrical_breaker.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
@@ -53,6 +54,7 @@ d874405c2f0b96e6269c1dcb75a4bbdd7005544d data/eln/advancement/recipes/misc/200v_
 7d050eb155ed83e1800657172d0fd9fd0b7fd577 data/eln/advancement/recipes/misc/20a_electrical_breaker.json
 dbeba0b8475b7812766abcf24e9050887b67c15c data/eln/advancement/recipes/misc/230_kv_steel_transmission_tower.json
 a371b28c37a0fb40833517c9a7e9ac730f1025fa data/eln/advancement/recipes/misc/230_kv_three_phase_cable_riser_tower.json
+4e27af53d8ad63a19e46adf385e1ad39f5003c04 data/eln/advancement/recipes/misc/240_v_100_a_vehicle_charger.json
 4a95b1a49849fd4fa42d5178fa38f46fc17b4e38 data/eln/advancement/recipes/misc/240_v_30_a_dryer_cord.json
 b28c4113102e1003d8d5eb0df00b16221d5b507a data/eln/advancement/recipes/misc/240_v_30_a_dryer_outlet.json
 fcd0659b88d2bf9321eaf7d63543a5ad0264e6c6 data/eln/advancement/recipes/misc/240_v_appliance_cord.json
@@ -156,6 +158,7 @@ b212cca0dd14ced77939d219b39336d3c698ee0f data/eln/advancement/recipes/misc/analo
 deef8d780422f077177f1d8075d975640f319ae2 data/eln/advancement/recipes/misc/analogic_regulator.json
 8adbb5fbd9a464b1637d56c80bac249461b0b459 data/eln/advancement/recipes/misc/and_chip.json
 9d88219c37e884c57072d6522173a6259b65b7ac data/eln/advancement/recipes/misc/animal_filter.json
+ca794785ce0a3330fc8452320e868d31c39f45f6 data/eln/advancement/recipes/misc/arc_runner_coupe.json
 4a9f4d6d5aa597cbb41516fa3b08935dccf3e954 data/eln/advancement/recipes/misc/arched_walkway_light.json
 fd85b8d786b5f80170b6df4562e1ba502f0e0ed4 data/eln/advancement/recipes/misc/armored_oval_bulkhead_light.json
 6a7369cea5efa3a4a3334d26b4ec415fae4a1c40 data/eln/advancement/recipes/misc/articulated_task_table_lamp.json
@@ -217,6 +220,7 @@ ac2011fba37a0aed61ad00c01aebe821b0cdf556 data/eln/advancement/recipes/misc/digit
 725d0cb22deeba21bcac49e1001afc544813d90f data/eln/advancement/recipes/misc/e_coal_leggings.json
 e8229001b2e6f5f4cd0f4162a618ac5b42cd108d data/eln/advancement/recipes/misc/electric_bike.json
 facef22351b140fc9379e663c3efb4dc5b5c3518 data/eln/advancement/recipes/misc/electric_forklift.json
+777705d665739768550e851ee43d2a328a0f678b data/eln/advancement/recipes/misc/electric_golf_cart.json
 23bb55cacfc931085d1ef99f72cacc867ee187df data/eln/advancement/recipes/misc/electric_poolside_tiki_light.json
 1909fe845b2e91e94777fdb6a948fe25ae83e6fd data/eln/advancement/recipes/misc/electric_welding_station.json
 cd57f474f8d1480acb959a2c973a132bec70d432 data/eln/advancement/recipes/misc/electrical_anemometer_sensor.json
@@ -635,6 +639,7 @@ e46ace98665bbeee9e00c278a1a7d497e969c14a data/eln/advancement/recipes/misc/xnor_
 78b1262536db1831c27927ce0cd6508ad93c7970 data/eln/advancement/recipes/misc/xor_chip.json
 01b586aaf0d8672f78ba0f0a789e68fbb01d3f64 data/eln/advancement/recipes/misc/yellow_brush.json
 32e45819656ae39139354517dbf2bcaaf014523a data/eln/recipe/100_a_pole_fuse.json
+f8e4a44f962bad10f4b305d872d027f720e328fe data/eln/recipe/100_a_vehicle_charging_lead.json
 3b90d8e32e8f58cd94b3d3e5c237e40e74092f03 data/eln/recipe/100_kw_pole_transformer.json
 dc77912608e67c46c81694643f4c5ee000792d7d data/eln/recipe/100a_electrical_breaker.json
 f55afec4206959bc52edd68849f62b13b674934e data/eln/recipe/10_a_pole_fuse.json
@@ -688,6 +693,7 @@ e25333ec84e2f843591d15dc724e02fd024fe100 data/eln/recipe/200v_submersible_pump.j
 eada7b2daa697879165cade86a1d1a0e4a23eb5b data/eln/recipe/20a_electrical_breaker.json
 9add6371c758ec14a9691bc7d5e7aceb3da90119 data/eln/recipe/230_kv_steel_transmission_tower.json
 99cc2d4b24f9ab05951b6692448459b234bd1514 data/eln/recipe/230_kv_three_phase_cable_riser_tower.json
+6af5b7119de90c2c9d8222dc7dd8fcbf5d6d1314 data/eln/recipe/240_v_100_a_vehicle_charger.json
 521426147ded526c3b295f8d5d53cbad13a1f8a8 data/eln/recipe/240_v_30_a_dryer_cord.json
 e648f6e62c5e7891f857c0793ce8b8e64d6dddd9 data/eln/recipe/240_v_30_a_dryer_outlet.json
 39722f326594ea24680384fe7995101db08c423b data/eln/recipe/240_v_appliance_cord.json
@@ -791,6 +797,7 @@ f8bb79bdca45cf72f71e9c34109d2cd1f0ea3f7c data/eln/recipe/analog_watch.json
 8fd7923bf8a68d3d9b30fe0eb4eb4ba90ee7d117 data/eln/recipe/analogic_regulator.json
 f08a17f8c96555319fad60d61b2788c122fbf087 data/eln/recipe/and_chip.json
 805798fa44f9f1beb943bfdbbcaf390d5e5a0861 data/eln/recipe/animal_filter.json
+d69dd2e311f9d6781c90e04fce9560449c2aa388 data/eln/recipe/arc_runner_coupe.json
 6810e4b04fbccaf7fc63c2901785280578defee4 data/eln/recipe/arched_walkway_light.json
 2f9e08f84970c4a6d0cca86f43098c2e5e840ca5 data/eln/recipe/armored_oval_bulkhead_light.json
 73ee0a885022d27b956b73101c1f6ae35d12f657 data/eln/recipe/articulated_task_table_lamp.json
@@ -852,6 +859,7 @@ a81c6ea17045af969bbb6dca4aec2b2361a32ef4 data/eln/recipe/deck_step_riser_light.j
 5fd7652fd6f4163bd70e90c8dba4ff7bcbcc61ba data/eln/recipe/e_coal_leggings.json
 011105395c8876f42483b267e81a390f6a3254fc data/eln/recipe/electric_bike.json
 f5f1f6eca75f9ebef501bff8219758cb4304b5ed data/eln/recipe/electric_forklift.json
+6ee22748b19115ea7fc3aff79055ca0d4c10e9b8 data/eln/recipe/electric_golf_cart.json
 af78484026b31855ed2e599bbb66bab5ffb72999 data/eln/recipe/electric_poolside_tiki_light.json
 58ba004ce17f92defb0f9b3cdd6328af7ce8cb5e data/eln/recipe/electric_welding_station.json
 8b9ee2b8504e1b559b8e3feea2996c631270b84e data/eln/recipe/electrical_anemometer_sensor.json

@@ -54,6 +54,11 @@ public final class ElnRegistry {
     /** The electric bike's trunk (Baughn 2026-10-28). */
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.bike.BikeTrunkMenu>> BIKE_TRUNK_MENU =
         MENUS.register("electric_bike", () -> new net.minecraft.world.inventory.MenuType<>(mods.eln.bike.BikeTrunkMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
+    public static final DeferredHolder<net.minecraft.world.inventory.MenuType<?>,net.minecraft.world.inventory.MenuType<mods.eln.vehicle.VehicleMenu>> ROAD_VEHICLE_MENU =
+        MENUS.register("road_vehicle",()->net.neoforged.neoforge.common.extensions.IMenuTypeExtension.create((id,inv,buf)->{
+            var entity=inv.player.level().getEntity(buf.readVarInt());
+            return new mods.eln.vehicle.VehicleMenu(id,inv,entity instanceof mods.eln.vehicle.RoadVehicleEntity car?car:null);
+        }));
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Eln.MODID);
 
     /** Every EA item, in 1.12 id order (creative tab, tests). */
@@ -212,6 +217,16 @@ public final class ElnRegistry {
     public static final DeferredItem<mods.eln.bike.ElectricBikeItem> TERRAIN_BIKE =
         registerListed("terrain_bike", p -> new mods.eln.bike.ElectricBikeItem(p, mods.eln.bike.BikeType.TERRAIN), p -> p.stacksTo(1));
 
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>,net.minecraft.world.entity.EntityType<mods.eln.vehicle.RoadVehicleEntity>> ROAD_CART_ENTITY =
+        ENTITY_TYPES.register("electric_golf_cart",()->net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.vehicle.RoadVehicleEntity>of((t,l)->new mods.eln.vehicle.RoadVehicleEntity(t,l,mods.eln.vehicle.RoadVehicleKind.CART),net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1.65f,2.15f).clientTrackingRange(12).updateInterval(1)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE,net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"electric_golf_cart"))));
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>,net.minecraft.world.entity.EntityType<mods.eln.vehicle.RoadVehicleEntity>> ROAD_COUPE_ENTITY =
+        ENTITY_TYPES.register("arc_runner_coupe",()->net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.vehicle.RoadVehicleEntity>of((t,l)->new mods.eln.vehicle.RoadVehicleEntity(t,l,mods.eln.vehicle.RoadVehicleKind.COUPE),net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1.9f,1.85f).clientTrackingRange(12).updateInterval(1)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE,net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"arc_runner_coupe"))));
     public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>, net.minecraft.world.entity.EntityType<mods.eln.transparentnode.industrial.ForkliftEntity>> ELECTRIC_FORKLIFT =
         ENTITY_TYPES.register("electric_forklift", () -> net.minecraft.world.entity.EntityType.Builder
             .<mods.eln.transparentnode.industrial.ForkliftEntity>of(mods.eln.transparentnode.industrial.ForkliftEntity::new, net.minecraft.world.entity.MobCategory.MISC)
@@ -223,6 +238,9 @@ public final class ElnRegistry {
             .noLootTable().sized(1f,.85f).clientTrackingRange(8).updateInterval(3)
             .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"equipment_pallet"))));
     static {
+        mods.eln.vehicle.RoadVehicles.INSTANCE.setCart(ROAD_CART_ENTITY);
+        mods.eln.vehicle.RoadVehicles.INSTANCE.setCoupe(ROAD_COUPE_ENTITY);
+        mods.eln.vehicle.RoadVehicles.INSTANCE.setMenu(ROAD_VEHICLE_MENU);
         mods.eln.transparentnode.industrial.ForkliftEntity.TYPE=ELECTRIC_FORKLIFT;
         mods.eln.transparentnode.industrial.PalletEntity.TYPE=EQUIPMENT_PALLET;
     }
