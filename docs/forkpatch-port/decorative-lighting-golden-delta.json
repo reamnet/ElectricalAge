@@ -90,6 +90,7 @@
     }
   ],
   "removedExactAssertions": [],
-  "observedLog": "/tmp/eln-lamps-native-all-v4.log",
-  "scope": "Completed intermediate run v4; expectations unchanged. Latest v6 pending; confirm exact delta after it finishes."
+  "observedLog": "/tmp/eln-lamps-all-validation-v6.log",
+  "nativeXml": "/tmp/eln-lamps-native-all-v6.xml",
+  "scope": "Final v6 run: all 714 exact assertions execute; all 697 prior assertions are unchanged and all 17 additions cover the seven special fixtures and String Lights. The two native test failures remain these historical 1.12 identity/container reference differences. Expectations are unchanged."
 }
