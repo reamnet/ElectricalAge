@@ -5,16 +5,12 @@ identify the last completed milestone + current task, check ONLY the files neede
 and resume immediately. Do NOT re-investigate the environment (all details below).
 
 ## Current state (keep concise; update at every milestone)
-- **FINAL (2026-11-17 ~12:30 UTC).** Session started 11:33 UTC resuming from d980ab76.
+- **ACTIVE (2026-11-17, session resume from dcfa8883).** PUSH IS AUTHORIZED this session (user explicitly said push all local/ported work + list what's left).
 - Repo: /home/matthew/projects/electrical-age-port/ElectricalAge
-- Branch: port/forkpatch-3.0.77-26.3. **HEAD d980ab76, 4 ahead of origin (NOT pushed; push needs explicit user OK).**
-- 4 unpushed commits: f078b7ca flat GUI icons; bcbd7b2c mctest stop-args; 70839aea real source textures; d980ab76 AlarmLab/PanelCarryLab hardening + mctest RCON codec.
-- **BASELINE GREEN (re-verified):** Native GameTest 1470 sel / 1468 pass / 2 FAIL (golden_descriptors + golden_slots, HISTORICAL — keep documented, do NOT fix/regenerate/weaken; 765 assertions, 761 prior + 4 new vehicle-station) / 0 skip. 1004 ForkPatch cases pass. Root :test 701 sel / 698 pass / 3 skip. CAD 15/15. Provenance 1099 pass. Datagen repeat = 0 writes (3631 files).
-- **JAR CERTIFIED (this session):** build/libs/eln-26.3-0.1.0-port.jar sha256 9fb9ab07423bdb6650182d2474322fbc33e6387e1c31299bff5c6044b5c05270, marker d980ab769343-dirty, packaging 9087/0/0. docs/forkpatch-port/artifact-certification.json refreshed (uncommitted -> committed with handoff).
-- **LIVE IN-ENGINE (server-side, RCON labs, disposable dev world):** gallery 227/620 placed (run/eln-gallery-26.json); lighting gallery (run/eln-lighting-gallery.json); 7 fire alarms (run/eln-alarm-gallery.json); cart+coupe vehicles (run/eln-road-vehicle-gallery.json); devicevolts dumps. Client booted to title (tools/mctest/shots/title-boot.png); render black (container GL limit).
-- **PENDING (honest):** live client-joined player behavior (0 players; DevLaunch quickPlay flaky), live GUI, driving, audio, multi-client, fresh-JVM save recovery, human visual QA, GPU/audio parity.
-- **DELIVERABLES DONE:** docs/forkpatch-port/overnight-handoff.md written; artifact cert refreshed; this file final. Next: local commit of docs+tooling (NO push).
-- Remaining feature backlog = Hard/Hardest/broad (see §Remaining work inventory + overnight-handoff.md §7).
+- Branch: port/forkpatch-3.0.77-26.3. **HEAD dcfa8883, 0/0 vs origin (clean, in sync).**
+- This session's mission: port **Kitchen/Laundry/Fusion + complex manufacturing families** (14 devices: 11 kitchen @ group 124, washer/dryer @ group 125 sub 9/10, fusion @ group 125 sub 11, + complex electrical machines), commit+push each validated batch, then list what's left.
+- **BASELINE (from dcfa8883, previously verified):** Native GameTest 1470 sel / 1468 pass / 2 FAIL (golden_descriptors + golden_slots — HISTORICAL 765-assertion delta, documented, do NOT fix/regenerate/weaken) / 0 skip. ForkPatch native 1004 pass. Root :test 698 pass / 3 pre-existing skips. CAD 15/15. Datagen repeat 0 writes (3631 files).
+- Kitchen API-substitution table + ID table + execution plan: see checkpoint handoff summary (kept in this file's §This-session plan).
 
 ## Hard constraints (user-mandated; do not violate)
 - NO push / merge / force-push / history rewrite. Local commits only. Preserve all prior work.
