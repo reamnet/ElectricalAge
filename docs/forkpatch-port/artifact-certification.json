@@ -1,0 +1,22 @@
+{
+  "sourceCommit": "c59e547138e53409f7a1bd282175ec25e16bb74d",
+  "buildTask": "./gradlew --no-daemon --max-workers=2 :jar",
+  "result": "BUILD SUCCESSFUL",
+  "artifact": "build/libs/eln-26.3-0.1.0-port.jar",
+  "sha256": "c19d8227540b495a9033a404740a33b12c5e7747446fb36a69d6f7b6c223cab8",
+  "embeddedBuildMarker": "c59e547138e5",
+  "packagingComparison": {
+    "compiledClassAndResourceEntriesCompared": 8767,
+    "missing": 0,
+    "mismatchedBytes": 0,
+    "extraArchiveEntries": [
+      "META-INF/MANIFEST.MF",
+      "META-INF/jarjar/commons-math3-3.6.1.jar",
+      "META-INF/jarjar/kotlin-stdlib-2.4.21.jar",
+      "META-INF/jarjar/metadata.json"
+    ]
+  },
+  "worktreeCleanAtBuild": true,
+  "jarPublished": false,
+  "notes": "The jar was built locally from the published code commit. Its compiled class/resource payload matches build/classes/java/main, build/classes/kotlin/main, and build/resources/main byte for byte, excluding only the generated eln-build.properties commit marker. The jar itself is not included in this evidence commit."
+}

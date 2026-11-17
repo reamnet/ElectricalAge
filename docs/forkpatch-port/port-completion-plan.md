@@ -1,6 +1,6 @@
 # ForkPatch 3.0.77 → NeoForge 26.3 completion plan
 
-Source pin: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Target reviewed: `973bf4626483452f73d8a130cc86a73709d2968d`. This is a work breakdown for the whole fork, including shared inherited behavior, assets, optional systems and verification. It does not certify that every implementation has already received a line-by-line semantic review.
+Source pin: `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. Target reviewed: `c59e547138e53409f7a1bd282175ec25e16bb74d`. This is a work breakdown for the whole fork, including shared inherited behavior, assets, optional systems and verification. It does not certify that every implementation has already received a line-by-line semantic review.
 
 Every source main file is assigned to an open review stream. Same-name classes, byte-identical files, model directories and import-ledger links are useful evidence locations; none alone proves a feature is ported. Source-excluded scaffolding needs an explicit retain/exclude decision, not automatic registration. Conditional integration status preserves source feature gates and does not authorize silently dropping active source features.
 

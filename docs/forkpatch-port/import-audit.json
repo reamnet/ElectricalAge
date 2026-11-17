@@ -1,6 +1,6 @@
 {
   "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
-  "targetCommit": "973bf4626483452f73d8a130cc86a73709d2968d",
+  "targetCommit": "c59e547138e53409f7a1bd282175ec25e16bb74d",
   "ledgerEntries": 1044,
   "uniqueSourceFiles": 797,
   "uniqueTargetFiles": 997,
@@ -11455,7 +11455,7 @@
       "target": "src/main/kotlin/mods/eln/transparentnode/festive/StringLightsScreen.kt",
       "mode": "adapted",
       "sourceSha256": "e9e5afbd846ebd6d305eecbdc0d4aa2393d3fda22d2032546fe9702e8d9f0a6f",
-      "targetSha256": "cc7c65a26edee939399fa92cb4655934c458cba5ca87f62e112cbcc8e4f76dcd",
+      "targetSha256": "715e6013e9bce4a0d186b67df474d37f27545a94707b0b7be8c93fcb44aaa625",
       "sourceMatchesLedger": true,
       "exactCopy": false,
       "declaredVerbatim": false

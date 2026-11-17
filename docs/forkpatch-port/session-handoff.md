@@ -84,8 +84,8 @@ historical golden identity/reference failures:
   See `decorative-lighting-validation.json` and `decorative-lighting-golden-delta.json`.
 
 Compile of the final GUI helper and String Lights heading fix succeeded. Games
-were stopped before compilation and after the interactive run. No final jar
-certification has been made yet.
+were stopped before compilation and after the interactive run. Clean JAR
+certification is recorded below and in `artifact-certification.json`.
 
 Run `tools/port/review_native_results.py` on the final XML+log. Resolve any
 non-golden failure, retaining every assertion/tolerance/skip. Update the lighting
@@ -120,14 +120,17 @@ project pins were changed.
 Gradle cache`/tmp/eln-port-gradle`. Keep pinned Gradle/wrapper/dependencies intact.
 Use`:test` for root filters, not bare`test` (would also filter CAD).
 
-No new clean artifact certification yet. Existing JARs may have dirty/stale
-markers; do not distribute based on the old3451e318 checksum. After final code
-validation/commit, assemble from clean HEAD, compare packaged tested classes and
-resources (only build marker may differ), then record SHA256+marker in an
-artifact/evidence follow-up commit.
+Clean artifact certification completed from published code commit
+`c59e547138e53409f7a1bd282175ec25e16bb74d`. `:jar` succeeded with a clean
+worktree. All 8,767 compiled class/resource entries match packaged bytes exactly;
+the only additional entries are the manifest and the declared commons-math3 and
+Kotlin stdlib jar-in-jar dependencies. Marker is `c59e547138e5`; artifact SHA256
+is `c19d8227540b495a9033a404740a33b12c5e7747446fb36a69d6f7b6c223cab8`.
+Full evidence is in `artifact-certification.json`. This records a local build;
+the JAR itself is not attached to the repository or release.
 
 All work is being published to the existing draft branch at user request,
-including clearly marked pending validation. Confirm remote HEAD equals local
+including the completed native/client verification and its stated limits. Confirm remote HEAD equals local
 and worktree clean. GitHub git-data tools support blobs/trees/commit/update_ref
 with expected-SHA lease; preserve reamnet authorship and PR metadata.
 
