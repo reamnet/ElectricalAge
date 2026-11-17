@@ -78,5 +78,7 @@
     "Room-climate and external spoilage bridges remain unported.",
     "Optional-metal prerequisite crafting is tag-conditioned.",
     "No new certified release artifact or full source-world migration."
-  ]
+  ],
+  "implementationCommit": "904059663c5085778a55c675b5e60461fd3cfd4d",
+  "pullRequest": "https://github.com/reamnet/ElectricalAge/pull/1"
 }

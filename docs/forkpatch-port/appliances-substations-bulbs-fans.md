@@ -1,5 +1,7 @@
 # Kitchen, laundry, fusion, substations, bulbs and fans
 
+Validated implementation: `904059663c5085778a55c675b5e60461fd3cfd4d`, pushed to draft PR1 as reamnet. Later handoff edits are documentation only.
+
 Continuation from `cfbad5a720d42279c104c00609963d97c5f8477d` on
 `port/forkpatch-3.0.77-26.3`. Source remains read-only at
 `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c`. The earlier kitchen-assets-only
