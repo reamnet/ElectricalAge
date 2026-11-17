@@ -45,7 +45,13 @@ object LightingLab {
                 source.networkUnserialize(c.stream { it.writeByte(1);it.writeFloat(120f) })
                 if(style.fan) {
                     val outletPos=p.offset(4,0,4);c.floor(outletPos.north())
-                    val outlet=mods.eln.gametest.cases.Wp10bCases.placeFacing(c,7968,outletPos,Direction.ZP) as OutletElement
+                    // Wall outlets derive their front from the clicked wall face, not player yaw.
+                    // Place against the north support wall with the source-facing ZP orientation.
+                    val outletDescriptor=requireNotNull(Eln.transparentNodeItem.getDescriptor(7968))
+                    val outletItem=outletDescriptor.parentItem as mods.eln.node.transparent.TransparentNodeItem
+                    val outletNode=outletItem.placeAt(outletDescriptor.newItemStack(),net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(src.level),src.level,outletPos,Direction.ZN)
+                        ?: error("could not place the rated wall outlet for ${style.name}")
+                    val outlet=outletNode.element as OutletElement
                     outlet.networkUnserialize(c.stream { it.writeByte(83);it.writeUTF(channel) })
                     outlet.networkUnserialize(c.stream { it.writeByte(82) })
                     check(requireNotNull(CordSupport.device(fixture)).cord.attach(outlet.anchor(0),true))
@@ -64,9 +70,16 @@ object LightingLab {
         val fixture=NodeManager.instance.nodes.asSequence().filterIsInstance<SixNode>()
             .filter { it.coordonate.dimention==mods.eln.misc.Dimensions.id(src.level) }
             .flatMap { it.sideElementList.asSequence().filterIsInstance<DecorativeLampElement>() }
-            .firstOrNull { it.style.lookup==lookup } ?: run { src.sendFailure(Component.literal("No resident lamp $lookup; build /elnlab lamps first"));return 0 }
+            .filter { it.style.lookup==lookup }
+            .minByOrNull {
+                val p=it.coordonate
+                val dx=player.x-(p.x+.5);val dy=player.y-(p.y+.5);val dz=player.z-(p.z+.5)
+                dx*dx+dy*dy+dz*dz
+            } ?: run { src.sendFailure(Component.literal("No resident lamp $lookup; build /elnlab lamps first"));return 0 }
         val p=fixture.coordonate
-        player.teleportTo(p.x+2.5,p.y.toDouble(),p.z+.5)
+        // Use ServerPlayer's connection-aware teleport so the client's next movement packet
+        // acknowledges the destination instead of being rejected as an implausible jump.
+        player.teleportTo(src.level,p.x+2.5,p.y.toDouble(),p.z+.5,emptySet<net.minecraft.world.entity.Relative>(),player.yRot,player.xRot,true)
         return if(NodeMenus.open(fixture.sixNode,player,fixture.side))1 else 0
     }
 }

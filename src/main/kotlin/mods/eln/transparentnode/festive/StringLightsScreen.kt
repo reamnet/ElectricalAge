@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
 /** Source coordinates and176x206 canvas, including the source channel and voltage controls. */
-class StringLightsScreen(m: ElnNodeMenu,i: Inventory,t: Component,r: Any):ElnScreen(m,i,t,176,206) {
+class StringLightsScreen(m: ElnNodeMenu,i: Inventory,t: Component,r: Any):ElnScreen(m,i,Component.empty(),176,206) {
     private val lamp=r as StringLightsRender
     private lateinit var channel: mods.eln.client.gui.EaField
     private var voltage: net.minecraft.client.gui.components.Button?=null

@@ -81,6 +81,20 @@ These commands create creative-mode lab hardware; they do not establish survival
 material accounting. Native recipe, insertion, solver and ownership tests cover
 that accounting independently.
 
+Representative controls were also exercised in a live client connected to a
+dedicated server: aim pan/reset/head selection, motion-light mode, fan on/off,
+warehouse-suspension adjustment, and String Lights voltage/channel controls.
+The String Lights panel was reopened after a server save and restart and showed
+the retained 240 V setting and `gui test channel`. Its heading now follows the
+source layout without overlapping the inventory or supply label. Screenshots
+are in [interactive GUI evidence](evidence/decorative-lighting/interactive-aim-panel.png),
+[motion](evidence/decorative-lighting/interactive-motion-off.png),
+[fan](evidence/decorative-lighting/interactive-fan-off.png),
+[suspension](evidence/decorative-lighting/interactive-suspension-1-25.png) and
+[reloaded String Lights](evidence/decorative-lighting/interactive-stringlights-reloaded.png).
+This is representative interaction coverage; it does not verify every fixture
+panel, multiplayer behavior, hardware GPU output or audio.
+
 Earlier four-owner software-OpenGL evidence remains available:
 [gallery](evidence/decorative-lighting/fresh-client-gallery.png),
 [shop light](evidence/decorative-lighting/shop-light-close.png),

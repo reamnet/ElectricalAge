@@ -6,7 +6,7 @@
   "sourceStyles": 108,
   "registeredStyles": 108,
   "unregisteredStyles": 0,
-  "status": "final v6 server/native validation complete; interactive fixture GUI validation pending",
+  "status": "final v6 server/native validation complete; representative interactive GUI controls verified",
   "finalV6": {
     "root": {"selected": 701, "passed": 698, "skipped": 3, "failed": 0},
     "cad": {"selected": 15, "passed": 15, "failed": 0},
@@ -24,6 +24,36 @@
     "nativeLog": "/tmp/eln-lamps-all-validation-v6.log",
     "review": "/tmp/eln-lamps-native-review-v6.json",
     "note": "Both native failures are unchanged historical golden identity/reference differences. No golden assertion, tolerance, or skip was relaxed."
+  },
+  "interactiveClient": {
+    "status": "partial representative verification",
+    "renderer": "Mesa llvmpipe, OpenGL 4.5, Xvfb 1280x720",
+    "server": "dedicated server on loopback; creative private test world",
+    "scene": "LightingLab built 108/108 fixtures with 0 placement failures",
+    "verified": [
+      "Actual in-game right-click opened the aimed Parking Light panel (4116), showing the saved channel, powered-by-supply mode, bulb slot and player inventory.",
+      "Actual Pan right button changed the displayed angle from 0° to 5°.",
+      "Actual Reset button restored 0°; selecting the second head changed the display to Head 2/2.",
+      "Actual motion-light screen button changed Always on to Always off.",
+      "Actual ceiling-fan screen button changed Fan: On to Fan: Off; the cord-powered panel hid wireless-channel and ground controls.",
+      "Actual warehouse-suspension plus button changed the displayed drop from 1.0 m to 1.25 m.",
+      "Placed String Lights opened its actual panel; the voltage button changed 120 V to 240 V and the wireless-channel control set 'gui test channel'. After saving and restarting the dedicated server, the panel retained both values.",
+      "Fixed String Lights panel title overlap by matching the pinned source's empty base title; the post-restart screen shows one 'Holiday lighting' heading."
+    ],
+    "screenshots": [
+      "evidence/decorative-lighting/interactive-aim-panel.png",
+      "evidence/decorative-lighting/interactive-aim-pan-5.png",
+      "evidence/decorative-lighting/interactive-aim-reset-head-2.png",
+      "evidence/decorative-lighting/interactive-motion-off.png",
+      "evidence/decorative-lighting/interactive-fan-off.png",
+      "evidence/decorative-lighting/interactive-suspension-1-25.png",
+      "evidence/decorative-lighting/interactive-stringlights-reloaded.png"
+    ],
+    "notVerifiedInteractively": [
+      "Every one of the 108 fixture panels and controls beyond the representative interactions listed above",
+      "Multiplayer, hardware GPU rendering and audio"
+    ],
+    "limitation": "The creative camera scene is for rendering and menus; it does not establish survival material accounting. Software rendering is not hardware GPU or audio parity."
   },
   "completedRootIntermediate": {
     "selected": 700,

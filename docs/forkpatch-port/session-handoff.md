@@ -71,50 +71,48 @@ Completed intermediate native run:
 - The earlier focused run crashed on the orphan fan component. Its production
   fix is in place; v4 ran fully without that crash. Do not count crashed runs as passes.
 
-LATEST VALIDATION WAS STILL RUNNING WHEN WRAP-UP WAS REQUESTED:
-```
-source /tmp/eln-port-java-env.sh
-./gradlew --no-daemon --max-workers=2 :build :cad:test runClientData runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report /tmp/eln-lamps-native-all-v6.xml --universe /tmp/eln-lamps-native-all-v6-world'
-```
-Log: `/tmp/eln-lamps-all-validation-v6.log`; Gradle shell PID142029, launcher142031
-at preparation time; execution session9385 if retained. It includes701 root
-cases and the new cord/native sensor/safety cases. First inspect the log, native
-XML and `build/test-results/test` / `cad/build/test-results/test` for final results.
-Do not compile changed main classes while these JVMs read the shared build outputs.
+FINAL v6 validation completed successfully except for the two unchanged
+historical golden identity/reference failures:
+- Root 701 selected, 698 passed, 3 existing optional skips, 0 failed; CAD 15/15.
+- Native 1416 selected, 1414 passed, 2 historical golden failures, 0 skipped;
+  all 950 ForkPatch cases passed. All 589 catalog devices and 246 server menus
+  passed; datagen repeated writes were zero.
+- 714 exact golden assertions preserve the previous 697 and add 17 across seven
+  fixtures and String Lights. No assertion/tolerance/skip was weakened.
+- Logs/XML/review: `/tmp/eln-lamps-all-validation-v6.log`,
+  `/tmp/eln-lamps-native-all-v6.xml`, `/tmp/eln-lamps-native-review-v6.json`.
+  See `decorative-lighting-validation.json` and `decorative-lighting-golden-delta.json`.
+
+Compile of the final GUI helper and String Lights heading fix succeeded. Games
+were stopped before compilation and after the interactive run. No final jar
+certification has been made yet.
 
 Run `tools/port/review_native_results.py` on the final XML+log. Resolve any
 non-golden failure, retaining every assertion/tolerance/skip. Update the lighting
 validation/golden delta and PR body with actual final counts. New recipe, sensor,
 cord and String tests must really execute; structure-placement failures are failures.
 
-## GUI / real game tests are NOT completed this session
+## GUI / real game verification
 
-The prior session's helper scripts and worlds are missing locally. A private
-virtual X display was prepared at `DISPLAY=:97`, with screenshot tool`scrot`
-and input tool`xdotool`; no public TCP listener. Xvfb and extracted dependencies
-are under`/tmp/eln-lamps-xvfb`; its local binary only redirects the missing
-xkbcomp path to`/tmp/xkb`. No system binaries/project pins were changed.
+Live dedicated server and actual Minecraft client connected over loopback under
+Xvfb `:97`/Mesa llvmpipe. The private world `/tmp/eln-lamps-server/world` was
+preserved; do not reset it. `LightingLab` built 108/108 fixtures with zero
+placement failures. Helper lookup now selects the nearest resident duplicate
+and uses the connection-aware server teleport. Screenshots and exact partial
+coverage are listed in `decorative-lighting-validation.json`.
 
-A server directory/properties/EULA were prepared at`/tmp/eln-lamps-server`,
-loopback port26035, offline creative flat world; launcher init script
-`/tmp/eln-lamps-server.init.gradle` sets its workingDir and console stdin.
-Client options are`/tmp/eln-lamps-client/options.txt`, GUI scale2,1280×720 intent.
-Neither game server nor client was launched before wrap-up. No new GUI screenshot
-or interactive-client/multiplayer/audio parity is claimed.
+Verified actual aim pan/reset/head selection, motion on/off, fan on/off, warehouse
+suspension adjustment, and String Lights placement/panel voltage/channel. After
+save and dedicated-server restart the String Lights GUI displayed the retained
+240 V and `gui test channel`. Fixed source title overlap; screenshot shows a single
+`Holiday lighting` heading. The gallery and these GUI checks are representative,
+not exhaustive of all 108 panels. Two-client behavior, hardware GPU and audio were
+not verified. Do not claim all client menus pass solely from server menu tests.
 
-Operator tools implemented for the next agent:
-- `/elnlab lamps x y z`: creates108 fixtures with bulbs and native saved electrical
-  sources/supplies, plus real paid fan cords/outlets; writes`eln-lighting-gallery.json`.
-- `/elnlab lampmenu LOOKUP`: teleports an actual player near a resident fixture
-  and opens its real menu. From server console use`execute as PLAYER at @s run ...`.
-- These new scene tools compile but have NOT been exercised in an actual client.
-  Fix any scene setup failure rather than omitting fixtures. Allow chunk publication
-  before judging a menu; opening too soon can fall back to the generic screen.
-
-Next: actual client checks of all108 screens/factories, aim head/reset/pan/tilt,
-fan/motion buttons, suspension bounds, cord-mode labels/hidden channel, String
-voltage/channel/player inventory; real right-click flows, save/restart, water
-illumination and two-client publication. Capture representative evidence.
+Operator commands: `/elnlab lamps x y z` builds the 108-fixture scene;
+`/elnlab lampmenu LOOKUP` opens the nearest resident fixture menu. The world,
+logs and screenshot sources are under `/tmp/eln-lamps-*`; no system binaries or
+project pins were changed.
 
 ## Toolchain / publication
 
