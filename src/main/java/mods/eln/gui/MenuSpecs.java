@@ -136,6 +136,10 @@ public final class MenuSpecs {
         put(mods.eln.utility.HouseServiceDescriptor.class,d->(d.getMeter()?MenuSpec.of(
             filter(0,8,42,1,stack->{var part=mods.eln.utility.UtilityItems.INSTANCE.part(stack);return part!=null && (part==1 || part==2);},MEDIUM,tr("Analog or smart service meter")))
             :MenuSpec.SCREEN_ONLY).publishing(1).panel(320,240,80,158));
+        put(mods.eln.utility.BreakerPanelDescriptor.class,d->MenuSpec.of(
+            java.util.stream.IntStream.range(0,12).mapToObj(i->filter(i,8+(i%2)*152,34+(i/2)*20,1,
+                mods.eln.utility.BreakerPanelElement.Companion::isBreaker,MEDIUM,tr("Branch breaker (5–400 A)")))
+                .toArray(SlotSpec[]::new)).publishing(1).panel(312,386,8,304));
         put(mods.eln.transparentnode.industrial.PadTransformerDescriptor.class,d->MenuSpec.of(
             descriptor(0,16,180,1,mods.eln.utility.PoleTransformerDescriptor.class,MEDIUM,tr("Physical transformer capacity")),
             filter(1,16,204,1,stack->{var fuse=mods.eln.utility.PoleHardware.INSTANCE.fuse(stack);return fuse!=null && !fuse.getSpent();},MEDIUM,tr("Primary fuse cartridge"))

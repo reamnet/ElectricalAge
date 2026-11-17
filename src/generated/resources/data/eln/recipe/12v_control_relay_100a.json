@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_2_awg_cable_600v",
+    "G": "minecraft:glass_pane",
+    "I": "eln:copper_cable",
+    "O": "eln:iron_cable",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "GGG",
+    "OIO",
+    "CRC"
+  ],
+  "result": {
+    "id": "eln:control_relay_12v_100a"
+  }
+}

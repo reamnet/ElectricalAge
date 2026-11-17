@@ -2622,12 +2622,32 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeElectricalBreaker() {
+        addRecipe(findItemStack("Twelve Circuit American Breaker Panel"),"P P","CRC","PPP",
+            'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'R',stack(Items.REDSTONE));
+        addRecipe(findItemStack("5A Switch"),"  I"," I ","CAC",'A',"itemRubber",'I',findItemStack("Copper Cable"),'C',findItemStack("Copper 20 AWG Cable 300V"));
+        String[] relayNames={"5V Control Relay 10A","12V Control Relay 20A","12V Control Relay 50A","12V Control Relay 100A"};
+        String[] relayWire={"Copper 18 AWG Cable 300V","Copper 12 AWG Cable 600V","Copper 6 AWG Cable 600V","Copper 2 AWG Cable 600V"};
+        for(int i=0;i<relayNames.length;i++)addRecipe(findItemStack(relayNames[i]),"GGG","OIO","CRC",
+            'R',stack(Items.REDSTONE),'O',findItemStack("Iron Cable"),'G',stack(Blocks.GLASS_PANE),
+            'I',findItemStack("Copper Cable"),'C',findItemStack(relayWire[i]));
 
         addRecipe(findItemStack("Electrical Breaker", 1),
             "crC",
             'c', findItemStack("Overvoltage Protection"),
             'C', findItemStack("Overheating Protection"),
             'r', findItemStack("High Voltage Relay"));
+
+        // Preserve the source gauge/relay input for each exact current rating.
+        String[] ratedParts={"5A Switch","5V Control Relay 10A","Copper 14 AWG Cable 600V","12V Control Relay 20A",
+            "Copper 10 AWG Cable 600V","Copper 8 AWG Cable 600V","12V Control Relay 50A","Copper 6 AWG Cable 600V",
+            "12V Control Relay 100A","Copper 1/0 AWG Cable 1000V","Copper 2/0 AWG Cable 1000V","Copper 4/0 AWG Cable 1000V"};
+        int[] ratedAmps={5,10,15,20,30,40,50,60,100,125,200,400};
+        for (int i=0;i<ratedAmps.length;i++) {
+            int amps=ratedAmps[i];
+            addRecipe(findItemStack(amps + "A Electrical Breaker",1),
+                "crC", 'c', findItemStack("Overvoltage Protection"),
+                'C', findItemStack("Overheating Protection"), 'r', findItemStack(ratedParts[i]));
+        }
 
     }
 

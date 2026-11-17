@@ -13,6 +13,9 @@ public class ElectricalRelayGateProcess extends NodeElectricalGateInputHysteresi
     }
 
     @Override
+    protected double nominalVoltage() { return element.descriptor.controlVoltage; }
+
+    @Override
     protected void setOutput(boolean value) {
         element.setSwitchState(value ^ element.defaultOutput);
     }

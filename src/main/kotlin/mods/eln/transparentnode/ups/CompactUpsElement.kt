@@ -10,6 +10,7 @@ import java.util.UUID
 
 /** Four independent native cell items and four durable, resident-owner socket leases. */
 class CompactUpsElement(node: TransparentNode,descriptor: TransparentNodeDescriptor): UpsElement(node,descriptor),CordDevice,CordSocketSource {
+    override val cordPortable get()=true
     override val socketOwner get()=this
     override var id=UUID.randomUUID();private set
     override val capacity=4

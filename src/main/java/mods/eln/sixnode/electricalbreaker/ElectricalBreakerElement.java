@@ -194,7 +194,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
         } else {
             cableDescriptor.applyTo(aLoad);
             cableDescriptor.applyTo(bLoad);
-            currantMax = cableDescriptor.electricalMaximalCurrent;
+            currantMax = Math.min(cableDescriptor.electricalMaximalCurrent, descriptor.currentLimit);
         }
         refreshSwitchResistor();
     }

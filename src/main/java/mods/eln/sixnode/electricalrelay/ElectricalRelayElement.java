@@ -66,10 +66,16 @@ public class ElectricalRelayElement extends SixNodeElement {
         slowProcessList.add(voltageWatchDogB);
 
         Failure exp = new Failure(this).electronics();
+        if (this.descriptor.rated) {
+            var watchdog = new mods.eln.sim.process.destruct.ResistorCurrentWatchdog(switchResistor, this.descriptor.currentRating * 1.25, .25);
+            watchdog.set(new Failure(this).cable());
+            slowProcessList.add(watchdog);
+        }
+
 
         //currentWatchDog.set(switchResistor).setIAbsMax(this.descriptor.cable.electricalMaximalCurrent).set(exp);
-        voltageWatchDogA.set(aLoad).setUNominal(this.descriptor.cable.electricalNominalVoltage).set(exp);
-        voltageWatchDogB.set(bLoad).setUNominal(this.descriptor.cable.electricalNominalVoltage).set(exp);
+        voltageWatchDogA.set(aLoad).setUNominal(this.descriptor.contactNominalVoltage).set(exp);
+        voltageWatchDogB.set(bLoad).setUNominal(this.descriptor.contactNominalVoltage).set(exp);
     }
 
     public static boolean canBePlacedOnSide(Direction side, int type) {
@@ -108,8 +114,8 @@ public class ElectricalRelayElement extends SixNodeElement {
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
-        if (front.left() == lrdu) return descriptor.cable.getNodeMask();
-        if (front.right() == lrdu) return descriptor.cable.getNodeMask();
+        if (front.left() == lrdu) return descriptor.getNodeMask();
+        if (front.right() == lrdu) return descriptor.getNodeMask();
         if (front == lrdu) return NodeBase.maskElectricalInputGate;
         return 0;
     }

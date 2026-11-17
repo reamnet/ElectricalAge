@@ -14,6 +14,7 @@ import java.util.UUID
 
 /** One paid physical link; polling and reconnect trials cannot advance a device's work clock. */
 class ApplianceCord(private val device: CordDevice,val owner: Any,val input: NbtElectricalLoad) {
+    var moving=false;private set
     var anchor: CordAnchor?=null;private set
     var token=UUID.randomUUID();private set
     var paid=false;private set
@@ -94,6 +95,7 @@ class ApplianceCord(private val device: CordDevice,val owner: Any,val input: Nbt
         outlet?.release(this,false);outlet=null;connected=false
     }
     fun detach(player: ServerPlayer?=null) {
+        if(moving)return
         val a=anchor ?: return
         val source=lookup(a).outlet;val refund=paid && source?.duplicateClaim(this,a.socket)!=true;paid=false
         source?.release(this,true)
@@ -105,9 +107,35 @@ class ApplianceCord(private val device: CordDevice,val owner: Any,val input: Nbt
         }
     }
     fun onBroken() {
+        if(moving)return
         val a=anchor ?: return;val source=lookup(a).outlet;val refund=paid && source?.duplicateClaim(this,a.socket)!=true;paid=false
         source?.release(this,true);disconnect();anchor=null;state="UNPLUGGED"
         if(refund)CordSupport.drop(owner,Eln.findItemStack(a.rating.cordName,1))
+    }
+    /** Transfer this paid link and the full appliance state into one held item. */
+    fun carry(player: ServerPlayer): Boolean {
+        if(!CordSupport.active(owner) || !plugged || !device.cordPortable || !player.mainHandItem.isEmpty)return false
+        val snapshot=CompoundTag()
+        // Downstream leads cannot follow a portable power source into an inventory.
+        if(owner is CordSocketSource)repeat(owner.capacity) { owner.disconnectSocket(it) }
+        val stack=when(owner) {
+            is TransparentNodeElement -> { owner.writeToNBT(snapshot);owner.descriptor.newItemStack() }
+            is mods.eln.node.six.SixNodeElement -> { owner.writeToNBT(snapshot);owner.sixNodeElementDescriptor.newItemStack() }
+            else -> return false
+        }
+        mods.eln.generic.ItemNbt.edit(stack) { it.put("carriedAppliance",snapshot);it.putLong("carriedAt",player.level().gameTime) }
+        moving=true
+        disconnect()
+        when(owner) {
+            is TransparentNodeElement -> owner.node.physicalSelfDestruction(0f)
+            is mods.eln.node.six.SixNodeElement -> {
+                val node=owner.sixNode
+                if(!node.deleteSlot(player,owner.slot)) { moving=false;return false }
+                if(node !is mods.eln.node.voxel.VoxelNode && !node.ifSideRemain && !node.isDestructing)node.coordonate.world().removeBlock(node.coordonate.pos(),false)
+            }
+        }
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,stack)
+        return true
     }
     fun read(tag: CompoundTag) {
         disconnect();val t=tag.getCompoundOrEmpty("applianceCord")

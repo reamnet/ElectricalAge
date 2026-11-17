@@ -44,7 +44,7 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
         BlockPos pos = ctx.getClickedPos().relative(ctx.getClickedFace());
         Direction direction = Direction.fromIntMinecraftSide(ctx.getClickedFace().get3DDataValue()).getInverse();
         boolean ok = placeAt(ctx.getItemInHand(), ctx.getPlayer(), world, pos, direction) != null;
-        if (ok && ctx.getPlayer() != null && !ctx.getPlayer().isCreative()) ctx.getItemInHand().shrink(1);
+        if (ok && ctx.getPlayer() != null && (!ctx.getPlayer().isCreative() || (mods.eln.generic.ItemNbt.get(ctx.getItemInHand()) != null && mods.eln.generic.ItemNbt.get(ctx.getItemInHand()).contains("carriedAppliance")))) ctx.getItemInHand().shrink(1);
         return ok ? InteractionResult.SUCCESS : InteractionResult.FAIL;
     }
 

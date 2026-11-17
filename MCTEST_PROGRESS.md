@@ -9,6 +9,17 @@ Status legend: [x] done+verified  [~] in progress  [!] blocked  [?] needs info
 
 Last updated: 2026-11-17 (infra completed + verified against a reference RCON server)
 
+
+## Port implementation follow-up (2026-11-17)
+
+The model-load blocker recorded below is resolved in the current porting WIP:
+`twelvecircuitpanel/twelvecircuitpanel.obj` was missing from the model index.
+The real NeoForge GameTest server now boots. The targeted panel/portable/native
+regression selection passed **51/51** in `/tmp/eln-requested-native-p-v3.xml`.
+This supersedes the blocker status below; historical stand-in tooling results
+remain stand-in results. Full regression and real client verification are pending.
+The existing tooling commit `dd3cbee2` is now pushed to the existing PR branch.
+
 ------------------------------------------------------------------------------
 ## TL;DR
 - `tools/mctest/mctest` (single stdlib-only Python file, ~1083 lines) is COMPLETE and

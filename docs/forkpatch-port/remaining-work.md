@@ -18,13 +18,22 @@ behavioral completion.
 
 ## Current continuation
 
+The [twelve-circuit panel](breaker-panel.md) and existing-family
+[portable carrying](portable-carry.md) now have native implementations and a
+962/962 passing ForkPatch regression. Source-rated breaker/switch/relay recipe
+prerequisites are included. Live GUI verification and the final unfiltered run
+remain pending. Road vehicles with their100A charging station/lead and the seven
+fire-alarm devices are the next active requested systems; they are not yet
+registered. See [requested scope](requested-systems-plan.md) and
+[validation](panel-carry-validation.json).
+
 The [decorative lighting port](decorative-lighting.md) now registers all 108
 fixtures, including the five fans, motion floodlight and adjustable warehouse
 light. It restores per-head aiming, wide beams, original palettes/item poses,
 water-preserving light leases and all 108 exact source recipes. Source String
-Lights is a working prerequisite. Fixture cord input is integrated; portable
-carry, partial-support mounting and additional bulb technology/configuration
-remain unfinished. Source 120/240 V LEDs use native lookups 302/303, preserving
+Lights is a working prerequisite. Fixture cord input and carrying for source table-lamp styles are integrated;
+partial-support mounting and additional bulb technology/configuration remain
+unfinished. Source 120/240 V LEDs use native lookups 302/303, preserving
 old 50/200 V bulbs. See the [review since bb962e1](review-since-bb962e1.md) and
 [lighting evidence](decorative-lighting-validation.json) for actual validation
 and its limits. Registration counts are not a claim of universal source parity.

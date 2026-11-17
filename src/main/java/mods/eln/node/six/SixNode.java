@@ -141,6 +141,7 @@ public class SixNode extends Node {
 
             disconnect();
             e.front = frontFor(descriptor, direction, player);
+            mods.eln.transparentnode.cord.CordSupport.restoreCarried(e, mods.eln.generic.ItemNbt.get(itemStack));
             e.initialize();
             sideElementIdList[slot] = descriptor.parentItemDamage;
 

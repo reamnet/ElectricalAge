@@ -51,6 +51,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ForkPatchSurgeCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchPadCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchServiceCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchBreakerPanelCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchOverheadCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchWireCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchMulticoreCases.cases());
@@ -77,6 +78,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ForkPatchWireMachineCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchFabricatorCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchCordCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchPortableCarryCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchLampSupplyCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchDecorativeLampCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchDecorativeRecipeCases.cases());

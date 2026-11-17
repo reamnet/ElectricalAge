@@ -4769,5 +4769,113 @@
   "display": "String Lights",
   "kind": "transparent_node",
   "name": "string_lights"
+ },
+ "eln:six_node@6273": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "10A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_10a"
+ },
+ "eln:six_node@6274": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "15A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_15a"
+ },
+ "eln:six_node@6275": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "20A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_20a"
+ },
+ "eln:six_node@6279": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "30A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_30a"
+ },
+ "eln:six_node@6280": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "40A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_40a"
+ },
+ "eln:six_node@6281": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "50A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_50a"
+ },
+ "eln:six_node@6282": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "60A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_60a"
+ },
+ "eln:six_node@6283": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "100A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_100a"
+ },
+ "eln:six_node@6285": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "125A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_125a"
+ },
+ "eln:six_node@6286": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "200A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_200a"
+ },
+ "eln:six_node@6287": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "400A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_400a"
+ },
+ "eln:six_node@6288": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "5A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_5a"
+ },
+ "eln:transparent_node@7988": {
+  "descriptor": "BreakerPanelDescriptor",
+  "display": "Twelve Circuit American Breaker Panel",
+  "kind": "transparent_node",
+  "name": "twelve_circuit_american_breaker_panel"
+ },
+ "eln:six_node@6021": {
+  "descriptor": "ElectricalRelayDescriptor",
+  "display": "5V Control Relay 10A",
+  "kind": "six_node",
+  "name": "control_relay_5v_10a"
+ },
+ "eln:six_node@6022": {
+  "descriptor": "ElectricalRelayDescriptor",
+  "display": "12V Control Relay 20A",
+  "kind": "six_node",
+  "name": "control_relay_12v_20a"
+ },
+ "eln:six_node@6023": {
+  "descriptor": "ElectricalRelayDescriptor",
+  "display": "12V Control Relay 50A",
+  "kind": "six_node",
+  "name": "control_relay_12v_50a"
+ },
+ "eln:six_node@6024": {
+  "descriptor": "ElectricalRelayDescriptor",
+  "display": "12V Control Relay 100A",
+  "kind": "six_node",
+  "name": "control_relay_12v_100a"
+ },
+ "eln:six_node@6213": {
+  "descriptor": "ElectricalSwitchDescriptor",
+  "display": "5A Switch",
+  "kind": "six_node",
+  "name": "switch_5a"
  }
 }

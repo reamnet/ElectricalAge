@@ -21,6 +21,10 @@ object ScadaLink {
     }
     fun read(owner:ScadaElement,address:Long,circuit:Int):String {
         val e=target(owner,address) ?: return tr("Target unavailable or chunk unloaded")
+        if(e is BreakerPanelElement) {
+            val b=e.branches.getOrNull(circuit) ?: return tr("Circuit unavailable")
+            return tr("Circuit %1$: %2$ V / %3$ A\nBreaker: %4$ A; %5$",circuit+1,b.load.u.toInt(),String.format(java.util.Locale.ROOT,"%.2f",b.contact.current),b.rating.toInt(),if(b.breaker.tripped)tr("Tripped") else if(b.breaker.enabled)tr("Enabled") else tr("Disabled"))
+        }
         val lines=e.waila.entries.take(4).joinToString("\n") { "${it.key}: ${it.value}" }
         return tr("%1$\n%2$",e.descriptor.name,lines)
     }
@@ -28,6 +32,7 @@ object ScadaLink {
         if(!owner.unit.canCommand)return false
         val e=target(owner,address) ?: return false
         val accepted=when(e) {
+            is BreakerPanelElement->e.remoteCircuit(circuit,closed)
             is HouseServiceElement->e.setRemoteDisconnect(!closed)
             is DistributionPoleElement->e.unit.switch(closed)
             is SwitchgearElement->{e.unit.setEnabled(closed);true}

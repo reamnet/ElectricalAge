@@ -7312,5 +7312,82 @@
     "sourceSha256": "f2caa8c33659ee76f55c719dd69120fba2e49db47f432e0b654da92ca2ba3fe0",
     "mode": "verbatim",
     "status": "source-reviewed-validation-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/BreakerPanel.kt",
+    "target": "src/main/kotlin/mods/eln/utility/BreakerPanel.kt",
+    "sourceSha256": "973afb277b8f8811190d9007aa5f093a7b5d367537e6b1870ea946a7839c92c8",
+    "mode": "adapted",
+    "status": "native-validation-in-progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/BreakerPanelClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/BreakerPanelClient.kt",
+    "sourceSha256": "74fd95b09f3d7e415d0073ea4a98f24a55d6b908b07753d6904c85a06a204475",
+    "mode": "adapted",
+    "status": "native-validation-in-progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/WirelessPowerChannels.kt",
+    "target": "src/main/kotlin/mods/eln/utility/WirelessPowerChannels.kt",
+    "sourceSha256": "57924b4a7a1d7191860c188d6df2ed186cb8f955550328112211ee280e8e7bcd",
+    "mode": "adapted",
+    "status": "native-validation-in-progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/utility/BreakerPanelClient.kt",
+    "target": "src/main/kotlin/mods/eln/utility/BreakerPanelScreen.kt",
+    "sourceSha256": "74fd95b09f3d7e415d0073ea4a98f24a55d6b908b07753d6904c85a06a204475",
+    "mode": "adapted",
+    "status": "native-validation-in-progress"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sim/process/destruct/ResistorCurrentWatchdog.kt",
+    "target": "src/main/java/mods/eln/sim/process/destruct/ResistorCurrentWatchdog.java",
+    "sourceSha256": "d6cf1fd1388f2ea4daf1e415b971922727efe629bda19f47b904e9b7bf5387a8",
+    "mode": "adapted",
+    "status": "native-validation-in-progress"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/twelvecircuitpanel/twelvecircuitpanel.obj",
+    "target": "src/main/resources/assets/eln/model/twelvecircuitpanel/twelvecircuitpanel.obj",
+    "sourceSha256": "907daa4f54202b70e4289ad81b0a18b47e633019c74c368874c5b6c6faed66c0",
+    "mode": "verbatim",
+    "status": "native-validation-in-progress"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/twelvecircuitpanel/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/twelvecircuitpanel/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "native-validation-in-progress"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/twelvecircuitpanel/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/twelvecircuitpanel/equipment_finish.mtl",
+    "sourceSha256": "134d6dbe9dbf3f5ed18247f571586891b3645edc3744dc491e3890acacaa2371",
+    "mode": "verbatim",
+    "status": "native-validation-in-progress"
+  },
+  {
+    "source": "src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayDescriptor.java",
+    "target": "src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayDescriptor.java",
+    "sourceSha256": "237e968f815dc61c5d4cc2d91d27cde7e42211c81f46ce1fc7f12f1354ce8b7f",
+    "mode": "adapted",
+    "status": "rated-prerequisite-native-tested"
+  },
+  {
+    "source": "src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayElement.java",
+    "target": "src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayElement.java",
+    "sourceSha256": "d42759050aad3f9113ea0f03cd93c86389763ed9dfe5279b2b9e36b2bd59f77b",
+    "mode": "adapted",
+    "status": "rated-prerequisite-native-tested"
+  },
+  {
+    "source": "src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGateProcess.java",
+    "target": "src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGateProcess.java",
+    "sourceSha256": "5f4ec6ac663e316c87a49f924a5269aab709abf6809298d5f6c1bc32e84a4897",
+    "mode": "adapted",
+    "status": "rated-prerequisite-native-tested"
   }
 ]

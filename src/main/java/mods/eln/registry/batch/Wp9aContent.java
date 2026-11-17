@@ -225,6 +225,10 @@ public class Wp9aContent implements ElnContent {
     }
 
     public static void registerSwitch(int id) {
+        var ratedSwitch = new ElectricalSwitchDescriptor(TR_NAME(Type.NONE,"5A Switch"),stdCableRender50V,obj.getObj("LowVoltageSwitch"),300,1500,.04,300,1500,cableThermalLoadInitializer.copy(),false);
+        ratedSwitch.setDefaultIcon("switch");
+        sixNodeItem.addDescriptor((id<<6)+5,ratedSwitch);
+
         int subId, completId;
         String name;
         IFunction function;
@@ -333,6 +337,15 @@ public class Wp9aContent implements ElnContent {
 
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+        // Source identities 0,1,2,3,7,8,9,10,11,13,14,15. Preserve the existing
+        // generic breaker at 6272; 6276-6278 belong to meters and the fuse holder.
+        int[] sourceSubIds = {0,1,2,3,7,8,9,10,11,13,14,15};
+        int[] nativeIds = {6288,6273,6274,6275,6279,6280,6281,6282,6283,6285,6286,6287};
+        int[] amps = {5,10,15,20,30,40,50,60,100,125,200,400};
+        for (int i=0;i<amps.length;i++) {
+            name = TR_NAME(Type.NONE, amps[i] + "A Electrical Breaker");
+            sixNodeItem.addDescriptor(nativeIds[i], new ElectricalBreakerDescriptor(name, obj.getObj("ElectricalBreaker"), amps[i]));
+        }
         {
             subId = 6;
 
@@ -386,6 +399,16 @@ public class Wp9aContent implements ElnContent {
     }
 
     public static void registerElectricalRelay(int id) {
+        String[] ratedNames = {"5V Control Relay 10A", "12V Control Relay 20A", "12V Control Relay 50A", "12V Control Relay 100A"};
+        String[] ratedModels = {"RelaySmall", "RelayBig", "relay800", "relay800"};
+        double[] ratedAmps = {10,20,50,100}, ratedResistance = {.04,.01,.005,.0025};
+        String[] icons = {"lowvoltagerelay","mediumvoltagerelay","highvoltagerelay","veryhighvoltagerelay"};
+        for (int i=0; i<4; i++) {
+            var relay = new ElectricalRelayDescriptor(TR_NAME(Type.NONE,ratedNames[i]),obj.getObj(ratedModels[i]),i==0?120:600,ratedAmps[i],ratedResistance[i],i==0?5:12);
+            relay.setDefaultIcon(icons[i]);
+            sixNodeItem.addDescriptor((id<<6)+5+i,relay);
+        }
+
         int subId, completId;
         String name;
         ElectricalRelayDescriptor desc;

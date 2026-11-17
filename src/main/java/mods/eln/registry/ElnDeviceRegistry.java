@@ -116,6 +116,7 @@ public final class ElnDeviceRegistry {
         mods.eln.utility.DistributionPoles.register();
         for (var kind : mods.eln.utility.TransmissionKind.values()) transparentNodeItem.addDescriptor(kind.getId(),new mods.eln.utility.TransmissionDescriptor(kind));
         transparentNodeItem.addDescriptor(50+(124<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false,mods.eln.utility.ServiceMastStyle.STANDARD));
+        transparentNodeItem.addDescriptor(52+(124<<6),new mods.eln.utility.BreakerPanelDescriptor());
         int mastIndex=0;
         for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK))
             transparentNodeItem.addDescriptor(28+mastIndex+++(125<<6),new mods.eln.utility.HouseServiceDescriptor(false,false,false,mast));

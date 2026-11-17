@@ -296,8 +296,10 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
             Eln.ghostManager.removeGhostAndBlockWithObserver(node.coordonate);
             //transparentNodeDescriptor.getGhostGroup(front).erase(node.coordonate);
         }
-        node.dropInventory(getInventory());
-        node.dropElement(node.removedByPlayer);
+        if (!mods.eln.transparentnode.cord.CordSupport.moving(this)) {
+            node.dropInventory(getInventory());
+            node.dropElement(node.removedByPlayer);
+        }
 
     }
 
@@ -353,6 +355,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     public void initializeFromThat(Direction front, LivingEntity entityLiving, CompoundTag itemStackNbt) {
         this.front = front;
         readItemStackNBT(itemStackNbt);
+        mods.eln.transparentnode.cord.CordSupport.restoreCarried(this, itemStackNbt);
         initialize();
     }
 

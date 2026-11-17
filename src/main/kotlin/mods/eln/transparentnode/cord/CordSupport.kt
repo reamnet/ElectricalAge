@@ -23,9 +23,11 @@ import net.minecraft.nbt.CompoundTag
 
 interface CordDevice {
     val cord: ApplianceCord
+    val cordPortable: Boolean get() = false
     fun acceptsCord(rating: CordRating): Boolean
 }
 open class MachineCordDevice(val owner: Any,val input: NbtElectricalLoad,val nominal: ()->Double): CordDevice {
+    override val cordPortable get() = owner is mods.eln.sixnode.lampsocket.DecorativeLampElement && owner.style.tableLamp
     override val cord by lazy { ApplianceCord(this,owner,input) }
     override fun acceptsCord(rating: CordRating)=rating.accepts(nominal())
 }
@@ -93,10 +95,21 @@ object CordSupport {
         if(active(owner))auxiliaryNodes(owner).forEach { it.reconnect() }
     }
     @JvmStatic fun beforeDisconnect(owner: Any) {
+        mods.eln.utility.WirelessPowerChannels.disconnectOwner(owner)
         auxiliaryNodes(owner).forEach { it.disconnect() }
         WirelessOutletPower.disconnectSupply(owner)
         mods.eln.transparentnode.festive.StringLightsElement.disconnectSupply(owner)
         device(owner)?.cord?.disconnect()
+    }
+    @JvmStatic fun moving(owner: Any)=device(owner)?.cord?.moving==true
+    /** Restore the full portable snapshot while preserving the new placement orientation. */
+    @JvmStatic fun restoreCarried(owner: Any, tag: CompoundTag?) {
+        if(tag?.contains("carriedAppliance")!=true || device(owner)?.cordPortable!=true)return
+        val saved=tag.getCompoundOrEmpty("carriedAppliance")
+        when(owner) {
+            is TransparentNodeElement -> { val front=owner.front;owner.readFromNBT(saved);owner.front=front }
+            is SixNodeElement -> { val front=owner.front;owner.readFromNBT(saved);owner.front=front }
+        }
     }
     @JvmStatic fun broken(owner: Any) { device(owner)?.cord?.onBroken() }
     @JvmStatic fun read(owner: Any,tag: CompoundTag) { device(owner)?.cord?.read(tag) }

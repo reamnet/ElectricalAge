@@ -43,7 +43,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
 
     double vp[] = new double[3];
 
-    private LampSupplyElement oldLampSupply;
+    private Object oldLampSupply;
 
     double updateLifeTimeout = 0, updateLifeTimeoutMax = 5;
 
@@ -63,28 +63,14 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
             oldLampSupply = null;
         } else {
             Coordonate myCoord = lamp.sixNode.coordonate;
-            LampSupplyElement.PowerSupplyChannelHandle best = null;
-            float bestDistance = 10000;
-            List<LampSupplyElement.PowerSupplyChannelHandle> list = LampSupplyElement.channelMap.get(lamp.channel);
-            if (list != null) {
-                for (LampSupplyElement.PowerSupplyChannelHandle s : list) {
-                    if (s.element.isBurnt()) continue; // out of the simulation; its powerLoad is stale
-                    // 26.x: a supply that isn't simulated (removed without its destroy, e.g. /setblock, or frozen by
-                    // Stasis Delvers) would win as the nearest and leave its channel OFF for good (AdventurAgent)
-                    if (s.element.sixNode == null || !mods.eln.transparentnode.cord.CordSupport.active(s.element) || s.element.sixNode.coordonate.dimention != myCoord.dimention) continue;
-                    float distance = (float) s.element.sixNode.coordonate.trueDistanceTo(myCoord);
-                    if (distance < bestDistance && distance <= s.element.getRange()) {
-                        bestDistance = distance;
-                        best = s;
-                    }
-                }
-            }
-            if (best != null && best.element.getChannelState(best.id)) {
+            mods.eln.utility.WirelessPowerHandle best = mods.eln.utility.WirelessPowerChannels.INSTANCE.nearest(lamp.channel,myCoord);
+            if (best != null && best.getElement().getChannelState(best.getId())) {
                 double resistance = lamp.getWirelessResistance();
-                if (Double.isFinite(resistance) && resistance > 0) best.element.addToRp(resistance);
-                lamp.positiveLoad.state = best.element.powerLoad.state;
-                oldLampSupply = best.element;
+                mods.eln.utility.WirelessLoadDemand.INSTANCE.report(lamp,best,resistance);
+                lamp.positiveLoad.state = best.getElement().getPowerLoad().state;
+                oldLampSupply = best.getElement().getOwner();
             } else {
+                mods.eln.utility.WirelessLoadDemand.INSTANCE.report(lamp,null,Double.NaN);
                 lamp.positiveLoad.state = 0;
                 oldLampSupply = null;
             }

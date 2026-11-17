@@ -9,6 +9,22 @@ import java.io.*
 
 /** Cached terrain-following mesh; drawing never advances simulation or paid ownership. */
 class CordDisplay {
+    companion object {
+        /** A carried appliance has no block renderer: its source draws the loose held lead. */
+        @JvmStatic fun drawHeld(world: Level?,pos: BlockPos,id: java.util.UUID?=null) {
+            if(world==null)return
+            val origin=Vec3.atCenterOf(pos)
+            val dimension=mods.eln.misc.Coordonate(pos,world).dimention
+            for(player in world.players()) {
+                val anchor=CordInteraction.heldAnchor(player.mainHandItem) ?: continue
+                if(anchor.pos!=pos || anchor.dimension!=dimension || id!=null && anchor.id!=id || player.distanceToSqr(origin)>100.0)continue
+                val start=origin.add(CordGeometry.world(anchor.front,CordGeometry.tip(anchor.socket,anchor.horizontal,anchor.strip,anchor.recessed,anchor.cabinet)))
+                val end=player.position().add(.2,.8,.2)
+                CordPath.draw(CordPath.socketSamples(start,end,anchor.front,anchor.cabinet) { x,z,y->CordPath.floor(world,x,z,y,pos) },origin)
+            }
+        }
+    }
+
     var endpoint: BlockPos?=null;private set
     var front=Direction.ZP;private set
     var rating=CordRating.V120;private set

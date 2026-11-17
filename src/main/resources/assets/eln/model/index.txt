@@ -343,3 +343,4 @@ industrialceilingfan/industrialceilingfan.obj
 modernceilingfan/modernceilingfan.obj
 patiotropicalfan/patiotropicalfan.obj
 outdoormotionlight/outdoormotionlight.obj
+twelvecircuitpanel/twelvecircuitpanel.obj

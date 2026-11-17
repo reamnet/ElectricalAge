@@ -16,6 +16,7 @@ final class ClientScreens {
         ElnScreens.register(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,mods.eln.transparentnode.utilitylight.StepDownScreen::new);
         ElnScreens.register(mods.eln.utility.DistributionPoleDescriptor.class,mods.eln.utility.DistributionPoleScreen::new);
         ElnScreens.register(mods.eln.utility.HouseServiceDescriptor.class, mods.eln.utility.HouseServiceScreen::new);
+        ElnScreens.register(mods.eln.utility.BreakerPanelDescriptor.class, mods.eln.utility.BreakerPanelScreen::new);
         ElnScreens.register(mods.eln.transparentnode.industrial.PadTransformerDescriptor.class, mods.eln.transparentnode.industrial.PadTransformerScreen::new);
         ElnScreens.register(mods.eln.transparentnode.industrial.MotorDriveDescriptor.class,mods.eln.transparentnode.industrial.MotorDriveScreen::new);
         ElnScreens.register(mods.eln.transparentnode.industrial.ScadaDescriptor.class,mods.eln.transparentnode.industrial.ScadaScreen::new);

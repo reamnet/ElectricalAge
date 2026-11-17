@@ -336,6 +336,13 @@ public class LampSocketElement extends SixNodeElement {
     public void destroy(ServerPlayer entityPlayer) {
         super.destroy(entityPlayer);
         lampProcess.destructor();
+        mods.eln.utility.WirelessLoadDemand.INSTANCE.disconnectOwner(this);
+    }
+
+    @Override
+    public void unload() {
+        super.unload();
+        mods.eln.utility.WirelessLoadDemand.INSTANCE.disconnectOwner(this);
     }
 
     void setIsConnectedToLampSupply(boolean value) {

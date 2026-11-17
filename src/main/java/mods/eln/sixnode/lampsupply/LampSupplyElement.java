@@ -260,12 +260,14 @@ public class LampSupplyElement extends SixNodeElement {
     public void destroy(ServerPlayer entityPlayer) {
         super.destroy(entityPlayer);
         unregister();
+        mods.eln.utility.WirelessPowerChannels.disconnectOwner(this);
     }
 
     @Override
     public void unload() {
         super.unload();
         unregister();
+        mods.eln.utility.WirelessPowerChannels.disconnectOwner(this);
     }
 
     void unregister() {

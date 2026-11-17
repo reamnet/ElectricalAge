@@ -7,7 +7,9 @@ import mods.eln.node.transparent.*
 import mods.eln.sim.IProcess
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.sixnode.lampsupply.LampSupplyElement
+import mods.eln.utility.WirelessPowerChannels
+import mods.eln.utility.WirelessPowerHandle
+import mods.eln.utility.WirelessPowerSupply
 import mods.eln.transparentnode.cord.CordSupport
 import net.minecraft.nbt.CompoundTag
 import java.io.*
@@ -19,7 +21,8 @@ class StringLightsElement(node: TransparentNode,d: TransparentNodeDescriptor):Tr
     val input=NbtElectricalLoad("electricalLoad").apply { setRs(.002) }
     val loadResistor=Resistor(input,null)
     private val wirelessLink=Resistor(null,null).apply { r=.002 }
-    private var supply: LampSupplyElement?=null
+    private var supply: WirelessPowerSupply?=null
+    private var supplyHandle:WirelessPowerHandle?=null
     val wirelessConnected get()=supply!=null
     var powerChannel="xmas";private set
     var nominalVolts=120;private set
@@ -33,20 +36,16 @@ class StringLightsElement(node: TransparentNode,d: TransparentNodeDescriptor):Tr
     private fun configure() { loadResistor.r=nominalVolts.toDouble()*nominalVolts/15.0 }
     private fun unplugWireless() {
         if(supply!=null)Eln.simulator.removeElectricalComponent(wirelessLink)
-        wirelessLink.connectTo(null,null);supply=null;wirelessReceivers.remove(this)
+        wirelessLink.connectTo(null,null);supply=null;supplyHandle=null;wirelessReceivers.remove(this);WirelessPowerChannels.untrackBridge(this)
     }
     private fun tick() {
         val here=node.coordonate
-        val nearest=if(CordSupport.active(this) && machineCord()?.cord?.plugged!=true)
-            LampSupplyElement.channelMap[powerChannel]?.asSequence()?.filter {
-                val e=it.element
-                CordSupport.active(e) && e.sixNode.coordonate.dimention==here.dimention && e.sixNode.coordonate.trueDistanceTo(here)<=e.range
-            }?.minByOrNull { it.element.sixNode.coordonate.trueDistanceTo(here) } else null
+        val nearest=if(CordSupport.active(this) && machineCord()?.cord?.plugged!=true)WirelessPowerChannels.nearest(powerChannel,here) else null
         // Source chooses the nearest handle first; an OFF near channel blocks farther supplies.
         val next=nearest?.takeIf {it.element.getChannelState(it.id)}?.element
-        if(next!==supply) {
+        if(nearest!==supplyHandle || next!==supply) {
             unplugWireless()
-            if(next!=null) { supply=next;wirelessLink.connectTo(next.powerLoad,input);Eln.simulator.addElectricalComponent(wirelessLink);wirelessReceivers.add(this) }
+            if(next!=null && nearest!=null) { supply=next;supplyHandle=nearest;wirelessLink.connectTo(next.powerLoad,input);Eln.simulator.addElectricalComponent(wirelessLink);wirelessReceivers.add(this);WirelessPowerChannels.trackBridge(this,next.owner,::unplugWireless) }
             needPublish()
         }
         val ratio=kotlin.math.abs(input.u)/nominalVolts
@@ -88,7 +87,7 @@ class StringLightsElement(node: TransparentNode,d: TransparentNodeDescriptor):Tr
         private val wirelessReceivers=java.util.Collections.newSetFromMap(java.util.IdentityHashMap<StringLightsElement,Boolean>())
         /** Remove both registration and pin adjacency before a supply leaves its solver system. */
         @JvmStatic fun disconnectSupply(owner: Any) {
-            wirelessReceivers.filter {it.supply===owner}.toList().forEach {
+            wirelessReceivers.filter {it.supply?.owner===owner}.toList().forEach {
                 it.unplugWireless();it.input.state=0.0;it.light=0;it.node.lightValue=0;it.needPublish()
             }
         }

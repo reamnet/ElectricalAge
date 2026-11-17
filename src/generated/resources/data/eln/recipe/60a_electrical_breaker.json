@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:overheating_protection",
+    "c": "eln:overvoltage_protection",
+    "r": "eln:copper_6_awg_cable_600v"
+  },
+  "pattern": [
+    "crC"
+  ],
+  "result": {
+    "id": "eln:electrical_breaker_60a"
+  }
+}

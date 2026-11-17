@@ -70,7 +70,7 @@ public class SixNodeItem extends Item implements IDescriptorItem {
         if (utility!=null && (ctx.getItemInHand().getCount()!=1 || utility.getRemainingLengthMeters(ctx.getItemInHand())<1.0)) return InteractionResult.FAIL;
         boolean ok = placeAt(ctx.getItemInHand(), ctx.getPlayer(), world, pos, direction,
             new double[]{h.x - pos.getX(), h.y - pos.getY(), h.z - pos.getZ()});
-        if (ok && ctx.getPlayer() != null && !ctx.getPlayer().isCreative()) {
+        if (ok && ctx.getPlayer() != null && (!ctx.getPlayer().isCreative() || (mods.eln.generic.ItemNbt.get(ctx.getItemInHand()) != null && mods.eln.generic.ItemNbt.get(ctx.getItemInHand()).contains("carriedAppliance")))) {
             if(utility!=null) utility.consume(ctx.getItemInHand(),1.0); else ctx.getItemInHand().shrink(1);
         }
         if (ok && ctx.getPlayer() != null) LAST_PLACED.put(ctx.getPlayer().getUUID(), new Placed(pos, world.getGameTime()));

@@ -1,5 +1,32 @@
 # Handoff — lamp completion and review since bb962e1
 
+## Active requested systems continuation
+
+User request: finish the12-circuit panel, road vehicles with their240V100A
+station/plug-in lead, fire alarms, and portable carrying where supported.
+Panel/carrying slice is implemented; see `breaker-panel.md`, `portable-carry.md`
+and `panel-carry-validation.json`. All962 ForkPatch cases pass, then58 targeted
+cases pass after the voxel-preservation guard and live-scene helper. Root698
+pass/3 unchanged skips; CAD15/15. Datagen repeats with zero writes;1055 import
+entries pass. Golden746 retains all714 old exact assertions, adding32 identities/
+menus. Earlier unfiltered1424-case run exposed8 non-golden issues; passing
+subsequent ForkPatch tests cover their fixes. Final unfiltered rerun remains due.
+
+Next: road vehicles/charger/lead and seven fire alarms are NOT yet registered.
+Prepared alarm source translations are in `/tmp/eln-firealarm-slice` outside the
+build tree; review before copying. Source remains pinned/read-only. The previous
+Luna worker hit its usage limit and is no longer running. Root continues directly.
+
+Live GUI is pending. RealDISPLAY`:0` works through `tools/mctest/mctest`; do not
+attemptXvfb in this environment. `/elnlab panelcarry <pos>` constructs paid native
+panel/UPS/table-lamp hardware; `/elnlab devicemenu7988` opens the nearest panel
+from a player context. Use a private new server world; preserve existing worlds.
+Do not compile while client/test JVMs use the shared build outputs. The previously
+certified lamp-only jar is stale for these new changes; rebuild/certify at the end.
+
+The standalone test-tooling commit`dd3cbee2` has been pushed to the existing PR
+branch as reamnet. Preserve draftPR1 title/base and all earlier commits.
+
 User requested wrapping up and pushing all work on 2026-11-16. Continue in draft
 PR #1 on `reamnet/ElectricalAge`, branch `port/forkpatch-3.0.77-26.3`, base
 `ports/26.3`. Keep PR title/base/draft unchanged. Use the GitHub connector as

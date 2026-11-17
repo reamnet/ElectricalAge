@@ -273,6 +273,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
             sixNodeElementDescriptor.getGhostGroup(side, front).erase(sixNode.coordonate);
         }
 
+        if (mods.eln.transparentnode.cord.CordSupport.moving(this)) return;
         sixNode.dropInventory(getInventory());
         //	getCoordonate().world().getWorldInfo().
         // A burnt device is slag: its contents drop, the device itself doesn't.

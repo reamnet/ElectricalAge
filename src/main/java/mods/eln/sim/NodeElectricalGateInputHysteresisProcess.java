@@ -19,15 +19,17 @@ public abstract class NodeElectricalGateInputHysteresisProcess implements IProce
 
     protected abstract void setOutput(boolean value);
 
+    protected double nominalVoltage() { return Eln.SVU; }
+
     @Override
     public void process(double time) {
         if (state) {
-            if (gate.getU() < Eln.SVU * 0.3) {
+            if (gate.getU() < nominalVoltage() * 0.3) {
                 state = false;
                 setOutput(false);
             } else setOutput(true);
         } else {
-            if (gate.getU() > Eln.SVU * 0.7) {
+            if (gate.getU() > nominalVoltage() * 0.7) {
                 state = true;
                 setOutput(true);
             } else setOutput(false);

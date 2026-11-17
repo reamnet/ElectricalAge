@@ -16,7 +16,7 @@ class CordDescriptor(name: String,val rating: CordRating): GenericItemUsingDamag
     }
     override fun addInformation(stack: ItemStack?,player: Player?,lines: MutableList<Any?>,advanced: Boolean) {
         lines.add(tr("%1$: %2$ V, %3$ A nominal; 8 block reach",rating.plug,rating.volts.toInt(),rating.amps))
-        lines.add(tr("Use on a matching outlet, then on a machine"));lines.add(tr("Sneak-use a cord to unplug"))
+        lines.add(tr("Use on a matching outlet, then on a machine"));lines.add(tr("Sneak-use a cord to unplug"));lines.add(tr("Sneak with an empty hand to carry a plugged portable appliance"))
     }
     override fun onItemUse(stack: ItemStack,player: Player,level: Level,x: Int,y: Int,z: Int,side: Int,hx: Float,hy: Float,hz: Float): Boolean {
         val pos=BlockPos(x,y,z);val hit=BlockHitResult(Vec3(x+hx.toDouble(),y+hy.toDouble(),z+hz.toDouble()),net.minecraft.core.Direction.from3DDataValue(side),pos,false)

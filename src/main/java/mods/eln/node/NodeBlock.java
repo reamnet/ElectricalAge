@@ -106,6 +106,8 @@ public abstract class NodeBlock extends Block implements EntityBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        var carried = mods.eln.transparentnode.cord.CordInteraction.carry(player, level, hit);
+        if (carried != InteractionResult.PASS) return carried;
         return activate(level, pos, player, hit);
     }
 

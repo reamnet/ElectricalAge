@@ -17,6 +17,7 @@ class UpsRender(entity: TransparentNodeEntity,descriptor: TransparentNodeDescrip
     override fun draw() {
         cabinet.draw(front,display)
         if(cabinet.compact) {
+            mods.eln.transparentnode.cord.CordDisplay.drawHeld(tileEntity.level,tileEntity.blockPos)
             for(i in 0..3)if(occupied and (1 shl i)!=0)mods.eln.transparentnode.cord.CompactSocketGeometry.plug(front,if(display.target==240.0)mods.eln.transparentnode.cord.CordRating.V240 else mods.eln.transparentnode.cord.CordRating.V120,i)
             return
         }

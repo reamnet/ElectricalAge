@@ -17,6 +17,7 @@ class OutletRender(tile: TransparentNodeEntity,d: TransparentNodeDescriptor): Tr
     var wallState=net.minecraft.world.level.block.Blocks.AIR.defaultBlockState();private set
     override fun networkUnserialize(s: DataInputStream) { super.networkUnserialize(s);id=UUID(s.readLong(),s.readLong());wireless=s.readBoolean();channel=s.readUTF();supplied=s.readBoolean();horizontal=s.readBoolean();sockets=s.readInt();volts=s.readDouble();amps=s.readDouble();wallState=net.minecraft.world.level.block.Block.stateById(s.readInt()) }
     override fun draw() {
+        CordDisplay.drawHeld(tileEntity.level,tileEntity.blockPos,id)
         if(!wallState.isAir) {
             mods.eln.gl.GL11.glPushMatrix()
             try {
@@ -30,6 +31,7 @@ class OutletRender(tile: TransparentNodeEntity,d: TransparentNodeDescriptor): Tr
             desc.draw(front,horizontal,sockets)
         }finally { mods.eln.gl.GL11.glPopMatrix() }
     }
+    override fun cameraDrawOptimisation()=false
     fun action(id: Int)=clientSendId(id.toByte())
     fun unplug(slot: Int)=clientSendInt(85.toByte(),slot)
     fun channel(value: String)=clientSendString(83.toByte(),value)

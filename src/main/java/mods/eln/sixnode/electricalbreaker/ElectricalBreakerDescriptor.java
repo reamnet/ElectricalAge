@@ -24,9 +24,16 @@ public class ElectricalBreakerDescriptor extends SixNodeDescriptor {
     private Obj3DPart led;
 
     float alphaOff, alphaOn, speed;
+    /** Hardware interrupt rating; positive infinity preserves the historic generic breaker. */
+    public final double currentLimit;
 
     public ElectricalBreakerDescriptor(String name, Obj3D obj) {
+        this(name, obj, Double.POSITIVE_INFINITY);
+    }
+
+    public ElectricalBreakerDescriptor(String name, Obj3D obj, double currentLimit) {
         super(name, ElectricalBreakerElement.class, null);
+        this.currentLimit = Double.isFinite(currentLimit) && currentLimit > 0 ? currentLimit : Double.POSITIVE_INFINITY;
         this.obj = obj;
         if (obj != null) {
             main = obj.getPart("case");
@@ -75,6 +82,7 @@ public class ElectricalBreakerDescriptor extends SixNodeDescriptor {
     public void addInformation(ItemStack itemStack, Player entityPlayer, List list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, (tr("Protects electrical components\nOpens contact if:\n  - Voltage exceeds a certain level\n- Current exceeds the cable limit").split("\n")));
+        if (Double.isFinite(currentLimit)) list.add(tr("Rated branch current: %1$ A", (int)currentLimit));
     }
 
     @Override
