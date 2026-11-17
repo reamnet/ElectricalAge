@@ -1,6 +1,6 @@
 {
   "parent": "eln:item/device_transparent",
   "textures": {
-    "particle": "eln:items/missing"
+    "particle": "eln:item/240_v_100_a_vehicle_charger"
   }
 }

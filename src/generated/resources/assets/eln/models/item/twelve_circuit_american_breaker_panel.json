@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "eln:items/missing"
+    "layer0": "eln:item/twelve_circuit_american_breaker_panel"
   }
 }
