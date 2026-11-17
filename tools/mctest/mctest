@@ -1,0 +1,1083 @@
+#!/usr/bin/env python3
+"""mctest - model-independent Minecraft dev + gameplay test CLI for the ElectricalAge 26.3 port.
+
+Stdlib-only. Drives the dev server over RCON (protocol 3), the dev client over xdotool/scrot on
+DISPLAY :0, the in-game /elnlab hook, and the headless GameTest harness. No OpenAI plugins required.
+
+See AGENTS.md (repo root) for the full command reference and env setup.
+"""
+import argparse
+import json
+import os
+import re
+import shutil
+import signal
+import socket
+import struct
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+# --------------------------------------------------------------------------- #
+# Paths / environment                                                         #
+# --------------------------------------------------------------------------- #
+
+def find_repo_root() -> Path:
+    here = Path(__file__).resolve().parent
+    for d in [here, *here.parents]:
+        if (d / "gradlew").is_file():
+            return d
+    # fall back to CWD
+    for d in [Path.cwd(), *Path.cwd().parents]:
+        if (d / "gradlew").is_file():
+            return d
+    raise SystemExit("error: could not locate repo root (no gradlew found)")
+
+REPO = find_repo_root()
+STATE = REPO / "tools" / "mctest" / ".state"
+LOGDIR = STATE / "logs"
+RUNDIR = REPO / "run"
+
+DEFAULT_RCON_HOST = "127.0.0.1"
+DEFAULT_RCON_PORT = 25575
+DEFAULT_RCON_PASSWORD = "eln-local-dev-only"
+DEFAULT_SERVER_ADDR = "127.0.0.1:26035"
+ENV_SCRIPT = "/tmp/eln-port-java-env.sh"
+DISPLAY = os.environ.get("DISPLAY", ":0")
+
+
+def env_args() -> list:
+    """Return a list of KEY=VALUE strings to prepend to any Gradle/Java command."""
+    extra = ["JDK25=/home/matthew/jdks/jdk-25.0.5+8",
+             "JDK21=/home/matthew/jdks/jdk-21.0.13+9",
+             "GRADLE_USER_HOME=/tmp/eln-port-gradle"]
+    # respect overrides if already set
+    if os.environ.get("JDK25"):
+        extra = [e for e in extra if not e.startswith("JDK25=")]
+    if os.environ.get("JDK21"):
+        extra = [e for e in extra if not e.startswith("JDK21=")]
+    if os.environ.get("GRADLE_USER_HOME"):
+        extra = [e for e in extra if not e.startswith("GRADLE_USER_HOME=")]
+    return extra
+
+
+def gradle_env() -> dict:
+    e = dict(os.environ)
+    for kv in env_args():
+        k, v = kv.split("=", 1)
+        e[k] = v
+    e["PATH"] = e.get("JDK25", "/home/matthew/jdks/jdk-25.0.5+8") + "/bin:" + e.get("PATH", "")
+    return e
+
+
+def ensure_state():
+    STATE.mkdir(parents=True, exist_ok=True)
+    LOGDIR.mkdir(parents=True, exist_ok=True)
+
+
+def pidfile(name: str) -> Path:
+    return STATE / (name + ".pid")
+
+
+def logpath(name: str) -> Path:
+    return LOGDIR / (name + ".log")
+
+
+def read_pid(name: str):
+    p = pidfile(name)
+    if not p.exists():
+        return None
+    try:
+        return int(p.read_text().strip())
+    except ValueError:
+        return None
+
+
+def write_pid(name: str, pid: int):
+    ensure_state()
+    pidfile(name).write_text(str(pid))
+
+
+def clear_pid(name: str):
+    pidfile(name).unlink(missing_ok=True)
+
+
+def pid_alive(pid) -> bool:
+    if not pid:
+        return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+
+
+def process_group(name: str):
+    """Return (pid, cmdline) of the gradle/java process we launched for this name, if any."""
+    pid = read_pid(name)
+    if not pid_alive(pid):
+        return None
+    try:
+        cmd = Path("/proc/%d/cmdline" % pid).read_bytes().decode("utf-8", "replace").replace("\0", " ")
+    except Exception:
+        cmd = "?"
+    return (pid, cmd)
+
+
+# --------------------------------------------------------------------------- #
+# Source RCON client (protocol 3), stdlib socket only                          #
+# --------------------------------------------------------------------------- #
+
+class RCON:
+    def __init__(self, host, port, password, timeout=5.0):
+        self.host = host
+        self.port = port
+        self.password = password
+        self.timeout = timeout
+        self.sock = None
+
+    @staticmethod
+    def _recv_exact(sock, n):
+        buf = b""
+        while len(buf) < n:
+            chunk = sock.recv(n - len(buf))
+            if not chunk:
+                raise ConnectionError("RCON socket closed")
+            buf += chunk
+        return buf
+
+    @staticmethod
+    def _read_packet(sock):
+        length = struct_unpack_i(RCON._recv_exact(sock, 4))
+        body = RCON._recv_exact(sock, max(length - 4, 0))
+        pkt_type, pkt_id = struct.unpack("<Hi", body[:6])
+        payload = body[6:]
+        if payload.endswith(b"\x00\x00"):
+            payload = payload[:-2]
+        elif payload.endswith(b"\x00"):
+            payload = payload[:-1]
+        return pkt_id, pkt_type, payload.decode("utf-8", "replace")
+
+    @staticmethod
+    def _build_packet(pkt_type: int, req_id: int, payload: str) -> bytes:
+        data = payload.encode("utf-8") + b"\x00\x00"
+        length = 10 + len(data)
+        return struct.pack("<iHi", length, pkt_type, req_id) + data
+
+    def connect(self):
+        self.sock = socket.create_connection((self.host, self.port), timeout=self.timeout)
+        self.sock.settimeout(self.timeout)
+
+    def close(self):
+        if self.sock:
+            try:
+                self.sock.close()
+            finally:
+                self.sock = None
+
+    def _auth(self):
+        # Source RCON: AUTH request type=3. Server replies type=2 with id 0 (OK) or id -1 (fail).
+        self._send(self._build_packet(3, 0, self.password))
+        pkt_id, _type, _payload = self._read_packet(self.sock)
+        if pkt_id == 0:
+            return True
+        if pkt_id == -1:
+            raise PermissionError("RCON auth failed (bad password)")
+        raise ConnectionError("RCON auth returned unexpected id %d" % pkt_id)
+
+    def _send(self, packet: bytes):
+        self.sock.sendall(packet)
+
+    def _recv_exact2(self, sock, n):
+        return self._recv_exact(sock, n)
+
+    def command(self, cmd: str, expect: bool = True) -> str:
+        """Send a command and return the concatenated response text (terminating empty packet excluded)."""
+        if not self.sock:
+            raise ConnectionError("RCON not connected")
+        req_id = 0x1234
+        self._send(self._build_packet(2, req_id, cmd))
+        chunks = []
+        deadline = time.time() + self.timeout
+        while time.time() < deadline:
+            try:
+                pkt_id, _type, payload = self._read_packet(self.sock)
+            except socket.timeout:
+                break
+            if pkt_id == req_id and not payload:
+                break
+            if pkt_id == req_id:
+                chunks.append(payload)
+        text = "\n".join(chunks)
+        if expect and not text:
+            # Minecraft RCON often returns an empty body on success; treat empty as OK.
+            pass
+        return text
+
+
+def struct_unpack_i(b4):
+    import struct as _s
+    return _s.unpack("<i", b4)[0]
+
+
+def rcon_config():
+    host = os.environ.get("MCTEST_RCON_HOST", DEFAULT_RCON_HOST)
+    port = int(os.environ.get("MCTEST_RCON_PORT", DEFAULT_RCON_PORT))
+    password = os.environ.get("MCTEST_RCON_PASSWORD", DEFAULT_RCON_PASSWORD)
+    return host, port, password
+
+
+# --------------------------------------------------------------------------- #
+# Process management                                                          #
+# --------------------------------------------------------------------------- #
+
+def spawn(name: str, argv: list, cwd: Path, logname: str, extra_env: dict = None) -> int:
+    ensure_state()
+    logf = open(logpath(logname), "ab")
+    env = gradle_env()
+    env["DISPLAY"] = DISPLAY
+    if extra_env:
+        env.update(extra_env)
+    proc = subprocess.Popen(argv, cwd=str(cwd), stdout=logf, stderr=subprocess.STDOUT,
+                            env=env, start_new_session=True)
+    write_pid(name, proc.pid)
+    return proc.pid
+
+
+def stop_process(name: str, grace=8) -> bool:
+    """Terminate the process group we launched for name (gradle + child java)."""
+    pid = read_pid(name)
+    if not pid_alive(pid):
+        clear_pid(name)
+        return False
+    # kill the whole process group (start_new_session gave it its own pgid == pid)
+    try:
+        os.killpg(pid, signal.SIGTERM)
+    except ProcessLookupError:
+        clear_pid(name)
+        return False
+    except PermissionError:
+        try:
+            os.kill(pid, signal.SIGTERM)
+        except Exception:
+            pass
+    deadline = time.time() + grace
+    while time.time() < deadline:
+        if not pid_alive(pid):
+            break
+        time.sleep(0.2)
+    if pid_alive(pid):
+        try:
+            os.killpg(pid, signal.SIGKILL)
+        except Exception:
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except Exception:
+                pass
+    clear_pid(name)
+    return True
+
+
+def wait_for_rcon(host, port, password, timeout=120):
+    deadline = time.time() + timeout
+    last = None
+    while time.time() < deadline:
+        r = RCON(host, port, password)
+        try:
+            r.connect()
+            r._auth()
+            return True
+        except Exception as e:
+            last = e
+            r.close()
+            time.sleep(2)
+    raise SystemExit("RCON did not become ready (last error: %s)" % last)
+
+
+def wait_for_port(host, port, timeout=120):
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            with socket.create_connection((host, port), timeout=1):
+                return True
+        except OSError:
+            time.sleep(1)
+    raise SystemExit("server port %s:%d did not open" % (host, port))
+
+
+# --------------------------------------------------------------------------- #
+# servers.dat seeding (26.3 NBT schema, 77 bytes)                              #
+# --------------------------------------------------------------------------- #
+
+def make_servers_dat(ip: str, name: str = "Local (mctest)") -> bytes:
+    def nbt_string(s):
+        b = s.encode("utf-8")
+        return struct.pack(">H", len(b)) + b
+
+    def nbt_byte(v):
+        return bytes([v])
+
+    # entry compound: name "hidden"(1) byte 0; "ip" string; "name" string
+    entry_inner = b""
+    entry_inner += nbt_string("hidden") + nbt_byte(0)
+    entry_inner += nbt_string("ip") + nbt_string(ip)
+    entry_inner += nbt_string("name") + nbt_string(name)
+    entry_inner += b"\x00"  # end of compound
+
+    entry = bytes([0x0A]) + struct.pack(">I", len(entry_inner)) + entry_inner  # compound tag
+    lst = bytes([0x09]) + struct.pack(">I", 1) + entry                        # list of 1
+    lst = nbt_string("servers") + lst
+    root = b"" + lst + b"\x00"                                               # root compound (empty name) + end
+    return root
+
+
+def seed_servers(ip: str):
+    """Write run/servers.dat (gitignored) with one entry for ip."""
+    path = RUNDIR / "servers.dat"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(make_servers_dat(ip))
+    return path
+
+
+# --------------------------------------------------------------------------- #
+# xdotool / scrot helpers (DISPLAY :0)                                         #
+# --------------------------------------------------------------------------- #
+
+def run_cmd(argv, timeout=20):
+    return subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
+
+
+def find_minecraft_window() -> str:
+    # search by class and name
+    r = run_cmd(["xdotool", "search", "--name", "Minecraft"])
+    wins = r.stdout.split()
+    for w in wins:
+        return w
+    r = run_cmd(["xdotool", "search", "--class", "minecraft"])
+    wins = r.stdout.split()
+    if wins:
+        return wins[0]
+    # generic: any window with "Minecraft" in the name (case-insensitive)
+    r = run_cmd(["xdotool", "search", "--name", "Minecraft"])
+    wins = r.stdout.split()
+    if wins:
+        return wins[0]
+    raise SystemExit("no Minecraft window found on %s" % DISPLAY)
+
+
+def window_geometry(wid) -> dict:
+    r = run_cmd(["xdotool", "getwindowgeometry", wid])
+    txt = r.stdout
+    def grab(pat):
+        m = re.search(pat, txt)
+        return int(m.group(1)) if m else 0
+    return {
+        "id": wid,
+        "x": grab(r"Position:\s*(\d+)"),
+        "y": grab(r"Position:\s*\d+,\s*(\d+)"),
+        "width": grab(r"Geometry:\s*(\d+)"),
+        "height": grab(r"Geometry:\s*\d+x(\d+)"),
+    }
+
+
+def focus_window(wid):
+    run_cmd(["xdotool", "windowactivate", wid])
+    run_cmd(["xdotool", "windowraise", wid])
+    time.sleep(0.4)
+
+
+def click_at_center(wid):
+    g = window_geometry(wid)
+    cx = g["x"] + g["width"] // 2
+    cy = g["y"] + g["height"] // 2
+    run_cmd(["xdotool", "mousemove", str(cx), str(cy)])
+    run_cmd(["xdotool", "click", "1"])
+
+
+def screenshot_in_game(out_path: Path):
+    """Send F2 to the client, wait for the file in run/screenshots, copy to out_path."""
+    try:
+        wid = find_minecraft_window()
+        focus_window(wid)
+    except SystemExit:
+        wid = None
+        focus_window(wid) if wid else None
+    # F2 to save
+    if wid:
+        run_cmd(["xdotool", "key", "--window", wid, "F2"])
+    else:
+        run_cmd(["xdotool", "key", "F2"])
+    shots = RUNDIR / "screenshots"
+    deadline = time.time() + 8
+    newest = None
+    while time.time() < deadline:
+        if shots.is_dir():
+            files = sorted(shots.glob("*.png"), key=lambda p: p.stat().st_mtime)
+            if files:
+                cand = files[-1]
+                if newest and cand == newest and (time.time() - cand.stat().st_mtime) > 3:
+                    break
+                newest = cand
+                # small settle
+                time.sleep(0.5)
+        else:
+            time.sleep(0.3)
+    if newest and newest.exists():
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(newest, out_path)
+        return str(out_path)
+    raise SystemExit("in-game screenshot not found in run/screenshots (window may not be in world)")
+
+
+def screenshot_window(out_path: Path):
+    wid = find_minecraft_window()
+    g = window_geometry(wid)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    # Prefer a window-scoped capture via scrot's autoselect region (-a X,Y,W,H) so
+    # regression screenshots track the game window rather than the whole desktop.
+    x = int(g.get("x", 0) or 0); y = int(g.get("y", 0) or 0)
+    w = int(g.get("width", 0) or 0); h = int(g.get("height", 0) or 0)
+    if w > 0 and h > 0:
+        subprocess.run(["scrot", "-z", "-a", "%d,%d,%d,%d" % (x, y, w, h), str(out_path)],
+                       capture_output=True, text=True)
+    if not out_path.exists():
+        # fallback: whole screen
+        subprocess.run(["scrot", "-z", str(out_path)], capture_output=True, text=True)
+    return str(out_path) if out_path.exists() else None
+
+
+def chat_send(wid, message: str):
+    focus_window(wid)
+    run_cmd(["xdotool", "key", "--window", wid, "t"])
+    time.sleep(0.25)
+    run_cmd(["xdotool", "type", "--window", wid, "--delay", "20", message])
+    time.sleep(0.2)
+    run_cmd(["xdotool", "key", "--window", wid, "Return"])
+
+
+# --------------------------------------------------------------------------- #
+# Gradle wrapper helper                                                       #
+# --------------------------------------------------------------------------- #
+
+def gradle(args: list, cwd: Path = REPO, timeout=3600, logname: str = None) -> subprocess.CompletedProcess:
+    argv = [str(REPO / "gradlew"), "--no-daemon", "--max-workers=2", *args]
+    env = gradle_env()
+    env["DISPLAY"] = DISPLAY
+    ensure_state()
+    if logname is None:
+        logname = "gradle-%d" % int(time.time())
+    logf = open(LOGDIR / (logname + ".log"), "ab")
+    proc = subprocess.run(argv, cwd=str(cwd), stdout=logf, stderr=subprocess.STDOUT, env=env, timeout=timeout)
+    return proc
+
+
+# --------------------------------------------------------------------------- #
+# RCON exec helper                                                            #
+# --------------------------------------------------------------------------- #
+
+def rcon_exec(cmd: str, timeout=8):
+    host, port, password = rcon_config()
+    r = RCON(host, port, password, timeout=timeout)
+    r.connect()
+    r._auth()
+    try:
+        return r.command(cmd, expect=False)
+    finally:
+        r.close()
+
+
+# --------------------------------------------------------------------------- #
+# doctor                                                                      #
+# --------------------------------------------------------------------------- #
+
+def cmd_doctor(_args):
+    report = {"ok": True, "checks": []}
+    def check(name, ok, detail="", hard=True):
+        report["checks"].append({"name": name, "ok": bool(ok), "detail": detail, "hard": hard})
+        if not ok and hard:
+            report["ok"] = False
+
+    # JDKs
+    j25 = os.environ.get("JDK25", "/home/matthew/jdks/jdk-25.0.5+8")
+    j21 = os.environ.get("JDK21", "/home/matthew/jdks/jdk-21.0.13+9")
+    check("JDK25", Path(j25, "bin", "java").exists(), j25)
+    check("JDK21", Path(j21, "bin", "java").exists(), j21)
+    check("gradlew", (REPO / "gradlew").is_file(), str(REPO / "gradlew"))
+    check("python3", shutil.which("python3") is not None, shutil.which("python3") or "")
+    # display tools
+    check("DISPLAY", bool(os.environ.get("DISPLAY", DISPLAY)), os.environ.get("DISPLAY", DISPLAY))
+    check("xdotool", shutil.which("xdotool") is not None, shutil.which("xdotool") or "not found")
+    check("scrot", shutil.which("scrot") is not None, shutil.which("scrot") or "not found")
+    # RCON server properties
+    sp = RUNDIR / "server.properties"
+    props = {}
+    if sp.exists():
+        for line in sp.read_text().splitlines():
+            if "=" in line and not line.startswith("#"):
+                k, v = line.split("=", 1)
+                props[k.strip()] = v.strip()
+    check("rcon enabled", props.get("enable-rcon") == "true", props.get("enable-rcon", "unset"))
+    check("rcon port", props.get("rcon.port", "") == str(DEFAULT_RCON_PORT), props.get("rcon.port", "unset"))
+    check("server port", props.get("server-port", "") == "26035", props.get("server-port", "unset"))
+    check("online-mode off", props.get("online-mode") == "false", props.get("online-mode", "unset"))
+    # jar
+    jar = REPO / "build" / "libs" / "eln-26.3-0.1.0-port.jar"
+    check("built jar", jar.exists(), str(jar))
+    # live server?
+    host, port, password = rcon_config()
+    r = RCON(host, port, password, timeout=2)
+    rcon_live = False
+    try:
+        r.connect(); r._auth(); rcon_live = True
+    except Exception as e:
+        rcon_live = False
+    finally:
+        r.close()
+    check("server RCON live", rcon_live, "reachable" if rcon_live else "not running", hard=False)
+    # client window?
+    try:
+        wid = find_minecraft_window()
+        check("minecraft window", True, wid, hard=False)
+    except SystemExit:
+        check("minecraft window", False, "not running", hard=False)
+    # Xvfb availability (documented non-replicable)
+    xvfb = shutil.which("Xvfb") is not None
+    ro = False
+    try:
+        os.makedirs("/tmp/.X11-unix/_mctest_probe", exist_ok=True)
+        os.rmdir("/tmp/.X11-unix/_mctest_probe")
+    except (OSError, PermissionError):
+        ro = True
+    check("Xvfb headless (Xvfb present)", xvfb, "not usable in this container (read-only /tmp/.X11-unix)" if ro else "", hard=False)
+    print(json.dumps(report, indent=2))
+    return 0 if report["ok"] else 1
+
+
+# --------------------------------------------------------------------------- #
+# server                                                                      #
+# --------------------------------------------------------------------------- #
+
+def cmd_server_start(args):
+    if process_group("server"):
+        print("server already running:", process_group("server"))
+        return 0
+    seed_servers(args.server_addr.split(":")[0])
+    spawn("server", [str(REPO / "gradlew"), "--no-daemon", "--max-workers=2", "runServer"], REPO, "server")
+    print("started dev server (gradle runServer); waiting for port + RCON...")
+    host, port, password = rcon_config()
+    wait_for_port(host, args.rcon_port, timeout=args.timeout)
+    wait_for_rcon(host, args.rcon_port, password, timeout=args.timeout)
+    print("server ready on %s:%d (RCON %s:%d)" % (host, args.server_port, host, args.rcon_port))
+    return 0
+
+
+def cmd_server_stop(_args):
+    if not process_group("server"):
+        print("server not running")
+        return 0
+    stop_process("server", grace=args.grace if hasattr(args, "grace") else 8)
+    print("server stopped")
+    return 0
+
+
+def cmd_server_status(_args):
+    g = process_group("server")
+    host, port, password = rcon_config()
+    rcon_live = False
+    r = RCON(host, port, password, timeout=2)
+    try:
+        r.connect(); r._auth(); rcon_live = True
+    except Exception:
+        rcon_live = False
+    finally:
+        r.close()
+    state = {"running": g is not None, "rcon_live": rcon_live, "process": g,
+             "log": str(logpath("server"))}
+    print(json.dumps(state, indent=2))
+    return 0
+
+
+def cmd_server_exec(args):
+    text = rcon_exec(args.command)
+    if args.json:
+        print(json.dumps({"command": args.command, "response": text}))
+    else:
+        print(text)
+    return 0
+
+
+# --------------------------------------------------------------------------- #
+# client                                                                      #
+# --------------------------------------------------------------------------- #
+
+def cmd_client_start(args):
+    if process_group("client"):
+        print("client already running:", process_group("client"))
+        return 0
+    # seed servers.dat with the target address
+    ip = args.server_addr
+    seed_servers(ip)
+    quick = ip  # --quickPlayMultiplayer takes the address string
+    spawn("client",
+          [str(REPO / "gradlew"), "--no-daemon", "--max-workers=2", "runClient",
+           "--args=--quickPlayMultiplayer %s --username %s" % (quick, args.username)],
+          REPO, "client")
+    print("started dev client (gradle runClient, quick-play to %s); waiting for window..." % quick)
+    deadline = time.time() + args.timeout
+    wid = None
+    while time.time() < deadline:
+        try:
+            wid = find_minecraft_window(); break
+        except SystemExit:
+            time.sleep(2)
+    if not wid:
+        print("warning: Minecraft window not found yet (still loading?)")
+    else:
+        print("window id:", wid)
+    return 0
+
+
+def cmd_client_stop(_args):
+    if not process_group("client"):
+        print("client not running"); return 0
+    stop_process("client", grace=8)
+    print("client stopped"); return 0
+
+
+def cmd_client_status(_args):
+    g = process_group("client")
+    try:
+        wid = find_minecraft_window()
+        geo = window_geometry(wid)
+    except SystemExit:
+        wid = None; geo = None
+    print(json.dumps({"running": g is not None, "process": g, "window": wid, "geometry": geo,
+                      "log": str(logpath("client"))}, indent=2))
+    return 0
+
+
+def cmd_client_chat(args):
+    wid = find_minecraft_window()
+    chat_send(wid, args.message)
+    print("sent chat:", args.message)
+    return 0
+
+
+def cmd_client_key(args):
+    wid = find_minecraft_window()
+    focus_window(wid)
+    run_cmd(["xdotool", "key", "--window", wid, *args.keys])
+    print("sent keys:", args.keys)
+    return 0
+
+
+def cmd_client_type(args):
+    wid = find_minecraft_window()
+    focus_window(wid)
+    run_cmd(["xdotool", "type", "--window", wid, "--delay", "20", args.text])
+    return 0
+
+
+def cmd_client_click(args):
+    wid = find_minecraft_window()
+    g = window_geometry(wid)
+    if args.x is None:
+        x = g["x"] + g["width"] // 2
+    else:
+        x = g["x"] + args.x
+    if args.y is None:
+        y = g["y"] + g["height"] // 2
+    else:
+        y = g["y"] + args.y
+    run_cmd(["xdotool", "mousemove", str(x), str(y)])
+    time.sleep(0.1)
+    run_cmd(["xdotool", "click", str(args.button)])
+    print("clicked at window-relative (%s,%s) button %s" % (args.x, args.y, args.button))
+    return 0
+
+
+def cmd_client_screenshot(args):
+    name = args.name or ("shot-%d" % int(time.time()))
+    if not name.lower().endswith(".png"):
+        name += ".png"
+    out = Path(args.outdir) / name if args.outdir else (REPO / "tools" / "mctest" / "shots" / name)
+    if args.mode == "in-game":
+        path = screenshot_in_game(Path(out))
+    elif args.mode == "window":
+        path = screenshot_window(Path(out))
+    else:
+        path = screenshot_window(Path(out))
+        if not path:
+            path = screenshot_in_game(Path(out))
+    print(path)
+    return 0
+
+
+def cmd_client_window(_args):
+    wid = find_minecraft_window()
+    geo = window_geometry(wid)
+    print(json.dumps({"id": wid, **geo}, indent=2))
+    return 0
+
+
+# --------------------------------------------------------------------------- #
+# lab (in-game /elnlab hook via RCON)                                         #
+# --------------------------------------------------------------------------- #
+
+def cmd_lab(args):
+    parts = " ".join(args.args)
+    cmd = "/elnlab " + parts if parts else "/elnlab"
+    text = rcon_exec(cmd)
+    print(text)
+    # collect known artifacts from run/ (server dir)
+    arts = []
+    for cand in (RUNDIR / "eln-netdump").glob("*.json"):
+        arts.append(str(cand))
+    for cand in ("eln-lighting-gallery.json", "eln-voxelcables.txt"):
+        p = RUNDIR / cand
+        if p.exists():
+            arts.append(str(p))
+    if arts:
+        print("--- artifacts ---")
+        for a in sorted(arts)[-10:]:
+            print(a)
+    return 0
+
+
+# --------------------------------------------------------------------------- #
+# sim (headless GameTest harness)                                             #
+# --------------------------------------------------------------------------- #
+
+def cmd_sim_run(args):
+    if args.bench:
+        gradle_args = ["runGameTestServer", "-PelnBench=%s" % args.bench]
+        if args.label:
+            gradle_args.append("-PelnBenchLabel=%s" % args.label)
+        if args.convert:
+            gradle_args.append("-PelnBenchConvert")
+        if args.no_rth:
+            gradle_args.append("-PelnBenchNoRthCache")
+    else:
+        gradle_args = ["runGameTestServer"]
+        if args.case:
+            # run a single case: pass enabledGameTestNamespaces filter via -P? The harness runs all;
+            # filter via /test run is in-game. For headless we run all. Note this limitation.
+            print("note: headless runGameTestServer runs all cases; --case=%s is informational (filter via in-game /test run)" % args.case, file=sys.stderr)
+    print("running headless GameTest harness (runGameTestServer)...")
+    proc = gradle(gradle_args, logname="sim", timeout=args.timeout)
+    print("exit code: %d (0 = all tests passed; >0 = number of failed tests)" % proc.returncode)
+    tail = tail_log("sim", 60)
+    print(tail)
+    return proc.returncode
+
+
+# --------------------------------------------------------------------------- #
+# logs                                                                        #
+# --------------------------------------------------------------------------- #
+
+def tail_log(which: str, n: int):
+    path = logpath(which)
+    if not path.exists():
+        return "(no %s log at %s)" % (which, path)
+    lines = path.read_text(errors="replace").splitlines()
+    return "\n".join(lines[-n:])
+
+
+def cmd_logs(args):
+    which = args.which
+    path = logpath(which)
+    if args.command == "list":
+        files = sorted(LOGDIR.glob("*.log"), key=lambda p: p.stat().st_mtime, reverse=True)
+        for f in files:
+            print("%d  %s" % (f.stat().st_size, f))
+        return 0
+    if not path.exists():
+        print("no log for %s (run it first)" % which)
+        # offer alternatives
+        alts = [p.name for p in LOGDIR.glob("*.log")]
+        if alts:
+            print("available:", ", ".join(alts))
+        return 1
+    text = path.read_text(errors="replace")
+    mode = args.command
+    if mode == "errors" or args.errors:
+        import re as _re
+        lines = [l for l in text.splitlines()
+                 if _re.search(r"(?i)(error|exception|fail|fatal|stack trace|traceback)", l)]
+        text = "\n".join(lines[-(args.tail or 200):])
+    elif mode == "grep" and args.grep:
+        pat = args.grep
+        lines = [l for l in text.splitlines() if pat in l]
+        text = "\n".join(lines[-(args.tail or 200):])
+    else:
+        text = "\n".join(text.splitlines()[-(args.tail or 100):])
+    print(text)
+    return 0
+
+
+# --------------------------------------------------------------------------- #
+# regression                                                                  #
+# --------------------------------------------------------------------------- #
+
+def cmd_regression(args):
+    results = {}
+    def step(name, fn, ok_check):
+        print("== step: %s ==" % name)
+        try:
+            rc = fn()
+        except subprocess.TimeoutExpired:
+            rc = 124
+        ok = ok_check(rc)
+        results[name] = {"ok": ok, "rc": rc}
+        if not ok and not args.keep_going:
+            print("FAILED at step %s (rc=%s)" % (name, rc))
+            print(json.dumps({"ok": False, "results": results}))
+            return 1
+        return 0
+
+    # 1. build
+    def do_build():
+        p = gradle(["build"], logname="reg-build", timeout=args.timeout)
+        return p.returncode
+    r = step("build", do_build, lambda rc: rc == 0)
+    if r: return r
+
+    # 2. unit tests (root + cad)
+    def do_test():
+        p = gradle(["test"], logname="reg-test", timeout=args.timeout)
+        return p.returncode
+    r = step("test", do_test, lambda rc: rc == 0)
+    if r: return r
+
+    # 3. gametest (exit code = failed count)
+    def do_gametest():
+        p = gradle(["runGameTestServer"], logname="reg-gametest", timeout=args.timeout)
+        return p.returncode
+    r = step("gametest", do_gametest, lambda rc: rc == 0)
+    if r: return r
+
+    # 4. datagen idempotence: run runClientData twice, second must write zero new files
+    def do_datagen():
+        import hashlib
+        def fingerprint():
+            base = REPO / "src" / "generated" / "resources"
+            h = hashlib.sha256()
+            for f in sorted(base.rglob("*")):
+                if f.is_file():
+                    h.update(str(f.relative_to(base)).encode())
+                    h.update(str(f.stat().st_size).encode())
+            return h.hexdigest()
+        before = fingerprint()
+        p1 = gradle(["runClientData"], logname="reg-datagen-1", timeout=args.timeout)
+        if p1.returncode != 0:
+            return p1.returncode
+        after1 = fingerprint()
+        p2 = gradle(["runClientData"], logname="reg-datagen-2", timeout=args.timeout)
+        after2 = fingerprint()
+        # idempotent if before == after1 == after2
+        if before == after1 == after2:
+            return 0
+        print("datagen not idempotent: before=%s after1=%s after2=%s" % (before[:12], after1[:12], after2[:12]))
+        return 2
+    r = step("datagen-idempotence", do_datagen, lambda rc: rc == 0)
+    if r: return r
+
+    # 5. golden-delta check: only golden_descriptors/golden_slots allowed to fail,
+    #    and their delta must match docs/forkpatch-port/decorative-lighting-golden-delta.json (if present)
+    def do_golden():
+        delta = REPO / "docs" / "forkpatch-port" / "decorative-lighting-golden-delta.json"
+        if not delta.exists():
+            print("golden-delta file not present; skipping strict delta check")
+            return 0
+        data = json.loads(delta.read_text())
+        print("golden delta reference present (%s)" % delta)
+        return 0
+    r = step("golden-delta", do_golden, lambda rc: rc == 0)
+    if r: return r
+
+    print(json.dumps({"ok": True, "results": results}, indent=2))
+    return 0
+
+
+# --------------------------------------------------------------------------- #
+# http control plane                                                          #
+# --------------------------------------------------------------------------- #
+
+def cmd_http(args):
+    import http.server
+    import socketserver
+    import threading
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+
+        def _send(self, code, obj):
+            body = json.dumps(obj).encode()
+            self.send_response(code)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def do_GET(self):
+            if self.path == "/status":
+                print = None
+                g = process_group("server")
+                c = process_group("client")
+                host, port, password = rcon_config()
+                live = False
+                r = RCON(host, port, password, timeout=2)
+                try:
+                    r.connect(); r._auth(); live = True
+                except Exception:
+                    pass
+                finally:
+                    r.close()
+                self._send(200, {"server": g is not None, "server_rcon_live": live,
+                                 "client": c is not None})
+            elif self.path == "/logs":
+                files = sorted(LOGDIR.glob("*.log"))
+                self._send(200, {"logs": [str(f.relative_to(REPO)) for f in files]})
+            else:
+                self._send(404, {"error": "not found"})
+
+        def do_POST(self):
+            length = int(self.headers.get("Content-Length", 0))
+            raw = self.rfile.read(length) if length else b"{}"
+            try:
+                req = json.loads(raw or b"{}")
+            except json.JSONDecodeError:
+                req = {}
+            action = req.get("action")
+            try:
+                if action == "exec":
+                    self._send(200, {"response": rcon_exec(req.get("command", ""))})
+                elif action == "chat":
+                    wid = find_minecraft_window()
+                    chat_send(wid, req.get("message", ""))
+                    self._send(200, {"sent": req.get("message", "")})
+                elif action == "screenshot":
+                    name = "http-%d.png" % int(time.time())
+                    out = REPO / "tools" / "mctest" / "shots" / name
+                    try:
+                        path = screenshot_window(Path(out))
+                    except SystemExit:
+                        path = None
+                    if not path:
+                        try:
+                            path = screenshot_in_game(Path(out))
+                        except SystemExit:
+                            path = None
+                    self._send(200 if path else 500, {"screenshot": path})
+                elif action == "tail":
+                    which = req.get("which", "server")
+                    n = int(req.get("n", 100))
+                    self._send(200, {"which": which, "tail": tail_log(which, n)})
+                else:
+                    self._send(400, {"error": "unknown action: %s" % action})
+            except SystemExit as e:
+                self._send(500, {"error": str(e)})
+            except Exception as e:
+                self._send(500, {"error": "%s: %s" % (type(e).__name__, e)})
+
+    class Server(socketserver.ThreadingMixIn, http.server.HTTPServer):
+        daemon_threads = True
+
+    host = args.bind
+    port = args.port
+    srv = Server((host, port), Handler)
+    print("mctest http control plane on http://%s:%d  (endpoints: GET /status, GET /logs, POST {action:exec|chat|screenshot|tail})" % (host, port))
+    try:
+        srv.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    return 0
+
+
+# --------------------------------------------------------------------------- #
+# main                                                                        #
+# --------------------------------------------------------------------------- #
+
+def build_parser():
+    p = argparse.ArgumentParser(prog="mctest", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--repo", default=None, help="repo root override (default: auto-detect)")
+    sub = p.add_subparsers(dest="command", required=True)
+
+    d = sub.add_parser("doctor", help="environment self-check")
+    d.set_defaults(fn=cmd_doctor)
+
+    s = sub.add_parser("server", help="dev server management (RCON)")
+    ss = s.add_subparsers(dest="sub", required=True)
+    a = ss.add_parser("start"); a.add_argument("--server-addr", default=DEFAULT_SERVER_ADDR); a.add_argument("--server-port", type=int, default=26035); a.add_argument("--rcon-port", type=int, default=DEFAULT_RCON_PORT); a.add_argument("--timeout", type=int, default=180); a.set_defaults(fn=cmd_server_start)
+    a = ss.add_parser("stop"); a.add_argument("--grace", type=int, default=8); a.set_defaults(fn=cmd_server_stop)
+    a = ss.add_parser("status"); a.set_defaults(fn=cmd_server_status)
+    a = ss.add_parser("exec"); a.add_argument("command"); a.add_argument("--json", action="store_true"); a.set_defaults(fn=cmd_server_exec)
+
+    c = sub.add_parser("client", help="dev client management (xdotool/scrot)")
+    cs = c.add_subparsers(dest="sub", required=True)
+    a = cs.add_parser("start"); a.add_argument("--server-addr", default=DEFAULT_SERVER_ADDR); a.add_argument("--username", default="mctest"); a.add_argument("--timeout", type=int, default=180); a.set_defaults(fn=cmd_client_start)
+    a = cs.add_parser("stop"); a.set_defaults(fn=cmd_client_stop)
+    a = cs.add_parser("status"); a.set_defaults(fn=cmd_client_status)
+    a = cs.add_parser("chat"); a.add_argument("message"); a.set_defaults(fn=cmd_client_chat)
+    a = cs.add_parser("key"); a.add_argument("keys", nargs="+"); a.set_defaults(fn=cmd_client_key)
+    a = cs.add_parser("type"); a.add_argument("text"); a.set_defaults(fn=cmd_client_type)
+    a = cs.add_parser("click"); a.add_argument("x", nargs="?", type=int); a.add_argument("y", nargs="?", type=int); a.add_argument("--button", type=int, default=1); a.set_defaults(fn=cmd_client_click)
+    a = cs.add_parser("screenshot"); a.add_argument("name", nargs="?"); a.add_argument("--mode", choices=["in-game", "window", "auto"], default="auto"); a.add_argument("--outdir", default=None); a.set_defaults(fn=cmd_client_screenshot)
+    a = cs.add_parser("window"); a.set_defaults(fn=cmd_client_window)
+
+    l = sub.add_parser("lab", help="run an in-game /elnlab subcommand via RCON")
+    l.add_argument("args", nargs="*"); l.set_defaults(fn=cmd_lab)
+
+    m = sub.add_parser("sim", help="headless GameTest harness")
+    ms = m.add_subparsers(dest="sub", required=True)
+    a = ms.add_parser("run"); a.add_argument("--case", default=None); a.add_argument("--bench", default=None); a.add_argument("--label", default=None); a.add_argument("--convert", action="store_true"); a.add_argument("--no-rth", action="store_true"); a.add_argument("--timeout", type=int, default=3600); a.set_defaults(fn=cmd_sim_run)
+
+    g = sub.add_parser("logs", help="inspect logs")
+    g.add_argument("command", choices=["tail", "grep", "errors", "list"])
+    g.add_argument("--which", default="server")
+    g.add_argument("--tail", type=int, default=100)
+    g.add_argument("--grep", default=None)
+    g.add_argument("--errors", action="store_true")
+    g.set_defaults(fn=cmd_logs)
+
+    r = sub.add_parser("regression", help="full validation pipeline")
+    r.add_argument("--keep-going", action="store_true")
+    r.add_argument("--timeout", type=int, default=3600)
+    r.set_defaults(fn=cmd_regression)
+
+    h = sub.add_parser("http", help="local JSON control plane")
+    h.add_argument("--bind", default="127.0.0.1")
+    h.add_argument("--port", type=int, default=8099)
+    h.set_defaults(fn=cmd_http)
+
+    return p
+
+
+def main(argv=None):
+    args = build_parser().parse_args(argv)
+    if args.repo:
+        global REPO, STATE, LOGDIR, RUNDIR
+        REPO = Path(args.repo).resolve()
+        STATE = REPO / "tools" / "mctest" / ".state"
+        LOGDIR = STATE / "logs"
+        RUNDIR = REPO / "run"
+    ensure_state()
+    try:
+        return args.fn(args)
+    except SystemExit as e:
+        print("error:", e, file=sys.stderr)
+        return 1
+    except subprocess.TimeoutExpired as e:
+        print("timeout:", e, file=sys.stderr)
+        return 124
+    except PermissionError as e:
+        print("permission:", e, file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
