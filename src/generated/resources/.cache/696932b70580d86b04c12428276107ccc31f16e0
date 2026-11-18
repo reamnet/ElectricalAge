@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T07:01:54.004511122	eln-global/EA models
+// 26.3	2026-11-18T07:23:59.761940509	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -1036,6 +1036,7 @@ ace404b358b0d51b5b4a4f727d7c989fd87e2d86 assets/eln/items/standing_drum_floor_la
 f5be8cbae972b0a222f2b97523926ae36187a761 assets/eln/items/steam_turbine.json
 d962359f623450ae3da651f15dc5ccf62eaef8d7 assets/eln/items/steamed_grains.json
 4b5c48f015dffce5825f1080ed1032614138c361 assets/eln/items/steel_roller_wheel.json
+a8d7aeed13e26cbe0b0bd025a35bc5992ad50d1e assets/eln/items/steel_turbine_blade.json
 7673b321165d9e22db59d2bf13173c3dfa78066e assets/eln/items/stone_heat_furnace.json
 7d064e0b50b6c4e863d7ee7687265b268d46f636 assets/eln/items/stone_wall_wash_light.json
 4f821cb69637a405c1e173be16701f19b1b9fdca assets/eln/items/streetlight.json
@@ -2299,6 +2300,7 @@ f6c487b99757d4b7b25d2e2b97c975bbc5062edb assets/eln/models/item/standby_gasoline
 8e835b5350ed3fe674a792114b186e8fb3906a03 assets/eln/models/item/steam_turbine_3d.json
 2ff2d01c2e4d5ec549f05ef4e371880bc4d8e3a2 assets/eln/models/item/steamed_grains.json
 9ebe18b7888f78d588b26838ab837c3ac81e984d assets/eln/models/item/steel_roller_wheel.json
+457cbef041b48856870af0f02d063e19b504dddb assets/eln/models/item/steel_turbine_blade.json
 215449c06675518ad1f5a2b5af777d6ae2514cc3 assets/eln/models/item/stone_heat_furnace.json
 0adeb700d126d3b2a069b69bcbb150612ee445c6 assets/eln/models/item/stone_heat_furnace_3d.json
 58651973ee7ec3b9dc96aac05184260937245561 assets/eln/models/item/stone_wall_wash_light.json

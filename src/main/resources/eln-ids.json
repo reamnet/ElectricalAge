@@ -1001,6 +1001,12 @@
   "kind": "shared_item_stack_one",
   "name": "iron_turbine_blade"
  },
+ "eln:shared_item_stack_one@1153": {
+  "descriptor": "TurbineBladeItem",
+  "display": "Steel Turbine Blade",
+  "kind": "shared_item_stack_one",
+  "name": "steel_turbine_blade"
+ },
  "eln:shared_item_stack_one@7488": {
   "descriptor": "TractionBattery",
   "display": "48 V 20 kWh Traction Battery",

@@ -63,7 +63,7 @@ class TurbineBladeItem(
     }
 
     companion object {
-        private val TURBINE_BLADE_TIERS = setOf("iron")
+        private val TURBINE_BLADE_TIERS = setOf("iron", "steel")
 
         fun getDescriptor(stack: ItemStack?): TurbineBladeItem? =
             stack?.let { GenericItemUsingDamageDescriptor.getDescriptor(it) as? TurbineBladeItem }

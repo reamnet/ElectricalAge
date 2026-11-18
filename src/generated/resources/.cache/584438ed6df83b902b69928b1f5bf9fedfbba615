@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T07:01:54.025508922	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-18T07:23:59.784885409	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -583,6 +583,8 @@ ca2f8a0f26291613f84a226e9e99d0312ac72383 data/eln/advancement/recipes/misc/steam
 7db10e9d7d6d8e99f8c777e97e56e3c62c8c6938 data/eln/advancement/recipes/misc/steam_turbine_3.json
 0590face2856286a25dda602fcc505727821f789 data/eln/advancement/recipes/misc/steam_turbine_4.json
 dbca10a656ed06ee0a3c054db8cf76844d00330e data/eln/advancement/recipes/misc/steel_roller_wheel.json
+313502c7c96384a9f0230521859794f05c2ea76b data/eln/advancement/recipes/misc/steel_turbine_blade.json
+e34026bdc3bb373cb647a871d42577cb8fe83c0a data/eln/advancement/recipes/misc/steel_turbine_blade_2.json
 64db41bd58f33e20ba7b082b4a155fa8b5980d4a data/eln/advancement/recipes/misc/stone_heat_furnace.json
 a19a8caed54d55a3ab33b8e7203b49cb5ff5fd29 data/eln/advancement/recipes/misc/stone_wall_wash_light.json
 6eb149d68fe73de4c46fa56fc4ad01e8303f8d49 data/eln/advancement/recipes/misc/street_light.json
@@ -1282,6 +1284,8 @@ d73dbee890e5b032106e12119ea9857489e8714d data/eln/recipe/steam_turbine.json
 25cb56c03da5f16893a1f4e8d1aed69997ce7d22 data/eln/recipe/steam_turbine_3.json
 6a5c4ea8dd1a012cdf9c341e34853e3dcd152e29 data/eln/recipe/steam_turbine_4.json
 52853901e24676cdd8805a4dfaa551feb33c6845 data/eln/recipe/steel_roller_wheel.json
+5539ad7de6505390df494f1991c7c5794d98067d data/eln/recipe/steel_turbine_blade.json
+2e9a43e540a08f3c9ab95c2e413cb95fedb071e5 data/eln/recipe/steel_turbine_blade_2.json
 3f4a24c3fb4412d21f208ff458e45f74a002f7ed data/eln/recipe/stone_heat_furnace.json
 e69929503a90fd9e24f807f26004e31a2490c0e2 data/eln/recipe/stone_wall_wash_light.json
 f4f9406ede6ea92137dd5caf98a20da982804e2e data/eln/recipe/street_light.json

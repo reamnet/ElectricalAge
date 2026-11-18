@@ -26,7 +26,7 @@ public final class ElnConfig {
     public static double sourceLampHours(int technology) {return SPEC.isLoaded()?SOURCE_LAMP_HOURS[technology].get():new double[]{24,12,168,48,672,96}[technology];}
     public static boolean sourceLampInfinite(int technology) {return SPEC.isLoaded()&&SOURCE_LAMP_INFINITE[technology].get();}
     // Turbine blades (ForkPatch 1.21.1 items.turbineBlades.<tier>): a turbine's consumable; condition wears with the
-    // fuel's temperature and corrosiveness (the turbine consumer is not ported yet). Iron tier now, steel next.
+    // fuel's temperature and corrosiveness (the turbine consumer is not ported yet). Iron + steel tiers ported 2026-11-18.
     private static final java.util.Map<String,ModConfigSpec.DoubleValue> TURBINE_BLADE_LIFE_HOURS = new java.util.HashMap<>();
     private static final java.util.Map<String,ModConfigSpec.BooleanValue> TURBINE_BLADE_INFINITE = new java.util.HashMap<>();
     private static final java.util.Map<String,Double> TURBINE_BLADE_DEFAULT_HOURS = new java.util.HashMap<>();
@@ -153,8 +153,8 @@ public final class ElnConfig {
         b.pop();b.pop();
         // turbine blades (ForkPatch 1.21.1 items.turbineBlades.<tier>; source TurbineBladeDescriptor.kt BladeConfigData)
         b.push("items");b.push("turbineBlades");
-        String[] bladeTiers={"iron"};
-        double[] bladeDefaultHours={10.0};
+        String[] bladeTiers={"iron","steel"};
+        double[] bladeDefaultHours={10.0,64.0};
         for(int i=0;i<bladeTiers.length;i++){
             b.push(bladeTiers[i]);
             TURBINE_BLADE_DEFAULT_HOURS.put(bladeTiers[i],bladeDefaultHours[i]);
