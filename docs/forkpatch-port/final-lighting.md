@@ -1,5 +1,7 @@
 # Final source lighting adapters
 
+Implementation: `d7fe3e98efa0480d20293fce686cedea4c3b9525` (subsequent evidence-only commits do not change production code).
+
 Source: `../ELN1.21.1ForkPatch` at `b7444a7b8a0c5e072b1fd35eed2b74a282c3348c` (read-only). Starting native checkpoint: `21b361c6afd0edea88b114eb4ecd2a485386a404`; fetch found no newer remote commit and the working tree was clean. This continuation finishes the remaining standalone fixture implementations and source bulb lifetime configuration. The earlier 108 decorative styles, 18 bulb identities, step-down unit, rated lamp supplies, pole lights and nine fan variants remain in place.
 
 ## Added fixtures
@@ -48,3 +50,5 @@ This machine uses OpenGL4.5/Mesa llvmpipe. Reducing the local client view distan
 ## Acceptance boundaries
 
 Implementation, native solver tests and catalog rendering do not establish universal pixel parity or hardware audio/GPU parity. Matching original assets, source coordinates and mesh geometry is evidence toward visual parity. Human side-by-side source/native views, real hardware sound/GPU checks, simultaneous multiplayer and broad world migration remain release-level acceptance work. General tools, unrelated cord consumers and the rest of the37 whole-fork workstreams are not closed by this lighting slice. Consult `port-completion-plan.md` for those tasks; historical fixture-not-registered notes elsewhere are superseded by this document once final validation is recorded.
+
+Current local JAR: `build/libs/eln-26.3-0.1.0-port.jar`, built after the final GUI fix with marker `d7fe3e98efa0`; SHA-256 `c0a7ad4d0adcc40ebb2bf9b0d2d22514b61da95efe55da9304e63112c4f57fab`. This is a development artifact, not a hardware/multiplayer-certified release. The post-commit `:jar runClientData` run passed and datagen wrote0 files.

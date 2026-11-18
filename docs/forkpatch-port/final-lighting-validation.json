@@ -91,5 +91,19 @@
     "report": "/tmp/eln-final-lighting-gui-followup.xml",
     "log": "/tmp/eln-final-lighting-gui-followup.log",
     "note": "Full regression above preceded these client-layout/operator-scene-only adjustments. Core production simulation, menus and identities are unchanged."
+  },
+  "implementationCommit": "d7fe3e98efa0480d20293fce686cedea4c3b9525",
+  "jar": {
+    "path": "build/libs/eln-26.3-0.1.0-port.jar",
+    "marker": "d7fe3e98efa0",
+    "sha256": "c0a7ad4d0adcc40ebb2bf9b0d2d22514b61da95efe55da9304e63112c4f57fab",
+    "builtAfterFinalGuiFix": true,
+    "certifiedRelease": false
+  },
+  "postCommitBuild": {
+    "tasks": ":jar runClientData",
+    "passed": true,
+    "datagenWritten": 0,
+    "log": "/tmp/eln-final-lighting-jar.log"
   }
 }
