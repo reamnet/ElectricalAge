@@ -443,6 +443,12 @@
   "kind": "shared_item",
   "name": "5a_lead_fuse"
  },
+ "eln:shared_item@6289": {
+  "descriptor": "ElectricalFuseDescriptor",
+  "display": "10A Lead Fuse",
+  "kind": "shared_item",
+  "name": "10a_lead_fuse"
+ },
  "eln:shared_item@64": {
   "descriptor": "HeatingCorpElement",
   "display": "Small 50V Copper Heating Corp",

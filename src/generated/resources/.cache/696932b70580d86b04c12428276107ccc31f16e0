@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T08:10:22.912319427	eln-global/EA models
+// 26.3	2026-11-18T08:31:43.214856547	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -253,6 +253,7 @@ a5fff8f4e9a12a6af2adfb791046a3a0fd834897 assets/eln/items/100_kw_pole_transforme
 482e37ae1969b6fbef45e24715a02b95108e71fe assets/eln/items/10_a_pole_fuse.json
 73216406e46509445ee90c4580145d0c996c319d assets/eln/items/10_kw_pole_transformer.json
 61d873cbec0fa1e9200f30544172a2cabc47c78e assets/eln/items/10a_diode.json
+8fe34e25298780475ab413de19cdc68a117e20dc assets/eln/items/10a_lead_fuse.json
 53eb7b3027b5896d6df445adc6978ba0f070db84 assets/eln/items/120_240v_secondary_street_light_pole.json
 022cd97edd26eee2580f0144bc368ee02f0955ff assets/eln/items/120_240v_secondary_utility_pole.json
 c1837dc81de7f8caad243857cef7c37df1a7e3a2 assets/eln/items/120_240v_service_weatherhead.json
@@ -1166,6 +1167,7 @@ a5ac578ee8f459ff5057195ce2b630f75ac6edbb assets/eln/models/item/10_kw_pole_trans
 622cd5c8a0e31893355819b8cbf9bb862f2f323c assets/eln/models/item/10_kw_pole_transformer_3d.json
 aa8b88dcb41aeb313a0f3f281ecdfdd5a22b78cc assets/eln/models/item/10a_diode.json
 bd23e2fc9f0a19326493f87f6a9c69ee2ae90984 assets/eln/models/item/10a_diode_3d.json
+545dc1ad8561074077d4e11ed76e1d2a30d05598 assets/eln/models/item/10a_lead_fuse.json
 397bf46c24431ad44475909bb1af88c666511d0b assets/eln/models/item/120_240v_secondary_street_light_pole.json
 a205911122edd0a8de0f9cc383d8239aff4f9f5d assets/eln/models/item/120_240v_secondary_street_light_pole_3d.json
 0796ce1a750afd5fdf348db4507d9fca487f270b assets/eln/models/item/120_240v_secondary_utility_pole.json

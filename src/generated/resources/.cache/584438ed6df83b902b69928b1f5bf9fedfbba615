@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T08:07:14.882717819	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-18T08:31:43.229395347	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -7,6 +7,7 @@ b2bfdcaca81904f8aebabbdd82b0e57f573870cb data/eln/advancement/recipes/misc/100a_
 60e102cb907fe6a28f445f2f5b3c9e066e68048a data/eln/advancement/recipes/misc/10_kw_pole_transformer.json
 e9b18790f61c5e60d17f49af5cad947638ed8e2b data/eln/advancement/recipes/misc/10a_diode.json
 d8e02837647b21511d2f06c5c65adb0bd279b3b3 data/eln/advancement/recipes/misc/10a_electrical_breaker.json
+8721c7b2b5d90b03cd0c6bb9487c04d53786dfe8 data/eln/advancement/recipes/misc/10a_lead_fuse.json
 bc0883fb89144b8ab5c4e44380700ad31e206b25 data/eln/advancement/recipes/misc/120_240v_secondary_utility_pole.json
 80754fa65d8fb60c74d8c661f51e2f9c9b8fa5fd data/eln/advancement/recipes/misc/120_240v_service_weatherhead.json
 3cfe081d056fd39ac427a25345a5fee5325575db data/eln/advancement/recipes/misc/120_240v_underground_service_handhole.json
@@ -709,6 +710,7 @@ f55afec4206959bc52edd68849f62b13b674934e data/eln/recipe/10_a_pole_fuse.json
 536966ac34935647873fe9154f02b9dba280e7b7 data/eln/recipe/10_kw_pole_transformer.json
 4f937d8d1c4645d4749a5fa22eaa93eeecbb3255 data/eln/recipe/10a_diode.json
 1a464ff473f856a6f1ff28c544e4f66446f4b4e5 data/eln/recipe/10a_electrical_breaker.json
+31d8d838550e1219fd1a5c09e653836d7e3ad3bc data/eln/recipe/10a_lead_fuse.json
 9c9830151c2bcebe0c2d7ca69a5f9b881c2ec6d2 data/eln/recipe/120_240v_secondary_utility_pole.json
 e7e7f17b3cd3ebaef4108ce705acb97295f8a143 data/eln/recipe/120_240v_service_weatherhead.json
 d8610a288173bdab9043ff395a048b46e0547dbb data/eln/recipe/120_240v_underground_service_handhole.json

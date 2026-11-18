@@ -403,6 +403,14 @@ public class Wp9aContent implements ElnContent {
             ElectricalFuseDescriptor desc = new ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 5.0);
             sharedItem.addElement(subId + (id << 6), desc);
         }
+        {
+            subId = 17;
+
+            name = TR_NAME(Type.NONE, "10A Lead Fuse");
+
+            ElectricalFuseDescriptor desc = new ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 10.0);
+            sharedItem.addElement(subId + (id << 6), desc);
+        }
 
     }
 

@@ -74,7 +74,7 @@ Each row retains the exact source model identifier so names can be traced withou
 | Source item/model | Finding |
 | --- | --- |
 | `100a_switch` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
-| `10a_lead_fuse` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
+| `10a_lead_fuse` | **Ported 2026-11-18** (ForkPatch 1.21.1): `eln:shared_item@6289` (subId 17, group 98 `sharedItem`); reuses the cable-fuse `ElectricalFuseDescriptor` with a new `currentLimit` parameter (10.0 A, `cableDescriptor` null) — heat R `getSmallRs()×2`, in-circuit R `getSmallRs()×1`; warm limit `Eln.cableWarmLimit` (130 °C), trips at 0.9× warm limit (WP16b factor 0.9 preserved over source 0.8); blown state reuses existing `BlownFuse` (no new blown item). Craft recipe `rcr` ×4 (rubber + Copper 16 AWG Cable 300V) exact vs source `CraftingRecipes.kt:2781-2782`; shared `electricalfuse` texture (byte-identical, md5 `199a8e8b…`, no new file). `:test` 704/704, `runClientData` idempotent (0 lines 2nd-run diff), GameTest 1552 (same 2 historical golden fails), live `summon` oracle resolves to "10A Lead Fuse" (5A regression + bogus-ID control → Air). See OVERNIGHT_PORT_PROGRESS.md 2026-11-18 10A entry. 15A/20A/30A/50A out of scope. |
 | `12.5_kv_cable_feed_insulator` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `12.5_kv_line_insulator` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `12v_ldo_regulator_chip` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
