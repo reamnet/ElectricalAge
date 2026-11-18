@@ -296,3 +296,93 @@ reusing the target's existing `sharedItem` registration pattern. Source baseline
 - Local commit for this session (no push): new local commit on top of `da075906` on branch
   `port/forkpatch-3.0.77-26.3`, subject `Port graphite_rod and 2x_graphite_rods from ForkPatch 1.21.1`;
   inspect with `git log --oneline -1`. External queue script handles pushing.
+
+## 13. Clutch plate port — Iron Clutch Plate + Copper Clutch Plate (2026-11-18, this session)
+
+Scope: port the two in-scope ForkPatch 1.21.1 `ClutchPlateItem` items (iron subId 54, copper subId 57),
+complete one before the other, reusing the target's `sharedItem` registration pattern (group 120
+`registerMiscItem`). Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPatch`); target start HEAD
+`63f67c15` (graphite commit).
+
+### Items implemented
+- **Iron Clutch Plate** — registry ID `eln:shared_item@7734` (group 120 `shared_item`, subId=54; 120×64+54=7734).
+  Ratings `(maxEF, minEF, maxDTF, minDTF, wearSpeed, explodes)` = `5120, 640, 640, 160, 0.0001, false` —
+  exact vs source.
+- **Copper Clutch Plate** — registry ID `eln:shared_item@7737` (group 120, subId=57; 120×64+57=7737).
+  Ratings = `8192, 4096, 1024, 512, 0.0003, false` — exact vs source.
+- Both confirmed absent in the target (unported-items inventory row "No matching current item
+  name/model found") before implementation.
+- Out of scope and NOT ported: `clutch` (machine), `clutch_pin`, `gold_clutch_plate`, `lead_clutch_plate`,
+  `coal_clutch_plate`; clutch machine/element classes.
+
+### Original source behavior (ForkPatch 1.21.1)
+- `src/main/kotlin/mods/eln/mechanical/Clutch.kt:38` — `ClutchPlateItem(name, maxEF, minEF, maxDTF,
+  minDTF, wearSpeed, explodes) : GenericItemUsingDamageDescriptor(name)`: wear tracked as a `wear` double
+  in item NBT; `maxStaticEnergyF` = Linear(0→maxEF, 1→minEF), `dynamicMaxTransferF` = Linear(0→maxDTF,
+  1→minDTF), `slipWearF` = Linear(0→0, 1000→wearSpeed); `addInformation` shows a Condition line
+  (New < 0.2 / Good < 0.5 / Used < 0.8 / End of life < 0.9 / Bad); `infiniteLifeEnabled` flag.
+  The plates are the consumable side of a clutch — actual wear/rating consumption happens in the (not
+  ported) clutch machine.
+- Registration `src/main/kotlin/mods/eln/registration/ItemRegistration.kt:1760` (iron), `:1773` (copper);
+  gold `:1767`, lead `:1779`, coal `:1785` out of scope.
+- Recipes `src/main/kotlin/mods/eln/craft/CraftingRecipes.kt:1897` (iron) / `:1899-1905` (copper):
+  plate center + 4 tungsten-dust cross; `'I'`/`'C'` = `plateIron`/`plateCopper`, `'t'` = config dict
+  `runtime.dictionary.tungstenDust` (default `dustElnTungsten`).
+- Textures `textures/items/{iron,copper}clutchplate.png`.
+
+### Registry IDs
+- `eln:shared_item@7734` = Iron Clutch Plate; `eln:shared_item@7737` = Copper Clutch Plate.
+  `eln-ids.json` entries: `{descriptor: ClutchPlateItem, display, kind: shared_item, name}`.
+
+### Implementation changes (target)
+- NEW `src/main/java/mods/eln/mechanical/ClutchPlateItem.kt` — parity with source `Clutch.kt:38`;
+  wear NBT via target `ItemNbt.edit/get` (26.3 CUSTOM_DATA component) in place of 1.12
+  `ItemStack.getTagCompound`/`setTagCompound`; Condition line + `infiniteLifeEnabled` preserved.
+- `src/main/java/mods/eln/registry/batch/Wp12aContent.java:988-995` — `registerMiscItem(120)` group:
+  subId 54 (iron) + subId 57 (copper) with exact source ratings.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java:2130-2144` — both craft recipes (identical shape);
+  ingredient refs use the target tag pattern `#eln:high_quality_plates/{iron,copper}` + `#eln:dusts/tungsten`
+  (deliberate target-pattern reuse; shape/behavior identical to source).
+- `src/main/resources/eln-ids.json` — added `@7734`/`@7737`.
+- Textures `src/main/resources/assets/eln/textures/items/{iron,copper}clutchplate.png` —
+  **byte-identical to source** (md5 `96feefcd…` / `dbc662bb…`).
+- Generated under `src/generated/resources/`: item + model JSON for both, `data/eln/recipe/
+  {iron,copper}_clutch_plate.json`, matching recipe advancements, and `item.eln.{iron,copper}_clutch_plate`
+  lang entries.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** main+test compiled during the `:test`/`runClientData` runs (prior agent).
+- **[tests-passed]** `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips) — identical to the graphite/dust
+  baselines; proves the mod constructs and both plates register (prior agent run).
+- **[datagen-verified]** `runClientData` idempotence proven: 3rd run → md5 diff of generated tree empty
+  (`/tmp/gen-before.md5` vs `/tmp/gen-after.md5`); item/model/recipe/advancement/lang JSONs present and
+  correct (prior agent runs).
+- **[live server-side oracle]** live MC 26.3 dev server via mctest RCON (this session):
+  `summon minecraft:item 0 -60 0 {Item:{id:"eln:iron_clutch_plate",count:1}}` → "Summoned new Iron Clutch
+  Plate"; same for copper → "Summoned new Copper Clutch Plate"; bogus `eln:totally_bogus_item_xyz` →
+  "Summoned new Air" (negative control). Both registry IDs + display names + item components resolve at
+  runtime. Probes cleaned up after the run.
+- **[NOT RUN — honestly labeled]** player-joined in-game crafting/wear/Condition validation NOT performed
+  (client-join blocked; see below). Plate behavior is item-level only — the clutch machine that consumes
+  wear/ratings is out of scope and not ported.
+
+### Remaining limitations
+- `clutch` machine, `clutch_pin`, gold/lead/coal clutch plates NOT ported (out of scope).
+- No player-joined in-game validation (crafting, wear, Condition toasts untested in-world).
+- No audio / multi-client / fresh-JVM save-recovery validation.
+
+### Known blockers
+- Client live-join is BLOCKED in this environment (3 approaches exhausted): (1) quickPlay arg injection —
+  ModDevGradle 2.0.148 rejects `--quickPlayMultiplayer` as a client program arg; leading-space workaround
+  passes Gradle but DevLaunch dies in `Main.main`; (2) blind title navigation — keyboard input IS delivered
+  (world list, singleplayer, `/seed` all worked) but the Multiplayer button was never positively reached
+  and screen capture is all-black (RenderPearl offscreen), so no visual oracle; (3) `/connect` from
+  singleplayer — command does not exist in 26.3 (no `Connect*` command class in the patched jar).
+  This is a test-infra limitation, documented only (not fixed — out of scope for this item port).
+- The AGENTS.md "12-circuit-breaker mod-load blocker" no longer reproduces in this window: `runServer`
+  boots cleanly and the server stayed up for the oracle.
+
+### Commit reference
+- Local commit for this session (no push): new commit on top of `63f67c15` on branch
+  `port/forkpatch-3.0.77-26.3`, subject `Port iron_clutch_plate and copper_clutch_plate from ForkPatch 1.21.1`;
+  inspect with `git log --oneline -1`. External queue script handles pushing.

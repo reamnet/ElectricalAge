@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T04:42:42.255987072	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-18T05:44:17.460511649	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -228,6 +228,7 @@ ebd2e52fa28eefa693c939e9e6dba6d33ba4c431 data/eln/advancement/recipes/misc/class
 083b94981390838b2cfffae637313aade05199db data/eln/advancement/recipes/misc/compact_side_entry_service_mast.json
 a7d17767a5dbba27b8cc1a46625e6e20c8a94f1d data/eln/advancement/recipes/misc/configurable_summing_unit.json
 bdec91984c6084d4e7819043b06effcf89f1b20c data/eln/advancement/recipes/misc/copper_cable.json
+5eb4ee8965014ee021608a06d43ef73b666fa2c3 data/eln/advancement/recipes/misc/copper_clutch_plate.json
 a4bc5c8521cddcafc66204673564d0f12cd4a473 data/eln/advancement/recipes/misc/copper_coil.json
 eae89276a850bb472186bce9bd10a536f029cc93 data/eln/advancement/recipes/misc/copper_thermal_cable.json
 2a3ff9592a14b04f39eec41e7a86d8a86bb54afb data/eln/advancement/recipes/misc/copper_thermal_cable_2.json
@@ -359,6 +360,7 @@ e56522c0a4cf8f74cc1f81dd8fc4fc347816cd4d data/eln/advancement/recipes/misc/indus
 40dc0062de491cfe55e13089ac9491ade847ad1b data/eln/advancement/recipes/misc/industrial_wall_pack_light.json
 9e19984f219b7b937adc1236acd5308dbf094877 data/eln/advancement/recipes/misc/industrial_yard_area_light.json
 23e7e1a3c03fa30b6de61225a6f5a79bb8c48b5e data/eln/advancement/recipes/misc/iron_cable.json
+9189bb3d24157f8df62700156499c111cff7a6a8 data/eln/advancement/recipes/misc/iron_clutch_plate.json
 36911902b55011201994746f5173dbebfd92709b data/eln/advancement/recipes/misc/iron_roller_wheel.json
 caa773201e3270ec7194fa6ad69acb7e3b4f7c13 data/eln/advancement/recipes/misc/iron_tank.json
 56fdbaa22c54cbd26384faeb1291429238fad4b9 data/eln/advancement/recipes/misc/jack_o_lantern_table_lamp.json
@@ -924,6 +926,7 @@ fca1fc277c3832899b240bf7f4a391e50b6d08a4 data/eln/recipe/classic_box_fan.json
 2c1b2da92db115ded11ac17d16c7c0345ea9dacd data/eln/recipe/compact_side_entry_service_mast.json
 e6d592a04e3a3543405fc3038e0c4d99be342217 data/eln/recipe/configurable_summing_unit.json
 59b6b7cda71498662dc4759287863f6959474cf3 data/eln/recipe/copper_cable.json
+22d1f636d41860d379fc37b96c23c1f9e80eafce data/eln/recipe/copper_clutch_plate.json
 b99487bebe5fb5db55128da9327d630d8b0b2ade data/eln/recipe/copper_coil.json
 8c328672129b25913e931b652ce23f22576e63d7 data/eln/recipe/copper_thermal_cable.json
 836168ec2234349f8e92493da4fb6e2578ce81bc data/eln/recipe/copper_thermal_cable_2.json
@@ -1055,6 +1058,7 @@ d7a54c89e137b00cf2d50b95480ddaf28591370f data/eln/recipe/high_voltage_switch.jso
 203c0207cebfd39025e7abb518675baeec996377 data/eln/recipe/industrial_wall_pack_light.json
 b9c14ea4923bf1b6a5c7a0634144213bad0ba188 data/eln/recipe/industrial_yard_area_light.json
 441236a83e9903671ee085ecd8705c19a822f2ac data/eln/recipe/iron_cable.json
+bbf51e77c7c9b4b39d8064b9befedd998f5a77b8 data/eln/recipe/iron_clutch_plate.json
 ff4c3c82db840e1dfc23de8ff0fe6bcd767ee0a0 data/eln/recipe/iron_roller_wheel.json
 4b9f9ef5fa11f713b714c8dd328c65558f315235 data/eln/recipe/iron_tank.json
 270fbc04b6a83192d63347c83a258f4c2ac20ee1 data/eln/recipe/jack_o_lantern_table_lamp.json

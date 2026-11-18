@@ -985,6 +985,13 @@ public class Wp12aContent implements ElnContent {
 
 
         sharedItem.addElement(53 + (id << 6), new CaseItemDescriptor(TR_NAME(Type.NONE, "Casing")));
+        // ForkPatch 1.21.1 ItemRegistration.kt:1758-1790 (iron subId 54, copper subId 57; ratings unchanged)
+        sharedItem.addElement(54 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
+            TR_NAME(Type.NONE, "Iron Clutch Plate"), 5120f, 640f, 640f, 160f, 0.0001f, false
+        ));
+        sharedItem.addElement(57 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
+            TR_NAME(Type.NONE, "Copper Clutch Plate"), 8192f, 4096f, 1024f, 512f, 0.0003f, false
+        ));
     
     }
 

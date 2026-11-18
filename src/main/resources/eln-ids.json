@@ -797,6 +797,18 @@
   "kind": "shared_item",
   "name": "casing"
  },
+ "eln:shared_item@7734": {
+  "descriptor": "ClutchPlateItem",
+  "display": "Iron Clutch Plate",
+  "kind": "shared_item",
+  "name": "iron_clutch_plate"
+ },
+ "eln:shared_item@7737": {
+  "descriptor": "ClutchPlateItem",
+  "display": "Copper Clutch Plate",
+  "kind": "shared_item",
+  "name": "copper_clutch_plate"
+ },
  "eln:shared_item@7872": {
   "descriptor": "WireScrapDescriptor",
   "display": "Wire Scraps",

@@ -2127,6 +2127,21 @@ public final class ElnRecipes extends ElnRecipesBase {
             "ppp",
             'p', "plateIron");
 
+        // ForkPatch 1.21.1: iron/copper clutch plates (tungsten dust ring + plate centre)
+        addRecipe(findItemStack("Iron Clutch Plate"),
+            " t ",
+            "tIt",
+            " t ",
+            'I', "plateIron",
+            't', "dustElnTungsten");
+
+        addRecipe(findItemStack("Copper Clutch Plate"),
+            " t ",
+            "tCt",
+            " t ",
+            'C', "plateCopper",
+            't', "dustElnTungsten");
+
     }
 
 
