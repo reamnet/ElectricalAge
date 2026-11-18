@@ -25,6 +25,14 @@ public final class ElnConfig {
 
     public static double sourceLampHours(int technology) {return SPEC.isLoaded()?SOURCE_LAMP_HOURS[technology].get():new double[]{24,12,168,48,672,96}[technology];}
     public static boolean sourceLampInfinite(int technology) {return SPEC.isLoaded()&&SOURCE_LAMP_INFINITE[technology].get();}
+    // Turbine blades (ForkPatch 1.21.1 items.turbineBlades.<tier>): a turbine's consumable; condition wears with the
+    // fuel's temperature and corrosiveness (the turbine consumer is not ported yet). Iron tier now, steel next.
+    private static final java.util.Map<String,ModConfigSpec.DoubleValue> TURBINE_BLADE_LIFE_HOURS = new java.util.HashMap<>();
+    private static final java.util.Map<String,ModConfigSpec.BooleanValue> TURBINE_BLADE_INFINITE = new java.util.HashMap<>();
+    private static final java.util.Map<String,Double> TURBINE_BLADE_DEFAULT_HOURS = new java.util.HashMap<>();
+
+    public static double turbineBladeLifeHours(String tier) {return SPEC.isLoaded()?TURBINE_BLADE_LIFE_HOURS.get(tier).get():TURBINE_BLADE_DEFAULT_HOURS.get(tier);}
+    public static boolean turbineBladeInfiniteLife(String tier) {return SPEC.isLoaded()&&TURBINE_BLADE_INFINITE.get(tier).get();}
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -140,6 +148,19 @@ public final class ElnConfig {
             b.push(technologies[i]);
             SOURCE_LAMP_HOURS[i]=b.comment("Source-rated bulb nominal lifetime in real hours; existing used bulbs retain absolute remaining hours.").defineInRange("nominalLifeInHours",defaults[i],1.0,8760.0);
             SOURCE_LAMP_INFINITE[i]=b.comment("Disable wear for this source bulb technology.").define("infiniteLifeEnabled",false);
+            b.pop();
+        }
+        b.pop();b.pop();
+        // turbine blades (ForkPatch 1.21.1 items.turbineBlades.<tier>; source TurbineBladeDescriptor.kt BladeConfigData)
+        b.push("items");b.push("turbineBlades");
+        String[] bladeTiers={"iron"};
+        double[] bladeDefaultHours={10.0};
+        for(int i=0;i<bladeTiers.length;i++){
+            b.push(bladeTiers[i]);
+            TURBINE_BLADE_DEFAULT_HOURS.put(bladeTiers[i],bladeDefaultHours[i]);
+            TURBINE_BLADE_LIFE_HOURS.put(bladeTiers[i],b.comment("Nominal lifetime (real hours) of this turbine blade tier at mild, clean fuel conditions;","must stay above 0 (ForkPatch: cast iron ~10 h as an early-game throwaway).")
+                .defineInRange("nominalLifeHours",bladeDefaultHours[i],0.001,87600.0));
+            TURBINE_BLADE_INFINITE.put(bladeTiers[i],b.comment("Disable wear for this turbine blade tier.").define("infiniteLifeEnabled",false));
             b.pop();
         }
         b.pop();b.pop();

@@ -386,3 +386,94 @@ complete one before the other, reusing the target's `sharedItem` registration pa
 - Local commit for this session (no push): new commit on top of `63f67c15` on branch
   `port/forkpatch-3.0.77-26.3`, subject `Port iron_clutch_plate and copper_clutch_plate from ForkPatch 1.21.1`;
   inspect with `git log --oneline -1`. External queue script handles pushing.
+
+## 14. Turbine blade port — Iron Turbine Blade (2026-11-18, this session)
+
+Scope: port the in-scope ForkPatch 1.21.1 turbine-blade item `iron_turbine_blade` (the consumable a
+large turbine runs on), complete before the steel tier. Reused the target's `sharedItemStackOne`
+registration pattern (group 18) and `ElnConfig`/datagen/texture conventions. Source baseline `b7444a7b`
+(read-only `../ELN1.21.1ForkPatch`); target start HEAD `bcaadf5e` (clutch commit).
+
+### Items implemented
+- **Iron Turbine Blade** — registry ID `eln:shared_item_stack_one@1152` (group 18 `sharedItemStackOne`,
+  subId=0; 18×64+0=1152). tierName=`iron`, temperatureResistance=0.8, corrosionResistance=0.8,
+  tierDescription=`"Suitable for mild, clean fuels"` — exact vs source `ItemRegistration.kt:1458-1468`.
+  Confirmed absent in the target (unported-items row "No matching current item name/model found") before
+  implementation.
+- Out of scope and NOT ported: `steel_turbine_blade` (follow-on commit), `alloy_turbine_blade`,
+  `tungsten_turbine_blade`, and the turbine/shaft/consumer machines. No target consumer reads the blade
+  condition yet — behavior is item-level only (same posture as the clutch plates vs the clutch machine).
+
+### Original source behavior (ForkPatch 1.21.1)
+- `src/main/kotlin/mods/eln/item/TurbineBladeDescriptor.kt` —
+  `TurbineBladeDescriptor(name, tierName, temperatureResistance, corrosionResistance, tierDescription) :
+  GenericItemUsingDamageDescriptorUpgrade(name)`: condition stored as a `condition` double in item NBT
+  (1.0 new → 0.0 broken; 1.0 default), survives inventory moves; `getDefaultNBT()` sets `condition: 1.0`;
+  `addInformation` shows `Nominal Lifetime: %h`, `Condition: New/Good/Used/Bad/End of life` (thresholds
+  1.0/0.5/0.15/0.01), and the tier line; `infiniteLifeEnabled` per tier. Nominal life from config
+  `items.turbineBlades.<tier>.nominalLifeHours` (iron default **10.0**, steel 64.0, alloy 400.0,
+  tungsten 2000.0) via `BladeConfigData`/`TurbineBladeLists`.
+- Registration `ItemRegistration.kt:1458` `registerTurbineBladeItems(18)` on `sharedItemStackOne` —
+  **not** `sharedItem`, source comment: "blades store durability in NBT, stacking would corrupt it".
+- Recipe `craft/CraftingRecipes.kt:2499` (iron): ` I ` / `IMI` / ` I `, iron ingots + Machine Block.
+- Texture `textures/items/ironturbineblade.png`.
+
+### Registry IDs
+- `eln:shared_item_stack_one@1152` = Iron Turbine Blade. `eln-ids.json` entry:
+  `{descriptor: TurbineBladeItem, display: "Iron Turbine Blade", kind: shared_item_stack_one,
+  name: iron_turbine_blade}`.
+
+### Implementation changes (target)
+- NEW `src/main/java/mods/eln/mechanical/TurbineBladeItem.kt` — parity with source
+  `TurbineBladeDescriptor.kt`; condition NBT via target `ItemNbt` (26.3 CUSTOM_DATA component) in place
+  of 1.12 `ItemStack.getTagCompound`/`setTagCompound`; tooltip + tier gating
+  (`TURBINE_BLADE_TIERS`) preserved. One Kotlin fix vs the prior agent's draft: the two `%$` format
+  strings need `\$` escapes (Kotlin string templates) — done this session; build then passed.
+- `src/main/java/mods/eln/ElnConfig.java` — new `items.turbineBlades.iron.{nominalLifeHours (10.0,
+  range 0.001–87600), infiniteLifeEnabled (false)}` + accessors `turbineBladeLifeHours(tier)` /
+  `turbineBladeInfiniteLife(tier)` + default-hours map. Tier arrays (`bladeTiers`/`bladeDefaultHours`)
+  are loops, so the steel commit appends `"steel"`/`64.0` without structural changes.
+- `src/main/java/mods/eln/registry/batch/Wp12aContent.java` — `registerTurbineBlade(18)` in
+  `preInit()`; `addElement(0 + (18 << 6), TurbineBladeItem(TR_NAME(Type.NONE, "Iron Turbine Blade"),
+  "iron", 0.8, 0.8, "Suitable for mild, clean fuels"))`.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` (`recipeMiscItem`) — iron craft recipe, exact shape
+  vs source; ingredient refs use the target pattern (`ingotIron`, `Machine Block`).
+- `src/main/resources/eln-ids.json` — added `@1152`.
+- Texture `src/main/resources/assets/eln/textures/items/ironturbineblade.png` — **byte-identical to
+  source** (sha256 `b0e1cfe3e545d0bb6171d319780508b20ef8c2a2d6aab5bdd91a1285958fa8b8`).
+- Generated under `src/generated/resources/`: item + model JSON, `data/eln/recipe/iron_turbine_blade.json`,
+  matching recipe advancement, `item.eln.iron_turbine_blade` lang entry.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `:build` BUILD SUCCESSFUL in 5m44s (`/tmp/eln-iron-build3.log`).
+- **[tests-passed]** `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips) — identical to the
+  dust/graphite/clutch baselines; proves the mod constructs and the blade registers.
+- **[datagen-verified]** `runClientData` ×2: first run generated the 5 new JSON/lang entries (expected);
+  second run md5 diff of the generated tree = **0 lines** (idempotent).
+- **[automated GameTest]** `runGameTestServer`: **1552 tests complete** in 7.56 min, exactly the 2
+  historical golden fails (`eln:golden_descriptors`, `eln:golden_slots`) — no new failures vs baseline
+  (`/tmp/eln-iron-gametest.log`).
+- **[env OK]** `mctest doctor` — all HARD checks pass.
+- **[live server-side oracle]** live MC 26.3 dev server (protocol 777) via mctest RCON (this session):
+  `summon minecraft:item 0 -60 0 {Item:{id:"eln:iron_turbine_blade",count:1}}` → "Summoned new Iron
+  Turbine Blade"; bogus `eln:totally_bogus_item_xyz` → "Summoned new Air" (negative control). Registry
+  ID + display name + item component resolve at runtime. Probes killed; server stopped.
+- **[NOT RUN — honestly labeled]** player-joined in-game crafting/wear/Condition validation NOT performed
+  (client-join blocked per the clutch entry; documented, not fixed). No consumer machine in target for
+  the wear path yet (out of scope).
+
+### Remaining limitations
+- `steel_turbine_blade` (follow-on commit), alloy/tungsten tiers, and all turbine/consumer machines NOT
+  ported (out of scope).
+- No player-joined in-game validation (crafting, wear, Condition toasts untested in-world).
+- No audio / multi-client / fresh-JVM save-recovery validation.
+
+### Known blockers
+- Client live-join remains BLOCKED in this environment (clutch-entry blockers unchanged); the AGENTS.md
+  "12-circuit-breaker mod-load blocker" still does not reproduce: `runServer` boots cleanly on MC 26.3
+  and the GameTest server ran all 1552 tests.
+
+### Commit reference
+- Local commit for this session (no push): new commit on top of `bcaadf5e` on branch
+  `port/forkpatch-3.0.77-26.3`, subject `Port iron_turbine_blade from ForkPatch 1.21.1`; inspect with
+  `git log --oneline -1`. External queue script handles pushing.

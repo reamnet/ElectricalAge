@@ -995,6 +995,12 @@
   "kind": "shared_item",
   "name": "fast_electrical_drill"
  },
+ "eln:shared_item_stack_one@1152": {
+  "descriptor": "TurbineBladeItem",
+  "display": "Iron Turbine Blade",
+  "kind": "shared_item_stack_one",
+  "name": "iron_turbine_blade"
+ },
  "eln:shared_item_stack_one@7488": {
   "descriptor": "TractionBattery",
   "display": "48 V 20 kWh Traction Battery",

@@ -2142,6 +2142,15 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', "plateCopper",
             't', "dustElnTungsten");
 
+        // ForkPatch 1.21.1: turbine blades (source CraftingRecipes.kt recipeTurbineBlades): iron tier now, steel next;
+        // alloy/tungsten tiers and the turbine consumers are out of scope.
+        addRecipe(findItemStack("Iron Turbine Blade"),
+            " I ",
+            "IMI",
+            " I ",
+            'I', "ingotIron",
+            'M', findItemStack("Machine Block"));
+
     }
 
 

@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T05:44:17.460511649	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-18T07:01:54.025508922	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -363,6 +363,7 @@ e56522c0a4cf8f74cc1f81dd8fc4fc347816cd4d data/eln/advancement/recipes/misc/indus
 9189bb3d24157f8df62700156499c111cff7a6a8 data/eln/advancement/recipes/misc/iron_clutch_plate.json
 36911902b55011201994746f5173dbebfd92709b data/eln/advancement/recipes/misc/iron_roller_wheel.json
 caa773201e3270ec7194fa6ad69acb7e3b4f7c13 data/eln/advancement/recipes/misc/iron_tank.json
+f8baf5f303d6915265cdf1416225d07e0b15a17c data/eln/advancement/recipes/misc/iron_turbine_blade.json
 56fdbaa22c54cbd26384faeb1291429238fad4b9 data/eln/advancement/recipes/misc/jack_o_lantern_table_lamp.json
 74456d14bc1de3c51ca612ecc6e5b67ec8d20996 data/eln/advancement/recipes/misc/jk_flip_flop_chip.json
 898d97ed54ccf9a038e21587c74511817611f4ce data/eln/advancement/recipes/misc/joint.json
@@ -1061,6 +1062,7 @@ b9c14ea4923bf1b6a5c7a0634144213bad0ba188 data/eln/recipe/industrial_yard_area_li
 bbf51e77c7c9b4b39d8064b9befedd998f5a77b8 data/eln/recipe/iron_clutch_plate.json
 ff4c3c82db840e1dfc23de8ff0fe6bcd767ee0a0 data/eln/recipe/iron_roller_wheel.json
 4b9f9ef5fa11f713b714c8dd328c65558f315235 data/eln/recipe/iron_tank.json
+550efaca697a3de631d23c9c8ca0924e48e8d3f6 data/eln/recipe/iron_turbine_blade.json
 270fbc04b6a83192d63347c83a258f4c2ac20ee1 data/eln/recipe/jack_o_lantern_table_lamp.json
 06a223dc3fee3d2f1bc82751b232279336ff98fb data/eln/recipe/jk_flip_flop_chip.json
 e6776792e8a688b133e4ee88f8ec981d5c41d46e data/eln/recipe/joint.json

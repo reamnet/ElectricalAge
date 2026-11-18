@@ -56,6 +56,7 @@ public class Wp12aContent implements ElnContent {
         registerPortableItem(122);
         registerFuelBurnerItem(124);
         registerArc(69);
+        registerTurbineBlade(18);
     }
 
     /** On EA's plates (Erisi's chat review: players' hammered plates didn't fit, and nothing said why; Baughn 2026-10-27). */
@@ -1092,6 +1093,16 @@ public class Wp12aContent implements ElnContent {
             sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
             // wiki (P4): Data.addResource(element.newItemStack());
         }
+    }
+
+    /** ForkPatch 1.21.1 turbine blades (source ItemRegistration.kt registerTurbineBladeItems(18)): the consumables a
+     * large turbine runs on; condition (1.0 new to 0.0 broken) wears with the fuel's temperature and corrosiveness.
+     * sharedItemStackOne, not sharedItem: blades store condition in NBT, stacking would corrupt it (source comment).
+     * Iron tier only so far (ForkPatch also has steel/alloy/tungsten tiers; the turbine consumers themselves are not ported).
+     */
+    public static void registerTurbineBlade(int id) {
+        sharedItemStackOne.addElement(0 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
+            TR_NAME(Type.NONE, "Iron Turbine Blade"), "iron", 0.8, 0.8, "Suitable for mild, clean fuels"));
     }
 
 }
