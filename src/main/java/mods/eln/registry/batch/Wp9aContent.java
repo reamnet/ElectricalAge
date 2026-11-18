@@ -395,7 +395,15 @@ public class Wp9aContent implements ElnContent {
             ElectricalFuseDescriptor.Companion.setBlownFuse(desc);
             sharedItem.addWithoutRegistry(subId + (id << 6), desc);
         }
-    
+        {
+            subId = 16;
+
+            name = TR_NAME(Type.NONE, "5A Lead Fuse");
+
+            ElectricalFuseDescriptor desc = new ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 5.0);
+            sharedItem.addElement(subId + (id << 6), desc);
+        }
+
     }
 
     public static void registerElectricalRelay(int id) {

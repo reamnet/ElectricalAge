@@ -81,7 +81,7 @@ class ElectricalFuseHolderDescriptor(name: String, obj: Obj3D) :
             mods.eln.sixnode.electricalcable.ElectricalCableDescriptor.voltageLevelColorOf(installedFuse.cableDescriptor).setGLColor()
             fuseType?.draw()
             GL11.glColor3f(1f, 1f, 1f)
-            if (installedFuse.cableDescriptor != null) {
+            if (installedFuse.isUsable()) {
                 fuseOk?.draw()
             }
             fuse?.draw()
@@ -118,17 +118,18 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
 
     private val fuseProcess = IProcess { time ->
         val I = aLoad.current
-        val cable = installedFuse?.cableDescriptor
-        if (cable == null) {
+        val fuse = installedFuse
+        if (fuse == null || !fuse.isUsable()) {
             T = 0.0
         } else {
-            val P = I * I * cable.electricalRs * 2.0 - T / cable.thermalRp * 0.9
+            val P = I * I * fuse.resistanceOhms() - T / fuse.thermalRp() * 0.9
 
-            T += P / cable.thermalC * time
+            T += P / fuse.thermalC() * time
         }
         // WP16: was `?: 0.0 * 0.8` (precedence: the factor never applied). WP16b (Baughn: 0.8 = 1.02 x Inom is too
         // twitchy): steady T = warm (I / 1.2 Inom)^2 / 0.9, so factor f trips at I = 1.2 sqrt(0.9 f) Inom; 0.9 -> 1.08 x.
-        if (T > (cable?.thermalWarmLimit ?: 0.0) * 0.9) {
+        // ForkPatch 5A/10A lead fuses trip with the same 0.9 factor (WP16b preserved over source 0.8).
+        if (T > (fuse?.warmLimitCelsius() ?: 0.0) * 0.9) {
             installedFuse = ElectricalFuseDescriptor.BlownFuse
         }
     }
@@ -207,7 +208,12 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
     }
 
     fun refreshSwitchResistor() {
-        installedFuse?.cableDescriptor?.applyTo(fuseResistor) ?: fuseResistor.ultraImpedance()
+        val fuse = installedFuse
+        if (fuse != null && fuse.isUsable()) {
+            fuse.cableDescriptor?.applyTo(fuseResistor) ?: fuseResistor.setR(ElnDeviceRegistry.getSmallRs())
+        } else {
+            fuseResistor.ultraImpedance()
+        }
     }
 
     override fun initialize() {

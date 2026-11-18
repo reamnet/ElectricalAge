@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T07:23:59.761940509	eln-global/EA models
+// 26.3	2026-11-18T08:10:22.912319427	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -375,6 +375,7 @@ d3f7ed94b2c39ca208659c9b74b19a8f69852e0c assets/eln/items/50v_tar_sand_separator
 5a4e111f8d5d642203067dd40d5df602b07a29b3 assets/eln/items/50v_tungsten_heating_corp.json
 9dc9ea2ce20f8d70da5568f96a0960921b137ecf assets/eln/items/50v_turbine.json
 abbb8b4c725a5637d224ad560590bf840014c4c9 assets/eln/items/5_a_pole_fuse.json
+52ded781e158d9c4c2b293f2f52067ac0736cd76 assets/eln/items/5a_lead_fuse.json
 ddcd7e407016acaee74129bda44386ea5763d2a5 assets/eln/items/64_kwh_lifepo4_battery_cabinet.json
 cbe3e732fa7fae540d2d689e79a215b94beff86a assets/eln/items/64_kwh_wall_mounted_lifepo4_battery.json
 d5c85a6a03f54fbaef949463cb44ec0224c83dd3 assets/eln/items/69_kv_steel_transmission_pole.json
@@ -1346,6 +1347,7 @@ d57623ca8b24a3b021b2354c5dc85ab339ae2ce5 assets/eln/models/item/50v_tar_sand_sep
 a67e6dcb8020e78ad48a94d67e13e7f5ad1c5fc6 assets/eln/models/item/50v_turbine.json
 07a35785a90399a7b9ffe27c076743c2e362451d assets/eln/models/item/50v_turbine_3d.json
 b3797e65a62fc6c36e1967d7f9e4097125ca249c assets/eln/models/item/5_a_pole_fuse.json
+545dc1ad8561074077d4e11ed76e1d2a30d05598 assets/eln/models/item/5a_lead_fuse.json
 2ae8773415f6fabaa356854383cbfa9af7af6c42 assets/eln/models/item/64_kwh_lifepo4_battery_cabinet.json
 35d60ff41495b03dc21cad1cb9407558b353ebb3 assets/eln/models/item/64_kwh_lifepo4_battery_cabinet_3d.json
 d4607723793134071f28e75d53faec62367d24f5 assets/eln/models/item/64_kwh_wall_mounted_lifepo4_battery.json

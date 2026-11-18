@@ -566,3 +566,110 @@ target start HEAD `33ffede4` (iron commit).
 - Local commit for this session (no push): new commit on top of `33ffede4` on branch
   `port/forkpatch-3.0.77-26.3`, subject `Port steel_turbine_blade from ForkPatch 1.21.1`; inspect with
   `git log --oneline -2`. External queue script handles pushing.
+
+## 16. Fuse port — 5A Lead Fuse (2026-11-18, this session)
+
+Scope: port the first assigned ForkPatch 1.21.1 current-limited fuse `5a_lead_fuse`; the 10A tier
+follows in the next commit (same descriptor change). Reused the existing cable-fuse
+`ElectricalFuseDescriptor` — the class already existed in the target for the four cable lead fuses;
+the new `currentLimit` parameter path is the only descriptor change, and the cable-fuse path is
+untouched. Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPatch`); target start HEAD
+`dda988ae` (steel-blade commit).
+
+### Items implemented
+- **5A Lead Fuse** — registry ID `eln:shared_item@6288` (group 98 `sharedItem`, subId=16;
+  98×64+16=6288). `currentLimit=5.0 A`, `cableDescriptor=null` — exact vs source
+  `SixNodeRegistration.kt:1641-1647`. Confirmed absent in the target (unported-items row "No
+  matching current item name/model found") before implementation.
+- Out of scope and NOT ported: `15a_lead_fuse`, `20a_lead_fuse`, `30a_lead_fuse`, `50a_lead_fuse`
+  (separate unported-items rows); source `creativeTab` assignment (no-op in the target) and source
+  `renderItem()` (removed in target, client rendering — not restored).
+
+### Original source behavior (ForkPatch 1.21.1)
+- Current-limited fuse: no cable descriptor, rated current instead.
+  `ElectricalFuseDescriptor(name, null, obj("ElectricalFuse"), 5.0)`;
+  `isUsable() = cableDescriptor != null || currentLimit != null`;
+  `resistanceOhms() = Eln.getSmallRs()*2` (heat R); `warmLimitCelsius() = Eln.cableWarmLimit` (130 °C);
+  `thermalRp() = warmLimit/(I²·R)`; `thermalC() = I²·R·Eln.cableHeatingTime/warmLimit` → steady-state
+  T = (I/I_limit)² × warmLimit, i.e. 5 A into a 5 A fuse reaches 130 °C.
+- Installed in the existing Electrical Fuse Holder (source subId 6, same block); the fuse-holder
+  element (`sixnode/ElectricalFuse.kt`) uses `isUsable()`/`resistanceOhms()`/`thermalRp()`/
+  `thermalC()`/`warmLimitCelsius()` and trips at `T > warmLimit × 0.9`, replacing the fuse with the
+  shared `BlownFuse` descriptor (icon `blownelectricalfuse` in source).
+- Recipe `craft/CraftingRecipes.kt:2777-2778`: `rcr`, `'r'=itemRubber`, `'c'=Copper 20 AWG Cable
+  300V`, output ×4.
+- Texture `textures/items/electricalfuse.png` (shared fuse icon).
+
+### Registry IDs
+- `eln:shared_item@6288` = 5A Lead Fuse. `eln-ids.json` entry:
+  `{descriptor: ElectricalFuseDescriptor, display: "5A Lead Fuse", kind: shared_item,
+  name: 5a_lead_fuse}`. Distinct registry slot from `eln:six_node@6288` (the 5A breaker panel
+  descriptor) — different registries, no collision.
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/item/ElectricalFuseDescriptor.kt` — 4th constructor param
+  `currentLimit: Double? = null` + secondary 3-arg constructor (Java callers keep compiling);
+  `init` gates on `isUsable()`; added `isUsable()`, `resistanceOhms()`, `warmLimitCelsius()`,
+  `thermalRp()`, `thermalC()` — 1:1 vs source (rendering methods remain removed per the 26.x P3
+  plan).
+- `src/main/java/mods/eln/sixnode/ElectricalFuse.kt` — `ElectricalFuseHolderElement` now routes
+  through the descriptor's `isUsable()`/`resistanceOhms()`/`thermalRp()`/`thermalC()`/
+  `warmLimitCelsius()`; cable-fuse math unchanged (`cableDescriptor?.electricalRs?.times(2.0)` ≡
+  `resistanceOhms()` on the cable path); trip comment documents WP16b factor 0.9 preserved over
+  source 0.8; `refreshSwitchResistor()` sets `R = getSmallRs()` (1×) for current-limited fuses,
+  ultra-impedance for non-usable (matches the source 1×/2× convention pinned by
+  `Wp9aCases.java:466-470`); `fuseOk` draw gate switched to `isUsable()`.
+- `src/main/java/mods/eln/registry/batch/Wp9aContent.java` — `registerElectricalFuse(98)` adds
+  `addElement(16 + (98 << 6), new ElectricalFuseDescriptor("5A Lead Fuse", null, obj.getObj("ElectricalFuse"), 5.0))`
+  after the BlownFuse block.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — 5A recipe in the same `recipeMiscItem` block as
+  the cable fuses, exact shape vs source.
+- `src/main/resources/eln-ids.json` — added `@6288`.
+- Texture `src/main/resources/assets/eln/textures/items/electricalfuse.png` — **byte-identical to
+  source** (md5 `199a8e8bbcc4d7a3fff9dd38d0f41938`; verified both sides this session). The cable
+  fuses' models already reference this icon name.
+- Generated under `src/generated/resources/`: `assets/eln/items/5a_lead_fuse.json`,
+  `assets/eln/models/item/5a_lead_fuse.json` (layer0 `eln:items/electricalfuse`),
+  `data/eln/recipe/5a_lead_fuse.json`, matching recipe advancement, `item.eln.5a_lead_fuse` lang
+  entry (auto-generated from `eln-ids.json` `display`).
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `./gradlew build` BUILD SUCCESSFUL (`/tmp/eln-fuse5a-compile.log`);
+  re-confirmed by the GameTest server boot.
+- **[tests-passed]** `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips) — identical to the
+  blade baselines (`/tmp/eln-fuse5a-test.log`); proves the mod constructs and the fuse registers.
+- **[datagen-verified]** `runClientData` ×2: run 1 generated the item/model + recipe + advancement +
+  lang entry; run 2 md5 diff of the 3957-file generated tree = **0 lines** (idempotent)
+  (`/tmp/eln-fuse5a-datagen{1,2}.log`, `/tmp/eln-fuse5a-md5-{1,2}.txt`).
+- **[automated GameTest]** `runGameTestServer`: **1552 GAME TESTS COMPLETE in 7.503 min**; exit 2 =
+  exactly the same 2 historical golden fails as the blade baselines (`eln:golden_descriptors`:
+  six_node 2176–2186 "no such item in golden/1.12/inventory.json"; `eln:golden_slots`: lamp-socket
+  bulb set / no-1.12-container specs) — no new failures; all cable-fuse goldens (low/medium/high/
+  very-high lead fuses, Blown Lead Fuse) PASS (`/tmp/eln-fuse5a-gametest.log`).
+- **[env OK]** `mctest doctor` — all HARD checks pass.
+- **[live server-side oracle]** live MC 26.3 dev server (boots cleanly — the AGENTS.md
+  "12-circuit-breaker mod-load blocker" is STALE) via mctest RCON:
+  `summon minecraft:item 0 -60 0 {Item:{id:"eln:5a_lead_fuse",count:1}}` → "Summoned new 5A Lead
+  Fuse"; bogus `eln:totally_bogus_item_xyz` → "Summoned new Air" (negative control). Registry ID +
+  display name resolve at runtime. Probe killed ("Killed 5A Lead Fuse"); server stopped.
+- **[NOT RUN — honestly labeled]** player-joined in-game crafting / fuse-holder installation / trip
+  validation NOT performed (client-join remains blocked in this environment per the clutch entry).
+  Trip physics exercised only through the shared descriptor code path + the GameTest suite, not a
+  live in-world trip.
+
+### Remaining limitations
+- `15a_lead_fuse` / `20a_lead_fuse` / `30a_lead_fuse` / `50a_lead_fuse` NOT ported (out of scope;
+  separate unported-items rows).
+- No player-joined in-game validation (crafting, fuse-holder install, actual trip event untested
+  in-world).
+- No audio / multi-client / fresh-JVM save-recovery validation.
+
+### Known blockers
+- Client live-join remains BLOCKED in this environment (clutch-entry blockers unchanged); the
+  AGENTS.md "12-circuit-breaker mod-load blocker" is confirmed STALE: `runServer` boots cleanly on
+  MC 26.3 and the GameTest server ran all 1552 tests.
+
+### Commit reference
+- Local commit for this session (no push): new commit on top of `dda988ae` on branch
+  `port/forkpatch-3.0.77-26.3`, subject `Port 5a_lead_fuse from ForkPatch 1.21.1`; inspect with
+  `git log --oneline -2`. External queue script handles pushing.

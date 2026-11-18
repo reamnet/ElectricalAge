@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T07:23:59.784885409	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-18T08:07:14.882717819	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -148,6 +148,7 @@ e66dc6bbecb715722e880e211fe59913fadcbedb data/eln/advancement/recipes/misc/50v_s
 8e3b85897658969af3d6d89f1f79f22619b924ac data/eln/advancement/recipes/misc/50v_tungsten_heating_corp.json
 ac57aa35b1ccd6c149f55265afa654f6b741da32 data/eln/advancement/recipes/misc/5_a_pole_fuse.json
 75ed8a95b007a0fd5676d0e8fe3ec1787e5c2f42 data/eln/advancement/recipes/misc/5a_electrical_breaker.json
+9be6735d094ca6b8ea28c2f2670b9b2987174556 data/eln/advancement/recipes/misc/5a_lead_fuse.json
 6501998d81855469a30142c8e7b09b2e877983ba data/eln/advancement/recipes/misc/5a_switch.json
 b19ab66e30ec12c1a7bf28c16af4fa9fcff0e0c9 data/eln/advancement/recipes/misc/5v_control_relay_10a.json
 8ac3ed02743cc4127f650e762b4419a4a5b522f6 data/eln/advancement/recipes/misc/60a_electrical_breaker.json
@@ -849,6 +850,7 @@ a2699653d83e94fba3176fed07eb9bc947098d52 data/eln/recipe/50v_submersible_pump.js
 26dd0e5b78d384e75a61dd3a288c91e7a056aed6 data/eln/recipe/50v_tungsten_heating_corp.json
 0bcb68bb6870d10095fa35befd18089e43ea5ccd data/eln/recipe/5_a_pole_fuse.json
 f4449c5d1726daffe671b2f9cd1305e3de200c25 data/eln/recipe/5a_electrical_breaker.json
+5fd423a037c20b4b9a912b4eab83751bcbbf9110 data/eln/recipe/5a_lead_fuse.json
 8b83577046c66b6ae28c8bc184fe65c1ffade364 data/eln/recipe/5a_switch.json
 696f672ebf705145b72a3ddce96bb6d3fec643a7 data/eln/recipe/5v_control_relay_10a.json
 d697a732276f9fded39ef87c7fb995b75b1e25b8 data/eln/recipe/60a_electrical_breaker.json
