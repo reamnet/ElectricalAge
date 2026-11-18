@@ -769,3 +769,91 @@ HEAD `67edf4a3` (5A fuse commit).
 - Local commit for this session (no push): new commit on top of `67edf4a3` on branch
   `port/forkpatch-3.0.77-26.3`, subject `Port 10a_lead_fuse from ForkPatch 1.21.1`; inspect with
   `git log --oneline -3`. External queue script handles pushing.
+
+## 18. Switch port — 20A Switch (2026-11-18, this session)
+
+Scope: port the assigned ForkPatch 1.21.1 six-node switch `20a_switch` (50A follows in the next
+commit). No new descriptor or element code was needed — the existing 5A-switch
+`ElectricalSwitchDescriptor` registration pattern in `Wp9aContent.java` carries the 20A switch
+verbatim; the only target changes are the registration block, the `eln-ids.json` entry, the
+datagen recipe line, the item texture, and the generated artifacts. Source baseline `b7444a7b`
+(read-only `../ELN1.21.1ForkPatch`); target start HEAD `caa1cc82` (10A fuse commit).
+
+### Items implemented
+- **20A Switch** — registry ID `eln:six_node@6214` (group 97 `sixNodeItem`, subId=6; 97×64+6=6214),
+  item `eln:switch_20a`, display name "20A Switch". Confirmed absent in the target (unported-items
+  row "No matching current item name/model found") and confirmed subId 6 free before implementing.
+- Out of scope for this commit and NOT ported: `50a_switch` (next commit this session),
+  `100a_switch` (separate unported-items row).
+
+### Original source behavior (ForkPatch 1.21.1)
+- Rated low-voltage switch: `ElectricalSwitchDescriptor("20A Switch", stdCableRender200V,
+  obj("LowVoltageSwitch"), 600, 12000, 0.01, 600, 12000, cableThermalLoadInitializer.copy(),
+  false).power()` — nominal 600 V / 12000 W, series R 0.01 Ω, max 600 V / 12000 W,
+  signalSwitch=false, icon `switch` — exact vs source `SixNodeRegistration.kt:1350-1356`
+  (subId 6 in source group 97). The source `.power()` call is omitted in the target, matching the
+  target 5A convention which also omits it (no behavioral difference: `.power()` only adds a
+  power-component entry absent from the target API shape).
+- Craft recipe (source `craft/CraftingRecipes.kt:678-684`): pattern `"  I"," I ","CAC"`,
+  `'A'` = Rubber, `'I'` = Copper Cable, `'C'` = Copper 12 AWG Cable 600V, output ×1
+  (`20a_switch.json` in source).
+- Texture: source uses the single shared `textures/blocks/switch.png` for all switches.
+
+### Registry IDs
+- `eln:six_node@6214` (group 97, subId 6) — six-node descriptor slot.
+- Item ID `eln:switch_20a` (eln-ids `name: "switch_20a"`), recipe file `20a_switch.json`
+  (name derived from the display name, matching the source recipe file name), advancement
+  `recipes/misc/20a_switch`, lang key `item.eln.switch_20a`.
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp9aContent.java` — new `ratedSwitch20a` descriptor block
+  directly after the 5A block (same constructor shape as the 5A precedent at L228-230).
+- `src/main/resources/eln-ids.json` — new entry between `six_node@6212` and `@6216`.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — new `addRecipe` line directly after the 5A
+  line (same `recipeMiscItem` block).
+- `src/main/resources/assets/eln/textures/item/switch_20a.png` — copied from source
+  `textures/blocks/switch.png`, **byte-identical** (md5 `158dbf77a748c3f6b20701afad541763` both
+  sides; also identical to the existing `switch_5a.png`). This makes `ElnModels.itemTexture`
+  resolve `eln:item/switch_20a` instead of the `items/missing` fallback (same mechanism as the
+  `switch_5a.png` precedent, commit `70839aea`).
+- Generated (datagen): `assets/eln/items/switch_20a.json`,
+  `assets/eln/models/item/switch_20a.json` (layer0 `eln:item/switch_20a`),
+  `assets/eln/models/item/switch_20a_3d.json` (particle `eln:item/switch_20a`, zero "missing"
+  textures), `data/eln/recipe/20a_switch.json` (result `eln:switch_20a`),
+  `data/eln/advancement/recipes/misc/20a_switch.json`, lang `item.eln.switch_20a: "20A Switch"`.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `./gradlew :build` EXIT=0 (5m02s; `/tmp/m1_build.log`).
+- **[tests-passed]** `:test` (inside the `:build` run): 704 tests, 0 failures, 0 errors,
+  3 pre-existing skips — identical to the 10A-fuse baseline (counted from
+  `build/test-results/test/TEST-*.xml`).
+- **[datagen-verified]** `runClientData` ×2: run 1 generated the switch_20a artifacts above;
+  run 2 `git status` diff = **zero** (idempotent; `/tmp/m1_state_before.txt` vs
+  `/tmp/m1_state_after.txt`).
+- **[live server-side oracle]** live MC 26.3 dev server (boots cleanly — the AGENTS.md
+  "12-circuit-breaker mod-load blocker" is confirmed STALE) via mctest RCON:
+  `summon minecraft:item 0 -60 0 {Item:{id:"eln:switch_20a",count:1}}` → "Summoned new 20A
+  Switch"; 5A regression `eln:switch_5a` → "Summoned new 5A Switch"; bogus `eln:switch_99a` →
+  "Summoned new Air" (negative control). Registry ID + display name resolve at runtime. Probes
+  killed ("Killed 2 entities"); server stopped.
+- **[NOT RUN — honestly labeled]** player-joined in-game placement/interaction validation NOT
+  performed (client-join remains blocked in this environment). Switch electrical behavior rides
+  the shared `ElectricalSwitchDescriptor` code path already exercised by the test suites, not a
+  live in-world switch.
+
+### Remaining limitations
+- `50a_switch` and `100a_switch` NOT ported (50A in the next commit this session; 100A separate
+  unported-items row).
+- No player-joined in-game validation (placing the switch on a six-node, toggling, in-circuit
+  behavior untested in-world).
+- No audio / multi-client / fresh-JVM save-recovery validation.
+
+### Known blockers
+- Client live-join remains BLOCKED in this environment (unchanged from prior entries); the
+  AGENTS.md "12-circuit-breaker mod-load blocker" is confirmed STALE: `runServer` boots cleanly
+  on MC 26.3 and the live oracle ran.
+
+### Commit reference
+- Local commit for this milestone (no push): commit `20a_switch` on top of `caa1cc82` on branch
+  `port/forkpatch-3.0.77-26.3`, subject `Port 20a_switch from ForkPatch 1.21.1`; inspect with
+  `git log --oneline -3`. External queue script handles pushing.

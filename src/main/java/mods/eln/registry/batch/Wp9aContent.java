@@ -229,6 +229,12 @@ public class Wp9aContent implements ElnContent {
         ratedSwitch.setDefaultIcon("switch");
         sixNodeItem.addDescriptor((id<<6)+5,ratedSwitch);
 
+        ratedSwitch.setDefaultIcon("switch");
+        sixNodeItem.addDescriptor((id<<6)+5,ratedSwitch);
+
+        var ratedSwitch20a = new ElectricalSwitchDescriptor(TR_NAME(Type.NONE,"20A Switch"),stdCableRender200V,obj.getObj("LowVoltageSwitch"),600,12000,.01,600,12000,cableThermalLoadInitializer.copy(),false);
+        ratedSwitch20a.setDefaultIcon("switch");
+        sixNodeItem.addDescriptor((id<<6)+6,ratedSwitch20a);
         int subId, completId;
         String name;
         IFunction function;

@@ -2531,6 +2531,12 @@
   "kind": "six_node",
   "name": "very_high_voltage_switch"
  },
+ "eln:six_node@6214": {
+  "descriptor": "ElectricalSwitchDescriptor",
+  "display": "20A Switch",
+  "kind": "six_node",
+  "name": "switch_20a"
+ },
  "eln:six_node@6216": {
   "descriptor": "ElectricalSwitchDescriptor",
   "display": "Signal Switch with LED",

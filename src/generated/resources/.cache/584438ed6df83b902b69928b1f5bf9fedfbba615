@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T08:31:43.229395347	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-18T09:06:04.211251088	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -68,6 +68,7 @@ f3200f6d5cda5edc04414e9f5ed32c9310cb1540 data/eln/advancement/recipes/misc/200v_
 d874405c2f0b96e6269c1dcb75a4bbdd7005544d data/eln/advancement/recipes/misc/200v_tungsten_heating_corp.json
 2046a4b8df8500c753e77008f4c3a44cc2acf89e data/eln/advancement/recipes/misc/20_a_pole_fuse.json
 7d050eb155ed83e1800657172d0fd9fd0b7fd577 data/eln/advancement/recipes/misc/20a_electrical_breaker.json
+ebc60efdf27015f86ecab0dcd89c3934c9a8067e data/eln/advancement/recipes/misc/20a_switch.json
 dbeba0b8475b7812766abcf24e9050887b67c15c data/eln/advancement/recipes/misc/230_kv_steel_transmission_tower.json
 a371b28c37a0fb40833517c9a7e9ac730f1025fa data/eln/advancement/recipes/misc/230_kv_three_phase_cable_riser_tower.json
 047bfc6cd2605a12a903ac828b866bbedf88d55a data/eln/advancement/recipes/misc/230_kv_three_phase_substation_disconnect.json
@@ -771,6 +772,7 @@ e25333ec84e2f843591d15dc724e02fd024fe100 data/eln/recipe/200v_submersible_pump.j
 9a75db92f399405442866f5db3fff39496170f65 data/eln/recipe/200v_tungsten_heating_corp.json
 9b0d1fa98fa3701abc618cea285baf7bfa2abe20 data/eln/recipe/20_a_pole_fuse.json
 eada7b2daa697879165cade86a1d1a0e4a23eb5b data/eln/recipe/20a_electrical_breaker.json
+25d855c21471e17a0c44a86f465ca2eea44fd3c4 data/eln/recipe/20a_switch.json
 9add6371c758ec14a9691bc7d5e7aceb3da90119 data/eln/recipe/230_kv_steel_transmission_tower.json
 99cc2d4b24f9ab05951b6692448459b234bd1514 data/eln/recipe/230_kv_three_phase_cable_riser_tower.json
 7c0e05123dda6fdfdbde895a318687a414771656 data/eln/recipe/230_kv_three_phase_substation_disconnect.json
