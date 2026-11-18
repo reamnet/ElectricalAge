@@ -2741,6 +2741,7 @@ public final class ElnRecipes extends ElnRecipesBase {
             'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'R',stack(Items.REDSTONE));
         addRecipe(findItemStack("5A Switch"),"  I"," I ","CAC",'A',"itemRubber",'I',findItemStack("Copper Cable"),'C',findItemStack("Copper 20 AWG Cable 300V"));
         addRecipe(findItemStack("20A Switch"),"  I"," I ","CAC",'A',"itemRubber",'I',findItemStack("Copper Cable"),'C',findItemStack("Copper 12 AWG Cable 600V"));
+        addRecipe(findItemStack("50A Switch"),"AAI","AIA","CAC",'A',"itemRubber",'I',findItemStack("Copper Cable"),'C',findItemStack("Copper 6 AWG Cable 600V"));
         String[] relayNames={"5V Control Relay 10A","12V Control Relay 20A","12V Control Relay 50A","12V Control Relay 100A"};
         String[] relayWire={"Copper 18 AWG Cable 300V","Copper 12 AWG Cable 600V","Copper 6 AWG Cable 600V","Copper 2 AWG Cable 600V"};
         for(int i=0;i<relayNames.length;i++)addRecipe(findItemStack(relayNames[i]),"GGG","OIO","CRC",

@@ -857,3 +857,94 @@ datagen recipe line, the item texture, and the generated artifacts. Source basel
 - Local commit for this milestone (no push): commit `20a_switch` on top of `caa1cc82` on branch
   `port/forkpatch-3.0.77-26.3`, subject `Port 20a_switch from ForkPatch 1.21.1`; inspect with
   `git log --oneline -3`. External queue script handles pushing.
+
+## 19. Switch port — 50A Switch (2026-11-18, this session)
+
+Scope: port the assigned ForkPatch 1.21.1 six-node switch `50a_switch` (milestone 2 of this
+session; 20A was milestone 1, already committed as `df8a8e3e`). No new descriptor or element
+code was needed — the existing 5A/20A-switch `ElectricalSwitchDescriptor` registration pattern
+in `Wp9aContent.java` carries the 50A switch verbatim; the only target changes are the
+registration block, the `eln-ids.json` entry, the datagen recipe line, the item texture, and
+the generated artifacts. Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPatch`);
+target start HEAD `df8a8e3e` (20A switch commit).
+
+### Items implemented
+- **50A Switch** — registry ID `eln:six_node@6215` (group 97 `sixNodeItem`, subId=7; 97×64+7=6215),
+  item `eln:switch_50a`, display name "50A Switch". Confirmed absent in the target (unported-items
+  row "No matching current item name/model found") and confirmed subId 7 free before implementing
+  (subId 8 is unassigned in the source too; the next source switch is subId 9 `100a_switch`).
+- Out of scope and NOT ported: `100a_switch` (separate unported-items row).
+
+### Original source behavior (ForkPatch 1.21.1)
+- Rated high-voltage switch: `ElectricalSwitchDescriptor("50A Switch", stdCableRender800V,
+  obj("HighVoltageSwitch"), 600, 30000, 0.005, 600, 30000, cableThermalLoadInitializer.copy(),
+  false).power()` — nominal 600 V / 30000 W, series R 0.005 Ω, max 600 V / 30000 W,
+  signalSwitch=false, icon `switch` — exact vs source `SixNodeRegistration.kt:1357-1363`
+  (subId 7 in source group 97). The source `.power()` call is omitted in the target, matching the
+  target 5A/20A convention which also omits it (no behavioral difference: `.power()` only adds a
+  power-component entry absent from the target API shape).
+- Craft recipe (source `craft/CraftingRecipes.kt:685-691`): pattern `"AAI","AIA","CAC"`,
+  `'A'` = Rubber, `'I'` = Copper Cable, `'C'` = Copper 6 AWG Cable 600V, output ×1
+  (`50a_switch.json` in source).
+- Texture: source uses the single shared `textures/blocks/switch.png` for all switches.
+
+### Registry IDs
+- `eln:six_node@6215` (group 97, subId 7) — six-node descriptor slot.
+- Item ID `eln:switch_50a` (eln-ids `name: "switch_50a"`), recipe file `50a_switch.json`
+  (name derived from the display name, matching the source recipe file name), advancement
+  `recipes/misc/50a_switch`, lang key `item.eln.switch_50a`.
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp9aContent.java` — new `ratedSwitch50a` descriptor block
+  directly after the 20A block (same constructor shape as the 5A/20A precedent).
+- `src/main/resources/eln-ids.json` — new entry between `six_node@6214` and `@6216`.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — new `addRecipe` line directly after the 20A
+  line (same recipe block).
+- `src/main/resources/assets/eln/textures/item/switch_50a.png` — copied from source
+  `textures/blocks/switch.png`, **byte-identical** (md5 `158dbf77a748c3f6b20701afad541763` all
+  three sides: source, `switch_50a.png`, `switch_20a.png`). This makes `ElnModels.itemTexture`
+  resolve `eln:item/switch_50a` instead of the `items/missing` fallback (same mechanism as the
+  `switch_5a.png` precedent, commit `70839aea`).
+- Generated (datagen): `assets/eln/items/switch_50a.json`,
+  `assets/eln/models/item/switch_50a.json` (layer0 `eln:item/switch_50a`),
+  `assets/eln/models/item/switch_50a_3d.json` (zero "missing" textures),
+  `data/eln/recipe/50a_switch.json` (result `eln:switch_50a`; key A `#c:rubbers`,
+  C `eln:copper_6_awg_cable_600v`, I `eln:copper_cable`),
+  `data/eln/advancement/recipes/misc/50a_switch.json`, lang `item.eln.switch_50a: "50A Switch"`.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `./gradlew :build` EXIT=0 (5m 5s; `/tmp/m2_build.log`).
+- **[tests-passed]** `:test` (inside the `:build` run): 704 tests, 0 failures, 0 errors,
+  3 pre-existing skips — identical to the 20A baseline (counted from
+  `build/test-results/test/TEST-*.xml`).
+- **[datagen-verified]** `runClientData`: run 1 generated the switch_50a artifacts above;
+  idempotence re-check (state before vs after an additional run) diff = **zero** (IDEMPOTENT;
+  `/tmp/m2_idem_before.txt` vs `/tmp/m2_idem_after.txt`). Note: one intermediate `runClientData`
+  invocation exited 1 because that shell had not sourced the Java env (JAVA_HOME unset) — an
+  environment error, not a build failure; the sourced re-runs passed.
+- **[live server-side oracle]** live MC 26.3 dev server (boots cleanly — the AGENTS.md
+  "12-circuit-breaker mod-load blocker" is confirmed STALE) via mctest RCON:
+  `summon minecraft:item 0 -60 0 {Item:{id:"eln:switch_50a",count:1}}` → "Summoned new 50A
+  Switch"; 20A regression `eln:switch_20a` → "Summoned new 20A Switch"; bogus `eln:switch_99a` →
+  "Summoned new Air" (negative control). Registry ID + display name resolve at runtime. Probes
+  killed ("Killed 2 entities"); server stopped.
+- **[NOT RUN — honestly labeled]** player-joined in-game placement/interaction validation NOT
+  performed (client-join remains blocked in this environment). Switch electrical behavior rides
+  the shared `ElectricalSwitchDescriptor` code path already exercised by the test suites, not a
+  live in-world switch.
+
+### Remaining limitations
+- `100a_switch` NOT ported (separate unported-items row, not assigned this session).
+- No player-joined in-game validation (placing the switch on a six-node, toggling, in-circuit
+  behavior untested in-world).
+- No audio / multi-client / fresh-JVM save-recovery validation.
+
+### Known blockers
+- Client live-join remains BLOCKED in this environment (unchanged from prior entries); the
+  AGENTS.md "12-circuit-breaker mod-load blocker" is confirmed STALE: `runServer` boots cleanly
+  on MC 26.3 and the live oracle ran.
+
+### Commit reference
+- Local commit for this milestone (no push): commit on top of `df8a8e3e` (20A) on branch
+  `port/forkpatch-3.0.77-26.3`, subject `Port 50a_switch from ForkPatch 1.21.1`; inspect with
+  `git log --oneline -3`. External queue script handles pushing.
