@@ -119,7 +119,7 @@ Each row retains the exact source model identifier so names can be traced withou
 | `corner_fireplace_tv_stand` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `crank_shaft` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `current_source` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
-| `diamond_dust` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
+| `diamond_dust` | IMPLEMENTED 2026-11-18 — `eln:shared_item@580` (subId=4, group 9 shared_item). Registration + byte-identical texture (sha256-verified vs source `diamonddust.png`) + generated model/item + `c:dusts/diamond` tag + `item.eln.diamond_dust` lang all present; `:test` 704/704 pass, GameTest 1552 (only 2 historical golden fails), `runClientData` idempotent (0 writes). No target consumer recipe — source consumes it in Inert Canister (out of scope). Previously: no matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `digital_display` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `direct_utility_pole` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `electric_minecart` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
@@ -138,7 +138,7 @@ Each row retains the exact source model identifier so names can be traced withou
 | `iron_clutch_plate` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `iron_turbine_blade` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `irresponsible_electrical_drill` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
-| `lapis_dust` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
+| `lapis_dust` | IMPLEMENTED 2026-11-18 — `eln:shared_item@579` (subId=3, group 9 shared_item). Registration + byte-identical texture (sha256-verified vs source `lapisdust.png`) + generated model/item + `c:dusts/lapis` tag + `item.eln.lapis_dust` lang all present; `:test` 704/704 pass, GameTest 1552 (only 2 historical golden fails), `runClientData` idempotent (0 writes). No target consumer recipe — source consumes it in Inert Canister (out of scope) and a Small Solar Panel recipe that the target implements with different materials. Previously: no matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `large_flywheel` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `large_gas_turbine` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `large_generator` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |

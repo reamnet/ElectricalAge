@@ -421,6 +421,33 @@ public class Wp12aContent implements ElnContent {
         }
 
         {
+            subId = 3;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Lapis Dust");
+            element = new GenericItemUsingDamageDescriptorWithComment(name,// iconId,
+                // name,
+                new String[]{});
+            dustCopper = element;
+            sharedItem.addElement(completId, element);
+            // wiki (P4): Data.addResource(element.newItemStack());
+            mods.eln.misc.OreDictTags.addToOre("dustLapis", element);
+        }
+        {
+            subId = 4;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Diamond Dust");
+            element = new GenericItemUsingDamageDescriptorWithComment(name,// iconId,
+                // name,
+                new String[]{});
+            dustCopper = element;
+            sharedItem.addElement(completId, element);
+            // wiki (P4): Data.addResource(element.newItemStack());
+            mods.eln.misc.OreDictTags.addToOre("dustDiamond", element);
+        }
+
+        {
             id = 5;
 
             name = TR_NAME(Type.NONE, "Lead Dust");

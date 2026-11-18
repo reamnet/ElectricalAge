@@ -144,3 +144,80 @@ python3 /tmp/verify_jar.py                            # 9087 / 0 / 0
 python3 tools/mctest/mctest server status
 python3 tools/mctest/mctest lab gallery / lab alarms / lab panelcarry / lab roadvehicles
 ```
+
+---
+
+## 11. Dust port — Lapis Dust + Diamond Dust (2026-11-18, this session)
+
+Scope: port the two ForkPatch 1.21.1 dust items, complete one before the other, reusing the
+target's existing `registerDust` pattern. Source baseline `b7444a7b` (read-only
+`../ELN1.21.1ForkPatch`); target start HEAD `72670385`.
+
+### Items implemented
+- **Lapis Dust** — registry ID `eln:shared_item@579` (group 9 `shared_item`, subId=3; 9×64+3=579).
+- **Diamond Dust** — registry ID `eln:shared_item@580` (group 9 `shared_item`, subId=4; 9×64+4=580).
+- Both are pure input items (no machine behavior, no electrical rating). Confirmed absent in the
+  target before implementation (no matching current item name/model; present only in the 177-row
+  candidate inventory of `unported-items.md`).
+
+### Original source behavior (ForkPatch 1.21.1)
+- Registered by `registerDust(9)` (`ItemRegistration.kt:110`, method `:773`); Lapis Dust
+  (`:804`, ore `dustLapis`) and Diamond Dust (`:814`, ore `dustDiamond`); display names
+  "Lapis Dust"/"Diamond Dust".
+- Textures `textures/items/diamonddust.png` / `lapisdust.png`.
+- Consumed as inputs by: (a) a Small Solar Panel recipe (`CraftingRecipes.kt:1284`, Lapis Dust), and
+  (b) the **Inert Canister** recipe (`CraftingRecipes.kt:1578`, 6× Lapis Dust + 1× Diamond Dust
+  shapeless).
+
+### Registry IDs
+- `eln:shared_item@579` = Lapis Dust; `eln:shared_item@580` = Diamond Dust. `eln-ids.json` now 876
+  keys. `eln-ids.json` entry format: `{descriptor: GenericItemUsingDamageDescriptorWithComment,
+  display, kind: shared_item, name}`.
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp12aContent.java` — `registerDust(9)` (line 46) already
+  existed; Lapis (subId=3, `:427`, ore `dustLapis`) and Diamond (subId=4, `:440`, ore `dustDiamond`)
+  added to the dust switch, mirroring the target's other dusts.
+- `src/main/resources/eln-ids.json` — added `@579`/`@580` entries.
+- Textures `src/main/resources/assets/eln/textures/item/{lapis,diamond}_dust.png` — **byte-identical
+  to source** (sha256 `2b917903…` diamond, `1a051de6…` lapis; target uses `textures/item/` singular,
+  matching all 645 existing target dusts).
+- Generated under `src/generated/resources/`: item+model JSON for both, `c/tags/item/dusts/{lapis,
+  diamond}.json`, the `dusts.json` index, and `item.eln.{lapis,diamond}_dust` lang entries. Ore tag
+  rule `dust`→`c:dusts/` (`OreDictTags.java:47`) maps `dustLapis`/`dustDiamond` accordingly.
+- **Recipes deliberately NOT changed:** the target's existing Small Solar Panel recipe
+  (`ElnRecipes.java:1412`) uses different materials (iron ingot + Low Voltage Cable + plateSilicon)
+  and is pre-existing working functionality; the Inert Canister is out of scope and was not ported.
+  Net effect: the dusts are pure input items with **no target consumer** (documented limitation).
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `:build` BUILD SUCCESSFUL (log `/tmp/eln-dust-build2.log`).
+- **[tests-passed]** `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips) — proves the mod
+  constructs and both dusts register.
+- **[datagen-verified]** `runClientData` ×2: 8 new writes → 0 writes on re-run (idempotent).
+- **[automated GameTest]** `runGameTestServer`: 1552 tests; only 2 required FAIL =
+  `eln:golden_descriptors` + `eln:golden_slots` (HISTORICAL, expected, not weakened); the dusts do
+  not appear in any failure (log `/tmp/eln-dust-gametest2.log`).
+- **[env OK]** `mctest doctor` all HARD checks pass.
+- **[live smoke-test]** `mctest server start` boots on MC 26.3; RCON live; `server exec version` →
+  26.3 / protocol 777.
+- **[INCONCLUSIVE — not claimed passed]** in-game item presence via `summon`/`data modify` was not
+  discriminating (a bogus `@9999` was also accepted). Registration is proven by mod-load (`:test`
+  704/704) + datagen, not by in-game summon.
+
+### Remaining limitations
+- No target consumer recipe for either dust (Inert Canister out of scope; target Small Solar Panel
+  uses different materials and was left unchanged). The dusts are obtainable/registered inputs with
+  no in-target use until a consumer is ported.
+- In-game (player) pickup/use/drop behavior not validated by a connected player (mod-load +
+  datagen + GameTest only).
+
+### Known blockers
+- None for this item. The AGENTS.md "12-circuit panel WIP blocks all boot" note is **stale for the
+  current build** — `runServer` boots and `:test`/GameTest run, so no blocker was hit and no WIP was
+  touched.
+
+### Commit reference
+- Local commit for this session (no push): single new local commit on top of `72670385` on branch
+  `port/forkpatch-3.0.77-26.3`, subject `Port lapis_dust and diamond_dust from ForkPatch 1.21.1`;
+  inspect with `git log --oneline -1`. External queue script handles pushing.

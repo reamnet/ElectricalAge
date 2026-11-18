@@ -1,4 +1,4 @@
-// 26.3	2026-11-17T22:19:12.17833323	eln-global/EA models
+// 26.3	2026-11-18T03:40:14.589527421	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -656,6 +656,7 @@ bda9071945474ac353684c30cd0e40e003588204 assets/eln/items/deck_post_cap_light.js
 3ba0b45db4a31469226646e89f8a8f2b4fc911ac assets/eln/items/deck_step_riser_light.json
 5ce056d32bcb6d285672a8f01741d20e44bd23db assets/eln/items/deep_baffle_recessed_light.json
 7a7772285d1f235d611fbc30b2eac02756ada357 assets/eln/items/deepslate_lead_ore.json
+eb5727e2e0222c4f514a136febe4fbed63a27f3e assets/eln/items/diamond_dust.json
 8520d766df6e210652cb43d6b1f3afd090bd693e assets/eln/items/dielectric.json
 e191f43f15cf7c2efad666aae8df6ee117d108c1 assets/eln/items/digital_watch.json
 bee21206687eda97c8250d6a703b39a0ed37c854 assets/eln/items/double_candle_wall_sconce.json
@@ -802,6 +803,7 @@ ddfd8ed2bdcafbca54e67237e525a57e085c7254 assets/eln/items/joint_hub.json
 0c5e2a5faa4966c9f5a8e8b9fda01ab0c3320b8f assets/eln/items/lamp_socket_b_projector.json
 28f6934cae6c4f86b2c92c45be482ffeb7bc5f67 assets/eln/items/lamp_supply.json
 80bb07a9c1ac143bc43a0ad310cab0c45d972c99 assets/eln/items/lantern_cage_foyer_chandelier.json
+7945c5d61f21bc796a14080a3afaa19717ae0ddc assets/eln/items/lapis_dust.json
 7b7d13e1cbb345a4ae89c5755954a41100bdcc46 assets/eln/items/large_area_floodlight.json
 6fa5f36f2359eef09ec258cef8df2b9ecadc5541 assets/eln/items/large_rheostat.json
 f3e4369c2d4d1fac99f31e2eed15fe5fd6bf0ce8 assets/eln/items/large_standby_gasoline_generator.json
@@ -1672,6 +1674,7 @@ f0b1339e20a406a9bc3754dc14b3f13b326990b5 assets/eln/models/item/deck_step_riser_
 da8fd4dc6baa1ee0ee7d3056cf5de5f791a0e28c assets/eln/models/item/deck_step_riser_light_3d.json
 a11e73abd6f6cdda23b7db557a24cab3df6c998b assets/eln/models/item/deep_baffle_recessed_light.json
 b71fb65e3c43419d9486ec447c1556e4f5ff3840 assets/eln/models/item/deep_baffle_recessed_light_3d.json
+53c9f4650a90d4bbeceecbb0a767d1f377ae810d assets/eln/models/item/diamond_dust.json
 c1edd3d4941867819dc5cee23ca8d23cafd4abf0 assets/eln/models/item/dielectric.json
 0e1eb32d980f64c7186f37da2ade10ec7c762d65 assets/eln/models/item/digital_watch.json
 08ad17f3ed444f42bfc69a6e19d5394658321f86 assets/eln/models/item/digital_watch_3d.json
@@ -1921,6 +1924,7 @@ f189888d8a65e22d52694235ff0ed93e24b30848 assets/eln/models/item/lamp_socket_b_pr
 f0b5134c9e58df8de33952b16d3e7618a4e85e71 assets/eln/models/item/lamp_supply_3d.json
 b8e859c584ad9233449fa43fd483713d34deaa75 assets/eln/models/item/lantern_cage_foyer_chandelier.json
 af64938b274956ee4caf9632a9cfd0c95c5900bd assets/eln/models/item/lantern_cage_foyer_chandelier_3d.json
+a08c6f26657d88d6a492331743ff23fc938638ad assets/eln/models/item/lapis_dust.json
 58debc0cdc99f27e0b8f9ba68da80a0ec1fa6293 assets/eln/models/item/large_area_floodlight.json
 d138a91656a57a6acd3a1a346d2fb264769787f1 assets/eln/models/item/large_area_floodlight_3d.json
 5445ae3a259c6d779aa9c67f0696d3845ccb939d assets/eln/models/item/large_rheostat.json

@@ -377,6 +377,18 @@
   "kind": "shared_item",
   "name": "iron_dust"
  },
+ "eln:shared_item@579": {
+  "descriptor": "GenericItemUsingDamageDescriptorWithComment",
+  "display": "Lapis Dust",
+  "kind": "shared_item",
+  "name": "lapis_dust"
+ },
+ "eln:shared_item@580": {
+  "descriptor": "GenericItemUsingDamageDescriptorWithComment",
+  "display": "Diamond Dust",
+  "kind": "shared_item",
+  "name": "diamond_dust"
+ },
  "eln:shared_item@6": {
   "descriptor": "GenericItemUsingDamageDescriptorWithComment",
   "display": "Tungsten Dust",
