@@ -10,7 +10,7 @@ This is a static inventory audit, **not a certified exhaustive runtime missing-i
 - Machines: 480 V Industrial Fluid Pump; Climate Controlled Growing Bed; Thermal Heat Exchanger; missing shaft/large-machine families listed below.
 - Mechanics: Clutch, Fixed Shaft, Radial Motor, Crank Shaft, Reinforced Shaft, Rolling Shaft Machine, Large Flywheel, Large Generator, Large Shaft Motor, Large Gas Turbine, Large Steam Turbine, Polarized Shaft Generator and Motor; clutch plates/pin, Heavy Winding, Motor Cowling and four material-specific turbine blades.
 - Controls/instruments: Current Source, Digital Display, Nixie Tube, Multicolor LED Vumeter, Humidity Sensor, Thermometer Sensor, MQTT Energy Meter and MQTT Signal Controller; extra wireless controls, current-rated switches/fuses and regulator chips.
-- Tools/materials: Config Copy Tool, Falstad Import Tool, Turbo and Irresponsible Electrical Drills, Electric Minecart, graphite rods, arc materials/canisters, additional dusts and Synthetic Diamond.
+- Tools/materials: Config Copy Tool, Falstad Import Tool, Turbo and Irresponsible Electrical Drills, Electric Minecart, graphite rod variants 3x/4x (single + 2x ported 2026-11-18), arc materials/canisters, additional dusts and Synthetic Diamond.
 - Utility: standalone line/feed insulators, Ceiling Color Segregated Cable Tray, older Direct Utility Pole/Transmission Tower/Grid Switch and railroad Overhead Lines. New 69/230 kV steel poles are already ported and are different items.
 - Source-specific ratings: chargers, heating elements, dissipators, egg incubator, defence turret, industrial processing machines, sockets and shaft motor. Existing legacy machines do not establish source 48/120/240/480 V parity.
 
@@ -83,7 +83,7 @@ Each row retains the exact source model identifier so names can be traced withou
 | `20a_switch` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `230_kv_cable_feed_insulator` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `230_kv_line_insulator` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
-| `2x_graphite_rods` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
+| `2x_graphite_rods` | **Ported 2026-11-18** (ForkPatch 1.21.1): registered `eln:shared_item@4417`, textures byte-identical, craft recipe (2x rods ⇄ 2× rods), compressor Coal Plate ×4 recipe preserved. See OVERNIGHT_PORT_PROGRESS.md 2026-11-18 graphite entry. |
 | `3.2_kv_cable_feed_insulator` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `3.2_kv_line_insulator` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `3.3v_boost_regulator_chip` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
@@ -128,7 +128,7 @@ Each row retains the exact source model identifier so names can be traced withou
 | `farmhouse_fireplace_tv_stand` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `fixed_shaft` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `gold_clutch_plate` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
-| `graphite_rod` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
+| `graphite_rod` | **Ported 2026-11-18** (ForkPatch 1.21.1): registered `eln:shared_item@4416`, texture byte-identical, craft + compressor recipes preserved (Coal Plate ×4 at 80 kJ). See OVERNIGHT_PORT_PROGRESS.md 2026-11-18 graphite entry. |
 | `grid_switch` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `heavy_winding` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `high_current_cable` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |

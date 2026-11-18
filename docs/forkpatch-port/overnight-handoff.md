@@ -221,3 +221,78 @@ target's existing `registerDust` pattern. Source baseline `b7444a7b` (read-only
 - Local commit for this session (no push): single new local commit on top of `72670385` on branch
   `port/forkpatch-3.0.77-26.3`, subject `Port lapis_dust and diamond_dust from ForkPatch 1.21.1`;
   inspect with `git log --oneline -1`. External queue script handles pushing.
+
+## 12. Graphite port — Graphite Rod + 2x Graphite Rods (2026-11-18, this session)
+
+Scope: port the two in-scope ForkPatch 1.21.1 `registerArc(69)` items, complete one before the other,
+reusing the target's existing `sharedItem` registration pattern. Source baseline `b7444a7b` (read-only
+`../ELN1.21.1ForkPatch`); target start HEAD `da075906` (dust commit).
+
+### Items implemented
+- **Graphite Rod** — registry ID `eln:shared_item@4416` (group 69 `shared_item`, subId=0; 69×64+0=4416).
+- **2x Graphite Rods** — registry ID `eln:shared_item@4417` (group 69 `shared_item`, subId=1; 69×64+1=4417).
+- Both are plain durability items: the source `GraphiteDescriptor` extends `GenericItemUsingDamageDescriptor`
+  with an empty body (no machine behavior, no electrical rating). Confirmed absent in the target before
+  implementation.
+- Out of scope and NOT ported: `3x_graphite_rods`, `4x_graphite_rods`, Synthetic Diamond.
+
+### Original source behavior (ForkPatch 1.21.1)
+- `registerArc(69)` (`ItemRegistration.kt:1223`, called at `:126`): Graphite Rod subId 0 (`:1231`,
+  `GraphiteDescriptor`), 2x Graphite Rods subId 1 (`:1239`); 3x (`:1247`) / 4x (`:1255`) out of scope.
+- Textures `textures/items/graphiterod.png` / `2xgraphiterods.png`.
+- Craft recipes (`CraftingRecipes.kt:1710` `recipeGraphite()`): `Graphite Rod ×2` shaped "I" from
+  `2x Graphite Rods` (`:1719`); `2x Graphite Rods` shapeless from 2× `Graphite Rod` (`:1723`).
+- Machine recipe (`CraftingRecipes.kt:2437`): compressor `Coal Plate ×4` from `Graphite Rod` at 80,000 J.
+- `Graphite Rod` is also an input to the source advanced-chip recipe (`CraftingRecipes.kt:1665`) — out of scope.
+
+### Registry IDs
+- `eln:shared_item@4416` = Graphite Rod; `eln:shared_item@4417` = 2x Graphite Rods. `eln-ids.json` entry
+  format: `{descriptor: GenericItemUsingDamageDescriptor, display, kind: shared_item, name}`.
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp12aContent.java` — new `registerArc(69)`: subId 0 (Graphite Rod)
+  and subId 1 (2x Graphite Rods) with `GenericItemUsingDamageDescriptor`, mirroring the source (whose
+  `GraphiteDescriptor` adds no behavior).
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — new `recipeForkPatchGraphite()`: the two mutually
+  dependent craft rows from source `:1719`/`:1723`.
+- `src/main/java/mods/eln/registry/ElnMachineRecipes.java` — `recipeCompressor()`: added `Coal Plate ×4`
+  from `Graphite Rod` @ 80,000 J (source `:2437`); the pre-existing `Coal Plate ×4` from Diamond row retained.
+- `src/main/resources/eln-ids.json` — added `@4416`/`@4417` entries.
+- Textures `src/main/resources/assets/eln/textures/item/{graphite_rod,2x_graphite_rods}.png` —
+  **byte-identical to source** (md5 `2129f6e2…` / `62f24e40…`; target uses `textures/item/` singular,
+  matching existing target items).
+- Generated under `src/generated/resources/`: item+model JSON for both, `data/eln/recipe/{graphite_rod,
+  2x_graphite_rods}.json`, the matching recipe advancements, and `item.eln.{graphite_rod,2x_graphite_rods}`
+  lang entries.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `:build` BUILD SUCCESSFUL (log `/tmp/eln-graphite-build.log`).
+- **[tests-passed]** `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips) — identical to the dust baseline;
+  proves the mod constructs and both items register.
+- **[datagen-verified]** `runClientData` ×2: 0 new writes on both runs (generated JSONs present and correct;
+  idempotent). Logs `/tmp/eln-graphite-dg1.log`, `/tmp/eln-graphite-dg2.log`.
+- **[automated GameTest]** `runGameTestServer`: 1552 tests; only 2 required FAIL = `eln:golden_descriptors` +
+  `eln:golden_slots` (HISTORICAL, expected, not weakened); no graphite-related failure
+  (log `/tmp/eln-graphite-gametest.log`).
+- **[env OK]** `mctest doctor` all HARD checks pass.
+- **[live smoke-test]** `mctest server start` boots on MC 26.3; RCON live; `server exec version` → 26.3 /
+  protocol 777. The leftover dev server from the smoke test was stopped before handoff (verified gone);
+  no client running.
+- **[NOT RUN — honestly labeled]** in-game crafting/compression of the new items by a connected player was
+  NOT performed (no connected player in this environment). Registration + recipes proven by mod-load
+  (`:test`), datagen and GameTest instead.
+
+### Remaining limitations
+- `3x_graphite_rods` / `4x_graphite_rods` and Synthetic Diamond are NOT ported (out of scope).
+- The source advanced-chip consumer recipe (`CraftingRecipes.kt:1665`, uses Graphite Rod + Synthetic
+  Diamond) is not in scope; the in-target consumer of Graphite Rod is the compressor Coal Plate recipe
+  (plus the 2x-rods craft pair).
+- No player-joined in-game crafting/compression validation.
+
+### Known blockers
+- None for this item. `runServer` boots and `:test`/GameTest run, so no blocker was hit and no WIP was touched.
+
+### Commit reference
+- Local commit for this session (no push): new local commit on top of `da075906` on branch
+  `port/forkpatch-3.0.77-26.3`, subject `Port graphite_rod and 2x_graphite_rods from ForkPatch 1.21.1`;
+  inspect with `git log --oneline -1`. External queue script handles pushing.

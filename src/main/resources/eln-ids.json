@@ -305,6 +305,18 @@
   "kind": "shared_item",
   "name": "turbine_blade_set"
  },
+ "eln:shared_item@4416": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Graphite Rod",
+  "kind": "shared_item",
+  "name": "graphite_rod"
+ },
+ "eln:shared_item@4417": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "2x Graphite Rods",
+  "kind": "shared_item",
+  "name": "2x_graphite_rods"
+ },
  "eln:shared_item@448": {
   "descriptor": "FerromagneticCoreDescriptor",
   "display": "Cheap Ferromagnetic Core",

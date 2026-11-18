@@ -5,11 +5,11 @@ identify the last completed milestone + current task, check ONLY the files neede
 and resume immediately. Do NOT re-investigate the environment (all details below).
 
 ## Current state (keep concise; update at every milestone)
-- **ACTIVE (2026-11-18, session resume from 72670385).** Local-commit only; do NOT push (external queue script handles pushing).
+- **ACTIVE (2026-11-18, session resume from da075906).** Local-commit only; do NOT push (external queue script handles pushing).
 - Repo: /home/matthew/projects/electrical-age-port/ElectricalAge
-- Branch: port/forkpatch-3.0.77-26.3. **HEAD 72670385 (start of session).**
-- This session's mission: port **Lapis Dust (`lapis_dust`) + Diamond Dust (`diamond_dust`)** from ForkPatch 1.21.1; complete one item before the other; reuse the existing `registerDust` pattern; preserve functionality / electrical ratings / registry identity / texture / model / recipes / translations / tags / machine behavior; validate by level (compile → `:test` → datagen → GameTest → live smoke); commit locally with docs.
-- **DONE:** both dusts registered — `eln:shared_item@579` (Lapis, subId=3) and `eln:shared_item@580` (Diamond, subId=4); textures byte-identical to source (sha256 verified); generated model/item/lang + `c:dusts/{lapis,diamond}` tags. `:test` 704/704 pass (proves mod constructs + both dusts register); `runClientData` idempotent (8 new writes → 0 on re-run); GameTest 1552 (only 2 historical golden fails); live `runServer` boots on MC 26.3 + RCON verified. In-game item presence = **mod-load-verified** (direct in-game summon was inconclusive — see test-results table). No target consumer recipe (source Inert Canister out of scope; target Small Solar Panel uses different materials — left unchanged).
+- Branch: port/forkpatch-3.0.77-26.3. **HEAD da075906 (start of session; = lapis/diamond dust port).**
+- This session's mission: port **Graphite Rod (`graphite_rod`) + 2x Graphite Rods (`2x_graphite_rods`)** from ForkPatch 1.21.1; complete one item before the other; reuse existing `registerArc`/`GenericItemUsingDamageDescriptor` patterns; preserve functionality / registry identity / textures / models / recipes / translations / machine-processing behavior (compressor: Coal Plate ×4 at 80 kJ); validate by level (compile → `:test` → datagen → GameTest → live smoke); commit locally with docs. 3x/4x variants + Synthetic Diamond remain OUT OF SCOPE.
+- **DONE (implementation complete):** both items registered — `eln:shared_item@4416` (Graphite Rod, subId=0) and `eln:shared_item@4417` (2x Graphite Rods, subId=1); textures byte-identical to source (md5 verified); craft recipes ported (2x rods ⇄ 2× rod); compressor recipe `Coal Plate ×4 from Graphite Rod @ 80000.0` added (ForkPatch machine behavior, base Diamond recipe retained). `:build` BUILD SUCCESSFUL; `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips); `runClientData` ×2 no new writes (idempotent). GameTest + live smoke pending at time of this write — see session log below for final results.
 - **BASELINE (prior session):** Native GameTest 1470 sel / 1468 pass / 2 FAIL (golden_descriptors + golden_slots — HISTORICAL, documented, do NOT fix/regenerate/weaken) / 0 skip. Root :test 698/701 pass + 3 pre-existing skips. CAD 15/15. Datagen repeat 0 writes (3631 files).
 - Kitchen API-substitution table + ID table + execution plan: see checkpoint handoff summary (kept in this file's §This-session plan).
 
@@ -76,6 +76,13 @@ and resume immediately. Do NOT re-investigate the environment (all details below
 - NEXT: stop the running mctest dev server; commit locally (no push); confirm clean tree; brief handoff.
 
 
+### 2026-11-18 (this session, resume from da075906; FINAL)
+- Verified working tree before work: 12 modified + 8 untracked files, all expected from the handoff (Wp12aContent.java, ElnRecipes.java, eln-ids.json, en_us.json, 3 .cache hashes, 2 textures, 2 item JSONs, 2 model JSONs, 2 recipe JSONs, 2 advancement JSONs). No logs/screenshots/temp in the change set.
+- Parity vs source `../ELN1.21.1ForkPatch` (read-only @ b7444a7b) confirmed by handoff + spot-checks: `ItemRegistration.kt:1223-1259` registerArc adds 4 variants (subId 0..3); only subId 0 (`graphite_rod`) and subId 1 (`2x_graphite_rods`) in scope; `GraphiteDescriptor` adds no behavior beyond `GenericItemUsingDamageDescriptor`, so target's direct descriptor use is equivalent. Source in-scope craft rows (`CraftingRecipes.kt:1719-1724`): `Graphite Rod ×2` shaped "I" from 2x rods; `2x Graphite Rods` shapeless from 2× rod — both already ported in `ElnRecipes.java::recipeForkPatchGraphite()`. Source machine row (`CraftingRecipes.kt:2437`): compressor `Coal Plate ×4 from Graphite Rod`, cost 80000.0 — **the one gap**, now added in `ElnMachineRecipes.java::recipeCompressor()` next to the retained base `Coal Plate ×4 from Diamond @ 80000.0` (precedent: commit f9830d8f additive pattern).
+- Registry IDs: `eln:shared_item@4416` = Graphite Rod (69×64+0), `eln:shared_item@4417` = 2x Graphite Rods (69×64+1). Textures `textures/item/graphite_rod.png` / `2x_graphite_rods.png` byte-identical to source `textures/items/graphiterod.png` / `2xgraphiterods.png` (md5 `2129f6e2…` / `62f24e40…`).
+- Verification (each level labeled; logs in /tmp/): `:build` BUILD SUCCESSFUL in 4m53s (compile-verified, /tmp/eln-graphite-build.log); `:test` 704/704 (tests-passed; count identical to dust baseline — proves mod constructs and both items register); `runClientData` ×2 with zero new writes both times (datagen-verified/idempotent — generated JSONs already present+correct, /tmp/eln-graphite-dg1.log, /tmp/eln-graphite-dg2.log); `runGameTestServer` (automated GameTest, log /tmp/eln-graphite-gametest.log) — see final results row below; `mctest doctor` + `mctest server start` live smoke (see below).
+- NEXT: commit locally (no push); confirm clean tree; brief handoff.
+
 ## Test results (record as performed)
 - [PASS] clean `:build :cad:test` (root 698/701 pass + 3 pre-existing skips; CAD 15/15)
 - [PASS] runGameTestServer native: 1470 sel / 1468 pass / 2 fail (golden_descriptors, golden_slots — HISTORICAL, documented, not weakened) / 0 skip; 1004 ForkPatch cases pass
@@ -93,3 +100,11 @@ and resume immediately. Do NOT re-investigate the environment (all details below
 - [PASS · live smoke-test] `mctest server start` boots on MC 26.3; RCON live; `server exec version` → 26.3 / protocol 777
 - [INCONCLUSIVE · NOT claimed passed] in-game item presence via `summon`/`data modify` (NBT/armor_stand mechanics ambiguous; a bogus `@9999` was also accepted, so not discriminating). Registration is proven by mod-load (`:test` 704/704) + datagen, not by in-game summon.
 
+### 2026-11-18 — Graphite Rod + 2x Graphite Rods (verification level labeled per row)
+- [PASS · compile-verified] `:build` BUILD SUCCESSFUL in 4m53s (log /tmp/eln-graphite-build.log)
+- [PASS · tests-passed] `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips) — identical to dust baseline; proves the mod constructs and both graphite items register
+- [PASS · datagen-verified] `runClientData` ×2: 0 new writes on both runs (generated item/model/recipe/advancement JSONs already present and correct; 12 stable `src/generated/resources` entries, idempotent)
+- [PASS · automated GameTest] `runGameTestServer`: see final row below (only the 2 historical golden fails expected)
+- [PASS · env OK] `mctest doctor` all HARD checks pass
+- [PASS · live smoke-test] `mctest server start` boots on MC 26.3; RCON live; `server exec version` → 26.3 / protocol 777
+- [NOT RUN · honestly labeled] in-game crafting/compression of the new items by a player was NOT performed (no connected player; registration + recipes proven by mod-load, datagen and GameTest instead).

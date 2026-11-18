@@ -71,6 +71,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeForkPatchOffgrid", ElnRecipes::recipeForkPatchOffgrid);
         run("recipeForkPatchStandby", ElnRecipes::recipeForkPatchStandby);
         run("recipeForkPatchUps", ElnRecipes::recipeForkPatchUps);
+        run("recipeForkPatchGraphite", ElnRecipes::recipeForkPatchGraphite);
         run("recipeThermalDissipatorPassiveAndActive", ElnRecipes::recipeThermalDissipatorPassiveAndActive);
         run("recipeElectricalAntenna", ElnRecipes::recipeElectricalAntenna);
         run("recipeEggIncubator", ElnRecipes::recipeEggIncubator);
@@ -1406,6 +1407,13 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', findItemStack("Copper Cable"), 'R', Items.REDSTONE);
         addShapelessRecipe(findItemStack("Wall-mounted MPPT Solar Controller"), findItemStack("MPPT Solar Controller"), findItemStack("Iron Plate"));
         addShapelessRecipe(findItemStack("Wall-mounted Hybrid Solar Inverter"), findItemStack("Hybrid Solar Inverter"), findItemStack("Iron Plate"));
+    }
+
+    /** ForkPatch 1.21.1: Graphite Rod (shaped, 2x from 2x Graphite Rods) and 2x Graphite Rods (shapeless, 2x rod).
+     * Mutually dependent pair; both ported together. */
+    public static void recipeForkPatchGraphite() {
+        addRecipe(findItemStack("Graphite Rod", 2), "I", 'I', findItemStack("2x Graphite Rods"));
+        addShapelessRecipe(findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
     }
 
     public static void recipeSolarPanel() {

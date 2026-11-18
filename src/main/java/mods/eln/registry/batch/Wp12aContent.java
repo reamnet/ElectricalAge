@@ -55,6 +55,7 @@ public class Wp12aContent implements ElnContent {
         registerMiscItem(120);
         registerPortableItem(122);
         registerFuelBurnerItem(124);
+        registerArc(69);
     }
 
     /** On EA's plates (Erisi's chat review: players' hammered plates didn't fit, and nothing said why; Baughn 2026-10-27). */
@@ -1060,4 +1061,30 @@ public class Wp12aContent implements ElnContent {
         sharedItemStackOne.addElement(2 + (id << 6),
             new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Big Fuel Burner"), 25000 * fuelHeatFurnacePowerFactor, 0, 1f));
     }
+    /** ForkPatch 1.21.1 registerArc sub-items in scope (source ItemRegistration.kt, id 69): Graphite Rod (subId 0),
+     * 2x Graphite Rods (subId 1). 3x/4x variants and Synthetic Diamond are out of scope. Plain descriptors: the
+     * source GraphiteDescriptor adds no behaviour beyond GenericItemUsingDamageDescriptor. No ore entries in source.
+     */
+    public static void registerArc(int id) {
+        int subId, completId;
+        String name;
+
+        {
+            subId = 0;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Graphite Rod");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
+        {
+            subId = 1;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "2x Graphite Rods");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
+    }
+
 }

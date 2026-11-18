@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T03:40:14.589527421	eln-global/EA models
+// 26.3	2026-11-18T04:24:51.517967238	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -333,6 +333,7 @@ d1f94e7fb1a9bc16ffa9e0f8524ae70d6917f64b assets/eln/items/25a_diode.json
 fab7bb3e1fe01aba95b89a55039e5c619aee9f16 assets/eln/items/2_a_pole_fuse.json
 507b9088655a2bbd0bd3a3d06d266d6f17c2dcb9 assets/eln/items/2x3_rotating_solar_panel.json
 861291c51eba402c3930f1b4a65d550c96054a14 assets/eln/items/2x3_solar_panel.json
+ed7b9f2824af25baeb2523cda00ccd5fd1c9e898 assets/eln/items/2x_graphite_rods.json
 e008bbfb2d49445a06566c192edf2756be1addd4 assets/eln/items/30_a_pole_fuse.json
 11509abb3cb064d06544951107654b56511f43cb assets/eln/items/32_kwh_lifepo4_battery_cabinet.json
 897b2e9fef886c07eaaa8e1eebc3f3eda183dd44 assets/eln/items/32_kwh_wall_mounted_lifepo4_battery.json
@@ -757,6 +758,7 @@ c7f9e26b775d9707b8295727599f3db0ec172123 assets/eln/items/gooseneck_service_mast
 61ebb1e4f6bbe4d9ef74adbca78ffa9894d7afbe assets/eln/items/grand_crystal_cascade_chandelier.json
 8cd3079c9a161d05e50cf7c5eb48c9491146e2c0 assets/eln/items/grand_empire_chandelier.json
 316edf9b34d334f9cada26a6bbfb466e5091f969 assets/eln/items/grand_halo_ring_chandelier.json
+1bf3a5dd8a855aed3c6199fe3fd4e7572e3ea1c8 assets/eln/items/graphite_rod.json
 12d8fcfd796a694035bd05fdd7dce7da9163aa76 assets/eln/items/gray_brush.json
 49f2b9c4168122d8cc40a95e09be84da4804afac assets/eln/items/green_banker_table_lamp.json
 69b0f5a9932f8a27ea63cded262a9a9976c7c64c assets/eln/items/green_brush.json
@@ -1278,6 +1280,7 @@ d361021630aae42517fa995142e48b53cc31cc9d assets/eln/models/item/2_a_pole_fuse.js
 20aa2918d882b915847904d54ea9b0ae68a9da63 assets/eln/models/item/2x3_rotating_solar_panel_3d.json
 533ab7a54f474ff6038450c4ae8f59fc68689d56 assets/eln/models/item/2x3_solar_panel.json
 58ee4af41e28eec052f6dab6934e9b3ccb288d27 assets/eln/models/item/2x3_solar_panel_3d.json
+29610b3853e5f73d3c28dca1b92ca2fe7c95b9cf assets/eln/models/item/2x_graphite_rods.json
 cc086ae9b7267585a5bdeb962771cfe1eb0898c5 assets/eln/models/item/30_a_pole_fuse.json
 d062abb1cdde12034732856bc4f1798f3726dffb assets/eln/models/item/32_kwh_lifepo4_battery_cabinet.json
 c9afafe6532d70a0b6eb67e6234b6c22395a15da assets/eln/models/item/32_kwh_lifepo4_battery_cabinet_3d.json
@@ -1847,6 +1850,7 @@ adf6879fb712577a83c92654ada96bbf10e82b24 assets/eln/models/item/grand_empire_cha
 8e8b92ef492a252b96efaf02c166aea5a7d6e5a6 assets/eln/models/item/grand_empire_chandelier_3d.json
 733e5ac98070cadb9077da923b20815b6792f4d1 assets/eln/models/item/grand_halo_ring_chandelier.json
 6f4ab2d6669e17aae2b21e0a8efba02464a269f9 assets/eln/models/item/grand_halo_ring_chandelier_3d.json
+eb72836728fb7bd75dbfe16351dcb5e77ca798af assets/eln/models/item/graphite_rod.json
 a226cf403dbdfeeb44c3bf58de0c6cf852269566 assets/eln/models/item/gray_brush.json
 55581918e7d19d1410bf23ccb99c9caddaa5597b assets/eln/models/item/green_banker_table_lamp.json
 46f0761787007a3105ec5d117cfda2e326a209f8 assets/eln/models/item/green_banker_table_lamp_3d.json

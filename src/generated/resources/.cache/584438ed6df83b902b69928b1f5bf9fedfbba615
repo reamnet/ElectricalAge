@@ -1,4 +1,4 @@
-// 26.3	2026-11-17T19:11:36.973018766	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-18T04:42:42.255987072	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -100,6 +100,7 @@ e9d160c9ddba6c8a8ec8405b1dff957b15c5bc56 data/eln/advancement/recipes/misc/2x3_s
 a7ef19f96f0a968e3279ec528966daa3ccc7f846 data/eln/advancement/recipes/misc/2x3_solar_panel_6.json
 cf9a542869d932b0467be73079c897ff6e4c4e30 data/eln/advancement/recipes/misc/2x3_solar_panel_7.json
 4ea3704ee0a90e5d256620f83f8baef339924c50 data/eln/advancement/recipes/misc/2x3_solar_panel_8.json
+410db019c3e3993980d8b2869456871346ca4200 data/eln/advancement/recipes/misc/2x_graphite_rods.json
 bf194788a8029458cf1c7fa28f34377b253def04 data/eln/advancement/recipes/misc/30_a_pole_fuse.json
 3decd97fbbd23e5e3762c01a60c538e071d787c1 data/eln/advancement/recipes/misc/30a_electrical_breaker.json
 84c01f91ed7fcb12fd00073d73e8659fdfa254b2 data/eln/advancement/recipes/misc/32_kwh_lifepo4_battery_cabinet.json
@@ -324,6 +325,7 @@ e8157249b4c9db4a112a3d1cc944546afca587d6 data/eln/advancement/recipes/misc/gasol
 232752e00d2f55cddb7dad84d0a60de69a78b6b1 data/eln/advancement/recipes/misc/grand_crystal_cascade_chandelier.json
 b778a6d5c59a017c3c5ed76f66447aed4e634fd2 data/eln/advancement/recipes/misc/grand_empire_chandelier.json
 082e6a36592ee9e875496d9f044f943e8ffdc0e3 data/eln/advancement/recipes/misc/grand_halo_ring_chandelier.json
+e1e2cc77fc3231064d43dc3f7ede2a00d35e2c29 data/eln/advancement/recipes/misc/graphite_rod.json
 3206c8a83c23437655d503a29cdf6acb090766cf data/eln/advancement/recipes/misc/gray_brush.json
 49b426100272a67dc0c0b6e3e1659c717c3f5de4 data/eln/advancement/recipes/misc/green_banker_table_lamp.json
 a0d612bd4f26061b5e9c15aa0f3000b426037fd0 data/eln/advancement/recipes/misc/green_brush.json
@@ -794,6 +796,7 @@ b0588f14522df3199d73680c26f0b307df03e644 data/eln/recipe/2x3_solar_panel_5.json
 a79753702704c77955e723a239e3a2112276263b data/eln/recipe/2x3_solar_panel_6.json
 a4f59d5c030a25e4d26a6b120055a3a1e251c3e2 data/eln/recipe/2x3_solar_panel_7.json
 d222dad695bf0df4e61a765b79857892e1119ead data/eln/recipe/2x3_solar_panel_8.json
+e3310329d9c901210f39d2eb6981bc4f50e92e88 data/eln/recipe/2x_graphite_rods.json
 442fbc57e44c878328201eab313eacd104883351 data/eln/recipe/30_a_pole_fuse.json
 722822fc885c09cd4288aa3fb5a637979eae61b0 data/eln/recipe/30a_electrical_breaker.json
 b50cc70833c54f5c0c672983a136873cdfb3a5de data/eln/recipe/32_kwh_lifepo4_battery_cabinet.json
@@ -1018,6 +1021,7 @@ a3490c55657a25c1a3472ba0cb062e62c8b9a612 data/eln/recipe/glass_globe_wall_sconce
 b24f0fdd11f4695c120a9461e33e31eef61f228e data/eln/recipe/grand_crystal_cascade_chandelier.json
 34aaa6ed4c3c78bbdb1efc1df25c023275bde104 data/eln/recipe/grand_empire_chandelier.json
 b555f27224c21da539eede40269569161c931a15 data/eln/recipe/grand_halo_ring_chandelier.json
+e4072c68a93fc9d81d22f57b9f308deab9f675e0 data/eln/recipe/graphite_rod.json
 6807bca5810c43c53a541f3192a05744bb3b73f2 data/eln/recipe/gray_brush.json
 761bb87157e0b0e45dabe6638548161f25ad54c4 data/eln/recipe/green_banker_table_lamp.json
 1fd7392f8f3c4443adbf0499d84396c5da56090d data/eln/recipe/green_brush.json

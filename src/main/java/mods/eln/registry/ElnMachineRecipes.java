@@ -179,6 +179,9 @@ public final class ElnMachineRecipes {
     public static void recipeCompressor() {
         add(compressorRecipes, new Recipe(findItemStack("Coal Plate", 4),
             new ItemStack[]{new ItemStack(Items.DIAMOND)}, 80000.0));
+        // ForkPatch 1.21.1: Graphite Rod also compresses to 4 Coal Plates at 80 kJ; base recipe retained.
+        add(compressorRecipes, new Recipe(findItemStack("Coal Plate", 4),
+            findItemStack("Graphite Rod"), 80000.0));
         // extractorRecipes.addRecipe(new
         // Recipe("dustCinnabar",new
         // ItemStack[]{findItemStack("Purified Cinnabar Dust",1)}, 1000.0));
