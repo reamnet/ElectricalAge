@@ -90,6 +90,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ForkPatchLampSensorCases.cases());
         l.addAll(mods.eln.sixnode.lampsocket.ForkPatchLampSupplySafetyCases.cases());
         l.addAll(mods.eln.transparentnode.festive.StringLightsCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchFinalLightingCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchRecessedCases.cases());
         l.add(new mods.eln.gametest.cases.ForkPatchSolarSamplingCases());
         l.addAll(mods.eln.gametest.cases.ForkPatchVariableInductorCases.cases());

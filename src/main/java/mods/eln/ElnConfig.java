@@ -8,6 +8,8 @@ public final class ElnConfig {
     }
 
     public static final ModConfigSpec SPEC;
+    private static final ModConfigSpec.DoubleValue[] SOURCE_LAMP_HOURS = new ModConfigSpec.DoubleValue[6];
+    private static final ModConfigSpec.BooleanValue[] SOURCE_LAMP_INFINITE = new ModConfigSpec.BooleanValue[6];
     static final ModConfigSpec.DoubleValue BATTERY_LIFE_FACTOR;
     static final ModConfigSpec.IntValue AUTOMINER_RANGE;
     static final ModConfigSpec.BooleanValue PROBE_DETAILS;
@@ -20,6 +22,9 @@ public final class ElnConfig {
     static final ModConfigSpec.IntValue ANVIL_BURSTS;
     static final ModConfigSpec.DoubleValue BANK_FARADS, BANK_VOLTS, BANK_LEAK, POWER_CAP_LEAK;
     static final ModConfigSpec.DoubleValue LAKE_SIZE, TAIL_SHARE, SEEP_SHARE, STEAM_PER_BUCKET;
+
+    public static double sourceLampHours(int technology) {return SPEC.isLoaded()?SOURCE_LAMP_HOURS[technology].get():new double[]{24,12,168,48,672,96}[technology];}
+    public static boolean sourceLampInfinite(int technology) {return SPEC.isLoaded()&&SOURCE_LAMP_INFINITE[technology].get();}
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -128,6 +133,16 @@ public final class ElnConfig {
                 "Also 1.12's wailaEasyMode: more detail on some machines.")
             .define("details", false);
         b.pop();
+        b.push("lighting");b.push("lamps");
+        String[] technologies={"incandescent","carbon","fluorescent","farming","led","halogen"};
+        double[] defaults={24,12,168,48,672,96};
+        for(int i=0;i<technologies.length;i++){
+            b.push(technologies[i]);
+            SOURCE_LAMP_HOURS[i]=b.comment("Source-rated bulb nominal lifetime in real hours; existing used bulbs retain absolute remaining hours.").defineInRange("nominalLifeInHours",defaults[i],1.0,8760.0);
+            SOURCE_LAMP_INFINITE[i]=b.comment("Disable wear for this source bulb technology.").define("infiniteLifeEnabled",false);
+            b.pop();
+        }
+        b.pop();b.pop();
         SPEC = b.build();
     }
 

@@ -77,7 +77,9 @@ emergencyexitlighting/emergencyexitlighting.obj
 energymeter/energymeter.obj
 fabricator/fabricator.obj
 fabricwallsconce/fabricwallsconce.obj
+festive_items/candle_light.obj
 festive_items/christmas_lights.obj
+festive_items/christmas_tree.obj
 fieldlogger/fieldlogger.obj
 firealarm_bell/firealarm_bell.obj
 firealarm_heat/firealarm_heat.obj
@@ -91,12 +93,15 @@ flarestack/flarestack.obj
 flatlamp/flatlamp.obj
 flatscreenmonitor/flatscreenmonitor.obj
 flexneonledstrip/flexneonledstrip.obj
+floodlight/floodlight.obj
+floodlight/floodlightmotor.obj
 fluorescentlamp/fluorescentlamp.obj
 fuelgenerator200v/fuelgenerator200v.obj
 fuelgenerator50v/fuelgenerator50v.obj
 fuelheater/fuelheater.obj
 fusionmatterreactor/fusionmatterreactor.obj
 gardenbollardlight/gardenbollardlight.obj
+gasworklight/gasworklight.obj
 gimbalpotlight/gimbalpotlight.obj
 globewallsconce/globewallsconce.obj
 gooseneckbarnlight/gooseneckbarnlight.obj

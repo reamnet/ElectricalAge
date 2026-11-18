@@ -40,8 +40,10 @@ object CordSupport {
         }
         if(owner is LampSupplyElement && owner.descriptor.nominalVoltage>0)return MachineCordDevice(owner,owner.powerLoad) { owner.descriptor.nominalVoltage }
         if(owner is mods.eln.transparentnode.festive.StringLightsElement)return object: MachineCordDevice(owner,owner.cordInput(),{ owner.cordNominalVoltage() }) {
+            override val cordPortable get()=(this.owner as mods.eln.transparentnode.festive.StringLightsElement).descriptor is mods.eln.transparentnode.festive.HolidayCandleDescriptor
             override fun acceptsCord(rating: CordRating)=rating==CordRating.V120 || rating==CordRating.V240
         }
+        if(owner is mods.eln.sixnode.EmergencyLampElement && owner.desc.sourceVoltage.isFinite())return MachineCordDevice(owner,owner.load){owner.desc.nominalVoltage}
         if(owner is BatteryChargerElement)return MachineCordDevice(owner,owner.powerLoad) { owner.descriptor.nominalVoltage }
         if(owner is ElectricalMachineElement)return MachineCordDevice(owner,owner.cordInput()) { owner.cordNominalVoltage() }
         // Bind explicit power loads, never whichever load happens to be first in a list.

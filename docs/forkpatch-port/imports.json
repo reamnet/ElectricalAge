@@ -8684,5 +8684,306 @@
     "sourceSha256": "92ff6a0855de710a639a9a7b32cd67ea59e0365b1b0cace6b223570a378b352b",
     "mode": "verbatim",
     "status": "expanded-native-regression-passed; live-client-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/misc/HybridNodeDirection.kt",
+    "target": "src/main/kotlin/mods/eln/misc/HybridNodeDirection.kt",
+    "sourceSha256": "ed1dbcb5931a868fd3163495e4705e6d4e9489bd3d7f0e9ebf57d16b890ecc3c",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/lampitem/LampDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/sixnode/lampsocket/SourceLampLife.kt",
+    "sourceSha256": "c3a8895fcbae34a223fec0de72724b27109194dcd0420f2152ae126cf94bbc32",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/festive/ChristmasTree.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/festive/ChristmasTree.kt",
+    "sourceSha256": "8cc2ddfb98060b36514dad52a42d36c51023262e0300a177e11f04be1c1b3b06",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/festive/FairyLights.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/festive/FairyLightPlacement.kt",
+    "sourceSha256": "ab221f2c81a3f68869df269787405524e5339b22775cf521b4a2121e6d4cfc32",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/festive/FairyLights.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/festive/FairyLights.kt",
+    "sourceSha256": "ab221f2c81a3f68869df269787405524e5339b22775cf521b4a2121e6d4cfc32",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/festive/HolidayCandle.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/festive/HolidayCandle.kt",
+    "sourceSha256": "1a4579559906e94cfe215e418109439ec1279ff47a25bc6b8a92eb3d696fc0df",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/festive/FestiveElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/festive/WirelessFixtureFeed.kt",
+    "sourceSha256": "44c5acb5a9dd1e57bc80654dd40c0bd6ed32d998a56aa9fd39b6ad8561c672f3",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightDescriptor.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightDescriptor.kt",
+    "sourceSha256": "f3ddb11ebb0ac924899e1ac7c24d7aa3777b2233f5ca099343ca2717313af7c0",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightElement.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightElement.kt",
+    "sourceSha256": "65cb30ecbe5ce660b766d05d829d0c80054ffa527f6d943581c991b25216e06a",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightOptics.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightOptics.kt",
+    "sourceSha256": "38370bd843be8a4d8daffab7453246de7c3cbdc199626ff5f2f8ebfabe5c7c3b",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightRender.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightRender.kt",
+    "sourceSha256": "460a270869014d549c98152ebff3eabd2573f319f347fd7407d1e46d09c02164",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightGui.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightScreen.kt",
+    "sourceSha256": "599b2c7803d0c70fc83b3e9d8cff345b1cd1c9f982c3d3563574892374ddc78f",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLight.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLight.kt",
+    "sourceSha256": "0bf6a5837978f9a4b13f8d67f69e62dbe3d0ff68db15f688628c78081828cb30",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLightClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLightMesh.kt",
+    "sourceSha256": "699906a6f98979b70374d26fa9708edb2852545e8d7bdb7d9d91d533d4352515",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLight.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLightOptics.kt",
+    "sourceSha256": "0bf6a5837978f9a4b13f8d67f69e62dbe3d0ff68db15f688628c78081828cb30",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLightClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLightRender.kt",
+    "sourceSha256": "699906a6f98979b70374d26fa9708edb2852545e8d7bdb7d9d91d533d4352515",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLightClient.kt",
+    "target": "src/main/kotlin/mods/eln/transparentnode/worklight/WorkLightScreen.kt",
+    "sourceSha256": "699906a6f98979b70374d26fa9708edb2852545e8d7bdb7d9d91d533d4352515",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/festive_items/candle_light.mtl",
+    "target": "src/main/resources/assets/eln/model/festive_items/candle_light.mtl",
+    "sourceSha256": "fa41ac7d1dce295aaef8cc8ba24aed6b88fc5a31deec78c5c03d54a71352b32b",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/festive_items/candle_light.obj",
+    "target": "src/main/resources/assets/eln/model/festive_items/candle_light.obj",
+    "sourceSha256": "f1134f3242bd54cfc3928b00970b059384567e5389996d6441cc99a932fc23e6",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/festive_items/candle_lightuv.png",
+    "target": "src/main/resources/assets/eln/model/festive_items/candle_lightuv.png",
+    "sourceSha256": "580fa519f6a70ec1cd5b6a3b6daac828957a747a0b850154004ca7927aff9878",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/festive_items/christmas_tree.mtl",
+    "target": "src/main/resources/assets/eln/model/festive_items/christmas_tree.mtl",
+    "sourceSha256": "5fc689306469b425d2b12b2afda53ffc178d5985a8f51f8fac4d11f0c75db683",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/festive_items/christmas_tree.obj",
+    "target": "src/main/resources/assets/eln/model/festive_items/christmas_tree.obj",
+    "sourceSha256": "2458bc4d3f1430e3bb7d49d15c01726c420183694503ec0a86cc644f758ba394",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/floodlight/flood_light_uv_map.png",
+    "target": "src/main/resources/assets/eln/model/floodlight/flood_light_uv_map.png",
+    "sourceSha256": "c3e38f8c4f8475f3d92c09a17ad73bbcc0966cc109088e659367cf2db8c17900",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/floodlight/floodlight.mtl",
+    "target": "src/main/resources/assets/eln/model/floodlight/floodlight.mtl",
+    "sourceSha256": "9263ea38d226b6458b6a583369376d7436ded23fb8ce5db969f249b75ae5e89f",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/floodlight/floodlight.obj",
+    "target": "src/main/resources/assets/eln/model/floodlight/floodlight.obj",
+    "sourceSha256": "9f519c635fb0ebfab3c696d219e80271e409033a7c752761739884860832ab96",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/floodlight/floodlight_item.png",
+    "target": "src/main/resources/assets/eln/model/floodlight/floodlight_item.png",
+    "sourceSha256": "4c0be32685bc97d09adaef7deec5813c301ea731b12021269d9813f441c7ecf3",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/floodlight/floodlightmotor.mtl",
+    "target": "src/main/resources/assets/eln/model/floodlight/floodlightmotor.mtl",
+    "sourceSha256": "203434d8202d3d356aacd52320cd6327c88079a1bc2f191ad675ea5948d6e343",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/floodlight/floodlightmotor.obj",
+    "target": "src/main/resources/assets/eln/model/floodlight/floodlightmotor.obj",
+    "sourceSha256": "980b2db43ce3d2f07dfd47bd49799b0e5d0dc837635bb3459b920ee8a4fdc964",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/poolsteplight/equipment_finish.mtl",
+    "target": "src/main/resources/assets/eln/model/gasworklight/equipment_finish.mtl",
+    "sourceSha256": "db710d88ffff76f0c96c6f2de49a8076ccd60afe569dfe9ad4dc8c0df9a6b33b",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/compactservicemast/fixture.mtl",
+    "target": "src/main/resources/assets/eln/model/gasworklight/fixture.mtl",
+    "sourceSha256": "be3ae061dc6dfc0e707ad0e464522eca6596b380b27100d5e5e5d3c9af82dd3c",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/model/gasworklight/gasworklight.obj",
+    "target": "src/main/resources/assets/eln/model/gasworklight/gasworklight.obj",
+    "sourceSha256": "a69348a3da14b08f609b656b3633436e454c5e812a13d54fb6a68419dc532ee6",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/basicfloodlight.png",
+    "target": "src/main/resources/assets/eln/textures/item/120v_basic_floodlight.png",
+    "sourceSha256": "4abf5d21ffaf6598072ece624db71308c168339077f8b655392b5b4d5ec98236",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/emergencylamp.png",
+    "target": "src/main/resources/assets/eln/textures/item/120v_emergency_lamp.png",
+    "sourceSha256": "34e169fd9b5070c919fb8b434ba81303e78d3d4efb36844a46d3d3b033993fd0",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/emergencylamp.png",
+    "target": "src/main/resources/assets/eln/textures/item/240v_emergency_lamp.png",
+    "sourceSha256": "34e169fd9b5070c919fb8b434ba81303e78d3d4efb36844a46d3d3b033993fd0",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/motorizedfloodlight.png",
+    "target": "src/main/resources/assets/eln/textures/item/240v_motorized_floodlight.png",
+    "sourceSha256": "3becb3f7770e8573f6cc1bbaf08341b910f321492dfedf5827e65fdb5d8c0872",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/christmastree.png",
+    "target": "src/main/resources/assets/eln/textures/item/christmas_tree.png",
+    "sourceSha256": "555fb0d65aabfd940f35049e240702e81b20c9e3ab966365b55d460329ec01e0",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/holidaycandle.png",
+    "target": "src/main/resources/assets/eln/textures/item/holiday_candle.png",
+    "sourceSha256": "5b4965f487c0897aa2301a3ee7eb6c0af65cd8b6d4f361d8aba5cc2d57af96e7",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/stringlights.png",
+    "target": "src/main/resources/assets/eln/textures/item/multicolor_deck_globe_string_lights.png",
+    "sourceSha256": "70c532ff0948558f9a69c56b7a476df98dc99fae11b313dec719c7e380e9fc00",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/stringlights.png",
+    "target": "src/main/resources/assets/eln/textures/item/multicolor_fairy_lights_on_green_wire.png",
+    "sourceSha256": "70c532ff0948558f9a69c56b7a476df98dc99fae11b313dec719c7e380e9fc00",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/stringlights.png",
+    "target": "src/main/resources/assets/eln/textures/item/warm_white_deck_globe_string_lights.png",
+    "sourceSha256": "70c532ff0948558f9a69c56b7a476df98dc99fae11b313dec719c7e380e9fc00",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/resources/assets/eln/textures/blocks/stringlights.png",
+    "target": "src/main/resources/assets/eln/textures/item/white_fairy_lights_on_green_wire.png",
+    "sourceSha256": "70c532ff0948558f9a69c56b7a476df98dc99fae11b313dec719c7e380e9fc00",
+    "mode": "verbatim",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/item/lampitem/LampTechnology.kt",
+    "target": "src/main/java/mods/eln/ElnConfig.java",
+    "sourceSha256": "b37fb0303d13924601b183eae40fa3b2fe7a0510b09c6230049140c3be66c9dd",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
+  },
+  {
+    "source": "src/main/kotlin/mods/eln/sixnode/EmergencyLamp.kt",
+    "target": "src/main/java/mods/eln/sixnode/EmergencyLamp.kt",
+    "sourceSha256": "fdd57951cd046f2b9b9d7146f42ce17ee0eb7de853eaa517424be859cde8d3ae",
+    "mode": "adapted",
+    "status": "final-lighting-native-regressions-passed; live-menu-smoke-recorded; hardware-parity-pending"
   }
 ]

@@ -54,6 +54,8 @@ public final class LabCommands {
                     .executes(c -> PanelCarryLab.build(c.getSource(), BlockPosArgument.getLoadedBlockPos(c, "pos")))))
                 .then(Commands.literal("devicemenu").then(Commands.argument("lookup", IntegerArgumentType.integer(0,65535))
                     .executes(c -> PanelCarryLab.menu(c.getSource(), IntegerArgumentType.getInteger(c, "lookup")))))
+                .then(Commands.literal("finallights").then(Commands.argument("pos", BlockPosArgument.blockPos())
+                    .executes(c -> FinalLightingLab.build(c.getSource(), BlockPosArgument.getLoadedBlockPos(c, "pos")))))
                 .then(Commands.literal("lamps").then(Commands.argument("pos", BlockPosArgument.blockPos())
                     .executes(c -> LightingLab.build(c.getSource(), BlockPosArgument.getLoadedBlockPos(c, "pos")))))
                 .then(Commands.literal("lampmenu").then(Commands.argument("lookup", IntegerArgumentType.integer(4116,4499))

@@ -40,6 +40,11 @@ final class ClientScreens {
         ElnScreens.register(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, mods.eln.transparentnode.converter.VariableDcDcScreen::new);
         ElnScreens.register(mods.eln.transparentnode.renewable.RenewableDescriptor.class, mods.eln.transparentnode.renewable.SolarScreen::new);
         ElnScreens.register(mods.eln.utility.TransmissionDescriptor.class, mods.eln.utility.TransmissionScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.festive.ChristmasTreeDescriptor.class,mods.eln.transparentnode.festive.StringLightsScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.festive.HolidayCandleDescriptor.class,mods.eln.transparentnode.festive.StringLightsScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.festive.FairyLightsDescriptor.class,mods.eln.transparentnode.festive.StringLightsScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.floodlight.FloodlightDescriptor.class,mods.eln.transparentnode.floodlight.FloodlightScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.worklight.WorkLightDescriptor.class,mods.eln.transparentnode.worklight.WorkLightScreen::new);
         // screen layouts (assets/eln/gui/<name>.json)
         layout("transparentnode.electricalfurnace.ElectricalFurnaceDescriptor", "electrical_furnace");
         layout("transparentnode.smelter.SmelterDescriptor", "smelter");

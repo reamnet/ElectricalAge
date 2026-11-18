@@ -16,7 +16,7 @@ import java.io.*
 import kotlin.math.roundToInt
 
 /** Source15W festive consumer. Wireless power is a real passive connection, never free light. */
-class StringLightsElement(node: TransparentNode,d: TransparentNodeDescriptor):TransparentNodeElement(node,d) {
+open class StringLightsElement(node: TransparentNode,d: TransparentNodeDescriptor):TransparentNodeElement(node,d) {
     private val slots=TransparentNodeElementInventory(0,1,this)
     val input=NbtElectricalLoad("electricalLoad").apply { setRs(.002) }
     val loadResistor=Resistor(input,null)
@@ -33,7 +33,7 @@ class StringLightsElement(node: TransparentNode,d: TransparentNodeDescriptor):Tr
     }
     fun cordInput()=input
     fun cordNominalVoltage()=nominalVolts.toDouble()
-    private fun configure() { loadResistor.r=nominalVolts.toDouble()*nominalVolts/15.0 }
+    private fun configure() { val watts=when(descriptor){is ChristmasTreeDescriptor->35.0;is HolidayCandleDescriptor->5.0;else->15.0};loadResistor.r=nominalVolts.toDouble()*nominalVolts/watts }
     private fun unplugWireless() {
         if(supply!=null)Eln.simulator.removeElectricalComponent(wirelessLink)
         wirelessLink.connectTo(null,null);supply=null;supplyHandle=null;wirelessReceivers.remove(this);WirelessPowerChannels.untrackBridge(this)

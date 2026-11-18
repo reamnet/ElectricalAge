@@ -27,7 +27,7 @@ import mods.eln.compat.BucketCompat
 import java.io.DataInputStream
 import java.io.DataOutputStream
 
-class FuelGeneratorDescriptor(name: String, internal val obj: Obj3D?, internal val cable: ElectricalCableDescriptor,
+open class FuelGeneratorDescriptor(name: String, internal val obj: Obj3D?, internal val cable: ElectricalCableDescriptor,
                               internal val nominalPower: Double, internal val maxVoltage: Double,
                               tankCapacityInSecondsAtNominalPower: Double)
     : TransparentNodeDescriptor(name, FuelGeneratorElement::class.java, null) {
@@ -104,12 +104,13 @@ class FuelGeneratorDescriptor(name: String, internal val obj: Obj3D?, internal v
     }
 }
 
-class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: TransparentNodeDescriptor) :
+open class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: TransparentNodeDescriptor) :
     TransparentNodeElement(transparentNode, descriptor_) {
     internal var positiveLoad = NbtElectricalLoad("positiveLoad")
     internal var powerSource = PowerSource("powerSource", positiveLoad)
     internal var slowProcess = FuelGeneratorSlowProcess(this)
     internal var descriptor = descriptor_ as FuelGeneratorDescriptor
+    internal open val operatingVoltage get()=descriptor.maxVoltage
     internal val fuels = FuelRegistry.fluidListToFluids(descriptor.fuels).map { FuelRegistry.fluidName(it) } // 1.12: fluids by name (no ids)
     internal var tankLevel = 0.0
     internal var tankFluid = "lava"
@@ -150,8 +151,8 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
 
     override fun initialize() {
         descriptor.cable.applyTo(positiveLoad)
-        powerSource.setUmax(descriptor.maxVoltage)
-        powerSource.setImax(descriptor.nominalPower * 5 / descriptor.maxVoltage)
+        powerSource.setUmax(operatingVoltage)
+        powerSource.setImax(descriptor.nominalPower * 5 / operatingVoltage)
         connect()
     }
 
@@ -285,7 +286,7 @@ class FuelGeneratorSlowProcess(internal val generator: FuelGeneratorElement) : I
             if (generator.voltageGracePeriod > 0) {
                 generator.voltageGracePeriod -= time;
             } else if (generator.positiveLoad.u <
-                FuelGeneratorDescriptor.GeneratorBailOutVoltageRatio * generator.descriptor.maxVoltage) {
+                FuelGeneratorDescriptor.GeneratorBailOutVoltageRatio * generator.operatingVoltage) {
                 generator.on = false;
             }
         }

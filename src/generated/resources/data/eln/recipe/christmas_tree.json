@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:string_lights",
+    "minecraft:spruce_sapling",
+    "eln:string_lights"
+  ],
+  "result": {
+    "id": "eln:christmas_tree"
+  }
+}

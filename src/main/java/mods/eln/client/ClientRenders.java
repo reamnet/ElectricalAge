@@ -20,6 +20,11 @@ public final class ClientRenders {
         ElnRenders.transparent(mods.eln.transparentnode.firealarm.AlarmDescriptor.class,mods.eln.transparentnode.firealarm.AlarmRender::new);
         ElnRenders.transparent(mods.eln.utility.BreakerPanelDescriptor.class,mods.eln.utility.BreakerPanelRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.festive.StringLightsDescriptor.class,mods.eln.transparentnode.festive.StringLightsRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.festive.ChristmasTreeDescriptor.class,mods.eln.transparentnode.festive.ChristmasTreeRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.festive.HolidayCandleDescriptor.class,mods.eln.transparentnode.festive.HolidayCandleRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.festive.FairyLightsDescriptor.class,mods.eln.transparentnode.festive.FairyLightsRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.floodlight.FloodlightDescriptor.class,mods.eln.transparentnode.floodlight.FloodlightRender::new);
+        ElnRenders.transparent(mods.eln.transparentnode.worklight.WorkLightDescriptor.class,mods.eln.transparentnode.worklight.WorkLightRender::new);
         // Native publication uses these factories; descriptor RenderClass fields are not a fallback.
         ElnRenders.transparent(mods.eln.utility.HouseServiceDescriptor.class,mods.eln.utility.HouseServiceRender::new);
         ElnRenders.transparent(mods.eln.utility.UndergroundHandholeDescriptor.class,mods.eln.utility.UndergroundHandholeRender::new);

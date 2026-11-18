@@ -5176,5 +5176,71 @@
   "display": "Grid DC-DC Converter",
   "kind": "transparent_node",
   "name": "grid_dc_dc_converter"
+ },
+ "eln:six_node@4500": {
+  "descriptor": "EmergencyLampDescriptor",
+  "display": "120V Emergency Lamp",
+  "kind": "six_node",
+  "name": "120v_emergency_lamp"
+ },
+ "eln:six_node@4501": {
+  "descriptor": "EmergencyLampDescriptor",
+  "display": "240V Emergency Lamp",
+  "kind": "six_node",
+  "name": "240v_emergency_lamp"
+ },
+ "eln:transparent_node@4352": {
+  "descriptor": "FloodlightDescriptor",
+  "display": "120V Basic Floodlight",
+  "kind": "transparent_node",
+  "name": "120v_basic_floodlight"
+ },
+ "eln:transparent_node@4353": {
+  "descriptor": "FloodlightDescriptor",
+  "display": "240V Motorized Floodlight",
+  "kind": "transparent_node",
+  "name": "240v_motorized_floodlight"
+ },
+ "eln:transparent_node@4416": {
+  "descriptor": "ChristmasTreeDescriptor",
+  "display": "Christmas Tree",
+  "kind": "transparent_node",
+  "name": "christmas_tree"
+ },
+ "eln:transparent_node@4417": {
+  "descriptor": "HolidayCandleDescriptor",
+  "display": "Holiday Candle",
+  "kind": "transparent_node",
+  "name": "holiday_candle"
+ },
+ "eln:transparent_node@7936": {
+  "descriptor": "WorkLightDescriptor",
+  "display": "Gasoline Construction Work Light",
+  "kind": "transparent_node",
+  "name": "gasoline_construction_work_light"
+ },
+ "eln:transparent_node@7994": {
+  "descriptor": "FairyLightsDescriptor",
+  "display": "White Fairy Lights on Green Wire",
+  "kind": "transparent_node",
+  "name": "white_fairy_lights_on_green_wire"
+ },
+ "eln:transparent_node@7995": {
+  "descriptor": "FairyLightsDescriptor",
+  "display": "Multicolor Fairy Lights on Green Wire",
+  "kind": "transparent_node",
+  "name": "multicolor_fairy_lights_on_green_wire"
+ },
+ "eln:transparent_node@8006": {
+  "descriptor": "FairyLightsDescriptor",
+  "display": "Warm White Deck Globe String Lights",
+  "kind": "transparent_node",
+  "name": "warm_white_deck_globe_string_lights"
+ },
+ "eln:transparent_node@8007": {
+  "descriptor": "FairyLightsDescriptor",
+  "display": "Multicolor Deck Globe String Lights",
+  "kind": "transparent_node",
+  "name": "multicolor_deck_globe_string_lights"
  }
 }

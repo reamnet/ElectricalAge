@@ -1,0 +1,95 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "baselineCommit": "21b361c6afd0edea88b114eb4ecd2a485386a404",
+  "status": "Remaining standalone lighting implementations complete; full native regression, targeted GUI follow-up and nine live menus recorded.",
+  "native": {
+    "selected": 1552,
+    "passed": 1550,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 1086,
+      "failed": 0
+    }
+  },
+  "newNativeCases": {
+    "selected": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0
+  },
+  "root": {
+    "tests": 704,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "selected": 704,
+    "passed": 701,
+    "failed": 0
+  },
+  "cad": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "catalog": {
+    "published": 649,
+    "menus": 304,
+    "itemDraws": 436,
+    "passed": true
+  },
+  "datagen": {
+    "totalFiles": 3917,
+    "written": 0,
+    "removedStale": 0
+  },
+  "goldens": {
+    "assertions": 857,
+    "retainedExactAssertions": 832,
+    "addedAssertions": 25,
+    "expectationsChanged": false
+  },
+  "provenance": {
+    "entries": 1283,
+    "passed": true
+  },
+  "artifacts": {
+    "report": "/tmp/eln-final-lighting-full.xml",
+    "log": "/tmp/eln-final-lighting-full.log",
+    "targetedReport": "/tmp/eln-light-final-native-v5.xml"
+  },
+  "live": {
+    "dedicatedServerBoot": true,
+    "gallery": "9/9 at3200,100,3200",
+    "client": "Real NeoForge client joined real dedicated server; all nine source-specific menus opened and captured.",
+    "audio": "OpenAL device unavailable; unverified",
+    "renderer": "OpenGL4.5 Mesa26.0.8 llvmpipe; temporary view distance2/gui scale2/30FPS; original local options restored after testing.",
+    "menus": 9,
+    "manualControl": "Basic floodlight swivel changed through its real widget and retained88 degrees after reopening; evidence captured before the later work-layout-only fix.",
+    "workLight": "Source-sized14px aim controls remove inventory-label overlap; final live menu captured. Both-head packets/save/restore are native-tested; later manual work-head capture was not obtained during renderer stalls.",
+    "scope": "Live menu/model smoke and actual saved-source power; not exhaustive human playtesting or source/native pixel comparison.",
+    "evidenceDirectory": "evidence/final-lighting",
+    "supplyEvidence": "final-lighting-live-menus.json",
+    "clientStopped": true,
+    "serverStopped": true,
+    "testForceloadsRemoved": true
+  },
+  "limitations": [
+    "No universal pixel or real hardware GPU/audio parity claim.",
+    "Simultaneous multiplayer and complete source-world migration remain release acceptance work.",
+    "Other whole-mod workstreams and general tools are outside this lighting slice.",
+    "llvmpipe terrain rendering intermittently stalled; desktop window captures were black. Use actual main-window F2 captures; audio has no available OpenAL device."
+  ],
+  "guiFollowup": {
+    "changes": [
+      "Work-light source aim button geometry/disabled engine state",
+      "Operator gallery supply orientation"
+    ],
+    "targetedNativeSelected": 16,
+    "targetedNativePassed": 16,
+    "report": "/tmp/eln-final-lighting-gui-followup.xml",
+    "log": "/tmp/eln-final-lighting-gui-followup.log",
+    "note": "Full regression above preceded these client-layout/operator-scene-only adjustments. Core production simulation, menus and identities are unchanged."
+  }
+}

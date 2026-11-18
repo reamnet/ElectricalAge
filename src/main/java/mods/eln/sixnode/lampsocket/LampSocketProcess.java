@@ -198,6 +198,13 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
 			/*
              * double overFactor = (lamp.electricalLoad.Uc-lampDescriptor.minimalU) /(lampDescriptor.nominalU-lampDescriptor.minimalU);
 			 */
+            if(mods.eln.sixnode.lampsocket.SourceLampLife.source(lampDescriptor)) {
+                updateLifeTimeout += deltaT;
+                if(updateLifeTimeout >= 1.0) {
+                    double elapsed=updateLifeTimeout;updateLifeTimeout=0.0;
+                    if(mods.eln.sixnode.lampsocket.SourceLampLife.account(lampStack,lampDescriptor,lamp.lampResistor.getU(),elapsed)<=0.0){lamp.getInventory().setItem(0,net.minecraft.world.item.ItemStack.EMPTY);newLight=0;}
+                }
+            } else {
             double overFactor = (lamp.lampResistor.getP()) / (lamp.getNominalLampPower(lampDescriptor));
             if (overFactor < 0)
                 overFactor = 0;
@@ -234,6 +241,8 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
                     lamp.getInventory().setItem(0, null);
                     light = 0;
                 }
+
+            }
 
             }
 

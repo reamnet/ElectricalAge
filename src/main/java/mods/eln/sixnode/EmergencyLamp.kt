@@ -22,10 +22,11 @@ import net.minecraft.nbt.CompoundTag
 import java.io.DataInputStream
 import java.io.DataOutputStream
 
-class EmergencyLampDescriptor(name: String, val cable: ElectricalCableDescriptor, val batteryCapacity: Double,
-                              val chargePower: Double, val consumption: Double, val lightLevel: Int, model: Obj3D)
+class EmergencyLampDescriptor @JvmOverloads constructor(name: String, val cable: ElectricalCableDescriptor, val batteryCapacity: Double,
+                              val chargePower: Double, val consumption: Double, val lightLevel: Int, model: Obj3D, val sourceVoltage:Double=Double.NaN)
     : SixNodeDescriptor(name, EmergencyLampElement::class.java, null) {
 
+    val nominalVoltage get()=if(sourceVoltage.isFinite())sourceVoltage else cable.electricalNominalVoltage
     val mainCeiling: Obj3D.Obj3DPart = model.getPart("coreCeil")
     val panelCeiling: Obj3D.Obj3DPart = model.getPart("panelCeil")
     val lightCeiling: Obj3D.Obj3DPart = model.getPart("lightCeil")
@@ -107,7 +108,17 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     var channel by published("Default channel")
     var isConnectedToLampSupply by published(false)
 
+    private val feed=mods.eln.transparentnode.festive.WirelessFixtureFeed(this,load)
+    private val sourceRated get()=desc.sourceVoltage.isFinite()
+    private val corded get()=mods.eln.transparentnode.cord.CordSupport.device(this)?.cord?.plugged==true
+    override fun disconnectJob(){if(sourceRated)feed.clear();super.disconnectJob()}
     val process = IProcess { deltaT ->
+        if(sourceRated){
+            feed.update(!poweredByCable&&!corded,channel)
+            isConnectedToLampSupply=feed.connected
+            if(kotlin.math.abs(load.u)>.5*desc.nominalVoltage){on=false;chargingResistor.state=charge<desc.batteryCapacity}
+            else {chargingResistor.state=false;on=charge>0;charge=(charge-desc.consumption*deltaT).coerceAtLeast(0.0)}
+        }else {
         if (!poweredByCable) {
             var closestPowerSupply: LampSupplyElement.PowerSupplyChannelHandle? = null
             var closestDistance = 10000f
@@ -134,7 +145,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
             }
         }
 
-        if (chargingResistor.u > 0.5 * desc.cable.electricalNominalVoltage) {
+        if (chargingResistor.u > 0.5 * desc.nominalVoltage) {
             on = false
             if (charge < desc.batteryCapacity) {
                 chargingResistor.state = true
@@ -151,24 +162,28 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
                 on = false
             }
         }
+        }
     }
 
     override fun initialize() {
+        if(sourceRated)electricalProcessList.add(IProcess { dt ->
+            if(chargingResistor.state&&dt.isFinite()&&dt>0)charge=(charge+chargingResistor.p.coerceAtLeast(0.0)*dt).coerceAtMost(desc.batteryCapacity)
+        })
         chargingResistor.r =
-            desc.cable.electricalNominalVoltage * desc.cable.electricalNominalVoltage / desc.chargePower
+            desc.nominalVoltage * desc.nominalVoltage / desc.chargePower
         desc.cable.applyTo(load)
 
         electricalLoadList.add(load)
         electricalComponentList.add(chargingResistor)
         slowProcessList.add(process)
         slowProcessList.add(NodePeriodicPublishProcess(sixNode, 2.0, 0.5))
-        slowProcessList.add(VoltageStateWatchDog().set(load).setUNominal(desc.cable.electricalNominalVoltage)
+        slowProcessList.add(VoltageStateWatchDog().set(load).setUNominal(desc.nominalVoltage)
             .set(Failure(this).electronics()))
     }
 
     override fun getConnectionMask(lrdu: LRDU) = when {
-        poweredByCable && side == Direction.YP -> Node.maskElectricalPower
-        poweredByCable && (lrdu == front.left() || lrdu == front.right()) -> Node.maskElectricalPower
+        poweredByCable && !corded && side == Direction.YP -> Node.maskElectricalPower
+        poweredByCable && !corded && (lrdu == front.left() || lrdu == front.right()) -> Node.maskElectricalPower
         else -> 0
     }
 
@@ -210,7 +225,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     override fun readFromNBT(nbt: CompoundTag) {
         super.readFromNBT(nbt)
         on = nbt.getBooleanOr("on", false)
-        charge = nbt.getDoubleOr("charge", 0.0)
+        charge = nbt.getDoubleOr("charge", 0.0).takeIf{it.isFinite()}?.coerceIn(0.0,desc.batteryCapacity)?:0.0
         poweredByCable = nbt.getBooleanOr("poweredByCable", false)
         channel = nbt.getStringOr("channel", "")
     }
@@ -223,6 +238,8 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
         nbt.putString("channel", channel)
     }
 
+    override fun getDropItemStack():ItemStack=super.getDropItemStack().also{stack->if(sourceRated)mods.eln.generic.ItemNbt.edit(stack){it.putDouble("charge",charge);it.putBoolean("poweredByCable",poweredByCable);it.putString("channel",channel)}}
+    fun restoreLightItem(tag:CompoundTag?){if(sourceRated&&tag!=null){charge=tag.getDoubleOr("charge",0.0).takeIf{it.isFinite()}?.coerceIn(0.0,desc.batteryCapacity)?:0.0;poweredByCable=tag.getBooleanOr("poweredByCable",false);channel=tag.getStringOr("channel","").take(128)}}
     override fun hasGui() = true
 }
 

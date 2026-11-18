@@ -37,6 +37,7 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
 
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
+        if (descriptor instanceof mods.eln.transparentnode.festive.FairyLightsDescriptor) return mods.eln.transparentnode.festive.FairyLightPlacement.INSTANCE.use(this,ctx);
         var recessed = mods.eln.transparentnode.cord.OutletWall.use(this, ctx);
         if (recessed != null) return recessed;
         Level world = ctx.getLevel();
@@ -73,7 +74,8 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
         if (ghostgroup != null) ghostgroup.plot(coord, coord, descriptor.getGhostGroupUuid());
 
         TransparentNode node = new TransparentNode();
-        node.onBlockPlacedBy(coord, front, player, stack);
+        ItemStack placedStack = descriptor instanceof mods.eln.transparentnode.floodlight.FloodlightDescriptor f ? f.placement(stack,direction,player) : stack;
+        node.onBlockPlacedBy(coord, front, player, placedStack);
         Block b = block.get();
         world.setBlock(at, b instanceof TransparentNodeBlock tb ? tb.placedState(front, world, at) : b.defaultBlockState(), 3);
         node.checkCanStay(true);

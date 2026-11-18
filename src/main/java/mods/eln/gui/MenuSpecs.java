@@ -123,6 +123,15 @@ public final class MenuSpecs {
             descriptor(0, 184 / 2 - 12, 8, 1, BatteryItem.class, MEDIUM, tr("Portable battery slot"))) : MenuSpec.SCREEN_ONLY);
 
         // ---- transparent-node devices
+        put(mods.eln.transparentnode.festive.ChristmasTreeDescriptor.class,d->MenuSpec.of().publishing(1).panel(176,206,8,124));
+        put(mods.eln.transparentnode.festive.HolidayCandleDescriptor.class,d->MenuSpec.of().publishing(1).panel(176,206,8,124));
+        put(mods.eln.transparentnode.festive.FairyLightsDescriptor.class,d->MenuSpec.of().publishing(1).panel(176,206,8,124));
+        put(mods.eln.transparentnode.floodlight.FloodlightDescriptor.class,d->MenuSpec.of(
+            filter(0,71,62,1,stack->((mods.eln.transparentnode.floodlight.FloodlightDescriptor)d).accepts(stack),MEDIUM,tr("LED or halogen bulb")),
+            filter(1,89,62,1,stack->((mods.eln.transparentnode.floodlight.FloodlightDescriptor)d).accepts(stack),MEDIUM,tr("LED or halogen bulb"))).publishing(1).panel(176,166,8,84));
+        put(mods.eln.transparentnode.worklight.WorkLightDescriptor.class,d->MenuSpec.of(
+            filter(0,17,60,2,stack->mods.eln.misc.Utils.getItemObject(stack) instanceof mods.eln.item.LampDescriptor,MEDIUM,tr("Two matching light bulbs"))).publishing(1).panel(176,290,8,208));
+
         put(mods.eln.transparentnode.festive.StringLightsDescriptor.class,d->MenuSpec.of().publishing(1).panel(176,206,8,124));
         put(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,278,0,0));
         put(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.class,d->MenuSpec.SCREEN_ONLY.publishing(1).panel(368,224,0,0));

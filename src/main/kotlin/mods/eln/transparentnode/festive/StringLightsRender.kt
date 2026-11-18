@@ -3,7 +3,7 @@ package mods.eln.transparentnode.festive
 import mods.eln.node.transparent.*
 import java.io.DataInputStream
 
-class StringLightsRender(e: TransparentNodeEntity,d: TransparentNodeDescriptor):TransparentNodeElementRender(e,d) {
+open class StringLightsRender(e: TransparentNodeEntity,d: TransparentNodeDescriptor):TransparentNodeElementRender(e,d) {
     var powered=false;private set
     var channel="xmas";private set
     var volts=120;private set

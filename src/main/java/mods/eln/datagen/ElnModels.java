@@ -52,6 +52,8 @@ public class ElnModels implements DataProvider {
     String itemTexture(String name, Item item) {
         // the redrawn icon set: textures/item/<registry id>.png (the schematic set overrides the same paths in a pack)
         if (textureExists("item/" + name)) return "item/" + name;
+        // The work-light GUI uses its original 3D mesh; engine hardware supplies the particle texture.
+        if (name.equals("gasoline_construction_work_light")) return itemTexture("200v_fuel_generator",item);
         // Rated supplies use the established native enclosure and its inventory icon.
         if (name.equals("120v_lamp_supply") || name.equals("240v_lamp_supply")) return itemTexture("lamp_supply", item);
         // 26.x oil machines: the macerator's icons until their own exist
@@ -173,7 +175,10 @@ public class ElnModels implements DataProvider {
                 out.add(DataProvider.saveStable(cache, obj("parent", parent, "textures", obj("particle", particle)),
                     assets.resolve("models/item/" + name + "_3d.json")));
                 JsonArray cases = new JsonArray();
-                cases.add(obj("when", "gui", "model", flat));
+                boolean sourceModelGui = d instanceof mods.eln.transparentnode.worklight.WorkLightDescriptor
+                    || d instanceof mods.eln.transparentnode.festive.FairyLightsDescriptor;
+                cases.add(obj("when", "gui", "model", sourceModelGui
+                    ? obj("type", "minecraft:special", "base", base, "model", obj("type", "eln:device", "context", "entity")) : flat));
                 JsonArray entity = new JsonArray();
                 for (String c : new String[]{"ground", "fixed", "head"}) entity.add(c);
                 cases.add(obj("when", entity, "model", obj("type", "minecraft:special", "base", base,

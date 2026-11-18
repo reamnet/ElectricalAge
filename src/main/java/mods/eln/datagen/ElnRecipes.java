@@ -37,6 +37,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeThermalCable", ElnRecipes::recipeThermalCable);
         run("recipeDecorativeLamps", ElnRecipes::recipeDecorativeLamps);
         run("recipeLampSocket", ElnRecipes::recipeLampSocket);
+        run("recipeRemainingLights", ElnRecipes::recipeRemainingLights);
         run("recipeLampSupply", ElnRecipes::recipeLampSupply);
         run("recipePowerSocket", ElnRecipes::recipePowerSocket);
         run("recipePassiveComponent", ElnRecipes::recipePassiveComponent);
@@ -105,6 +106,21 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeECoal", ElnRecipes::recipeECoal);
         run("recipeGridDevices", ElnRecipes::recipeGridDevices);
     }
+    private static void recipeRemainingLights() {
+        addShapelessRecipe(findItemStack("Christmas Tree"),findItemStack("String Lights"),Items.SPRUCE_SAPLING,findItemStack("String Lights"));
+        addRecipe(findItemStack("Holiday Candle")," g ","gbg"," i ",'g',Items.GLASS_PANE,'b',findItemStack("120V LED Light Bulb"),'i',Items.IRON_INGOT);
+        addShapelessRecipe(findItemStack("White Fairy Lights on Green Wire"),findItemStack("String Lights"),findItemStack("Flexible Appliance Cord"),Items.DYE.white(),Items.DYE.green());
+        addShapelessRecipe(findItemStack("Multicolor Fairy Lights on Green Wire"),findItemStack("String Lights"),findItemStack("Flexible Appliance Cord"),Items.DYE.red(),Items.DYE.green());
+        addShapelessRecipe(findItemStack("Warm White Deck Globe String Lights"),findItemStack("White Fairy Lights on Green Wire"),Items.GLASS_BOTTLE,Items.DYE.black());
+        addShapelessRecipe(findItemStack("Multicolor Deck Globe String Lights"),findItemStack("Multicolor Fairy Lights on Green Wire"),Items.GLASS_BOTTLE,Items.DYE.black());
+        addRecipe(findItemStack("120V Basic Floodlight")," PG","MBP","ICI",'P',findItemStack("Iron Plate"),'G',Items.GLASS_PANE,'M',findItemStack("Electrical Motor"),'B',findItemStack("Machine Block"),'I',Items.IRON_INGOT,'C',findItemStack("Low Voltage Cable"));
+        addRecipe(findItemStack("240V Motorized Floodlight")," PG","MBP","ICI",'P',findItemStack("Iron Plate"),'G',Items.GLASS_PANE,'M',findItemStack("Advanced Electrical Motor"),'B',findItemStack("Advanced Machine Block"),'I',Items.IRON_INGOT,'C',findItemStack("Medium Voltage Cable"));
+        // Native200V generator is the existing engine assembly; the fixture regulates to its bulbs' source voltage.
+        addRecipe(findItemStack("Gasoline Construction Work Light"),"L L"," G ","IPI",'L',findItemStack("Warehouse Wall Floodlight"),'G',findItemStack("200V Fuel Generator"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("120V Emergency Lamp"),"cbc"," l "," g ",'c',findItemStack("Low Voltage Cable"),'b',findItemStack("Portable Battery Pack"),'l',findItemStack("120V LED Light Bulb"),'g',Items.GLASS_PANE);
+        addRecipe(findItemStack("240V Emergency Lamp"),"cbc"," l "," g ",'c',findItemStack("Medium Voltage Cable"),'b',findItemStack("Portable Battery Pack"),'l',findItemStack("240V LED Light Bulb"),'g',Items.GLASS_PANE);
+    }
+
 
     // ------------------------------------------------------------------ recipes (1.7.10)
 

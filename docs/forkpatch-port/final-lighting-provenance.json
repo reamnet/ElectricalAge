@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "targetCommit": "21b361c6afd0edea88b114eb4ecd2a485386a404",
+  "ledgerEntries": 1283,
+  "uniqueSourceFiles": 1008,
+  "uniqueTargetFiles": 1234,
+  "declaredVerbatimEntries": 808,
+  "exactCopies": 821,
+  "passed": true,
+  "problems": [],
+  "scope": "Source hashes, target existence and declared exact copies; not full runtime parity.",
+  "targetCommitNote": "Audit covers the tested working tree attached to this implementation commit; do not treat the parent SHA as the implementation SHA."
+}
