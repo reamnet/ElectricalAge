@@ -1415,3 +1415,95 @@ datagen block. Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPatch`); t
 - Local commit for this session (NO push): new commit on top of `83a0ab6c` (branch
   `port/forkpatch-3.0.77-26.3`), subject `Port alloy_turbine_blade and tungsten_turbine_blade from
   ForkPatch 1.21.1`; inspect with `git log --oneline -2`. The external queue script handles pushing.
+
+## 25. Fuse port — 15A + 20A Lead Fuses (2026-11-19, this session)
+
+Scope: port the assigned ForkPatch 1.21.1 items `15a_lead_fuse` + `20a_lead_fuse`, the next two
+ratings of the lead-fuse family (5A@6288 + 10A@6289 already ported 2026-11-18; 30A/50A remain
+unported). Reused the existing cable-fuse `ElectricalFuseDescriptor` (ported with 5A/10A), whose
+`currentLimit` parameter carries the 15.0/20.0 A ratings, plus the shared `electricalfuse` texture
+and the existing `BlownFuse` blown state. Source baseline `b7444a7b` (read-only
+`../ELN1.21.1ForkPatch`); target start HEAD `fe400ab0` (turbine blades).
+
+### Items implemented
+- **15A Lead Fuse** — registry ID `eln:shared_item@6290` (group 98 `sharedItem`, subId 18;
+  98×64+18=6290). `ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 15.0)` —
+  exact vs source `SixNodeRegistration.kt:1655-1661`.
+- **20A Lead Fuse** — registry ID `eln:shared_item@6291` (subId 19; 98×64+19=6291).
+  `ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 20.0)` —
+  exact vs source `SixNodeRegistration.kt:1662-1668`.
+- Electricals (identical for both, via the shared descriptor): heat R `getSmallRs()×2`, in-circuit
+  R `getSmallRs()×1`, warm limit `Eln.cableWarmLimit` (130 °C), trip at 0.9× warm limit (WP16b
+  factor 0.9 preserved over source 0.8), trip produces existing `BlownFuse` (no new blown item).
+- Out of scope and NOT ported: `30a_lead_fuse` / `50a_lead_fuse` (separate unported-items rows).
+
+### Original source behavior (ForkPatch 1.21.1)
+- `registration/SixNodeRegistration.kt:1655-1668` — subId 18 "15A Lead Fuse" (15.0 A) and subId 19
+  "20A Lead Fuse" (20.0 A) in the sharedItem group; each sets `desc.creativeTab =
+  Eln.creativeTabPowerElectronics` (omitted in target — no creative tabs, 5A/10A precedent).
+- `item/ElectricalFuseDescriptor` (existing in both codebases) — current-limited fuse: heat R
+  `getSmallRs()×2`, in-circuit R `getSmallRs()×1`, warm limit `Eln.cableWarmLimit`, trip at 0.9×
+  warm limit → `BlownFuse`; `currentLimit` (A) is the only per-rating parameter.
+- `craft/CraftingRecipes.kt:2784-2790` — 15A: `rcr` ×4 (r=itemRubber, c=Copper 14 AWG Cable
+  600V); 20A: `rcr` ×4 (r=itemRubber, c=Copper 12 AWG Cable 600V).
+- No other source consumers found (registration + recipe + lang only).
+
+### Registry IDs
+- `eln:shared_item@6290` → `15a_lead_fuse` ("15A Lead Fuse").
+- `eln:shared_item@6291` → `20a_lead_fuse` ("20A Lead Fuse").
+- Confirmed both IDs free in the target before implementation (unported-items rows read "No matching
+  current item name/model found"; `@6290`/`@6291` absent from `eln-ids.json`; only 5A/10A fuses
+  existed in target).
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp9aContent.java` — group 98 `sharedItem`: subId 18
+  (15.0 A) + subId 19 (20.0 A) with `ElectricalFuseDescriptor(name, null,
+  obj.getObj("ElectricalFuse"), 15.0/20.0)`.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — 2 shaped `rcr` ×4 recipes after the 10A entry
+  (15A: Copper 14 AWG Cable 600V; 20A: Copper 12 AWG Cable 600V).
+- `src/main/resources/eln-ids.json` — added `@6290 15a_lead_fuse` + `@6291 20a_lead_fuse`.
+- Textures: shared `electricalfuse` icon reused (no new file — 5A/10A precedent; that texture is
+  byte-identical to source, verified in the 10A session).
+- Generated under `src/generated/resources/`: `assets/eln/items/{15,20}a_lead_fuse.json`,
+  `assets/eln/models/item/{15,20}a_lead_fuse.json` (layer0 `eln:items/electricalfuse`),
+  `data/eln/recipe/{15,20}a_lead_fuse.json`, matching recipe advancements, and
+  `item.eln.{15,20}a_lead_fuse` lang entries ("15A Lead Fuse" / "20A Lead Fuse").
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** fresh `:test` run BUILD SUCCESSFUL in 4m50s, exit 0
+  (/tmp/eln-test-fuse1520.log).
+- **[tests-passed]** `:test` 708/708 (0 fail, 0 err, 3 pre-existing skips — same count as the
+  turbine-blade baseline; no new unit tests added, behavior rides the existing fuse-descriptor path).
+- **[datagen-verified + idempotent]** `runClientData` ×2: run 1 wrote the item/model/recipe/
+  advancement/lang files above; run 2 = **0 new changes** (IDEMPOTENT;
+  /tmp/eln-datagen{1,2}-fuse1520.log).
+- **[automated GameTest]** `runGameTestServer`: **1552 GAME TESTS COMPLETE IN 7.290 min**; 2
+  required failures = exactly the 2 HISTORICAL golden fails (`eln:golden_descriptors` +
+  `eln:golden_slots`); new `@6290`/`@6291` appear inside the golden sub-assertions exactly like
+  their registered siblings `@6288`/`@6289` (ForkPatch items absent from the 1.12 golden inventory
+  by construction) — **no new failing tests**; goldens NOT weakened (log /tmp/eln-gt-fuse1520.log).
+- **[live registration verified — NOT gameplay]** live MC 26.3 dev server (boots cleanly — the
+  AGENTS.md "12-circuit breaker mod-load blocker" is STALE) via mctest RCON, 26.x summon syntax
+  `summon minecraft:item 0 100 0 {Item:{id:"eln:NAME",count:1b}}`: `eln:15a_lead_fuse` → "Summoned
+  new 15A Lead Fuse"; `eln:20a_lead_fuse` → "Summoned new 20A Lead Fuse"; regressions
+  `eln:5a_lead_fuse` → "5A Lead Fuse", `eln:10a_lead_fuse` → "10A Lead Fuse"; control `eln:bogus`
+  → "Air" (unregistered ID degrades as expected). Probes killed; re-scan "No entity was found";
+  server stopped; no lingering JVM.
+- **[NOT RUN — honestly labeled]** player-joined in-game in-circuit trip validation NOT performed
+  (client-join remains blocked in this environment). Fuse electricals ride the same
+  `ElectricalFuseDescriptor` path already exercised by the GameTest suite for the 5A/10A siblings —
+  **live gameplay verification is NOT claimed**.
+
+### Remaining limitations
+- No player-joined in-game in-circuit trip validation (craft + fuse-in-circuit behavior untested
+  in-world).
+- No audio / multi-client / fresh-JVM save-recovery validation.
+
+### Known blockers
+- Client live-join remains blocked in this environment (clutch-entry blockers unchanged);
+  server-side RCON oracle works.
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `fe400ab0` (turbine blades; branch
+  `port/forkpatch-3.0.77-26.3`), subject `Port 15a_lead_fuse and 20a_lead_fuse from ForkPatch
+  1.21.1`; inspect with `git log --oneline -1`. The external queue script handles pushing.

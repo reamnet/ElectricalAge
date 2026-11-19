@@ -2854,6 +2854,16 @@ public final class ElnRecipes extends ElnRecipesBase {
             'r', findItemStack("itemRubber"),
             'c', findItemStack("Copper 16 AWG Cable 300V"));
 
+        addRecipe(findItemStack("15A Lead Fuse", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Copper 14 AWG Cable 600V"));
+
+        addRecipe(findItemStack("20A Lead Fuse", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Copper 12 AWG Cable 600V"));
+
     }
 
     public static void recipeElectricalGateSource() {

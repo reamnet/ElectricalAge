@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T05:18:08.198675125	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-19T06:03:09.38395756	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -34,6 +34,7 @@ e23b7b4d4340256397ab7cad11e53119d190c989 data/eln/advancement/recipes/misc/12v_f
 0b2157aff47e79f96de6f629e847df01d335f917 data/eln/advancement/recipes/misc/12v_incandescent_light_bulb.json
 f0199303b9934445abe5e23c86fe8f4935b693dc data/eln/advancement/recipes/misc/12v_led_light_bulb.json
 64d23635e71791a04325a3e6156c7afe3a1a1170 data/eln/advancement/recipes/misc/15a_electrical_breaker.json
+6d6661cad03e7c9ce46e3f887c2b88f3659d9876 data/eln/advancement/recipes/misc/15a_lead_fuse.json
 ffb3dd54239082d9bf2df265f579d1da09080723 data/eln/advancement/recipes/misc/16_kwh_lifepo4_battery_cabinet.json
 07e130cd23322937bb3bfc892b49b5f5d0c0cd6f data/eln/advancement/recipes/misc/16_kwh_lifepo4_cell_stack.json
 c3884a72c0d0aaf37648495f534d7891c3462ab8 data/eln/advancement/recipes/misc/16_kwh_wall_mounted_lifepo4_battery.json
@@ -68,6 +69,7 @@ f3200f6d5cda5edc04414e9f5ed32c9310cb1540 data/eln/advancement/recipes/misc/200v_
 d874405c2f0b96e6269c1dcb75a4bbdd7005544d data/eln/advancement/recipes/misc/200v_tungsten_heating_corp.json
 2046a4b8df8500c753e77008f4c3a44cc2acf89e data/eln/advancement/recipes/misc/20_a_pole_fuse.json
 7d050eb155ed83e1800657172d0fd9fd0b7fd577 data/eln/advancement/recipes/misc/20a_electrical_breaker.json
+ed061452584000cfe133d9ce21b554814fd57f9c data/eln/advancement/recipes/misc/20a_lead_fuse.json
 ebc60efdf27015f86ecab0dcd89c3934c9a8067e data/eln/advancement/recipes/misc/20a_switch.json
 dbeba0b8475b7812766abcf24e9050887b67c15c data/eln/advancement/recipes/misc/230_kv_steel_transmission_tower.json
 a371b28c37a0fb40833517c9a7e9ac730f1025fa data/eln/advancement/recipes/misc/230_kv_three_phase_cable_riser_tower.json
@@ -753,6 +755,7 @@ c2dd1e2fc64246ee238b4bc4b730172fecb4f1f4 data/eln/recipe/12v_halogen_light_bulb.
 d5e8d3be410548ed6140183fe69d2b8a66005837 data/eln/recipe/12v_incandescent_light_bulb.json
 8852f6436e76ba9a7597ff96235b12294ef2b36d data/eln/recipe/12v_led_light_bulb.json
 b8be2405e759aa97862ffeff3765f4fce67e323d data/eln/recipe/15a_electrical_breaker.json
+30d53ac39b1107e16994693120f82eca542b77b6 data/eln/recipe/15a_lead_fuse.json
 5ae8875341efdea7c1dabc1039b6bcdcfab8fc07 data/eln/recipe/16_kwh_lifepo4_battery_cabinet.json
 23732fdbe30922cfe48301df9753819fa12dd809 data/eln/recipe/16_kwh_lifepo4_cell_stack.json
 46d233c9d9670450c8e86138630faea06a2047c3 data/eln/recipe/16_kwh_wall_mounted_lifepo4_battery.json
@@ -787,6 +790,7 @@ e25333ec84e2f843591d15dc724e02fd024fe100 data/eln/recipe/200v_submersible_pump.j
 9a75db92f399405442866f5db3fff39496170f65 data/eln/recipe/200v_tungsten_heating_corp.json
 9b0d1fa98fa3701abc618cea285baf7bfa2abe20 data/eln/recipe/20_a_pole_fuse.json
 eada7b2daa697879165cade86a1d1a0e4a23eb5b data/eln/recipe/20a_electrical_breaker.json
+6fec7c1cf0ffd8f66f47e038cd98b26037c8d3e8 data/eln/recipe/20a_lead_fuse.json
 25d855c21471e17a0c44a86f465ca2eea44fd3c4 data/eln/recipe/20a_switch.json
 9add6371c758ec14a9691bc7d5e7aceb3da90119 data/eln/recipe/230_kv_steel_transmission_tower.json
 99cc2d4b24f9ab05951b6692448459b234bd1514 data/eln/recipe/230_kv_three_phase_cable_riser_tower.json
