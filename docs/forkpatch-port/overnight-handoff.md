@@ -1507,3 +1507,87 @@ and the existing `BlownFuse` blown state. Source baseline `b7444a7b` (read-only
 - Local commit for this session (NO push): new commit on top of `fe400ab0` (turbine blades; branch
   `port/forkpatch-3.0.77-26.3`), subject `Port 15a_lead_fuse and 20a_lead_fuse from ForkPatch
   1.21.1`; inspect with `git log --oneline -1`. The external queue script handles pushing.
+
+## 26. Fuse port — 30A + 50A Lead Fuses (2026-11-19, this session)
+
+Scope: port the assigned ForkPatch 1.21.1 items `30a_lead_fuse` + `50a_lead_fuse`, the last two
+ratings of the lead-fuse family (5A@6288 + 10A@6289 ported 2026-11-18; 15A@6290 + 20A@6291 ported
+2026-11-19). This completes all six rated lead fuses. Reused the existing cable-fuse
+`ElectricalFuseDescriptor` (its `currentLimit` parameter carries the 30.0/50.0 A ratings), the
+shared `electricalfuse` texture, and the existing `BlownFuse` blown state. Source baseline
+`b7444a7b` (read-only `../ELN1.21.1ForkPatch`); target start HEAD `1c0c57b1` (15A/20A fuses).
+
+### Items implemented
+- **30A Lead Fuse** — registry ID `eln:shared_item@6292` (group 98 `sharedItem`, subId 20;
+  98×64+20=6292). `ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 30.0)` —
+  exact vs source `SixNodeRegistration.kt:1670-1676`.
+- **50A Lead Fuse** — registry ID `eln:shared_item@6293` (subId 21; 98×64+21=6293).
+  `ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 50.0)` —
+  exact vs source `SixNodeRegistration.kt:1677-1683`.
+- Electricals (identical for both, via the shared descriptor): heat R `getSmallRs()×2`, in-circuit
+  R `getSmallRs()×1`, warm limit `Eln.cableWarmLimit` (130 °C), trip at 0.9× warm limit (WP16b
+  factor 0.9 preserved over source 0.8), trip produces existing `BlownFuse` (no new blown item).
+
+### Original source behavior (ForkPatch 1.21.1)
+- Source registration: `SixNodeRegistration.kt:1670-1683` — subId 20 `30A Lead Fuse` (30.0 A),
+  subId 21 `50A Lead Fuse` (50.0 A), both `ElectricalFuseDescriptor(name, null,
+  Eln.obj.getObj("ElectricalFuse"), <limit>)` with `creativeTab = powerElectronics` (creative tabs
+  are out of scope in the target — same omission as 5A/10A/15A/20A).
+- Source recipes: `CraftingRecipes.kt:2792-2799` — `rcr` (center `itemRubber`, sides
+  `Copper 10 AWG Cable 600V` for 30A / `Copper 6 AWG Cable 600V` for 50A), output ×4. Both cable
+  items already registered in the target (used by the 50A switch and relay recipes).
+
+### Registry IDs
+- `eln:shared_item@6292` → `30a_lead_fuse` (eln-ids.json).
+- `eln:shared_item@6293` → `50a_lead_fuse` (eln-ids.json).
+- No new textures/models: shared `electricalfuse` icon; generated `items/*.json` +
+  `models/item/*.json` reference the shared model (same as 5A–20A siblings).
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp9aContent.java` (group 98 `sharedItem`): +subId 20
+  `30A Lead Fuse` (30.0) + subId 21 `50A Lead Fuse` (50.0) after the 20A entry.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java`: +30A recipe (`rcr`, rubber +
+  `Copper 10 AWG Cable 600V`, ×4) + 50A recipe (`rcr`, rubber + `Copper 6 AWG Cable 600V`, ×4)
+  after the 20A entry.
+- `src/main/resources/eln-ids.json`: +`@6292 30a_lead_fuse`, +`@6293 50a_lead_fuse`.
+- Generated under `src/generated/resources/`: `items/{30,50}a_lead_fuse.json`,
+  `models/item/{30,50}a_lead_fuse.json`, `recipe/{30,50}a_lead_fuse.json` (50A key
+  `c`=`eln:copper_6_awg_cable_600v`, 30A key `c`=`eln:copper_10_awg_cable_600v`, pattern `rcr`,
+  count 4), `advancement/recipes/misc/{30,50}a_lead_fuse.json`, `lang/en_us.json`
+  (`item.eln.30a_lead_fuse` L414, `item.eln.50a_lead_fuse` L432), 3 `.cache` hashes.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `:compileJava` BUILD SUCCESSFUL in 22s.
+- **[tests-passed]** `:test` BUILD SUCCESSFUL in 4m49s — 708 tests, 0 fail, 0 err, 3 pre-existing
+  skips (same count as the 15A/20A baseline; log /tmp/eln-test-fuse3050.log).
+- **[datagen-verified + idempotent]** `runClientData` ×2: run 1 wrote exactly the 12 expected
+  files (8 new item/model/recipe/advancement + lang + 3 caches); run 2 = **0 new changes**
+  (git-status diff empty).
+- **[automated GameTest]** `runGameTestServer`: **1552 GAME TESTS COMPLETE IN 7.250 min**;
+  2 required failures = exactly the 2 HISTORICAL golden fails (`eln:golden_descriptors` +
+  `eln:golden_slots`); new `@6292`/`@6293` appear inside the golden sub-assertions exactly like
+  their registered siblings `@6288`–`@6291` (ForkPatch items absent from the 1.12 golden inventory
+  by construction) — **no new failing tests**; goldens NOT weakened (log /tmp/eln-gt-fuse3050.log).
+- **[live registration verified — NOT gameplay]** live MC 26.3 dev server via mctest RCON,
+  `summon minecraft:item 0 100 0 {Item:{id:"eln:NAME",count:1b}}`: `eln:30a_lead_fuse` →
+  "Summoned new 30A Lead Fuse"; `eln:50a_lead_fuse` → "Summoned new 50A Lead Fuse"; regressions
+  `eln:15a_lead_fuse` → "15A Lead Fuse", `eln:20a_lead_fuse` → "20A Lead Fuse"; control
+  `eln:bogus` → "Air" (unregistered ID degrades as expected). Probes killed ("Killed 4
+  entities"); re-scan "No entity was found"; server stopped; no lingering JVM.
+- **[NOT RUN — honestly labeled]** player-joined in-game in-circuit trip validation NOT performed
+  (client-join remains blocked in this environment). Fuse electricals ride the same
+  `ElectricalFuseDescriptor` path already exercised by the GameTest suite for the 5A/10A/15A/20A
+  siblings — **live gameplay verification is NOT claimed**.
+
+### Remaining limitations
+- No player-joined in-game in-circuit trip validation (craft + fuse-in-circuit behavior untested
+  in-world); no audio / multi-client / fresh-JVM save-recovery validation.
+
+### Known blockers
+- Client live-join remains blocked in this environment (unchanged); server-side RCON oracle works.
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `1c0c57b1` (15A/20A fuses;
+  branch `port/forkpatch-3.0.77-26.3`), subject `Port 30a_lead_fuse and 50a_lead_fuse from
+  ForkPatch 1.21.1`; inspect with `git log --oneline -1`. The external queue script handles
+  pushing.

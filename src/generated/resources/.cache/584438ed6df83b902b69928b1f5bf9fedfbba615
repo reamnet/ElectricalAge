@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T06:03:09.38395756	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-19T06:22:16.04408152	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -107,6 +107,7 @@ cf9a542869d932b0467be73079c897ff6e4c4e30 data/eln/advancement/recipes/misc/2x3_s
 410db019c3e3993980d8b2869456871346ca4200 data/eln/advancement/recipes/misc/2x_graphite_rods.json
 bf194788a8029458cf1c7fa28f34377b253def04 data/eln/advancement/recipes/misc/30_a_pole_fuse.json
 3decd97fbbd23e5e3762c01a60c538e071d787c1 data/eln/advancement/recipes/misc/30a_electrical_breaker.json
+cdaf4c80bcd556f90d30f12fec3d4fedec93512f data/eln/advancement/recipes/misc/30a_lead_fuse.json
 84c01f91ed7fcb12fd00073d73e8659fdfa254b2 data/eln/advancement/recipes/misc/32_kwh_lifepo4_battery_cabinet.json
 9fba86777ac0bee34d015ebc3c0d41af3eb513f4 data/eln/advancement/recipes/misc/32_kwh_wall_mounted_lifepo4_battery.json
 a9e0de1a1447e0ccfad5a1fd5fac1032ebb6626a data/eln/advancement/recipes/misc/3_2_kv_industrial_cord.json
@@ -131,6 +132,7 @@ f9da9e838f5af856fdba559c48a8ea255b45a557 data/eln/advancement/recipes/misc/4x_gr
 ac76b69351ccd2d43a8f6af3895ddd15c8ec2d96 data/eln/advancement/recipes/misc/50_a_pole_fuse.json
 456038edd4972e1caa1bd306490ba86a930ed616 data/eln/advancement/recipes/misc/50_kw_pole_transformer.json
 83f5bb8fc51dc7a1c579363c236de9b2a116aef1 data/eln/advancement/recipes/misc/50a_electrical_breaker.json
+ecb1eabe708c0f6644be3e6e80722227e2b96247 data/eln/advancement/recipes/misc/50a_lead_fuse.json
 f39e8bf5689c3d66b306b8ca57bd6fdbdc06278f data/eln/advancement/recipes/misc/50a_switch.json
 360410e4aa3afcc317d46454202ab05055fe3e78 data/eln/advancement/recipes/misc/50v_battery_charger.json
 cfa1b1325b4147e7565231411cf883d5bdf4482f data/eln/advancement/recipes/misc/50v_carbon_incandescent_light_bulb.json
@@ -828,6 +830,7 @@ d222dad695bf0df4e61a765b79857892e1119ead data/eln/recipe/2x3_solar_panel_8.json
 e3310329d9c901210f39d2eb6981bc4f50e92e88 data/eln/recipe/2x_graphite_rods.json
 442fbc57e44c878328201eab313eacd104883351 data/eln/recipe/30_a_pole_fuse.json
 722822fc885c09cd4288aa3fb5a637979eae61b0 data/eln/recipe/30a_electrical_breaker.json
+1a4315f0d7af6805889dad81721660fa8df604e5 data/eln/recipe/30a_lead_fuse.json
 b50cc70833c54f5c0c672983a136873cdfb3a5de data/eln/recipe/32_kwh_lifepo4_battery_cabinet.json
 059e2803d760b1cccc72a8bc96cbf54f8fc7a584 data/eln/recipe/32_kwh_wall_mounted_lifepo4_battery.json
 3ce39cbaa6046c8f51aafc42a4a681da253c3847 data/eln/recipe/3_2_kv_industrial_cord.json
@@ -852,6 +855,7 @@ fcf37550ac26db89306c869035fb68fcc872d844 data/eln/recipe/4x_graphite_rods_4.json
 ce305a432e9aecf0f7494aba90cd5c361971eb75 data/eln/recipe/50_a_pole_fuse.json
 d32aa51c7dadf3b589a3cf71b48f7463ca4a1ce6 data/eln/recipe/50_kw_pole_transformer.json
 8bd84d4418511f910d27aa5fbd8dd7b739f88557 data/eln/recipe/50a_electrical_breaker.json
+0ff0ecc089d2c3410fe869f267a36c64b52507d9 data/eln/recipe/50a_lead_fuse.json
 aca5b1c074884878c8b2b09d0966b48817f2d63c data/eln/recipe/50a_switch.json
 2f4cacf4f0fd6c140714632b687c9fca6a3b75e4 data/eln/recipe/50v_battery_charger.json
 71340d95d6699e4ee5d0d4fe4aa6442fbd63c985 data/eln/recipe/50v_carbon_incandescent_light_bulb.json

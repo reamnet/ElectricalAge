@@ -473,6 +473,18 @@
   "kind": "shared_item",
   "name": "20a_lead_fuse"
  },
+ "eln:shared_item@6292": {
+  "descriptor": "ElectricalFuseDescriptor",
+  "display": "30A Lead Fuse",
+  "kind": "shared_item",
+  "name": "30a_lead_fuse"
+ },
+ "eln:shared_item@6293": {
+  "descriptor": "ElectricalFuseDescriptor",
+  "display": "50A Lead Fuse",
+  "kind": "shared_item",
+  "name": "50a_lead_fuse"
+ },
  "eln:shared_item@64": {
   "descriptor": "HeatingCorpElement",
   "display": "Small 50V Copper Heating Corp",
