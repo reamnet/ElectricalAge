@@ -5,6 +5,7 @@
     "#c:ingots/alloy",
     "#c:ingots/silicon",
     "#c:ingots/aluminum",
-    "#c:ingots/aluminum"
+    "#c:ingots/aluminum",
+    "#c:ingots/steel"
   ]
 }

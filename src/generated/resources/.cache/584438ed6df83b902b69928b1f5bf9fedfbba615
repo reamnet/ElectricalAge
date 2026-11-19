@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T08:02:35.349114822	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-19T08:34:46.550725964	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -204,6 +204,8 @@ deef8d780422f077177f1d8075d975640f319ae2 data/eln/advancement/recipes/misc/analo
 9d88219c37e884c57072d6522173a6259b65b7ac data/eln/advancement/recipes/misc/animal_filter.json
 24efcc07d77dbba8b7d2d9cf46814f4e25151442 data/eln/advancement/recipes/misc/arc_clay_block.json
 891da623d01d76aceddffb32e48618200d64c872 data/eln/advancement/recipes/misc/arc_clay_ingot.json
+ea1f5ebd48efa485f7d533a1530a785377dfc37a data/eln/advancement/recipes/misc/arc_metal_block.json
+b2a8b7d2c12190ab27f3a351197f705a60d44617 data/eln/advancement/recipes/misc/arc_metal_ingot.json
 ca794785ce0a3330fc8452320e868d31c39f45f6 data/eln/advancement/recipes/misc/arc_runner_coupe.json
 4a9f4d6d5aa597cbb41516fa3b08935dccf3e954 data/eln/advancement/recipes/misc/arched_walkway_light.json
 fd85b8d786b5f80170b6df4562e1ba502f0e0ed4 data/eln/advancement/recipes/misc/armored_oval_bulkhead_light.json
@@ -241,7 +243,7 @@ f996e81fb80e515548a6e7a7c20e6807ff52a339 data/eln/advancement/recipes/misc/cheap
 64af9c42728563cf40cdee5e2c5f5101f2f7bfdc data/eln/advancement/recipes/misc/christmas_tree.json
 90b2d85b19ee79fe690905abaa27df34251a5624 data/eln/advancement/recipes/misc/classic_box_fan.json
 ebd2e52fa28eefa693c939e9e6dba6d33ba4c431 data/eln/advancement/recipes/misc/classic_four_blade_ceiling_fan.json
-8b78ffc58be1d934fb902d6522347fed9bd29fff data/eln/advancement/recipes/misc/clutch_pin.json
+cb22534cd11f41a4fdee43d96afe0c8f4f502418 data/eln/advancement/recipes/misc/clutch_pin.json
 09acf745d173372f1f89a9717290b3bb26f92978 data/eln/advancement/recipes/misc/coal_clutch_plate.json
 495dad7ca040158c03dae28e27b0da45f191dc33 data/eln/advancement/recipes/misc/combustion_chamber.json
 25074c064d0ff925d30d2a633041d1d6861b75e5 data/eln/advancement/recipes/misc/compact_desktop_box_fan.json
@@ -333,9 +335,9 @@ e0b7af77e174173ac10a27c0d70aa5aca270d224 data/eln/advancement/recipes/misc/fuel_
 cb3051fdd9c37c54bd342902874ef99d0d53b501 data/eln/advancement/recipes/misc/fused_underground_120_240v_service_pedestal.json
 63c48ce48a5c0a52bb846011b3c3973b98323523 data/eln/advancement/recipes/misc/fusion_matter_reactor.json
 3f90bd4038110d1f610b34f213f7419391f9c5a8 data/eln/advancement/recipes/misc/garden_bollard_light.json
-a39938c4e0204b6626d2678f78657d83d72f3732 data/eln/advancement/recipes/misc/gas_turbine.json
+b3b02e40972aafb333226702350fbf86871a6521 data/eln/advancement/recipes/misc/gas_turbine.json
 428deb152fa68644cde3947102b66fe5f3ded300 data/eln/advancement/recipes/misc/gas_turbine_2.json
-1ffc9850ec9e9f653b953bc61abea7e0bccca979 data/eln/advancement/recipes/misc/gas_turbine_3.json
+1afc2c5fe4aec07b7771fe44cc2f85f53647110c data/eln/advancement/recipes/misc/gas_turbine_3.json
 27456a349bab7b30e872eccc1f4f893dd699891c data/eln/advancement/recipes/misc/gas_turbine_4.json
 e8157249b4c9db4a112a3d1cc944546afca587d6 data/eln/advancement/recipes/misc/gasoline_construction_work_light.json
 630707dd73ad187d6475bd3fa3dd2773439c9a90 data/eln/advancement/recipes/misc/generator.json
@@ -354,7 +356,7 @@ e1e2cc77fc3231064d43dc3f7ede2a00d35e2c29 data/eln/advancement/recipes/misc/graph
 49b426100272a67dc0c0b6e3e1659c717c3f5de4 data/eln/advancement/recipes/misc/green_banker_table_lamp.json
 a0d612bd4f26061b5e9c15aa0f3000b426037fd0 data/eln/advancement/recipes/misc/green_brush.json
 709c3ad72af1a1da0bec74750a7fa8a8e408e3ef data/eln/advancement/recipes/misc/grid_control_console.json
-0aeb57c2dbfea1eb65ebd4df3b6912d5a822dc57 data/eln/advancement/recipes/misc/grid_dc_dc_converter.json
+4912d0ae23059ed314d5fc16b66d11420275a5d9 data/eln/advancement/recipes/misc/grid_dc_dc_converter.json
 be2ada6ea5588090b3a08be7af2149dceb1d2063 data/eln/advancement/recipes/misc/grid_dc_dc_converter_2.json
 301649c9346a236bc25ecf5030e90d46dea5b19d data/eln/advancement/recipes/misc/grid_dc_dc_converter_3.json
 c14117c6913e1bb9562e34acda9dbe02383521d8 data/eln/advancement/recipes/misc/ground_cable.json
@@ -454,7 +456,7 @@ bc5161bfb4c6a09ed2797bd127716c00cd5c3a86 data/eln/advancement/recipes/misc/moder
 dd1242cd6b9ff29ba81aac774e1b969ec8f0ec6b data/eln/advancement/recipes/misc/modern_sputnik_foyer_chandelier.json
 d86da4cbdb60c57deceee290e0bc95d1a5e17ce2 data/eln/advancement/recipes/misc/modern_three_blade_ceiling_fan.json
 610c33e376abf2f1d751476431a162f19c57bd8b data/eln/advancement/recipes/misc/monster_filter.json
-298fc786bc59d580fe1846d909022e35bccf834b data/eln/advancement/recipes/misc/motor_cowling.json
+44fd407c60a540d466bc662c4292d70c33cb5e2c data/eln/advancement/recipes/misc/motor_cowling.json
 046dfec5a4294d393fbddb41d68841e7ccdeeed4 data/eln/advancement/recipes/misc/mppt_solar_controller.json
 f5bb44fa55e3da53b55af497e7b3b9304fac427e data/eln/advancement/recipes/misc/multicolor_christmas_string_lights.json
 a01298ec8e541c6feab50f4e82db1222a81ec47b data/eln/advancement/recipes/misc/multicolor_deck_globe_string_lights.json
@@ -608,8 +610,8 @@ eabb3f360799dd4e4ca55e8bb5f015c0c066fbff data/eln/advancement/recipes/misc/steam
 80d2514f5559c045fad856c766d9b349f59b0d1a data/eln/advancement/recipes/misc/steam_turbine_2.json
 d27c497dda0d0d91a75855c964ada8c4e494d426 data/eln/advancement/recipes/misc/steam_turbine_3.json
 0590face2856286a25dda602fcc505727821f789 data/eln/advancement/recipes/misc/steam_turbine_4.json
-dbca10a656ed06ee0a3c054db8cf76844d00330e data/eln/advancement/recipes/misc/steel_roller_wheel.json
-313502c7c96384a9f0230521859794f05c2ea76b data/eln/advancement/recipes/misc/steel_turbine_blade.json
+5a8b01af308e239287454d90a7186cd3ddcc2777 data/eln/advancement/recipes/misc/steel_roller_wheel.json
+8f493f1cea7e3b04620053e9499198018cea3924 data/eln/advancement/recipes/misc/steel_turbine_blade.json
 e34026bdc3bb373cb647a871d42577cb8fe83c0a data/eln/advancement/recipes/misc/steel_turbine_blade_2.json
 64db41bd58f33e20ba7b082b4a155fa8b5980d4a data/eln/advancement/recipes/misc/stone_heat_furnace.json
 a19a8caed54d55a3ab33b8e7203b49cb5ff5fd29 data/eln/advancement/recipes/misc/stone_wall_wash_light.json
@@ -662,7 +664,7 @@ bf8348a28f32ca7b23c9752646b97e5ef12ef005 data/eln/advancement/recipes/misc/ups_a
 4a268044fb710d6b232eea70dc54a1ebe1606ae8 data/eln/advancement/recipes/misc/ups_industrial_battery_module.json
 1bd2d21c8dc6df07942f3792c2f25707b5317991 data/eln/advancement/recipes/misc/ups_lifepo4_battery_cell.json
 15cf54627e0cffe5d78ac245774295ae9fc4cf33 data/eln/advancement/recipes/misc/utility_pole.json
-45da0cd5f829bf7dcb0e5bfecc984c9067178cc3 data/eln/advancement/recipes/misc/utility_pole_2.json
+e818f7946b34fb5bbb1032c8a30f2dde7793646f data/eln/advancement/recipes/misc/utility_pole_2.json
 036bce211a26d4b14a24a799461b4d1e26a834f4 data/eln/advancement/recipes/misc/utility_pole_3.json
 aa8fd0f6d50cf3c54d56d97003bfc2ce7a1673bf data/eln/advancement/recipes/misc/utility_pole_w_dc_dc_converter.json
 6bb2c6efa724e4dbae5b3c7cd7d84522a157d234 data/eln/advancement/recipes/misc/utility_wind_turbine_3_2kv.json
@@ -932,6 +934,8 @@ f08a17f8c96555319fad60d61b2788c122fbf087 data/eln/recipe/and_chip.json
 805798fa44f9f1beb943bfdbbcaf390d5e5a0861 data/eln/recipe/animal_filter.json
 f38956b3909ac10ef4112c1616c83e3996fef9d5 data/eln/recipe/arc_clay_block.json
 f9c616c70be0fdf703be0bea8767696541db2955 data/eln/recipe/arc_clay_ingot.json
+157115913a6b430b26bd6fb61ecbca09be241636 data/eln/recipe/arc_metal_block.json
+a9adbc34674ac1ef96672b541760cb9a17ee10d8 data/eln/recipe/arc_metal_ingot.json
 d69dd2e311f9d6781c90e04fce9560449c2aa388 data/eln/recipe/arc_runner_coupe.json
 6810e4b04fbccaf7fc63c2901785280578defee4 data/eln/recipe/arched_walkway_light.json
 2f9e08f84970c4a6d0cca86f43098c2e5e840ca5 data/eln/recipe/armored_oval_bulkhead_light.json
@@ -969,7 +973,7 @@ b555d3660d470673fa7356e9ed4adac0776928fc data/eln/recipe/christmas_star_wall_lig
 47ae53d77a92dbf13bb68b242666852552e3df0e data/eln/recipe/christmas_tree.json
 fca1fc277c3832899b240bf7f4a391e50b6d08a4 data/eln/recipe/classic_box_fan.json
 36d5f6ebcb3df1df669b31360f814d738fa44f69 data/eln/recipe/classic_four_blade_ceiling_fan.json
-7320c04cd5514320c6f0f08d9332516a71f304ad data/eln/recipe/clutch_pin.json
+4f7739f97f17b05678d6c38694109ee914eaa00f data/eln/recipe/clutch_pin.json
 58ee7430d0a59a3a7dc5ea5c0c99772b8a5b196e data/eln/recipe/coal_clutch_plate.json
 10859b043b2f46648ba82294d9dd0461b0bd7cc2 data/eln/recipe/combustion_chamber.json
 1934e6210b3a494c9acd49d3c85979af0fdba24d data/eln/recipe/compact_desktop_box_fan.json
@@ -1061,9 +1065,9 @@ ad67f642228a2e390b3271c1a35b1bd48f9688fa data/eln/recipe/fused_pv_combiner_and_d
 59fae3d017c124f4e1535a9865fe80f6dba3364e data/eln/recipe/fused_underground_120_240v_service_pedestal.json
 d5be2a6ffc6c66700ea62869ebabaa5df0961557 data/eln/recipe/fusion_matter_reactor.json
 fba92b279dcb49c9afc3d15ccfd4ba7e4bd9f112 data/eln/recipe/garden_bollard_light.json
-847b5455275368faefb966a7680a8f6c3b199200 data/eln/recipe/gas_turbine.json
+f76232dc71fc62ac89ebb0acd94120be2e93508e data/eln/recipe/gas_turbine.json
 734b6b28b43594815e9946d1af179448e3be7f22 data/eln/recipe/gas_turbine_2.json
-92f9512b82f679e2cc5fe90240ae1c0a712ab632 data/eln/recipe/gas_turbine_3.json
+71085fc195bd6c767a654d640c3e016fe1b9caeb data/eln/recipe/gas_turbine_3.json
 50b00513e836e116b02abf07f92ef12aaefc2b57 data/eln/recipe/gas_turbine_4.json
 22dce59c4569736780615771114e4012f16faf23 data/eln/recipe/gasoline_construction_work_light.json
 8d2b31a137f15fd6e85407a390ea99b7e1b6b220 data/eln/recipe/generator.json
@@ -1082,7 +1086,7 @@ bd492d0545722a403a6c6ae1819af4aebe66c96c data/eln/recipe/graphite_rod_3.json
 761bb87157e0b0e45dabe6638548161f25ad54c4 data/eln/recipe/green_banker_table_lamp.json
 1fd7392f8f3c4443adbf0499d84396c5da56090d data/eln/recipe/green_brush.json
 9fea350da7727347e458880b872c9ffc283ee3a3 data/eln/recipe/grid_control_console.json
-347b66cbf7b0bff8f51b929006df1e143fc53381 data/eln/recipe/grid_dc_dc_converter.json
+36f1348c5f9caf3d3c8c8905d2e584468689d8cf data/eln/recipe/grid_dc_dc_converter.json
 5f99aa37555ae882c18b655b6346e7ab688387b9 data/eln/recipe/grid_dc_dc_converter_2.json
 5f99aa37555ae882c18b655b6346e7ab688387b9 data/eln/recipe/grid_dc_dc_converter_3.json
 15ba4c1dcda12e30a0ba2f80409862bb6d81569f data/eln/recipe/ground_cable.json
@@ -1182,7 +1186,7 @@ ebd63e9a5f900366c5a0004356905112cd008098 data/eln/recipe/modern_data_logger.json
 a6770f74cf9548ef82ab69701135f0fe59828f06 data/eln/recipe/modern_sputnik_foyer_chandelier.json
 76931f229f0cefaf5c6724500c2f45a6a9e40eff data/eln/recipe/modern_three_blade_ceiling_fan.json
 b937a3eff0a8f08a2d43f6bc97d126a15a5689fa data/eln/recipe/monster_filter.json
-248fd899538ad567a81fbc68a9f034d5a51b5420 data/eln/recipe/motor_cowling.json
+6e99944f4335e79672bb999cf237b3f5295ffc57 data/eln/recipe/motor_cowling.json
 23bad57c57984cae1127203c1bd744942a95323d data/eln/recipe/mppt_solar_controller.json
 24cacc633be4f3d04d06b2b328099c6685c5231e data/eln/recipe/multicolor_christmas_string_lights.json
 2e51d8d3a5245a014c7b9019570bb2b86c7867cf data/eln/recipe/multicolor_deck_globe_string_lights.json
@@ -1336,8 +1340,8 @@ b82fdc7bbe0951b013cd14c9fab26c23007f8ecd data/eln/recipe/steam_turbine.json
 90cc99ddc75685fa0dab1231a0fdc71e1ab0fd62 data/eln/recipe/steam_turbine_2.json
 241fea2acf92123423819a2a366362fdfd80c66e data/eln/recipe/steam_turbine_3.json
 6a5c4ea8dd1a012cdf9c341e34853e3dcd152e29 data/eln/recipe/steam_turbine_4.json
-52853901e24676cdd8805a4dfaa551feb33c6845 data/eln/recipe/steel_roller_wheel.json
-5539ad7de6505390df494f1991c7c5794d98067d data/eln/recipe/steel_turbine_blade.json
+1d6cea1c26d3c8186bd10104d9d79391100d5454 data/eln/recipe/steel_roller_wheel.json
+71262ff685ed3c3dc5405322e6f4f984fa56b907 data/eln/recipe/steel_turbine_blade.json
 2e9a43e540a08f3c9ab95c2e413cb95fedb071e5 data/eln/recipe/steel_turbine_blade_2.json
 3f4a24c3fb4412d21f208ff458e45f74a002f7ed data/eln/recipe/stone_heat_furnace.json
 e69929503a90fd9e24f807f26004e31a2490c0e2 data/eln/recipe/stone_wall_wash_light.json
@@ -1390,7 +1394,7 @@ c29034602df442dfb455ac2e3ceefbfe007ca27c data/eln/recipe/ups_agm_battery_cell.js
 0ef56c88d3ed8b6f9b10694be54bb33c1273c544 data/eln/recipe/ups_industrial_battery_module.json
 2b95bc21f8dfac06b951f90029a4046fd30159c0 data/eln/recipe/ups_lifepo4_battery_cell.json
 dae1da25486bb260e9d8442574602f7863348a51 data/eln/recipe/utility_pole.json
-b204e479cbae894349308593acaaac469f4941ab data/eln/recipe/utility_pole_2.json
+f611d14ce2cc77525f9ea74c681f5be6ea0c4851 data/eln/recipe/utility_pole_2.json
 fdb6dd720302e6dca9aafb6aa3bf07a3b7b35a8f data/eln/recipe/utility_pole_3.json
 dac1cc7568c77d968ce729665085384428966fb2 data/eln/recipe/utility_pole_w_dc_dc_converter.json
 887b3e5bfcb12e714fe349a4b9a0fe190576a5a3 data/eln/recipe/utility_wind_turbine_3_2kv.json

@@ -1827,3 +1827,90 @@ recipes `CraftingRecipes.kt:1715-1716`; target start HEAD `ca498620` (motor_cowl
   branch `port/forkpatch-3.0.77-26.3`), subject `Port arc_clay_ingot and arc_clay_block from
   ForkPatch 1.21.1`; inspect with `git log --oneline -1`. The external queue script handles
   pushing.
+
+## 30. Material port — Arc Metal Ingot + Arc Metal Block (2026-11-19, this session)
+
+Scope: port the two assigned ForkPatch 1.21.1 items `arc_metal_ingot` + `arc_metal_block`. Both
+are plain materials (no electrical/thermal behavior — the ingot is the generic steel material of
+ForkPatch and the block is its 9× storage form; the only source consumers are the two crafting
+recipes, both ported). Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPatch`): descriptor
+`ItemRegistration.kt` (id 69 subId 7, `registerArc(69)`), block `block/ArcClayBlock.kt`
+(`ArcMetalBlock` class), recipes `CraftingRecipes.kt:1717-1718`; target start HEAD `9017490e`
+(arc_clay).
+
+### Items implemented
+- **Arc Metal Ingot** — registry ID `eln:shared_item@4423` (group 69 `registerArc`, subId 7;
+  `7 + (69<<6)` = 4423; siblings `@4416`–`@4422` = graphite rods + arc clay).
+  `GenericItemUsingDamageDescriptor` "Arc Metal Ingot" — exact vs source (the source descriptor
+  for id 69 subId 7 adds nothing beyond the generic descriptor). Carries the source ore name
+  `ingotSteel` (`OreDictTags.addToOre` → tag `c:ingots/steel`) — this is why the ingot is the
+  generic steel material in ForkPatch (steel recipes in source use `ingotSteel`).
+- **Arc Metal Block** — `ElnRegistry.ARC_METAL_BLOCK` DeferredBlock + `BlockItem` in `ALL_ITEMS`
+  (registered before `registerShared`, after the ores loop, next to `ARC_CLAY_BLOCK`); mapColor
+  STONE, strength 1.5/6.0, requiresCorrectToolForDrops, SoundType.STONE — exact vs source
+  `block/ArcClayBlock.kt` (`ArcMetalBlock`; plain cube block, no custom behavior).
+- Craft recipes (`ElnRecipes.recipeForkPatchArcMetal`, source `CraftingRecipes.kt:1717-1718`):
+  shaped 3×3 Arc Metal Ingot → Arc Metal Block; shapeless Arc Metal Block → 9× Arc Metal Ingot.
+  No machine processing of arc metal exists in source. Source T1/T2 transmission-cable recipes
+  using `ingotSteel` are commented out in source and therefore NOT ported (noted in the
+  `recipeForkPatchArcMetal` javadoc).
+- Tags: ingot in `c:ingots/steel` (via the `ingotSteel` ore name; generated
+  `data/c/tags/item/ingots/steel.json` = `eln:arc_metal_ingot`); block in
+  `c:storage_blocks/steel` (`ElnItemTags`, generated `data/c/tags/item/storage_blocks/steel.json`
+  = `eln:arc_metal_block`). Mineable: `minecraft:tags/block/mineable/pickaxe.json`.
+- Textures: `assets/eln/textures/items/arcmetalingot.png` (md5 `36f7778bec47c14392c0041fed69a6b4`)
+  copied byte-identical from source this session; `assets/eln/textures/blocks/arc_metal_block.png`
+  (md5 `55092f10a825868c813beee8d225bb0b`) already present in target (committed in `5eeef8e1`),
+  byte-identical to source.
+- `src/main/resources/eln-ids.json`: `eln:shared_item@4423` = "Arc Metal Ingot" (kind
+  `shared_item`). JSON validated.
+- Generated (`src/generated/resources/`): blockstate, item/block/item models, 2 recipe JSONs +
+  2 advancements, `en_us.json` +`block.eln.arc_metal_block`/`item.eln.arc_metal_block`/
+  `item.eln.arc_metal_ingot`, `c/tags/item/ingots.json` +`#c:ingots/steel`, 4 `.cache`.
+- **Parity-restoration side effect (kept, analyzed):** with `c:ingots/steel` no longer empty,
+  8 previously disabled recipes + their advancements lost the `neoforge:not tag_empty
+  c:ingots/steel` guard and are now ENABLED with `#c:ingots/steel` ingredients: `clutch_pin`,
+  `gas_turbine`, `gas_turbine_3`, `grid_dc_dc_converter`, `motor_cowling`, `steel_roller_wheel`,
+  `steel_turbine_blade`, `utility_pole_2`. In source these recipes are active because
+  `ingotSteel` = Arc Metal Ingot — parity restoration, not a regression.
+- **Cosmetic artifact (documented, left as-is):** `data/c/tags/item/ingots.json` still lists
+  `#c:ingots/aluminum` twice (from the arc_clay session; both ore-name spellings resolve to the
+  same tag) plus the new `#c:ingots/steel` member. Harmless (Minecraft dedupes tag members).
+
+### Verification (by level)
+- **[Implemented]** code + ingot texture + `eln-ids.json` as above (block texture pre-existing,
+  byte-identical to source).
+- **[Compilation verified]** `./gradlew :compileJava :compileKotlin` BUILD SUCCESSFUL.
+- **[Automated tests passed]** `./gradlew :test`: 708 tests / 0 fail / 0 err / 3 pre-existing
+  skips (== baseline; ~4m47s).
+- **[Datagen idempotent]** `./gradlew runClientData` run 1 wrote the expected arc_metal files
+  (list above); run 2: `HashCache ... removed stale: 0, written: 0, total 4064` (idempotent);
+  `git status src/generated` unchanged between runs.
+- **[Automated GameTest]** `./gradlew runGameTestServer`: **1552 tests running**, "2 required
+  tests failed :(" = exactly the 2 HISTORICAL golden fails (`eln:golden_descriptors` +
+  `eln:golden_slots`); no new failures; goldens NOT weakened (log /tmp/gametest-arcmetal.log).
+- **[Build + cad tests]** `./gradlew :build :cad:test` BUILD SUCCESSFUL.
+- **[Live registration verified — NOT gameplay]** live MC 26.3 dev server via mctest RCON
+  (port 25575, pw `eln-local-dev-only`): `summon minecraft:item 0 100 0
+  {Item:{id:"eln:arc_metal_ingot",count:1b}}` → "Summoned new Arc Metal Ingot";
+  `setblock 0 100 0 eln:arc_metal_block` → "Changed the block at 0, 100, 0"; control
+  `eln:bogus` → "Summoned new Air" (log /tmp/eln-arcmetal-rcon.log). Server stopped, no
+  lingering JVM.
+- **[NOT achieved — honestly labeled]** live gameplay verification: both are plain materials with
+  no in-circuit behavior in source (no machine/electrical consumer exists); max achievable level
+  = live registration verified.
+
+### Remaining limitations
+- No player-joined in-world craft + inspect — client-join blocked in this environment; server-side
+  RCON oracle works.
+- Cosmetic duplicate `#c:ingots/aluminum` member in `c/tags/item/ingots.json` (from arc_clay,
+  documented there and above).
+
+### Known blockers
+- None for these two items.
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `9017490e` (arc_clay; branch
+  `port/forkpatch-3.0.77-26.3`), subject `Port arc_metal_ingot and arc_metal_block from
+  ForkPatch 1.21.1`; inspect with `git log --oneline -1`. The external queue script handles
+  pushing.

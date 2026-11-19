@@ -1091,7 +1091,8 @@ public class Wp12aContent implements ElnContent {
             new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Big Fuel Burner"), 25000 * fuelHeatFurnacePowerFactor, 0, 1f));
     }
     /** ForkPatch 1.21.1 registerArc sub-items in scope (source ItemRegistration.kt, id 69): Graphite Rod (subId 0),
-     * 2x Graphite Rods (subId 1), 3x Graphite Rods (subId 2), 4x Graphite Rods (subId 3), Arc Clay Ingot (subId 6).
+     * 2x Graphite Rods (subId 1), 3x Graphite Rods (subId 2), 4x Graphite Rods (subId 3), Arc Clay Ingot (subId 6),
+     * Arc Metal Ingot (subId 7).
      * Plain descriptors: the source GraphiteDescriptor adds no behaviour beyond GenericItemUsingDamageDescriptor.
      * The Arc Clay Ingot carries the source ore names ingotAluminum/ingotAluminium (source ItemRegistration.kt subId 6).
      * Synthetic Diamond (compressor input for 4x) and unreleasedium (subId 5) are unported; the compressor 4x recipe is not ported.
@@ -1142,6 +1143,16 @@ public class Wp12aContent implements ElnContent {
             // source ItemRegistration.kt subId 6: registerOre("ingotAluminum") + registerOre("ingotAluminium")
             mods.eln.misc.OreDictTags.addToOre("ingotAluminum", arcClay);
             mods.eln.misc.OreDictTags.addToOre("ingotAluminium", arcClay);
+        }
+        {
+            subId = 7;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Arc Metal Ingot");
+            GenericItemUsingDamageDescriptor arcMetal = new GenericItemUsingDamageDescriptor(name);
+            sharedItem.addElement(completId, arcMetal);
+            // source ItemRegistration.kt subId 7: registerOre("ingotSteel")
+            mods.eln.misc.OreDictTags.addToOre("ingotSteel", arcMetal);
         }
     }
 

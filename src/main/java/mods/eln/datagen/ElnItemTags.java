@@ -61,6 +61,8 @@ public class ElnItemTags extends ItemTagsProvider {
         tag(itemTag("c", "ores")).addTag(itemTag("c", "ores/tungsten"));
         // ForkPatch 1.21.1: the arc clay block is the aluminium storage block (the ingot's c:ingots/aluminum comes from its source ore names ingotAluminum/ingotAluminium)
         tag(itemTag("c", "storage_blocks/aluminum")).add(key(BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("eln", "arc_clay_block")).asItem()));
+        // ForkPatch 1.21.1: the arc metal block is the steel storage block (source ore name ingotSteel)
+        tag(itemTag("c", "storage_blocks/steel")).add(key(BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("eln", "arc_metal_block")).asItem()));
         // the X-ray scanner's filters (XRayFilter): coal is what coal ore drops, but has no convention tag of its own
         tag(itemTag("eln", "ore_drops/coal")).add(key(net.minecraft.world.item.Items.COAL));
     }

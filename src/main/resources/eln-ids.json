@@ -335,6 +335,12 @@
   "kind": "shared_item",
   "name": "arc_clay_ingot"
  },
+ "eln:shared_item@4423": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Arc Metal Ingot",
+  "kind": "shared_item",
+  "name": "arc_metal_ingot"
+ },
  "eln:shared_item@448": {
   "descriptor": "FerromagneticCoreDescriptor",
   "display": "Cheap Ferromagnetic Core",

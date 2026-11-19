@@ -73,6 +73,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeForkPatchUps", ElnRecipes::recipeForkPatchUps);
         run("recipeForkPatchGraphite", ElnRecipes::recipeForkPatchGraphite);
         run("recipeForkPatchArcClay", ElnRecipes::recipeForkPatchArcClay);
+        run("recipeForkPatchArcMetal", ElnRecipes::recipeForkPatchArcMetal);
         run("recipeThermalDissipatorPassiveAndActive", ElnRecipes::recipeThermalDissipatorPassiveAndActive);
         run("recipeElectricalAntenna", ElnRecipes::recipeElectricalAntenna);
         run("recipeEggIncubator", ElnRecipes::recipeEggIncubator);
@@ -1431,6 +1432,14 @@ public final class ElnRecipes extends ElnRecipesBase {
     public static void recipeForkPatchArcClay() {
         addRecipe(stack(mods.eln.registry.ElnRegistry.ARC_CLAY_BLOCK.get()), "III", "III", "III", 'I', findItemStack("Arc Clay Ingot"));
         addShapelessRecipe(findItemStack("Arc Clay Ingot", 9), stack(mods.eln.registry.ElnRegistry.ARC_CLAY_BLOCK.get()));
+    }
+
+    /** ForkPatch 1.21.1 CraftingRecipes.kt:1717-1718 (misc): 3x3 Arc Metal Ingot -> Arc Metal Block; block -> 9 ingots.
+     * No machine processing of arc metal in source (grep-verified); the T1/T2 transmission cable recipes using
+     * ingotSteel are commented out in source. */
+    public static void recipeForkPatchArcMetal() {
+        addRecipe(stack(mods.eln.registry.ElnRegistry.ARC_METAL_BLOCK.get()), "III", "III", "III", 'I', findItemStack("Arc Metal Ingot"));
+        addShapelessRecipe(findItemStack("Arc Metal Ingot", 9), stack(mods.eln.registry.ElnRegistry.ARC_METAL_BLOCK.get()));
     }
 
     public static void recipeSolarPanel() {
