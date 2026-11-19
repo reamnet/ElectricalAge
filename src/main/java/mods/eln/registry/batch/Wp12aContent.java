@@ -1006,6 +1006,14 @@ public class Wp12aContent implements ElnContent {
         sharedItem.addElement(59 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
             TR_NAME(Type.NONE, "Coal Clutch Plate"), 1024f, 128f, 128f, 32f, 0.1f, true
         ));
+        // ForkPatch 1.21.1 ItemRegistration.kt:1789-1811 (subId 60 Motor Cowling, subId 61 Heavy Winding;
+        // plain GenericItemUsingDamageDescriptorWithComment damage items, no electrical behavior)
+        sharedItem.addElement(60 + (id << 6), new GenericItemUsingDamageDescriptorWithComment(
+            TR_NAME(Type.NONE, "Motor Cowling"), new String[]{}
+        ));
+        sharedItem.addElement(61 + (id << 6), new GenericItemUsingDamageDescriptorWithComment(
+            TR_NAME(Type.NONE, "Heavy Winding"), new String[]{}
+        ));
     
     }
 

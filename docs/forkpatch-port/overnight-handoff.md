@@ -1658,3 +1658,89 @@ shared `switch` icon texture set. Source baseline `b7444a7b` (read-only
 - Local commit for this session (NO push): new commit on top of `529b0a1e` (30A/50A fuses;
   branch `port/forkpatch-3.0.77-26.3`), subject `Port 100a_switch from ForkPatch 1.21.1`;
   inspect with `git log --oneline -1`. The external queue script handles pushing.
+
+## 28. Material component port — Motor Cowling + Heavy Winding (2026-11-19, this session)
+
+Scope: port the two assigned ForkPatch 1.21.1 plain material components `motor_cowling` and
+`heavy_winding`. Both are damage-based generic items (no electrical/thermal behavior — they are
+consumed by the unported Large Shaft Motor / Large Generator / Gas Turbine, which remain out of
+scope). Reused the existing `Wp12aContent.registerMiscItem(120)` group-120 `shared_item` pattern
+(siblings `clutch_pin`, `coal_clutch_plate` @7734–@7739). Source baseline `b7444a7b` (read-only
+`../ELN1.21.1ForkPatch`): descriptors `ItemRegistration.kt:1789-1811`, recipes
+`CraftingRecipes.kt:1912-1939`; target start HEAD `e447bb6e` (100a_switch).
+
+### Items implemented
+- **Motor Cowling** — registry ID `eln:shared_item@7740` (group 120 `shared_item`, subId 60;
+  120×64+60=7740; `@7740` was free in `eln-ids.json`). `GenericItemUsingDamageDescriptorWithComment`
+  with empty comment array — exact vs source `ItemRegistration.kt:1789-1797`
+  (`GenericItemUsingDamageDescriptorWithComment(name, arrayOf())`, `.inOresAndMaterialsTab()` =
+  creative-tab helper only, omitted per sibling precedent; no `Data.addResource` needed, same as
+  Clutch Pin).
+- **Heavy Winding** — registry ID `eln:shared_item@7741` (subId 61; 120×64+61=7741). Same
+  descriptor shape, exact vs source `ItemRegistration.kt:1803-1811`.
+- Craft recipe **Motor Cowling** `ISI/MAM/ISI`: `I`=`Iron Plate` (eln:iron_plate),
+  `S`=steel ingot (`ingotSteel` → `c:ingots/steel`), `M`=`Machine Block`,
+  `A`=`Advanced Machine Block` — exact vs source `CraftingRecipes.kt:1912-1929`.
+- Craft recipe **Heavy Winding** `cRc/RTR/cRc`: `c`=`Copper Cable` (eln:copper_cable),
+  `R`=`Tree Resin`, `T`=rubber — exact vs source `CraftingRecipes.kt:1930-1939`.
+  **Documented normalization:** source uses tag `c:rubber` (singular); the target datagen
+  framework resolves the `itemRubber` ore key via `OreDictTags` → `c:rubbers` (plural), used by
+  all ~10 existing rubber recipes in target. Both tags contain exactly one item (`eln:rubber` —
+  verified against both repos' generated tag JSONs), so recipe behavior is identical; changing
+  the global `itemRubber` mapping to singular would have touched every other rubber recipe and
+  contradicted the target convention. Same class of normalization as `ingotAluminium`→
+  `c:ingots/aluminum`.
+- Textures `src/main/resources/assets/eln/textures/item/{motor_cowling,heavy_winding}.png`
+  copied byte-identical from source `textures/items/{motorcowling,heavywinding}.png` (md5
+  `12ed1efbbd01bb4a70dd7ccdbb6919bd` / `286e17c0b95481652a8462365ca7d535`; 32×32 RGBA). Target
+  `ElnModels.itemTexture` resolves `item/<name>` first → both models emit `eln:item/<name>`.
+- `src/main/resources/eln-ids.json` (runtime id map, manually maintained): `eln:shared_item@7740`
+  = `motor_cowling`, `eln:shared_item@7741` = `heavy_winding` (descriptor
+  `GenericItemUsingDamageDescriptorWithComment`, kind `shared_item`). JSON validated.
+- Generated (`src/generated/resources/`, 10 files): `items/{motor_cowling,heavy_winding}.json`,
+  `models/item/{motor_cowling,heavy_winding}.json` (`layer0: eln:item/<name>`),
+  `data/eln/recipe/{motor_cowling,heavy_winding}.json`,
+  `advancement/recipes/misc/{motor_cowling,heavy_winding}.json`, `lang/en_us.json` +2 lines
+  (`item.eln.motor_cowling: Motor Cowling`, `item.eln.heavy_winding: Heavy Winding`), 3 `.cache`.
+
+### Verification (by level)
+- **[compile-verified]** `./gradlew :compileJava` BUILD SUCCESSFUL in 22s (2 pre-existing
+  deprecation warnings only; log /tmp/eln-compile-mcw.log).
+- **[tests-passed]** `./gradlew :test` BUILD SUCCESSFUL in 4m51s — 708 tests / 0 fail / 0 err /
+  3 pre-existing skips (== baseline; log /tmp/eln-test-mcw.log).
+- **[datagen-verified + idempotent]** `runClientData` run 1 wrote exactly the expected 10 files
+  (8 new JSONs + lang +2 lines + 3 caches); run 2 HashCache `written: 0` (idempotent); en_us diff
+  vs HEAD = exactly +2 lines (logs /tmp/eln-dg1-mcw.log, /tmp/eln-dg2-mcw.log). Both textures
+  RESOLVE (neither in the "no texture" warning list). Recipe JSONs verified: motor_cowling
+  `#c:ingots/steel` (+ `neoforge:not/tag_empty` condition) with `eln:iron_plate` /
+  `eln:machine_block` / `eln:advanced_machine_block`; heavy_winding `#c:rubbers` with
+  `eln:copper_cable` / `eln:tree_resin`.
+- **[automated GameTest]** `runGameTestServer`: **1552 GAME TESTS COMPLETE IN 7.420 min**;
+  2 required failures = exactly the 2 HISTORICAL golden fails (`eln:golden_descriptors` +
+  `eln:golden_slots`); new `@7740`/`@7741` appear inside the golden sub-assertions exactly like
+  their ported siblings `@4418`/`@4419`/`@7734`–`@7739`/`@6217` (`known in 1.12: no such item in
+  golden/1.12/inventory.json` — ForkPatch items absent from the 1.12 golden inventory by
+  construction) — **no new failing tests**; goldens NOT weakened (log /tmp/eln-gt-mcw.log).
+- **[live registration verified — NOT gameplay]** live MC 26.3 dev server via mctest RCON:
+  `summon minecraft:item 0 100 0 {Item:{id:"eln:motor_cowling",count:1b}}` → "Summoned new Motor
+  Cowling"; `summon ... eln:heavy_winding` → "Summoned new Heavy Winding"; regressions
+  `eln:clutch_pin` → "Summoned new Clutch Pin", `eln:coal_clutch_plate` → "Summoned new Coal
+  Clutch Plate"; control `eln:bogus` → "Summoned new Air". Probes killed (4 entities), server
+  stopped, no lingering JVM.
+- **[NOT RUN — honestly labeled]** player-joined in-game validation NOT performed (client-join
+  blocked in this environment). These are plain material components with no in-circuit behavior;
+  their consumers (Large Shaft Motor / Large Generator / Gas Turbine) are unported —
+  **live gameplay verification is NOT claimed**. Max achievable level for these items = live
+  registration verified.
+
+### Remaining limitations
+- No player-joined in-world validation (craft + inspect) — client-join blocked in this
+  environment; server-side RCON oracle works.
+
+### Known blockers
+- None for these two items.
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `e447bb6e` (100a_switch; branch
+  `port/forkpatch-3.0.77-26.3`), subject `Port motor_cowling and heavy_winding from ForkPatch
+  1.21.1`; inspect with `git log --oneline -1`. The external queue script handles pushing.

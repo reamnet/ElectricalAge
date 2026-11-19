@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": "eln:tree_resin",
+    "T": "#c:rubbers",
+    "c": "eln:copper_cable"
+  },
+  "pattern": [
+    "cRc",
+    "RTR",
+    "cRc"
+  ],
+  "result": {
+    "id": "eln:heavy_winding"
+  }
+}

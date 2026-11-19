@@ -2178,6 +2178,25 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', "plateCoal",
             't', "dustElnTungsten");
 
+        // ForkPatch 1.21.1: motor cowling + heavy winding (source data/eln/recipe/{motor_cowling,heavy_winding}.json)
+        // S -> "ingotSteel" resolves to tag c:ingots/steel and T -> "itemRubber" to tag c:rubber,
+        // matching the source's generated recipe JSON exactly.
+        addRecipe(findItemStack("Motor Cowling"),
+            "ISI",
+            "MAM",
+            "ISI",
+            'I', findItemStack("Iron Plate"),
+            'S', "ingotSteel",
+            'M', findItemStack("Machine Block"),
+            'A', findItemStack("Advanced Machine Block"));
+        addRecipe(findItemStack("Heavy Winding"),
+            "cRc",
+            "RTR",
+            "cRc",
+            'c', findItemStack("Copper Cable"),
+            'R', findItemStack("Tree Resin"),
+            'T', "itemRubber");
+
         // ForkPatch 1.21.1: turbine blades (source CraftingRecipes.kt recipeTurbineBlades): all four tiers ported
         // (iron + steel 2026-11-18, alloy + tungsten 2026-11-19); the turbine consumers are out of scope.
         // Tungsten uses the config dictionary default "ingotElnTungsten" (source

@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/steel"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": "eln:advanced_machine_block",
+    "I": "eln:iron_plate",
+    "M": "eln:machine_block",
+    "S": "#c:ingots/steel"
+  },
+  "pattern": [
+    "ISI",
+    "MAM",
+    "ISI"
+  ],
+  "result": {
+    "id": "eln:motor_cowling"
+  }
+}

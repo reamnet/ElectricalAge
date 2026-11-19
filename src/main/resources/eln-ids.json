@@ -881,6 +881,18 @@
   "kind": "shared_item",
   "name": "coal_clutch_plate"
  },
+ "eln:shared_item@7740": {
+  "descriptor": "GenericItemUsingDamageDescriptorWithComment",
+  "display": "Motor Cowling",
+  "kind": "shared_item",
+  "name": "motor_cowling"
+ },
+ "eln:shared_item@7741": {
+  "descriptor": "GenericItemUsingDamageDescriptorWithComment",
+  "display": "Heavy Winding",
+  "kind": "shared_item",
+  "name": "heavy_winding"
+ },
  "eln:shared_item@7872": {
   "descriptor": "WireScrapDescriptor",
   "display": "Wire Scraps",
