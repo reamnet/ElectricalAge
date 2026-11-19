@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T04:02:24.274659607	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-19T04:43:31.664435097	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -233,6 +233,8 @@ f996e81fb80e515548a6e7a7c20e6807ff52a339 data/eln/advancement/recipes/misc/cheap
 64af9c42728563cf40cdee5e2c5f5101f2f7bfdc data/eln/advancement/recipes/misc/christmas_tree.json
 90b2d85b19ee79fe690905abaa27df34251a5624 data/eln/advancement/recipes/misc/classic_box_fan.json
 ebd2e52fa28eefa693c939e9e6dba6d33ba4c431 data/eln/advancement/recipes/misc/classic_four_blade_ceiling_fan.json
+8b78ffc58be1d934fb902d6522347fed9bd29fff data/eln/advancement/recipes/misc/clutch_pin.json
+09acf745d173372f1f89a9717290b3bb26f92978 data/eln/advancement/recipes/misc/coal_clutch_plate.json
 495dad7ca040158c03dae28e27b0da45f191dc33 data/eln/advancement/recipes/misc/combustion_chamber.json
 25074c064d0ff925d30d2a633041d1d6861b75e5 data/eln/advancement/recipes/misc/compact_desktop_box_fan.json
 083b94981390838b2cfffae637313aade05199db data/eln/advancement/recipes/misc/compact_side_entry_service_mast.json
@@ -948,6 +950,8 @@ b555d3660d470673fa7356e9ed4adac0776928fc data/eln/recipe/christmas_star_wall_lig
 47ae53d77a92dbf13bb68b242666852552e3df0e data/eln/recipe/christmas_tree.json
 fca1fc277c3832899b240bf7f4a391e50b6d08a4 data/eln/recipe/classic_box_fan.json
 36d5f6ebcb3df1df669b31360f814d738fa44f69 data/eln/recipe/classic_four_blade_ceiling_fan.json
+7320c04cd5514320c6f0f08d9332516a71f304ad data/eln/recipe/clutch_pin.json
+58ee7430d0a59a3a7dc5ea5c0c99772b8a5b196e data/eln/recipe/coal_clutch_plate.json
 10859b043b2f46648ba82294d9dd0461b0bd7cc2 data/eln/recipe/combustion_chamber.json
 1934e6210b3a494c9acd49d3c85979af0fdba24d data/eln/recipe/compact_desktop_box_fan.json
 2c1b2da92db115ded11ac17d16c7c0345ea9dacd data/eln/recipe/compact_side_entry_service_mast.json

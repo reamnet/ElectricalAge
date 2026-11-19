@@ -986,9 +986,13 @@ public class Wp12aContent implements ElnContent {
 
 
         sharedItem.addElement(53 + (id << 6), new CaseItemDescriptor(TR_NAME(Type.NONE, "Casing")));
-        // ForkPatch 1.21.1 ItemRegistration.kt:1758-1790 (iron 54, gold 56, copper 57, lead 58; ratings unchanged)
+        // ForkPatch 1.21.1 ItemRegistration.kt:1758-1790 (iron 54, pin 55, gold 56, copper 57, lead 58, coal 59; ratings unchanged)
         sharedItem.addElement(54 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
             TR_NAME(Type.NONE, "Iron Clutch Plate"), 5120f, 640f, 640f, 160f, 0.0001f, false
+        ));
+        // ForkPatch 1.21.1 ItemRegistration.kt:1764 (ClutchPinItem = damage item + tooltip, Clutch.kt:88)
+        sharedItem.addElement(55 + (id << 6), new GenericItemUsingDamageDescriptorWithComment(
+            TR_NAME(Type.NONE, "Clutch Pin"), new String[]{"Prevents clutches from slipping", "again after they stop."}
         ));
         sharedItem.addElement(56 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
             TR_NAME(Type.NONE, "Gold Clutch Plate"), 10240f, 2048f, 1024f, 512f, 0.001f, false
@@ -998,6 +1002,9 @@ public class Wp12aContent implements ElnContent {
         ));
         sharedItem.addElement(58 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
             TR_NAME(Type.NONE, "Lead Clutch Plate"), 15360f, 1024f, 1536f, 768f, 0.0015f, false
+        ));
+        sharedItem.addElement(59 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
+            TR_NAME(Type.NONE, "Coal Clutch Plate"), 1024f, 128f, 128f, 32f, 0.1f, true
         ));
     
     }

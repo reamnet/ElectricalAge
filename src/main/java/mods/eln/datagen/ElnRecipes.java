@@ -2136,7 +2136,13 @@ public final class ElnRecipes extends ElnRecipesBase {
             "ppp",
             'p', "plateIron");
 
-        // ForkPatch 1.21.1: iron/gold/copper/lead clutch plates (tungsten dust ring + plate centre)
+        // ForkPatch 1.21.1: clutch pin (source data/eln/recipe/clutch_pin.json: 2x steel ingot -> 4)
+        addRecipe(findItemStack("Clutch Pin", 4),
+            "s",
+            "s",
+            's', "ingotSteel");
+
+        // ForkPatch 1.21.1: iron/gold/copper/lead/coal clutch plates (tungsten dust ring + plate centre)
         addRecipe(findItemStack("Iron Clutch Plate"),
             " t ",
             "tIt",
@@ -2163,6 +2169,13 @@ public final class ElnRecipes extends ElnRecipesBase {
             "tLt",
             " t ",
             'L', "plateLead",
+            't', "dustElnTungsten");
+
+        addRecipe(findItemStack("Coal Clutch Plate"),
+            " t ",
+            "tCt",
+            " t ",
+            'C', "plateCoal",
             't', "dustElnTungsten");
 
         // ForkPatch 1.21.1: turbine blades (source CraftingRecipes.kt recipeTurbineBlades): iron + steel tiers ported

@@ -1213,3 +1213,105 @@ target start HEAD `2eb5f543` (4x graphite commit).
 
 ### Commit reference
 - Local commit for this session (NO push): new commit on top of `2eb5f543` (branch `port/forkpatch-3.0.77-26.3`), subject `Port gold_clutch_plate and lead_clutch_plate from ForkPatch 1.21.1`; inspect with `git log --oneline -1`. The external queue script handles pushing.
+
+## 23. Clutch port — Clutch Pin + Coal Clutch Plate (2026-11-19, this session)
+
+Scope: port the two remaining in-scope ForkPatch 1.21.1 clutch items (`clutch_pin` subId 55,
+`coal_clutch_plate` subId 59), reusing the established clutch-plate pattern (target
+`ClutchPlateItem` + `shared_item` group 120 `registerMiscItem`, `GenericItemUsingDamageDescriptor
+WithComment` for the pin). Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPatch`);
+target start HEAD `6ab78d9c` (gold/lead plate commit).
+
+### Items implemented
+- **Clutch Pin** — registry ID `eln:shared_item@7735` (group 120 `shared_item`, subId=55;
+  120×64+55=7735). Descriptor `GenericItemUsingDamageDescriptorWithComment` with the 2-line
+  tooltip "Prevents clutches from slipping / again after they stop." — exact vs source
+  `ClutchPinItem` (damage item + comment).
+- **Coal Clutch Plate** — registry ID `eln:shared_item@7739` (group 120, subId=59; 120×64+59=7739).
+  Ratings `(maxEF, minEF, maxDTF, minDTF, wearSpeed, explodes)` = `1024, 128, 128, 32, 0.1, true`
+  — exact vs source; `explodes=true` is unique among the six plates.
+- Both confirmed absent in the target (unported-items rows "No matching current item name/model
+  found") and IDs `@7735`/`@7739` confirmed free before implementation.
+- Out of scope and NOT ported: `clutch` (machine — the plate/pin consumer). The full clutch-plate
+  item family (iron 54, gold 56, copper 57, lead 58 + coal 59 + pin 55) is now complete.
+
+### Original source behavior (ForkPatch 1.21.1)
+- `src/main/kotlin/mods/eln/mechanical/Clutch.kt:88` — `ClutchPinItem` = a damage item with a
+  static 2-line tooltip comment ("Prevents clutches from slipping" / "again after they stop.");
+  the pin is the non-consumable side of a clutch (prevents re-slipping after stop); its
+  electrical/wear interaction happens in the (not ported) clutch machine.
+- `src/main/kotlin/mods/eln/mechanical/Clutch.kt:38` — `ClutchPlateItem(name, maxEF, minEF, maxDTF,
+  minDTF, wearSpeed, explodes) : GenericItemUsingDamageDescriptor(name)`: wear tracked as a `wear`
+  double in item NBT; `maxStaticEnergyF` = Linear(0→maxEF, 1→minEF), `dynamicMaxTransferF` =
+  Linear(0→maxDTF, 1→minDTF), `slipWearF` = Linear(0→0, 1000→wearSpeed); `addInformation` shows a
+  Condition line (New/Good/Used/End of life/Bad); `infiniteLifeEnabled` flag. The plates are the
+  consumable side of a clutch — actual wear/rating consumption happens in the (not ported) clutch
+  machine.
+- Registration `src/main/kotlin/mods/eln/registration/ItemRegistration.kt:1764` (pin, subId 55)
+  and `:1785-1789` (coal plate, subId 59, `1024f, 128f, 128f, 32f, 0.1f, true`).
+- Recipes: `data/eln/recipe/clutch_pin.json` (shaped `s`/`s` with `c:ingots/steel` → 4 pins) and
+  `data/eln/recipe/coal_clutch_plate.json` (`" t "/"tCt"/" t "` with `c:plates/coal` +
+  `c:dusts/eln_tungsten` → 1 plate).
+- Textures `assets/eln/textures/items/{clutchpin,coalclutchplate}.png`.
+
+### Registry IDs
+- `eln:shared_item@7735` = Clutch Pin; `eln:shared_item@7739` = Coal Clutch Plate.
+  `eln-ids.json` entries: `{descriptor: GenericItemUsingDamageDescriptorWithComment | ClutchPlateItem,
+  display, kind: shared_item, name}`.
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp12aContent.java` (group 120 `registerMiscItem`) —
+  subId 55 `Clutch Pin` = `GenericItemUsingDamageDescriptorWithComment(name,
+  {"Prevents clutches from slipping","again after they stop."})` and subId 59 `Coal Clutch Plate`
+  = `ClutchPlateItem(name, 1024f, 128f, 128f, 32f, 0.1f, true)`, reusing existing target
+  descriptors (no new classes).
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — two craft recipes: pin = shaped `s`/`s` with
+  `ingotSteel` → 4 (wrapped in the established `neoforge:conditions` `tag_empty(c:ingots/steel)`
+  guard used by ALL steel recipes, e.g. `gas_turbine`, `steel_turbine_blade`, `steel_roller_wheel`);
+  coal plate = `" t "/"tCt"/" t "` with `plateCoal` + `dustElnTungsten` (same shape as the
+  iron/gold/copper/lead recipes).
+- `src/main/resources/eln-ids.json` — added `@7735`/`@7739`.
+- Textures `src/main/resources/assets/eln/textures/items/{clutchpin,coalclutchplate}.png` —
+  **byte-identical to source** (md5 `2081a0ea7dee02d6bb2f6d62e34ff37f` /
+  `0255f88323b581dc78df966073204291`, both sides verified this session).
+- Generated under `src/generated/resources/`: item + model JSON (layer0 → `eln:items/{clutchpin,
+  coalclutchplate}`), `data/eln/recipe/{clutch_pin,coal_clutch_plate}.json`, matching recipe
+  advancements, and `item.eln.{clutch_pin,coal_clutch_plate}` lang entries ("Clutch Pin" /
+  "Coal Clutch Plate"); `en_us.json` + 3 `.cache` hashes updated.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `:compileJava` EXIT=0.
+- **[tests-passed]** `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips) — identical to the
+  prior baselines; proves the mod constructs and both items register.
+- **[datagen-verified + idempotent]** `runClientData` ×2: run 1 wrote 9 files (8 new +
+  `en_us.json`); run 2 wrote 0 (HashCache total 4003) — IDEMPOTENT.
+- **[PASS · automated GameTest]** `runGameTestServer`: `1552 GAME TESTS COMPLETE IN 7.483 min`;
+  exactly `2 required tests failed` = the 2 HISTORICAL golden fails (`eln:golden_descriptors`
+  six_node + `eln:golden_slots` Lamp Socket A — documented, NOT weakened, NOT fixed);
+  `coal_clutch_plate` appears in the known "26.x recipes without a 1.12 twin" list (ForkPatch
+  items absent from the 1.12 golden inventory by construction); the `clutch_pin` recipe is
+  deliberately NOT loaded on the steel-less GameTest server because of the established
+  `neoforge:conditions` `tag_empty(c:ingots/steel)` guard — this is the codebase pattern for ALL
+  steel recipes, so it is expected, not a gap; zero new failing tests.
+- **[PASS · live server-side registration oracle]** live MC 26.3 dev server via `mctest` RCON
+  (2026-11-19): 26.x summon syntax `summon minecraft:item 0 100 0 {Item:{id:"eln:NAME",count:1b}}`.
+  `eln:clutch_pin` → "Summoned new Clutch Pin"; `eln:coal_clutch_plate` → "Summoned new Coal
+  Clutch Plate"; regressions `eln:{iron,gold,copper,lead}_clutch_plate` → all resolve with correct
+  display names; control `eln:totally_bogus_item_xyz` → "Summoned new Air" (unregistered ID
+  degrades as expected). Then `kill @e[type=minecraft:item]` → "Killed 6 entities"; server
+  stopped; no lingering JVM (`ps` clean). This is a server-side registration/display-name oracle —
+  NOT player gameplay validation.
+- **[NOT RUN — honestly labeled]** player-joined in-game crafting/wear/Condition validation NOT
+  performed. Plate/pin behavior is item-level only — the `clutch` machine that consumes
+  wear/ratings is out of scope and not ported, so **live gameplay verification is NOT claimed**.
+
+### Remaining limitations
+- `clutch` machine (plate+pin consumer) NOT ported — wear/Condition/electrical consumption of the
+  coal plate and pin behavior therefore cannot be gameplay-validated in-world.
+- No player-joined in-game validation (crafting, wear, Condition toasts untested in-world).
+- No audio / multi-client / fresh-JVM save-recovery validation.
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `6ab78d9c` (branch
+  `port/forkpatch-3.0.77-26.3`), subject `Port clutch_pin and coal_clutch_plate from ForkPatch
+  1.21.1`; inspect with `git log --oneline -1`. The external queue script handles pushing.

@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T04:02:24.259274008	eln-global/EA models
+// 26.3	2026-11-19T04:43:31.648674797	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -496,6 +496,8 @@ f560f5eda8ce5d031e9132c276204bb60b71dcd0 assets/eln/items/cinnabar_dust.json
 25bc81a2d15fd985d4ded7d263222fc97ed6408c assets/eln/items/cinnabar_ore.json
 96c530eaeeda7b671d780947ba8fe58cc43250ca assets/eln/items/classic_box_fan.json
 58d5e37aa5874744406baae5fd9c9afad797df9c assets/eln/items/classic_four_blade_ceiling_fan.json
+efc349e8f85ffedc225e4af50803317dc4c90632 assets/eln/items/clutch_pin.json
+7c1d10fe46234a2639a826e044bff66b2cf86bfc assets/eln/items/coal_clutch_plate.json
 0b10ab2c3df4347ff01ac48252cef9fcb2483a35 assets/eln/items/coal_dust.json
 95e1215b35afc42a351197cc27f48657dc179d4e assets/eln/items/coal_plate.json
 dcec7d729a81b7afd3021b053bf6d59a56a9f13e assets/eln/items/combustion_chamber.json
@@ -1512,6 +1514,8 @@ b414eedcad041b5dcf4dfc0ab2f9a951b1afc523 assets/eln/models/item/classic_box_fan.
 bda6e369ab0719a6a951d6919f38e4c49467cdda assets/eln/models/item/classic_box_fan_3d.json
 f779b98b3cfe6169f364ce5893c164f2500d81f8 assets/eln/models/item/classic_four_blade_ceiling_fan.json
 9397b1a5d1fda1df1d90cb9b0b1da79395d09f95 assets/eln/models/item/classic_four_blade_ceiling_fan_3d.json
+ddd54262874720ae13e3c53973a6095f38233a70 assets/eln/models/item/clutch_pin.json
+16e7217a405bb515befcce710d65994f8a4a178d assets/eln/models/item/coal_clutch_plate.json
 a9953e6a49c74c057dac9d99d58d72189660a69d assets/eln/models/item/coal_dust.json
 1a3ffec747ee0cb6fefbabbee0ea304386be4ba8 assets/eln/models/item/coal_plate.json
 f16f7b5d2c22adfcaf93131b9f4f2f6466a8a3c1 assets/eln/models/item/combustion_chamber.json
