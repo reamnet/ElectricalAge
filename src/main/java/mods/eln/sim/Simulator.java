@@ -572,7 +572,7 @@ public class Simulator /* ,IPacketHandler */ {
             }
             load.PcTemp -= (load.Tc - load.ambient) / load.Rp;
 
-            load.Tc += load.PcTemp * dt / load.C;
+            load.integrateEnergy(load.PcTemp * dt);
 
             load.Pc = load.PcTemp;
             load.Prs = load.PrsTemp;

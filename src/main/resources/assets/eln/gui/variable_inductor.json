@@ -1,0 +1,41 @@
+{
+ "column": [
+  {
+   "text": "title",
+   "sample": "Variable Inductor"
+  },
+  {
+   "row": [
+    {
+     "column": [
+      {
+       "text": "line0",
+       "sample": "Inductance: 999.9mH"
+      },
+      {
+       "text": "line1",
+       "sample": "Control: 100%"
+      }
+     ],
+     "gap": 2
+    },
+    {
+     "space": 0,
+     "fill": true
+    },
+    {
+     "slot": "0"
+    }
+   ],
+   "fill": true
+  },
+  {
+   "text": "inventory",
+   "sample": "Inventory"
+  },
+  {
+   "inventory": true
+  }
+ ],
+ "gap": 4
+}

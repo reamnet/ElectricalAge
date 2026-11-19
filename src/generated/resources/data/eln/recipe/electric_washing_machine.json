@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:bucket",
+    "C": "eln:copper_cable",
+    "M": "eln:electrical_motor",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "PBP",
+    "MCM",
+    "PPP"
+  ],
+  "result": {
+    "id": "eln:electric_washing_machine"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_transparent",
+  "textures": {
+    "particle": "eln:item/one_way_boost_buck_vdc_dc_converter"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "sourceIdentity": 8065,
+  "registryName": "grid_control_console",
+  "focused": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "command": "./gradlew --no-daemon --max-workers=2 :test --tests '*ForkPatchScadaTest'"
+  },
+  "root": {
+    "suites": 111,
+    "tests": 607,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 20,
+  "rootCommand": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20 cad:test",
+  "native": {
+    "selected": 271,
+    "passed": 271,
+    "failed": 0,
+    "skipped": 0,
+    "newEquipmentCases": 11,
+    "newFactoryCases": 1,
+    "filter": "eln:forkpatch_*",
+    "command": "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_* --report /tmp/eln26-scada-all.xml --universe /workspace/ElectricalAge/run/scada-all'",
+    "unloadedBranchExecuted": true
+  },
+  "datagen": {
+    "identities": 630,
+    "priorIdentities": 629,
+    "changedExisting": [],
+    "englishEntries": 919,
+    "priorEnglishEntries": 917,
+    "changedEnglish": [],
+    "textureReferences": 446,
+    "missingTextures": []
+  },
+  "coverage": [
+    "Eight independent source-compatible world-local target addresses and circuits",
+    "Atomic binding packet plus legacy separate settings/bind operations",
+    "Physical 20W resistor, sag and loaded-owner/inhibit/overvoltage command guards",
+    "Actual endpoint open/close and physical loads for banks, switchgear, service disconnect, air-break and drive",
+    "Remote enable cannot clear actual overload trip, pad-core trip or recloser lockout",
+    "Fresh same-world lookup, spherical range and unloaded target without chunk requests",
+    "Actual node reload, publication factory, geometry, menu and saved address book",
+    "Physical polling cadence and steady native LU reuse"
+  ],
+  "intentionalCorrection": "Commands are blocked while the console is inhibited or overvoltage, matching the source supply load disconnect behavior; source helper omitted those guards. Native bind is atomic.",
+  "limitations": [
+    "Source 12-circuit breaker-panel and media-addon endpoints need their own future adapters",
+    "Reduced fluid20 run here; full default595-passed regression checkpoint precedes this addition",
+    "Full source-world conversion and interactive client/multiplayer checks pending",
+    "Filtered port-native results do not establish unfiltered historical golden completion"
+  ]
+}

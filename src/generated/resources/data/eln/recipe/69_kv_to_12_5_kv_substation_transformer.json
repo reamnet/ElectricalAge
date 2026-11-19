@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:69_kv_steel_transmission_pole",
+    "C": "eln:copper_cable",
+    "I": "minecraft:iron_block",
+    "P": "eln:iron_plate",
+    "T": "eln:grid_dc_dc_converter"
+  },
+  "pattern": [
+    "III",
+    "CTC",
+    "PBP"
+  ],
+  "result": {
+    "id": "eln:69_kv_to_12_5_kv_substation_transformer"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "newBlockstates": 2,
+  "newItemDefinitions": 2,
+  "newItemModels": 4,
+  "newAdvancements": 2,
+  "newRecipes": 2,
+  "newEnglishKeys": 4,
+  "passed": true,
+  "task": "runClientData",
+  "registryAdditions": 2,
+  "existingIdentitiesRetained": 395,
+  "modelsRetained": 178,
+  "newGeometryModels": 2
+}

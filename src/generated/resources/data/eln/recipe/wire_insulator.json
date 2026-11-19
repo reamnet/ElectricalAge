@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:bucket",
+    "C": "eln:copper_cable",
+    "I": "minecraft:iron_ingot",
+    "M": "eln:machine_block",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "IRI",
+    "BMB",
+    "ICI"
+  ],
+  "result": {
+    "id": "eln:wire_insulator"
+  }
+}

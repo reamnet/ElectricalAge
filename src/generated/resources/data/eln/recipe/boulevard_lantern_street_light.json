@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:iron_chain",
+    "L": "eln:traditional_lantern_post_light",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
+  ],
+  "result": {
+    "id": "eln:boulevard_lantern_street_light"
+  }
+}

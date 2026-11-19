@@ -260,12 +260,14 @@ public class LampSupplyElement extends SixNodeElement {
     public void destroy(ServerPlayer entityPlayer) {
         super.destroy(entityPlayer);
         unregister();
+        mods.eln.utility.WirelessPowerChannels.disconnectOwner(this);
     }
 
     @Override
     public void unload() {
         super.unload();
         unregister();
+        mods.eln.utility.WirelessPowerChannels.disconnectOwner(this);
     }
 
     void unregister() {
@@ -298,18 +300,23 @@ public class LampSupplyElement extends SixNodeElement {
         }
 
         super.readFromNBT(nbt);
+        // Decode only the owner's three channels. Reset absent fields on a repeated
+        // read as well: neither stale entries nor a fourth saved channel owns a slot.
+        for (int i = 0; i < entries.size(); i++) {
+            entries.set(i, new Entry("", "", 2));
+            channelStates[i] = false;
+            ((ToogleAggregator) aggregators[i][2]).readFromNBT(nbt, "toogleAggregator" + i);
+        }
         if (nbt.contains("channel")) {
             entries.get(0).powerChannel = nbt.getStringOr("channel", "");
 
         } else {
-            idx = 0;
-            while (nbt.contains("entry_p" + idx)) {
-                entries.set(idx, new Entry(nbt.getStringOr("entry_p" + idx, ""), nbt.getStringOr("entry_w" + idx, ""), nbt.getIntOr("selectedAggregator" + idx, 0)));
+            for (idx = 0; idx < entries.size(); idx++) {
+                if (!nbt.contains("entry_p" + idx)) continue;
+                int aggregator = nbt.getIntOr("selectedAggregator" + idx, 0);
+                if (aggregator < 0 || aggregator >= aggregators[idx].length) aggregator = 2;
+                entries.set(idx, new Entry(nbt.getStringOr("entry_p" + idx, ""), nbt.getStringOr("entry_w" + idx, ""), aggregator));
                 channelStates[idx] = nbt.getBooleanOr("channelStates" + idx, false);
-
-                ((ToogleAggregator) aggregators[idx][2]).readFromNBT(nbt, "toogleAggregator" + idx);
-
-                idx++;
             }
         }
 
@@ -336,7 +343,8 @@ public class LampSupplyElement extends SixNodeElement {
         try {
             switch (stream.readByte()) {
                 case setPowerName: {
-                    int id = stream.readByte();
+                    int id = stream.readUnsignedByte();
+                    if (id >= entries.size()) return;
                     String newName = stream.readUTF();
                     channelRemove(this, id, entries.get(id).powerChannel);
                     entries.get(id).powerChannel = newName;
@@ -345,18 +353,22 @@ public class LampSupplyElement extends SixNodeElement {
                     break;
                 }
                 case setWirelessName: {
-                    int id = stream.readByte();
+                    int id = stream.readUnsignedByte();
+                    if (id >= entries.size()) return;
                     String newName = stream.readUTF();
-                    channelRemove(this, id, entries.get(id).wirelessChannel);
+                    // This is a signal-control name, not another supplied power channel.
                     entries.get(id).wirelessChannel = newName;
                     needPublish();
-                    channelRegister(this, id, newName);
                     break;
                 }
-                case setSelectedAggregator:
-                    entries.get(stream.readByte()).aggregator = stream.readByte();
+                case setSelectedAggregator: {
+                    int id = stream.readUnsignedByte();
+                    int aggregator = stream.readUnsignedByte();
+                    if (id >= entries.size() || aggregator >= aggregators[id].length) return;
+                    entries.get(id).aggregator = aggregator;
                     needPublish();
                     break;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

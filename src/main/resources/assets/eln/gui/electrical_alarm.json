@@ -1,17 +1,17 @@
 {
- "column": [
-  {
-   "text": "title",
-   "sample": "Standard Alarm"
-  },
-  {
-   "button": "mute",
-   "sample": [
-    "Sound: on",
-    "Sound: muted"
-   ],
-   "fill": true
-  }
- ],
- "gap": 4
+  "source": "ForkPatch b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "width": 128,
+  "height": 32,
+  "absolute": [
+    {
+      "button": "mute",
+      "rect": [
+        6,
+        6,
+        115,
+        20
+      ]
+    }
+  ],
+  "sourceGui": "src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmGui.java"
 }

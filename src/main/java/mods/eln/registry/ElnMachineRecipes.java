@@ -153,6 +153,9 @@ public final class ElnMachineRecipes {
 
     public static void recipePlateMachine() {
         float f = 10000;
+        // One paid silicon plate becomes one wafer; existing ingot-to-plate recipes are retained.
+        add(plateMachineRecipes, new Recipe(findItemStack("Silicon Plate"), findItemStack("Silicon Wafer"), f));
+
         add(plateMachineRecipes, new Recipe(
             new ItemStack(Items.COPPER_INGOT, plateConversionRatio), // 26.x: EA's copper ingot is gone
             findItemStack("Copper Plate"), 1.0 * f));
@@ -176,6 +179,12 @@ public final class ElnMachineRecipes {
     public static void recipeCompressor() {
         add(compressorRecipes, new Recipe(findItemStack("Coal Plate", 4),
             new ItemStack[]{new ItemStack(Items.DIAMOND)}, 80000.0));
+        // ForkPatch 1.21.1: Graphite Rod also compresses to 4 Coal Plates at 80 kJ; base recipe retained.
+        add(compressorRecipes, new Recipe(findItemStack("Coal Plate", 4),
+            findItemStack("Graphite Rod"), 80000.0));
+        // ForkPatch 1.21.1 CraftingRecipes.kt:2428-2435: one 4x Graphite Rods bundle compresses into one Synthetic Diamond.
+        add(compressorRecipes, new Recipe(findItemStack("4x Graphite Rods", 1),
+            findItemStack("Synthetic Diamond"), 80000.0));
         // extractorRecipes.addRecipe(new
         // Recipe("dustCinnabar",new
         // ItemStack[]{findItemStack("Purified Cinnabar Dust",1)}, 1000.0));

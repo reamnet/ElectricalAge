@@ -546,3 +546,88 @@ on 1.7.10) onto 26.x.
   clipboard, scrolling) instead of the one-line field, a quick reference of the functions beside it (click to insert),
   and the chips needed or the first problem shown as you type; Apply sends the program. Inputs A, B and C always
   connect, whether or not the program reads them (1.12 offered only the ones it read). GameTest `wp9c signal processor`.
+
+## ForkPatch wire manufacturing ownership and work
+
+Wire Roller4608, Insulator4609 and Combiner4610 retain the source inventories,
+passive200 V load/rates and scalar paid buffers. Native accepted electrical steps
+advance work. An outage retains paid progress for the same job; stock/hardware or
+option changes clear it. Native GameTests exercise sag, outages and repeated
+readiness checks against the cached LU factors.
+
+Paid metal/rubber buffers travel only in the actual destroyed machine's one drop,
+separately from inventory. Ordinary pick/configuration payloads carry settings.
+Repeated break/place payload reads cannot clone resources; partial work remains
+world-owned. Hot input is retained through insulation, and combination mixes
+constituent sensible heat rather than creating a cold default bundle. See
+[further behavior and validation](forkpatch-port/wire-manufacturing.md).
+
+## ForkPatch chip fabrication attempts
+
+The native Fabricator uses accepted electrical steps for its 4 kJ attempt budget.
+It matches actual wafer/plate item identities, permits exact output capacity and
+checks full output components. Each attempt consumes both ingredients and its
+whole budget, including a failed 50% ALU yield. A saved per-machine seed/counter
+makes the next outcome independent of renderer/world random calls and stable
+through partial-work reload. Picked/copied settings carry only the operation;
+partial work and inventories remain world-owned. Native GameTests cover every
+operation, actual ownership, sag/outages, malformed controls and the failed-yield
+energy regression. See [the adapter and bootstrap recipes](forkpatch-port/chip-fabrication.md).
+
+## Accepted energy for the native stack-machine process
+
+The ingot→plate→wafer→Fabricator integration exposed an inherited ordering error:
+`ElectricalStackMachineProcess.process` changed the load resistance and then
+credited that new resistance's power at the previous solved voltage. Starting a
+job could therefore count one unsolved sample before the circuit had supplied it.
+The shared process now accumulates work only in an accepted electrical callback;
+its slow callback handles readiness and completion. The existing machine element
+registers that callback. Recipe, booster, port, inventory and solver infrastructure
+remain in place, with no save keys changed. A native energy-metered production
+chain and 2,000 repeated-readiness checks guard the fix. The native campaign also
+verifies 64 paid ALU attempts, 62 real output chips, and an actual scheduled owner
+reload after a failed attempt.
+
+
+## Native fixed-machine cords and passive outlets
+
+Source connector identities now use actual native passive links and filtered
+native inlets. Survival connections debit the held cord only after attachment
+succeeds; selection, rejected claims and copied settings cannot create a paid
+resource. Contacts and cords dissipate real input power, and existing machine
+work clocks remain accepted-step callbacks. Polling and drawing never pay work.
+
+Native reconnects can remove a physical link while retaining its logical socket
+reservation. Bounded weak owner references preserve immediate resident unplug
+without retaining unloaded instances. Duplicate loaded tokens cannot steal or
+refund a live owner's reservation. Explicit release invalidates an unloaded
+consumer's old claim; its later poll refunds the original paid cord once.
+Unknown source rating names and malformed socket indices now reject rather than
+silently defaulting/clamping to another valid connector. Ordinary native settings
+never import the world-owned link or source socket ledger.
+
+Native voxel end/pin paths enforce the same plugged-inlet policy as ordinary
+nodes and preserve non-power connections. Wireless outlet bridges charge the
+actual supply through one passive link and remove it before source teardown;
+they do not also add equivalent lamp demand. Native source-style surface outlet
+shapes are stored by front/horizontal block state, preserving resident-only
+queries. Recessed walls, portable carry and compact UPS remain separate work.
+See [the adapter and limits](forkpatch-port/cord-outlets.md).
+
+
+Cord lifecycle follow-up: a strengthened paid-owner suspension case reproduced an
+explicit `ApplianceCord.poll()` reconnecting a suspended native owner. Physical
+polls now require the exact resident owner to be added; the paid logical socket
+reservation survives and normal native resume reclaims it once. The pre-fix test
+failure is retained separately from passing final evidence. Default outlet
+channels use the source/legacy `Default channel`, preserving explicit custom
+values. Horizontal socket controls immediately republish resident cord anchors
+without work or stable-LU changes, and render teardown clears cached cord meshes.
+
+The same explicit-refresh suspension defect was reproduced for a wireless outlet:
+after native unload removed its input load, `WirelessOutletPower.refresh()` could
+add a new bridge to that inactive load. Refresh now requires the exact resident
+outlet to be added, disconnecting otherwise; ordinary native resume reconnects
+the original real supply. The strengthened wireless production case retains
+both unload/refusal and resume checks, alongside its independently metered power
+and 2000 stable-LU refresh checks.

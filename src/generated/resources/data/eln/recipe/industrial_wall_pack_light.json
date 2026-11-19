@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:iron_ingot",
+    "L": "eln:warehouse_wall_floodlight",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
+  ],
+  "result": {
+    "id": "eln:industrial_wall_pack_light"
+  }
+}

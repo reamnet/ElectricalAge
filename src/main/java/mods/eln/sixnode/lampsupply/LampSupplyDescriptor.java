@@ -22,9 +22,19 @@ public class LampSupplyDescriptor extends SixNodeDescriptor {
     public boolean isWireless;
     public int range;
     public int channelCount = 3;
+    /** Zero keeps the established, unrated native supply out of the cord whitelist. */
+    public final double nominalVoltage;
+
+    public static final int RATED_120_ID = 4162;
+    public static final int RATED_240_ID = 4161;
 
     public LampSupplyDescriptor(String name, Obj3D obj, int range) {
+        this(name, obj, range, 0);
+    }
+
+    public LampSupplyDescriptor(String name, Obj3D obj, int range, double nominalVoltage) {
         super(name, LampSupplyElement.class, null);
+        this.nominalVoltage = nominalVoltage;
         this.isWireless = isWireless;
         this.range = range;
         this.obj = obj;
@@ -37,6 +47,15 @@ public class LampSupplyDescriptor extends SixNodeDescriptor {
         }
 
         voltageLevelColor = VoltageLevelColor.Neutral;
+    }
+
+    /** Source lookup helper only; source worlds still require an explicit converter. */
+    public static Integer destinationIdForSource(int sourceId) {
+        return switch (sourceId) {
+            case 4160 -> RATED_120_ID;
+            case 4161 -> RATED_240_ID;
+            default -> null;
+        };
     }
 
     @Override
@@ -82,6 +101,7 @@ public class LampSupplyDescriptor extends SixNodeDescriptor {
     public void addInformation(ItemStack itemStack, Player entityPlayer, List list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         list.add(tr("Supplies all lamps on the channel."));
+        if (nominalVoltage > 0) list.add(tr("Nominal mains class: %1$V", Utils.plotValue(nominalVoltage)));
     }
 
     @Override

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:lamp_supply"
+  ],
+  "result": {
+    "id": "eln:120v_lamp_supply"
+  }
+}

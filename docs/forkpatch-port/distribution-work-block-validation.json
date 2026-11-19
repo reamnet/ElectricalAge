@@ -1,0 +1,955 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "startCommit": "ce152268e926fa2de918d46ec9e3469df4f68340",
+  "validatedCodeCommit": "4148c7415e2cf39ecc273f2240e96553546fdba9",
+  "regressions": {
+    "tests": 529,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 3,
+    "passed": 526,
+    "suites": 101,
+    "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+    "fluidCases": 20,
+    "defaultFluidCases": 200,
+    "defaultFluidCorpusRun": false,
+    "skippedCases": [
+      {
+        "suite": "mods.eln.node.voxel.VoxelPreviewTest",
+        "case": "safetyValveAndSensor()",
+        "message": "Assumption failed: -PcadPreviews=DIR"
+      },
+      {
+        "suite": "mods.eln.node.voxel.VoxelPreviewTest",
+        "case": "junctionsAndAdapters()",
+        "message": "Assumption failed: -PcadPreviews=DIR"
+      },
+      {
+        "suite": "mods.eln.client.entity.BikePreviewTest",
+        "case": "bikes()",
+        "message": "Assumption failed: -PcadPreviews=DIR"
+      }
+    ],
+    "newCasesThisBlock": 41,
+    "transformerCases": 15
+  },
+  "native": {
+    "tests": 175,
+    "passed": 175,
+    "failures": 0,
+    "errors": 0,
+    "selector": "eln:forkpatch_*",
+    "newCasesThisBlock": 43,
+    "cases": [
+      {
+        "classname": "eln:floor_3x4x3",
+        "name": "eln:forkpatch_converter_ticks",
+        "time": "1.183"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_standby_fuel_transactions",
+        "time": "0.936"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_ups_cell_inventory",
+        "time": "1.025"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_solar_mppt_floor",
+        "time": "1.832"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_solar_hybrid_floor",
+        "time": "1.762"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_solar_mppt_wall",
+        "time": "1.79"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_solar_hybrid_wall",
+        "time": "1.815"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_solar_mppt_floor_export",
+        "time": "1.846"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_bank16",
+        "time": "1.89"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_bank32",
+        "time": "1.912"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_bank48",
+        "time": "1.961"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_bank64",
+        "time": "1.987"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_wall16",
+        "time": "2.037"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_wall32",
+        "time": "2.104"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_wall48",
+        "time": "2.136"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_wall64",
+        "time": "2.168"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_inverter",
+        "time": "2.188"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_mppt",
+        "time": "2.228"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_ac_charger",
+        "time": "2.251"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_combiner",
+        "time": "2.322"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_offgrid_disconnect",
+        "time": "2.358"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_relay_paired_leak_reset",
+        "time": "3.459"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_relay_wired_trip",
+        "time": "3.457"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_relay_overcurrent",
+        "time": "3.462"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_standby_engine_small",
+        "time": "3.669"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_standby_engine_medium",
+        "time": "3.597"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_standby_engine_large",
+        "time": "3.6"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_standby_engine_extra_large",
+        "time": "3.603"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_standby_engine_extreme",
+        "time": "3.61"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_pad_145a_secondary",
+        "time": "3.505"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_ups_floor_backup",
+        "time": "3.766"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_ups_empty_unloaded",
+        "time": "3.764"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_ups_wall_xn",
+        "time": "3.77"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_ups_wall_xp",
+        "time": "3.773"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_ups_wall_zn",
+        "time": "3.778"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_ups_wall_zp",
+        "time": "3.782"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_pad_core_guard",
+        "time": "2.549"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_pad_primary_fuse_replace",
+        "time": "2.552"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_pad_200a_short",
+        "time": "2.55"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_shedder_headroom_retry",
+        "time": "3.759"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_pad_split_service_sag",
+        "time": "1.143"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_pad_shared_service_guard",
+        "time": "1.136"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_standby_ats_floor",
+        "time": "3.987"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_standby_ats_wall",
+        "time": "3.987"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_shedder_wired_inhibit",
+        "time": "3.798"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_shedder_voltage_restore",
+        "time": "3.918"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_standby_linked_reset_corrected_load",
+        "time": "4.249"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_standby_linked_reset_still_faulted",
+        "time": "4.25"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_ups_standby_stop_restart",
+        "time": "4.275"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_ups_standby_empty_start",
+        "time": "4.282"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_underground_riser",
+        "time": "0.684"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_handhole",
+        "time": "0.691"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_service_meter_item_inventory",
+        "time": "0.712"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_7986_xn",
+        "time": "0.729"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_7986_xp",
+        "time": "0.688"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_7986_zn",
+        "time": "0.696"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_7986_zp",
+        "time": "0.705"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8028_xn",
+        "time": "0.709"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8028_xp",
+        "time": "0.713"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8028_zn",
+        "time": "0.717"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8028_zp",
+        "time": "0.722"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8029_xn",
+        "time": "0.729"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8029_xp",
+        "time": "0.731"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8029_zn",
+        "time": "0.731"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8029_zp",
+        "time": "0.735"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8030_xn",
+        "time": "0.739"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8030_xp",
+        "time": "0.739"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8030_zn",
+        "time": "0.751"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_8030_zp",
+        "time": "0.76"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_reload_and_freeze",
+        "time": "0.762"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_paid_clicks_and_terminals",
+        "time": "0.769"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_wire_catalog_and_lengths",
+        "time": "0.792"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_wire_actual_spool_placement",
+        "time": "0.797"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_wire_native_junction_heating",
+        "time": "0.763"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_wire_jacket_melting_transition",
+        "time": "0.756"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_wire_molten_pile_transition",
+        "time": "0.756"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_wire_span_full_fusion_opens_circuit",
+        "time": "0.758"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_wire_actual_span_heat_budget",
+        "time": "0.683"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_wire_latched_insulation_fault",
+        "time": "0.679"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_wire_spool_span_hot_reload_and_refund",
+        "time": "0.638"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_catalog_mass_and_identity",
+        "time": "0.655"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_independent_eight_core_voxel_boundary",
+        "time": "0.659"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_independent_eight_core_inner_corner",
+        "time": "0.658"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_scalar_tap_color_15",
+        "time": "0.658"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_scalar_tap_color_1",
+        "time": "0.651"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_palette_reconnect_and_save",
+        "time": "0.651"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_finite_pair_fault_reload",
+        "time": "0.647"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_flat_geometry_palette_packet",
+        "time": "0.655"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_legacy_plain_pole",
+        "time": "1.11"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_overhead_legacy_dcdc_pole",
+        "time": "1.111"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_wide_xn_meter_first",
+        "time": "1.712"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_wide_xn_wire_first",
+        "time": "1.515"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_wide_xp_meter_first",
+        "time": "1.512"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_wide_xp_wire_first",
+        "time": "1.508"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_wide_zn_meter_first",
+        "time": "1.512"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_wide_zn_wire_first",
+        "time": "1.516"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_wide_zp_meter_first",
+        "time": "1.508"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_wide_zp_wire_first",
+        "time": "1.504"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_compact_meter",
+        "time": "1.503"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_service_manual_disconnect",
+        "time": "1.502"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_direct_ground_routes_protective_core",
+        "time": "1.367"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_hot_jacket_failure_preserves_metal",
+        "time": "1.323"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_multicore_native_freeze_and_single_reconnect",
+        "time": "1.328"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_bundle_span_jacket_payment_reload_refund",
+        "time": "1.386"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_bundle_span_independent_power_and_heat",
+        "time": "1.401"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_bundle_span_rejects_mismatched_cores_without_payment",
+        "time": "1.401"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_bundle_span_old_payment_interpretation",
+        "time": "1.399"
+      },
+      {
+        "classname": "eln:floor_10x5x10",
+        "name": "eln:forkpatch_bundle_span_creative_payment",
+        "time": "1.425"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_single",
+        "time": "1.429"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_three",
+        "time": "1.428"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_transformer_single",
+        "time": "1.434"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_transformer_three",
+        "time": "1.43"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_feeder_three",
+        "time": "1.436"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_cutout_single",
+        "time": "1.444"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_cutout_three",
+        "time": "1.446"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_recloser_three",
+        "time": "1.466"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_secondary",
+        "time": "1.393"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_capacitor_three",
+        "time": "1.402"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_regulator_single",
+        "time": "1.403"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_regulator_three",
+        "time": "1.402"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_air_break_three",
+        "time": "1.404"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_fused_tap_three",
+        "time": "1.411"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_secondary_light",
+        "time": "1.419"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_street_single",
+        "time": "1.429"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_street_three",
+        "time": "1.435"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_secondary_fed_single",
+        "time": "1.446"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_secondary_fed_three",
+        "time": "1.449"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_feeder_single",
+        "time": "1.458"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_service_pedestal",
+        "time": "1.472"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_underground_single",
+        "time": "1.499"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_power_underground_secondary_transformer_single",
+        "time": "1.484"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_phase_inheritance_single_run",
+        "time": "1.438"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_phase_inheritance_open_cutout",
+        "time": "1.436"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_three_phase_bundle_native_power",
+        "time": "1.448"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_fused_tap_phase_change_guard",
+        "time": "1.449"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_paid_fuse_cartridge_and_reload",
+        "time": "1.435"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_packets_carry_and_lockout",
+        "time": "1.437"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_real_crossarm_clearance",
+        "time": "1.445"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_native_equipment_graphics",
+        "time": "1.591"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_actual_clicks_and_legacy_phase_alias",
+        "time": "2.909"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_distribution_phase_inheritance_through_twenty_pole_loop",
+        "time": "3.083"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_empty",
+        "time": "4.829"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_145a_secondary",
+        "time": "4.844"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_shared_core_guard",
+        "time": "4.916"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_reverse_power",
+        "time": "4.98"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_physical_fuse",
+        "time": "5.023"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_remove_core",
+        "time": "5.101"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_select_phase",
+        "time": "5.067"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_inventory_reload",
+        "time": "5.174"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_packets_carry",
+        "time": "3.087"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_controls_geometry_and_persistence",
+        "time": "0.608"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_single_feeder_primary_and_secondary_ports",
+        "time": "0.618"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_attachment_paid_install_reload",
+        "time": "0.984"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_attachment_removal",
+        "time": "0.989"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_attachment_manual_240_supply",
+        "time": "0.998"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_attachment_break_refund",
+        "time": "1.041"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_underground_distribution_pedestal_split",
+        "time": "1.04"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_underground_distribution_pedestal_fuse",
+        "time": "1.046"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_underground_distribution_pedestal_reverse",
+        "time": "1.052"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_underground_distribution_primary_cabinet",
+        "time": "1.052"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_underground_distribution_buried_transformer",
+        "time": "1.007"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_underground_distribution_clearance_geometry",
+        "time": "0.961"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_secondary_light_powered",
+        "time": "1.469"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_secondary_light_switch_off",
+        "time": "1.434"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_street_single_powered",
+        "time": "1.44"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_street_single_switch_off",
+        "time": "1.282"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_street_three_powered",
+        "time": "1.281"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_street_three_switch_off",
+        "time": "1.283"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_secondary_fed_single_powered",
+        "time": "1.29"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_secondary_fed_single_switch_off",
+        "time": "1.293"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_secondary_fed_three_powered",
+        "time": "1.289"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_lamp_secondary_fed_three_switch_off",
+        "time": "1.292"
+      },
+      {
+        "classname": "eln:floor_24x12x24",
+        "name": "eln:forkpatch_pole_transformer_graphics",
+        "time": "1.675"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_isolated_transformer_open",
+        "time": "0.155"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_isolated_transformer_loaded",
+        "time": "0.103"
+      }
+    ]
+  },
+  "sourceDistribution": {
+    "currentVariants": 18,
+    "currentVariantsAdapted": 18,
+    "registeredVariants": 23,
+    "hiddenLegacyVariantsAdapted": 5,
+    "hiddenLegacyVariantsPending": 7
+  },
+  "data": {
+    "originalIdentitiesRetained": 599,
+    "totalIdentities": 611,
+    "newIdentities": 12,
+    "originalEnglishKeysRetained": 858,
+    "newEnglishKeys": 23,
+    "newRecipes": 7,
+    "newAdvancements": 7,
+    "newInventoryIcons": 12,
+    "originalGeometryModelsRetained": 192,
+    "newGeometryModels": 2
+  },
+  "importAudit": {
+    "ledgerEntries": 161,
+    "sourceHashProblems": 0,
+    "missingTargets": 0,
+    "verbatimMismatches": 0
+  },
+  "thermalFix": "Joules from every powered winding interval are deposited once, including startup and the interval whose fuse opens afterward. Preserve the one-argument JVM step entrypoint.",
+  "unchangedGradleConfiguration": true,
+  "overallPortComplete": false,
+  "limits": [
+    "Seven hidden legacy pole adapters and other ForkPatch workstreams remain pending.",
+    "Scalar service equivalents are preserved, not an explicit neutral/AC phasor solver.",
+    "Adaptive racks, legacy pole/transmission streetlight adapters, full source-world migration and interactive GPU/audio checks remain pending.",
+    "Three optional CAD preview tests require -PcadPreviews; the default 200-case fluid corpus was not run."
+  ]
+}

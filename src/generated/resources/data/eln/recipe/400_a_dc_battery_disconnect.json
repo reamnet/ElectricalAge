@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:repeater",
+    "I": "eln:iron_plate",
+    "M": "eln:machine_block",
+    "P": "minecraft:comparator",
+    "W": "eln:copper_cable"
+  },
+  "pattern": [
+    "IPI",
+    "WCW",
+    "IMI"
+  ],
+  "result": {
+    "id": "eln:400_a_dc_battery_disconnect"
+  }
+}

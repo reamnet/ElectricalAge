@@ -1,0 +1,78 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "native": {
+    "scope": "Observed native results; no golden expectations or production behavior are changed by this tool.",
+    "selected": 976,
+    "passed": 976,
+    "failed": 0,
+    "skipped": 0,
+    "failures": [],
+    "portCases": {
+      "selected": 976,
+      "failed": 0
+    },
+    "golden": {
+      "golden_descriptors": {
+        "failedAssertions": 0,
+        "categories": {},
+        "differences": []
+      },
+      "golden_slots": {
+        "failedAssertions": 0,
+        "categories": {},
+        "differences": []
+      }
+    },
+    "nonGoldenAssertions": {},
+    "command": "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report REPORT.xml --universe NEW_UNIQUE_WORLD'",
+    "report": "/tmp/eln-fire-alarm-all-forkpatch-v4.xml",
+    "log": "/tmp/eln-fire-alarm-all-forkpatch-v4.log",
+    "limitations": [
+      "Failure categories describe observed differences, not approved exceptions.",
+      "Review against pinned ForkPatch source and intentional destination changes before updating historical checks."
+    ]
+  },
+  "targeted": {
+    "selected": 13,
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0,
+    "report": "/tmp/eln-fire-alarm-native-v2.xml"
+  },
+  "root": {
+    "selected": 701,
+    "passed": 698,
+    "failed": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "selected": 15,
+    "passed": 15,
+    "failed": 0
+  },
+  "buildLog": "/tmp/eln-fire-alarm-final-check-v5.log",
+  "goldens": {
+    "selected": 3,
+    "passed": 1,
+    "failed": 2,
+    "assertions": 761,
+    "allPrior746Retained": true,
+    "newAssertions": 15,
+    "report": "/tmp/eln-fire-alarm-goldens-v5.xml",
+    "explanation": "Only historical golden_descriptors/golden_slots comparisons fail; expectations are unchanged."
+  },
+  "datagenRepeat": {
+    "written": 0,
+    "log": "/tmp/eln-fire-alarm-final-check-v5.log"
+  },
+  "provenance": {
+    "entries": 1085,
+    "passed": true,
+    "report": "/tmp/eln-fire-alarm-imports-v5.json"
+  },
+  "limitations": [
+    "Live GUI/GPU/audio checks pending.",
+    "Room-climate adapter is unported; heat uses source20C fallback plus real nearby radiant sources.",
+    "Final unfiltered native run and artifact certification remain due after road vehicles."
+  ]
+}

@@ -21,6 +21,8 @@ public class SolarPanelRender extends TransparentNodeElementRender {
 
     public SolarPanelDescriptor descriptor;
     private CableRenderType renderPreProcess;
+    public SolarRoofMount roofMount = new SolarRoofMount(null);
+    public boolean roofMountKnown;
 
     public SolarPanelRender(TransparentNodeEntity tileEntity, TransparentNodeDescriptor descriptor) {
         super(tileEntity, descriptor);
@@ -34,7 +36,16 @@ public class SolarPanelRender extends TransparentNodeElementRender {
     @Override
     public void draw() {
         renderPreProcess = drawCable(Direction.YN, descriptor.cableRender, eConn, renderPreProcess);
-        descriptor.draw((float) (interpol.get() * 180 / Math.PI - 90), front);
+        mods.eln.gl.GL11.glPushMatrix();
+        try {
+            var up = roofMount.getUphill();
+            if (up != null) {
+                mods.eln.gl.GL11.glTranslated(0, -.5, 0);
+                mods.eln.gl.GL11.glRotatef(45, -up.getStepZ(), 0, up.getStepX());
+                mods.eln.gl.GL11.glTranslated(0, .5, 0);
+            }
+            descriptor.draw((float) (interpol.get() * 180 / Math.PI - 90), front);
+        } finally { mods.eln.gl.GL11.glPopMatrix(); }
     }
 
     @Override
@@ -43,7 +54,7 @@ public class SolarPanelRender extends TransparentNodeElementRender {
         if (hasTracker == false) {
             alpha = (float) descriptor.alphaTrunk(pannelAlphaSyncValue);
         } else {
-            alpha = (float) descriptor.alphaTrunk(SolarPannelSlowProcess.getSolarAlpha(tileEntity.getLevel()));
+            alpha = (float) descriptor.alphaTrunk(roofMount.targetAlpha(SolarPannelSlowProcess.getSolarAlpha(tileEntity.getLevel())));
         }
         interpol.setTarget(alpha);
         if (boot) {
@@ -82,6 +93,8 @@ public class SolarPanelRender extends TransparentNodeElementRender {
             }
 
             eConn.deserialize(stream);
+            roofMount = SolarRoofMount.fromId(stream.readByte());
+            roofMountKnown = true;
 
             renderPreProcess = null;
 

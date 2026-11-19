@@ -1,7 +1,6 @@
 package mods.eln.transparentnode.solarpanel;
 
 
-import mods.eln.compat.WorldCompat;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Utils;
 import mods.eln.sim.IProcess;
@@ -29,67 +28,45 @@ public class SolarPannelSlowProcess implements IProcess {
 			}
 			else*/
             {
-                solarPannel.powerSource.setP(solarPannel.descriptor.electricalPmax * getSolarLight());
+                solarPannel.powerSource.setLightFactor(getSolarLight());
             }
             timeCounter += Math.random() * timeCounterRefreshMax / 2 + timeCounterRefreshMax / 2;
         }
 
     }
 
+    public SolarRay.Result lastTrace = new SolarRay.Result(0, 0, 0, false);
+
+    /** The source's sampling point follows the array front and its saved pitch. */
+    public Vec3 sampleOrigin() {
+        double[] offset = {solarPannel.descriptor.solarOffsetX, solarPannel.descriptor.solarOffsetY, solarPannel.descriptor.solarOffsetZ};
+        solarPannel.front.rotateFromXN(offset);
+        return Utils.getVec05(solarPannel.node.coordonate).add(solarPannel.roofMount.point(new Vec3(offset[0], offset[1], offset[2])));
+    }
+
+    public static double weatherMultiplier(double rain, double thunder) {
+        if (!Double.isFinite(rain) || !Double.isFinite(thunder)) return 0;
+        return (1 - .5 * Math.clamp(rain, 0, 1)) * (1 - .5 * Math.clamp(thunder, 0, 1));
+    }
+
     public double getSolarLight() {
-        double solarAlpha = getSolarAlpha();
-        //	Utils.print("solarAlpha : " + solarAlpha + "  ");
-        if (solarAlpha >= Math.PI) return 0.0;
-
-        if (!Utils.isEmpty(solarPannel.getInventory().getItem(SolarPanelElement.trackerSlotId))) {
-            solarPannel.panelAlpha = solarPannel.descriptor.alphaTrunk(solarAlpha);
-        }
-
-
+        lastTrace = new SolarRay.Result(0, 0, 0, false);
         Coordonate coordonate = solarPannel.node.coordonate;
-        Vec3 v = Utils.getVec05(coordonate);
-        double x = v.x + solarPannel.descriptor.solarOffsetX, y = v.y + solarPannel.descriptor.solarOffsetY, z = v.z + solarPannel.descriptor.solarOffsetZ;
-
-
-        double lightAlpha = solarPannel.panelAlpha - solarAlpha;
-        double light = Math.cos(lightAlpha);
-
-
-        if (light < 0.0) light = 0.0;
-
-        if (coordonate.getWorldExist() == false) return light;
-
+        if (!coordonate.getWorldExist()) return 0;
+        double solarAlpha = getSolarAlpha();
+        if (!Double.isFinite(solarAlpha) || solarAlpha < 0 || solarAlpha >= Math.PI) return 0;
+        if (!Utils.isEmpty(solarPannel.getInventory().getItem(SolarPanelElement.trackerSlotId)))
+            solarPannel.panelAlpha = solarPannel.descriptor.alphaTrunk(solarPannel.roofMount.targetAlpha(solarAlpha));
+        double light = solarPannel.roofMount.incidence(solarPannel.panelAlpha, solarAlpha);
+        if (light <= 0) return 0;
         Level world = coordonate.world();
-        // (rain halves it, a thunderstorm halves it again; graded, at the panel: Watershed's showers are local)
+        // Preserve destination local/graded weather integration, with bounded finite provider values.
         double[] weather = Utils.weatherAt(world, coordonate.pos());
-        light *= (1 - 0.5 * weather[0]) * (1 - 0.5 * weather[1]);
-
-
-        double xD = Math.cos(solarAlpha), yD = Math.sin(solarAlpha);
-
-        if (Math.abs(xD) > yD) {
-            xD = Math.signum(xD);
-            yD /= Math.abs(xD);
-        } else {
-            yD = 1.0;
-            xD /= yD;
-        }
-        int count = 0;
-        ///world.getChunkProvider().chunkExists(var1, var2)
-        while (world.hasChunk(((int) x) >> 4, ((int) z) >> 4)) { // 1.7.10 chunkExists = loaded
-            double opacity = WorldCompat.getBlockLightOpacity(world, (int) x, (int) y, (int) z);
-            light *= (255 - opacity) / 255;
-            if (light == 0.0) {
-                break;
-            }
-
-            x += xD;
-            y += yD;
-            count++;
-            if (y > world.getMaxY()) break; // 26.x: build height is no longer 256
-        }
-//		Utils.print("count : " + count + "   ");
-        return light;
+        if (weather == null || weather.length < 2) return 0;
+        light *= weatherMultiplier(weather[0], weather[1]);
+        if (light <= 0) return 0;
+        lastTrace = SolarWorldRay.trace(world, sampleOrigin(), solarAlpha);
+        return light * lastTrace.transmission();
     }
 
     public static double getSolarAlpha(Level world) {

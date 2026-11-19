@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:experimental_wall_outlet",
+    "eln:iron_plate",
+    "minecraft:red_dye"
+  ],
+  "result": {
+    "id": "eln:480_v_industrial_outlet"
+  }
+}

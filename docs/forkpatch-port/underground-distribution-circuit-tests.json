@@ -1,0 +1,23 @@
+{
+  "tests": 8,
+  "passed": 8,
+  "errors": 0,
+  "failures": 0,
+  "cases": [
+    "undergroundPrimaryCutoutIsolatesOnlyItsRealPrimaryLoad",
+    "healthyUndergroundServiceKeepsNativeLuFactorization",
+    "actualPlaced240VoltFeedSuppliesBothPassiveServiceLegs",
+    "savedBlownPedestalCannotBeResetIntoAFreeCartridge",
+    "independentlyFedOverheadChannelsDoNotGetAnImplicitNeutralSplit",
+    "pedestalPassesReversePowerWithoutCreatingEnergy",
+    "pedestalFuseMeasuresTotal240VoltEquivalentCurrent",
+    "oneBlownPedestalFuseOpensAllThreeServiceCircuits"
+  ],
+  "limits": [
+    "Seven hidden legacy distribution variants remain unregistered; all eighteen current source creative distribution variants are adapted.",
+    "Cabinet recipes retain the source shaped bill of materials in a native shapeless recipe.",
+    "Existing native scalar service equivalents are preserved; this is not a neutral/AC phasor solver.",
+    "Legacy pole/transmission attachment adapters, adaptive racks/clearances, source-world migration and interactive GPU/audio checks remain pending.",
+    "The default 200-case fluid corpus is not run; full regressions select fluidCases=20."
+  ]
+}

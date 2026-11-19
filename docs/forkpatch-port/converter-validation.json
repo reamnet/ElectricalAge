@@ -1,0 +1,88 @@
+{
+  "toolchain": {
+    "minecraft": "26.3",
+    "neoforge": "26.3.0.75-beta",
+    "java": "25"
+  },
+  "scope": "Destination unit suite with reduced seeded fluid corpus, CAD suite and native transformer blocks",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "main": {
+    "tests": 334,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "passed": 331,
+    "suites": 82
+  },
+  "cad": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 15,
+    "suites": 3
+  },
+  "skipped": [
+    {
+      "name": "safetyValveAndSensor()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "time": "0.002",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "junctionsAndAdapters()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "time": "0.001",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "bikes()",
+      "classname": "mods.eln.client.entity.BikePreviewTest",
+      "time": "0.01",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    }
+  ],
+  "nativeTransformer": {
+    "passed": [
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:wp10a_transformer",
+        "time": "0.362"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_isolated_transformer_open",
+        "time": "0.307"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:forkpatch_isolated_transformer_loaded",
+        "time": "0.313"
+      },
+      {
+        "classname": "eln:floor_8x4x3",
+        "name": "eln:wp10a_transformer_connects_only_when_complete",
+        "time": "0.096"
+      }
+    ],
+    "failures": 0
+  },
+  "limits": [
+    "Default 200-case fluid corpus not run",
+    "Fully floating differential/gauge and stiff high-voltage accuracy remain pending",
+    "MPPT/hybrid cabinet registration and client presentation remain pending"
+  ],
+  "portCommit": "32356a82",
+  "forkPatchSourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "nativeRegulatedConverter": {
+    "passed": [
+      {
+        "classname": "eln:floor_3x4x3",
+        "name": "eln:forkpatch_converter_ticks",
+        "time": "0.157"
+      }
+    ],
+    "failures": 0
+  }
+}

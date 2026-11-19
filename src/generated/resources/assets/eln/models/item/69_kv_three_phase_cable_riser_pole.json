@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eln:item/69_kv_three_phase_cable_riser_pole"
+  }
+}

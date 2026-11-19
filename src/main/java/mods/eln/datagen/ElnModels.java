@@ -52,6 +52,10 @@ public class ElnModels implements DataProvider {
     String itemTexture(String name, Item item) {
         // the redrawn icon set: textures/item/<registry id>.png (the schematic set overrides the same paths in a pack)
         if (textureExists("item/" + name)) return "item/" + name;
+        // The work-light GUI uses its original 3D mesh; engine hardware supplies the particle texture.
+        if (name.equals("gasoline_construction_work_light")) return itemTexture("200v_fuel_generator",item);
+        // Rated supplies use the established native enclosure and its inventory icon.
+        if (name.equals("120v_lamp_supply") || name.equals("240v_lamp_supply")) return itemTexture("lamp_supply", item);
         // 26.x oil machines: the macerator's icons until their own exist
         if (name.endsWith("tar_sand_separator")) return itemTexture(name.replace("tar_sand_separator", "macerator"), item);
         if (name.endsWith("oil_pump")) return itemTexture(name.replace("oil_pump", "compressor"), item);
@@ -106,6 +110,11 @@ public class ElnModels implements DataProvider {
                 model = "eln:block/" + name;
                 out.add(DataProvider.saveStable(cache, obj("parent", "minecraft:block/cube_all", "textures",
                     obj("all", "eln:" + (tex == null ? "blocks/ore" : tex))), assets.resolve("models/block/" + name + ".json")));
+            } else if (id.getPath().equals("arc_clay_block") || id.getPath().equals("arc_metal_block")) {
+                // ForkPatch 1.21.1 ArcClayBlock/ArcMetalBlock: a plain cube (texture blocks/<name>), as the ores
+                out.add(DataProvider.saveStable(cache, obj("parent", "minecraft:block/cube_all", "textures",
+                    obj("all", "eln:blocks/" + name)), assets.resolve("models/block/" + name + ".json")));
+                model = "eln:block/" + name;
             } else if (b instanceof mods.eln.transparentnode.energyconverter.EnergyConverterElnToOtherBlock) {
                 // the synchronous-condenser models (AdventurAgent, mods.eln.cad.models.Converter; OBJ in src/main/resources),
                 // turned so their EA face is the node's FRONT
@@ -150,12 +159,13 @@ public class ElnModels implements DataProvider {
                 model = "eln:block/" + name;
             } else {
                 String tex = itemTexture(name, item);
+                if (tex == null && java.util.Set.of("hot_water","fruit_smoothie","steamed_grains").contains(name)) tex = "source_food";
                 if (tex == null) {
                     missing.add("item " + name);
                     tex = "items/missing";
                 }
                 // the data-log print had an empty icon (1.12 drew the graph over it): vanilla paper in the GUI
-                String layer = name.equals("data_logger_print") ? "minecraft:item/paper" : "eln:" + tex;
+                String layer = switch(name) { case "data_logger_print" -> "minecraft:item/paper"; case "hot_water" -> "minecraft:item/potion"; case "fruit_smoothie" -> "minecraft:item/honey_bottle"; case "steamed_grains" -> "minecraft:item/mushroom_stew"; default -> "eln:" + tex; };
                 out.add(DataProvider.saveStable(cache, obj("parent", HANDHELD.contains(name) ? "minecraft:item/handheld" : "minecraft:item/generated",
                     "textures", obj("layer0", layer)), assets.resolve("models/item/" + name + ".json")));
             }
@@ -170,7 +180,10 @@ public class ElnModels implements DataProvider {
                 out.add(DataProvider.saveStable(cache, obj("parent", parent, "textures", obj("particle", particle)),
                     assets.resolve("models/item/" + name + "_3d.json")));
                 JsonArray cases = new JsonArray();
-                cases.add(obj("when", "gui", "model", flat));
+                boolean sourceModelGui = d instanceof mods.eln.transparentnode.worklight.WorkLightDescriptor
+                    || d instanceof mods.eln.transparentnode.festive.FairyLightsDescriptor;
+                cases.add(obj("when", "gui", "model", sourceModelGui
+                    ? obj("type", "minecraft:special", "base", base, "model", obj("type", "eln:device", "context", "entity")) : flat));
                 JsonArray entity = new JsonArray();
                 for (String c : new String[]{"ground", "fixed", "head"}) entity.add(c);
                 cases.add(obj("when", entity, "model", obj("type", "minecraft:special", "base", base,

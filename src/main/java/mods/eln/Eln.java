@@ -310,6 +310,7 @@ public class Eln {
         NeoForge.EVENT_BUS.addListener(ServerTickEvent.Post.class, e -> mods.eln.node.NodeOrphans.tick(e.getServer()));
         // X-ray scanner: ore blocks per material come from tags
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.TagsUpdatedEvent.class, e -> mods.eln.item.xray.XRayFilter.invalidate());
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent.class, mods.eln.transparentnode.industrial.SurgeProtection::lightning);
         serverEventListener = new mods.eln.server.ServerEventListener();
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent.class,
             mods.eln.item.electricalitem.ElectricalArmor::onIncomingDamage);
@@ -321,6 +322,10 @@ public class Eln {
         mods.eln.oil.Oil.register(modBus);
         mods.eln.sound.ElnSounds.register(modBus);
         mods.eln.datagen.ElnDataGen.register(modBus);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.RegisterCommandsEvent.class, e -> e.getDispatcher().register(
+            net.minecraft.commands.Commands.literal("eln").then(net.minecraft.commands.Commands.literal("resetLampLives")
+                .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
+                .executes(c -> {int count=mods.eln.sixnode.lampsocket.SourceLampLife.requestReset();c.getSource().sendSuccess(() -> net.minecraft.network.chat.Component.literal("Reset lifetime of "+count+" installed source-rated bulbs in loaded fixtures."),true);return count;}))));
         mods.eln.gametest.LabCommands.register(); // /elnlab: render-port scenes (op only)
         mods.eln.node.voxel.CableConverter.register(); // six-node cables to voxel cables as chunks load (config)
         mods.eln.network.ServerPacketHandler.register();

@@ -86,13 +86,13 @@ public class LampDescriptor extends GenericItemUsingDamageDescriptorUpgrade impl
         CompoundTag t = mods.eln.generic.ItemNbt.get(stack);
         if (t != null && t.contains("life"))
             return t.getDoubleOr("life", 0.0);
-        return Utils.rand(0.75, 1.50);
+        return mods.eln.sixnode.lampsocket.SourceLampLife.source(this) ? 1.0 : Utils.rand(0.75, 1.50);
     }
 
     public void setLifeInTag(ItemStack stack, double life) {
         if (!mods.eln.generic.ItemNbt.has(stack))
             mods.eln.generic.ItemNbt.set(stack, getDefaultNBT());
-        mods.eln.generic.ItemNbt.edit(stack, t -> t.putDouble("life", life));
+        mods.eln.generic.ItemNbt.edit(stack, t -> { t.putDouble("life", life); t.remove("sourceLampHours"); });
     }
 
     @Override
@@ -117,7 +117,8 @@ public class LampDescriptor extends GenericItemUsingDamageDescriptorUpgrade impl
         list.add(tr("Range: %1$ blocks", (int) (nominalLight * 15)));
         list.add(tr("Power: %1$W", Utils.plotValue(nominalP)));
         list.add(tr("Resistance: %1$\u2126", Utils.plotValue(getR())));
-        list.add(tr("Nominal lifetime: %1$h", serverNominalLife));
+        // Config sync stores seconds; the tooltip promises hours. Server tooltips use the local rating.
+        list.add(tr("Nominal lifetime: %1$h", mods.eln.sixnode.lampsocket.SourceLampLife.source(this) ? mods.eln.sixnode.lampsocket.SourceLampLife.hours(this) : (serverNominalLife > 0 ? serverNominalLife : nominalLife) / 3600.0));
         if (!Utils.isEmpty(itemStack)) {
             if (!mods.eln.generic.ItemNbt.has(itemStack) || !mods.eln.generic.ItemNbt.get(itemStack).contains("life"))
                 list.add(tr("Condition:") + " " + tr("New"));

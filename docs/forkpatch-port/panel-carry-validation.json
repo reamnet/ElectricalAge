@@ -1,0 +1,79 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "root": {
+    "selected": 701,
+    "passed": 698,
+    "skipped": 3,
+    "failed": 0,
+    "log": "/tmp/eln-requested-panel-full-v3.log"
+  },
+  "cad": {
+    "selected": 15,
+    "passed": 15,
+    "failed": 0
+  },
+  "nativeForkPatch": {
+    "scope": "Observed native results; no golden expectations or production behavior are changed by this tool.",
+    "selected": 962,
+    "passed": 962,
+    "failed": 0,
+    "skipped": 0,
+    "failures": [],
+    "portCases": {
+      "selected": 962,
+      "failed": 0
+    },
+    "golden": {
+      "golden_descriptors": {
+        "failedAssertions": 0,
+        "categories": {},
+        "differences": []
+      },
+      "golden_slots": {
+        "failedAssertions": 0,
+        "categories": {},
+        "differences": []
+      }
+    },
+    "nonGoldenAssertions": {},
+    "command": "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report REPORT.xml --universe NEW_UNIQUE_WORLD'",
+    "report": "/tmp/eln-requested-panel-forkpatch-v4.xml",
+    "log": "/tmp/eln-requested-panel-forkpatch-v4.log",
+    "limitations": [
+      "Failure categories describe observed differences, not approved exceptions.",
+      "Review against pinned ForkPatch source and intentional destination changes before updating historical checks."
+    ]
+  },
+  "unfilteredPreFix": {
+    "selected": 1424,
+    "passed": 1414,
+    "failed": 10,
+    "skipped": 0,
+    "report": "/tmp/eln-requested-panel-full-v3.xml",
+    "log": "/tmp/eln-requested-panel-full-v3.log",
+    "explanation": "Historical golden_descriptors/golden_slots plus8 cases affected by missing panel renderer, floating unused buses, stale legacy handle caching and String Lights disconnect ordering. All affected ForkPatch tests pass in the subsequent962-case run; the shared renderer is covered by full ForkPatch catalog checks."
+  },
+  "goldenAssertions": 746,
+  "previousGoldenAssertionsRetained": 714,
+  "liveGui": "pending; use /elnlab panelcarry and /elnlab devicemenu7988",
+  "finalUnfilteredRerun": "pending after requested systems settle",
+  "artifact": "Existing lamp-only certified jar is superseded by WIP; no final artifact certification claimed.",
+  "followupNative": {
+    "selected": 58,
+    "passed": 58,
+    "failed": 0,
+    "skipped": 0,
+    "report": "/tmp/eln-requested-panel-p-v6.xml",
+    "log": "/tmp/eln-requested-panel-p-v6.log",
+    "scope": "Panel/portable and matching existing regressions after live-scene helper, saved-range compatibility, source button labels and the additional voxel-hardware carry guard."
+  },
+  "provenance": {
+    "entries": 1055,
+    "passed": true,
+    "report": "/tmp/eln-requested-panel-imports-v5.json"
+  },
+  "datagenRepeat": {
+    "written": 0,
+    "log": "/tmp/eln-requested-panel-prepare-v5.log"
+  }
+}

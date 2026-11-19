@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": "minecraft:iron_bars",
+    "L": "eln:basic_lamp_holder",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "III",
+    "ILI",
+    " P "
+  ],
+  "result": {
+    "id": "eln:industrial_cage_wall_sconce"
+  }
+}

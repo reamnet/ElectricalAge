@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "F": "eln:machine_block",
+    "I": "minecraft:iron_block",
+    "M": "eln:advanced_electrical_motor",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "PPP",
+    "MCM",
+    "IFI"
+  ],
+  "result": {
+    "id": "eln:utility_wind_turbine_3_2kv"
+  }
+}

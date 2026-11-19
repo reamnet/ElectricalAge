@@ -1,0 +1,92 @@
+{
+  "scope": "Same resident scene and exact voxel traversal; full voxel baseline versus native cached heightmap shortcut, not whole-mod baseline comparison",
+  "panels": 96,
+  "queriesPerRound": 1920,
+  "warmupPairs": 2,
+  "alternatingRounds": 7,
+  "baselineRoundsWallNsCpuNsBytesPerRay": [
+    [
+      18033.670833333334,
+      17984.759895833333,
+      3565.258333333333
+    ],
+    [
+      14205.005729166667,
+      14163.875520833333,
+      48.333333333333336
+    ],
+    [
+      13507.3515625,
+      13423.278125,
+      48.333333333333336
+    ],
+    [
+      6499.545833333334,
+      6396.896354166666,
+      48.333333333333336
+    ],
+    [
+      5940.16875,
+      5915.28125,
+      48.333333333333336
+    ],
+    [
+      6156.472916666667,
+      6136.593229166667,
+      48.333333333333336
+    ],
+    [
+      6002.4796875,
+      5974.207291666667,
+      48.333333333333336
+    ]
+  ],
+  "optimizedRoundsWallNsCpuNsBytesPerRay": [
+    [
+      601.0526041666667,
+      602.89375,
+      120.33333333333333
+    ],
+    [
+      660.5729166666666,
+      607.24375,
+      120.33333333333333
+    ],
+    [
+      476.06145833333335,
+      478.3755208333333,
+      120.33333333333333
+    ],
+    [
+      414.78333333333336,
+      416.7270833333333,
+      120.33333333333333
+    ],
+    [
+      183.82291666666666,
+      184.81041666666667,
+      120.33333333333333
+    ],
+    [
+      163.43385416666666,
+      164.2640625,
+      120.33333333333333
+    ],
+    [
+      149.0375,
+      149.53958333333333,
+      120.33333333333333
+    ]
+  ],
+  "baselineMedianWallNsPerRay": 6156.472916666667,
+  "optimizedMedianWallNsPerRay": 183.82291666666666,
+  "baselineMedianCpuNsPerRay": 6136.593229166667,
+  "optimizedMedianCpuNsPerRay": 184.81041666666667,
+  "baselineMedianBytesPerRay": 48.333333333333336,
+  "optimizedMedianBytesPerRay": 120.33333333333333,
+  "report": "/tmp/eln26-session3-all-native-final.xml",
+  "log": "session3-all-native-final.log",
+  "optimizedCpuSpeedup": 33.204801654849,
+  "allocationDeltaBytesPerRay": 72.0,
+  "interpretation": "Observed paired ray-only cost in one native96-panel scene. More allocated bytes per ray trade for substantially lower CPU. Not complete source/destination loaded-world performance."
+}

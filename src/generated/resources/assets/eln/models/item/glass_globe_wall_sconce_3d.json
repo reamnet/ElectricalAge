@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_six",
+  "textures": {
+    "particle": "eln:item/glass_globe_wall_sconce"
+  }
+}

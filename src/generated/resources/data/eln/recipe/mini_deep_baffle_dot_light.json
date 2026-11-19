@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:mini_dot_spotlight",
+    "eln:iron_plate",
+    "minecraft:black_dye"
+  ],
+  "result": {
+    "id": "eln:mini_deep_baffle_dot_light"
+  }
+}

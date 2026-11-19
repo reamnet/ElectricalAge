@@ -1,0 +1,74 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "sourceIdentity": 8067,
+  "registryName": "pole_surge_arrester",
+  "scope": "Standalone arrester, paid overhead HV pole kits, real physical surge dissipation, native lightning event integration and SCADA control.",
+  "focused": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "command": "./gradlew --no-daemon --max-workers=2 :test --tests '*ForkPatchSurgeTest'"
+  },
+  "root": {
+    "suites": 112,
+    "tests": 616,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "rootCommand": "./gradlew --no-daemon --max-workers=2 :test cad:test",
+  "native": {
+    "selected": 283,
+    "passed": 283,
+    "failed": 0,
+    "skipped": 0,
+    "newEquipmentCases": 11,
+    "newFactoryCases": 1,
+    "filter": "eln:forkpatch_*",
+    "command": "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_* --report /tmp/eln26-final-all.xml --universe /workspace/ElectricalAge/run/final-all'"
+  },
+  "datagen": {
+    "command": "./gradlew --no-daemon --max-workers=2 runClientData",
+    "identities": 631,
+    "priorIdentities": 630,
+    "changedExisting": [],
+    "englishEntries": 921,
+    "priorEnglishEntries": 919,
+    "changedEnglish": [],
+    "textureReferences": 447,
+    "missingTextures": [],
+    "sourceRecipeIngredient": "minecraft:lightning_rod (unweathered; 26.3 Items.LIGHTNING_ROD.weathering().unaffected())"
+  },
+  "coverage": [
+    "Healthy shunts and steady native LU reuse",
+    "Real accepted surge joules, finite cartridge threshold and next-solve fail-open",
+    "Independent phase shunts with source shared-budget/all-phase activation",
+    "External 40kJ strikes do not create a second healthy-grid load",
+    "Actual native entity join event, nearest same-world protection, five-strike exhaustion and repeated-bolt idempotency",
+    "Paid install, duplicate install, partial removal, spent replacement and actual one-time block-break refund",
+    "World reload retains paid installation and remaining capacity; carried pole settings cannot mint them",
+    "Removed kit becomes standalone with same remaining capacity",
+    "Spent/nonfinite capacity cannot be refreshed by enable, settings, carried read or SCADA",
+    "Native factories, publication, menus, porcelain/lead geometry and phase placement"
+  ],
+  "corrections": [
+    "Explicit server-side inventory prediction for native refunds",
+    "26.3 unweathered lightning-rod recipe selection",
+    "Per-bolt marker prevents duplicate strike debits"
+  ],
+  "limitations": [
+    "Final physical conducting interval may cross cartridge energy threshold; its real joules are retained, not truncated",
+    "Full source-world conversion, historical unfiltered golden reconciliation and broader equipment parity remain pending",
+    "Interactive GPU/audio/multiplayer, tall-pole culling and representative loaded-world performance comparisons are unrun"
+  ],
+  "testedCodeCommit": "94c295d54bf1a27fb6b106f3f3956342b0361d0e"
+}

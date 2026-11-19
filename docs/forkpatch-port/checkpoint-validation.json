@@ -1,0 +1,50 @@
+{
+  "scope": "Destination regression smoke, new array/probe tests, CAD tests and native solar tests; not the full default 200-case fluid corpus",
+  "toolchain": {
+    "minecraft": "26.3",
+    "neoforge": "26.3.0.75-beta",
+    "java": "25"
+  },
+  "mainSmoke": {
+    "fluidCases": 2,
+    "tests": 322,
+    "passed": 318,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 3,
+    "failure": "MultiFluidPropertyTest.theCasesHoldLayersAndMixes: two requested cases are insufficient for the existing minimum ten layered and mixed examples",
+    "note": "This run failed; coverage assertion was rerun separately with sufficient samples. No fluid production code or assertion was changed."
+  },
+  "coverageRerun": {
+    "fluidCases": 20,
+    "test": "mods.eln.sim.fluid.MultiFluidPropertyTest.theCasesHoldLayersAndMixes",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cad": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "arrayRegression": {
+    "layout": "96 large modules, 12 series by 8 parallel",
+    "passed": true,
+    "cases": [
+      "open circuit",
+      "loaded voltage",
+      "generated/load/wire energy balance",
+      "shade",
+      "night",
+      "recovery",
+      "unload"
+    ]
+  },
+  "limits": [
+    "Skipped destination tests were not validated",
+    "No full client or complete ForkPatch equipment validation",
+    "Probe timings are warmed synthetic measurements, not a server TPS claim"
+  ]
+}

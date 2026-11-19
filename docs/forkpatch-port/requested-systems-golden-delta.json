@@ -1,0 +1,31 @@
+{
+  "previousAssertions": 761,
+  "currentAssertions": 765,
+  "unchangedExactAssertions": 761,
+  "addedExactAssertions": [
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item_stack_one@7492: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item_stack_one@7493: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:shared_item_stack_one@7494: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8079: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    }
+  ],
+  "removedExactAssertions": [],
+  "observedLog": "/tmp/eln-requested-systems-all-validation-v1.log",
+  "nativeXml": "/tmp/eln-requested-systems-native-all-v1.xml",
+  "scope": "Observed exact differences only; expectations unchanged."
+}

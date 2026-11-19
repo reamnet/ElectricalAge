@@ -33,7 +33,7 @@ final class MenusOpenCase implements TestCase {
     }
 
     public int height() {
-        return 7;
+        return 32; // Room for the complete tall-pole catalog, without excluding any new device.
     }
 
     public int depth() {
@@ -51,7 +51,8 @@ final class MenusOpenCase implements TestCase {
     static final java.util.Set<String> CLICK_TOGGLES = java.util.Set.of("Wireless Button", "Wireless Switch");
 
     public void measure(TestContext ctx) {
-        FakePlayer fp = FakePlayerFactory.getMinecraft(ctx.level());
+        FakePlayer fp = FakePlayerFactory.get(ctx.level(), new com.mojang.authlib.GameProfile(
+            java.util.UUID.fromString("b7ad52c4-c56a-47ac-bf07-aac96616baf4"), "[ELNMenuCheck]"));
         NodeMenus.openedHook = (pl, m) -> opened = m;
         try {
             run(ctx, fp);
@@ -88,7 +89,12 @@ final class MenusOpenCase implements TestCase {
             TransparentNode node;
             try {
                 ctx.floor(p.below());
-                node = ctx.placeTransparent(e.getKey(), p).node;
+                if (d.mustHaveWallFrontInverse()) {
+                    ctx.floor(p.south()); ctx.floor(p.south().above());
+                    ctx.floor(p.south().east()); ctx.floor(p.south().west());
+                    node = ((mods.eln.node.transparent.TransparentNodeItem)d.parentItem).placeAt(d.newItemStack(), fp, ctx.level(), p, Direction.ZP);
+                    if (node == null) throw new IllegalStateException("Wall menu fixture could not be placed: " + d.name);
+                } else node = ctx.placeTransparent(e.getKey(), p).node;
             } catch (RuntimeException ex) {
                 GoldenSlotsCase.clear(ctx);
                 continue;
@@ -107,6 +113,10 @@ final class MenusOpenCase implements TestCase {
                          net.minecraft.core.Direction face, Vec3 local) {
         try {
             opened = null;
+            // Source action fixtures use an empty-hand click to operate; sneak opens setup.
+            fp.setShiftKeyDown(name.equals("Red Handle Service Disconnect")
+                || node instanceof TransparentNode tn && tn.element instanceof mods.eln.transparentnode.firealarm.AlarmElement alarm
+                    && alarm.getKind()==mods.eln.transparentnode.firealarm.AlarmKind.PULL);
             Vec3 hitAt = new Vec3(at.getX() + local.x, at.getY() + local.y, at.getZ() + local.z);
             fp.setPos(hitAt.x - 1.5, at.getY(), hitAt.z);
             var state = ctx.level().getBlockState(at);
@@ -126,6 +136,8 @@ final class MenusOpenCase implements TestCase {
         } catch (RuntimeException ex) {
             ctx.check("menu " + name + " opens", false, ex.toString());
             return false;
+        } finally {
+            fp.setShiftKeyDown(false);
         }
     }
 }

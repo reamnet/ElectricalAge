@@ -1,0 +1,95 @@
+{
+  "tests": 16,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "sourceVersion": "3.0.77",
+  "portCommit": "1187e6e6",
+  "task": "./gradlew --no-daemon --max-workers=2 :test --tests '*ForkPatchUps*'",
+  "cases": [
+    {
+      "name": "invalidAndTruncatedVoltagePacketsLeaveSettingsIntact",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.009"
+    },
+    {
+      "name": "aSecondRackUpgradesUsablePowerAsWellAsStoredEnergy",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.06"
+    },
+    {
+      "name": "anUnloadedEmptyBankCanChargeBeforeTheInverterStarts",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.008"
+    },
+    {
+      "name": "fullBatteryAndIdleOutputDoNotOverchargeOrClampTheGrid",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.003"
+    },
+    {
+      "name": "returningFromBypassRestoresProgrammedVoltageAndBatteryBackup",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.019"
+    },
+    {
+      "name": "inputLossAndRestorationDoNotInterruptTheOutput",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.012"
+    },
+    {
+      "name": "everyRequestedVoltageRegulatesFromOneTo3200Volts",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.022"
+    },
+    {
+      "name": "aWeakInputUsesBatteryAssistWithoutInterruptingTheLoad",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.004"
+    },
+    {
+      "name": "overloadAndEmptyBatteryNeverCreatePowerOrBackfeedInput",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.005"
+    },
+    {
+      "name": "thermalLossesArePhysicalJoulesAndHotElectronicsDisableConversion",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.003"
+    },
+    {
+      "name": "bypassCarriesRawInputWithoutCellsAndDisconnectsTheInverter",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.001"
+    },
+    {
+      "name": "anEmptyBankChargesAndStartsAutomatically",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.003"
+    },
+    {
+      "name": "turningTheOutputOffStillAllowsChargingAndInputOvervoltageUsesBackup",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsTest",
+      "time": "0.005"
+    },
+    {
+      "name": "fullBankAndLoadChangesNeverSendReversePowerIntoTheGenerator",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsStandbyTest",
+      "time": "0.076"
+    },
+    {
+      "name": "partiallyChargedUpsStartsAndChargesFromStandaloneGeneratorWithoutTripping",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsStandbyTest",
+      "time": "0.212"
+    },
+    {
+      "name": "anEmptyBankRecoversAndAHeavilyLoadedUpsRidesThroughGeneratorStopAndRestart",
+      "classname": "mods.eln.transparentnode.ups.ForkPatchUpsStandbyTest",
+      "time": "0.112"
+    }
+  ],
+  "limits": [
+    "Production UPS and standby controllers run on native LU with metered bank/fuel fixtures. Real item inventories, menus, world adapters and persistence are validated separately by native server cases.",
+    "Compact four-cell plug-in UPS requires the pending appliance cord/socket layer."
+  ]
+}

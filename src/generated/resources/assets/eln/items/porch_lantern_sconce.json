@@ -1,0 +1,38 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "eln:item/porch_lantern_sconce"
+        },
+        "when": "gui"
+      },
+      {
+        "model": {
+          "type": "minecraft:special",
+          "base": "eln:item/porch_lantern_sconce_3d",
+          "model": {
+            "type": "eln:device",
+            "context": "entity"
+          }
+        },
+        "when": [
+          "ground",
+          "fixed",
+          "head"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:special",
+      "base": "eln:item/porch_lantern_sconce_3d",
+      "model": {
+        "type": "eln:device",
+        "context": "hand"
+      }
+    },
+    "property": "minecraft:display_context"
+  }
+}

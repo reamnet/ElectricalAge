@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eln:item/three_phase_transformer_street_light_pole_with_fused_single_phase_tap"
+  }
+}

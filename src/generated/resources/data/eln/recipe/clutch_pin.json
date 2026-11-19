@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "s": "#c:ingots/steel"
+  },
+  "pattern": [
+    "s",
+    "s"
+  ],
+  "result": {
+    "count": 4,
+    "id": "eln:clutch_pin"
+  }
+}

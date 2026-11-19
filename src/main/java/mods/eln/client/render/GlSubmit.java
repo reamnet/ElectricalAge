@@ -75,6 +75,9 @@ public final class GlSubmit {
                 int argb = (t.color() & 0xFF000000) == 0 ? t.color() | 0xFF000000 : t.color();
                 collector.submitText(ps, t.x(), t.y(), net.minecraft.network.chat.Component.literal(t.text()).getVisualOrderText(), false,
                     net.minecraft.client.gui.Font.DisplayMode.POLYGON_OFFSET, t.fullBright() ? LightCoordsUtil.FULL_BRIGHT : light, argb, 0, 0);
+            } else if (e.payload() instanceof GlFrame.WallBlock wall) {
+                var state = WallBlockModels.get(wall.state());
+                state.submit(ps, collector, light, OverlayTexture.NO_OVERLAY, 0);
             } else if (e.payload() instanceof GlFrame.FlatItem flat) {
                 // lying flat: the item-frame view (generated items one block across, with their pixel-deep thickness)
                 var state = new net.minecraft.client.renderer.item.ItemStackRenderState();

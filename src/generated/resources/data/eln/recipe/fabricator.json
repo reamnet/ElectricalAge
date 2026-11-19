@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "#c:circuits/basic",
+    "E": "eln:electrical_motor",
+    "I": "minecraft:iron_ingot",
+    "M": "eln:machine_block",
+    "P": "eln:copper_plate"
+  },
+  "pattern": [
+    "ICI",
+    "PMP",
+    "IEI"
+  ],
+  "result": {
+    "id": "eln:fabricator"
+  }
+}

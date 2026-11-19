@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:utility_pole",
+    "eln:pole_fuse_link",
+    "minecraft:iron_nugget"
+  ],
+  "result": {
+    "id": "eln:single_phase_fused_cutout_pole"
+  }
+}

@@ -1,0 +1,463 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "targetObservedCommit": "c59e547138e53409f7a1bd282175ec25e16bb74d",
+  "targetMainSourceFingerprint": "bd92f7dccb92cabb050c4bd5f0a99cfd96419e0e5dfabe38fd1f91a186a7663a",
+  "meaning": "Exhaustive file/name observations within the listed directories; no row certifies semantic parity or feature completion.",
+  "mainSourceFiles": 1277,
+  "sourceBuildActive": 1264,
+  "sourceBuildExcluded": 13,
+  "observations": {
+    "no-same-identity-candidate": 693,
+    "same-identity-different-bytes": 526,
+    "same-identity-exact-bytes": 58
+  },
+  "trackedSourceFiles": 7132,
+  "supportFiles": 3133,
+  "supportCategories": {
+    "build-and-repository-support": 12,
+    "tooling-and-campaigns": 186,
+    "documentation-reference": 432,
+    "original-artwork": 7,
+    "generated-runtime-data": 2496
+  },
+  "allTrackedFilesAccountedFor": true,
+  "sourceResources": 2460,
+  "resourceObservations": {
+    "no-same-path-candidate": 1235,
+    "same-path-exact-bytes": 1208,
+    "same-path-different-bytes": 17
+  },
+  "sourceTestFiles": 262,
+  "testsSelectedBySourcePatterns": 256,
+  "literalSourceNames": 781,
+  "workstreamCount": 37,
+  "workstreams": [
+    {
+      "id": "registry",
+      "title": "Registration and identity contracts",
+      "state": "partial",
+      "sourceFiles": 26,
+      "sourceBuildActive": 25,
+      "dependsOn": []
+    },
+    {
+      "id": "mounting",
+      "title": "Node lifecycle, partial mounting and ghost ownership",
+      "state": "partial",
+      "sourceFiles": 65,
+      "sourceBuildActive": 64,
+      "dependsOn": [
+        "registry"
+      ]
+    },
+    {
+      "id": "solver",
+      "title": "Electrical/thermal solver and shared simulation changes",
+      "state": "behavior-review",
+      "sourceFiles": 116,
+      "sourceBuildActive": 116,
+      "dependsOn": [
+        "mounting"
+      ]
+    },
+    {
+      "id": "wiring",
+      "title": "Grid spans, cables, pole height and routing",
+      "state": "partial",
+      "sourceFiles": 23,
+      "sourceBuildActive": 23,
+      "dependsOn": [
+        "mounting",
+        "solver"
+      ]
+    },
+    {
+      "id": "distribution",
+      "title": "Distribution, services and legacy pole attachments",
+      "state": "partial",
+      "sourceFiles": 27,
+      "sourceBuildActive": 27,
+      "dependsOn": [
+        "wiring"
+      ]
+    },
+    {
+      "id": "substations",
+      "title": "69/230 kV substation transformers and disconnects",
+      "state": "implementation-needed",
+      "sourceFiles": 2,
+      "sourceBuildActive": 2,
+      "dependsOn": [
+        "distribution",
+        "electronics"
+      ]
+    },
+    {
+      "id": "panel",
+      "title": "Twelve-circuit panel and generalized wireless power",
+      "state": "implementation-needed",
+      "sourceFiles": 3,
+      "sourceBuildActive": 3,
+      "dependsOn": [
+        "distribution",
+        "solver"
+      ]
+    },
+    {
+      "id": "lighting",
+      "title": "Remaining decorative fixture catalog",
+      "state": "partial",
+      "sourceFiles": 29,
+      "sourceBuildActive": 29,
+      "dependsOn": [
+        "mounting",
+        "registry"
+      ]
+    },
+    {
+      "id": "bulbs",
+      "title": "Bulb technologies, lifetime and lighting configuration",
+      "state": "partial",
+      "sourceFiles": 3,
+      "sourceBuildActive": 3,
+      "dependsOn": [
+        "solver",
+        "registry"
+      ]
+    },
+    {
+      "id": "other-lights",
+      "title": "Standalone flood/work/festive lighting",
+      "state": "partial",
+      "sourceFiles": 24,
+      "sourceBuildActive": 24,
+      "dependsOn": [
+        "lighting",
+        "bulbs",
+        "cords"
+      ]
+    },
+    {
+      "id": "alarms",
+      "title": "Fire alarm network and environmental sensing",
+      "state": "implementation-needed",
+      "sourceFiles": 5,
+      "sourceBuildActive": 5,
+      "dependsOn": [
+        "panel",
+        "network",
+        "mounting"
+      ]
+    },
+    {
+      "id": "cords",
+      "title": "Portable appliances, carry and remaining cord consumers",
+      "state": "partial",
+      "sourceFiles": 12,
+      "sourceBuildActive": 12,
+      "dependsOn": [
+        "mounting",
+        "registry"
+      ]
+    },
+    {
+      "id": "kitchen",
+      "title": "Kitchen appliances, foods and refrigeration",
+      "state": "implementation-needed",
+      "sourceFiles": 8,
+      "sourceBuildActive": 8,
+      "dependsOn": [
+        "cords",
+        "climate",
+        "resources"
+      ]
+    },
+    {
+      "id": "laundry",
+      "title": "Washer, dryer and fusion matter machine",
+      "state": "implementation-needed",
+      "sourceFiles": 15,
+      "sourceBuildActive": 15,
+      "dependsOn": [
+        "cords",
+        "fluids",
+        "resources"
+      ]
+    },
+    {
+      "id": "climate",
+      "title": "Room thermal/humidity services and climate appliances",
+      "state": "implementation-needed",
+      "sourceFiles": 8,
+      "sourceBuildActive": 8,
+      "dependsOn": [
+        "solver",
+        "mounting",
+        "cords"
+      ]
+    },
+    {
+      "id": "fans",
+      "title": "Floor/ceiling fans and evaporative cooling",
+      "state": "implementation-needed",
+      "sourceFiles": 12,
+      "sourceBuildActive": 12,
+      "dependsOn": [
+        "climate",
+        "cords",
+        "lighting"
+      ]
+    },
+    {
+      "id": "pumps",
+      "title": "Industrial/world-intake pumping and growing beds",
+      "state": "implementation-needed",
+      "sourceFiles": 7,
+      "sourceBuildActive": 7,
+      "dependsOn": [
+        "fluids",
+        "climate",
+        "cords"
+      ]
+    },
+    {
+      "id": "fluids",
+      "title": "Mechanical shafts, thermal machines and fluid systems",
+      "state": "behavior-review",
+      "sourceFiles": 65,
+      "sourceBuildActive": 65,
+      "dependsOn": [
+        "solver",
+        "mounting"
+      ]
+    },
+    {
+      "id": "vehicles",
+      "title": "Road vehicles and in-car charging",
+      "state": "foundation-only",
+      "sourceFiles": 4,
+      "sourceBuildActive": 4,
+      "dependsOn": [
+        "cords",
+        "network",
+        "resources"
+      ]
+    },
+    {
+      "id": "transport",
+      "title": "Forklift, pallet, EV pack charger and welding follow-up",
+      "state": "validation-needed",
+      "sourceFiles": 1,
+      "sourceBuildActive": 1,
+      "dependsOn": [
+        "network",
+        "gui",
+        "rendering"
+      ]
+    },
+    {
+      "id": "manufacturing",
+      "title": "Wire machines, chip fabrication and industrial controls",
+      "state": "partial",
+      "sourceFiles": 17,
+      "sourceBuildActive": 17,
+      "dependsOn": [
+        "solver",
+        "resources",
+        "gui"
+      ]
+    },
+    {
+      "id": "electronics",
+      "title": "Converters and inherited power electronics",
+      "state": "partial",
+      "sourceFiles": 34,
+      "sourceBuildActive": 32,
+      "dependsOn": [
+        "solver",
+        "registry"
+      ]
+    },
+    {
+      "id": "renewables",
+      "title": "Renewable and solar adapter completion checks",
+      "state": "validation-needed",
+      "sourceFiles": 23,
+      "sourceBuildActive": 23,
+      "dependsOn": [
+        "mounting",
+        "solver",
+        "rendering"
+      ]
+    },
+    {
+      "id": "storage",
+      "title": "Storage, standby, UPS, generation and protection completion",
+      "state": "validation-needed",
+      "sourceFiles": 30,
+      "sourceBuildActive": 30,
+      "dependsOn": [
+        "solver",
+        "cords",
+        "gui"
+      ]
+    },
+    {
+      "id": "classic",
+      "title": "Inherited devices, sensing, control and world interactions",
+      "state": "behavior-review",
+      "sourceFiles": 277,
+      "sourceBuildActive": 273,
+      "dependsOn": [
+        "solver",
+        "mounting",
+        "network"
+      ]
+    },
+    {
+      "id": "entities",
+      "title": "Railroad and replicator/entity parity",
+      "state": "behavior-review",
+      "sourceFiles": 16,
+      "sourceBuildActive": 15,
+      "dependsOn": [
+        "solver",
+        "network",
+        "rendering"
+      ]
+    },
+    {
+      "id": "tools",
+      "title": "Tools, copy/configuration, scanners and circuit import",
+      "state": "behavior-review",
+      "sourceFiles": 52,
+      "sourceBuildActive": 52,
+      "dependsOn": [
+        "registry",
+        "network",
+        "classic"
+      ]
+    },
+    {
+      "id": "network",
+      "title": "Packets, server lifecycle and input authority",
+      "state": "behavior-review",
+      "sourceFiles": 32,
+      "sourceBuildActive": 32,
+      "dependsOn": [
+        "registry",
+        "mounting"
+      ]
+    },
+    {
+      "id": "rendering",
+      "title": "Rendering, covers, distant models and graphics compatibility",
+      "state": "partial",
+      "sourceFiles": 50,
+      "sourceBuildActive": 50,
+      "dependsOn": [
+        "mounting",
+        "network"
+      ]
+    },
+    {
+      "id": "gui",
+      "title": "Source-matching menus and user interaction",
+      "state": "partial",
+      "sourceFiles": 30,
+      "sourceBuildActive": 30,
+      "dependsOn": [
+        "registry",
+        "network"
+      ]
+    },
+    {
+      "id": "resources",
+      "title": "Crafting, materials, assets, sound and translations",
+      "state": "partial",
+      "sourceFiles": 11,
+      "sourceBuildActive": 11,
+      "dependsOn": [
+        "registry"
+      ]
+    },
+    {
+      "id": "world-content",
+      "title": "World generation, progression, tutorials and guides",
+      "state": "behavior-review",
+      "sourceFiles": 20,
+      "sourceBuildActive": 20,
+      "dependsOn": [
+        "registry",
+        "resources",
+        "classic"
+      ]
+    },
+    {
+      "id": "integrations",
+      "title": "MQTT, Modbus, computer/mechanical bridges and addon API",
+      "state": "conditional-review",
+      "sourceFiles": 69,
+      "sourceBuildActive": 65,
+      "dependsOn": [
+        "network",
+        "panel",
+        "registry"
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "Source oracles, whole-world performance and release verification",
+      "state": "validation-needed",
+      "sourceFiles": 95,
+      "sourceBuildActive": 95,
+      "dependsOn": [
+        "registry",
+        "network",
+        "rendering",
+        "gui"
+      ]
+    },
+    {
+      "id": "migration",
+      "title": "Full 1.21.1 world/item/entity conversion",
+      "state": "implementation-needed",
+      "sourceFiles": 0,
+      "sourceBuildActive": 0,
+      "dependsOn": [
+        "registry",
+        "mounting",
+        "network"
+      ]
+    },
+    {
+      "id": "build-compat",
+      "title": "Bootstrap, platform hooks, configs and compatibility mixins",
+      "state": "behavior-review",
+      "sourceFiles": 11,
+      "sourceBuildActive": 11,
+      "dependsOn": [
+        "registry",
+        "network"
+      ]
+    },
+    {
+      "id": "review-remainder",
+      "title": "Remaining shared support code and explicit review queue",
+      "state": "behavior-review",
+      "sourceFiles": 55,
+      "sourceBuildActive": 55,
+      "dependsOn": [
+        "registry",
+        "solver"
+      ]
+    }
+  ],
+  "lighting": {
+    "sourceStyles": 108,
+    "nativeAdapters": 108,
+    "unregistered": 0,
+    "sourceBulbRegistrations": 18
+  },
+  "excludedScope": "Other repositories/addons and unreferenced assets are not assumed required; build tools, source runtime catalog exports, optional dependencies and release campaigns remain explicit tasks in the plan."
+}

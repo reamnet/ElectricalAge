@@ -1,0 +1,72 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Flat solar collision, six grounded converter adapters and Wire Snips; unfinished full ForkPatch port.",
+  "root": {
+    "suites": 120,
+    "tests": 665,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "native": {
+    "selected": 860,
+    "passed": 858,
+    "failed": 2,
+    "skipped": 0,
+    "portCases": {
+      "selected": 394,
+      "failed": 0
+    }
+  },
+  "historicalGoldenAssertions": 418,
+  "catalog": {
+    "identities": 645,
+    "englishEntries": 949,
+    "resolvedNativeItemTextures": 461,
+    "previousIdentityCount": 638,
+    "previousEnglishCount": 936,
+    "previousIdentitiesChanged": [],
+    "previousEnglishEntriesChanged": []
+  },
+  "artifact": {
+    "path": "build/libs/eln-26.3-0.1.0-port.jar",
+    "bytes": 30235939,
+    "sha256": "1f7b42707e4a7a6208e3b25bf5af91b8572cd60b2d58f827caef293d77de1fc0",
+    "allPrimaryOutputFilesChecked": {
+      "java": 1768,
+      "kotlin": 711
+    },
+    "scopedOutputFilesChecked": 79,
+    "processedResourcesChecked": 4745,
+    "allCheckedBytesMatch": true
+  },
+  "sourceUnchanged": true,
+  "gradleAndWrapperUnchanged": true,
+  "commands": [
+    "./gradlew --no-daemon --max-workers=2 :build cad:test runClientData",
+    "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --report /tmp/eln26-session4-all-final.xml --universe /workspace/ElectricalAge/run/session4-all-final'",
+    "python3 tools/port/audit_imports.py --source ../ELN1.21.1ForkPatch"
+  ],
+  "rootLog": "session4-final-full-build.log",
+  "nativeLog": "session4-all-native-final.log",
+  "limitations": [
+    "Unfiltered historical descriptor and slot goldens still fail; no expected references, skip lists or tolerances changed.",
+    "Full source-world conversion, development isolation135, remaining equipment/integrations and copy-tool work remain pending.",
+    "Headless native/mesh/server checks do not establish interactive client/GPU/audio/multiplayer or complete loaded-world comparative performance.",
+    "Development artifact integrity verified; this is not a finished release."
+  ],
+  "productionCommit": "bfc95c10fbd192e902070c418b5d9faa0229cd18",
+  "provenance": {
+    "ledgerEntries": 392,
+    "passed": true
+  },
+  "goldenReferencesAndSkipListsUnchanged": true
+}

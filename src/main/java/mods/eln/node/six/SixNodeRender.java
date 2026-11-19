@@ -49,7 +49,7 @@ public class SixNodeRender<E extends SixNodeEntity> implements BlockEntityRender
     @Override
     public net.minecraft.world.phys.AABB getRenderBoundingBox(E be) {
         int reach = 0;
-        for (SixNodeElementRender r : be.elementRenderList) if (r != null) reach = Math.max(reach, r.renderReach());
+        for (SixNodeElementRender r : be.elementRenderList) if (r != null) reach = Math.max(reach, Math.max(r.renderReach(), r.cordDisplay.active() ? 9 : 0));
         return new net.minecraft.world.phys.AABB(be.getBlockPos()).inflate(reach);
     }
 
@@ -81,6 +81,7 @@ public class SixNodeRender<E extends SixNodeEntity> implements BlockEntityRender
                 }
                 render.draw();
                 GL11.glPopMatrix();
+                render.cordDisplay.draw(render.tileEntity.getLevel(), render.tileEntity.getBlockPos());
                 if (render.burnt) {
                     // 1.12 BurntRender.overlay: the same draw again, multiplied in soot
                     frame.soot = true;

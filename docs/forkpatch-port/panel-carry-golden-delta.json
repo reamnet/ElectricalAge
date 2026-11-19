@@ -1,0 +1,171 @@
+{
+  "previousAssertions": 714,
+  "currentAssertions": 746,
+  "unchangedExactAssertions": 714,
+  "addedExactAssertions": [
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6021: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6022: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6023: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6024: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6213: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6273: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6274: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6275: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6279: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6280: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6281: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6282: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6283: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6285: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6286: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6287: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@6288: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@7988: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 100A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 10A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 125A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 15A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 200A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 20A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 30A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 400A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 40A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 50A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 5A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: 60A Electrical Breaker has no 1.12 container: spec from ElectricalBreakerDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: BreakerPanelDescriptor in the 1.12 dump: spec without a 1.12 container",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Twelve Circuit American Breaker Panel has no 1.12 container: spec from BreakerPanelDescriptor",
+      "count": 1
+    }
+  ],
+  "removedExactAssertions": [],
+  "observedLog": "/tmp/eln-requested-panel-full-v3.log",
+  "nativeXml": "/tmp/eln-requested-panel-full-v3.xml",
+  "scope": "All714 prior exact assertions are retained. The32 additions describe18 new source-backed identities and their menus. Historical expectations remain unchanged. This unfiltered run preceded renderer/solver/wireless fixes; all962 ForkPatch native cases pass after those fixes in the separate v4 report."
+}

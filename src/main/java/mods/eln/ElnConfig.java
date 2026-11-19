@@ -8,6 +8,8 @@ public final class ElnConfig {
     }
 
     public static final ModConfigSpec SPEC;
+    private static final ModConfigSpec.DoubleValue[] SOURCE_LAMP_HOURS = new ModConfigSpec.DoubleValue[6];
+    private static final ModConfigSpec.BooleanValue[] SOURCE_LAMP_INFINITE = new ModConfigSpec.BooleanValue[6];
     static final ModConfigSpec.DoubleValue BATTERY_LIFE_FACTOR;
     static final ModConfigSpec.IntValue AUTOMINER_RANGE;
     static final ModConfigSpec.BooleanValue PROBE_DETAILS;
@@ -20,6 +22,17 @@ public final class ElnConfig {
     static final ModConfigSpec.IntValue ANVIL_BURSTS;
     static final ModConfigSpec.DoubleValue BANK_FARADS, BANK_VOLTS, BANK_LEAK, POWER_CAP_LEAK;
     static final ModConfigSpec.DoubleValue LAKE_SIZE, TAIL_SHARE, SEEP_SHARE, STEAM_PER_BUCKET;
+
+    public static double sourceLampHours(int technology) {return SPEC.isLoaded()?SOURCE_LAMP_HOURS[technology].get():new double[]{24,12,168,48,672,96}[technology];}
+    public static boolean sourceLampInfinite(int technology) {return SPEC.isLoaded()&&SOURCE_LAMP_INFINITE[technology].get();}
+    // Turbine blades (ForkPatch 1.21.1 items.turbineBlades.<tier>): a turbine's consumable; condition wears with the
+    // fuel's temperature and corrosiveness (the turbine consumer is not ported yet). Iron + steel tiers ported 2026-11-18.
+    private static final java.util.Map<String,ModConfigSpec.DoubleValue> TURBINE_BLADE_LIFE_HOURS = new java.util.HashMap<>();
+    private static final java.util.Map<String,ModConfigSpec.BooleanValue> TURBINE_BLADE_INFINITE = new java.util.HashMap<>();
+    private static final java.util.Map<String,Double> TURBINE_BLADE_DEFAULT_HOURS = new java.util.HashMap<>();
+
+    public static double turbineBladeLifeHours(String tier) {return SPEC.isLoaded()?TURBINE_BLADE_LIFE_HOURS.get(tier).get():TURBINE_BLADE_DEFAULT_HOURS.get(tier);}
+    public static boolean turbineBladeInfiniteLife(String tier) {return SPEC.isLoaded()&&TURBINE_BLADE_INFINITE.get(tier).get();}
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -128,6 +141,29 @@ public final class ElnConfig {
                 "Also 1.12's wailaEasyMode: more detail on some machines.")
             .define("details", false);
         b.pop();
+        b.push("lighting");b.push("lamps");
+        String[] technologies={"incandescent","carbon","fluorescent","farming","led","halogen"};
+        double[] defaults={24,12,168,48,672,96};
+        for(int i=0;i<technologies.length;i++){
+            b.push(technologies[i]);
+            SOURCE_LAMP_HOURS[i]=b.comment("Source-rated bulb nominal lifetime in real hours; existing used bulbs retain absolute remaining hours.").defineInRange("nominalLifeInHours",defaults[i],1.0,8760.0);
+            SOURCE_LAMP_INFINITE[i]=b.comment("Disable wear for this source bulb technology.").define("infiniteLifeEnabled",false);
+            b.pop();
+        }
+        b.pop();b.pop();
+        // turbine blades (ForkPatch 1.21.1 items.turbineBlades.<tier>; source TurbineBladeDescriptor.kt BladeConfigData)
+        b.push("items");b.push("turbineBlades");
+        String[] bladeTiers={"iron","steel","alloy","tungsten"};
+        double[] bladeDefaultHours={10.0,64.0,400.0,2000.0};
+        for(int i=0;i<bladeTiers.length;i++){
+            b.push(bladeTiers[i]);
+            TURBINE_BLADE_DEFAULT_HOURS.put(bladeTiers[i],bladeDefaultHours[i]);
+            TURBINE_BLADE_LIFE_HOURS.put(bladeTiers[i],b.comment("Nominal lifetime (real hours) of this turbine blade tier at mild, clean fuel conditions;","must stay above 0 (ForkPatch: cast iron ~10 h as an early-game throwaway).")
+                .defineInRange("nominalLifeHours",bladeDefaultHours[i],0.001,87600.0));
+            TURBINE_BLADE_INFINITE.put(bladeTiers[i],b.comment("Disable wear for this turbine blade tier.").define("infiniteLifeEnabled",false));
+            b.pop();
+        }
+        b.pop();b.pop();
         SPEC = b.build();
     }
 

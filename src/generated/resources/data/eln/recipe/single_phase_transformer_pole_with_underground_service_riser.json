@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:single_phase_transformer_pole",
+    "eln:underground_service_entrance_riser",
+    "eln:iron_plate"
+  ],
+  "result": {
+    "id": "eln:single_phase_transformer_pole_with_underground_service_riser"
+  }
+}

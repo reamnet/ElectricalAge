@@ -43,7 +43,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
 
     double vp[] = new double[3];
 
-    private LampSupplyElement oldLampSupply;
+    private Object oldLampSupply;
 
     double updateLifeTimeout = 0, updateLifeTimeoutMax = 5;
 
@@ -58,35 +58,19 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
     public void process(double time) {
         ItemStack lampStack = lamp.getInventory().getItem(0);
 
-        if (!lamp.poweredByLampSupply) {
+        if (!lamp.isWirelessPower()) {
             lamp.setIsConnectedToLampSupply(false);
             oldLampSupply = null;
         } else {
             Coordonate myCoord = lamp.sixNode.coordonate;
-            LampSupplyElement.PowerSupplyChannelHandle best = null;
-            float bestDistance = 10000;
-            List<LampSupplyElement.PowerSupplyChannelHandle> list = LampSupplyElement.channelMap.get(lamp.channel);
-            if (list != null) {
-                for (LampSupplyElement.PowerSupplyChannelHandle s : list) {
-                    if (s.element.isBurnt()) continue; // out of the simulation; its powerLoad is stale
-                    // 26.x: a supply that isn't simulated (removed without its destroy, e.g. /setblock, or frozen by
-                    // Stasis Delvers) would win as the nearest and leave its channel OFF for good (AdventurAgent)
-                    if (s.element.sixNode == null || !s.element.sixNode.isAdded() || s.element.sixNode.isDestructing()) continue;
-                    float distance = (float) s.element.sixNode.coordonate.trueDistanceTo(myCoord);
-                    if (distance < bestDistance && distance <= s.element.getRange()) {
-                        bestDistance = distance;
-                        best = s;
-                    }
-                }
-            }
-            if (best != null && best.element.getChannelState(best.id)) {
-                if (!Utils.isEmpty(lampStack)) {
-                    LampDescriptor lampDescriptor = (LampDescriptor) ((GenericItemUsingDamageDescriptor) Utils.getItemObject(lampStack));
-                    best.element.addToRp(lampDescriptor.getR());
-                }
-                lamp.positiveLoad.state = best.element.powerLoad.state;
-                oldLampSupply = best.element;
+            mods.eln.utility.WirelessPowerHandle best = mods.eln.utility.WirelessPowerChannels.INSTANCE.nearest(lamp.channel,myCoord);
+            if (best != null && best.getElement().getChannelState(best.getId())) {
+                double resistance = lamp.getWirelessResistance();
+                mods.eln.utility.WirelessLoadDemand.INSTANCE.report(lamp,best,resistance);
+                lamp.positiveLoad.state = best.getElement().getPowerLoad().state;
+                oldLampSupply = best.getElement().getOwner();
             } else {
+                mods.eln.utility.WirelessLoadDemand.INSTANCE.report(lamp,null,Double.NaN);
                 lamp.positiveLoad.state = 0;
                 oldLampSupply = null;
             }
@@ -94,7 +78,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
             lamp.setIsConnectedToLampSupply(best != null);
         }
 
-        if (!Utils.isEmpty(lampStack)) {
+        if (!Utils.isEmpty(lampStack) && lamp.isLampEnergized()) {
             LampDescriptor lampDescriptor = (LampDescriptor) ((GenericItemUsingDamageDescriptor) Utils.getItemObject(lampStack));
 
             if (lamp.getCoordonate().getBlockExist() && lampDescriptor.vegetableGrowRate != 0.0) {
@@ -160,7 +144,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
             stableProb = 0;
         }
 
-        if (!Utils.isEmpty(lampStack)) {
+        if (!Utils.isEmpty(lampStack) && lamp.isLampEnergized()) {
             LampDescriptor lampDescriptor = (LampDescriptor) ((GenericItemUsingDamageDescriptor) Utils.getItemObject(lampStack));
 
             if (stableProb < 0)
@@ -214,7 +198,14 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
 			/*
              * double overFactor = (lamp.electricalLoad.Uc-lampDescriptor.minimalU) /(lampDescriptor.nominalU-lampDescriptor.minimalU);
 			 */
-            double overFactor = (lamp.lampResistor.getP()) / (lampDescriptor.nominalP);
+            if(mods.eln.sixnode.lampsocket.SourceLampLife.source(lampDescriptor)) {
+                updateLifeTimeout += deltaT;
+                if(updateLifeTimeout >= 1.0) {
+                    double elapsed=updateLifeTimeout;updateLifeTimeout=0.0;
+                    if(mods.eln.sixnode.lampsocket.SourceLampLife.account(lampStack,lampDescriptor,lamp.lampResistor.getU(),elapsed)<=0.0){lamp.getInventory().setItem(0,net.minecraft.world.item.ItemStack.EMPTY);newLight=0;}
+                }
+            } else {
+            double overFactor = (lamp.lampResistor.getP()) / (lamp.getNominalLampPower(lampDescriptor));
             if (overFactor < 0)
                 overFactor = 0;
 
@@ -250,6 +241,8 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
                     lamp.getInventory().setItem(0, null);
                     light = 0;
                 }
+
+            }
 
             }
 

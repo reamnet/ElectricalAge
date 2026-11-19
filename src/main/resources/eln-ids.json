@@ -305,6 +305,48 @@
   "kind": "shared_item",
   "name": "turbine_blade_set"
  },
+ "eln:shared_item@4416": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Graphite Rod",
+  "kind": "shared_item",
+  "name": "graphite_rod"
+ },
+ "eln:shared_item@4417": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "2x Graphite Rods",
+  "kind": "shared_item",
+  "name": "2x_graphite_rods"
+ },
+ "eln:shared_item@4418": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "3x Graphite Rods",
+  "kind": "shared_item",
+  "name": "3x_graphite_rods"
+ },
+ "eln:shared_item@4419": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "4x Graphite Rods",
+  "kind": "shared_item",
+  "name": "4x_graphite_rods"
+ },
+ "eln:shared_item@4420": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Synthetic Diamond",
+  "kind": "shared_item",
+  "name": "synthetic_diamond"
+ },
+ "eln:shared_item@4422": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Arc Clay Ingot",
+  "kind": "shared_item",
+  "name": "arc_clay_ingot"
+ },
+ "eln:shared_item@4423": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Arc Metal Ingot",
+  "kind": "shared_item",
+  "name": "arc_metal_ingot"
+ },
  "eln:shared_item@448": {
   "descriptor": "FerromagneticCoreDescriptor",
   "display": "Cheap Ferromagnetic Core",
@@ -377,6 +419,18 @@
   "kind": "shared_item",
   "name": "iron_dust"
  },
+ "eln:shared_item@579": {
+  "descriptor": "GenericItemUsingDamageDescriptorWithComment",
+  "display": "Lapis Dust",
+  "kind": "shared_item",
+  "name": "lapis_dust"
+ },
+ "eln:shared_item@580": {
+  "descriptor": "GenericItemUsingDamageDescriptorWithComment",
+  "display": "Diamond Dust",
+  "kind": "shared_item",
+  "name": "diamond_dust"
+ },
  "eln:shared_item@6": {
   "descriptor": "GenericItemUsingDamageDescriptorWithComment",
   "display": "Tungsten Dust",
@@ -412,6 +466,42 @@
   "display": "Blown Lead Fuse",
   "kind": "shared_item",
   "name": "blown_lead_fuse"
+ },
+ "eln:shared_item@6288": {
+  "descriptor": "ElectricalFuseDescriptor",
+  "display": "5A Lead Fuse",
+  "kind": "shared_item",
+  "name": "5a_lead_fuse"
+ },
+ "eln:shared_item@6289": {
+  "descriptor": "ElectricalFuseDescriptor",
+  "display": "10A Lead Fuse",
+  "kind": "shared_item",
+  "name": "10a_lead_fuse"
+ },
+ "eln:shared_item@6290": {
+  "descriptor": "ElectricalFuseDescriptor",
+  "display": "15A Lead Fuse",
+  "kind": "shared_item",
+  "name": "15a_lead_fuse"
+ },
+ "eln:shared_item@6291": {
+  "descriptor": "ElectricalFuseDescriptor",
+  "display": "20A Lead Fuse",
+  "kind": "shared_item",
+  "name": "20a_lead_fuse"
+ },
+ "eln:shared_item@6292": {
+  "descriptor": "ElectricalFuseDescriptor",
+  "display": "30A Lead Fuse",
+  "kind": "shared_item",
+  "name": "30a_lead_fuse"
+ },
+ "eln:shared_item@6293": {
+  "descriptor": "ElectricalFuseDescriptor",
+  "display": "50A Lead Fuse",
+  "kind": "shared_item",
+  "name": "50a_lead_fuse"
  },
  "eln:shared_item@64": {
   "descriptor": "HeatingCorpElement",
@@ -502,6 +592,18 @@
   "display": "Small 200V Tungsten Heating Corp",
   "kind": "shared_item",
   "name": "small_200v_tungsten_heating_corp"
+ },
+ "eln:shared_item@7489": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Welded Machine Frame",
+  "kind": "shared_item",
+  "name": "welded_machine_frame"
+ },
+ "eln:shared_item@7495": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "16 kWh LiFePO4 Cell Stack",
+  "kind": "shared_item",
+  "name": "16_kwh_lifepo4_cell_stack"
  },
  "eln:shared_item@75": {
   "descriptor": "HeatingCorpElement",
@@ -761,6 +863,186 @@
   "kind": "shared_item",
   "name": "casing"
  },
+ "eln:shared_item@7734": {
+  "descriptor": "ClutchPlateItem",
+  "display": "Iron Clutch Plate",
+  "kind": "shared_item",
+  "name": "iron_clutch_plate"
+ },
+ "eln:shared_item@7735": {
+  "descriptor": "GenericItemUsingDamageDescriptorWithComment",
+  "display": "Clutch Pin",
+  "kind": "shared_item",
+  "name": "clutch_pin"
+ },
+ "eln:shared_item@7736": {
+  "descriptor": "ClutchPlateItem",
+  "display": "Gold Clutch Plate",
+  "kind": "shared_item",
+  "name": "gold_clutch_plate"
+ },
+ "eln:shared_item@7737": {
+  "descriptor": "ClutchPlateItem",
+  "display": "Copper Clutch Plate",
+  "kind": "shared_item",
+  "name": "copper_clutch_plate"
+ },
+ "eln:shared_item@7738": {
+  "descriptor": "ClutchPlateItem",
+  "display": "Lead Clutch Plate",
+  "kind": "shared_item",
+  "name": "lead_clutch_plate"
+ },
+ "eln:shared_item@7739": {
+  "descriptor": "ClutchPlateItem",
+  "display": "Coal Clutch Plate",
+  "kind": "shared_item",
+  "name": "coal_clutch_plate"
+ },
+ "eln:shared_item@7740": {
+  "descriptor": "GenericItemUsingDamageDescriptorWithComment",
+  "display": "Motor Cowling",
+  "kind": "shared_item",
+  "name": "motor_cowling"
+ },
+ "eln:shared_item@7741": {
+  "descriptor": "GenericItemUsingDamageDescriptorWithComment",
+  "display": "Heavy Winding",
+  "kind": "shared_item",
+  "name": "heavy_winding"
+ },
+ "eln:shared_item@7872": {
+  "descriptor": "WireScrapDescriptor",
+  "display": "Wire Scraps",
+  "kind": "shared_item",
+  "name": "wire_scraps"
+ },
+ "eln:shared_item@7876": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Pole Fuse Link",
+  "kind": "shared_item",
+  "name": "pole_fuse_link"
+ },
+ "eln:shared_item@7877": {
+  "descriptor": "UtilityPartDescriptor",
+  "display": "Analog Glass Service Meter",
+  "kind": "shared_item",
+  "name": "analog_glass_service_meter"
+ },
+ "eln:shared_item@7878": {
+  "descriptor": "UtilityPartDescriptor",
+  "display": "Smart Digital Service Meter",
+  "kind": "shared_item",
+  "name": "smart_digital_service_meter"
+ },
+ "eln:shared_item@7879": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "10 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "10_kw_pole_transformer"
+ },
+ "eln:shared_item@7880": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "25 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "25_kw_pole_transformer"
+ },
+ "eln:shared_item@7881": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "50 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "50_kw_pole_transformer"
+ },
+ "eln:shared_item@7882": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "75 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "75_kw_pole_transformer"
+ },
+ "eln:shared_item@7883": {
+  "descriptor": "PoleTransformerDescriptor",
+  "display": "100 kW Pole Transformer",
+  "kind": "shared_item",
+  "name": "100_kw_pole_transformer"
+ },
+ "eln:shared_item@7884": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "1 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "1_a_pole_fuse"
+ },
+ "eln:shared_item@7885": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "2 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "2_a_pole_fuse"
+ },
+ "eln:shared_item@7886": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "3 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "3_a_pole_fuse"
+ },
+ "eln:shared_item@7887": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "5 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "5_a_pole_fuse"
+ },
+ "eln:shared_item@7888": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "8 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "8_a_pole_fuse"
+ },
+ "eln:shared_item@7889": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "10 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "10_a_pole_fuse"
+ },
+ "eln:shared_item@7890": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "20 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "20_a_pole_fuse"
+ },
+ "eln:shared_item@7891": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "30 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "30_a_pole_fuse"
+ },
+ "eln:shared_item@7892": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "50 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "50_a_pole_fuse"
+ },
+ "eln:shared_item@7893": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "100 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "100_a_pole_fuse"
+ },
+ "eln:shared_item@7894": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "200 A Pole Fuse",
+  "kind": "shared_item",
+  "name": "200_a_pole_fuse"
+ },
+ "eln:shared_item@7895": {
+  "descriptor": "PoleFuseDescriptor",
+  "display": "Blown Pole Fuse",
+  "kind": "shared_item",
+  "name": "blown_pole_fuse"
+ },
+ "eln:shared_item@7896": {
+  "descriptor": "UtilityPartDescriptor",
+  "display": "Pole Streetlight Attachment",
+  "kind": "shared_item",
+  "name": "pole_streetlight_attachment"
+ },
  "eln:shared_item@8": {
   "descriptor": "GenericItemUsingDamageDescriptorWithComment",
   "display": "Coal Dust",
@@ -815,6 +1097,48 @@
   "kind": "shared_item",
   "name": "fast_electrical_drill"
  },
+ "eln:shared_item_stack_one@1152": {
+  "descriptor": "TurbineBladeItem",
+  "display": "Iron Turbine Blade",
+  "kind": "shared_item_stack_one",
+  "name": "iron_turbine_blade"
+ },
+ "eln:shared_item_stack_one@1153": {
+  "descriptor": "TurbineBladeItem",
+  "display": "Steel Turbine Blade",
+  "kind": "shared_item_stack_one",
+  "name": "steel_turbine_blade"
+ },
+ "eln:shared_item_stack_one@1154": {
+  "descriptor": "TurbineBladeItem",
+  "display": "Alloy Turbine Blade",
+  "kind": "shared_item_stack_one",
+  "name": "alloy_turbine_blade"
+ },
+ "eln:shared_item_stack_one@1155": {
+  "descriptor": "TurbineBladeItem",
+  "display": "Tungsten Turbine Blade",
+  "kind": "shared_item_stack_one",
+  "name": "tungsten_turbine_blade"
+ },
+ "eln:shared_item_stack_one@7488": {
+  "descriptor": "TractionBattery",
+  "display": "48 V 20 kWh Traction Battery",
+  "kind": "shared_item_stack_one",
+  "name": "48_v_20_kwh_traction_battery"
+ },
+ "eln:shared_item_stack_one@7490": {
+  "descriptor": "TransportItem",
+  "display": "Electric Forklift",
+  "kind": "shared_item_stack_one",
+  "name": "electric_forklift"
+ },
+ "eln:shared_item_stack_one@7491": {
+  "descriptor": "TransportItem",
+  "display": "Warehouse Equipment Pallet",
+  "kind": "shared_item_stack_one",
+  "name": "warehouse_equipment_pallet"
+ },
  "eln:shared_item_stack_one@7744": {
   "descriptor": "ElectricalLampItem",
   "display": "Small Flashlight",
@@ -850,6 +1174,24 @@
   "display": "Portable Battery Pack",
   "kind": "shared_item_stack_one",
   "name": "portable_battery_pack"
+ },
+ "eln:shared_item_stack_one@7810": {
+  "descriptor": "UpsLargeCell",
+  "display": "UPS AGM Battery Cell",
+  "kind": "shared_item_stack_one",
+  "name": "ups_agm_battery_cell"
+ },
+ "eln:shared_item_stack_one@7811": {
+  "descriptor": "UpsLargeCell",
+  "display": "UPS LiFePO4 Battery Cell",
+  "kind": "shared_item_stack_one",
+  "name": "ups_lifepo4_battery_cell"
+ },
+ "eln:shared_item_stack_one@7812": {
+  "descriptor": "UpsLargeCell",
+  "display": "UPS Industrial Battery Module",
+  "kind": "shared_item_stack_one",
+  "name": "ups_industrial_battery_module"
  },
  "eln:shared_item_stack_one@7824": {
   "descriptor": "BatteryItem",
@@ -940,6 +1282,1038 @@
   "display": "Very High Voltage Cable",
   "kind": "six_node",
   "name": "very_high_voltage_cable"
+ },
+ "eln:six_node@2176": {
+  "descriptor": "MoltenMetalPileDescriptor",
+  "display": "Copper Molten Metal Pile",
+  "kind": "six_node",
+  "name": "copper_molten_metal_pile"
+ },
+ "eln:six_node@2177": {
+  "descriptor": "MoltenMetalPileDescriptor",
+  "display": "Aluminum Molten Metal Pile",
+  "kind": "six_node",
+  "name": "aluminum_molten_metal_pile"
+ },
+ "eln:six_node@2178": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 26 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_26_awg_cable_bare"
+ },
+ "eln:six_node@2179": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 26 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_26_awg_cable_300v"
+ },
+ "eln:six_node@2180": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 26 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_26_awg_cable_melted"
+ },
+ "eln:six_node@2181": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 24 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_24_awg_cable_bare"
+ },
+ "eln:six_node@2182": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 24 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_24_awg_cable_300v"
+ },
+ "eln:six_node@2183": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 24 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_24_awg_cable_melted"
+ },
+ "eln:six_node@2184": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 22 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_22_awg_cable_bare"
+ },
+ "eln:six_node@2185": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 22 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_22_awg_cable_300v"
+ },
+ "eln:six_node@2186": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 22 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_22_awg_cable_melted"
+ },
+ "eln:six_node@2187": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 20 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_20_awg_cable_bare"
+ },
+ "eln:six_node@2188": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_20_awg_cable_300v"
+ },
+ "eln:six_node@2189": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_20_awg_cable_melted"
+ },
+ "eln:six_node@2190": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 18 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_18_awg_cable_bare"
+ },
+ "eln:six_node@2191": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_18_awg_cable_300v"
+ },
+ "eln:six_node@2192": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_18_awg_cable_melted"
+ },
+ "eln:six_node@2193": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 16 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_16_awg_cable_bare"
+ },
+ "eln:six_node@2194": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 16 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_16_awg_cable_300v"
+ },
+ "eln:six_node@2195": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 16 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_16_awg_cable_melted"
+ },
+ "eln:six_node@2196": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_14_awg_cable_bare"
+ },
+ "eln:six_node@2197": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14 AWG Cable 600V",
+  "kind": "six_node",
+  "name": "copper_14_awg_cable_600v"
+ },
+ "eln:six_node@2198": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_14_awg_cable_melted"
+ },
+ "eln:six_node@2199": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_bare"
+ },
+ "eln:six_node@2200": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 600V",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_600v"
+ },
+ "eln:six_node@2201": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_melted"
+ },
+ "eln:six_node@2202": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_10_awg_cable_bare"
+ },
+ "eln:six_node@2203": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10 AWG Cable 600V",
+  "kind": "six_node",
+  "name": "copper_10_awg_cable_600v"
+ },
+ "eln:six_node@2204": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_10_awg_cable_melted"
+ },
+ "eln:six_node@2205": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_8_awg_cable_bare"
+ },
+ "eln:six_node@2206": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8 AWG Cable 600V",
+  "kind": "six_node",
+  "name": "copper_8_awg_cable_600v"
+ },
+ "eln:six_node@2207": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_8_awg_cable_melted"
+ },
+ "eln:six_node@2208": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_6_awg_cable_bare"
+ },
+ "eln:six_node@2209": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6 AWG Cable 600V",
+  "kind": "six_node",
+  "name": "copper_6_awg_cable_600v"
+ },
+ "eln:six_node@2210": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_6_awg_cable_melted"
+ },
+ "eln:six_node@2211": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_4_awg_cable_bare"
+ },
+ "eln:six_node@2212": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4 AWG Cable 600V",
+  "kind": "six_node",
+  "name": "copper_4_awg_cable_600v"
+ },
+ "eln:six_node@2213": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4_awg_cable_melted"
+ },
+ "eln:six_node@2214": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_bare"
+ },
+ "eln:six_node@2215": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 600V",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_600v"
+ },
+ "eln:six_node@2216": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_melted"
+ },
+ "eln:six_node@2217": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 1/0 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_1_0_awg_cable_bare"
+ },
+ "eln:six_node@2218": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 1/0 AWG Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_1_0_awg_cable_1000v"
+ },
+ "eln:six_node@2219": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 1/0 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_1_0_awg_cable_melted"
+ },
+ "eln:six_node@2220": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2/0 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_2_0_awg_cable_bare"
+ },
+ "eln:six_node@2221": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2/0 AWG Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_2_0_awg_cable_1000v"
+ },
+ "eln:six_node@2222": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2/0 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_2_0_awg_cable_melted"
+ },
+ "eln:six_node@2223": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/0 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "copper_4_0_awg_cable_bare"
+ },
+ "eln:six_node@2224": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/0 AWG Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_4_0_awg_cable_1000v"
+ },
+ "eln:six_node@2225": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/0 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4_0_awg_cable_melted"
+ },
+ "eln:six_node@2226": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 250 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "copper_250_kcmil_cable_bare"
+ },
+ "eln:six_node@2227": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 250 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_250_kcmil_cable_1000v"
+ },
+ "eln:six_node@2228": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 250 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "copper_250_kcmil_cable_melted"
+ },
+ "eln:six_node@2229": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 350 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "copper_350_kcmil_cable_bare"
+ },
+ "eln:six_node@2230": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 350 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_350_kcmil_cable_1000v"
+ },
+ "eln:six_node@2231": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 350 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "copper_350_kcmil_cable_melted"
+ },
+ "eln:six_node@2232": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 500 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "copper_500_kcmil_cable_bare"
+ },
+ "eln:six_node@2233": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 500 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_500_kcmil_cable_1000v"
+ },
+ "eln:six_node@2234": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 500 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "copper_500_kcmil_cable_melted"
+ },
+ "eln:six_node@2235": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 750 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "copper_750_kcmil_cable_bare"
+ },
+ "eln:six_node@2236": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 750 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_750_kcmil_cable_1000v"
+ },
+ "eln:six_node@2237": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 750 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "copper_750_kcmil_cable_melted"
+ },
+ "eln:six_node@2238": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 1000 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "copper_1000_kcmil_cable_bare"
+ },
+ "eln:six_node@2239": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 1000 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_1000_kcmil_cable_1000v"
+ },
+ "eln:six_node@2240": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 1000 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "copper_1000_kcmil_cable_melted"
+ },
+ "eln:six_node@2241": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 2 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "aluminum_2_awg_cable_bare"
+ },
+ "eln:six_node@2242": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 2 AWG Cable 600V",
+  "kind": "six_node",
+  "name": "aluminum_2_awg_cable_600v"
+ },
+ "eln:six_node@2243": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 2 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_2_awg_cable_melted"
+ },
+ "eln:six_node@2244": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 1/0 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "aluminum_1_0_awg_cable_bare"
+ },
+ "eln:six_node@2245": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 1/0 AWG Cable 1000V",
+  "kind": "six_node",
+  "name": "aluminum_1_0_awg_cable_1000v"
+ },
+ "eln:six_node@2246": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 1/0 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_1_0_awg_cable_melted"
+ },
+ "eln:six_node@2247": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 2/0 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "aluminum_2_0_awg_cable_bare"
+ },
+ "eln:six_node@2248": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 2/0 AWG Cable 1000V",
+  "kind": "six_node",
+  "name": "aluminum_2_0_awg_cable_1000v"
+ },
+ "eln:six_node@2249": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 2/0 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_2_0_awg_cable_melted"
+ },
+ "eln:six_node@2250": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 4/0 AWG Cable Bare",
+  "kind": "six_node",
+  "name": "aluminum_4_0_awg_cable_bare"
+ },
+ "eln:six_node@2251": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 4/0 AWG Cable 1000V",
+  "kind": "six_node",
+  "name": "aluminum_4_0_awg_cable_1000v"
+ },
+ "eln:six_node@2252": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 4/0 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_4_0_awg_cable_melted"
+ },
+ "eln:six_node@2253": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 250 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "aluminum_250_kcmil_cable_bare"
+ },
+ "eln:six_node@2254": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 250 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "aluminum_250_kcmil_cable_1000v"
+ },
+ "eln:six_node@2255": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 250 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_250_kcmil_cable_melted"
+ },
+ "eln:six_node@2256": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 350 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "aluminum_350_kcmil_cable_bare"
+ },
+ "eln:six_node@2257": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 350 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "aluminum_350_kcmil_cable_1000v"
+ },
+ "eln:six_node@2258": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 350 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_350_kcmil_cable_melted"
+ },
+ "eln:six_node@2259": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 500 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "aluminum_500_kcmil_cable_bare"
+ },
+ "eln:six_node@2260": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 500 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "aluminum_500_kcmil_cable_1000v"
+ },
+ "eln:six_node@2261": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 500 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_500_kcmil_cable_melted"
+ },
+ "eln:six_node@2262": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 750 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "aluminum_750_kcmil_cable_bare"
+ },
+ "eln:six_node@2263": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 750 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "aluminum_750_kcmil_cable_1000v"
+ },
+ "eln:six_node@2264": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 750 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_750_kcmil_cable_melted"
+ },
+ "eln:six_node@2265": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 1000 kcmil Cable Bare",
+  "kind": "six_node",
+  "name": "aluminum_1000_kcmil_cable_bare"
+ },
+ "eln:six_node@2266": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 1000 kcmil Cable 1000V",
+  "kind": "six_node",
+  "name": "aluminum_1000_kcmil_cable_1000v"
+ },
+ "eln:six_node@2267": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum 1000 kcmil Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_1000_kcmil_cable_melted"
+ },
+ "eln:six_node@2268": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_2c_18_awg_cable_300v"
+ },
+ "eln:six_node@2269": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_2c_18_awg_cable_melted"
+ },
+ "eln:six_node@2270": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 3C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_3c_18_awg_cable_300v"
+ },
+ "eln:six_node@2271": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 3C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_3c_18_awg_cable_melted"
+ },
+ "eln:six_node@2272": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_4c_18_awg_cable_300v"
+ },
+ "eln:six_node@2273": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4c_18_awg_cable_melted"
+ },
+ "eln:six_node@2274": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 5C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_5c_18_awg_cable_300v"
+ },
+ "eln:six_node@2275": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 5C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_5c_18_awg_cable_melted"
+ },
+ "eln:six_node@2276": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8C 18 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_8c_18_awg_cable_300v"
+ },
+ "eln:six_node@2277": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8C 18 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_8c_18_awg_cable_melted"
+ },
+ "eln:six_node@2278": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_2c_20_awg_cable_300v"
+ },
+ "eln:six_node@2279": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_2c_20_awg_cable_melted"
+ },
+ "eln:six_node@2280": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 3C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_3c_20_awg_cable_300v"
+ },
+ "eln:six_node@2281": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 3C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_3c_20_awg_cable_melted"
+ },
+ "eln:six_node@2282": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_4c_20_awg_cable_300v"
+ },
+ "eln:six_node@2283": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4c_20_awg_cable_melted"
+ },
+ "eln:six_node@2284": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 5C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_5c_20_awg_cable_300v"
+ },
+ "eln:six_node@2285": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 5C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_5c_20_awg_cable_melted"
+ },
+ "eln:six_node@2286": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8C 20 AWG Cable 300V",
+  "kind": "six_node",
+  "name": "copper_8c_20_awg_cable_300v"
+ },
+ "eln:six_node@2287": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8C 20 AWG Cable Melted",
+  "kind": "six_node",
+  "name": "copper_8c_20_awg_cable_melted"
+ },
+ "eln:six_node@2288": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_14_2_cable_600v"
+ },
+ "eln:six_node@2289": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_14_2_cable_melted"
+ },
+ "eln:six_node@2290": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_14_3_cable_600v"
+ },
+ "eln:six_node@2291": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 14/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_14_3_cable_melted"
+ },
+ "eln:six_node@2292": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_12_2_cable_600v"
+ },
+ "eln:six_node@2293": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_12_2_cable_melted"
+ },
+ "eln:six_node@2294": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_12_3_cable_600v"
+ },
+ "eln:six_node@2295": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_12_3_cable_melted"
+ },
+ "eln:six_node@2296": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_10_2_cable_600v"
+ },
+ "eln:six_node@2297": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_10_2_cable_melted"
+ },
+ "eln:six_node@2298": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_10_3_cable_600v"
+ },
+ "eln:six_node@2299": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 10/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_10_3_cable_melted"
+ },
+ "eln:six_node@2300": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_8_2_cable_600v"
+ },
+ "eln:six_node@2301": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_8_2_cable_melted"
+ },
+ "eln:six_node@2302": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_8_3_cable_600v"
+ },
+ "eln:six_node@2303": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 8/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_8_3_cable_melted"
+ },
+ "eln:six_node@2304": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_6_2_cable_600v"
+ },
+ "eln:six_node@2305": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_6_2_cable_melted"
+ },
+ "eln:six_node@2306": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_6_3_cable_600v"
+ },
+ "eln:six_node@2307": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 6/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_6_3_cable_melted"
+ },
+ "eln:six_node@2308": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/2 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_4_2_cable_600v"
+ },
+ "eln:six_node@2309": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/2 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4_2_cable_melted"
+ },
+ "eln:six_node@2310": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/3 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_4_3_cable_600v"
+ },
+ "eln:six_node@2311": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 4/3 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_4_3_cable_melted"
+ },
+ "eln:six_node@2312": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Triplex 1/0 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_triplex_1_0_cable_600v"
+ },
+ "eln:six_node@2313": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Triplex 1/0 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_triplex_1_0_cable_melted"
+ },
+ "eln:six_node@2314": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Triplex 4/0 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_triplex_4_0_cable_600v"
+ },
+ "eln:six_node@2315": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Triplex 4/0 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_triplex_4_0_cable_melted"
+ },
+ "eln:six_node@2316": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Quadruplex 1/0 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_quadruplex_1_0_cable_600v"
+ },
+ "eln:six_node@2317": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Quadruplex 1/0 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_quadruplex_1_0_cable_melted"
+ },
+ "eln:six_node@2318": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Quadruplex 4/0 Cable 600V",
+  "kind": "six_node",
+  "name": "copper_quadruplex_4_0_cable_600v"
+ },
+ "eln:six_node@2319": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper Quadruplex 4/0 Cable Melted",
+  "kind": "six_node",
+  "name": "copper_quadruplex_4_0_cable_melted"
+ },
+ "eln:six_node@2320": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Triplex 1/0 Cable 600V",
+  "kind": "six_node",
+  "name": "aluminum_triplex_1_0_cable_600v"
+ },
+ "eln:six_node@2321": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Triplex 1/0 Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_triplex_1_0_cable_melted"
+ },
+ "eln:six_node@2322": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Triplex 4/0 Cable 600V",
+  "kind": "six_node",
+  "name": "aluminum_triplex_4_0_cable_600v"
+ },
+ "eln:six_node@2323": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Triplex 4/0 Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_triplex_4_0_cable_melted"
+ },
+ "eln:six_node@2324": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Quadruplex 1/0 Cable 600V",
+  "kind": "six_node",
+  "name": "aluminum_quadruplex_1_0_cable_600v"
+ },
+ "eln:six_node@2325": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Quadruplex 1/0 Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_quadruplex_1_0_cable_melted"
+ },
+ "eln:six_node@2326": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Quadruplex 4/0 Cable 600V",
+  "kind": "six_node",
+  "name": "aluminum_quadruplex_4_0_cable_600v"
+ },
+ "eln:six_node@2327": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Aluminum Quadruplex 4/0 Cable Melted",
+  "kind": "six_node",
+  "name": "aluminum_quadruplex_4_0_cable_melted"
+ },
+ "eln:six_node@2432": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_1000v"
+ },
+ "eln:six_node@2433": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 1000V Melted",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_1000v_melted"
+ },
+ "eln:six_node@2434": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 5000V",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_5000v"
+ },
+ "eln:six_node@2435": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 5000V Melted",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_5000v_melted"
+ },
+ "eln:six_node@2436": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 20000V",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_20000v"
+ },
+ "eln:six_node@2437": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 20000V Melted",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_20000v_melted"
+ },
+ "eln:six_node@2438": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 40000V",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_40000v"
+ },
+ "eln:six_node@2439": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 40000V Melted",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_40000v_melted"
+ },
+ "eln:six_node@2440": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 150000V",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_150000v"
+ },
+ "eln:six_node@2441": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 12 AWG Cable 150000V Melted",
+  "kind": "six_node",
+  "name": "copper_12_awg_cable_150000v_melted"
+ },
+ "eln:six_node@2442": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 1000V",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_1000v"
+ },
+ "eln:six_node@2443": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 1000V Melted",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_1000v_melted"
+ },
+ "eln:six_node@2444": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 5000V",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_5000v"
+ },
+ "eln:six_node@2445": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 5000V Melted",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_5000v_melted"
+ },
+ "eln:six_node@2446": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 20000V",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_20000v"
+ },
+ "eln:six_node@2447": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 20000V Melted",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_20000v_melted"
+ },
+ "eln:six_node@2448": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 40000V",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_40000v"
+ },
+ "eln:six_node@2449": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 40000V Melted",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_40000v_melted"
+ },
+ "eln:six_node@2450": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 150000V",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_150000v"
+ },
+ "eln:six_node@2451": {
+  "descriptor": "UtilityCableDescriptor",
+  "display": "Copper 2 AWG Cable 150000V Melted",
+  "kind": "six_node",
+  "name": "copper_2_awg_cable_150000v_melted"
  },
  "eln:six_node@3072": {
   "descriptor": "ThermalCableDescriptor",
@@ -1205,6 +2579,12 @@
   "kind": "six_node",
   "name": "power_inductor"
  },
+ "eln:six_node@6179": {
+  "descriptor": "VariableInductorDescriptor",
+  "display": "Variable inductor",
+  "kind": "six_node",
+  "name": "variable_inductor"
+ },
  "eln:six_node@6180": {
   "descriptor": "ResistorDescriptor",
   "display": "Power Resistor",
@@ -1252,6 +2632,24 @@
   "display": "Very High Voltage Switch",
   "kind": "six_node",
   "name": "very_high_voltage_switch"
+ },
+ "eln:six_node@6214": {
+  "descriptor": "ElectricalSwitchDescriptor",
+  "display": "20A Switch",
+  "kind": "six_node",
+  "name": "switch_20a"
+ },
+ "eln:six_node@6215": {
+  "descriptor": "ElectricalSwitchDescriptor",
+  "display": "50A Switch",
+  "kind": "six_node",
+  "name": "switch_50a"
+ },
+ "eln:six_node@6217": {
+  "descriptor": "ElectricalSwitchDescriptor",
+  "display": "100A Switch",
+  "kind": "six_node",
+  "name": "switch_100a"
  },
  "eln:six_node@6216": {
   "descriptor": "ElectricalSwitchDescriptor",
@@ -1637,6 +3035,18 @@
   "kind": "transparent_node",
   "name": "dc_dc_converter"
  },
+ "eln:transparent_node@129": {
+  "descriptor": "VariableDcDcDescriptor",
+  "display": "Variable DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "variable_dc_dc_converter"
+ },
+ "eln:transparent_node@16383": {
+  "descriptor": "LargeRenewableDescriptor",
+  "display": "Large Watermill 3.2kV",
+  "kind": "transparent_node",
+  "name": "large_watermill_3_2kv"
+ },
  "eln:transparent_node@192": {
   "descriptor": "HeatFurnaceDescriptor",
   "display": "Stone Heat Furnace",
@@ -1901,36 +3311,6 @@
   "kind": "transparent_node",
   "name": "high_power_receiver_antenna"
  },
- "eln:transparent_node@6183": {
-  "descriptor": "LargeRheostatDescriptor",
-  "display": "Large Rheostat",
-  "kind": "transparent_node",
-  "name": "large_rheostat"
- },
- "eln:transparent_node@7876": {
-  "descriptor": "ElectricalPoleDescriptor",
-  "display": "Utility Pole",
-  "kind": "transparent_node",
-  "name": "utility_pole"
- },
- "eln:transparent_node@7877": {
-  "descriptor": "ElectricalPoleDescriptor",
-  "display": "Utility Pole w/DC-DC Converter",
-  "kind": "transparent_node",
-  "name": "utility_pole_w_dc_dc_converter"
- },
- "eln:transparent_node@80": {
-  "descriptor": "PowerInductorDescriptor",
-  "display": "Power inductor",
-  "kind": "transparent_node",
-  "name": "power_inductor_block"
- },
- "eln:transparent_node@84": {
-  "descriptor": "PowerCapacitorDescriptor",
-  "display": "Power capacitor",
-  "kind": "transparent_node",
-  "name": "power_capacitor_block"
- },
  "eln:transparent_node@5120": {
   "descriptor": "OilSeparatorDescriptor",
   "display": "50V Tar Sand Separator",
@@ -2110,5 +3490,1937 @@
   "display": "Capacitor Bank",
   "kind": "transparent_node",
   "name": "capacitor_bank"
+ },
+ "eln:transparent_node@6183": {
+  "descriptor": "LargeRheostatDescriptor",
+  "display": "Large Rheostat",
+  "kind": "transparent_node",
+  "name": "large_rheostat"
+ },
+ "eln:transparent_node@7876": {
+  "descriptor": "ElectricalPoleDescriptor",
+  "display": "Utility Pole",
+  "kind": "transparent_node",
+  "name": "utility_pole"
+ },
+ "eln:transparent_node@7877": {
+  "descriptor": "ElectricalPoleDescriptor",
+  "display": "Utility Pole w/DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "utility_pole_w_dc_dc_converter"
+ },
+ "eln:transparent_node@7882": {
+  "descriptor": "StepDownUnitDescriptor",
+  "display": "Mains Step-down Unit",
+  "kind": "transparent_node",
+  "name": "mains_step_down_unit"
+ },
+ "eln:transparent_node@7942": {
+  "descriptor": "BackupDescriptor",
+  "display": "Automatic Transfer Switch",
+  "kind": "transparent_node",
+  "name": "automatic_transfer_switch"
+ },
+ "eln:transparent_node@7943": {
+  "descriptor": "BackupDescriptor",
+  "display": "Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "standby_gasoline_generator"
+ },
+ "eln:transparent_node@7944": {
+  "descriptor": "RenewableDescriptor",
+  "display": "MPPT Solar Controller",
+  "kind": "transparent_node",
+  "name": "mppt_solar_controller"
+ },
+ "eln:transparent_node@7945": {
+  "descriptor": "RenewableDescriptor",
+  "display": "Hybrid Solar Inverter",
+  "kind": "transparent_node",
+  "name": "hybrid_solar_inverter"
+ },
+ "eln:transparent_node@7946": {
+  "descriptor": "LargeRenewableDescriptor",
+  "display": "Utility Wind Turbine 3.2kV",
+  "kind": "transparent_node",
+  "name": "utility_wind_turbine_3_2kv"
+ },
+ "eln:transparent_node@7947": {
+  "descriptor": "UpsDescriptor",
+  "display": "Programmable UPS",
+  "kind": "transparent_node",
+  "name": "programmable_ups"
+ },
+ "eln:transparent_node@7949": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Utility Pole Twin LED Street Light",
+  "kind": "transparent_node",
+  "name": "utility_pole_twin_led_street_light"
+ },
+ "eln:transparent_node@7950": {
+  "descriptor": "BackupDescriptor",
+  "display": "Wall-mounted Automatic Transfer Switch",
+  "kind": "transparent_node",
+  "name": "wall_mounted_automatic_transfer_switch"
+ },
+ "eln:transparent_node@7951": {
+  "descriptor": "RenewableDescriptor",
+  "display": "Wall-mounted MPPT Solar Controller",
+  "kind": "transparent_node",
+  "name": "wall_mounted_mppt_solar_controller"
+ },
+ "eln:transparent_node@7952": {
+  "descriptor": "RenewableDescriptor",
+  "display": "Wall-mounted Hybrid Solar Inverter",
+  "kind": "transparent_node",
+  "name": "wall_mounted_hybrid_solar_inverter"
+ },
+ "eln:transparent_node@7953": {
+  "descriptor": "UpsDescriptor",
+  "display": "Wall-mounted Programmable UPS",
+  "kind": "transparent_node",
+  "name": "wall_mounted_programmable_ups"
+ },
+ "eln:transparent_node@7970": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Utility Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_utility_pole"
+ },
+ "eln:transparent_node@7971": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Utility Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_utility_pole"
+ },
+ "eln:transparent_node@7972": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Transformer Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_transformer_pole"
+ },
+ "eln:transparent_node@7973": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Transformer Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_transformer_pole"
+ },
+ "eln:transparent_node@7974": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Underground Feeder Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_underground_feeder_pole"
+ },
+ "eln:transparent_node@7975": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Fused Cutout Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_fused_cutout_pole"
+ },
+ "eln:transparent_node@7976": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Fused Cutout Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_fused_cutout_pole"
+ },
+ "eln:transparent_node@7977": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Recloser Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_recloser_pole"
+ },
+ "eln:transparent_node@7978": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "120/240V Secondary Utility Pole",
+  "kind": "transparent_node",
+  "name": "120_240v_secondary_utility_pole"
+ },
+ "eln:transparent_node@7979": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "120/240V Secondary Street Light Pole",
+  "kind": "transparent_node",
+  "name": "120_240v_secondary_street_light_pole"
+ },
+ "eln:transparent_node@7980": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Pole Mounted Capacitor Bank",
+  "kind": "transparent_node",
+  "name": "three_phase_pole_mounted_capacitor_bank"
+ },
+ "eln:transparent_node@7981": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Automatic Voltage Regulator Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_automatic_voltage_regulator_pole"
+ },
+ "eln:transparent_node@7982": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Automatic Voltage Regulator Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_automatic_voltage_regulator_pole"
+ },
+ "eln:transparent_node@7983": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Gang Operated Air Break Switch Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_gang_operated_air_break_switch_pole"
+ },
+ "eln:transparent_node@7984": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Transformer Street Light Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_transformer_street_light_pole"
+ },
+ "eln:transparent_node@7985": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Transformer Street Light Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_transformer_street_light_pole"
+ },
+ "eln:transparent_node@7986": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "120/240V Service Weatherhead",
+  "kind": "transparent_node",
+  "name": "120_240v_service_weatherhead"
+ },
+ "eln:transparent_node@7987": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "North American Meter Base",
+  "kind": "transparent_node",
+  "name": "north_american_meter_base"
+ },
+ "eln:transparent_node@7989": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Secondary Fed Street Light Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_secondary_fed_street_light_pole"
+ },
+ "eln:transparent_node@7990": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Secondary Fed Street Light Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_secondary_fed_street_light_pole"
+ },
+ "eln:transparent_node@7992": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Red Handle Service Disconnect",
+  "kind": "transparent_node",
+  "name": "red_handle_service_disconnect"
+ },
+ "eln:transparent_node@7993": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Pole with Fused Single Phase Tap",
+  "kind": "transparent_node",
+  "name": "three_phase_pole_with_fused_single_phase_tap"
+ },
+ "eln:transparent_node@80": {
+  "descriptor": "PowerInductorDescriptor",
+  "display": "Power inductor",
+  "kind": "transparent_node",
+  "name": "power_inductor_block"
+ },
+ "eln:transparent_node@8022": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Fused Tap Secondary Fed Street Light Pole",
+  "kind": "transparent_node",
+  "name": "three_phase_fused_tap_secondary_fed_street_light_pole"
+ },
+ "eln:transparent_node@8023": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Three Phase Transformer Street Light Pole with Fused Single Phase Tap",
+  "kind": "transparent_node",
+  "name": "three_phase_transformer_street_light_pole_with_fused_single_phase_tap"
+ },
+ "eln:transparent_node@8024": {
+  "descriptor": "BackupDescriptor",
+  "display": "Medium Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "medium_standby_gasoline_generator"
+ },
+ "eln:transparent_node@8025": {
+  "descriptor": "BackupDescriptor",
+  "display": "Large Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "large_standby_gasoline_generator"
+ },
+ "eln:transparent_node@8026": {
+  "descriptor": "BackupDescriptor",
+  "display": "Extra Large Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "extra_large_standby_gasoline_generator"
+ },
+ "eln:transparent_node@8027": {
+  "descriptor": "BackupDescriptor",
+  "display": "Extreme Standby Gasoline Generator",
+  "kind": "transparent_node",
+  "name": "extreme_standby_gasoline_generator"
+ },
+ "eln:transparent_node@8028": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Compact Side Entry Service Mast",
+  "kind": "transparent_node",
+  "name": "compact_side_entry_service_mast"
+ },
+ "eln:transparent_node@8029": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Through Roof Service Mast",
+  "kind": "transparent_node",
+  "name": "through_roof_service_mast"
+ },
+ "eln:transparent_node@8030": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Gooseneck Service Mast",
+  "kind": "transparent_node",
+  "name": "gooseneck_service_mast"
+ },
+ "eln:transparent_node@8032": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Fused Underground 120/240V Service Pedestal",
+  "kind": "transparent_node",
+  "name": "fused_underground_120_240v_service_pedestal"
+ },
+ "eln:transparent_node@8033": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "12.5kV Single Phase Fused Underground Feeder",
+  "kind": "transparent_node",
+  "name": "12_5kv_single_phase_fused_underground_feeder"
+ },
+ "eln:transparent_node@8034": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "12.5kV Three Phase Fused Underground Feeder",
+  "kind": "transparent_node",
+  "name": "12_5kv_three_phase_fused_underground_feeder"
+ },
+ "eln:transparent_node@8035": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "12.5kV Single Phase Fused Underground Feeder with Street Light",
+  "kind": "transparent_node",
+  "name": "12_5kv_single_phase_fused_underground_feeder_with_street_light"
+ },
+ "eln:transparent_node@8036": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "12.5kV Three Phase Fused Underground Feeder with Street Light",
+  "kind": "transparent_node",
+  "name": "12_5kv_three_phase_fused_underground_feeder_with_street_light"
+ },
+ "eln:transparent_node@8037": {
+  "descriptor": "SwitchgearDescriptor",
+  "display": "Single Pole Contactor",
+  "kind": "transparent_node",
+  "name": "single_pole_contactor"
+ },
+ "eln:transparent_node@8038": {
+  "descriptor": "SwitchgearDescriptor",
+  "display": "Three Pole Contactor",
+  "kind": "transparent_node",
+  "name": "three_pole_contactor"
+ },
+ "eln:transparent_node@8039": {
+  "descriptor": "SwitchgearDescriptor",
+  "display": "Two Pole Changeover Relay",
+  "kind": "transparent_node",
+  "name": "two_pole_changeover_relay"
+ },
+ "eln:transparent_node@8040": {
+  "descriptor": "SwitchgearDescriptor",
+  "display": "Four Pole Changeover Relay",
+  "kind": "transparent_node",
+  "name": "four_pole_changeover_relay"
+ },
+ "eln:transparent_node@8041": {
+  "descriptor": "SwitchgearDescriptor",
+  "display": "Solid State Relay",
+  "kind": "transparent_node",
+  "name": "solid_state_relay"
+ },
+ "eln:transparent_node@8042": {
+  "descriptor": "SwitchgearDescriptor",
+  "display": "Three Pole Solid State Relay",
+  "kind": "transparent_node",
+  "name": "three_pole_solid_state_relay"
+ },
+ "eln:transparent_node@8064": {
+  "descriptor": "LoadBankDescriptor",
+  "display": "Programmable Load Bank",
+  "kind": "transparent_node",
+  "name": "programmable_load_bank"
+ },
+ "eln:transparent_node@8065": {
+  "descriptor": "ScadaDescriptor",
+  "display": "Grid Control Console",
+  "kind": "transparent_node",
+  "name": "grid_control_console"
+ },
+ "eln:transparent_node@8066": {
+  "descriptor": "IndustrialDescriptor",
+  "display": "Protective Relay Cabinet",
+  "kind": "transparent_node",
+  "name": "protective_relay_cabinet"
+ },
+ "eln:transparent_node@8067": {
+  "descriptor": "SurgeArresterDescriptor",
+  "display": "Pole Surge Arrester",
+  "kind": "transparent_node",
+  "name": "pole_surge_arrester"
+ },
+ "eln:transparent_node@8068": {
+  "descriptor": "PadTransformerDescriptor",
+  "display": "Pad Mounted Neighbourhood Transformer",
+  "kind": "transparent_node",
+  "name": "pad_mounted_neighbourhood_transformer"
+ },
+ "eln:transparent_node@8069": {
+  "descriptor": "MotorDriveDescriptor",
+  "display": "Variable Frequency Motor Drive",
+  "kind": "transparent_node",
+  "name": "variable_frequency_motor_drive"
+ },
+ "eln:transparent_node@8070": {
+  "descriptor": "IndustrialDescriptor",
+  "display": "Automatic Load Shedding Controller",
+  "kind": "transparent_node",
+  "name": "automatic_load_shedding_controller"
+ },
+ "eln:transparent_node@8071": {
+  "descriptor": "ChargerDescriptor",
+  "display": "Programmable EV Pack Charger",
+  "kind": "transparent_node",
+  "name": "programmable_ev_pack_charger"
+ },
+ "eln:transparent_node@8072": {
+  "descriptor": "WelderDescriptor",
+  "display": "Electric Welding Station",
+  "kind": "transparent_node",
+  "name": "electric_welding_station"
+ },
+ "eln:transparent_node@8128": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Wide Underground Meter Socket",
+  "kind": "transparent_node",
+  "name": "wide_underground_meter_socket"
+ },
+ "eln:transparent_node@8129": {
+  "descriptor": "HouseServiceDescriptor",
+  "display": "Underground Service Entrance Riser",
+  "kind": "transparent_node",
+  "name": "underground_service_entrance_riser"
+ },
+ "eln:transparent_node@8130": {
+  "descriptor": "UndergroundHandholeDescriptor",
+  "display": "120/240V Underground Service Handhole",
+  "kind": "transparent_node",
+  "name": "120_240v_underground_service_handhole"
+ },
+ "eln:transparent_node@8131": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Underground Feeder Pole",
+  "kind": "transparent_node",
+  "name": "single_phase_underground_feeder_pole"
+ },
+ "eln:transparent_node@8132": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Underground Feeder Pole with Secondary Fed Street Light",
+  "kind": "transparent_node",
+  "name": "single_phase_underground_feeder_pole_with_secondary_fed_street_light"
+ },
+ "eln:transparent_node@8133": {
+  "descriptor": "DistributionPoleDescriptor",
+  "display": "Single Phase Transformer Pole with Underground Service Riser",
+  "kind": "transparent_node",
+  "name": "single_phase_transformer_pole_with_underground_service_riser"
+ },
+ "eln:transparent_node@8192": {
+  "descriptor": "OffGridDescriptor",
+  "display": "16 kWh LiFePO4 Battery Cabinet",
+  "kind": "transparent_node",
+  "name": "16_kwh_lifepo4_battery_cabinet"
+ },
+ "eln:transparent_node@8193": {
+  "descriptor": "OffGridDescriptor",
+  "display": "32 kWh LiFePO4 Battery Cabinet",
+  "kind": "transparent_node",
+  "name": "32_kwh_lifepo4_battery_cabinet"
+ },
+ "eln:transparent_node@8194": {
+  "descriptor": "OffGridDescriptor",
+  "display": "48 kWh LiFePO4 Battery Cabinet",
+  "kind": "transparent_node",
+  "name": "48_kwh_lifepo4_battery_cabinet"
+ },
+ "eln:transparent_node@8195": {
+  "descriptor": "OffGridDescriptor",
+  "display": "64 kWh LiFePO4 Battery Cabinet",
+  "kind": "transparent_node",
+  "name": "64_kwh_lifepo4_battery_cabinet"
+ },
+ "eln:transparent_node@8196": {
+  "descriptor": "OffGridDescriptor",
+  "display": "16 kWh Wall-mounted LiFePO4 Battery",
+  "kind": "transparent_node",
+  "name": "16_kwh_wall_mounted_lifepo4_battery"
+ },
+ "eln:transparent_node@8197": {
+  "descriptor": "OffGridDescriptor",
+  "display": "32 kWh Wall-mounted LiFePO4 Battery",
+  "kind": "transparent_node",
+  "name": "32_kwh_wall_mounted_lifepo4_battery"
+ },
+ "eln:transparent_node@8198": {
+  "descriptor": "OffGridDescriptor",
+  "display": "48 kWh Wall-mounted LiFePO4 Battery",
+  "kind": "transparent_node",
+  "name": "48_kwh_wall_mounted_lifepo4_battery"
+ },
+ "eln:transparent_node@8199": {
+  "descriptor": "OffGridDescriptor",
+  "display": "64 kWh Wall-mounted LiFePO4 Battery",
+  "kind": "transparent_node",
+  "name": "64_kwh_wall_mounted_lifepo4_battery"
+ },
+ "eln:transparent_node@8200": {
+  "descriptor": "OffGridDescriptor",
+  "display": "Off-grid Inverter Charger",
+  "kind": "transparent_node",
+  "name": "off_grid_inverter_charger"
+ },
+ "eln:transparent_node@8201": {
+  "descriptor": "OffGridDescriptor",
+  "display": "LiFePO4 MPPT Charge Controller",
+  "kind": "transparent_node",
+  "name": "lifepo4_mppt_charge_controller"
+ },
+ "eln:transparent_node@8202": {
+  "descriptor": "OffGridDescriptor",
+  "display": "AC LiFePO4 Battery Charger",
+  "kind": "transparent_node",
+  "name": "ac_lifepo4_battery_charger"
+ },
+ "eln:transparent_node@8203": {
+  "descriptor": "OffGridDescriptor",
+  "display": "Fused PV Combiner and Disconnect",
+  "kind": "transparent_node",
+  "name": "fused_pv_combiner_and_disconnect"
+ },
+ "eln:transparent_node@8204": {
+  "descriptor": "OffGridDescriptor",
+  "display": "400 A DC Battery Disconnect",
+  "kind": "transparent_node",
+  "name": "400_a_dc_battery_disconnect"
+ },
+ "eln:transparent_node@84": {
+  "descriptor": "PowerCapacitorDescriptor",
+  "display": "Power capacitor",
+  "kind": "transparent_node",
+  "name": "power_capacitor_block"
+ },
+ "eln:transparent_node@130": {
+  "descriptor": "FixedDcDcDescriptor",
+  "display": "Winding DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "winding_dc_dc_converter"
+ },
+ "eln:transparent_node@131": {
+  "descriptor": "OneWayDcDcDescriptor",
+  "display": "One-way DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "one_way_dc_dc_converter"
+ },
+ "eln:transparent_node@132": {
+  "descriptor": "OneWayDcDcDescriptor",
+  "display": "One-way Boost vDC/DC Converter",
+  "kind": "transparent_node",
+  "name": "one_way_boost_vdc_dc_converter"
+ },
+ "eln:transparent_node@133": {
+  "descriptor": "OneWayDcDcDescriptor",
+  "display": "One-way Buck vDC/DC Converter",
+  "kind": "transparent_node",
+  "name": "one_way_buck_vdc_dc_converter"
+ },
+ "eln:transparent_node@134": {
+  "descriptor": "OneWayDcDcDescriptor",
+  "display": "One-way Boost/Buck vDC/DC Converter",
+  "kind": "transparent_node",
+  "name": "one_way_boost_buck_vdc_dc_converter"
+ },
+ "eln:shared_item@7873": {
+  "descriptor": "WireSnipsDescriptor",
+  "display": "Wire Snips",
+  "kind": "shared_item",
+  "name": "wire_snips"
+ },
+ "eln:transparent_node@4608": {
+  "descriptor": "WireMachineDescriptor",
+  "display": "Wire Roller",
+  "kind": "transparent_node",
+  "name": "wire_roller"
+ },
+ "eln:transparent_node@4609": {
+  "descriptor": "WireMachineDescriptor",
+  "display": "Wire Insulator",
+  "kind": "transparent_node",
+  "name": "wire_insulator"
+ },
+ "eln:transparent_node@4610": {
+  "descriptor": "WireMachineDescriptor",
+  "display": "Wire Combiner",
+  "kind": "transparent_node",
+  "name": "wire_combiner"
+ },
+ "eln:shared_item@7552": {
+  "descriptor": "RollerWheelDescriptor",
+  "display": "Iron Roller Wheel",
+  "kind": "shared_item",
+  "name": "iron_roller_wheel"
+ },
+ "eln:shared_item@7553": {
+  "descriptor": "RollerWheelDescriptor",
+  "display": "Steel Roller Wheel",
+  "kind": "shared_item",
+  "name": "steel_roller_wheel"
+ },
+ "eln:shared_item@7554": {
+  "descriptor": "RollerWheelDescriptor",
+  "display": "Aluminum Roller Wheel",
+  "kind": "shared_item",
+  "name": "aluminum_roller_wheel"
+ },
+ "eln:shared_item@7556": {
+  "descriptor": "WoundWireBundleDescriptor",
+  "display": "Wound Wire Bundle",
+  "kind": "shared_item",
+  "name": "wound_wire_bundle"
+ },
+ "eln:transparent_node@4480": {
+  "descriptor": "FabricatorDescriptor",
+  "display": "Fabricator",
+  "kind": "transparent_node",
+  "name": "fabricator"
+ },
+ "eln:shared_item@8064": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Silicon Wafer",
+  "kind": "shared_item",
+  "name": "silicon_wafer"
+ },
+ "eln:shared_item@8065": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Transistor",
+  "kind": "shared_item",
+  "name": "transistor"
+ },
+ "eln:shared_item@8066": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "NTC Thermistor",
+  "kind": "shared_item",
+  "name": "ntc_thermistor"
+ },
+ "eln:shared_item@8067": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Nibble Memory Chip",
+  "kind": "shared_item",
+  "name": "nibble_memory_chip"
+ },
+ "eln:shared_item@8068": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Arithmetic Logic Unit",
+  "kind": "shared_item",
+  "name": "arithmetic_logic_unit"
+ },
+ "eln:transparent_node@7968": {
+  "descriptor": "OutletDescriptor",
+  "display": "Experimental Wall Outlet",
+  "kind": "transparent_node",
+  "name": "experimental_wall_outlet"
+ },
+ "eln:shared_item@7874": {
+  "descriptor": "CordDescriptor",
+  "display": "Flexible Appliance Cord",
+  "kind": "shared_item",
+  "name": "flexible_appliance_cord"
+ },
+ "eln:transparent_node@7969": {
+  "descriptor": "OutletDescriptor",
+  "display": "240 V Wall Outlet",
+  "kind": "transparent_node",
+  "name": "240_v_wall_outlet"
+ },
+ "eln:shared_item@7875": {
+  "descriptor": "CordDescriptor",
+  "display": "240 V Appliance Cord",
+  "kind": "shared_item",
+  "name": "240_v_appliance_cord"
+ },
+ "eln:transparent_node@8000": {
+  "descriptor": "OutletDescriptor",
+  "display": "24 V Machine Outlet",
+  "kind": "transparent_node",
+  "name": "24_v_machine_outlet"
+ },
+ "eln:shared_item@8000": {
+  "descriptor": "CordDescriptor",
+  "display": "24 V Machine Cord",
+  "kind": "shared_item",
+  "name": "24_v_machine_cord"
+ },
+ "eln:transparent_node@8001": {
+  "descriptor": "OutletDescriptor",
+  "display": "48 V Machine Outlet",
+  "kind": "transparent_node",
+  "name": "48_v_machine_outlet"
+ },
+ "eln:shared_item@8001": {
+  "descriptor": "CordDescriptor",
+  "display": "48 V Machine Cord",
+  "kind": "shared_item",
+  "name": "48_v_machine_cord"
+ },
+ "eln:transparent_node@8002": {
+  "descriptor": "OutletDescriptor",
+  "display": "200 V Workshop Outlet",
+  "kind": "transparent_node",
+  "name": "200_v_workshop_outlet"
+ },
+ "eln:shared_item@8002": {
+  "descriptor": "CordDescriptor",
+  "display": "200 V Workshop Cord",
+  "kind": "shared_item",
+  "name": "200_v_workshop_cord"
+ },
+ "eln:transparent_node@8003": {
+  "descriptor": "OutletDescriptor",
+  "display": "480 V Industrial Outlet",
+  "kind": "transparent_node",
+  "name": "480_v_industrial_outlet"
+ },
+ "eln:shared_item@8003": {
+  "descriptor": "CordDescriptor",
+  "display": "480 V Industrial Cord",
+  "kind": "shared_item",
+  "name": "480_v_industrial_cord"
+ },
+ "eln:transparent_node@8004": {
+  "descriptor": "OutletDescriptor",
+  "display": "800 V Industrial Outlet",
+  "kind": "transparent_node",
+  "name": "800_v_industrial_outlet"
+ },
+ "eln:shared_item@8004": {
+  "descriptor": "CordDescriptor",
+  "display": "800 V Industrial Cord",
+  "kind": "shared_item",
+  "name": "800_v_industrial_cord"
+ },
+ "eln:transparent_node@8005": {
+  "descriptor": "OutletDescriptor",
+  "display": "3.2 kV Industrial Outlet",
+  "kind": "transparent_node",
+  "name": "3_2_kv_industrial_outlet"
+ },
+ "eln:shared_item@8005": {
+  "descriptor": "CordDescriptor",
+  "display": "3.2 kV Industrial Cord",
+  "kind": "shared_item",
+  "name": "3_2_kv_industrial_cord"
+ },
+ "eln:transparent_node@8012": {
+  "descriptor": "OutletDescriptor",
+  "display": "240 V 30 A Dryer Outlet",
+  "kind": "transparent_node",
+  "name": "240_v_30_a_dryer_outlet"
+ },
+ "eln:shared_item@8006": {
+  "descriptor": "CordDescriptor",
+  "display": "240 V 30 A Dryer Cord",
+  "kind": "shared_item",
+  "name": "240_v_30_a_dryer_cord"
+ },
+ "eln:transparent_node@7991": {
+  "descriptor": "OutletDescriptor",
+  "display": "Six Socket Power Strip",
+  "kind": "transparent_node",
+  "name": "six_socket_power_strip"
+ },
+ "eln:transparent_node@8076": {
+  "descriptor": "UpsDescriptor",
+  "display": "Four Cell Plug-in UPS",
+  "kind": "transparent_node",
+  "name": "four_cell_plug_in_ups"
+ },
+ "eln:six_node@4162": {
+  "descriptor": "LampSupplyDescriptor",
+  "display": "120V Lamp Supply",
+  "kind": "six_node",
+  "name": "120v_lamp_supply"
+ },
+ "eln:six_node@4161": {
+  "descriptor": "LampSupplyDescriptor",
+  "display": "240V Lamp Supply",
+  "kind": "six_node",
+  "name": "240v_lamp_supply"
+ },
+ "eln:transparent_node@8014": {
+  "descriptor": "TransmissionDescriptor",
+  "display": "69 kV Steel Transmission Pole",
+  "kind": "transparent_node",
+  "name": "69_kv_steel_transmission_pole"
+ },
+ "eln:transparent_node@8015": {
+  "descriptor": "TransmissionDescriptor",
+  "display": "230 kV Steel Transmission Tower",
+  "kind": "transparent_node",
+  "name": "230_kv_steel_transmission_tower"
+ },
+ "eln:transparent_node@8020": {
+  "descriptor": "TransmissionDescriptor",
+  "display": "69 kV Three Phase Cable Riser Pole",
+  "kind": "transparent_node",
+  "name": "69_kv_three_phase_cable_riser_pole"
+ },
+ "eln:transparent_node@8021": {
+  "descriptor": "TransmissionDescriptor",
+  "display": "230 kV Three Phase Cable Riser Tower",
+  "kind": "transparent_node",
+  "name": "230_kv_three_phase_cable_riser_tower"
+ },
+ "eln:six_node@4116": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Twin Parking Lot Light",
+  "kind": "six_node",
+  "name": "twin_parking_lot_light"
+ },
+ "eln:six_node@4117": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Warehouse Wall Floodlight",
+  "kind": "six_node",
+  "name": "warehouse_wall_floodlight"
+ },
+ "eln:six_node@4118": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Household Desk Lamp",
+  "kind": "six_node",
+  "name": "household_desk_lamp"
+ },
+ "eln:six_node@4119": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Round Recessed Ceiling Light",
+  "kind": "six_node",
+  "name": "round_recessed_ceiling_light"
+ },
+ "eln:six_node@4120": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Basic Chandelier",
+  "kind": "six_node",
+  "name": "basic_chandelier"
+ },
+ "eln:six_node@4121": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Dot Spotlight",
+  "kind": "six_node",
+  "name": "mini_dot_spotlight"
+ },
+ "eln:six_node@4122": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Porch Lantern Sconce",
+  "kind": "six_node",
+  "name": "porch_lantern_sconce"
+ },
+ "eln:six_node@4123": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Basic Lamp Holder",
+  "kind": "six_node",
+  "name": "basic_lamp_holder"
+ },
+ "eln:six_node@4124": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Thin Fluorescent Shop Light",
+  "kind": "six_node",
+  "name": "thin_fluorescent_shop_light"
+ },
+ "eln:six_node@4125": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Suspended Factory Fluorescent Light",
+  "kind": "six_node",
+  "name": "suspended_factory_fluorescent_light"
+ },
+ "eln:six_node@4127": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Candle Arm Foyer Chandelier",
+  "kind": "six_node",
+  "name": "candle_arm_foyer_chandelier"
+ },
+ "eln:six_node@4128": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Crystal Tier Foyer Chandelier",
+  "kind": "six_node",
+  "name": "crystal_tier_foyer_chandelier"
+ },
+ "eln:six_node@4129": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Wagon Wheel Foyer Chandelier",
+  "kind": "six_node",
+  "name": "wagon_wheel_foyer_chandelier"
+ },
+ "eln:six_node@4130": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Lantern Cage Foyer Chandelier",
+  "kind": "six_node",
+  "name": "lantern_cage_foyer_chandelier"
+ },
+ "eln:six_node@4131": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Modern Sputnik Foyer Chandelier",
+  "kind": "six_node",
+  "name": "modern_sputnik_foyer_chandelier"
+ },
+ "eln:six_node@4132": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Up Down Cylinder Wall Sconce",
+  "kind": "six_node",
+  "name": "up_down_cylinder_wall_sconce"
+ },
+ "eln:six_node@4133": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Fabric Shade Wall Sconce",
+  "kind": "six_node",
+  "name": "fabric_shade_wall_sconce"
+ },
+ "eln:six_node@4134": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Glass Globe Wall Sconce",
+  "kind": "six_node",
+  "name": "glass_globe_wall_sconce"
+ },
+ "eln:six_node@4135": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Industrial Cage Wall Sconce",
+  "kind": "six_node",
+  "name": "industrial_cage_wall_sconce"
+ },
+ "eln:six_node@4136": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Double Candle Wall Sconce",
+  "kind": "six_node",
+  "name": "double_candle_wall_sconce"
+ },
+ "eln:six_node@4137": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Ceramic Drum Table Lamp",
+  "kind": "six_node",
+  "name": "ceramic_drum_table_lamp"
+ },
+ "eln:six_node@4138": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Green Banker Table Lamp",
+  "kind": "six_node",
+  "name": "green_banker_table_lamp"
+ },
+ "eln:six_node@4139": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Articulated Task Table Lamp",
+  "kind": "six_node",
+  "name": "articulated_task_table_lamp"
+ },
+ "eln:six_node@4140": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Deep Baffle Recessed Light",
+  "kind": "six_node",
+  "name": "deep_baffle_recessed_light"
+ },
+ "eln:six_node@4141": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Trimless Recessed Downlight",
+  "kind": "six_node",
+  "name": "trimless_recessed_downlight"
+ },
+ "eln:six_node@4142": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Adjustable Gimbal Recessed Light",
+  "kind": "six_node",
+  "name": "adjustable_gimbal_recessed_light"
+ },
+ "eln:six_node@4143": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Garden Bollard Light",
+  "kind": "six_node",
+  "name": "garden_bollard_light"
+ },
+ "eln:six_node@4144": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Gooseneck Barn Light",
+  "kind": "six_node",
+  "name": "gooseneck_barn_light"
+ },
+ "eln:six_node@4145": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Traditional Lantern Post Light",
+  "kind": "six_node",
+  "name": "traditional_lantern_post_light"
+ },
+ "eln:six_node@4352": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Window Candle Light",
+  "kind": "six_node",
+  "name": "window_candle_light"
+ },
+ "eln:six_node@4353": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Standing Drum Floor Lamp",
+  "kind": "six_node",
+  "name": "standing_drum_floor_lamp"
+ },
+ "eln:six_node@4354": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Under Cabinet LED Strip",
+  "kind": "six_node",
+  "name": "under_cabinet_led_strip"
+ },
+ "eln:six_node@4355": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Recessed LED Channel",
+  "kind": "six_node",
+  "name": "recessed_led_channel"
+ },
+ "eln:six_node@4356": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Indirect Cove LED Strip",
+  "kind": "six_node",
+  "name": "indirect_cove_led_strip"
+ },
+ "eln:six_node@4357": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Surface Linear LED Strip",
+  "kind": "six_node",
+  "name": "surface_linear_led_strip"
+ },
+ "eln:six_node@4358": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Flexible Neon LED Strip",
+  "kind": "six_node",
+  "name": "flexible_neon_led_strip"
+ },
+ "eln:six_node@4359": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Grand Halo Ring Chandelier",
+  "kind": "six_node",
+  "name": "grand_halo_ring_chandelier"
+ },
+ "eln:six_node@4360": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Grand Crystal Cascade Chandelier",
+  "kind": "six_node",
+  "name": "grand_crystal_cascade_chandelier"
+ },
+ "eln:six_node@4361": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Sculptural Branch Chandelier",
+  "kind": "six_node",
+  "name": "sculptural_branch_chandelier"
+ },
+ "eln:six_node@4362": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Spiral Rain Chandelier",
+  "kind": "six_node",
+  "name": "spiral_rain_chandelier"
+ },
+ "eln:six_node@4363": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Grand Empire Chandelier",
+  "kind": "six_node",
+  "name": "grand_empire_chandelier"
+ },
+ "eln:six_node@4364": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Heavy Duty Stadium Wall Floodlight",
+  "kind": "six_node",
+  "name": "heavy_duty_stadium_wall_floodlight"
+ },
+ "eln:six_node@4365": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Armored Oval Bulkhead Light",
+  "kind": "six_node",
+  "name": "armored_oval_bulkhead_light"
+ },
+ "eln:six_node@4366": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Industrial Wall Pack Light",
+  "kind": "six_node",
+  "name": "industrial_wall_pack_light"
+ },
+ "eln:six_node@4367": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Rugged Outdoor Canopy Light",
+  "kind": "six_node",
+  "name": "rugged_outdoor_canopy_light"
+ },
+ "eln:six_node@4368": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Industrial Yard Area Light",
+  "kind": "six_node",
+  "name": "industrial_yard_area_light"
+ },
+ "eln:six_node@4369": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Offshore Caged Wellglass Light",
+  "kind": "six_node",
+  "name": "offshore_caged_wellglass_light"
+ },
+ "eln:six_node@4371": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Offshore Platform Floodlight",
+  "kind": "six_node",
+  "name": "offshore_platform_floodlight"
+ },
+ "eln:six_node@4370": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Offshore Sealed Linear Light",
+  "kind": "six_node",
+  "name": "offshore_sealed_linear_light"
+ },
+ "eln:six_node@4372": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Modern LED Street Light",
+  "kind": "six_node",
+  "name": "modern_led_street_light"
+ },
+ "eln:six_node@4373": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Boulevard Lantern Street Light",
+  "kind": "six_node",
+  "name": "boulevard_lantern_street_light"
+ },
+ "eln:six_node@4374": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Warm White Christmas Fairy Lights",
+  "kind": "six_node",
+  "name": "warm_white_christmas_fairy_lights"
+ },
+ "eln:six_node@4375": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Multicolor Christmas String Lights",
+  "kind": "six_node",
+  "name": "multicolor_christmas_string_lights"
+ },
+ "eln:six_node@4376": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Christmas Icicle Lights",
+  "kind": "six_node",
+  "name": "christmas_icicle_lights"
+ },
+ "eln:six_node@4377": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Christmas Star Wall Light",
+  "kind": "six_node",
+  "name": "christmas_star_wall_light"
+ },
+ "eln:six_node@4378": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Halloween Pumpkin String Lights",
+  "kind": "six_node",
+  "name": "halloween_pumpkin_string_lights"
+ },
+ "eln:six_node@4379": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Halloween Ghost String Lights",
+  "kind": "six_node",
+  "name": "halloween_ghost_string_lights"
+ },
+ "eln:six_node@4380": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Halloween Bat Wall Light",
+  "kind": "six_node",
+  "name": "halloween_bat_wall_light"
+ },
+ "eln:six_node@4381": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Jack O Lantern Table Lamp",
+  "kind": "six_node",
+  "name": "jack_o_lantern_table_lamp"
+ },
+ "eln:six_node@4382": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Pinhole Dot Light",
+  "kind": "six_node",
+  "name": "mini_pinhole_dot_light"
+ },
+ "eln:six_node@4383": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Bezel Dot Spotlight",
+  "kind": "six_node",
+  "name": "mini_bezel_dot_spotlight"
+ },
+ "eln:six_node@4384": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Eyeball Dot Spotlight",
+  "kind": "six_node",
+  "name": "mini_eyeball_dot_spotlight"
+ },
+ "eln:six_node@4385": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Deep Baffle Dot Light",
+  "kind": "six_node",
+  "name": "mini_deep_baffle_dot_light"
+ },
+ "eln:six_node@4386": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mini Twin Dot Light",
+  "kind": "six_node",
+  "name": "mini_twin_dot_light"
+ },
+ "eln:six_node@4387": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Twin Adjustable Eave Floodlight",
+  "kind": "six_node",
+  "name": "twin_adjustable_eave_floodlight"
+ },
+ "eln:six_node@4392": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Large Area Floodlight",
+  "kind": "six_node",
+  "name": "large_area_floodlight"
+ },
+ "eln:six_node@4393": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Quad Head Parking Lot Light",
+  "kind": "six_node",
+  "name": "quad_head_parking_lot_light"
+ },
+ "eln:six_node@4394": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Round Canopy Parking Lot Light",
+  "kind": "six_node",
+  "name": "round_canopy_parking_lot_light"
+ },
+ "eln:six_node@4395": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Offset Twin Arm Parking Lot Light",
+  "kind": "six_node",
+  "name": "offset_twin_arm_parking_lot_light"
+ },
+ "eln:six_node@4396": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Round Niche Pool Light",
+  "kind": "six_node",
+  "name": "round_niche_pool_light"
+ },
+ "eln:six_node@4397": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Linear Pool Wall Light",
+  "kind": "six_node",
+  "name": "linear_pool_wall_light"
+ },
+ "eln:six_node@4398": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Square Recessed Pool Light",
+  "kind": "six_node",
+  "name": "square_recessed_pool_light"
+ },
+ "eln:six_node@4399": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Pool Corner Wash Light",
+  "kind": "six_node",
+  "name": "pool_corner_wash_light"
+ },
+ "eln:six_node@4400": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Pool Step Marker Light",
+  "kind": "six_node",
+  "name": "pool_step_marker_light"
+ },
+ "eln:six_node@4401": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Patio Festoon Party Lights",
+  "kind": "six_node",
+  "name": "patio_festoon_party_lights"
+ },
+ "eln:six_node@4402": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Electric Poolside Tiki Light",
+  "kind": "six_node",
+  "name": "electric_poolside_tiki_light"
+ },
+ "eln:six_node@4403": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Multicolor Party Wash Light",
+  "kind": "six_node",
+  "name": "multicolor_party_wash_light"
+ },
+ "eln:six_node@4404": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Poolside Globe String Lights",
+  "kind": "six_node",
+  "name": "poolside_globe_string_lights"
+ },
+ "eln:six_node@4405": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Poolside Party Lantern",
+  "kind": "six_node",
+  "name": "poolside_party_lantern"
+ },
+ "eln:six_node@4406": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Deck Post Cap Light",
+  "kind": "six_node",
+  "name": "deck_post_cap_light"
+ },
+ "eln:six_node@4407": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Deck Step Riser Light",
+  "kind": "six_node",
+  "name": "deck_step_riser_light"
+ },
+ "eln:six_node@4480": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Nautical Pier Bollard Light",
+  "kind": "six_node",
+  "name": "nautical_pier_bollard_light"
+ },
+ "eln:six_node@4481": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Marine Pier Bulkhead Light",
+  "kind": "six_node",
+  "name": "marine_pier_bulkhead_light"
+ },
+ "eln:six_node@4482": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Harbor Gooseneck Pier Light",
+  "kind": "six_node",
+  "name": "harbor_gooseneck_pier_light"
+ },
+ "eln:six_node@4483": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Pier Lantern Post Light",
+  "kind": "six_node",
+  "name": "pier_lantern_post_light"
+ },
+ "eln:six_node@4484": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Low Profile Dock Light",
+  "kind": "six_node",
+  "name": "low_profile_dock_light"
+ },
+ "eln:six_node@4485": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Louvered Walkway Bollard",
+  "kind": "six_node",
+  "name": "louvered_walkway_bollard"
+ },
+ "eln:six_node@4486": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Shielded Walkway Light",
+  "kind": "six_node",
+  "name": "shielded_walkway_light"
+ },
+ "eln:six_node@4487": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Modern Blade Walkway Light",
+  "kind": "six_node",
+  "name": "modern_blade_walkway_light"
+ },
+ "eln:six_node@4488": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Mushroom Walkway Light",
+  "kind": "six_node",
+  "name": "mushroom_walkway_light"
+ },
+ "eln:six_node@4489": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Arched Walkway Light",
+  "kind": "six_node",
+  "name": "arched_walkway_light"
+ },
+ "eln:six_node@4490": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Recessed Brick Patio Wall Light",
+  "kind": "six_node",
+  "name": "recessed_brick_patio_wall_light"
+ },
+ "eln:six_node@4491": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Round Stone Wall Light",
+  "kind": "six_node",
+  "name": "round_stone_wall_light"
+ },
+ "eln:six_node@4492": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Slotted Patio Wall Light",
+  "kind": "six_node",
+  "name": "slotted_patio_wall_light"
+ },
+ "eln:six_node@4493": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Recessed Square Patio Wall Light",
+  "kind": "six_node",
+  "name": "recessed_square_patio_wall_light"
+ },
+ "eln:six_node@4494": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Stone Wall Wash Light",
+  "kind": "six_node",
+  "name": "stone_wall_wash_light"
+ },
+ "eln:six_node@4495": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Shoebox Parking Lot Light",
+  "kind": "six_node",
+  "name": "shoebox_parking_lot_light"
+ },
+ "eln:six_node@4496": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Twin Wide Area Parking Lot Light",
+  "kind": "six_node",
+  "name": "twin_wide_area_parking_lot_light"
+ },
+ "eln:six_node@4497": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Three Arm Parking Lot Light",
+  "kind": "six_node",
+  "name": "three_arm_parking_lot_light"
+ },
+ "eln:six_node@4498": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Gumdrop Sidewalk Light",
+  "kind": "six_node",
+  "name": "gumdrop_sidewalk_light"
+ },
+ "eln:six_node@4499": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Dual Gumdrop Sidewalk Light",
+  "kind": "six_node",
+  "name": "dual_gumdrop_sidewalk_light"
+ },
+ "eln:shared_item@302": {
+  "descriptor": "LampDescriptor",
+  "display": "120V LED Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_led_light_bulb"
+ },
+ "eln:shared_item@303": {
+  "descriptor": "LampDescriptor",
+  "display": "240V LED Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_led_light_bulb"
+ },
+ "eln:six_node@4126": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Outdoor Motion Floodlight",
+  "kind": "six_node",
+  "name": "outdoor_motion_floodlight"
+ },
+ "eln:six_node@4388": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Classic Four Blade Ceiling Fan",
+  "kind": "six_node",
+  "name": "classic_four_blade_ceiling_fan"
+ },
+ "eln:six_node@4389": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Modern Three Blade Ceiling Fan",
+  "kind": "six_node",
+  "name": "modern_three_blade_ceiling_fan"
+ },
+ "eln:six_node@4390": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Industrial Five Block Ceiling Fan",
+  "kind": "six_node",
+  "name": "industrial_five_block_ceiling_fan"
+ },
+ "eln:six_node@4391": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Aura Five Blade Ceiling Fan",
+  "kind": "six_node",
+  "name": "aura_five_blade_ceiling_fan"
+ },
+ "eln:six_node@4408": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Tropical Patio Ceiling Fan",
+  "kind": "six_node",
+  "name": "tropical_patio_ceiling_fan"
+ },
+ "eln:six_node@4409": {
+  "descriptor": "DecorativeLampDescriptor",
+  "display": "Adjustable Suspended Warehouse Light",
+  "kind": "six_node",
+  "name": "adjustable_suspended_warehouse_light"
+ },
+ "eln:transparent_node@4418": {
+  "descriptor": "StringLightsDescriptor",
+  "display": "String Lights",
+  "kind": "transparent_node",
+  "name": "string_lights"
+ },
+ "eln:six_node@6273": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "10A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_10a"
+ },
+ "eln:six_node@6274": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "15A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_15a"
+ },
+ "eln:six_node@6275": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "20A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_20a"
+ },
+ "eln:six_node@6279": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "30A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_30a"
+ },
+ "eln:six_node@6280": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "40A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_40a"
+ },
+ "eln:six_node@6281": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "50A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_50a"
+ },
+ "eln:six_node@6282": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "60A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_60a"
+ },
+ "eln:six_node@6283": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "100A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_100a"
+ },
+ "eln:six_node@6285": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "125A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_125a"
+ },
+ "eln:six_node@6286": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "200A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_200a"
+ },
+ "eln:six_node@6287": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "400A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_400a"
+ },
+ "eln:six_node@6288": {
+  "descriptor": "ElectricalBreakerDescriptor",
+  "display": "5A Electrical Breaker",
+  "kind": "six_node",
+  "name": "electrical_breaker_5a"
+ },
+ "eln:transparent_node@7988": {
+  "descriptor": "BreakerPanelDescriptor",
+  "display": "Twelve Circuit American Breaker Panel",
+  "kind": "transparent_node",
+  "name": "twelve_circuit_american_breaker_panel"
+ },
+ "eln:six_node@6021": {
+  "descriptor": "ElectricalRelayDescriptor",
+  "display": "5V Control Relay 10A",
+  "kind": "six_node",
+  "name": "control_relay_5v_10a"
+ },
+ "eln:six_node@6022": {
+  "descriptor": "ElectricalRelayDescriptor",
+  "display": "12V Control Relay 20A",
+  "kind": "six_node",
+  "name": "control_relay_12v_20a"
+ },
+ "eln:six_node@6023": {
+  "descriptor": "ElectricalRelayDescriptor",
+  "display": "12V Control Relay 50A",
+  "kind": "six_node",
+  "name": "control_relay_12v_50a"
+ },
+ "eln:six_node@6024": {
+  "descriptor": "ElectricalRelayDescriptor",
+  "display": "12V Control Relay 100A",
+  "kind": "six_node",
+  "name": "control_relay_12v_100a"
+ },
+ "eln:six_node@6213": {
+  "descriptor": "ElectricalSwitchDescriptor",
+  "display": "5A Switch",
+  "kind": "six_node",
+  "name": "switch_5a"
+ },
+ "eln:transparent_node@8053": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Control Panel",
+  "kind": "transparent_node",
+  "name": "fire_alarm_control_panel"
+ },
+ "eln:transparent_node@8054": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Pull Station",
+  "kind": "transparent_node",
+  "name": "fire_alarm_pull_station"
+ },
+ "eln:transparent_node@8055": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Horn Strobe",
+  "kind": "transparent_node",
+  "name": "fire_alarm_horn_strobe"
+ },
+ "eln:transparent_node@8056": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Bell",
+  "kind": "transparent_node",
+  "name": "fire_alarm_bell"
+ },
+ "eln:transparent_node@8057": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Strobe",
+  "kind": "transparent_node",
+  "name": "fire_alarm_strobe"
+ },
+ "eln:transparent_node@8058": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Smoke Detector",
+  "kind": "transparent_node",
+  "name": "fire_alarm_smoke_detector"
+ },
+ "eln:transparent_node@8059": {
+  "descriptor": "AlarmDescriptor",
+  "display": "Fire Alarm Heat Detector",
+  "kind": "transparent_node",
+  "name": "fire_alarm_heat_detector"
+ },
+ "eln:shared_item_stack_one@7492": {
+  "descriptor": "RoadVehicleItem",
+  "display": "Electric Golf Cart",
+  "kind": "shared_item_stack_one",
+  "name": "electric_golf_cart"
+ },
+ "eln:shared_item_stack_one@7493": {
+  "descriptor": "RoadVehicleItem",
+  "display": "Arc Runner Coupe",
+  "kind": "shared_item_stack_one",
+  "name": "arc_runner_coupe"
+ },
+ "eln:shared_item_stack_one@7494": {
+  "descriptor": "VehicleLeadItem",
+  "display": "100 A Vehicle Charging Lead",
+  "kind": "shared_item_stack_one",
+  "name": "100_a_vehicle_charging_lead"
+ },
+ "eln:transparent_node@8079": {
+  "descriptor": "VehicleChargerDescriptor",
+  "display": "240 V 100 A Vehicle Charger",
+  "kind": "transparent_node",
+  "name": "240_v_100_a_vehicle_charger"
+ },
+ "eln:shared_item@304": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Incandescent Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_incandescent_light_bulb"
+ },
+ "eln:shared_item@305": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Incandescent Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_incandescent_light_bulb"
+ },
+ "eln:shared_item@306": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Incandescent Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_incandescent_light_bulb"
+ },
+ "eln:shared_item@307": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Carbon Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_carbon_light_bulb"
+ },
+ "eln:shared_item@308": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Carbon Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_carbon_light_bulb"
+ },
+ "eln:shared_item@309": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Carbon Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_carbon_light_bulb"
+ },
+ "eln:shared_item@310": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Fluorescent Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_fluorescent_light_bulb"
+ },
+ "eln:shared_item@311": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Fluorescent Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_fluorescent_light_bulb"
+ },
+ "eln:shared_item@312": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Fluorescent Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_fluorescent_light_bulb"
+ },
+ "eln:shared_item@313": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Farming Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_farming_light_bulb"
+ },
+ "eln:shared_item@314": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Farming Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_farming_light_bulb"
+ },
+ "eln:shared_item@315": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Farming Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_farming_light_bulb"
+ },
+ "eln:shared_item@316": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V LED Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_led_light_bulb"
+ },
+ "eln:shared_item@317": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "12V Halogen Light Bulb",
+  "kind": "shared_item",
+  "name": "12v_halogen_light_bulb"
+ },
+ "eln:shared_item@318": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "120V Halogen Light Bulb",
+  "kind": "shared_item",
+  "name": "120v_halogen_light_bulb"
+ },
+ "eln:shared_item@319": {
+  "descriptor": "mods.eln.item.LampDescriptor",
+  "display": "240V Halogen Light Bulb",
+  "kind": "shared_item",
+  "name": "240v_halogen_light_bulb"
+ },
+ "eln:transparent_node@7964": {
+  "descriptor": "mods.eln.transparentnode.fan.FanDescriptor",
+  "display": "Industrial Five Block Fan",
+  "kind": "transparent_node",
+  "name": "industrial_five_block_fan"
+ },
+ "eln:transparent_node@7965": {
+  "descriptor": "mods.eln.transparentnode.fan.FanDescriptor",
+  "display": "Classic Box Fan",
+  "kind": "transparent_node",
+  "name": "classic_box_fan"
+ },
+ "eln:transparent_node@7966": {
+  "descriptor": "mods.eln.transparentnode.fan.FanDescriptor",
+  "display": "Metal Shop Box Fan",
+  "kind": "transparent_node",
+  "name": "metal_shop_box_fan"
+ },
+ "eln:transparent_node@7967": {
+  "descriptor": "mods.eln.transparentnode.fan.FanDescriptor",
+  "display": "Compact Desktop Box Fan",
+  "kind": "transparent_node",
+  "name": "compact_desktop_box_fan"
+ },
+ "eln:transparent_node@7937": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Microwave",
+  "kind": "transparent_node",
+  "name": "electric_microwave"
+ },
+ "eln:transparent_node@7938": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Toaster",
+  "kind": "transparent_node",
+  "name": "electric_toaster"
+ },
+ "eln:transparent_node@7939": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Flat Electric Cooktop",
+  "kind": "transparent_node",
+  "name": "flat_electric_cooktop"
+ },
+ "eln:transparent_node@7940": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Refrigerator",
+  "kind": "transparent_node",
+  "name": "electric_refrigerator"
+ },
+ "eln:transparent_node@7941": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Coffee Maker",
+  "kind": "transparent_node",
+  "name": "electric_coffee_maker"
+ },
+ "eln:transparent_node@7954": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Kettle",
+  "kind": "transparent_node",
+  "name": "electric_kettle"
+ },
+ "eln:transparent_node@7955": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Countertop Blender",
+  "kind": "transparent_node",
+  "name": "countertop_blender"
+ },
+ "eln:transparent_node@7956": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Rice Cooker",
+  "kind": "transparent_node",
+  "name": "electric_rice_cooker"
+ },
+ "eln:transparent_node@7963": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Mini Oven",
+  "kind": "transparent_node",
+  "name": "electric_mini_oven"
+ },
+ "eln:transparent_node@7996": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Electric Mini Fridge",
+  "kind": "transparent_node",
+  "name": "electric_mini_fridge"
+ },
+ "eln:transparent_node@7997": {
+  "descriptor": "mods.eln.transparentnode.kitchen.KitchenDescriptor",
+  "display": "Patio Electric Grill",
+  "kind": "transparent_node",
+  "name": "patio_electric_grill"
+ },
+ "eln:transparent_node@8009": {
+  "descriptor": "mods.eln.transparentnode.laundry.MatterMachineDescriptor",
+  "display": "Electric Washing Machine",
+  "kind": "transparent_node",
+  "name": "electric_washing_machine"
+ },
+ "eln:transparent_node@8010": {
+  "descriptor": "mods.eln.transparentnode.laundry.MatterMachineDescriptor",
+  "display": "Electric Dryer",
+  "kind": "transparent_node",
+  "name": "electric_dryer"
+ },
+ "eln:transparent_node@8011": {
+  "descriptor": "mods.eln.transparentnode.laundry.MatterMachineDescriptor",
+  "display": "Fusion Matter Reactor",
+  "kind": "transparent_node",
+  "name": "fusion_matter_reactor"
+ },
+ "eln:transparent_node@8016": {
+  "descriptor": "mods.eln.utility.SubstationDescriptor",
+  "display": "69 kV to 12.5 kV Substation Transformer",
+  "kind": "transparent_node",
+  "name": "69_kv_to_12_5_kv_substation_transformer"
+ },
+ "eln:transparent_node@8017": {
+  "descriptor": "mods.eln.utility.SubstationDescriptor",
+  "display": "230 kV to 69 kV Substation Transformer",
+  "kind": "transparent_node",
+  "name": "230_kv_to_69_kv_substation_transformer"
+ },
+ "eln:transparent_node@8018": {
+  "descriptor": "mods.eln.utility.SubstationDescriptor",
+  "display": "69 kV Three Phase Substation Disconnect",
+  "kind": "transparent_node",
+  "name": "69_kv_three_phase_substation_disconnect"
+ },
+ "eln:transparent_node@8019": {
+  "descriptor": "mods.eln.utility.SubstationDescriptor",
+  "display": "230 kV Three Phase Substation Disconnect",
+  "kind": "transparent_node",
+  "name": "230_kv_three_phase_substation_disconnect"
+ },
+ "eln:transparent_node@7875": {
+  "descriptor": "mods.eln.utility.GridSourceTransformerDescriptor",
+  "display": "Grid DC-DC Converter",
+  "kind": "transparent_node",
+  "name": "grid_dc_dc_converter"
+ },
+ "eln:six_node@4500": {
+  "descriptor": "EmergencyLampDescriptor",
+  "display": "120V Emergency Lamp",
+  "kind": "six_node",
+  "name": "120v_emergency_lamp"
+ },
+ "eln:six_node@4501": {
+  "descriptor": "EmergencyLampDescriptor",
+  "display": "240V Emergency Lamp",
+  "kind": "six_node",
+  "name": "240v_emergency_lamp"
+ },
+ "eln:transparent_node@4352": {
+  "descriptor": "FloodlightDescriptor",
+  "display": "120V Basic Floodlight",
+  "kind": "transparent_node",
+  "name": "120v_basic_floodlight"
+ },
+ "eln:transparent_node@4353": {
+  "descriptor": "FloodlightDescriptor",
+  "display": "240V Motorized Floodlight",
+  "kind": "transparent_node",
+  "name": "240v_motorized_floodlight"
+ },
+ "eln:transparent_node@4416": {
+  "descriptor": "ChristmasTreeDescriptor",
+  "display": "Christmas Tree",
+  "kind": "transparent_node",
+  "name": "christmas_tree"
+ },
+ "eln:transparent_node@4417": {
+  "descriptor": "HolidayCandleDescriptor",
+  "display": "Holiday Candle",
+  "kind": "transparent_node",
+  "name": "holiday_candle"
+ },
+ "eln:transparent_node@7936": {
+  "descriptor": "WorkLightDescriptor",
+  "display": "Gasoline Construction Work Light",
+  "kind": "transparent_node",
+  "name": "gasoline_construction_work_light"
+ },
+ "eln:transparent_node@7994": {
+  "descriptor": "FairyLightsDescriptor",
+  "display": "White Fairy Lights on Green Wire",
+  "kind": "transparent_node",
+  "name": "white_fairy_lights_on_green_wire"
+ },
+ "eln:transparent_node@7995": {
+  "descriptor": "FairyLightsDescriptor",
+  "display": "Multicolor Fairy Lights on Green Wire",
+  "kind": "transparent_node",
+  "name": "multicolor_fairy_lights_on_green_wire"
+ },
+ "eln:transparent_node@8006": {
+  "descriptor": "FairyLightsDescriptor",
+  "display": "Warm White Deck Globe String Lights",
+  "kind": "transparent_node",
+  "name": "warm_white_deck_globe_string_lights"
+ },
+ "eln:transparent_node@8007": {
+  "descriptor": "FairyLightsDescriptor",
+  "display": "Multicolor Deck Globe String Lights",
+  "kind": "transparent_node",
+  "name": "multicolor_deck_globe_string_lights"
  }
 }

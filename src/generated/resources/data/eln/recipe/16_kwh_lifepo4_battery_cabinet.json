@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "I": "eln:iron_plate",
+    "M": "eln:machine_block",
+    "S": "eln:16_kwh_lifepo4_cell_stack"
+  },
+  "pattern": [
+    " I ",
+    "CSC",
+    "IMI"
+  ],
+  "result": {
+    "id": "eln:16_kwh_lifepo4_battery_cabinet"
+  }
+}

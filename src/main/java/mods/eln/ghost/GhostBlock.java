@@ -31,6 +31,19 @@ public class GhostBlock extends Block {
     public static final int tFloor = 1;
     public static final int tLadder = 2;
 
+    public static final int tFlatSolar = 13; // Fixed flat arrays: source half-height owner collision.
+    public static final int tBatteryFloor = 7;
+    public static final int tClearance = 8; // 3..7 retain the native cabinet/battery shapes.
+    public static int wallServiceMeta(Direction front) {
+        return switch (front) { case XN -> 3; case XP -> 4; case ZN -> 5; case ZP -> 6;
+            default -> throw new IllegalArgumentException("A wall cabinet needs a horizontal front"); };
+    }
+    private static final VoxelShape[] CABINETS = {
+        Shapes.box(.67,0,.04,1,1,.96), Shapes.box(0,0,.04,.33,1,.96),
+        Shapes.box(.04,0,.67,.96,1,1), Shapes.box(.04,0,0,.96,1,.33),
+        Shapes.box(.06,0,.08,.94,1,.92)
+    };
+    private static final VoxelShape FLAT_SOLAR = Shapes.box(0, 0, 0, 1, .5, 1);
     private static final VoxelShape FLOOR = Block.box(0, 0, 0, 16, 1, 16);
 
     public GhostBlock(Properties properties) {
@@ -45,10 +58,17 @@ public class GhostBlock extends Block {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(BlockMeta.META)) {
+        int meta = state.getValue(BlockMeta.META);
+        // Four unused native metadata values carry roof pitch to remote clients and survive saves.
+        if (meta >= 9 && meta <= 12) return mods.eln.transparentnode.solarpanel.SolarPanelBlock.roofShape(meta - 9);
+        if (meta >= 3 && meta <= tBatteryFloor) return CABINETS[meta - 3];
+        switch (meta) {
+            case tFlatSolar:
+                return FLAT_SOLAR;
             case tFloor:
                 return FLOOR;
             case tLadder:
+            case tClearance:
                 return Shapes.empty();
             default:
                 return Shapes.block();

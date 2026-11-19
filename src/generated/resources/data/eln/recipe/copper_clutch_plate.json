@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "#eln:high_quality_plates/copper",
+    "t": "#eln:dusts/tungsten"
+  },
+  "pattern": [
+    " t ",
+    "tCt",
+    " t "
+  ],
+  "result": {
+    "id": "eln:copper_clutch_plate"
+  }
+}

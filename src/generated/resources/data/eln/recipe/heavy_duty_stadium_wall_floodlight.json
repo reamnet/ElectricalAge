@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:iron_block",
+    "L": "eln:warehouse_wall_floodlight",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " P "
+  ],
+  "result": {
+    "id": "eln:heavy_duty_stadium_wall_floodlight"
+  }
+}

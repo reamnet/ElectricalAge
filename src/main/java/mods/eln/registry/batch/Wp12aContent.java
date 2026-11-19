@@ -55,6 +55,8 @@ public class Wp12aContent implements ElnContent {
         registerMiscItem(120);
         registerPortableItem(122);
         registerFuelBurnerItem(124);
+        registerArc(69);
+        registerTurbineBlade(18);
     }
 
     /** On EA's plates (Erisi's chat review: players' hammered plates didn't fit, and nothing said why; Baughn 2026-10-27). */
@@ -418,6 +420,33 @@ public class Wp12aContent implements ElnContent {
             sharedItem.addElement(completId, element);
             // wiki (P4): Data.addResource(element.newItemStack());
             mods.eln.misc.OreDictTags.addToOre("dustIron", element);
+        }
+
+        {
+            subId = 3;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Lapis Dust");
+            element = new GenericItemUsingDamageDescriptorWithComment(name,// iconId,
+                // name,
+                new String[]{});
+            dustCopper = element;
+            sharedItem.addElement(completId, element);
+            // wiki (P4): Data.addResource(element.newItemStack());
+            mods.eln.misc.OreDictTags.addToOre("dustLapis", element);
+        }
+        {
+            subId = 4;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Diamond Dust");
+            element = new GenericItemUsingDamageDescriptorWithComment(name,// iconId,
+                // name,
+                new String[]{});
+            dustCopper = element;
+            sharedItem.addElement(completId, element);
+            // wiki (P4): Data.addResource(element.newItemStack());
+            mods.eln.misc.OreDictTags.addToOre("dustDiamond", element);
         }
 
         {
@@ -957,6 +986,34 @@ public class Wp12aContent implements ElnContent {
 
 
         sharedItem.addElement(53 + (id << 6), new CaseItemDescriptor(TR_NAME(Type.NONE, "Casing")));
+        // ForkPatch 1.21.1 ItemRegistration.kt:1758-1790 (iron 54, pin 55, gold 56, copper 57, lead 58, coal 59; ratings unchanged)
+        sharedItem.addElement(54 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
+            TR_NAME(Type.NONE, "Iron Clutch Plate"), 5120f, 640f, 640f, 160f, 0.0001f, false
+        ));
+        // ForkPatch 1.21.1 ItemRegistration.kt:1764 (ClutchPinItem = damage item + tooltip, Clutch.kt:88)
+        sharedItem.addElement(55 + (id << 6), new GenericItemUsingDamageDescriptorWithComment(
+            TR_NAME(Type.NONE, "Clutch Pin"), new String[]{"Prevents clutches from slipping", "again after they stop."}
+        ));
+        sharedItem.addElement(56 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
+            TR_NAME(Type.NONE, "Gold Clutch Plate"), 10240f, 2048f, 1024f, 512f, 0.001f, false
+        ));
+        sharedItem.addElement(57 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
+            TR_NAME(Type.NONE, "Copper Clutch Plate"), 8192f, 4096f, 1024f, 512f, 0.0003f, false
+        ));
+        sharedItem.addElement(58 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
+            TR_NAME(Type.NONE, "Lead Clutch Plate"), 15360f, 1024f, 1536f, 768f, 0.0015f, false
+        ));
+        sharedItem.addElement(59 + (id << 6), new mods.eln.mechanical.ClutchPlateItem(
+            TR_NAME(Type.NONE, "Coal Clutch Plate"), 1024f, 128f, 128f, 32f, 0.1f, true
+        ));
+        // ForkPatch 1.21.1 ItemRegistration.kt:1789-1811 (subId 60 Motor Cowling, subId 61 Heavy Winding;
+        // plain GenericItemUsingDamageDescriptorWithComment damage items, no electrical behavior)
+        sharedItem.addElement(60 + (id << 6), new GenericItemUsingDamageDescriptorWithComment(
+            TR_NAME(Type.NONE, "Motor Cowling"), new String[]{}
+        ));
+        sharedItem.addElement(61 + (id << 6), new GenericItemUsingDamageDescriptorWithComment(
+            TR_NAME(Type.NONE, "Heavy Winding"), new String[]{}
+        ));
     
     }
 
@@ -1033,4 +1090,96 @@ public class Wp12aContent implements ElnContent {
         sharedItemStackOne.addElement(2 + (id << 6),
             new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Big Fuel Burner"), 25000 * fuelHeatFurnacePowerFactor, 0, 1f));
     }
+    /** ForkPatch 1.21.1 registerArc sub-items in scope (source ItemRegistration.kt, id 69): Graphite Rod (subId 0),
+     * 2x Graphite Rods (subId 1), 3x Graphite Rods (subId 2), 4x Graphite Rods (subId 3), Synthetic Diamond (subId 4),
+     * Arc Clay Ingot (subId 6), Arc Metal Ingot (subId 7).
+     * Plain descriptors: the source GraphiteDescriptor adds no behaviour beyond GenericItemUsingDamageDescriptor.
+     * The Arc Clay Ingot carries the source ore names ingotAluminum/ingotAluminium (source ItemRegistration.kt subId 6).
+     * Synthetic Diamond (source CraftingRecipes.kt:1762): one shapeless-crafts into two Diamonds, and one 4x Graphite Rods
+     * bundle compresses into one (source CraftingRecipes.kt:2428-2435, 80 kJ). No ore names (unlike subIds 6/7).
+     * Unreleasedium (subId 5) is unported.
+     */
+    public static void registerArc(int id) {
+        int subId, completId;
+        String name;
+
+        {
+            subId = 0;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Graphite Rod");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
+        {
+            subId = 1;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "2x Graphite Rods");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
+        {
+            subId = 2;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "3x Graphite Rods");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
+        {
+            subId = 3;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "4x Graphite Rods");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
+        {
+            subId = 4;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Synthetic Diamond");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
+        {
+            subId = 6;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Arc Clay Ingot");
+            GenericItemUsingDamageDescriptor arcClay = new GenericItemUsingDamageDescriptor(name);
+            sharedItem.addElement(completId, arcClay);
+            // source ItemRegistration.kt subId 6: registerOre("ingotAluminum") + registerOre("ingotAluminium")
+            mods.eln.misc.OreDictTags.addToOre("ingotAluminum", arcClay);
+            mods.eln.misc.OreDictTags.addToOre("ingotAluminium", arcClay);
+        }
+        {
+            subId = 7;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Arc Metal Ingot");
+            GenericItemUsingDamageDescriptor arcMetal = new GenericItemUsingDamageDescriptor(name);
+            sharedItem.addElement(completId, arcMetal);
+            // source ItemRegistration.kt subId 7: registerOre("ingotSteel")
+            mods.eln.misc.OreDictTags.addToOre("ingotSteel", arcMetal);
+        }
+    }
+
+    /** ForkPatch 1.21.1 turbine blades (source ItemRegistration.kt registerTurbineBladeItems(18)): the consumables a
+     * large turbine runs on; condition (1.0 new to 0.0 broken) wears with the fuel's temperature and corrosiveness.
+     * sharedItemStackOne, not sharedItem: blades store condition in NBT, stacking would corrupt it (source comment).
+     * All four tiers ported (iron + steel 2026-11-18, alloy + tungsten 2026-11-19); the turbine consumers themselves are not ported.
+     */
+    public static void registerTurbineBlade(int id) {
+        sharedItemStackOne.addElement(0 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
+            TR_NAME(Type.NONE, "Iron Turbine Blade"), "iron", 0.8, 0.8, "Suitable for mild, clean fuels"));
+        sharedItemStackOne.addElement(1 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
+            TR_NAME(Type.NONE, "Steel Turbine Blade"), "steel", 1.2, 1.2, "Handles moderate conditions"));
+        sharedItemStackOne.addElement(2 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
+            TR_NAME(Type.NONE, "Alloy Turbine Blade"), "alloy", 2.0, 2.0, "Suitable for most fuel types"));
+        sharedItemStackOne.addElement(3 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
+            TR_NAME(Type.NONE, "Tungsten Turbine Blade"), "tungsten", 3.5, 3.5, "Handles extreme conditions"));
+    }
+
 }

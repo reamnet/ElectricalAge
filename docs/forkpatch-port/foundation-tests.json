@@ -1,0 +1,12 @@
+{
+  "tests": 49,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": 9,
+  "scope": "Focused destination MNA plus incoming ForkPatch controller, solar and reference corpus tests",
+  "referenceCorpus": {
+    "deterministicChecks": 51,
+    "seededPropertyTrials": 12000
+  }
+}

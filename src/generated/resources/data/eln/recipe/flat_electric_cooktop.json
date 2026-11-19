@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "G": "minecraft:black_stained_glass",
+    "P": "eln:iron_plate",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "GGG",
+    "RRR",
+    "PCP"
+  ],
+  "result": {
+    "id": "eln:flat_electric_cooktop"
+  }
+}

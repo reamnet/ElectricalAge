@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "G": "minecraft:glass",
+    "M": "eln:electrical_motor",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " G ",
+    "CMC",
+    " P "
+  ],
+  "result": {
+    "id": "eln:analog_glass_service_meter"
+  }
+}

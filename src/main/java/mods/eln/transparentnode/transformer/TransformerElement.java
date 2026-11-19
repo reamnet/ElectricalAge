@@ -15,8 +15,8 @@ import mods.eln.node.transparent.TransparentNodeElementInventory;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Transformer;
-import mods.eln.sim.mna.component.VoltageSource;
-import mods.eln.sim.mna.process.TransformerInterSystemProcess;
+import mods.eln.sim.mna.component.SwitchableVoltageSource;
+import mods.eln.sim.power.SafeTransformerProcess;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.Failure;
@@ -37,11 +37,11 @@ public class TransformerElement extends TransparentNodeElement {
     private final NbtElectricalLoad primaryLoad = new NbtElectricalLoad("primaryLoad");
     private final NbtElectricalLoad secondaryLoad = new NbtElectricalLoad("secondaryLoad");
 
-    private final VoltageSource primaryVoltageSource = new VoltageSource("primaryVoltageSource");
-    private final VoltageSource secondaryVoltageSource = new VoltageSource("secondaryVoltageSource");
+    private final SwitchableVoltageSource primaryVoltageSource = new SwitchableVoltageSource("primaryVoltageSource");
+    private final SwitchableVoltageSource secondaryVoltageSource = new SwitchableVoltageSource("secondaryVoltageSource");
 
-    private final TransformerInterSystemProcess interSystemProcess =
-        new TransformerInterSystemProcess(primaryLoad, secondaryLoad, primaryVoltageSource, secondaryVoltageSource);
+    private final SafeTransformerProcess interSystemProcess =
+        new SafeTransformerProcess(primaryLoad, secondaryLoad, primaryVoltageSource, secondaryVoltageSource, this::complete);
     private final Transformer transformer = new Transformer();
 
     private final TransparentNodeElementInventory inventory = new TransparentNodeElementInventory(4, 64, this);
@@ -143,6 +143,7 @@ public class TransformerElement extends TransparentNodeElement {
     }
 
     private void computeInventory() {
+        interSystemProcess.resetFault();
         ItemStack primaryCable = inventory.getItem(TransformerContainer.primaryCableSlotId);
         ItemStack secondaryCable = inventory.getItem(TransformerContainer.secondaryCableSlotId);
         ItemStack core = inventory.getItem(TransformerContainer.ferromagneticSlotId);
@@ -308,8 +309,12 @@ public class TransformerElement extends TransparentNodeElement {
 
     @Override
     public void readFromNBT(CompoundTag nbt) {
-        super.readFromNBT(nbt);
         isIsolator = nbt.getBooleanOr("isIsolated", false);
+        // The base loader reads only components already in the active list.
+        // Select the saved circuit first so isolated winding commands/history
+        // are restored before initialize() connects the device.
+        applyIsolation();
+        super.readFromNBT(nbt);
     }
 
     @Override

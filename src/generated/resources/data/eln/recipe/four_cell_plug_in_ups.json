@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "D": "eln:dc_dc_converter",
+    "O": "eln:six_socket_power_strip",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "POP",
+    "CDC",
+    "PPP"
+  ],
+  "result": {
+    "id": "eln:four_cell_plug_in_ups"
+  }
+}

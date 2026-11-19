@@ -1,0 +1,1078 @@
+{
+  "date": "2026-11-17",
+  "target_commit": "86ab755f65f9a7305e9417fae92ef59745e545ea",
+  "source_commit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "coverage": "930 source generated item models versus 895 native generated item entries plus native eln-ids.json; static name/registration audit, not runtime catalog certification",
+  "counts": {
+    "Creative/hidden source item": 10,
+    "Mapped/present \u2014 exclude from missing list": 16,
+    "Missing source item / distinct variant candidate": 100,
+    "Optional integration": 5,
+    "Source rating/variant parity outstanding": 39,
+    "Unresolved legacy/internal/recovery mapping": 7
+  },
+  "rows": [
+    {
+      "source_model": "100a_switch",
+      "name": "100A Switch",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "10a_lead_fuse",
+      "name": "10A Lead Fuse",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "12.5_kv_cable_feed_insulator",
+      "name": "12.5 kV Cable Feed Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "12.5_kv_line_insulator",
+      "name": "12.5 kV Line Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "120v_battery_charger",
+      "name": "120V Battery Charger",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "120v_fast_battery_charger",
+      "name": "120V Fast Battery Charger",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "12v_ldo_regulator_chip",
+      "name": "12V LDO Regulator Chip",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "15a_lead_fuse",
+      "name": "15A Lead Fuse",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "20a_lead_fuse",
+      "name": "20A Lead Fuse",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "20a_switch",
+      "name": "20A Switch",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "230_kv_cable_feed_insulator",
+      "name": "230 kV Cable Feed Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "230_kv_line_insulator",
+      "name": "230 kV Line Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "240v_active_thermal_dissipator",
+      "name": "240V Active Thermal Dissipator",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_battery_charger",
+      "name": "240V Battery Charger",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_compressor",
+      "name": "240V Compressor",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_copper_heating_element",
+      "name": "240V Copper Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_evaporative_heat_sink",
+      "name": "240V Evaporative Heat Sink",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_fuel_generator",
+      "name": "240V Fuel Generator",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_iron_heating_element",
+      "name": "240V Iron Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_macerator",
+      "name": "240V Macerator",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_magnetizer",
+      "name": "240V Magnetizer",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_plate_machine",
+      "name": "240V Plate Machine",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_tungsten_heating_element",
+      "name": "240V Tungsten Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_turbine",
+      "name": "240V Turbine",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_type_e_socket",
+      "name": "240V Type E Socket",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "240v_type_j_socket",
+      "name": "240V Type J Socket",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "24v_egg_incubator",
+      "name": "24V Egg Incubator",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "24v_small_active_thermal_dissipator",
+      "name": "24V Small Active Thermal Dissipator",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "2x_graphite_rods",
+      "name": "2x Graphite Rods",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "3.2_kv_cable_feed_insulator",
+      "name": "3.2 kV Cable Feed Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "3.2_kv_line_insulator",
+      "name": "3.2 kV Line Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "3.3v_boost_regulator_chip",
+      "name": "3.3V Boost Regulator Chip",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "3.3v_ldo_regulator_chip",
+      "name": "3.3V LDO Regulator Chip",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "30a_lead_fuse",
+      "name": "30A Lead Fuse",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "3x_graphite_rods",
+      "name": "3x Graphite Rods",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "480_v_industrial_fluid_pump",
+      "name": "480 V Industrial Fluid Pump",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "480v_defence_turret",
+      "name": "480V Defence Turret",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "480v_heavy_tungsten_heating_element",
+      "name": "480V Heavy Tungsten Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "480v_tungsten_heating_element",
+      "name": "480V Tungsten Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "48v_compressor",
+      "name": "48V Compressor",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "48v_copper_heating_element",
+      "name": "48V Copper Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "48v_fuel_generator",
+      "name": "48V Fuel Generator",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "48v_iron_heating_element",
+      "name": "48V Iron Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "48v_macerator",
+      "name": "48V Macerator",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "48v_magnetizer",
+      "name": "48V Magnetizer",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "48v_plate_machine",
+      "name": "48V Plate Machine",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "48v_tungsten_heating_element",
+      "name": "48V Tungsten Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "48v_turbine",
+      "name": "48V Turbine",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "4x_graphite_rods",
+      "name": "4x Graphite Rods",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "50a_lead_fuse",
+      "name": "50A Lead Fuse",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "50a_switch",
+      "name": "50A Switch",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "5a_lead_fuse",
+      "name": "5A Lead Fuse",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "5v_boost_regulator_chip",
+      "name": "5V Boost Regulator Chip",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "5v_ldo_regulator_chip",
+      "name": "5V LDO Regulator Chip",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "69_kv_cable_feed_insulator",
+      "name": "69 kV Cable Feed Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "69_kv_line_insulator",
+      "name": "69 kV Line Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "800_v_cable_feed_insulator",
+      "name": "800 V Cable Feed Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "800_v_line_insulator",
+      "name": "800 V Line Insulator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "allmeter",
+      "name": "Universal-Meter",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Multimeter"
+    },
+    {
+      "source_model": "alloy_turbine_blade",
+      "name": "Alloy Turbine Blade",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "analog_vumeter",
+      "name": "Analog Gauge",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Analog Gauge"
+    },
+    {
+      "source_model": "arc_clay_block",
+      "name": "arc clay block",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "arc_clay_ingot",
+      "name": "Arc Clay Ingot",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "arc_metal_block",
+      "name": "arc metal block",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "arc_metal_ingot",
+      "name": "Arc Metal Ingot",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "canister_of_arc_water",
+      "name": "Canister of Arc Water",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "canister_of_water",
+      "name": "Canister of Water",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "ceiling_color_segregated_cable_tray",
+      "name": "Ceiling Color Segregated Cable Tray",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "classic_lamp_socket",
+      "name": "Classic Lamp Socket",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Lamp Socket A"
+    },
+    {
+      "source_model": "climate_controlled_growing_bed",
+      "name": "Climate Controlled Growing Bed",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "clutch",
+      "name": "Clutch",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "clutch_pin",
+      "name": "Clutch Pin",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "coal_clutch_plate",
+      "name": "Coal Clutch Plate",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "cold_water_bucket",
+      "name": "cold water bucket",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "config_copy_tool",
+      "name": "Config Copy Tool",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "copper_clutch_plate",
+      "name": "Copper Clutch Plate",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "corner_fireplace_tv_stand",
+      "name": "Corner Fireplace TV Stand",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "crank_shaft",
+      "name": "Crank Shaft",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "creative_cable",
+      "name": "Creative Cable",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "creative_power_capacitor",
+      "name": "Creative Power Capacitor",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "creative_power_inductor",
+      "name": "Creative Power Inductor",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "creative_power_resistor",
+      "name": "Creative Power Resistor",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "current_source",
+      "name": "Current Source",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "diamond_dust",
+      "name": "Diamond Dust",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "digital_display",
+      "name": "Digital Display",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "direct_utility_pole",
+      "name": "Direct Utility Pole",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "electric_minecart",
+      "name": "Electric Minecart",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "electric_patio_heater",
+      "name": "Electric Patio Heater",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "eln_to_cee_power_bridge",
+      "name": "ELN to CEE Power Bridge",
+      "status": "Optional integration",
+      "note": "Separate integration/addon scope; not a normal standalone core-item omission."
+    },
+    {
+      "source_model": "elnprobe",
+      "name": "elnprobe",
+      "status": "Optional integration",
+      "note": "Separate integration/addon scope; not a normal standalone core-item omission."
+    },
+    {
+      "source_model": "energyconverter",
+      "name": "energyconverter",
+      "status": "Unresolved legacy/internal/recovery mapping",
+      "note": "Do not count as confirmed missing until descriptor IDs and replacement behavior are reconciled."
+    },
+    {
+      "source_model": "experimental_battery",
+      "name": "Experimental Battery",
+      "status": "Unresolved legacy/internal/recovery mapping",
+      "note": "Do not count as confirmed missing until descriptor IDs and replacement behavior are reconciled."
+    },
+    {
+      "source_model": "falstad_import_tool",
+      "name": "Falstad Import Tool",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "farmhouse_fireplace_tv_stand",
+      "name": "Farmhouse Fireplace TV Stand",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "fixed_shaft",
+      "name": "Fixed Shaft",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "ghostblock",
+      "name": "ghostblock",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Internal native ghost block"
+    },
+    {
+      "source_model": "gold_clutch_plate",
+      "name": "Gold Clutch Plate",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "graphite_rod",
+      "name": "Graphite Rod",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "grid_switch",
+      "name": "Grid Switch",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "heavy_winding",
+      "name": "Heavy Winding",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "high_current_cable",
+      "name": "High Current Cable",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "high_current_relay",
+      "name": "High Current Relay",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "hot_water_bucket",
+      "name": "hot water bucket",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "humidity_sensor",
+      "name": "Humidity Sensor",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "inert_canister",
+      "name": "Inert Canister",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "iron_clutch_plate",
+      "name": "Iron Clutch Plate",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "iron_turbine_blade",
+      "name": "Iron Turbine Blade",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "irresponsible_electrical_drill",
+      "name": "Irresponsible Electrical Drill",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "lapis_dust",
+      "name": "Lapis Dust",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "large_flywheel",
+      "name": "Large Flywheel",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "large_gas_turbine",
+      "name": "Large Gas Turbine",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "large_generator",
+      "name": "Large Generator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "large_shaft_motor",
+      "name": "Large Shaft Motor",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "large_steam_turbine",
+      "name": "Large Steam Turbine",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "lead_clutch_plate",
+      "name": "Lead Clutch Plate",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "legacy_dc-dc_converter",
+      "name": "DC-DC Converter (Legacy)",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Native converter 128 is retained; source converter 130 maps to Winding DC-DC Converter"
+    },
+    {
+      "source_model": "legacy_signal_switch",
+      "name": "Legacy Signal Switch",
+      "status": "Unresolved legacy/internal/recovery mapping",
+      "note": "Do not count as confirmed missing until descriptor IDs and replacement behavior are reconciled."
+    },
+    {
+      "source_model": "lightblock",
+      "name": "lightblock",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Internal native light block"
+    },
+    {
+      "source_model": "long_suspended_lamp_socket__no_swing_",
+      "name": "Long Suspended Lamp Socket (No Swing)",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Long Suspended Lamp Socket"
+    },
+    {
+      "source_model": "low_current_cable",
+      "name": "Low Current Cable",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "low_current_relay",
+      "name": "Low Current Relay",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "medium_current_cable",
+      "name": "Medium Current Cable",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "medium_current_relay",
+      "name": "Medium Current Relay",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "modern_fireplace_tv_stand",
+      "name": "Modern Fireplace TV Stand",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "motor_cowling",
+      "name": "Motor Cowling",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "mqtt_energy_meter",
+      "name": "MQTT Energy Meter",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "mqtt_signal_controller",
+      "name": "MQTT Signal Controller",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "multicolor_led_vumeter",
+      "name": "Multicolor LED vuMeter",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "nixie_tube",
+      "name": "Nixie Tube",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "old_480v_arc_furnace",
+      "name": "480V Arc Furnace",
+      "status": "Unresolved legacy/internal/recovery mapping",
+      "note": "Do not count as confirmed missing until descriptor IDs and replacement behavior are reconciled."
+    },
+    {
+      "source_model": "on_off_regulator_10_percent",
+      "name": "On/off regulator 10%",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "On/off regulator 10%"
+    },
+    {
+      "source_model": "on_off_regulator_1_percent",
+      "name": "On/off regulator 1%",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "On/off regulator 1%"
+    },
+    {
+      "source_model": "overhead_lines",
+      "name": "Overhead Lines",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "polarized_shaft_generator",
+      "name": "Polarized Shaft Generator",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "polarized_shaft_motor",
+      "name": "Polarized Shaft Motor",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "portable_condensator",
+      "name": "Portable Capacitor",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Portable Capacitor"
+    },
+    {
+      "source_model": "portable_condensator_pack",
+      "name": "Portable Capacitor Pack",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Portable Capacitor Pack"
+    },
+    {
+      "source_model": "portable_electric_space_heater",
+      "name": "Portable Electric Space Heater",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "portable_nan",
+      "name": "Portable NaN (DEV ITEM)",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "power_capacitor_84",
+      "name": "power capacitor 84",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Native transparent descriptor 84"
+    },
+    {
+      "source_model": "power_inductor_80",
+      "name": "power inductor 80",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Native transparent descriptor 80"
+    },
+    {
+      "source_model": "powered_browser_television",
+      "name": "Powered Browser Television",
+      "status": "Optional integration",
+      "note": "Separate integration/addon scope; not a normal standalone core-item omission."
+    },
+    {
+      "source_model": "powered_web_jukebox",
+      "name": "Powered Web Jukebox",
+      "status": "Optional integration",
+      "note": "Separate integration/addon scope; not a normal standalone core-item omission."
+    },
+    {
+      "source_model": "radial_motor",
+      "name": "Radial Motor",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "reinforced_shaft",
+      "name": "Reinforced Shaft",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "rolling_shaft_machine",
+      "name": "Rolling Shaft Machine",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "shaft_motor",
+      "name": "Shaft Motor",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "signal_bus_cable",
+      "name": "Signal Bus Cable",
+      "status": "Unresolved legacy/internal/recovery mapping",
+      "note": "Do not count as confirmed missing until descriptor IDs and replacement behavior are reconciled."
+    },
+    {
+      "source_model": "small_240v_copper_heating_element",
+      "name": "Small 240V Copper Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "small_240v_iron_heating_element",
+      "name": "Small 240V Iron Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "small_240v_tungsten_heating_element",
+      "name": "Small 240V Tungsten Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "small_480v_heavy_tungsten_heating_element",
+      "name": "Small 480V Heavy Tungsten Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "small_480v_tungsten_heating_element",
+      "name": "Small 480V Tungsten Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "small_48v_copper_heating_element",
+      "name": "Small 48V Copper Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "small_48v_iron_heating_element",
+      "name": "Small 48V Iron Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "small_48v_tungsten_heating_element",
+      "name": "Small 48V Tungsten Heating Element",
+      "status": "Source rating/variant parity outstanding",
+      "note": "A legacy native machine/counterpart exists; source-specific voltage, power or variant is not established."
+    },
+    {
+      "source_model": "spot_lamp_socket",
+      "name": "Spot Lamp Socket",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Lamp Socket B Projector"
+    },
+    {
+      "source_model": "steel_turbine_blade",
+      "name": "Steel Turbine Blade",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "suspended_lamp_socket__no_swing_",
+      "name": "Suspended Lamp Socket (No Swing)",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Suspended Lamp Socket"
+    },
+    {
+      "source_model": "synthetic_diamond",
+      "name": "Synthetic Diamond",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "the_nope_wand",
+      "name": "The Nope Wand",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "thermal_heat_exchanger",
+      "name": "Thermal Heat Exchanger",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "thermometer_sensor",
+      "name": "Thermometer Sensor",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "transmission_tower",
+      "name": "T2 Transmission Tower",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "tungsten_turbine_blade",
+      "name": "Tungsten Turbine Blade",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "turbo_electrical_drill",
+      "name": "Turbo Electrical Drill",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "unreleasedium",
+      "name": "unreleasedium",
+      "status": "Creative/hidden source item",
+      "note": "Separate from ordinary survival inventory; native equivalent not established."
+    },
+    {
+      "source_model": "utility_pole_cobrahead_street_light",
+      "name": "Utility Pole Cobrahead Street Light",
+      "status": "Unresolved legacy/internal/recovery mapping",
+      "note": "Do not count as confirmed missing until descriptor IDs and replacement behavior are reconciled."
+    },
+    {
+      "source_model": "utility_pole_street_light",
+      "name": "Utility Pole Street Light",
+      "status": "Unresolved legacy/internal/recovery mapping",
+      "note": "Do not count as confirmed missing until descriptor IDs and replacement behavior are reconciled."
+    },
+    {
+      "source_model": "wall-mounted_browser_television",
+      "name": "Wall-mounted Browser Television",
+      "status": "Optional integration",
+      "note": "Separate integration/addon scope; not a normal standalone core-item omission."
+    },
+    {
+      "source_model": "wall-mounted_mini-split_air_conditioner",
+      "name": "Wall-mounted Mini-split Air Conditioner",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "window_air_conditioner",
+      "name": "Window Air Conditioner",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "wireless_analyser",
+      "name": "Wireless Analyzer",
+      "status": "Mapped/present \u2014 exclude from missing list",
+      "note": "Wireless Analyzer"
+    },
+    {
+      "source_model": "wireless_paddle_button",
+      "name": "Wireless Paddle Button",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "wireless_paddle_switch",
+      "name": "Wireless Paddle Switch",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "wireless_toggle_button",
+      "name": "Wireless Toggle Button",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    },
+    {
+      "source_model": "wireless_toggle_switch",
+      "name": "Wireless Toggle Switch",
+      "status": "Missing source item / distinct variant candidate",
+      "note": "No matching current item name/model found; registration/recipe parity still needs acceptance testing."
+    }
+  ]
+}

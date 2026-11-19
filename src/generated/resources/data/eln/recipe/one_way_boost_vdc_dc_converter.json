@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "eln:variable_dc_dc_converter",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "D",
+    "R"
+  ],
+  "result": {
+    "id": "eln:one_way_boost_vdc_dc_converter"
+  }
+}

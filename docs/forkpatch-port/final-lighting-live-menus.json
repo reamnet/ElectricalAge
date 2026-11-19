@@ -1,0 +1,47 @@
+[
+  {
+    "lookup": 4352,
+    "menu": "docs/forkpatch-port/evidence/final-lighting/basic-flood-menu.png",
+    "supply": "SixNode at BlockPos{x=3210, y=101, z=3210}, in simulation true, light 0\n  links: [3211,101,3210]\n- YN: LampSupplyElement {Channel 1=final lighting 3200, 100, 3200 4352 = \u00a7aON, Total power=30.0W  }\n  supply: [power 'final lighting 3200, 100, 3200 4352' wireless '', power '' wireless '', power '' wireless ''], states [true, true, true], range 32, U 119.9937532535138, I 0.24986985944774887\n"
+  },
+  {
+    "lookup": 4353,
+    "menu": "docs/forkpatch-port/evidence/final-lighting/motor-flood-menu.png",
+    "supply": "SixNode at BlockPos{x=3226, y=101, z=3210}, in simulation true, light 0\n  links: [3227,101,3210]\n- YN: LampSupplyElement {Channel 1=final lighting 3200, 100, 3200 4353 = \u00a7aON, Total power=45.0W  }\n  supply: [power 'final lighting 3200, 100, 3200 4353' wireless '', power '' wireless '', power '' wireless ''], states [true, true, true], range 32, U 239.99531341534862, I 0.18746338605708956\n"
+  },
+  {
+    "lookup": 4416,
+    "menu": "docs/forkpatch-port/evidence/final-lighting/christmas-tree-menu.png",
+    "supply": "SixNode at BlockPos{x=3242, y=101, z=3210}, in simulation true, light 0\n  links: [3243,101,3210]\n- YN: LampSupplyElement {Channel 1=final lighting 3200, 100, 3200 4416 = \u00a7aON, Total power=35.0W  }\n  supply: [power 'final lighting 3200, 100, 3200 4416' wireless '', power '' wireless '', power '' wireless ''], states [true, true, true], range 32, U 119.99270881181751, I 0.2916475273030983\n"
+  },
+  {
+    "lookup": 4417,
+    "menu": "docs/forkpatch-port/evidence/final-lighting/holiday-candle-menu.png",
+    "supply": "SixNode at BlockPos{x=3210, y=101, z=3226}, in simulation true, light 0\n  links: [3211,101,3226]\n- YN: LampSupplyElement {Channel 1=final lighting 3200, 100, 3200 4417 = \u00a7aON, Total power=5.00W  }\n  supply: [power 'final lighting 3200, 100, 3200 4417' wireless '', power '' wireless '', power '' wireless ''], states [true, true, true], range 32, U 119.99895834309889, I 0.04166627604575979\n"
+  },
+  {
+    "lookup": 7936,
+    "menu": "docs/forkpatch-port/evidence/final-lighting/work-light-menu.png",
+    "supply": "SixNode at BlockPos{x=3226, y=101, z=3226}, in simulation true, light 0\n  links: [3227,101,3226]\n- YN: LampSupplyElement {Channel 1=final lighting 3200, 100, 3200 7936 = \u00a7aON, Total power=30.0W  }\n  supply: [power 'final lighting 3200, 100, 3200 7936' wireless '', power '' wireless '', power '' wireless ''], states [true, true, true], range 32, U 119.99375035154264, I 0.2499859382953673\n"
+  },
+  {
+    "lookup": 7994,
+    "menu": "docs/forkpatch-port/evidence/final-lighting/white-fairy-menu.png",
+    "supply": "SixNode at BlockPos{x=3242, y=101, z=3226}, in simulation true, light 0\n  links: [3243,101,3226]\n- YN: LampSupplyElement {Channel 1=final lighting 3200, 100, 3200 7994 = \u00a7aON, Total power=15.0W  }\n  supply: [power 'final lighting 3200, 100, 3200 7994' wireless '', power '' wireless '', power '' wireless ''], states [true, true, true], range 32, U 119.9968750878882, I 0.1249964844726037\n"
+  },
+  {
+    "lookup": 7995,
+    "menu": "docs/forkpatch-port/evidence/final-lighting/multicolor-fairy-menu.png",
+    "supply": "SixNode at BlockPos{x=3210, y=101, z=3242}, in simulation true, light 0\n  links: [3211,101,3242]\n- YN: LampSupplyElement {Channel 1=final lighting 3200, 100, 3200 7995 = \u00a7aON, Total power=15.0W  }\n  supply: [power 'final lighting 3200, 100, 3200 7995' wireless '', power '' wireless '', power '' wireless ''], states [true, true, true], range 32, U 119.9968750878882, I 0.1249964844726037\n"
+  },
+  {
+    "lookup": 8006,
+    "menu": "docs/forkpatch-port/evidence/final-lighting/white-globes-menu.png",
+    "supply": "SixNode at BlockPos{x=3226, y=101, z=3242}, in simulation true, light 0\n  links: [3227,101,3242]\n- YN: LampSupplyElement {Channel 1=final lighting 3200, 100, 3200 8006 = \u00a7aON, Total power=15.0W  }\n  supply: [power 'final lighting 3200, 100, 3200 8006' wireless '', power '' wireless '', power '' wireless ''], states [true, true, true], range 32, U 119.9968750878882, I 0.1249964844726037\n"
+  },
+  {
+    "lookup": 8007,
+    "menu": "docs/forkpatch-port/evidence/final-lighting/multicolor-globes-menu.png",
+    "supply": "SixNode at BlockPos{x=3242, y=101, z=3242}, in simulation true, light 0\n  links: [3243,101,3242]\n- YN: LampSupplyElement {Channel 1=final lighting 3200, 100, 3200 8007 = \u00a7aON, Total power=15.0W  }\n  supply: [power 'final lighting 3200, 100, 3200 8007' wireless '', power '' wireless '', power '' wireless ''], states [true, true, true], range 32, U 119.9968750878882, I 0.1249964844726037\n"
+  }
+]

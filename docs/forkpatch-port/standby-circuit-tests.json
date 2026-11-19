@@ -1,0 +1,35 @@
+{
+  "tests": 19,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "portCommit": "bb5c26b0",
+  "sourceVersion": "3.0.77",
+  "task": "./gradlew --no-daemon --max-workers=2 :test --tests '*ForkPatchStandbyTest'",
+  "cases": [
+    "anIncorrectParallelGridTripsReversePowerAndDisabledEngineNeverClampsThatGrid",
+    "aSharedChannelResetsFaultedPeersWithoutStoppingAHealthyGenerator",
+    "failedFeedStartsWirelesslyTransfersWithoutBackfeedAndReturnsToMains",
+    "atsResetsTheLinkedFaultedGeneratorAndRestoresTheCorrectedLoad",
+    "manualModeRunsWithoutAnyWirelessRequest",
+    "aHardShortCannotExceedElectricalOrFuelLimitsAndNeverAutoRestartsIntoTheFault",
+    "resettingAnOffEmptyGeneratorDoesNotRefuelStartItOrInterruptMains",
+    "atsResetIsOneShotAndAStillFaultedLoadLatchesAgain",
+    "overloadStopsOnceAndStaysLatchedRatherThanBlinkingTheEntireGrid",
+    "wrongVoltageNeverReachesTheLoadAndDisabledAtsOpensBothContacts",
+    "contactSoundsFollowPhysicalTransfersOnceAndUnloadingIsSilent",
+    "resettingAnAlreadyHealthyLinkDoesNotInterruptAnActiveBackupFeed",
+    "emptyFuelAndOffModeCannotCreatePowerButRefuellingRestartsAutomaticBackup",
+    "allProgrammedVoltagesPowerRealLoadsAndFuelMatchesAcceptedElectricalEnergy",
+    "everyTransferIncludesAnOpenIntervalAndVoltageDipsDoNotChatter",
+    "wirelessChannelsAreCaseSensitiveDimensionScopedAndExpireWhenTheirOwnerDisappears",
+    "excessiveCableVoltageDropHoldsTheBackupContactOpenInsteadOfBlinking",
+    "settingsAndFuelReloadButContactsAndEngineAlwaysRevalidateBeforeReconnecting",
+    "remoteResetsAreCaseSensitiveWorldScopedExpireAndNeverReachDisconnectedPeers"
+  ],
+  "limits": [
+    "Production ATS/alternator/timers/link runtime on the native LU solver, with an injected metered fuel budget.",
+    "Fluid transactions/codecs, containers and registered element adapters are checked separately in native server cases.",
+    "The source mixed-voltage pole-feeder test awaits the utility-grid equipment port."
+  ]
+}

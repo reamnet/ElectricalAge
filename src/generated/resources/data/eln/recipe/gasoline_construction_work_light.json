@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": "eln:200v_fuel_generator",
+    "I": "minecraft:iron_ingot",
+    "L": "eln:warehouse_wall_floodlight",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "L L",
+    " G ",
+    "IPI"
+  ],
+  "result": {
+    "id": "eln:gasoline_construction_work_light"
+  }
+}

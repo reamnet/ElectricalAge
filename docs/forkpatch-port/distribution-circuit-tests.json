@@ -1,0 +1,25 @@
+{
+  "portCommit": "7f1ef238",
+  "tests": 15,
+  "passed": 15,
+  "errors": 0,
+  "failures": 0,
+  "cases": [
+    "regulatorCannotExceedItsTenPercentTapRange",
+    "healthyContactsKeepCachedNativeLuFactors",
+    "recloserAndRegulatorSettingsKeepFiniteSavedState",
+    "fusedTapSelectsOnePhaseWithoutParallelingTheOthers",
+    "gangSwitchOpensEveryPhaseAndSupportsReversePower",
+    "capacitorBankRetainsNativeHistoryAndSteadyFactorization",
+    "aSavedClosedFlagCannotReviveABlownCutout",
+    "aHealthyCutoutCarriesPowerAndContactLoss",
+    "recloserRetriesThenLocksOutUntilExplicitReset",
+    "oneBlownPhaseDoesNotOpenTheOtherTwoCutouts",
+    "disabledAutomaticRegulationHoldsItsSavedTap",
+    "threePhasesStayIndependentWithoutInventedSecondaryVoltage",
+    "manualRecloserOpeningDoesNotAutoRetry",
+    "voltageRegulationMovesAtMostOnePercentPerSecond",
+    "anOverloadedCutoutOpensAndCannotBeClosedWithoutReplacement"
+  ],
+  "scope": "Production native MNA paths: phase isolation, fuse current/contact losses, independent phase trips, recloser lockout/manual opening/persistence, gradual bounded regulation, reverse power, tap selection, capacitor history and steady LU reuse."
+}

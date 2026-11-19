@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_transparent",
+  "textures": {
+    "particle": "eln:item/three_phase_pole_with_fused_single_phase_tap"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": "eln:lamp_socket_a",
+    "P": "eln:iron_plate",
+    "W": "minecraft:white_wool"
+  },
+  "pattern": [
+    "WWW",
+    " L ",
+    " P "
+  ],
+  "result": {
+    "id": "eln:household_desk_lamp"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": "minecraft:glass_pane",
+    "I": "minecraft:iron_ingot",
+    "L": "eln:lamp_socket_b_projector",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "IPI",
+    "GLG",
+    " I "
+  ],
+  "result": {
+    "id": "eln:warehouse_wall_floodlight"
+  }
+}

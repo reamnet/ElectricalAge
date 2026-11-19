@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:advanced_machine_block",
+    "C": "eln:medium_voltage_cable",
+    "G": "minecraft:glass_pane",
+    "I": "minecraft:iron_ingot",
+    "M": "eln:advanced_electrical_motor",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " PG",
+    "MBP",
+    "ICI"
+  ],
+  "result": {
+    "id": "eln:240v_motorized_floodlight"
+  }
+}

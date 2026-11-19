@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:flexible_appliance_cord",
+    "eln:rubber",
+    "minecraft:black_dye"
+  ],
+  "result": {
+    "id": "eln:800_v_industrial_cord"
+  }
+}

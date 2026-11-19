@@ -3,6 +3,9 @@
     "#c:ingots/lead",
     "#c:ingots/ferrite",
     "#c:ingots/alloy",
-    "#c:ingots/silicon"
+    "#c:ingots/silicon",
+    "#c:ingots/aluminum",
+    "#c:ingots/aluminum",
+    "#c:ingots/steel"
   ]
 }

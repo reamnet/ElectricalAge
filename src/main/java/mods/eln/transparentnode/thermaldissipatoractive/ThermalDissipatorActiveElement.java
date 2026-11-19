@@ -59,6 +59,10 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
     ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
 
+    /** The cord feeds the existing power inlet; signal/thermal terminals remain independent. */
+    public NbtElectricalLoad cordInput() { return positiveLoad; }
+    public double cordNominalVoltage() { return descriptor.nominalElectricalU; }
+
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
         if (side == front || side == front.getInverse()) return positiveLoad;

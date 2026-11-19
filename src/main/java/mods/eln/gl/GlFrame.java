@@ -64,6 +64,9 @@ public final class GlFrame {
     public record FlatItem(net.minecraft.world.item.ItemStack stack) {
     }
 
+    /** An original wall model, submitted through the native block-model pipeline. */
+    public record WallBlock(net.minecraft.world.level.block.state.BlockState state) {}
+
     private final ArrayList<Extra> extras = new ArrayList<>();
 
     /** Burnt overlay (1.12 BurntRender): everything drawn while set is multiplied into the frame in a soot colour. */

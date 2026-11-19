@@ -1,0 +1,26 @@
+{
+  "tests": 12,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "sourceVersion": "3.0.77",
+  "portCommit": "f70d7dd6",
+  "task": "./gradlew --no-daemon --max-workers=2 :test --tests '*ForkPatchServiceTest'",
+  "cases": [
+    "registersIgnoreInvalidSamplesAndReloadIndependentNonnegativeValues",
+    "stableMeterContactsAndWiredSplitReuseNativeLuFactors",
+    "both120VoltLegsAndFull240VoltLoadDrawFromOneActualWire",
+    "analogMeterClosesAllServiceContactsButCannotRemotelyDisconnect",
+    "serviceVoltagesFollowSupplySagRatherThanRegulatingOrCreatingEnergy",
+    "emptySocketLeavesAllThreeLoadCircuitsUnpowered",
+    "manualDisconnectAndRiserUseRealPassiveConnections",
+    "reversePowerAddsExportWithoutErasingTheImportRegister",
+    "smartDisconnectOpensEveryLoadButLeavesTheLineEnergized",
+    "savedSmartDisconnectAndCircuitSelectionDoNotResetItsRegisters",
+    "meterRemovalCannotLeaveABypassAndNewMeterStartsWithItsOwnRegisters",
+    "diskCalibrationMatchesThePhysicalSevenPointTwoWattHourMeter"
+  ],
+  "limits": [
+    "Production service circuits on native LU with real passive taps and electrical connections. Actual removable items and placed cable topology are checked separately by native world cases."
+  ]
+}

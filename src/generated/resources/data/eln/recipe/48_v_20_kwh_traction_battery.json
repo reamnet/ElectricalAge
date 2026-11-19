@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:ups_industrial_battery_module",
+    "C": "eln:copper_cable",
+    "I": "eln:iron_plate"
+  },
+  "pattern": [
+    "IBI",
+    "BBB",
+    "CBC"
+  ],
+  "result": {
+    "id": "eln:48_v_20_kwh_traction_battery"
+  }
+}

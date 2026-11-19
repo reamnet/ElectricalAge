@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": "eln:120v_led_light_bulb",
+    "g": "minecraft:glass_pane",
+    "i": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " g ",
+    "gbg",
+    " i "
+  ],
+  "result": {
+    "id": "eln:holiday_candle"
+  }
+}

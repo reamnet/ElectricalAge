@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:iron_chain",
+    "F": "eln:suspended_factory_fluorescent_light",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "CCC",
+    "PFP",
+    " C "
+  ],
+  "result": {
+    "id": "eln:adjustable_suspended_warehouse_light"
+  }
+}

@@ -29,6 +29,21 @@ public class ElectricalRelayDescriptor extends SixNodeDescriptor {
     private Obj3D obj;
 
     ElectricalCableDescriptor cable;
+    public double contactNominalVoltage, currentRating, contactResistance, controlVoltage;
+    public boolean rated;
+
+    public ElectricalRelayDescriptor(String name, Obj3D obj, double volts, double amps, double resistance, double controlVolts) {
+        this(name, obj, mods.eln.registry.ElnDeviceRegistry.lowVoltageCableDescriptor);
+        rated = true;
+        contactNominalVoltage = volts;
+        currentRating = amps;
+        contactResistance = resistance;
+        controlVoltage = controlVolts;
+        voltageLevelColor = VoltageLevelColor.fromVoltage(volts);
+    }
+
+    public int getNodeMask() { return rated ? mods.eln.node.NodeBase.maskElectricalPower : cable.getNodeMask(); }
+
 
     float r0rOff, r0rOn, r1rOff, r1rOn;
     public float speed;
@@ -36,6 +51,10 @@ public class ElectricalRelayDescriptor extends SixNodeDescriptor {
     public ElectricalRelayDescriptor(String name, Obj3D obj, ElectricalCableDescriptor cable) {
         super(name, ElectricalRelayElement.class, null);
         this.cable = cable;
+        contactNominalVoltage = cable.electricalNominalVoltage;
+        currentRating = cable.electricalMaximalCurrent;
+        contactResistance = cable.electricalRs;
+        controlVoltage = mods.eln.Eln.SVU;
         this.obj = obj;
         modelScale = 0.5f;   // (draw scales the model by half: its footprint, click box and outline follow)
 
@@ -60,11 +79,11 @@ public class ElectricalRelayDescriptor extends SixNodeDescriptor {
     }
 
     void applyTo(ElectricalLoad load) {
-        cable.applyTo(load);
+        if (rated) load.setRs(contactResistance); else cable.applyTo(load);
     }
 
     void applyTo(Resistor load) {
-        cable.applyTo(load);
+        if (rated) load.setR(contactResistance); else cable.applyTo(load);
     }
 
     @Override

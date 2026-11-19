@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:experimental_wall_outlet",
+    "eln:experimental_wall_outlet",
+    "eln:experimental_wall_outlet",
+    "eln:iron_plate"
+  ],
+  "result": {
+    "id": "eln:six_socket_power_strip"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "testedCodeCommit": "94c295d54bf1a27fb6b106f3f3956342b0361d0e",
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "root": {
+    "command": "./gradlew --no-daemon --max-workers=2 :test cad:test",
+    "testedCodeCommit": "94c295d54bf1a27fb6b106f3f3956342b0361d0e",
+    "fluidCases": 200,
+    "suites": 112,
+    "tests": 616,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "passed": 613,
+    "skippedCases": [
+      "mods.eln.node.voxel.VoxelPreviewTest.safetyValveAndSensor()",
+      "mods.eln.node.voxel.VoxelPreviewTest.junctionsAndAdapters()",
+      "mods.eln.client.entity.BikePreviewTest.bikes()"
+    ],
+    "elapsed": "4m 51s",
+    "scope": "Complete final root regression corpus after load bank, motor drive, SCADA and surge arrester/pole-kit adapters; default 200 fluid cases. CAD and filtered native checks recorded separately."
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "native": {
+    "selected": 283,
+    "passed": 283,
+    "failed": 0,
+    "skipped": 0,
+    "newEquipmentCases": 11,
+    "newFactoryCases": 1,
+    "filter": "eln:forkpatch_*",
+    "command": "./gradlew --no-daemon --max-workers=2 runGameTestServer --args='net.neoforged.fml.startup.GameTestServer --tests eln:forkpatch_* --report /tmp/eln26-final-all.xml --universe /workspace/ElectricalAge/run/final-all'"
+  },
+  "datagen": {
+    "command": "./gradlew --no-daemon --max-workers=2 runClientData",
+    "identities": 631,
+    "priorIdentities": 630,
+    "changedExisting": [],
+    "englishEntries": 921,
+    "priorEnglishEntries": 919,
+    "changedEnglish": [],
+    "textureReferences": 447,
+    "missingTextures": [],
+    "sourceRecipeIngredient": "minecraft:lightning_rod (unweathered; 26.3 Items.LIGHTNING_ROD.weathering().unaffected())"
+  },
+  "originalHandoffIdentities": 627,
+  "originalHandoffEnglish": 913,
+  "allOriginalHandoffIdentitiesAndEnglishUnchanged": true,
+  "newAdapters": [
+    "Programmable Load Bank (8064)",
+    "Grid Control Console / SCADA (8065)",
+    "Pole Surge Arrester and paid HV pole kits (8067)",
+    "Variable Frequency Motor Drive (8069)"
+  ],
+  "newFocusedRegressionTests": 36,
+  "jar": {
+    "path": "build/libs/eln-26.3-0.1.0-port.jar",
+    "sha256": "e6e714942f8e8db40ed62109e2b5dae63b9955943269e7fd49ae98703d43ab90",
+    "size": 29592743,
+    "testedClassBytesMatch": [
+      "mods/eln/transparentnode/industrial/LoadBankUnit.class",
+      "mods/eln/transparentnode/industrial/MotorDriveUnit.class",
+      "mods/eln/transparentnode/industrial/ScadaUnit.class",
+      "mods/eln/transparentnode/industrial/SurgeArresterUnit.class",
+      "mods/eln/transparentnode/industrial/SurgeProtection.class",
+      "mods/eln/transparentnode/industrial/PoleSurgeUpgrade.class"
+    ],
+    "unweatheredRodRecipePackaged": true,
+    "scope": "Development JAR packaging and tested class/resource identity verified; packaged multiplayer/distribution launch is not claimed."
+  },
+  "remaining": [
+    "Programmable EV Pack Charger and Electric Welding Station",
+    "Source 12-circuit panel and media SCADA endpoints",
+    "Vehicles, appliances, manufacturing, roof mounting and remaining parity work",
+    "Full source-world conversion and historical unfiltered golden reconciliation",
+    "Interactive GPU/audio/multiplayer and representative loaded-world performance comparisons"
+  ]
+}

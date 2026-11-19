@@ -35,7 +35,9 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeElectricalSource", ElnRecipes::recipeElectricalSource);
         run("recipeElectricalCable", ElnRecipes::recipeElectricalCable);
         run("recipeThermalCable", ElnRecipes::recipeThermalCable);
+        run("recipeDecorativeLamps", ElnRecipes::recipeDecorativeLamps);
         run("recipeLampSocket", ElnRecipes::recipeLampSocket);
+        run("recipeRemainingLights", ElnRecipes::recipeRemainingLights);
         run("recipeLampSupply", ElnRecipes::recipeLampSupply);
         run("recipePowerSocket", ElnRecipes::recipePowerSocket);
         run("recipePassiveComponent", ElnRecipes::recipePassiveComponent);
@@ -65,6 +67,13 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeElectricalFurnace", ElnRecipes::recipeElectricalFurnace);
         run("recipeAutoMiner", ElnRecipes::recipeAutoMiner);
         run("recipeSolarPanel", ElnRecipes::recipeSolarPanel);
+        run("recipeForkPatchSolar", ElnRecipes::recipeForkPatchSolar);
+        run("recipeForkPatchOffgrid", ElnRecipes::recipeForkPatchOffgrid);
+        run("recipeForkPatchStandby", ElnRecipes::recipeForkPatchStandby);
+        run("recipeForkPatchUps", ElnRecipes::recipeForkPatchUps);
+        run("recipeForkPatchGraphite", ElnRecipes::recipeForkPatchGraphite);
+        run("recipeForkPatchArcClay", ElnRecipes::recipeForkPatchArcClay);
+        run("recipeForkPatchArcMetal", ElnRecipes::recipeForkPatchArcMetal);
         run("recipeThermalDissipatorPassiveAndActive", ElnRecipes::recipeThermalDissipatorPassiveAndActive);
         run("recipeElectricalAntenna", ElnRecipes::recipeElectricalAntenna);
         run("recipeEggIncubator", ElnRecipes::recipeEggIncubator);
@@ -100,6 +109,21 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeECoal", ElnRecipes::recipeECoal);
         run("recipeGridDevices", ElnRecipes::recipeGridDevices);
     }
+    private static void recipeRemainingLights() {
+        addShapelessRecipe(findItemStack("Christmas Tree"),findItemStack("String Lights"),Items.SPRUCE_SAPLING,findItemStack("String Lights"));
+        addRecipe(findItemStack("Holiday Candle")," g ","gbg"," i ",'g',Items.GLASS_PANE,'b',findItemStack("120V LED Light Bulb"),'i',Items.IRON_INGOT);
+        addShapelessRecipe(findItemStack("White Fairy Lights on Green Wire"),findItemStack("String Lights"),findItemStack("Flexible Appliance Cord"),Items.DYE.white(),Items.DYE.green());
+        addShapelessRecipe(findItemStack("Multicolor Fairy Lights on Green Wire"),findItemStack("String Lights"),findItemStack("Flexible Appliance Cord"),Items.DYE.red(),Items.DYE.green());
+        addShapelessRecipe(findItemStack("Warm White Deck Globe String Lights"),findItemStack("White Fairy Lights on Green Wire"),Items.GLASS_BOTTLE,Items.DYE.black());
+        addShapelessRecipe(findItemStack("Multicolor Deck Globe String Lights"),findItemStack("Multicolor Fairy Lights on Green Wire"),Items.GLASS_BOTTLE,Items.DYE.black());
+        addRecipe(findItemStack("120V Basic Floodlight")," PG","MBP","ICI",'P',findItemStack("Iron Plate"),'G',Items.GLASS_PANE,'M',findItemStack("Electrical Motor"),'B',findItemStack("Machine Block"),'I',Items.IRON_INGOT,'C',findItemStack("Low Voltage Cable"));
+        addRecipe(findItemStack("240V Motorized Floodlight")," PG","MBP","ICI",'P',findItemStack("Iron Plate"),'G',Items.GLASS_PANE,'M',findItemStack("Advanced Electrical Motor"),'B',findItemStack("Advanced Machine Block"),'I',Items.IRON_INGOT,'C',findItemStack("Medium Voltage Cable"));
+        // Native200V generator is the existing engine assembly; the fixture regulates to its bulbs' source voltage.
+        addRecipe(findItemStack("Gasoline Construction Work Light"),"L L"," G ","IPI",'L',findItemStack("Warehouse Wall Floodlight"),'G',findItemStack("200V Fuel Generator"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("120V Emergency Lamp"),"cbc"," l "," g ",'c',findItemStack("Low Voltage Cable"),'b',findItemStack("Portable Battery Pack"),'l',findItemStack("120V LED Light Bulb"),'g',Items.GLASS_PANE);
+        addRecipe(findItemStack("240V Emergency Lamp"),"cbc"," l "," g ",'c',findItemStack("Medium Voltage Cable"),'b',findItemStack("Portable Battery Pack"),'l',findItemStack("240V LED Light Bulb"),'g',Items.GLASS_PANE);
+    }
+
 
     // ------------------------------------------------------------------ recipes (1.7.10)
 
@@ -202,6 +226,178 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', findItemStack("Copper Cable"));
     }
 
+    public static void recipeDecorativeLamps() {
+        for(String metal:new String[]{"Steel","Aluminum","Aluminium"})
+            addRecipe(findItemStack("Grid DC-DC Converter"),"i i","mtm","imi",'i',"ingot"+metal,'t',findItemStack("Winding DC-DC Converter"),'m',findItemStack("Advanced Machine Block"));
+        for(var r:mods.eln.sixnode.lampsocket.RatedLampBulbs.INSTANCE.getRatings()) {
+            if(r.getId()==302||r.getId()==303)continue;
+            var wire=findItemStack(r.getVolts()==12?"Copper Cable":r.getVolts()==120?"Low Voltage Cable":"Medium Voltage Cable");
+            String title=r.getTitle();
+            if(title.contains("Halogen"))addRecipe(findItemStack(title,2),"GGG","CTC","GGG",'G',Blocks.GLASS_PANE,'C',wire,'T',dictTungstenIngot);
+            else if(title.contains("LED"))addRecipe(findItemStack(title,2),"GGG","SSS","PCP",'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',wire);
+            else if(title.contains("Farming"))addRecipe(findItemStack(title,2),"GGG","FFF","PSP",'G',Blocks.GLASS_PANE,'F',dictTungstenIngot,'P',findItemStack("Iron Plate"),'S',wire);
+            else {
+                Object filament=title.contains("Carbon")?Items.COAL:title.contains("Fluorescent")?Items.GLOWSTONE_DUST:dictTungstenIngot;
+                addRecipe(findItemStack(title,4)," G ","GFG","PSP",'G',Blocks.GLASS_PANE,'F',filament,'P',findItemStack("Iron Plate"),'S',wire);
+                if(title.contains("Carbon"))addRecipe(findItemStack(title,4)," G ","GFG","PSP",'G',Blocks.GLASS_PANE,'F',Items.CHARCOAL,'P',findItemStack("Iron Plate"),'S',wire);
+            }
+        }
+        addRecipe(findItemStack("Electric Microwave"), "PPP", "GRC", "PPP",
+            'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'R',Items.REDSTONE,'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Toaster"), "I I", "PRP", "CCC",
+            'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"),'R',Items.REDSTONE,'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Flat Electric Cooktop"), "GGG", "RRR", "PCP",
+            'G',Blocks.STAINED_GLASS.black(),'R',Items.REDSTONE,'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Patio Electric Grill"),"III","RCR","P P",
+            'I',Items.IRON_BARS,'R',Items.REDSTONE,'C',findItemStack("Copper Cable"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Electric Mini Fridge"),"PP","CR","PP",
+            'P',findItemStack("Iron Plate"),'C',Blocks.CHEST,'R',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Washing Machine"),"PBP","MCM","PPP",
+            'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'M',findItemStack("Electrical Motor"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Dryer"),"PPP","MHM","PCP",
+            'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'H',Items.BLAZE_ROD,'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Fusion Matter Reactor"),"NDN","MCM","NDN",
+            'N',Items.NETHERITE_INGOT,'D',Blocks.DIAMOND_BLOCK,'M',findItemStack("Electrical Motor"),
+            'C',Items.NETHER_STAR);
+        addRecipe(findItemStack("Electric Refrigerator"), "PPP", "GCG", "PRP",
+            'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'C',Blocks.CHEST,'R',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Coffee Maker"), " I ", "GBG", "PCP",
+            'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'B',Items.BUCKET,'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Mini Oven"),"PPP","GCG","PRP",
+            'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        addRecipe(findItemStack("Electric Kettle")," P ","BCP"," R ",
+            'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        addRecipe(findItemStack("Countertop Blender"),"G G","GGG","PMC",
+            'G',Blocks.GLASS_PANE,'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Electric Rice Cooker"),"PPP","BCB","PRP",
+            'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        addRecipe(findItemStack("Industrial Five Block Fan"),"PMP","MCM","PMP",'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'C',findItemStack("Copper Cable"));
+        for(var t:mods.eln.transparentnode.fan.FanType.values())if(!t.getIndustrial())
+            addRecipe(findItemStack(t.getTitle()),"PPP","MCM","PRP",'P',t==mods.eln.transparentnode.fan.FanType.SHOP?Items.IRON_INGOT:t==mods.eln.transparentnode.fan.FanType.COMPACT?findItemStack("Rubber"):findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        for(var k:mods.eln.utility.SubstationKind.values()) {
+            var pole=findItemStack(k.getInputVolts()>100000?"230 kV Steel Transmission Tower":"69 kV Steel Transmission Pole");
+            if(k.getTransformer())addRecipe(findItemStack(k.getTitle()),"III","CTC","PBP",'I',Blocks.IRON_BLOCK,'C',findItemStack("Copper Cable"),'T',findItemStack("Grid DC-DC Converter"),'P',findItemStack("Iron Plate"),'B',pole);
+            else addRecipe(findItemStack(k.getTitle()),"CCC","IBI","PPP",'C',findItemStack("Copper Cable"),'I',Blocks.IRON_BARS,'B',pole,'P',findItemStack("Iron Plate"));
+        }
+
+        // Original LED patterns still produce legacy bulbs. Distinct paid patterns add both source ratings.
+        addRecipe(findItemStack("120V LED Light Bulb",2),"GGG","SSS","PCP",
+            'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',findItemStack("Low Voltage Cable"));
+        addRecipe(findItemStack("240V LED Light Bulb",2),"GGG","SSS","PCP",
+            'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',findItemStack("Medium Voltage Cable"));
+        // Source materialString is vanilla string; retain the two-fixture bootstrap yield.
+        addShapelessRecipe(findItemStack("String Lights",2),findItemStack("120V LED Light Bulb"),Items.STRING);
+        // Exact pinned ForkPatch b7444a7 source fixture recipes; native socket names are stable aliases.
+        addRecipe(findItemStack("Twin Parking Lot Light",1),"L L"," I "," P ",'L',findItemStack("Robust Lamp Socket"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Warehouse Wall Floodlight",1),"IPI","GLG"," I ",'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket B Projector"));
+        addRecipe(findItemStack("Household Desk Lamp",1),"WWW"," L "," P ",'W',wool(0),'L',findItemStack("Lamp Socket A"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Round Recessed Ceiling Light",2)," P ","GLG",'P',findItemStack("Iron Plate"),'G',Blocks.GLASS_PANE,'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Basic Chandelier",1)," I ","LIL","LLL",'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Mini Dot Spotlight",2)," I ","GLG",'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket B Projector"));
+        addRecipe(findItemStack("Porch Lantern Sconce",1)," I ","GLG"," P ",'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE,'L',findItemStack("Lamp Socket A"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Basic Lamp Holder",2)," C "," P ",'C',Items.COPPER_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Thin Fluorescent Shop Light",1),"PPP","LLL",'P',findItemStack("Iron Plate"),'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Suspended Factory Fluorescent Light",1),"C C","PPP","LLL",'C',Items.IRON_CHAIN,'P',findItemStack("Iron Plate"),'L',findItemStack("Thin Fluorescent Shop Light"));
+        addRecipe(findItemStack("Outdoor Motion Floodlight",1),"L L"," S "," P ",'L',findItemStack("Lamp Socket B Projector"),'S',findItemStack("Electrical Entity Sensor"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Candle Arm Foyer Chandelier",1)," C ","GLG","LLL",'C',Items.IRON_CHAIN,'G',Items.GOLD_INGOT,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Crystal Tier Foyer Chandelier",1)," C ","GLG","GGG",'C',Items.IRON_CHAIN,'G',Blocks.GLASS_PANE,'L',findItemStack("Candle Arm Foyer Chandelier"));
+        addRecipe(findItemStack("Wagon Wheel Foyer Chandelier",1),"CCC","LPL","LLL",'C',Items.IRON_CHAIN,'P',Blocks.DARK_OAK_PLANKS,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Lantern Cage Foyer Chandelier",1)," C ","ILI","ILI",'C',Items.IRON_CHAIN,'I',Blocks.IRON_BARS,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Modern Sputnik Foyer Chandelier",1)," L ","LGL"," L ",'G',Items.GOLD_INGOT,'L',findItemStack("Lamp Socket A"));
+        addRecipe(findItemStack("Up Down Cylinder Wall Sconce",1)," L ","IPI"," L ",'L',findItemStack("Lamp Socket B Projector"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Fabric Shade Wall Sconce",1),"WWW"," L "," P ",'W',wool(0),'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Glass Globe Wall Sconce",1)," G ","GLG"," P ",'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Industrial Cage Wall Sconce",1),"III","ILI"," P ",'I',Blocks.IRON_BARS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Double Candle Wall Sconce",1),"L L"," G "," P ",'L',findItemStack("Basic Lamp Holder"),'G',Items.GOLD_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Ceramic Drum Table Lamp",1),"WWW"," L "," B ",'W',wool(0),'L',findItemStack("Basic Lamp Holder"),'B',Blocks.TERRACOTTA);
+        addRecipe(findItemStack("Green Banker Table Lamp",1),"GGG"," L "," P ",'G',vanilla("green_stained_glass"),'L',findItemStack("Basic Lamp Holder"),'P',Items.COPPER_INGOT);
+        addRecipe(findItemStack("Articulated Task Table Lamp",1)," IL"," I "," P ",'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Deep Baffle Recessed Light",2)," I ","BLB",'I',findItemStack("Iron Plate"),'B',Items.DYE.black(),'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Trimless Recessed Downlight",2)," W ","GLG",'W',Items.DYE.white(),'G',Blocks.GLASS_PANE,'L',findItemStack("Flat Lamp Socket"));
+        addRecipe(findItemStack("Adjustable Gimbal Recessed Light",2)," I ","ILI",'I',Items.IRON_INGOT,'L',findItemStack("Lamp Socket B Projector"));
+        addRecipe(findItemStack("Garden Bollard Light",1)," G ","ILI"," P ",'G',Blocks.GLASS,'I',Items.IRON_INGOT,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Gooseneck Barn Light",1),"IIL","P  ",'I',Items.IRON_INGOT,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Traditional Lantern Post Light",1)," L "," I "," P ",'L',findItemStack("Porch Lantern Sconce"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Window Candle Light",1)," D ","DLD"," P ",'D',Items.HONEYCOMB,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Standing Drum Floor Lamp",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Ceramic Drum Table Lamp"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Under Cabinet LED Strip",1)," D ","DLD"," P ",'D',Items.IRON_NUGGET,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Recessed LED Channel",1)," D ","DLD"," P ",'D',Items.QUARTZ,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Indirect Cove LED Strip",1)," D ","DLD"," P ",'D',Items.DYE.white(),'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Surface Linear LED Strip",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Thin Fluorescent Shop Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Flexible Neon LED Strip",1)," D ","DLD"," P ",'D',Items.SLIME_BALL,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Grand Halo Ring Chandelier",1)," D ","DLD"," P ",'D',Items.GOLD_INGOT,'L',findItemStack("Modern Sputnik Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Grand Crystal Cascade Chandelier",1)," D ","DLD"," P ",'D',Items.DIAMOND,'L',findItemStack("Crystal Tier Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Sculptural Branch Chandelier",1)," D ","DLD"," P ",'D',Items.COPPER_INGOT,'L',findItemStack("Modern Sputnik Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Spiral Rain Chandelier",1)," D ","DLD"," P ",'D',Items.IRON_CHAIN,'L',findItemStack("Crystal Tier Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Grand Empire Chandelier",1)," D ","DLD"," P ",'D',Items.GOLD_INGOT,'L',findItemStack("Candle Arm Foyer Chandelier"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Heavy Duty Stadium Wall Floodlight",1)," D ","DLD"," P ",'D',Items.IRON_BLOCK,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Armored Oval Bulkhead Light",1)," D ","DLD"," P ",'D',Items.IRON_BARS,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Industrial Wall Pack Light",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Rugged Outdoor Canopy Light",1)," D ","DLD"," P ",'D',Items.IRON_BLOCK,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Industrial Yard Area Light",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Gooseneck Barn Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offshore Caged Wellglass Light",1)," D ","DLD"," P ",'D',Items.DYE.yellow(),'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offshore Sealed Linear Light",1)," D ","DLD"," P ",'D',Items.DYE.yellow(),'L',findItemStack("Thin Fluorescent Shop Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offshore Platform Floodlight",1)," D ","DLD"," P ",'D',Items.DYE.yellow(),'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Modern LED Street Light",1)," D ","DLD"," P ",'D',Items.IRON_INGOT,'L',findItemStack("Street Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Boulevard Lantern Street Light",1)," D ","DLD"," P ",'D',Items.IRON_CHAIN,'L',findItemStack("Traditional Lantern Post Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Warm White Christmas Fairy Lights",1)," D ","DLD"," P ",'D',Items.DYE.yellow(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Multicolor Christmas String Lights",1)," D ","DLD"," P ",'D',Items.DYE.red(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Christmas Icicle Lights",1)," D ","DLD"," P ",'D',Items.DYE.lightBlue(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Christmas Star Wall Light",1)," D ","DLD"," P ",'D',Items.GOLD_NUGGET,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Halloween Pumpkin String Lights",1)," D ","DLD"," P ",'D',Items.PUMPKIN,'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Halloween Ghost String Lights",1)," D ","DLD"," P ",'D',Items.DYE.white(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Halloween Bat Wall Light",1)," D ","DLD"," P ",'D',Items.DYE.black(),'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Jack O Lantern Table Lamp",1)," D ","DLD"," P ",'D',Items.CARVED_PUMPKIN,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Mini Pinhole Dot Light",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.IRON_NUGGET);
+        addShapelessRecipe(findItemStack("Mini Bezel Dot Spotlight",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.GOLD_NUGGET);
+        addShapelessRecipe(findItemStack("Mini Eyeball Dot Spotlight",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.LEVER);
+        addShapelessRecipe(findItemStack("Mini Deep Baffle Dot Light",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Items.DYE.black());
+        addShapelessRecipe(findItemStack("Mini Twin Dot Light",1),findItemStack("Mini Dot Spotlight"),findItemStack("Iron Plate"),Blocks.GLASS_PANE);
+        addRecipe(findItemStack("Twin Adjustable Eave Floodlight",1),"L L"," P ",'L',findItemStack("Mini Bezel Dot Spotlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Classic Four Blade Ceiling Fan",1)," M ","PLP"," P ",'M',findItemStack("Electrical Motor"),'P',Blocks.OAK_PLANKS,'L',findItemStack("Basic Lamp Holder"));
+        addRecipe(findItemStack("Modern Three Blade Ceiling Fan",1)," M ","PLP"," P ",'M',findItemStack("Electrical Motor"),'P',findItemStack("Iron Plate"),'L',findItemStack("Basic Lamp Holder"));
+        addRecipe(findItemStack("Industrial Five Block Ceiling Fan",1),"PMP","MLM","PPP",'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'L',findItemStack("Basic Lamp Holder"));
+        addRecipe(findItemStack("Aura Five Blade Ceiling Fan",1),"PMP","LLL","PPP",'P',findItemStack("Iron Plate"),'M',findItemStack("Electrical Motor"),'L',findItemStack("Basic Lamp Holder"));
+        addRecipe(findItemStack("Large Area Floodlight",1)," D ","DLD"," P ",'D',Items.DIAMOND,'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Quad Head Parking Lot Light",1)," D ","DLD"," P ",'D',Items.IRON_BLOCK,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Round Canopy Parking Lot Light",1)," D ","DLD"," P ",'D',Items.QUARTZ,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Offset Twin Arm Parking Lot Light",1)," D ","DLD"," P ",'D',Items.COPPER_INGOT,'L',findItemStack("Twin Parking Lot Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Round Niche Pool Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Robust Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Linear Pool Wall Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Thin Fluorescent Shop Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Square Recessed Pool Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Pool Corner Wash Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Lamp Socket B Projector"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Pool Step Marker Light",1)," D ","DLD"," P ",'D',Items.PRISMARINE_CRYSTALS,'L',findItemStack("Mini Dot Spotlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Patio Festoon Party Lights",1)," D ","DLD"," P ",'D',Items.DYE.orange(),'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Electric Poolside Tiki Light",1)," D ","DLD"," P ",'D',Items.BAMBOO,'L',findItemStack("Traditional Lantern Post Light"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Multicolor Party Wash Light",1)," D ","DLD"," P ",'D',Items.DYE.magenta(),'L',findItemStack("Warehouse Wall Floodlight"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Poolside Globe String Lights",1)," D ","DLD"," P ",'D',Items.GLASS_BOTTLE,'L',findItemStack("String Lights"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Poolside Party Lantern",1)," D ","DLD"," P ",'D',Items.DYE.lightBlue(),'L',findItemStack("Porch Lantern Sconce"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Deck Post Cap Light",1)," D ","DLD"," P ",'D',Items.OAK_SLAB,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Deck Step Riser Light",1)," D ","DLD"," P ",'D',Items.SPRUCE_SLAB,'L',findItemStack("Flat Lamp Socket"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Tropical Patio Ceiling Fan",1)," D ","DLD"," P ",'D',Items.JUNGLE_PLANKS,'L',findItemStack("Classic Four Blade Ceiling Fan"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Adjustable Suspended Warehouse Light",1),"CCC","PFP"," C ",'C',Items.IRON_CHAIN,'P',findItemStack("Iron Plate"),'F',findItemStack("Suspended Factory Fluorescent Light"));
+        addRecipe(findItemStack("Nautical Pier Bollard Light",1)," D ","GLG"," P ",'D',Items.DYE.white(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Marine Pier Bulkhead Light",1)," D ","GLG"," P ",'D',Items.DYE.orange(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Harbor Gooseneck Pier Light",1)," D ","GLG"," P ",'D',Items.DYE.magenta(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Pier Lantern Post Light",1)," D ","GLG"," P ",'D',Items.DYE.lightBlue(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Low Profile Dock Light",1)," D ","GLG"," P ",'D',Items.DYE.yellow(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Louvered Walkway Bollard",1)," D ","GLG"," P ",'D',Items.DYE.lime(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Shielded Walkway Light",1)," D ","GLG"," P ",'D',Items.DYE.pink(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Modern Blade Walkway Light",1)," D ","GLG"," P ",'D',Items.DYE.gray(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Mushroom Walkway Light",1)," D ","GLG"," P ",'D',Items.DYE.lightGray(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Arched Walkway Light",1)," D ","GLG"," P ",'D',Items.DYE.cyan(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.IRON_BLOCK);
+        addRecipe(findItemStack("Recessed Brick Patio Wall Light",1)," D ","GLG"," P ",'D',Items.DYE.purple(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Round Stone Wall Light",1)," D ","GLG"," P ",'D',Items.DYE.blue(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Slotted Patio Wall Light",1)," D ","GLG"," P ",'D',Items.DYE.brown(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Recessed Square Patio Wall Light",1)," D ","GLG"," P ",'D',Items.DYE.green(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Stone Wall Wash Light",1)," D ","GLG"," P ",'D',Items.DYE.red(),'G',Blocks.GLASS_PANE,'L',findItemStack("Basic Lamp Holder"),'P',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Shoebox Parking Lot Light",1)," D ","GLG"," P ",'D',Items.DYE.white(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Twin Wide Area Parking Lot Light",1)," D ","GLG"," P ",'D',Items.DYE.blue(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Three Arm Parking Lot Light",1)," D ","GLG"," P ",'D',Items.DYE.black(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Gumdrop Sidewalk Light",1)," D ","GLG"," P ",'D',Items.DYE.green(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Dual Gumdrop Sidewalk Light",1)," D ","GLG"," P ",'D',Items.DYE.red(),'G',Blocks.GLASS,'L',findItemStack("Basic Lamp Holder"),'P',findItemStack("Iron Plate"));
+    }
+
     public static void recipeLampSocket() {
         addRecipe(findItemStack("Lamp Socket A", 3),
             "G ",
@@ -292,6 +488,14 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', "ingotCopper",
             'I', stack(Items.IRON_INGOT));
 
+        // Preserve the native generic recipe: a separate conversion avoids two outputs
+        // competing for the source's otherwise identical 120 V crafting pattern.
+        addShapelessRecipe(findItemStack("120V Lamp Supply"), findItemStack("Lamp Supply"));
+        addRecipe(findItemStack("240V Lamp Supply"),
+            " I ", "ACA", " I ",
+            'C', "ingotCopper", 'I', stack(Items.IRON_INGOT),
+            'A', findItemStack("Advanced Machine Block"));
+
     }
 
     public static void recipePowerSocket() {
@@ -312,6 +516,38 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipePassiveComponent() {
+
+        addRecipe(findItemStack("Experimental Wall Outlet")," P ","CRC"," P ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        addShapelessRecipe(findItemStack("Flexible Appliance Cord"),findItemStack("Copper Cable"),findItemStack("Copper Cable"),findItemStack("Rubber"));
+        addShapelessRecipe(findItemStack("240 V Wall Outlet"),findItemStack("Experimental Wall Outlet"),vanilla("orange_dye"));
+        addShapelessRecipe(findItemStack("240 V Appliance Cord"),findItemStack("Flexible Appliance Cord"),vanilla("orange_dye"));
+        addShapelessRecipe(findItemStack("240 V 30 A Dryer Cord"),findItemStack("240 V Appliance Cord"),findItemStack("Copper Cable"),findItemStack("Rubber"));
+        addShapelessRecipe(findItemStack("240 V 30 A Dryer Outlet"),findItemStack("240 V Wall Outlet"),findItemStack("Copper Cable"),findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Six Socket Power Strip"),findItemStack("Experimental Wall Outlet"),findItemStack("Experimental Wall Outlet"),findItemStack("Experimental Wall Outlet"),findItemStack("Iron Plate"));
+        var cordDyes = new Object[]{vanilla("purple_dye"),vanilla("light_gray_dye"),vanilla("green_dye"),vanilla("red_dye"),vanilla("black_dye"),vanilla("yellow_dye")};
+        int cordDye=0;
+        for(var rating: mods.eln.transparentnode.cord.CordRating.values()) if(rating.getIndustrial()) {
+            var dye=cordDyes[cordDye++];
+            addShapelessRecipe(findItemStack(rating.getCordName()),findItemStack("Flexible Appliance Cord"),findItemStack("Rubber"),dye);
+            addShapelessRecipe(findItemStack(rating.getOutletName()),findItemStack("Experimental Wall Outlet"),findItemStack("Iron Plate"),dye);
+        }
+
+        // Native bootstrap for source Fabricator; wafer production stays in the powered plate machine.
+        addRecipe(findItemStack("Fabricator"),"ICI","PMP","IEI",'I',Items.IRON_INGOT,'C',dictCheapChip,'P',findItemStack("Copper Plate"),'M',findItemStack("Machine Block"),'E',findItemStack("Electrical Motor"));
+
+        for (String[] wheel : new String[][]{{"Iron Roller Wheel","ingotIron"},{"Steel Roller Wheel","ingotSteel"},{"Aluminum Roller Wheel","ingotAluminum"}}) addRecipe(findItemStack(wheel[0],2)," M ","MIM"," M ",'M',wheel[1],'I',stack(Items.IRON_INGOT));
+        addRecipe(findItemStack("Wire Roller"),"IRI","WMW","ICI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'W',findItemStack("Iron Roller Wheel"),'M',findItemStack("Machine Block"),'C',findItemStack("Electrical Motor"));
+        addRecipe(findItemStack("Wire Insulator"),"IRI","BMB","ICI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'B',stack(Items.BUCKET),'M',findItemStack("Machine Block"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Wire Combiner"),"IRI","CMC","IWI",'I',stack(Items.IRON_INGOT),'R',stack(Items.REDSTONE),'C',findItemStack("Electrical Motor"),'M',findItemStack("Machine Block"),'W',findItemStack("Iron Roller Wheel"));
+
+        addRecipe(findItemStack("Winding DC-DC Converter"), "C C", "III", 'C', findItemStack("Copper Cable"), 'I', stack(Items.IRON_INGOT));
+        addRecipe(findItemStack("One-way DC-DC Converter"), "D", "R", 'D', findItemStack("Winding DC-DC Converter"), 'R', stack(Items.REDSTONE));
+        addRecipe(findItemStack("One-way Boost vDC/DC Converter"), "D", "R", 'D', findItemStack("Variable DC-DC Converter"), 'R', stack(Items.REDSTONE));
+        addRecipe(findItemStack("One-way Buck vDC/DC Converter"), "D", "r", 'D', findItemStack("Variable DC-DC Converter"), 'r', dictCheapChip);
+        addRecipe(findItemStack("One-way Boost/Buck vDC/DC Converter"), " B ", "DVD", " B ", 'V', findItemStack("Variable DC-DC Converter"), 'D', findItemStack("Signal Diode"), 'B', dictCheapChip);
+        addRecipe(findItemStack("Variable DC-DC Converter"), "CBC", "III", 'C', findItemStack("Copper Cable"), 'I', stack(Items.IRON_INGOT), 'B', dictCheapChip);
+        addRecipe(findItemStack("Variable inductor"), " S ", "cIc", " c ", 'I', stack(Items.IRON_INGOT), 'c', findItemStack("Copper Cable"), 'S', findItemStack("Signal Cable"));
+
         addRecipe(findItemStack("Signal Diode", 4),
             " RB",
             "IIR",
@@ -1078,6 +1314,136 @@ public final class ElnRecipes extends ElnRecipesBase {
             'M', findItemStack("Advanced Electrical Motor"));
     }
 
+    public static void recipeForkPatchUps() {
+        addRecipe(findItemStack("Utility Wind Turbine 3.2kV"),"PPP","MCM","IFI",'P',findItemStack("Iron Plate"),'M',findItemStack("Advanced Electrical Motor"),'C',findItemStack("Copper Cable"),'I',Items.IRON_BLOCK,'F',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Large Watermill 3.2kV"),"WWW","MCM","IFI",'W',Items.OAK_PLANKS,'M',findItemStack("Advanced Electrical Motor"),'C',findItemStack("Copper Cable"),'I',Items.IRON_BLOCK,'F',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Pole Streetlight Attachment")," II","CPG"," I ",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'P',findItemStack("Simple Lamp Socket"),'G',Items.GLASS);
+        addRecipe(findItemStack("Mains Step-down Unit"),"CFC","MVM","CCC",'C',findItemStack("Copper Cable"),'F',findItemStack("Optimal Ferromagnetic Core"),'M',findItemStack("Machine Block"),'V',findItemStack("Variable DC-DC Converter"));
+        for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values()) {
+            String previous=switch(kind) { case CONTACTOR_THREE -> "Single Pole Contactor";case RELAY_FOUR -> "Two Pole Changeover Relay";case SSR_THREE -> "Solid State Relay";default -> null; };
+            if(previous!=null)addRecipe(findItemStack(kind.getTitle()),kind.getPoles()==4?"R R":"RRR","PWP",'R',findItemStack(previous),'P',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
+            else addRecipe(findItemStack(kind.getTitle())," C ","PRP","IWI",'C',findItemStack(kind.getSolidState()?"Silicon Plate":"Cheap Ferromagnetic Core"),'P',Items.IRON_NUGGET,'R',findItemStack(kind.getSolidState()?"Signal Relay":"Low Voltage Relay"),'I',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
+        }
+        addRecipe(findItemStack("69 kV Steel Transmission Pole"),"I I","IPI","I I",'I',Blocks.IRON_BARS,'P',findItemStack("Three Phase Utility Pole"));
+        addRecipe(findItemStack("230 kV Steel Transmission Tower"),"IPI","PBP","I I",'I',Blocks.IRON_BLOCK,'P',findItemStack("69 kV Steel Transmission Pole"),'B',Blocks.IRON_BARS);
+        for (var kind : mods.eln.utility.TransmissionKind.values()) if (kind.getRiser())
+            addShapelessRecipe(findItemStack(kind.getTitle()),findItemStack(kind.getVolts()>100000?"230 kV Steel Transmission Tower":"69 kV Steel Transmission Pole"),findItemStack("Copper Cable"),findItemStack("Copper Cable"),findItemStack("Copper Cable"));
+        mods.eln.utility.DistributionPoles.recipes((out,args)->{addShapelessRecipe(out,args);return kotlin.Unit.INSTANCE;});
+        addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        int mastIndex=0;
+        for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK)) {
+            java.util.List<Object> ingredients=new java.util.ArrayList<>();ingredients.add(findItemStack("120/240V Service Weatherhead"));
+            for(int i=0;i<=mastIndex;i++)ingredients.add(Items.IRON_INGOT);
+            addShapelessRecipe(findItemStack(mast.getTitle()),ingredients.toArray());mastIndex++;
+        }
+        addRecipe(findItemStack("North American Meter Base"),"P P","PCP","P P",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Analog Glass Service Meter")," G ","CMC"," P ",'G',Items.GLASS,'C',findItemStack("Copper Cable"),'M',findItemStack("Electrical Motor"),'P',findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Smart Digital Service Meter"),findItemStack("Analog Glass Service Meter"),Items.COMPARATOR,Items.REDSTONE);
+        addRecipe(findItemStack("Wide Underground Meter Socket"),"PPP","MCC","P P",'P',findItemStack("Iron Plate"),'M',findItemStack("North American Meter Base"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Underground Service Entrance Riser")," P "," C ","ICI",'P',findItemStack("Iron Plate"),'I',Items.IRON_INGOT,'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("120/240V Underground Service Handhole"),"IPI","CBC","III",'I',Items.STONE_BRICKS,'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'B',Items.IRON_BARS);
+        addRecipe(findItemStack("Red Handle Service Disconnect"),"PPP","CLC","PPP",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'L',Items.LEVER);
+        addRecipe(findItemStack("Pad Mounted Neighbourhood Transformer"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.IRON_BLOCK,'M',findItemStack("Machine Block"));
+        for(int i=0;i<5;i++)addRecipe(findItemStack(mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i)),"ICI","CTC","ICI",'I',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'T',findItemStack(i==0?"Mains Step-down Unit":mods.eln.utility.PoleHardware.INSTANCE.getTransformerNames().get(i-1)));
+        addRecipe(findItemStack("Variable Frequency Motor Drive"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.REDSTONE_BLOCK,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Grid Control Console"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.COMPARATOR,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Pole Surge Arrester"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.LIGHTNING_ROD.weathering().unaffected(),'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Electric Forklift"),"FFF","CMC","III",'F',findItemStack("Welded Machine Frame"),'C',findItemStack("Copper Cable"),'M',findItemStack("Electrical Motor"),'I',Items.IRON_BLOCK);
+        for(var kind:mods.eln.vehicle.RoadVehicleKind.values())addRecipe(findItemStack(kind.getTitle()),"F F",kind==mods.eln.vehicle.RoadVehicleKind.CART?"CMC":"MCM","III",'F',findItemStack("Welded Machine Frame"),'C',findItemStack("Copper Cable"),'M',findItemStack("Electrical Motor"),'I',Items.IRON_BLOCK);
+        addRecipe(findItemStack("240 V 100 A Vehicle Charger"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',findItemStack("Electrical Motor"),'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("100 A Vehicle Charging Lead"),"CCC","  C","  I",'C',findItemStack("Copper Cable"),'I',findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Warehouse Equipment Pallet"),"PPP","S S","PPP",'P',Items.OAK_PLANKS,'S',Items.STICK);
+        addRecipe(findItemStack("Electric Welding Station"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.FLINT_AND_STEEL,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Programmable EV Pack Charger"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.QUARTZ,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("48 V 20 kWh Traction Battery"),"IBI","BBB","CBC",'I',findItemStack("Iron Plate"),'B',findItemStack("UPS Industrial Battery Module"),'C',findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Programmable Load Bank"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.BLAZE_ROD,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Protective Relay Cabinet"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.REPEATER,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Automatic Load Shedding Controller"),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.REDSTONE,'W',findItemStack("Copper Cable"),'C',Items.OBSERVER,'M',findItemStack("Machine Block"));
+        addRecipe(findItemStack("Programmable UPS"),"CVC","MFM","CVC",'C',findItemStack("Copper Cable"),'V',findItemStack("Variable DC-DC Converter"),'M',findItemStack("Machine Block"),'F',findItemStack("Optimal Ferromagnetic Core"));
+        addRecipe(findItemStack("Four Cell Plug-in UPS"),"POP","CDC","PPP",'P',findItemStack("Iron Plate"),'O',findItemStack("Six Socket Power Strip"),'C',findItemStack("Copper Cable"),'D',findItemStack("DC-DC Converter"));
+        addShapelessRecipe(findItemStack("Wall-mounted Programmable UPS"),findItemStack("Programmable UPS"),findItemStack("Iron Plate"));
+    }
+
+    public static void recipeForkPatchStandby() {
+        addRecipe(findItemStack("Automatic Transfer Switch"),"IPI","RCR","IPI",'I',findItemStack("Iron Plate"),'P',Items.COMPARATOR,'R',Items.REDSTONE,'C',findItemStack("Copper Cable"));
+        addShapelessRecipe(findItemStack("Wall-mounted Automatic Transfer Switch"),findItemStack("Automatic Transfer Switch"),findItemStack("Iron Plate"));
+        addRecipe(findItemStack("Standby Gasoline Generator"),"PPP","BGB","CRC",'P',findItemStack("Iron Plate"),'B',Items.BUCKET,'G',findItemStack("200V Fuel Generator"),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        // Native survival upgrade paths conserve the source tiers' installed engine capacity.
+        var tiers=mods.eln.transparentnode.standby.GeneratorTier.values();
+        for(int i=1;i<tiers.length;i++) {
+            if(i==tiers.length-1)addRecipe(findItemStack(tiers[i].getTitle()),"PPP","GGG","CRC",'P',findItemStack("Iron Plate"),'G',findItemStack(tiers[i-1].getTitle()),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+            else addRecipe(findItemStack(tiers[i].getTitle()),"PPP","GCG","PRP",'P',findItemStack("Iron Plate"),'G',findItemStack(tiers[i-1].getTitle()),'C',findItemStack("Copper Cable"),'R',Items.REDSTONE);
+        }
+    }
+
+    public static void recipeForkPatchOffgrid() {
+        addRecipe(findItemStack("UPS AGM Battery Cell"),"PPP","LBL","PPP",'P',findItemStack("Iron Plate"),'L',"ingotLead",'B',findItemStack("Portable Battery"));
+        addRecipe(findItemStack("UPS LiFePO4 Battery Cell"),"CCC","GBG","CCC",'C',Items.COPPER_INGOT,'G',Items.GOLD_INGOT,'B',findItemStack("UPS AGM Battery Cell"));
+        addRecipe(findItemStack("UPS Industrial Battery Module"),"PPP","BBB","PPP",'P',findItemStack("Iron Plate"),'B',findItemStack("UPS LiFePO4 Battery Cell"));
+        addRecipe(findItemStack("16 kWh LiFePO4 Cell Stack"),"IBI","BCB","IBI",'I',findItemStack("Iron Plate"),'B',findItemStack("UPS Industrial Battery Module"),'C',findItemStack("Copper Cable"));
+        for(var t:mods.eln.transparentnode.offgrid.OffGridType.values()) {
+            if(t.getBank()) {
+                String[] pattern=switch(t.getKwh()) { case 16 -> new String[]{" I ","CSC","IMI"}; case 32 -> new String[]{"SIS","CMC","III"}; case 48 -> new String[]{"SIS","CMC","ISI"}; default -> new String[]{"SIS","CMC","SIS"}; };
+                addRecipe(findItemStack(t.getTitle()),pattern[0],pattern[1],pattern[2],'I',t.getWall()?Items.IRON_CHAIN:findItemStack("Iron Plate"),'S',findItemStack("16 kWh LiFePO4 Cell Stack"),'C',findItemStack("Copper Cable"),'M',findItemStack("Machine Block"));
+            } else {
+                Object core=switch(t) { case MPPT -> findItemStack("MPPT Solar Controller"); case INVERTER -> findItemStack("Hybrid Solar Inverter"); case COMBINER -> findItemStack("30 A Pole Fuse"); default -> Items.REPEATER; };
+                addRecipe(findItemStack(t.getTitle()),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.COMPARATOR,'W',findItemStack("Copper Cable"),'C',core,'M',findItemStack("Machine Block"));
+            }
+        }
+        addRecipe(findItemStack("Pole Fuse Link",3)," C "," P "," C ",'C',findItemStack("Copper Cable"),'P',findItemStack("Iron Plate"));
+        var names=mods.eln.utility.PoleHardware.INSTANCE.getFuseNames();
+        for(int i=0;i<names.size();i++) {
+            var parts=new java.util.ArrayList<Object>();parts.add(findItemStack("Pole Fuse Link"));
+            for(int j=0;j<1+i/3;j++)parts.add(Items.COPPER_INGOT);
+            for(int j=0;j<i%3;j++)parts.add(Items.IRON_NUGGET);
+            addShapelessRecipe(findItemStack(names.get(i)),parts.toArray());
+        }
+    }
+
+    public static void recipeForkPatchSolar() {
+        addRecipe(findItemStack("MPPT Solar Controller"), "IPI", "RCR", "IPI",
+            'I', findItemStack("Iron Plate"), 'P', Items.COMPARATOR, 'R', Items.REDSTONE,
+            'C', findItemStack("Small Solar Panel"));
+        addRecipe(findItemStack("Hybrid Solar Inverter"), "PPP", "MCM", "CRC",
+            'P', findItemStack("Iron Plate"), 'M', findItemStack("MPPT Solar Controller"),
+            'C', findItemStack("Copper Cable"), 'R', Items.REDSTONE);
+        addShapelessRecipe(findItemStack("Wall-mounted MPPT Solar Controller"), findItemStack("MPPT Solar Controller"), findItemStack("Iron Plate"));
+        addShapelessRecipe(findItemStack("Wall-mounted Hybrid Solar Inverter"), findItemStack("Hybrid Solar Inverter"), findItemStack("Iron Plate"));
+    }
+
+    /** ForkPatch 1.21.1: Graphite Rod (shaped, from 2x/3x/4x Graphite Rods) and 2x/3x/4x Graphite Rods
+     * (shapeless from rods; splits: 2x -> 2 rod, 3x -> 3 rod, 4x -> 4 rod, 2x + rod -> 3x,
+     * 2x + 2 rod / 2x + 2x / 3x + rod -> 4x). All ported together. Source CraftingRecipes.kt:1719-1763. */
+    public static void recipeForkPatchGraphite() {
+        addRecipe(findItemStack("Graphite Rod", 2), "I", 'I', findItemStack("2x Graphite Rods"));
+        addShapelessRecipe(findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
+        addRecipe(findItemStack("Graphite Rod", 3), "I", 'I', findItemStack("3x Graphite Rods"));
+        addShapelessRecipe(findItemStack("3x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
+        addShapelessRecipe(findItemStack("3x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"));
+        addRecipe(findItemStack("Graphite Rod", 4), "I", 'I', findItemStack("4x Graphite Rods"));
+        addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
+        addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
+        addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("2x Graphite Rods"));
+        addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("3x Graphite Rods"), findItemStack("Graphite Rod"));
+        // ForkPatch 1.21.1 CraftingRecipes.kt:1762: one Synthetic Diamond shapeless-crafts into two Diamonds.
+        addShapelessRecipe(stack(Items.DIAMOND, 2), findItemStack("Synthetic Diamond"));
+    }
+
+    /** ForkPatch 1.21.1 CraftingRecipes.kt:1715-1716 (misc): 3x3 Arc Clay Ingot -> Arc Clay Block; block -> 9 ingots.
+     * No machine processing of arc clay in source (grep-verified). */
+    public static void recipeForkPatchArcClay() {
+        addRecipe(stack(mods.eln.registry.ElnRegistry.ARC_CLAY_BLOCK.get()), "III", "III", "III", 'I', findItemStack("Arc Clay Ingot"));
+        addShapelessRecipe(findItemStack("Arc Clay Ingot", 9), stack(mods.eln.registry.ElnRegistry.ARC_CLAY_BLOCK.get()));
+    }
+
+    /** ForkPatch 1.21.1 CraftingRecipes.kt:1717-1718 (misc): 3x3 Arc Metal Ingot -> Arc Metal Block; block -> 9 ingots.
+     * No machine processing of arc metal in source (grep-verified); the T1/T2 transmission cable recipes using
+     * ingotSteel are commented out in source. */
+    public static void recipeForkPatchArcMetal() {
+        addRecipe(stack(mods.eln.registry.ElnRegistry.ARC_METAL_BLOCK.get()), "III", "III", "III", 'I', findItemStack("Arc Metal Ingot"));
+        addShapelessRecipe(findItemStack("Arc Metal Ingot", 9), stack(mods.eln.registry.ElnRegistry.ARC_METAL_BLOCK.get()));
+    }
+
     public static void recipeSolarPanel() {
         addRecipe(findItemStack("Small Solar Panel"),
             "III",
@@ -1789,6 +2155,95 @@ public final class ElnRecipes extends ElnRecipesBase {
             "ppp",
             'p', "plateIron");
 
+        // ForkPatch 1.21.1: clutch pin (source data/eln/recipe/clutch_pin.json: 2x steel ingot -> 4)
+        addRecipe(findItemStack("Clutch Pin", 4),
+            "s",
+            "s",
+            's', "ingotSteel");
+
+        // ForkPatch 1.21.1: iron/gold/copper/lead/coal clutch plates (tungsten dust ring + plate centre)
+        addRecipe(findItemStack("Iron Clutch Plate"),
+            " t ",
+            "tIt",
+            " t ",
+            'I', "plateIron",
+            't', "dustElnTungsten");
+
+        addRecipe(findItemStack("Gold Clutch Plate"),
+            " t ",
+            "tGt",
+            " t ",
+            'G', "plateGold",
+            't', "dustElnTungsten");
+
+        addRecipe(findItemStack("Copper Clutch Plate"),
+            " t ",
+            "tCt",
+            " t ",
+            'C', "plateCopper",
+            't', "dustElnTungsten");
+
+        addRecipe(findItemStack("Lead Clutch Plate"),
+            " t ",
+            "tLt",
+            " t ",
+            'L', "plateLead",
+            't', "dustElnTungsten");
+
+        addRecipe(findItemStack("Coal Clutch Plate"),
+            " t ",
+            "tCt",
+            " t ",
+            'C', "plateCoal",
+            't', "dustElnTungsten");
+
+        // ForkPatch 1.21.1: motor cowling + heavy winding (source data/eln/recipe/{motor_cowling,heavy_winding}.json)
+        // S -> "ingotSteel" resolves to tag c:ingots/steel and T -> "itemRubber" to tag c:rubber,
+        // matching the source's generated recipe JSON exactly.
+        addRecipe(findItemStack("Motor Cowling"),
+            "ISI",
+            "MAM",
+            "ISI",
+            'I', findItemStack("Iron Plate"),
+            'S', "ingotSteel",
+            'M', findItemStack("Machine Block"),
+            'A', findItemStack("Advanced Machine Block"));
+        addRecipe(findItemStack("Heavy Winding"),
+            "cRc",
+            "RTR",
+            "cRc",
+            'c', findItemStack("Copper Cable"),
+            'R', findItemStack("Tree Resin"),
+            'T', "itemRubber");
+
+        // ForkPatch 1.21.1: turbine blades (source CraftingRecipes.kt recipeTurbineBlades): all four tiers ported
+        // (iron + steel 2026-11-18, alloy + tungsten 2026-11-19); the turbine consumers are out of scope.
+        // Tungsten uses the config dictionary default "ingotElnTungsten" (source
+        // runtime.dictionary.tungstenIngot default) mapped to eln:ingots/tungsten by OreDictTags.
+        addRecipe(findItemStack("Iron Turbine Blade"),
+            " I ",
+            "IMI",
+            " I ",
+            'I', "ingotIron",
+            'M', findItemStack("Machine Block"));
+        addRecipe(findItemStack("Steel Turbine Blade"),
+            "SIS",
+            "SMS",
+            "SIS",
+            'S', firstExistingOre("ingotSteel", "ingotIron"),
+            'I', "ingotIron",
+            'M', findItemStack("Machine Block"));
+        addRecipe(findItemStack("Alloy Turbine Blade"),
+            "AIA", "ACA", "AIA",
+            'A', "ingotAlloy",
+            'I', "ingotIron",
+            'C', findItemStack("Advanced Machine Block"));
+        addRecipe(findItemStack("Tungsten Turbine Blade"),
+            "TAT", "ACA", "TAT",
+            'T', "ingotElnTungsten",
+            'A', "ingotAlloy",
+            'C', findItemStack("Advanced Machine Block"));
+
     }
 
 
@@ -2364,12 +2819,39 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeElectricalBreaker() {
+        net.minecraft.world.item.Item[] alarmParts={Items.COMPARATOR,Items.LEVER,Items.NOTE_BLOCK,Items.BELL,Items.GLOWSTONE_DUST,Items.OBSERVER,Items.BLAZE_POWDER};
+        for(var kind:mods.eln.transparentnode.firealarm.AlarmKind.values())addRecipe(findItemStack(kind.getTitle()),"IRI","RCR","IWI",
+            'I',findItemStack("Iron Plate"),'R',stack(Items.REDSTONE),'C',stack(alarmParts[kind.ordinal()]),'W',findItemStack("Signal Cable"));
+
+        addRecipe(findItemStack("Twelve Circuit American Breaker Panel"),"P P","CRC","PPP",
+            'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"),'R',stack(Items.REDSTONE));
+        addRecipe(findItemStack("5A Switch"),"  I"," I ","CAC",'A',"itemRubber",'I',findItemStack("Copper Cable"),'C',findItemStack("Copper 20 AWG Cable 300V"));
+        addRecipe(findItemStack("20A Switch"),"  I"," I ","CAC",'A',"itemRubber",'I',findItemStack("Copper Cable"),'C',findItemStack("Copper 12 AWG Cable 600V"));
+        addRecipe(findItemStack("50A Switch"),"AAI","AIA","CAC",'A',"itemRubber",'I',findItemStack("Copper Cable"),'C',findItemStack("Copper 6 AWG Cable 600V"));
+        addRecipe(findItemStack("100A Switch"),"AAI","AIA","CAC",'A',"itemRubber",'I',findItemStack("Copper Cable"),'C',findItemStack("Copper 2 AWG Cable 600V"));
+        String[] relayNames={"5V Control Relay 10A","12V Control Relay 20A","12V Control Relay 50A","12V Control Relay 100A"};
+        String[] relayWire={"Copper 18 AWG Cable 300V","Copper 12 AWG Cable 600V","Copper 6 AWG Cable 600V","Copper 2 AWG Cable 600V"};
+        for(int i=0;i<relayNames.length;i++)addRecipe(findItemStack(relayNames[i]),"GGG","OIO","CRC",
+            'R',stack(Items.REDSTONE),'O',findItemStack("Iron Cable"),'G',stack(Blocks.GLASS_PANE),
+            'I',findItemStack("Copper Cable"),'C',findItemStack(relayWire[i]));
 
         addRecipe(findItemStack("Electrical Breaker", 1),
             "crC",
             'c', findItemStack("Overvoltage Protection"),
             'C', findItemStack("Overheating Protection"),
             'r', findItemStack("High Voltage Relay"));
+
+        // Preserve the source gauge/relay input for each exact current rating.
+        String[] ratedParts={"5A Switch","5V Control Relay 10A","Copper 14 AWG Cable 600V","12V Control Relay 20A",
+            "Copper 10 AWG Cable 600V","Copper 8 AWG Cable 600V","12V Control Relay 50A","Copper 6 AWG Cable 600V",
+            "12V Control Relay 100A","Copper 1/0 AWG Cable 1000V","Copper 2/0 AWG Cable 1000V","Copper 4/0 AWG Cable 1000V"};
+        int[] ratedAmps={5,10,15,20,30,40,50,60,100,125,200,400};
+        for (int i=0;i<ratedAmps.length;i++) {
+            int amps=ratedAmps[i];
+            addRecipe(findItemStack(amps + "A Electrical Breaker",1),
+                "crC", 'c', findItemStack("Overvoltage Protection"),
+                'C', findItemStack("Overheating Protection"), 'r', findItemStack(ratedParts[i]));
+        }
 
     }
 
@@ -2400,6 +2882,36 @@ public final class ElnRecipes extends ElnRecipesBase {
             "rcr",
             'r', findItemStack("itemRubber"),
             'c', findItemStack("Very High Voltage Cable"));
+
+        addRecipe(findItemStack("5A Lead Fuse", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Copper 20 AWG Cable 300V"));
+
+        addRecipe(findItemStack("10A Lead Fuse", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Copper 16 AWG Cable 300V"));
+
+        addRecipe(findItemStack("15A Lead Fuse", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Copper 14 AWG Cable 600V"));
+
+        addRecipe(findItemStack("20A Lead Fuse", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Copper 12 AWG Cable 600V"));
+
+        addRecipe(findItemStack("30A Lead Fuse", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Copper 10 AWG Cable 600V"));
+
+        addRecipe(findItemStack("50A Lead Fuse", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Copper 6 AWG Cable 600V"));
 
     }
 
@@ -2652,5 +3164,6 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeTool() {
+        addRecipe(findItemStack("Wire Snips"), " I", "I ", "RR", 'I', "ingotIron", 'R', "itemRubber");
     }
 }

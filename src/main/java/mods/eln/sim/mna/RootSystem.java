@@ -3,6 +3,8 @@ package mods.eln.sim.mna;
 import mods.eln.misc.Profiler;
 import mods.eln.misc.Utils;
 import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.power.ConservativePowerProcess;
+import mods.eln.sim.power.ConverterConvergence;
 import mods.eln.sim.mna.component.*;
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush;
@@ -28,6 +30,11 @@ public class RootSystem {
     ArrayList<ISubSystemProcessFlush> processF = new ArrayList<ISubSystemProcessFlush>();
 
     ArrayList<IRootSystemPreStepProcess> processPre = new ArrayList<IRootSystemPreStepProcess>();
+
+    private final ConverterConvergence converterConvergence = new ConverterConvergence();
+    private final List<ConservativePowerProcess> converters = new ArrayList<>();
+    private final List<IRootSystemPreStepProcess> legacyProcesses = new ArrayList<>();
+    private boolean processGroupsDirty = true;
 
     public RootSystem(double dt, int interSystemOverSampling) {
         this.dt = dt;
@@ -198,6 +205,14 @@ public class RootSystem {
 	}*/
 
     private void generateSystems() {
+        // Converter port impedances must not be replaced by stale partition proxies.
+        // Only connected networks containing switchable sources opt into exact assembly.
+        for (Component component : new ArrayList<>(addComponents)) {
+            if (!(component instanceof SwitchableVoltageSource)) continue;
+            for (State pin : component.getConnectedStates()) {
+                if (pin != null && pin.getSubSystem() == null) buildSubSystem(pin, true);
+            }
+        }
         LinkedList<State> firstState = new LinkedList<State>();
         for (State s : addStates) {
             if (s.mustBeFarFromInterSystem()) {
@@ -241,10 +256,135 @@ public class RootSystem {
     public final long[] stageNs = new long[5];
 
     public void step() {
-        long t = System.nanoTime(), t1;
+        long generationStarted = System.nanoTime();
         generate();
-        stageNs[0] += (t1 = System.nanoTime()) - t;
-        t = t1;
+        stageNs[0] += System.nanoTime() - generationStarted;
+        if (processGroupsDirty) {
+            converters.clear(); legacyProcesses.clear();
+            for (IRootSystemPreStepProcess process : processPre) {
+                if (process instanceof ConservativePowerProcess converter) converters.add(converter);
+                else legacyProcesses.add(process);
+            }
+            processGroupsDirty = false;
+        }
+        if (converters.isEmpty()) { stepLegacy(); return; }
+        long started = System.nanoTime(), calculatedBefore = stageNs[2];
+        List<IRootSystemPreStepProcess> legacy = legacyProcesses;
+        // Seed all voltage-regulated sources before sequential load calculations. Otherwise
+        // the first member of a parallel bus is incorrectly asked to carry the entire load,
+        // and subsequent members climb out of current limit only millivolts per iteration.
+        for (ConservativePowerProcess converter : converters) {
+            converter.beginStep(dt);
+            converter.prepareStep();
+        }
+        converterConvergence.seedStartupVoltages(converters);
+        // Legacy partition/transformer proxies still need their configured sweeps.
+        // Exact converter networks have their own bounded trial/acceptance loop below;
+        // multiplying that loop by the default 50 legacy sweeps only repeats port probes.
+        if (!converters.isEmpty()) sampleLegacy(legacy);
+        Set<ConservativePowerProcess> blocked = new HashSet<>();
+        boolean converged = false;
+        int attempts = converters.isEmpty() ? 1 : 64;
+        for (int trial = 0; trial < attempts; trial++) {
+            for (ConservativePowerProcess converter : converters) converter.rootSystemPreStepProcess();
+            sampleLegacy(legacy);
+            calculateTrials();
+            converged = converters.stream().allMatch(ConservativePowerProcess::acceptsCandidate);
+            if (converged) break;
+            if (trial == 1 || trial == 7) {
+                converterConvergence.correct(converters);
+                // Reconcile legacy loads/supplies with the new commands before accepting
+                // any candidate, including one produced by the numerical correction.
+                sampleLegacy(legacy);
+                calculateTrials();
+                converged = converters.stream().allMatch(ConservativePowerProcess::acceptsCandidate);
+                if (converged) break;
+                if (trial == 7 && converterConvergence.restartAtSourceBoundary(converters)) {
+                    sampleLegacy(legacy);
+                    calculateTrials();
+                    converged = converters.stream().allMatch(ConservativePowerProcess::acceptsCandidate);
+                    if (converged) break;
+                }
+            }
+        }
+        if (!converged) {
+            // A rejected load is not a reason to shut off every generator on its feeder.
+            // Open only those load ports first, then re-solve and validate everything left.
+            for (ConservativePowerProcess converter : converters) {
+                if (converter.isolatesLoadOnFailure() && !converter.acceptsCandidate()) {
+                    converter.failClosed();
+                    blocked.add(converter);
+                }
+            }
+            if (!blocked.isEmpty()) converged = settleUnblocked(converters, blocked, legacy);
+        }
+        if (!converged) {
+            // Fail the connected converter group, not unrelated machines elsewhere in the world.
+            Set<SubSystem> affected = new HashSet<>();
+            for (ConservativePowerProcess converter : converters) {
+                if (!converter.acceptsCandidate()) {
+                    blocked.add(converter);
+                    affected.addAll(converter.connectedSystems());
+                }
+            }
+            boolean changed;
+            do {
+                changed = false;
+                for (SubSystem system : new ArrayList<>(affected)) {
+                    changed |= affected.addAll(system.interSystemConnectivity);
+                }
+                for (ConservativePowerProcess converter : converters) {
+                    if (!Collections.disjoint(affected, converter.connectedSystems())) {
+                        changed |= affected.addAll(converter.connectedSystems());
+                        blocked.add(converter);
+                    }
+                }
+            } while (changed);
+            for (ConservativePowerProcess converter : blocked) converter.failClosed();
+            for (ConservativePowerProcess converter : converters) if (!blocked.contains(converter)) converter.rootSystemPreStepProcess();
+            sampleLegacy(legacy);
+            calculateTrials();
+        }
+        stageNs[1] += System.nanoTime() - started - (stageNs[2] - calculatedBefore);
+        long flushStarted = System.nanoTime();
+        for (SubSystem s : systems) s.stepFlush();
+        stageNs[3] += System.nanoTime() - flushStarted;
+        flushStarted = System.nanoTime();
+        for (ISubSystemProcessFlush p : processF) p.simProcessFlush();
+        stageNs[4] += System.nanoTime() - flushStarted;
+    }
+
+    private void calculateTrials() {
+        long started = System.nanoTime();
+        for (SubSystem system : systems) system.stepCalc();
+        stageNs[2] += System.nanoTime() - started;
+    }
+
+    private void sampleLegacy(List<IRootSystemPreStepProcess> processes) {
+        if (processes.isEmpty()) return;
+        for (int sample = 0; sample < Math.max(1, interSystemOverSampling); sample++) {
+            for (IRootSystemPreStepProcess process : processes) process.rootSystemPreStepProcess();
+        }
+    }
+
+    private boolean settleUnblocked(List<ConservativePowerProcess> converters,
+                                    Set<ConservativePowerProcess> blocked,
+                                    List<IRootSystemPreStepProcess> legacy) {
+        List<ConservativePowerProcess> active = new ArrayList<>();
+        for (ConservativePowerProcess converter : converters) if (!blocked.contains(converter)) active.add(converter);
+        converterConvergence.clear();
+        for (int trial = 0; trial < 16; trial++) {
+            for (ConservativePowerProcess converter : active) converter.rootSystemPreStepProcess();
+            sampleLegacy(legacy);
+            calculateTrials();
+            if (active.stream().allMatch(ConservativePowerProcess::acceptsCandidate)) return true;
+            if (trial == 1 || trial == 7) converterConvergence.correct(active);
+        }
+        return false;
+    }
+
+    private void stepLegacy() {
+        long t = System.nanoTime(), t1;
         for (int idx = 0; idx < interSystemOverSampling; idx++) {
             for (IRootSystemPreStepProcess p : processPre) {
                 p.rootSystemPreStepProcess();
@@ -268,13 +408,15 @@ public class RootSystem {
         stageNs[4] += System.nanoTime() - t;
     }
 
-    private void buildSubSystem(State root) {
+    private void buildSubSystem(State root) { buildSubSystem(root, false); }
+
+    private void buildSubSystem(State root, boolean exactConverterNetwork) {
         Set<Component> componentSet = new java.util.LinkedHashSet<Component>();
         Set<State> stateSet = new java.util.LinkedHashSet<State>();
 
         LinkedList<State> roots = new LinkedList<State>();
         roots.push(root);
-        buildSubSystem(roots, componentSet, stateSet);
+        buildSubSystem(roots, componentSet, stateSet, exactConverterNetwork);
 
         addComponents.removeAll(componentSet);
         addStates.removeAll(stateSet);
@@ -286,7 +428,7 @@ public class RootSystem {
         systems.add(subSystem);
     }
 
-    private void buildSubSystem(LinkedList<State> roots, Set<Component> componentSet, Set<State> stateSet) {
+    private void buildSubSystem(LinkedList<State> roots, Set<Component> componentSet, Set<State> stateSet, boolean exactConverterNetwork) {
         boolean privateSystem = roots.getFirst().isPrivateSubSystem();
 
         while (!roots.isEmpty()) {
@@ -294,7 +436,7 @@ public class RootSystem {
             stateSet.add(sExplored);
 
             for (Component c : sExplored.getConnectedComponentsNotAbstracted()) {
-                if (privateSystem == false && roots.size() + stateSet.size() > maxSubSystemSize && c.canBeReplacedByInterSystem()) {
+                if (!exactConverterNetwork && privateSystem == false && roots.size() + stateSet.size() > maxSubSystemSize && c.canBeReplacedByInterSystem()) {
                     continue;
                 }
                 if (componentSet.contains(c)) continue;
@@ -305,7 +447,7 @@ public class RootSystem {
                         noGo = true;
                         break;
                     }
-                    if (sNext.isPrivateSubSystem() != privateSystem) {
+                    if (!exactConverterNetwork && sNext.isPrivateSubSystem() != privateSystem) {
                         noGo = true;
                         break;
                     }
@@ -323,7 +465,7 @@ public class RootSystem {
         }
     }/*
 		
-		private void buildSubSystem(State root,boolean withInterSystem, Set<Component> componentSet, Set<State> stateSet) {
+		private void buildSubSystem(State root,boolean withInterSystem, Set<Component> componentSet, Set<State> stateSet, boolean exactConverterNetwork) {
 		if (stateSet.size() > maxSubSystemSize) {
 			return;
 		}
@@ -441,10 +583,14 @@ public class RootSystem {
 
     public void addProcess(IRootSystemPreStepProcess p) {
         processPre.add(p);
+        processGroupsDirty = true;
+        converterConvergence.clear();
     }
 
     public void removeProcess(IRootSystemPreStepProcess p) {
         processPre.remove(p);
+        processGroupsDirty = true;
+        converterConvergence.clear();
     }
 
     public boolean isRegistred(ElectricalLoad load) {

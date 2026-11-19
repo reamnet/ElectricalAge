@@ -131,8 +131,12 @@ public class NodeManager {
 
     public void removeNode(NodeBase node) {
         if (node == null) return;
-        if (node instanceof Node && node.coordonate.world() != null) NodeBlock.setLight(node.coordonate.world(), node.coordonate.pos(), 0);
-        nodesMap.remove(node.coordonate);
+        // A callback may already have installed a different owner at the same coordinate.
+        // Removing the stale object must not unregister it or erase its light snapshot.
+        if (nodesMap.get(node.coordonate) == node) {
+            if (node instanceof Node && node.coordonate.world() != null) NodeBlock.setLight(node.coordonate.world(), node.coordonate.pos(), 0);
+            nodesMap.remove(node.coordonate);
+        }
         nodes.remove(node);
         Utils.println("NodeManager has " + nodesMap.size() + "node");
     }

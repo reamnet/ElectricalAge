@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:brown_dye",
+    "G": "minecraft:glass_pane",
+    "L": "eln:basic_lamp_holder",
+    "P": "minecraft:stone_bricks"
+  },
+  "pattern": [
+    " D ",
+    "GLG",
+    " P "
+  ],
+  "result": {
+    "id": "eln:slotted_patio_wall_light"
+  }
+}

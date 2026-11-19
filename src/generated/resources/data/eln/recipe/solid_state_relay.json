@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:silicon_plate",
+    "I": "eln:iron_plate",
+    "P": "minecraft:iron_nugget",
+    "R": "eln:signal_relay",
+    "W": "eln:copper_cable"
+  },
+  "pattern": [
+    " C ",
+    "PRP",
+    "IWI"
+  ],
+  "result": {
+    "id": "eln:solid_state_relay"
+  }
+}

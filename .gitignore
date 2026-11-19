@@ -14,6 +14,7 @@ eclipse
 # gradle
 .gradle
 .gradle/
+.kotlin/
 # idea
 .idea
 *.iml
@@ -25,6 +26,7 @@ eclipse
 !golden/**/*.json
 !src/generated/**/*.json
 !tools/**/*.json
+!docs/forkpatch-port/**/*.json
 # kate
 *.kate-swp
 *.launch
@@ -53,3 +55,7 @@ result
 __pycache__/
 *.pyc
 tools/icons/refs/
+
+# mctest local test state + screenshot artifacts (generated, not source)
+tools/mctest/.state/
+tools/mctest/shots/

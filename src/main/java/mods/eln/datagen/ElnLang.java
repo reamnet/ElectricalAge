@@ -18,12 +18,15 @@ import java.util.Map;
 public class ElnLang extends LanguageProvider {
     /** 1.12 TR_NAME of the items that have no descriptor. */
     static final Map<String, String> PLAIN = Map.ofEntries(
+        Map.entry("hot_water","Hot Water"),Map.entry("fruit_smoothie","Fruit Smoothie"),Map.entry("steamed_grains","Steamed Grains"),Map.entry("toasted_bread","Toasted Bread"),Map.entry("fresh_coffee","Fresh Coffee"),Map.entry("wet_equipment","Wet Equipment"),
         Map.entry("e_coal_helmet", "E-Coal Helmet"), Map.entry("e_coal_chestplate", "E-Coal Chestplate"),
         Map.entry("e_coal_leggings", "E-Coal Leggings"), Map.entry("e_coal_boots", "E-Coal Boots"),
         Map.entry("replicator_spawn_egg", "Replicator Spawn Egg"),
         Map.entry("pipe_kit_iron", "Iron Pipe Kit"), Map.entry("pipe_kit_alloy", "Alloy Pipe Kit"), Map.entry("pipe_kit_large_alloy", "Large Alloy Pipe Kit"), Map.entry("pipe_valve", "Pipe Valve"), Map.entry("pipe_control_valve", "Pipe Control Valve"), Map.entry("pipe_throttle_valve", "Pipe Throttle Valve"), Map.entry("pipe_adapter", "Pipe Adapter"), Map.entry("pipe_safety_valve", "Pipe Safety Valve"), Map.entry("pipe_pressure_sensor", "Pipe Pressure Sensor"), Map.entry("pipe_temperature_sensor", "Pipe Temperature Sensor"), Map.entry("pipe_quality_sensor", "Pipe Steam Quality Sensor"), Map.entry("pipe_pressure_valve", "Pipe Pressure Valve"), Map.entry("battery_belt", "Battery Belt"), Map.entry("headlamp", "Headlamp"), Map.entry("electric_bike", "Electric Bike"), Map.entry("terrain_bike", "Terrain Bike"),
         Map.entry("cable_kit_signal", "Signal Cable Kit"), Map.entry("cable_kit_lv", "Low Voltage Cable Kit"), Map.entry("cable_kit_mv", "Medium Voltage Cable Kit"),
         Map.entry("cable_kit_hv", "High Voltage Cable Kit"), Map.entry("cable_kit_vhv", "Very High Voltage Cable Kit"), Map.entry("cable_kit_thermal", "Copper Thermal Cable Kit"), Map.entry("cable_kit_bus", "Field Bus Cable Kit"), Map.entry("field_bus_cable", "Field Bus Cable"), Map.entry("chisel", "Chisel"), Map.entry("handbook", "Electrical Engineer's Ledger"), Map.entry("raw_lead", "Raw Lead"), Map.entry("raw_tungsten", "Raw Tungsten"), Map.entry("capacitor_cell", "Capacitor Cell"), Map.entry("charcoal_nugget", "Charcoal Nugget"),
+        Map.entry("arc_clay_block", "Arc Clay Block"),
+        Map.entry("arc_metal_block", "Arc Metal Block"),
         Map.entry("item_creative_tab", "Electrical Age"));
 
     public ElnLang(PackOutput output) {
@@ -37,6 +40,12 @@ public class ElnLang extends LanguageProvider {
         add("container.eln.electric_bike", "Bike Trunk");
         add("message.eln.electric_bike.no_battery", "No battery: pedalling only");
         add("message.eln.electric_bike.flat_battery", "The battery is flat: pedalling only");
+        add("entity.eln.electric_forklift","Electric Forklift");
+        add("entity.eln.equipment_pallet","Warehouse Equipment Pallet");
+        add("key.categories.eln.vehicles","Electrical Age vehicles");
+        add("key.eln.forklift.raise","Forklift: raise forks");
+        add("key.eln.forklift.lower","Forklift: lower forks");
+        add("key.eln.forklift.cargo","Forklift: load or unload pallet");
         add("key.eln.wrench", "Wrench (hold: a switch's screen on click; the chisel's brush menu)");
         add("key.eln.headlamp", "Lights on/off (headlamp, flashlights in hand)");
         add("eln.headlamp.none", "No headlamp worn, no flashlight in hand");
@@ -128,7 +137,7 @@ public class ElnLang extends LanguageProvider {
         add(ElnRegistry.LIGHT_BLOCK.get(), "Electrical Age Light");
         for (var b : ElnRegistry.TRANSPARENT_BLOCKS) {
             var d = b.get().descriptor;
-            add(b.get(), d.name);
+            add(b.get(), descriptorName(d));
         }
         add("itemGroup.eln", "Electrical Age");
         add("death.attack.eln.scald", "%1$s was scalded by steam");
@@ -148,6 +157,7 @@ public class ElnLang extends LanguageProvider {
     }
 
     static String descriptorName(Object d) {
+        if (d instanceof mods.eln.transparentnode.cord.OutletDescriptor o && o.getRating() == mods.eln.transparentnode.cord.CordRating.V120 && !o.getStrip()) return "120 V Wall Outlet";
         if (d instanceof mods.eln.generic.GenericItemUsingDamageDescriptor g) return g.name;
         if (d instanceof mods.eln.generic.GenericItemBlockUsingDamageDescriptor g) return g.name;
         if (d instanceof mods.eln.misc.DescriptorBase b) return b.descriptorKey;

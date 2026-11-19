@@ -151,6 +151,9 @@ public class ThermalLoad {
         EnergyTemp += energy;
     }
 
+    /** Integrate joules; phase-changing loads override this without replacing native heat transfer. */
+    public void integrateEnergy(double joules) { Tc += joules / C; }
+
     public double getT() {
         return Tc;
     }

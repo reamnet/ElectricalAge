@@ -1,0 +1,858 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "statusMeaning": "Human scope assessment. Every stream retains the listed open work; same names, imports and audit membership are not completion evidence.",
+  "workstreams": [
+    {
+      "id": "registry",
+      "title": "Registration and identity contracts",
+      "state": "partial",
+      "dependsOn": [],
+      "reuse": "The 707-entry native manifest and existing conflict helpers; keep shared-item, six-node, transparent-node and entity namespaces separate.",
+      "needed": [
+        "Export the actual active 1.21.1 runtime catalog, including loop-generated variants, hidden legacy entries and development/config gates. Compare names, numeric IDs, properties and recipes with native registration; literal-name search alone cannot finish this job.",
+        "Record an explicit destination for every incoming identity. Preserve occupied native IDs, inventories and old recipe outputs; document display-name aliases and newly required ingredients.",
+        "Adapt entry points, capabilities, attributes, menus, packets, creative categories and lifecycle registration. Do not copy source bootstrap, Gradle configuration or an old dependency set wholesale."
+      ],
+      "acceptance": [
+        "Every source runtime identity is accounted for as adapted, intentionally hidden/conditional, superseded with a recorded mapping, or still open.",
+        "Load an existing native world and prove old identities/stack data stay exact; run datagen twice and inspect missing/duplicate registrations."
+      ],
+      "evidence": [
+        "registry-conflicts.md",
+        "decorative-lighting.md"
+      ]
+    },
+    {
+      "id": "mounting",
+      "title": "Node lifecycle, partial mounting and ghost ownership",
+      "state": "partial",
+      "dependsOn": [
+        "registry"
+      ],
+      "reuse": "Native node/voxel placement, cached oriented shapes, solar roof/flat adapters and resident-only owner queries.",
+      "needed": [
+        "Carry source support-plane insets through placement, selection, collision, drawing, cable rises and light origins together. Preserve grid owner coordinates and invalidate cached geometry when supports change.",
+        "Map source clearance/lamp-clearance/cabinet/roof reservations by owner meaning. Repair and remove reservations without duplicate drops or stale-owner teardown; never reinterpret numeric metadata globally.",
+        "Review generic node save/load, block callbacks, automation ownership and chunk/dimension lifecycle against the source; a matching class name does not establish matching behavior."
+      ],
+      "acceptance": [
+        "Exercise slabs, every stair half/facing, walls/ceilings, mixed-height terminals, support changes, unloaded neighbors, ray picking and fresh-JVM restoration.",
+        "Native voxel ownership and existing roof/flat/cabinet saves remain valid; loaded-only repair does not request chunks."
+      ],
+      "evidence": [
+        "mounting-review.md",
+        "ghost-migration-review.md",
+        "solar-roofs.md",
+        "flat-solar.md"
+      ]
+    },
+    {
+      "id": "solver",
+      "title": "Electrical/thermal solver and shared simulation changes",
+      "state": "behavior-review",
+      "dependsOn": [
+        "mounting"
+      ],
+      "reuse": "The destination conservative power helpers, accepted-step accounting, guarded finite states and cached LU factors.",
+      "needed": [
+        "Diff source sim, MNA, NBT, nonlinear components, regulators and equation helpers against native implementations. Classify each change as already equivalent, intentional native behavior or a required adapter.",
+        "Preserve physical-time integration: solver retries must not consume energy, fuel, bulb life, heat or charge. Retain finite limits, sign conventions, reset/disconnect behavior and stable-matrix caching.",
+        "Review source diagnostics and configuration interaction before changing shared code used by already passing devices."
+      ],
+      "acceptance": [
+        "Run exact circuit/conservation/thermal regressions, sag/short/reverse-flow and unload/reload campaigns with the existing tolerances.",
+        "Compare matrix rebuild counts and representative coupled-network CPU/memory; retain the default fluid corpus and existing expectations."
+      ],
+      "evidence": [
+        "power-electronics-review.md",
+        "probe-benchmark.json"
+      ]
+    },
+    {
+      "id": "wiring",
+      "title": "Grid spans, cables, pole height and routing",
+      "state": "partial",
+      "dependsOn": [
+        "mounting",
+        "solver"
+      ],
+      "reuse": "Paid native utility/multicore wire, catenary caches, manufacturing ledgers and steel span alignment.",
+      "needed": [
+        "Review remaining cable tools, legacy pole height upgrades, attachments, phase inheritance and adaptive primary/service lead/rack alignment.",
+        "Reconcile source wind/weather/thermal-span refresh, covered cable behavior and span visibility with native conductor resistance, mass, insulation, melt state and actual paid lengths.",
+        "Keep topology updates on real endpoint changes; geometry/status polling must not recreate stable electrical links or retain unloaded worlds."
+      ],
+      "acceptance": [
+        "Verify all facings/heights and terminal combinations, obstructed turns, long spans, hot/damaged partial spools, reload, refunds and unloaded endpoints.",
+        "Check physical cable endpoints, phase labels and loaded-pole visibility in the client, including legacy pole families."
+      ],
+      "evidence": [
+        "overhead-checkpoint-validation.json",
+        "next-distribution-work.md",
+        "power-poles.md",
+        "wire-manufacturing.md"
+      ]
+    },
+    {
+      "id": "distribution",
+      "title": "Distribution, services and legacy pole attachments",
+      "state": "partial",
+      "dependsOn": [
+        "wiring"
+      ],
+      "reuse": "All 30 distribution variants, source-style hardware, protection, paid pole lamps, services/meters/handholes and steel poles.",
+      "needed": [
+        "Review non-distribution legacy streetlight ports, other height/surge attachments, hidden standalone recovery and source/native selection geometry.",
+        "Finish adaptive service/primary rack alignment and verify fuse/core/regulator/recloser/capacitor/switch behavior in whole upstream/downstream installations.",
+        "Recheck service meters, split-phase wiring, grounded/return paths, phase isolation and source display/status parts rather than equating render emission with visual correctness."
+      ],
+      "acceptance": [
+        "Use all 30 registered variants, all four steel types and old-save recovery fixtures without removing coverage.",
+        "Run paid attachment/removal, fault/reset, multi-phase isolation, remote-client and owner reload campaigns."
+      ],
+      "evidence": [
+        "distribution-parity.json",
+        "next-distribution-work.md",
+        "power-poles.md"
+      ]
+    },
+    {
+      "id": "substations",
+      "title": "69/230 kV substation transformers and disconnects",
+      "state": "implementation-needed",
+      "dependsOn": [
+        "distribution",
+        "electronics"
+      ],
+      "reuse": "Steel pole/risers 8014/8015/8020/8021, pad-transformer and native protection/converter primitives.",
+      "needed": [
+        "Adapt source transmission lookups 8016\u20138019 with their actual transformer/disconnect circuit topology, independent terminals, paid hardware and thermal/protection state.",
+        "Bring over station-specific ghost footprint, collision/picking, nameplates, leads, controls, recipes and packet/save fields; check every target identity first.",
+        "Connect a real transmission source through the equipment to an actual distribution/service load; a pole model or an ideal voltage assignment is insufficient."
+      ],
+      "acceptance": [
+        "Check open/closed isolation, voltage ratio, delivered work/loss, overload trips and reset, removed hardware and restored ownership.",
+        "Validate complete footprints, control authority and nameplate/phase rendering on a dedicated server and client."
+      ],
+      "evidence": [
+        "power-poles.md"
+      ]
+    },
+    {
+      "id": "panel",
+      "title": "Twelve-circuit panel and generalized wireless power",
+      "state": "implementation-needed",
+      "dependsOn": [
+        "distribution",
+        "solver"
+      ],
+      "reuse": "Native three-channel lamp supplies, passive outlet wireless paths and SCADA controls; these are not the source panel.",
+      "needed": [
+        "Adapt BreakerPanel and shared WirelessPowerChannels: twelve real branch breaker items, bus selection, 120/240 V service topology, demand ownership, ranges and controls.",
+        "Preserve trip latches/heat and explicit resets; removing a fault must not silently close a breaker. Avoid duplicate demand, cross-world channels and stale-owner registration.",
+        "Add the full branch-selection menu, feeder orientation, source recipes, diagnostics and SCADA endpoint support. Coordinate panel support with portable consumers and the media API."
+      ],
+      "acceptance": [
+        "Test all branches, bus/return isolation, brownouts, missing breaker stock, overload/reset, channel changes, duplicate owners and unload/reconnect.",
+        "Source channel consumers draw actual upstream power once and restored panels preserve settings and trip state."
+      ],
+      "evidence": [
+        "rated-lamp-supplies.md",
+        "scada.md"
+      ]
+    },
+    {
+      "id": "lighting",
+      "title": "Remaining decorative fixture catalog",
+      "state": "partial",
+      "dependsOn": [
+        "mounting",
+        "registry"
+      ],
+      "reuse": "All108 registered decorative adapters, original meshes, shared multi-bulb loads, loaded-only projections and native menus; newly implemented aim, motion, water, fan and suspension paths await recorded validation.",
+      "needed": [
+        "Validate all108 explicit styles using lighting-port-matrix.md. The current explicit source-ordinal helper covers all three ranges:0\u201329 group64+20,30\u201387 group68,and88+ group70; preserve those IDs. Portable carry/cord ownership, technology/configuration and partial-block support remain open.",
+        "Transfer exact per-style placement, clearance, head positions, beam widths, item poses, colors and exposed-bulb rules. Large chandeliers and strings need their complete source reservation/render bounds.",
+        "Validate implemented per-head pan/tilt and axial parking/street aiming in physical light origins and rendering with matching save/packet validation. Validate motion detection, 30-second hold and mode controls using physical time.",
+        "Validate ceiling fan motors/rotors/hazards, 0\u20137 m warehouse suspension and portable fixtures through their dependent adapters. Validate pool fittings through the new water-preserving lease adapter, including overlap and expiry; registration alone does not certify underwater behavior."
+      ],
+      "acceptance": [
+        "Every one of 108 styles has an explicit stable ID/status and passes allowed/disallowed placement, partial bulb count/power, lease/obstruction/unload and fresh-owner publication checks.",
+        "Use source-sized aim/suspension menus, real powered night scenes, resource reload and client/server controls; compare matching source reference views."
+      ],
+      "evidence": [
+        "decorative-lighting.md",
+        "decorative-lighting-validation.json"
+      ]
+    },
+    {
+      "id": "bulbs",
+      "title": "Bulb technologies, lifetime and lighting configuration",
+      "state": "partial",
+      "dependsOn": [
+        "solver",
+        "registry"
+      ],
+      "reuse": "Native bulbs and the source-rated 120/240 V LEDs at 302/303; old 50/200 V identities are preserved.",
+      "needed": [
+        "Inventory every source 12/120/240 V technology and its registered identity, brightness, power, crop growth, minimum voltage, warmup and lifetime/configuration behavior. There are 18 source registrations; two have explicit source-rated LED adapters, leaving sixteen ratings/technology identities to reconcile.",
+        "Adapt remaining incandescent/carbon/fluorescent/farming/halogen variants and source reset/configuration tools without overwriting old bulbs or silently replacing native aging semantics.",
+        "Handle used-stack condition, technology-specific infinite-life settings and conversion/crafting policies explicitly. Reusing a shape does not establish equivalent wear or electrical demand."
+      ],
+      "acceptance": [
+        "At matching and mismatched voltages verify real watts, startup/dimming, growth and wear; multi-bulb wear must be per bulb.",
+        "Used components survive insertion, automation, copy/configuration, removal and reload without renewal or loss; old menu acceptance changes stay visible in golden review."
+      ],
+      "evidence": [
+        "decorative-lighting.md"
+      ]
+    },
+    {
+      "id": "other-lights",
+      "title": "Standalone flood/work/festive lighting",
+      "state": "partial",
+      "dependsOn": [
+        "lighting",
+        "bulbs",
+        "cords"
+      ],
+      "reuse": "Native utility lamps, legacy floodlights and the new fixed decorative renderer; check source device identity before choosing a counterpart.",
+      "needed": [
+        "Review remaining basic/motorized floodlights, gasoline construction work light, Christmas tree, holiday candle, standalone strings and fairy/deck globe strings separately from the 108 decorative socket styles.",
+        "Adapt fuel/startup, real motor/aiming power, optical damage/interaction, bounds, controls, bulb inventories, cords and paid recipes for each relevant owner.",
+        "Match source seasonal colors, motion/animation, on/off effects and sound loops; do not register interactive devices with a static lamp-only renderer."
+      ],
+      "acceptance": [
+        "Run no-fuel/no-voltage, partial bulbs, moving aim, paid fuel/use, saved state and relevant damage cases.",
+        "Inspect lit/unlit models, animation and sound starts/stops after unload, removal and network reconnection."
+      ],
+      "evidence": [
+        "legacy-lighting-validation.json",
+        "pole-lamp-native-tests.json"
+      ]
+    },
+    {
+      "id": "alarms",
+      "title": "Fire alarm network and environmental sensing",
+      "state": "implementation-needed",
+      "dependsOn": [
+        "panel",
+        "network",
+        "mounting"
+      ],
+      "reuse": "Native generic alarms/sensors and actual power/packet primitives; source networked alarm equipment is a distinct family.",
+      "needed": [
+        "Port the panel, pull station, horn/strobe, bell, strobe, smoke and heat detector definitions, stable registration, network association and environmental detection.",
+        "Retain panel latching, silence/reset/test behavior, power demands, detection thresholds and wall/ceiling placement. Bound network and world queries to loaded owners.",
+        "Add source menus, models, flash/sound timing, recipes and configuration/copy behavior."
+      ],
+      "acceptance": [
+        "Test independent networks, unpowered detection/notification behavior, latching/reset, removed/replaced panels, unloaded detectors and saved links.",
+        "Check synchronized flash/sound and remote controls with more than one observer."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "cords",
+      "title": "Portable appliances, carry and remaining cord consumers",
+      "state": "partial",
+      "dependsOn": [
+        "mounting",
+        "registry"
+      ],
+      "reuse": "Nine native cord ratings, outlets/strips, compact UPS sources, fixed-machine adapters and durable paid reservations.",
+      "needed": [
+        "Implement portable carry as an ownership transition: preserve item/component inventories, settings, UUIDs, paid cords and socket claims while packing, moving, replacing and dropping devices.",
+        "Audit every source consumer against its actual inlet and return topology. Add only intended consumers; generators and storage outputs must not become accidental appliance inputs.",
+        "Handle loops, duplicate tokens, range/rating changes, dimensions, dead sources versus temporary unload, one-time refunds and mutually exclusive cable/wireless/cord feeds.",
+        "Review remaining connector/cord geometry, source selection and un/plug controls on partial supports and new portable fixtures."
+      ],
+      "acceptance": [
+        "Survival carry/drop/reconnect campaigns retain exact contents and paid hardware once; stale owners cannot detach new owners.",
+        "Test multiple clients, simultaneous socket claims, source replacement, chunk boundaries and fresh-server restoration."
+      ],
+      "evidence": [
+        "appliance-cord-review.md",
+        "cord-outlets.md",
+        "compact-ups.md",
+        "ghost-consumers.md"
+      ]
+    },
+    {
+      "id": "kitchen",
+      "title": "Kitchen appliances, foods and refrigeration",
+      "state": "implementation-needed",
+      "dependsOn": [
+        "cords",
+        "climate",
+        "resources"
+      ],
+      "reuse": "Native paid inlets, inventory/recipe helpers, heat networks and source mesh assets.",
+      "needed": [
+        "Adapt all eleven KitchenType entries: microwave, toaster, cooktop, refrigerator, coffee maker, kettle, blender, rice cooker, mini oven, mini fridge and patio grill.",
+        "Preserve each food/material inventory, recipe timing, actual electrical/heat input, water handling, battery heating interactions and output-food registration. Keep cold storage tied to actual thermal behavior.",
+        "Review refrigerator preservation/spoilage hooks and optional mixins as separate compatibility contracts; implement source menus, door/status parts, animations, cords and food translations."
+      ],
+      "acceptance": [
+        "Prove no processing or preservation benefit from absent power, conserved material/output counts, temperature behavior and exact inventories after reload/automation.",
+        "Exercise food recipes, condition/spoilage integration with each optional mod both absent and present, and visual/menu interaction."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "laundry",
+      "title": "Washer, dryer and fusion matter machine",
+      "state": "implementation-needed",
+      "dependsOn": [
+        "cords",
+        "fluids",
+        "resources"
+      ],
+      "reuse": "Native inventory/energy accounting, 30 A dryer cord rating and source value-graph helpers for review.",
+      "needed": [
+        "Adapt washer water transactions and wet-equipment item metadata; dryer heating, 240 V/30 A connection and actual energy-paid cycles must preserve source ratings.",
+        "Port Fusion Matter Reactor recipe/value graph, arithmetic/collectors and material valuation safely. Do not confuse this family with a free-energy generator.",
+        "Bring over process progress, cancellation/automation, outputs, recipes, meshes, sound, menus and versioned saves."
+      ],
+      "acceptance": [
+        "Check input shortage, interrupted cycles, water rollback, exact wet-item contents and no material/energy duplication across reload.",
+        "Prove reactor valuation/cycles terminate for recursive or unsupported recipes and outputs are paid by actual accepted energy/materials."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "climate",
+      "title": "Room thermal/humidity services and climate appliances",
+      "state": "implementation-needed",
+      "dependsOn": [
+        "solver",
+        "mounting",
+        "cords"
+      ],
+      "reuse": "Native thermal networks and environmental sampling; source room model is not established by those existing systems.",
+      "needed": [
+        "Adapt biome climate, room sampling/cache/invalidation and block-change events with bounded loaded-world work and explicit heat-capacity/exchange units.",
+        "Port seven ClimateType variants (portable heater, three fireplace stands, window AC, mini-split and patio heater), thermostat hysteresis, target/enable controls and real heat/cooling/rejection power.",
+        "Coordinate humidity, room leaks/doors/support changes and appliance sound with the fluid/evaporative and growing-bed families."
+      ],
+      "acceptance": [
+        "Brownouts/no supply yield no artificial heat/cooling; rejected energy and heat exchange balance and timers advance only physically.",
+        "Run room openings/rebuilds, large buildings, chunk unload, invalid sensors, saved targets and hot/cold/weather performance comparisons."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "fans",
+      "title": "Floor/ceiling fans and evaporative cooling",
+      "state": "implementation-needed",
+      "dependsOn": [
+        "climate",
+        "cords",
+        "lighting"
+      ],
+      "reuse": "Source mesh assets, native electricity and sound/animation primitives; five decorative ceiling-fan motor adapters are registered with behavior validation pending. Other fan appliances and airflow integration remain open.",
+      "needed": [
+        "Adapt industrial, classic, shop and compact standalone fans and validate all five registered decorative ceiling fan styles. Include motor watts, spin-up/coast, controls, airflow effects and industrial blade hazards.",
+        "Port evaporative cooler variants, actual water use, humidity/temperature response, tank/port automation and dry/unpowered behavior.",
+        "Keep rendered rotor state, collision/hazard radius, sound lifecycle and actual power synchronized across server, client and reload."
+      ],
+      "acceptance": [
+        "Stopped/unpowered fans do not grant free continuous airflow; every active motor and cooler pays actual power/water.",
+        "Check players/entities near blades, walls, all mounting orientations, occlusion, audio and multi-client animation."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "pumps",
+      "title": "Industrial/world-intake pumping and growing beds",
+      "state": "implementation-needed",
+      "dependsOn": [
+        "fluids",
+        "climate",
+        "cords"
+      ],
+      "reuse": "Native pressure/fluid systems, world interactions, actual electrical loads and machine inventories.",
+      "needed": [
+        "Adapt 480 V Industrial Fluid Pump ports/intake, head/pressure and source fluid ownership rules to native fluids; avoid treating existing pressure pumps as identical devices.",
+        "Port growing-bed crop cycle, water/nutrient/material inventories and climate/light dependencies with source controls and visuals.",
+        "Make transfer/world-intake and processing transactions atomic with accepted energy, safe boundaries, loaded-only lookups and persisted progress."
+      ],
+      "acceptance": [
+        "Prove paid transfer/cycles under dry intake, obstruction, backpressure, brownout, blocked output and unload/reload.",
+        "Verify finite water extraction, material counts, crop/climate effects, automation and exact port/selection geometry."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "fluids",
+      "title": "Mechanical shafts, thermal machines and fluid systems",
+      "state": "behavior-review",
+      "dependsOn": [
+        "solver",
+        "mounting"
+      ],
+      "reuse": "Existing native shaft networks, boilers/turbines/water systems, fluid corpus and cached geometry.",
+      "needed": [
+        "Diff source shaft joints, motors/generators, flywheels, clutches, blade wear and large-machine layouts against native behavior; preserve real torque, inertia, energy and ghost shaft ports.",
+        "Review legacy furnaces, incubator, heat exchangers/dissipators, turbines, fuel/thermal/fluid registry and sided/precise transfer changes. Keep native steam/pressure conventions rather than copying foreign APIs.",
+        "Bring missing controls, shapes, recipes and wear/fuel/temperature state across only after identifying real semantic differences."
+      ],
+      "acceptance": [
+        "Run mechanical start/stop/reverse/overload and shaft-layout campaigns; prove electrical/mechanical/thermal work balances.",
+        "Retain all fluid goldens, default 200-case corpus, pressure/phase transitions and native saves; compare long-running source/native installations."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "vehicles",
+      "title": "Road vehicles and in-car charging",
+      "state": "foundation-only",
+      "dependsOn": [
+        "cords",
+        "network",
+        "resources"
+      ],
+      "reuse": "Native RoadPhysics is a pure helper; it does not establish registered road vehicles. Reuse the paid traction pack/charger primitives.",
+      "needed": [
+        "Adapt the four-seat Electric Golf Cart and two-seat Arc Runner Coupe entity/item/menu registrations, server-authoritative driving, stepping/collision, passenger positions and storage.",
+        "Preserve one/six pack capacity, actual driving drain and 240 V parked charging, disconnect/range behavior, dangerous-corner/fire/explosion policy and item/drop accounting.",
+        "Match clear coupe windows, moving wheels, camera/seat transforms, sound, controls, recipes and persisted cargo/energy."
+      ],
+      "acceptance": [
+        "Use actual passengers and driver/observer clients; reject remote/stale control and charging while driving or with invalid packs.",
+        "Exercise slopes, collisions, rollover thresholds, death/removal, multi-pack debit limits, cargo and fresh-server restoration."
+      ],
+      "evidence": [
+        "industrial-transport.md"
+      ]
+    },
+    {
+      "id": "transport",
+      "title": "Forklift, pallet, EV pack charger and welding follow-up",
+      "state": "validation-needed",
+      "dependsOn": [
+        "network",
+        "gui",
+        "rendering"
+      ],
+      "reuse": "Registered forklift/pallet, real traction packs, charger/welder and paid lifting/manufacturing adapters.",
+      "needed": [
+        "Complete interactive steering/lifting/loading, audio, passenger/driver authority, remote observers and transport through chunk boundaries.",
+        "Review source state/geometry changes not covered by the existing adapter evidence, including cargo selection and pack/recharge interactions.",
+        "Retain one-time cargo/pack/hardware refunds and conservative accepted-energy debit in mixed manufacturing campaigns."
+      ],
+      "acceptance": [
+        "Run two-client drive/lift/store/reload/unload/recharge campaigns with exact cargo and energy checks.",
+        "Inspect hands/controls, moving parts, source menu geometry, audio start/stop and removal under load."
+      ],
+      "evidence": [
+        "industrial-transport.md",
+        "workshop.md",
+        "workshop-transport-validation.json"
+      ]
+    },
+    {
+      "id": "manufacturing",
+      "title": "Wire machines, chip fabrication and industrial controls",
+      "state": "partial",
+      "dependsOn": [
+        "solver",
+        "resources",
+        "gui"
+      ],
+      "reuse": "Paid Roller/Insulator/Combiner, Wire Snips, Fabricator/components, load bank, VFD, surge and SCADA adapters.",
+      "needed": [
+        "Audit remaining wire/cable tools and complete source acquisition/automation chains through wafer/components, hot partial spools, jacket/core material and finished bundles.",
+        "Review source industrial device displays, controls, optional JEI examples and interactive audio; finish SCADA endpoints for newly adapted panel/media/other owners.",
+        "Preserve paid attempt buffers, failed-yield debits, output blockage and source/native recipe aliases; do not replace native process implementations wholesale."
+      ],
+      "acceptance": [
+        "Run survival acquisition-to-finished-product and drive/charge/recharge scenes with output automation and actual owner reloads.",
+        "Prove exact material/energy ledgers, cached matrices, hot/damaged metadata, malformed controls and remote clients."
+      ],
+      "evidence": [
+        "wire-manufacturing.md",
+        "chip-fabrication-review.md",
+        "chip-fabrication.md",
+        "motor-drive.md"
+      ]
+    },
+    {
+      "id": "electronics",
+      "title": "Converters and inherited power electronics",
+      "state": "partial",
+      "dependsOn": [
+        "solver",
+        "registry"
+      ],
+      "reuse": "Native variable129, fixed130 and one-way131\u2013134 with paid windings and the retained converter128 identity.",
+      "needed": [
+        "Finish semantic comparison of inherited transformer, capacitor, inductor, regulated-supply, resistor/rheostat and power-source/sink changes.",
+        "Treat development-only floating isolation135 as a separate conditional decision/adapter; do not publish it merely because its code exists in the source.",
+        "Preserve V1/V2 control meanings, grounding/isolation, paid fractional winding wire, current/voltage/temperature limits and thermal accepted-step timing."
+      ],
+      "acceptance": [
+        "Run floating/grounded and coupled converter banks, reverse flow, short/recovery, hot wire removal and native voxel integration.",
+        "Review display/coil geometry and configuration copying; retain all existing conservative solver/protection expectations."
+      ],
+      "evidence": [
+        "power-electronics-review.md",
+        "converter-family.md",
+        "variable-dcdc.md",
+        "variable-inductor.md"
+      ]
+    },
+    {
+      "id": "renewables",
+      "title": "Renewable and solar adapter completion checks",
+      "state": "validation-needed",
+      "dependsOn": [
+        "mounting",
+        "solver",
+        "rendering"
+      ],
+      "reuse": "Registered solar/roof/flat, MPPT/hybrid, wind and large watermill adapters and bounded environmental sampling.",
+      "needed": [
+        "Review any remaining source control, model/status, roof selection, shade/daylight, fluid/rotor and partial-support differences against current native paths.",
+        "Complete source-sized larger menus, actual GPU/audio and observer-client campaigns, including changed supports and distant loaded installations.",
+        "Compare daylight/occlusion and mixed charging/drive operation in representative source and native worlds without discarding native caches."
+      ],
+      "acceptance": [
+        "Retain all environmental sampling, paid hardware, accepted energy and fresh-owner tests.",
+        "Show correct graphics/selection and bounded server cost at representative installation scale and through chunk lifecycle changes."
+      ],
+      "evidence": [
+        "solar-sampling.md",
+        "solar-roofs.md",
+        "large-renewable-validation.json"
+      ]
+    },
+    {
+      "id": "storage",
+      "title": "Storage, standby, UPS, generation and protection completion",
+      "state": "validation-needed",
+      "dependsOn": [
+        "solver",
+        "cords",
+        "gui"
+      ],
+      "reuse": "Registered off-grid cabinets, ATS/generators, relay/shedding and programmable/compact UPS adapters.",
+      "needed": [
+        "Compare source control/state, cabinet geometry, battery chemistry/cell rules, bypass, fuel/start behavior and protection changes not yet covered by evidence.",
+        "Complete large screen coordinate matching and interactive audio/network campaigns with mixed storage, charging and downstream portable loads.",
+        "Retain compact versus rack inventories, durable cord reservations and native save identities; require real input/output and rejected-energy heat."
+      ],
+      "acceptance": [
+        "Run brownout, depleted packs/fuel, restart/reset, bypass and simultaneous channel/cord claims with remote observers.",
+        "Verify cold-server reload, one-time refunds and conservative power through chained sources and outages."
+      ],
+      "evidence": [
+        "compact-ups.md",
+        "rated-lamp-supplies.md",
+        "standby-checkpoint-validation.json"
+      ]
+    },
+    {
+      "id": "classic",
+      "title": "Inherited devices, sensing, control and world interactions",
+      "state": "behavior-review",
+      "dependsOn": [
+        "solver",
+        "mounting",
+        "network"
+      ],
+      "reuse": "Native classic six-node/simple/transparent devices and their passing circuit/voxel regressions.",
+      "needed": [
+        "Review every remaining shared device in the source audit: sensors, meters/loggers, relays/timers, logic/math/chips, redstone/wireless, charger, antennas, turret, miner, transporter, signs and other classic machines.",
+        "Compare electrical/thermal thresholds, inventory/filter semantics, packet bounds, process timers, world effects, damage and configuration/save defaults\u2014not just class names or rendered meshes.",
+        "Add missing source-specific capabilities only through native ports and lifecycle rules; record intentional voltage/name/cable-slot differences."
+      ],
+      "acceptance": [
+        "For each reviewed device record source contract, native counterpart, actual behavior tests and open visual/interaction gaps.",
+        "Exercise real world/crop/entity effects and native voxel hosting, automation, removal and reload without loosening old checks."
+      ],
+      "evidence": [
+        "ghost-consumers.md",
+        "extended-consumers.md",
+        "gui-parity.md"
+      ]
+    },
+    {
+      "id": "entities",
+      "title": "Railroad and replicator/entity parity",
+      "state": "behavior-review",
+      "dependsOn": [
+        "solver",
+        "network",
+        "rendering"
+      ],
+      "reuse": "Native entities, minecart/rail interfaces and source entity assets/behavior for comparison.",
+      "needed": [
+        "Review electric minecart powered simulation, under-track/overhead supply, charger/reporting and fuel/energy/save behavior; adapt missing source changes.",
+        "Review replicator AI, attacks, hunger, spawn attributes, drops and tracking. The unused source ReplicatorModel is excluded and is not a required new mesh.",
+        "Check entity registration/serialization, chunk/dimension travel, interaction, damage and render/sound authority."
+      ],
+      "acceptance": [
+        "Run actual entities over powered/unpowered rail sections and through save/server restarts; verify energy and item ownership.",
+        "Test AI/drops and passenger/entity synchronization on a dedicated server with observer clients."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "tools",
+      "title": "Tools, copy/configuration, scanners and circuit import",
+      "state": "behavior-review",
+      "dependsOn": [
+        "registry",
+        "network",
+        "classic"
+      ],
+      "reuse": "Native tools, Wire Snips, filters, configuration objects and diagnostic helpers.",
+      "needed": [
+        "Review drills, meters/thermometers, mining/ore tools, brushes, configuration copier and moving helpers against source inventory/component rules.",
+        "Port or reconcile Falstad importer/netlist/tool, command feedback and supported circuit mappings; source names alone do not prove a native equivalent.",
+        "Include safe main/off-hand and remote-use authority, retained condition/paid materials, invalid settings and source guide acquisition."
+      ],
+      "acceptance": [
+        "Use survival/main/off-hand, loaded/unloaded targets, invalid files/settings and native/source saved tool data.",
+        "Check exact configuration round trips, item wear/returns and bounded circuit import with clear unsupported-element feedback."
+      ],
+      "evidence": [
+        "wire-snips.md"
+      ]
+    },
+    {
+      "id": "network",
+      "title": "Packets, server lifecycle and input authority",
+      "state": "behavior-review",
+      "dependsOn": [
+        "registry",
+        "mounting"
+      ],
+      "reuse": "Native typed packets, bounded device controls, owner publication and build-commit handshake.",
+      "needed": [
+        "Account for every active source packet/handler/server event and its destination equivalent, including key controls, tooltips, entity controls, configuration and periodic publication.",
+        "Validate sender/menu/owner/dimension/range, payload lengths, finite values and packet versioning. Keep client classes out of dedicated-server initialization.",
+        "Preserve disconnect cleanup, loaded installations, delayed tasks, exact packet consumption and no retained stale worlds or duplicated owner tokens."
+      ],
+      "acceptance": [
+        "Fuzz relevant controls without changing production tolerances; run different owners, stale menus, logout and chunk/dimension transitions.",
+        "Use at least driver/operator and observer clients for timing/authority cases; keep exact native publication/reload tests."
+      ],
+      "evidence": [
+        "decorative-lighting-saved-owners.json",
+        "cord-outlets-validation.json"
+      ]
+    },
+    {
+      "id": "rendering",
+      "title": "Rendering, covers, distant models and graphics compatibility",
+      "state": "partial",
+      "dependsOn": [
+        "mounting",
+        "network"
+      ],
+      "reuse": "Native GL recording shim, item/node render factories, cached catenaries and loaded tall-pole bounds.",
+      "needed": [
+        "Review source terrain batching/atlases, packed emission, covers/selection, moving/status parts, transparency and per-owner bounds against native 26.3 rendering.",
+        "Treat distant-model streaming/retention and source Sodium/Distant Horizons hooks as platform-specific work. Loaded-pole bounds do not implement unloaded/distant streaming.",
+        "Preserve source mesh/material provenance while checking normals, colors, light/emission, windows, clipping and resource-pack overrides; geometry emission alone is insufficient."
+      ],
+      "acceptance": [
+        "Capture matching source/native views for each family, lit/unlit and active/inactive, through resource reload and fresh clients.",
+        "Check hardware GPU, alternative renderer/mod absent/present, distant loaded/unloaded owners, multi-client retention and draw/mesh allocation costs."
+      ],
+      "evidence": [
+        "power-poles.md",
+        "gui-parity.md",
+        "decorative-lighting.md"
+      ]
+    },
+    {
+      "id": "gui",
+      "title": "Source-matching menus and user interaction",
+      "state": "partial",
+      "dependsOn": [
+        "registry",
+        "network"
+      ],
+      "reuse": "Native MenuSpecs/ElnScreen/layouts, 13 classic matched layout variants and first decorative menus.",
+      "needed": [
+        "Create a full source-to-native screen/variant list, including dynamic aim/fan/suspension, full cabinets, outlets, manufacturing, panels, vehicles and inherited classics.",
+        "Match panel dimensions, slots/filters/limits, control rectangles, visible/enabled states, keyboard/mouse behavior, tooltips and labels; retain intentional native cable-slot differences.",
+        "Use mutually exclusive control regions where the source overlaps hidden widgets. Preserve overlap/bounds validation and use source/reference captures for actual pixel comparison."
+      ],
+      "acceptance": [
+        "Check every registered menu on server/client, shift-click/automation, invalid controls, GUI scales, translation lengths and fresh reload.",
+        "Capture side-by-side 1.21.1/26.3 views and record coordinates versus unresolved skin/font differences without claiming universal pixel parity."
+      ],
+      "evidence": [
+        "gui-parity.md",
+        "decorative-lighting.md"
+      ]
+    },
+    {
+      "id": "resources",
+      "title": "Crafting, materials, assets, sound and translations",
+      "state": "partial",
+      "dependsOn": [
+        "registry"
+      ],
+      "reuse": "Existing native datagen, paid recipe aliases, resource/model indexes and import provenance ledger.",
+      "needed": [
+        "Audit raw resources, all 2,496 source generated runtime data files and actual recipe/registration references. Regenerate native equivalents from reviewed inputs; do not copy a generated source catalog over native identities. Port required models/materials/textures/icons/atlases, blockstates, particles, sounds/subtitles, tags, loot and data; keep unused assets as review items rather than automatic required registrations.",
+        "Review full acquisition/manufacturing chains, named/dynamic recipes, energy/fuel/material costs and native counterpart aliases. Register food/chemical/fluid/material content and retain recipe compatibility.",
+        "Wrap new user strings, regenerate native language data and update model/item indexes. Review translations beyond English and optional JEI/recipe-book behavior."
+      ],
+      "acceptance": [
+        "Every referenced runtime asset resolves from the packaged JAR; verify each sound event and translated menu at runtime.",
+        "Datagen repeats with zero writes; survival recipes/loot/automation preserve paid inputs and existing outputs. Keep the provenance audit honest about exact versus adapted copies."
+      ],
+      "evidence": [
+        "imports.json",
+        "import-audit.json",
+        "wire-manufacturing.md"
+      ]
+    },
+    {
+      "id": "world-content",
+      "title": "World generation, progression, tutorials and guides",
+      "state": "behavior-review",
+      "dependsOn": [
+        "registry",
+        "resources",
+        "classic"
+      ],
+      "reuse": "Native world/content registration and guide/tutorial mechanisms, plus source ore and wiki material.",
+      "needed": [
+        "Review ore biome modifiers, generation/config defaults, deposits/terrain/block items, achievements and acquisition progression against the source.",
+        "Reconcile wiki/search/recipe/circuit-lesson pages and tutorial signs with actual native device names, recipes, voltages and controls; adapt missing discovery/key interactions.",
+        "Check existing versus newly generated chunks and optional guide/recipe integration without moving old world identities."
+      ],
+      "acceptance": [
+        "Generate controlled fresh worlds and verify ore distribution/config paths; prove existing chunks are not silently regenerated.",
+        "Follow a survival starter-to-machine progression and validate guide search, displayed recipes, lessons and unlock triggers."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "integrations",
+      "title": "MQTT, Modbus, computer/mechanical bridges and addon API",
+      "state": "conditional-review",
+      "dependsOn": [
+        "network",
+        "panel",
+        "registry"
+      ],
+      "reuse": "Native Modbus files and existing optional bridges where registered; file presence is not an enabled integration.",
+      "needed": [
+        "Inventory source MQTT managers/meters/signals, Modbus RTU/RS485/serial tools, CC:Tweaked, OpenComputers Rebooted, Create, ElectroEnergetics, Jade/Waila and media-provider API contracts.",
+        "Determine which source features are active/config-gated, which native bridges are registered, and which excluded legacy exporters/scaffolding should stay excluded. Port supported contracts using 26.3-compatible APIs and main-thread/world ownership rules.",
+        "Handle optional dependencies absent/present, broker/serial disconnects, bounded queues, reconnect/subscription cleanup and no duplicate demand. Keep EAMedia jukebox/speakers/Plex/web as a separate addon scope."
+      ],
+      "acceptance": [
+        "Record a support/availability decision and concrete smoke test for each integration; do not silently enable development or build-excluded code.",
+        "Run dedicated-server startup without optional mods, then protocol/control and reconnect tests with each selected dependency. No source-era dependency pin is assumed compatible."
+      ],
+      "evidence": [
+        "appliance-cord-review.md"
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "Source oracles, whole-world performance and release verification",
+      "state": "validation-needed",
+      "dependsOn": [
+        "registry",
+        "network",
+        "rendering",
+        "gui"
+      ],
+      "reuse": "690 passing root tests (three existing optional previews skipped), 15 CAD tests, 846 ForkPatch native cases and historical golden evidence at the lighting checkpoint.",
+      "needed": [
+        "Map all source unit/property/devtest campaigns to native equivalents. Keep independent source oracles for food/climate, driving, optics, power, acquisition, configuration and interactions; do not replace expectations with implementation output. Review source workflows/scripts, metrics/profiler diagnostics and documentation as independent campaign/export references; their presence does not mean they execute on 26.3.",
+        "Review the two historical golden failures explicitly: 537 assertions at the current code checkpoint, including preserved older differences and the new bulb acceptance changes.",
+        "Run representative loaded source/native worlds with arrays, converter banks, wiring, mechanics/fluids and appliances; compare tick percentiles, matrix rebuilds, allocations, caches and unload behavior.",
+        "Finish hardware GPU/audio, simultaneous multi-client, optional-mod/resource-pack, clean-JAR and release-install campaigns. Keep logs, exact code marker/checksum and stated limitations."
+      ],
+      "acceptance": [
+        "All intended-scope source cases have a native result or an explicit open/conditional record; old tests, tolerances, goldens and skips remain intact.",
+        "Every release claim links to actual evidence; package/install/upgrade checks use the intended release scope, not just a successful compile or a mesh count."
+      ],
+      "evidence": [
+        "decorative-lighting-validation.json",
+        "decorative-lighting-golden-delta.json",
+        "native-suite-review.md"
+      ]
+    },
+    {
+      "id": "migration",
+      "title": "Full 1.21.1 world/item/entity conversion",
+      "state": "implementation-needed",
+      "dependsOn": [
+        "registry",
+        "mounting",
+        "network"
+      ],
+      "reuse": "Explicit native identity conflict helpers and native owner round trips; neither is a general world converter.",
+      "needed": [
+        "Design an opt-in, versioned source-world conversion with backups/dry run and an origin marker so native saves are never reinterpreted as source data.",
+        "Map blocks/state properties, descriptors/items/components, node graphs, inventories, entities/passengers/cargo, ghosts, circuits, paid wire/cord ledgers, channels, cells, temperatures and config schema.",
+        "Handle duplicate names/IDs, half-built installations, hidden legacy hardware, absent optional mods and partial/unloaded regions; preserve ownership and avoid double refunds.",
+        "Export a source fixture/world corpus and compare topology, contents, settings, behavior and idempotence after conversion and repeated fresh-server loads."
+      ],
+      "acceptance": [
+        "Native worlds stay unchanged; dry-run reports every unresolved mapping before writes and repeated conversion is safe.",
+        "Converted source scenes retain exact paid materials/energy state and perform equivalent work with validated source-to-native schema transforms."
+      ],
+      "evidence": [
+        "registry-conflicts.md",
+        "ghost-migration-review.md",
+        "power-electronics-review.md"
+      ]
+    },
+    {
+      "id": "build-compat",
+      "title": "Bootstrap, platform hooks, configs and compatibility mixins",
+      "state": "behavior-review",
+      "dependsOn": [
+        "registry",
+        "network"
+      ],
+      "reuse": "Pinned native Gradle/NeoForge setup, native config/handshake and full local JDK 21/25 installations.",
+      "needed": [
+        "Review source entry points, JSON configuration defaults/migration, loader metadata, capability/attribute providers, optional feature gates and source mixin/access contracts.",
+        "Audit Sodium/Distant Horizons, covered-cable weather and refrigerator-spoilage mixins against actual 26.3 target classes. Source mixin JSON or a source build succeeding is not compatibility proof.",
+        "Keep project Gradle/wrapper/dependency pins unchanged for this planning task. Any future dependency/platform change needs a concrete compatibility proposal and the applicable authorization."
+      ],
+      "acceptance": [
+        "Dedicated and client startup are side-safe with every optional feature absent; selected present configurations pass actual runtime checks.",
+        "Configuration defaults, migrations, handshake/build identity and failure behavior are documented and tested without suppressing linkage errors."
+      ],
+      "evidence": []
+    },
+    {
+      "id": "review-remainder",
+      "title": "Remaining shared support code and explicit review queue",
+      "state": "behavior-review",
+      "dependsOn": [
+        "registry",
+        "solver"
+      ],
+      "reuse": "Current native support classes, helpers and all file-level source/audit links.",
+      "needed": [
+        "Review every file assigned here in completion-source-audit.tsv, including miscellaneous common helpers, math/data/config contracts and any source item or framework that lacks a narrower adapter.",
+        "For each item record the actual native equivalent or an intentional exclusion, the behavioral delta and the required test. Renamed/split/combined classes need an explicit equivalence mapping.",
+        "Move newly identified feature work into a named workstream with dependencies and acceptance checks. An audit assignment or import-ledger row never marks a file behaviorally complete."
+      ],
+      "acceptance": [
+        "No active source file disappears from the review surface; every remaining unknown has an actionable open review entry.",
+        "A future completion claim requires evidence for shared and byte-identical classes too, not just an empty list of missing names."
+      ],
+      "evidence": [
+        "source-inventory.json",
+        "imports.json"
+      ]
+    }
+  ]
+}

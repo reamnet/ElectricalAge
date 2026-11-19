@@ -1,0 +1,25 @@
+{
+  "itemDefinitions": 3,
+  "itemModels": 6,
+  "blockstates": 3,
+  "recipes": 3,
+  "advancements": 3,
+  "newEnglishKeys": 6,
+  "existingGeometryModelsRetained": 192,
+  "newGeometryModels": 2,
+  "existingIdentitiesRetained": 608,
+  "totalIdentities": 611,
+  "inventoryIcons": 3,
+  "currentSourceDistributionVariants": 18,
+  "hiddenLegacyVariantsRegistered": 5,
+  "hiddenLegacyVariantsPending": 7,
+  "passed": true,
+  "task": "runClientData",
+  "limits": [
+    "Seven hidden legacy distribution variants remain unregistered; all eighteen current source creative distribution variants are adapted.",
+    "Cabinet recipes retain the source shaped bill of materials in a native shapeless recipe.",
+    "Existing native scalar service equivalents are preserved; this is not a neutral/AC phasor solver.",
+    "Legacy pole/transmission attachment adapters, adaptive racks/clearances, source-world migration and interactive GPU/audio checks remain pending.",
+    "The default 200-case fluid corpus is not run; full regressions select fluidCases=20."
+  ]
+}

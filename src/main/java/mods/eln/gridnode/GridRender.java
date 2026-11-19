@@ -23,6 +23,12 @@ public abstract class GridRender extends TransparentNodeElementRender {
     private final Identifier cableTexture;
     private ArrayList<Catenary> catenaries = new ArrayList<Catenary>();
     private float idealRenderingAngle;
+    private record Wire(Vec3 start, Vec3 end) { }
+    private java.util.List<Wire> geometry = java.util.List.of();
+    private int spanGeometryRevision;
+
+    /** Changes only when the published cable mesh actually changes. */
+    public int getSpanGeometryRevision() { return spanGeometryRevision; }
 
     public GridRender(TransparentNodeEntity tileEntity, TransparentNodeDescriptor descriptor) {
         super(tileEntity, descriptor);
@@ -34,53 +40,61 @@ public abstract class GridRender extends TransparentNodeElementRender {
     @Override
     public void draw() {
         descriptor.draw(idealRenderingAngle);
+        drawCables();
+    }
 
-        UtilsClient.bindTexture(cableTexture);
-        // TODO: Try not to need this. (How? Math.)
-        glDisable(GL_CULL_FACE);
-        for (Catenary catenary : catenaries) {
-            catenary.draw();
-        }
-        glEnable(GL_CULL_FACE);
+    public void drawCables() {
+        glPushAttrib(0xFFFFF);
+        try {
+            UtilsClient.bindTexture(cableTexture);
+            glDisable(GL_CULL_FACE);
+            for (Catenary catenary : catenaries) catenary.draw();
+        } finally { glPopAttrib(); }
     }
 
     private Vec3 readVec(DataInputStream stream) throws IOException {
-        return new Vec3(stream.readFloat(), stream.readFloat(), stream.readFloat());
+        float x=stream.readFloat(), y=stream.readFloat(), z=stream.readFloat();
+        if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) throw new IOException("Invalid grid cable endpoint");
+        return new Vec3(x,y,z);
     }
 
     @Override
     public void networkUnserialize(DataInputStream stream) {
         super.networkUnserialize(stream);
         try {
-            for (Catenary catenary : catenaries) {
-                catenary.destroy();
-            }
-            catenaries.clear();
             idealRenderingAngle = stream.readFloat();
             int linkCount = stream.readInt();
-            for (int i = 0; i < linkCount; i++) {
-                // Links always come in pairs.
-                Vec3 splus = readVec(stream);
-                Vec3 tplus = readVec(stream);
-                Vec3 sgnd = readVec(stream);
-                Vec3 tgnd = readVec(stream);
-                Vec3 dplus = splus.vectorTo(tplus).normalize();
-                Vec3 dgnd = sgnd.vectorTo(tgnd).normalize();
-                double straightV = dplus.dot(dgnd);
-                dplus = splus.vectorTo(tgnd).normalize();
-                dgnd = sgnd.vectorTo(tplus).normalize();
-                double crossV = dplus.dot(dgnd);
-                if (crossV < straightV) {
-                    catenaries.add(new Catenary(splus, tplus));
-                    catenaries.add(new Catenary(sgnd, tgnd));
-                } else {
-                    catenaries.add(new Catenary(splus, tgnd));
-                    catenaries.add(new Catenary(sgnd, tplus));
+            if (linkCount<0 || linkCount>4096) throw new IOException("Invalid grid span count");
+            java.util.List<Wire> incoming = new ArrayList<>();
+            for (int i=0;i<linkCount;i++) {
+                int wires=stream.readInt();
+                if (wires<1 || wires>3) throw new IOException("Invalid grid wire count");
+                if (wires!=2) {
+                    for(int wire=0;wire<wires;wire++) incoming.add(new Wire(readVec(stream),readVec(stream)));
+                    continue;
                 }
+                // Preserve the legacy pair's crossing minimisation.
+                Vec3 splus=readVec(stream), tplus=readVec(stream), sgnd=readVec(stream), tgnd=readVec(stream);
+                double straight=splus.vectorTo(tplus).normalize().dot(sgnd.vectorTo(tgnd).normalize());
+                double cross=splus.vectorTo(tgnd).normalize().dot(sgnd.vectorTo(tplus).normalize());
+                incoming.add(new Wire(splus,cross<straight?tplus:tgnd));
+                incoming.add(new Wire(sgnd,cross<straight?tgnd:tplus));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            // Live voltage/status updates reuse the native display lists when spans have not changed.
+            if (!incoming.equals(geometry)) {
+                ArrayList<Catenary> replacement=new ArrayList<>();
+                for (Wire wire:incoming) replacement.add(new Catenary(wire.start(),wire.end()));
+                for (Catenary old:catenaries) old.destroy();
+                catenaries=replacement;geometry=java.util.List.copyOf(incoming);spanGeometryRevision++;
+            }
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    @Override
+    public void destructor() {
+        for (Catenary catenary:catenaries) catenary.destroy();
+        catenaries.clear();geometry=java.util.List.of();
+        super.destructor();
     }
 
     @Override

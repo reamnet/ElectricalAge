@@ -62,7 +62,7 @@ public class LightBlockEntity extends BlockEntity {
         Level world = getLevel();
         BlockPos pos = getBlockPos();
         if (lightList.isEmpty()) {
-            world.removeBlock(pos, false);
+            world.setBlock(pos, world.getBlockState(pos).getFluidState().createLegacyBlock(), 3);
             Utils.println("Destroy light at " + pos.getX() + " " + pos.getY() + " " + pos.getZ() + " ");
             return;
         }
@@ -91,10 +91,14 @@ public class LightBlockEntity extends BlockEntity {
         // block light is 0..15 (the turret asks for 25: 1.7.10 clamped it; here the meta property threw and crashed
         // the server on the next tick)
         light = Math.max(0, Math.min(15, light));
-        Block block = WorldCompat.getBlock(w, x, y, z);
-        if (block != ElnDeviceRegistry.lightBlock) {
-            if (!Utils.isAirBlock(block)) return; // 26.x: also cave/void air
-            WorldCompat.setBlock(w, x, y, z, ElnDeviceRegistry.lightBlock, light, 2);
+        if (!(w instanceof net.minecraft.server.level.ServerLevel server) || light == 0 || timeout <= 0) return;
+        BlockPos pos = new BlockPos(x,y,z);
+        if (w.isOutsideBuildHeight(pos) || server.getChunkSource().getChunkNow(x >> 4,z >> 4) == null) return;
+        BlockState old = w.getBlockState(pos);
+        if (old.getBlock() != ElnDeviceRegistry.lightBlock) {
+            boolean water = old.is(Blocks.WATER) && old.getFluidState().isSource();
+            if (!old.isAir() && !water) return;
+            w.setBlock(pos,ElnDeviceRegistry.lightBlock.defaultBlockState().setValue(BlockMeta.META,light).setValue(LightBlock.WATERLOGGED,water),2);
         }
 
         BlockEntity t = WorldCompat.getBlockEntity(w, x, y, z);

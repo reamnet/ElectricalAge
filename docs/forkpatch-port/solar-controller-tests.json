@@ -1,0 +1,10 @@
+{
+  "tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "scope": "Six MPPT/hybrid accounting/export cases and two real 96-panel array cases",
+  "realArray": "12-series by 8-parallel large modules feed the production MPPT; daytime delivery and night discharge validated",
+  "parallelExport": "Two MPPTs export into one live bus and account separately for accepted PV energy",
+  "nativeBlockChecks": "Eight passed; see solar-cabinet-native-tests.json"
+}

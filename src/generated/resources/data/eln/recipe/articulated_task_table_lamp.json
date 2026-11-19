@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "L": "eln:lamp_socket_b_projector",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " IL",
+    " I ",
+    " P "
+  ],
+  "result": {
+    "id": "eln:articulated_task_table_lamp"
+  }
+}

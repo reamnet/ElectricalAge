@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:tag_empty",
+      "tag": "c:ingots/steel"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/iron"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": "#c:ingots/iron",
+    "M": "eln:machine_block",
+    "S": "#c:ingots/iron"
+  },
+  "pattern": [
+    "SIS",
+    "SMS",
+    "SIS"
+  ],
+  "result": {
+    "id": "eln:steel_turbine_blade"
+  }
+}

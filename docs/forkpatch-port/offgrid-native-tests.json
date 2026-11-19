@@ -1,0 +1,131 @@
+{
+  "sourceVersion": "3.0.77",
+  "portCommit": "6d072afb",
+  "destination": "NeoForge 26.3.0.75-beta / Minecraft 26.3",
+  "task": "runGameTestServer",
+  "selector": "eln:forkpatch_*",
+  "tests": 21,
+  "passed": 21,
+  "failures": 0,
+  "errors": 0,
+  "newOffgridEquipmentCases": 13,
+  "existingConverterTransformerSolarCases": 8,
+  "cases": [
+    {
+      "classname": "eln:floor_3x4x3",
+      "name": "eln:forkpatch_converter_ticks",
+      "time": "0.73"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_isolated_transformer_open",
+      "time": "0.409"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_isolated_transformer_loaded",
+      "time": "0.392"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_floor",
+      "time": "0.937"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_hybrid_floor",
+      "time": "0.774"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_wall",
+      "time": "0.784"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_hybrid_wall",
+      "time": "0.789"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_floor_export",
+      "time": "0.793"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank16",
+      "time": "0.818"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank32",
+      "time": "0.809"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank48",
+      "time": "0.813"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank64",
+      "time": "0.816"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall16",
+      "time": "0.822"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall32",
+      "time": "0.824"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall48",
+      "time": "0.828"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall64",
+      "time": "0.831"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_inverter",
+      "time": "0.842"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_mppt",
+      "time": "0.779"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_ac_charger",
+      "time": "0.783"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_combiner",
+      "time": "0.775"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_disconnect",
+      "time": "0.774"
+    }
+  ],
+  "coverage": [
+    "All eight floor/wall battery banks, including all four wall orientations and upper ghost collision.",
+    "Actual registered inverter, AC charger, battery MPPT, combiner and single-pole disconnect on real server ticks.",
+    "Charge-current packet handling, front-panel publication and native recorded geometry.",
+    "Paid fuse cartridge codec, removal persistence and battery cell capacity/empty-charge contracts.",
+    "Moved battery energy, configuration energy whitelist and automatic native node save/load round trips."
+  ],
+  "limits": [
+    "No interactive client GPU screenshot.",
+    "This is an off-grid checkpoint within the incomplete full ForkPatch port."
+  ]
+}

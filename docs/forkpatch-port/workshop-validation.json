@@ -1,0 +1,52 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Native charger, traction pack, welder and welded frame; full source-world conversion and appliance cords remain pending.",
+  "focused": [
+    {
+      "suite": "mods.eln.transparentnode.industrial.ForkPatchWelderTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "mods.eln.transparentnode.industrial.ForkPatchChargerTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "native": {
+    "selected": 300,
+    "failed": 0,
+    "filter": "eln:forkpatch_*",
+    "newChargerCases": 7,
+    "newWelderCases": 8,
+    "newPublicationCases": 2,
+    "report": "/tmp/eln26-workshop.xml"
+  },
+  "datagen": {
+    "identities": 635,
+    "previousIdentities": 631,
+    "changedPreviousIdentities": [],
+    "englishEntries": 927,
+    "previousEnglishEntries": 921,
+    "changedPreviousEnglishEntries": [],
+    "nativeTextureReferences": 451,
+    "missingTextures": []
+  },
+  "coverage": [
+    "94% accepted-step energy; individual pack charge rate and capacity bounds",
+    "Resistive voltage-squared supply response, schedule, inhibit, overvoltage, loaded owner and steady LU reuse",
+    "Actual item energy flush on menu shift-click, removal without update, replacement, clear and node save",
+    "120 kJ welding cycle, one output under blockage, exact material consumption and component-preserving repair",
+    "Changed workpiece reset, verified world-saved template, settings-only carried/config state",
+    "Four native orientations, original source geometry and actual client publication factories"
+  ],
+  "limitations": [
+    "Full default root and CAD rerun follows this work block",
+    "Selected port native cases only; historical unfiltered golden reconciliation remains pending",
+    "Interactive GPU/audio, full multiplayer, appliance cords and source-world conversion remain pending"
+  ]
+}

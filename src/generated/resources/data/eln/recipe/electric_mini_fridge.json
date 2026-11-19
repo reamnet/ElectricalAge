@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:chest",
+    "P": "eln:iron_plate",
+    "R": "eln:copper_cable"
+  },
+  "pattern": [
+    "PP",
+    "CR",
+    "PP"
+  ],
+  "result": {
+    "id": "eln:electric_mini_fridge"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eln:item/69_kv_to_12_5_kv_substation_transformer"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Fixed flat solar-array ghost collision, native state13 and resident-only scheduled old-save repair.",
+  "root": {
+    "suites": 118,
+    "tests": 651,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "native": {
+    "selected": 350,
+    "passed": 350,
+    "failed": 0,
+    "skipped": 0,
+    "flatCases": 6,
+    "filter": "eln:forkpatch_*",
+    "report": "/tmp/eln26-session4-flat-port.xml",
+    "log": "session4-flat-port.log"
+  },
+  "catalog": {
+    "identities": 638,
+    "englishEntries": 936,
+    "previousIdentitiesChanged": [],
+    "previousEnglishEntriesChanged": []
+  },
+  "rootCommand": "./gradlew --no-daemon --max-workers=2 :test cad:test runClientData",
+  "rootLog": "session4-flat-root-datagen.log",
+  "coverage": [
+    "Four real placement fronts and new half-height states",
+    "Actual saved owner reload and scheduled main-thread legacy repair",
+    "Normal world collision above/below every reservation and client shape without owner data",
+    "Owner/UUID verification, real block protection, missing terrain deferral and idempotence",
+    "Exactly one real return terminal, teardown and preserved rotating full-height envelope"
+  ],
+  "limitations": [
+    "Full source-world conversion and interactive client/multiplayer validation remain pending.",
+    "Previous unfiltered810 run still has two historical golden failures; this checkpoint reruns350 port cases."
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": "eln:flat_lamp_socket",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "PPP",
+    "LLL"
+  ],
+  "result": {
+    "id": "eln:thin_fluorescent_shop_light"
+  }
+}

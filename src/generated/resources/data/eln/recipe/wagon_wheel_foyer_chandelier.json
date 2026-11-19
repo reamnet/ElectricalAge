@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:iron_chain",
+    "L": "eln:lamp_socket_a",
+    "P": "minecraft:dark_oak_planks"
+  },
+  "pattern": [
+    "CCC",
+    "LPL",
+    "LLL"
+  ],
+  "result": {
+    "id": "eln:wagon_wheel_foyer_chandelier"
+  }
+}

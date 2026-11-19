@@ -1,0 +1,544 @@
+{
+  "portCommit": "379ce28e",
+  "task": "runGameTestServer",
+  "selector": "eln:forkpatch_*",
+  "tests": 105,
+  "passed": 105,
+  "failures": 0,
+  "errors": 0,
+  "newMulticoreCases": 11,
+  "previousCases": 94,
+  "cases": [
+    {
+      "classname": "eln:floor_3x4x3",
+      "name": "eln:forkpatch_converter_ticks",
+      "time": "0.906"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_standby_fuel_transactions",
+      "time": "0.631"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_cell_inventory",
+      "time": "0.648"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_floor",
+      "time": "1.205"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_hybrid_floor",
+      "time": "1.03"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_wall",
+      "time": "1.034"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_hybrid_wall",
+      "time": "1.04"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_floor_export",
+      "time": "1.044"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank16",
+      "time": "1.051"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank32",
+      "time": "1.057"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank48",
+      "time": "1.06"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_bank64",
+      "time": "1.063"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall16",
+      "time": "1.068"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall32",
+      "time": "1.076"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall48",
+      "time": "1.078"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_wall64",
+      "time": "1.087"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_inverter",
+      "time": "1.093"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_mppt",
+      "time": "1.096"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_ac_charger",
+      "time": "1.101"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_combiner",
+      "time": "1.11"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_offgrid_disconnect",
+      "time": "1.111"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_relay_paired_leak_reset",
+      "time": "1.21"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_relay_wired_trip",
+      "time": "1.032"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_relay_overcurrent",
+      "time": "1.028"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_small",
+      "time": "1.407"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_medium",
+      "time": "1.374"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_large",
+      "time": "1.379"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_extra_large",
+      "time": "1.384"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_engine_extreme",
+      "time": "1.391"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_145a_secondary",
+      "time": "1.232"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_core_guard",
+      "time": "1.231"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_primary_fuse_replace",
+      "time": "1.236"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_200a_short",
+      "time": "1.241"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_floor_backup",
+      "time": "1.522"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_empty_unloaded",
+      "time": "1.516"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_wall_xn",
+      "time": "1.521"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_wall_xp",
+      "time": "1.537"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_wall_zn",
+      "time": "1.542"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_ups_wall_zp",
+      "time": "1.549"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_split_service_sag",
+      "time": "1.136"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_pad_shared_service_guard",
+      "time": "1.138"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_shedder_headroom_retry",
+      "time": "1.543"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_ats_floor",
+      "time": "1.812"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_ats_wall",
+      "time": "1.81"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_shedder_wired_inhibit",
+      "time": "1.589"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_shedder_voltage_restore",
+      "time": "1.678"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_linked_reset_corrected_load",
+      "time": "2.01"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_standby_linked_reset_still_faulted",
+      "time": "2.007"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_ups_standby_stop_restart",
+      "time": "2.031"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_ups_standby_empty_start",
+      "time": "2.037"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_underground_riser",
+      "time": "0.358"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_handhole",
+      "time": "0.357"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_service_meter_item_inventory",
+      "time": "0.366"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_7986_xn",
+      "time": "0.392"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_7986_xp",
+      "time": "0.387"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_7986_zn",
+      "time": "0.39"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_7986_zp",
+      "time": "0.392"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8028_xn",
+      "time": "0.395"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8028_xp",
+      "time": "0.398"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8028_zn",
+      "time": "0.408"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8028_zp",
+      "time": "0.413"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8029_xn",
+      "time": "0.417"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8029_xp",
+      "time": "0.417"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8029_zn",
+      "time": "0.418"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8029_zp",
+      "time": "0.422"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8030_xn",
+      "time": "0.426"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8030_xp",
+      "time": "0.43"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8030_zn",
+      "time": "0.435"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_8030_zp",
+      "time": "0.438"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_reload_and_freeze",
+      "time": "0.449"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_paid_clicks_and_terminals",
+      "time": "0.455"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_wire_catalog_and_lengths",
+      "time": "0.46"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_wire_actual_spool_placement",
+      "time": "0.465"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_wire_native_junction_heating",
+      "time": "0.444"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_wire_jacket_melting_transition",
+      "time": "0.443"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_wire_molten_pile_transition",
+      "time": "0.443"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_wire_spool_span_hot_reload_and_refund",
+      "time": "0.446"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_wire_span_full_fusion_opens_circuit",
+      "time": "0.437"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_wire_actual_span_heat_budget",
+      "time": "0.436"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_wire_latched_insulation_fault",
+      "time": "0.459"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_catalog_mass_and_identity",
+      "time": "0.467"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_independent_eight_core_voxel_boundary",
+      "time": "0.472"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_independent_eight_core_inner_corner",
+      "time": "0.469"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_scalar_tap_color_15",
+      "time": "0.477"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_scalar_tap_color_1",
+      "time": "0.475"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_palette_reconnect_and_save",
+      "time": "0.445"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_finite_pair_fault_reload",
+      "time": "0.444"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_flat_geometry_palette_packet",
+      "time": "0.429"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_legacy_plain_pole",
+      "time": "0.764"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_overhead_legacy_dcdc_pole",
+      "time": "0.765"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_wide_xn_meter_first",
+      "time": "1.108"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_wide_xn_wire_first",
+      "time": "1.062"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_wide_xp_meter_first",
+      "time": "1.064"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_wide_xp_wire_first",
+      "time": "1.067"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_wide_zn_meter_first",
+      "time": "1.068"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_wide_zn_wire_first",
+      "time": "1.07"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_wide_zp_meter_first",
+      "time": "1.07"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_wide_zp_wire_first",
+      "time": "1.073"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_compact_meter",
+      "time": "1.068"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_service_manual_disconnect",
+      "time": "1.068"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_direct_ground_routes_protective_core",
+      "time": "0.117"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_hot_jacket_failure_preserves_metal",
+      "time": "0.11"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_isolated_transformer_loaded",
+      "time": "0.115"
+    },
+    {
+      "classname": "eln:floor_10x5x10",
+      "name": "eln:forkpatch_multicore_native_freeze_and_single_reconnect",
+      "time": "0.105"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_isolated_transformer_open",
+      "time": "0.107"
+    }
+  ],
+  "limits": [
+    "Multicore overhead phase mapping/length payment and automatic ground tracing through chains of uncolored single wires remain pending. New multicore overhead links are rejected until adapted.",
+    "New utility spools remain creative-accessible until source wire-processing machines and survival manufacturing recipes are ported.",
+    "Inventory trimming/tools, player-contact shocks, room coupling, full source-world migration, remaining hardware and interactive client GPU/audio checks remain pending.",
+    "The default 200-case fluid corpus was not run; regression validation uses fluidCases=20."
+  ]
+}

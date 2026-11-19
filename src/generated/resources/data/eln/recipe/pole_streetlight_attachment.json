@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "G": "minecraft:glass",
+    "I": "eln:iron_plate",
+    "P": "eln:simple_lamp_socket"
+  },
+  "pattern": [
+    " II",
+    "CPG",
+    " I "
+  ],
+  "result": {
+    "id": "eln:pole_streetlight_attachment"
+  }
+}

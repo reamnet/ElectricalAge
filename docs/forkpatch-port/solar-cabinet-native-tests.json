@@ -1,0 +1,59 @@
+{
+  "portCommit": "94ad6f7d",
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.75-beta",
+  "passed": [
+    {
+      "classname": "eln:floor_3x4x3",
+      "name": "eln:solar_small",
+      "time": "0.712"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:solar_2x3_ghosts",
+      "time": "0.525"
+    },
+    {
+      "classname": "eln:floor_4x4x3",
+      "name": "eln:wp10b_solar_panel",
+      "time": "0.628"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_floor",
+      "time": "0.914"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_hybrid_floor",
+      "time": "0.914"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_wall",
+      "time": "0.921"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_hybrid_wall",
+      "time": "0.842"
+    },
+    {
+      "classname": "eln:floor_8x4x3",
+      "name": "eln:forkpatch_solar_mppt_floor_export",
+      "time": "0.843"
+    }
+  ],
+  "failures": 0,
+  "checks": [
+    "Native floor and wall placement",
+    "GUI command packets",
+    "Live publication round trips",
+    "Native enclosure and seven-segment geometry recording",
+    "Thin wall collision",
+    "Loaded grid/solar operation and grid export",
+    "Dropped items cannot duplicate stored energy",
+    "Node save round trips"
+  ],
+  "clientGpuScreenshot": "not captured"
+}

@@ -13,6 +13,8 @@ import static mods.eln.i18n.I18N.tr;
 /** Wireless signal receiver (P4b; layout gui/wireless_rx.json): channel, connection, how emitters combine. */
 public class WirelessSignalRxScreen extends ElnScreen {
     final WirelessSignalRxRender render;
+    private final net.minecraft.client.gui.components.Button[] modes = new net.minecraft.client.gui.components.Button[3];
+    private EaField channel;
 
     public WirelessSignalRxScreen(ElnNodeMenu menu, Inventory inventory, Component title, Object render) {
         super(menu, inventory, title);
@@ -22,7 +24,7 @@ public class WirelessSignalRxScreen extends ElnScreen {
     @Override
     protected void init() {
         super.init();
-        field("channel", () -> render.channel, v -> render.clientSetString(WirelessSignalRxElement.setChannelId, v),
+        channel = field("channel", () -> render.channel, v -> render.clientSetString(WirelessSignalRxElement.setChannelId, v),
             tr("Specify the channel"));
         text("connection", () -> render.connection ? tr("Connected") : tr("Not connected"), () -> render.connection ? 0xFF207020 : 0xFFA02020);
         String[] names = {tr("Biggest"), tr("Smallest"), tr("Toggle")};
@@ -30,8 +32,17 @@ public class WirelessSignalRxScreen extends ElnScreen {
             tr("Toggles the output each time an emitter's value rises. Useful to allow multiple buttons to control the same light.")};
         for (int i = 0; i < 3; i++) {
             final byte id = (byte) i;
-            button(String.valueOf(i), () -> (render.selectedAggregator == id ? "> " : "") + names[id],
+            modes[i] = button(String.valueOf(i), () -> names[id],
                 () -> render.clientSetByte(WirelessSignalRxElement.setSelectedAggregator, id), tips[i]);
         }
+        update();
+    }
+
+    @Override
+    protected void update() {
+        for (int i = 0; i < modes.length; i++)
+            if (modes[i] != null) modes[i].active = render.selectedAggregator != i;
+        if (channel != null) channel.setTooltip(net.minecraft.client.gui.components.Tooltip.create(
+            Component.literal(tr("Specify the channel") + "\n" + (render.connection ? tr("Connected") : tr("Not connected")))));
     }
 }

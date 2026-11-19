@@ -1,0 +1,133 @@
+package mods.eln.sim.power
+
+import mods.eln.sim.mna.SubSystem
+import mods.eln.sim.mna.component.SwitchableVoltageSource
+import mods.eln.sim.mna.state.State
+
+/** The production regulated controller, independent of inventory/UI and reusable in circuit tests.
+ * Windings remain physical resistors outside these ports. No method here advances physical time.
+ */
+class RegulatedPowerProcess(
+    private val primary: State,
+    private val primaryReference: State?,
+    private val secondary: State,
+    private val secondaryReference: State?,
+    private val input: SwitchableVoltageSource,
+    private val output: SwitchableVoltageSource,
+    private val enabled: () -> Boolean,
+    private val limits: () -> ConverterLimits,
+    private val target: (Double) -> Double
+) : ResettablePowerProcess {
+    override var status = "IDLE"
+        private set
+    private val retry = ConverterRetry()
+    private var commandedInput = Double.NaN
+    private var commandedOutput = Double.NaN
+    private var activeLimits: ConverterLimits? = null
+    private var previousTarget = Double.NaN
+    private var powerRoundoff = 0.0
+
+    override fun resetFault() { retry.reset(); previousTarget = Double.NaN }
+    override fun beginStep(seconds: Double) { retry.advance(seconds) }
+
+    private fun open(reason: String) {
+        input.enabled = false
+        output.enabled = false
+        previousTarget = Double.NaN
+        status = reason
+    }
+
+    private fun readLimits(): ConverterLimits? = try {
+        limits()
+    } catch (_: IllegalArgumentException) {
+        open("INVALID_CONTROL")
+        null
+    }
+
+    private fun readTarget(inputVolts: Double): Double? {
+        val requested = try {
+            target(inputVolts)
+        } catch (_: IllegalArgumentException) {
+            // Invalid active signals/settings must not escape into the simulator's tick loop.
+            open("INVALID_CONTROL")
+            return null
+        }
+        if (!requested.isFinite() || requested < 0) {
+            open("INVALID_CONTROL")
+            return null
+        }
+        if (requested == 0.0) {
+            open("DISABLED")
+            return null
+        }
+        return requested
+    }
+
+    override fun prepareStep() {
+        if (retry.waiting) { open("NON_CONVERGENT"); return }
+        if (!enabled()) { open("DISABLED"); return }
+        val a = probePort(primary, primaryReference, input)
+        val rating = readLimits() ?: return
+        if (!a.volts.isFinite() || a.volts < rating.minInputVolts || a.volts > rating.maxInputVolts ||
+            a.ohms.isNaN() || a.ohms >= RegulatedConverter.OPEN_OHMS) return
+        val requested = readTarget(a.volts) ?: return
+        // Retain the last operating point, especially in current limit. Re-seeding a
+        // limited bus at its unloaded target each tick needlessly repeats startup.
+        if (output.enabled && requested == previousTarget) return
+        previousTarget = requested
+        input.u = a.volts
+        output.u = requested.coerceAtMost(rating.maxOutputVolts)
+        input.enabled = true
+        output.enabled = true
+    }
+
+    override fun rootSystemPreStepProcess() {
+        if (retry.waiting) { open("NON_CONVERGENT"); return }
+        if (!enabled()) { open("DISABLED"); return }
+        val a = probePort(primary, primaryReference, input)
+        val b = probePort(secondary, secondaryReference, output)
+        val rating = readLimits() ?: return
+        activeLimits = rating
+        val requested = readTarget(a.volts) ?: return
+        when (val result = RegulatedConverter.solve(a, b, requested, rating)) {
+            is TransferResult.Off -> open(result.reason.name)
+            is TransferResult.Running -> {
+                input.u = result.point.inputVolts
+                output.u = result.point.outputVolts
+                commandedInput = input.u; commandedOutput = output.u
+                input.enabled = result.point.inputWatts > 0.0
+                output.enabled = true
+                powerRoundoff = (if (input.enabled) portPowerResolution(input.u, a) * rating.electronicsEfficiency else 0.0) +
+                    portPowerResolution(output.u, b)
+                status = result.point.limitedBy.firstOrNull()?.name ?: "REGULATING"
+            }
+        }
+    }
+
+    override fun iterationRegion(): String = status
+
+    override fun acceptsCandidate(): Boolean {
+        if (!input.enabled && !output.enabled) return true
+        if ((input.enabled && !commandMatches(input.u, commandedInput)) ||
+            (output.enabled && !commandMatches(output.u, commandedOutput))) return false
+        val rating = activeLimits ?: return false
+        val a = input.subSystem ?: return false
+        val b = output.subSystem ?: return false
+        val ampsIn = a.pendingValue(input.currentState)
+        val ampsOut = -b.pendingValue(output.currentState)
+        if (!ampsIn.isFinite() || !ampsOut.isFinite() || ampsIn < -1e-7 || ampsOut < -1e-7 ||
+            ampsIn > rating.maxInputAmps * (1 + 1e-6) || ampsOut > rating.maxOutputAmps * (1 + 1e-6)) return false
+        val outputWatts = pendingSourcePower(output)
+        if (outputWatts > rating.maxOutputWatts * (1 + 1e-6) + 1e-7) return false
+        return balancedPower(-pendingSourcePower(input), outputWatts, rating.electronicsEfficiency, powerRoundoff)
+    }
+
+    override fun failClosed() { retry.trip(); open("NON_CONVERGENT") }
+    override fun isolatesLoadOnFailure() = true
+    override fun connectedSystems(): Set<SubSystem> = setOfNotNull(primary.subSystem, secondary.subSystem)
+    override fun controlledSources() = listOf(input, output)
+    override fun supportsLocalCommandDerivative() = true
+
+    override fun trialSources(): List<SwitchableVoltageSource> =
+        if (!input.enabled && output.enabled) listOf(input) else listOf(input, output)
+}

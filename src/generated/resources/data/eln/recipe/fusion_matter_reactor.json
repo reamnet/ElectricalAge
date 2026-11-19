@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:nether_star",
+    "D": "minecraft:diamond_block",
+    "M": "eln:electrical_motor",
+    "N": "minecraft:netherite_ingot"
+  },
+  "pattern": [
+    "NDN",
+    "MCM",
+    "NDN"
+  ],
+  "result": {
+    "id": "eln:fusion_matter_reactor"
+  }
+}

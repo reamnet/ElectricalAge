@@ -1,0 +1,19 @@
+{
+  "tests": 488,
+  "errors": 0,
+  "failures": 0,
+  "skipped": 3,
+  "passed": 485,
+  "suites": 97,
+  "portCommit": "7f1ef238",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "limits": [
+    "Twelve of the thirty source distribution variants are registered. Transformer poles, lighting, underground variants and their remaining related hardware are pending.",
+    "Independent adaptive rack alignment, height/surge/streetlight attachments, source-world migration and interactive client/audio validation remain pending.",
+    "Three-phase/service circuits retain the native scalar equivalents; this is not an AC phasor or neutral solver.",
+    "The source Direct Utility Pole ingredient is adapted to the existing native Utility Pole for secondary-pole crafting.",
+    "Default 200-case fluid corpus is not run; full regressions use fluidCases=20."
+  ]
+}

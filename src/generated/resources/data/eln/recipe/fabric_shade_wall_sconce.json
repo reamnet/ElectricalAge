@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": "eln:basic_lamp_holder",
+    "P": "eln:iron_plate",
+    "W": "minecraft:white_wool"
+  },
+  "pattern": [
+    "WWW",
+    " L ",
+    " P "
+  ],
+  "result": {
+    "id": "eln:fabric_shade_wall_sconce"
+  }
+}

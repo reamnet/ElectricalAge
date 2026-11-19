@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:ups_agm_battery_cell",
+    "C": "minecraft:copper_ingot",
+    "G": "minecraft:gold_ingot"
+  },
+  "pattern": [
+    "CCC",
+    "GBG",
+    "CCC"
+  ],
+  "result": {
+    "id": "eln:ups_lifepo4_battery_cell"
+  }
+}

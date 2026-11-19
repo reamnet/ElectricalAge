@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class GroundCableElement extends SixNodeElement {
 
-    NbtElectricalLoad electricalLoad = new NbtElectricalLoad("electricalLoad");
+    NbtElectricalLoad electricalLoad = new mods.eln.sixnode.electricalcable.GroundTerminalLoad();
     VoltageSource ground = new VoltageSource("ground", electricalLoad, null);
     //ElectricalSourceRefGroundProcess groundProcess = new ElectricalSourceRefGroundProcess(electricalLoad, 0);
 

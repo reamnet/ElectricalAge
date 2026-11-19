@@ -1,40 +1,35 @@
 {
- "column": [
-  {
-   "text": "title",
-   "sample": "Electrical Timer"
-  },
-  {
-   "row": [
+  "source": "ForkPatch b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "width": 62,
+  "height": 72,
+  "absolute": [
     {
-     "text": "hold",
-     "sample": "Hold time"
+      "button": "reset",
+      "rect": [
+        6,
+        6,
+        50,
+        20
+      ]
     },
     {
-     "field": "time",
-     "chars": 8
+      "button": "set",
+      "rect": [
+        6,
+        30,
+        50,
+        20
+      ]
     },
     {
-     "text": "unit",
-     "sample": "s"
+      "field": "time",
+      "rect": [
+        6,
+        54,
+        50,
+        12
+      ]
     }
-   ]
-  },
-  {
-   "row": [
-    {
-     "button": "set",
-     "sample": "Set",
-     "fill": true
-    },
-    {
-     "button": "reset",
-     "sample": "Reset",
-     "fill": true
-    }
-   ],
-   "fill": true
-  }
- ],
- "gap": 4
+  ],
+  "sourceGui": "src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutGui.java"
 }

@@ -1,0 +1,12 @@
+{
+  "source": "ForkPatch b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "sourceGui": "src/main/kotlin/mods/eln/sixnode/lampsocket/LampSocketGui.kt",
+  "width": 176,
+  "height": 166,
+  "absolute": [
+    {"button": "supply", "rect": [16, 7, 144, 20]},
+    {"field": "channel", "rect": [16, 33, 144, 20]},
+    {"slot": "0", "rect": [16, 59, 18, 18]},
+    {"inventory": true, "rect": [7, 83, 162, 76]}
+  ]
+}

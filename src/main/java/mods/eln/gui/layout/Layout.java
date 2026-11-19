@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * EA's screen layout (P4b): rows and columns of self-sizing leaves, so nothing on a screen is placed by hand and
- * nothing can overlap. Pure Java (no client classes): the client measures text with its font, tests with a fixed width
+ * EA's screen layout: adaptive rows/columns or reviewed source coordinates with overlap validation. Pure Java (no client classes): the client measures text with its font, tests with a fixed width
  * per character. A screen's tree comes from assets/eln/gui/&lt;name&gt;.json:
  * <pre>
+ * {"width": 62, "height": 72, "absolute": [{"field": "time", "rect": [6,54,50,12]}]}
  * {"column": [ ... ], "gap": 4}                    a column (children top to bottom), or "row" (left to right)
  * {"slot": "in", "big": true}                      an item slot (18x18; big: 26x26), id = the slot's name
  * {"text": "status", "sample": ["..", ".."]}       a text line, as wide as its widest sample
@@ -66,7 +66,8 @@ public final class Layout {
         }
     }
 
-    public record Result(int width, int height, List<Placed> leaves) {
+    public record Result(int width, int height, List<Placed> leaves, boolean sourceLayout) {
+        public Result(int width, int height, List<Placed> leaves) { this(width, height, leaves, false); }
         public Rect get(String kind, String id) {
             for (Placed p : leaves) if (p.kind.equals(kind) && p.id.equals(id)) return p.rect;
             return null;
@@ -253,8 +254,30 @@ public final class Layout {
 
     public static final int PAD = 7, MIN_WIDTH = 176;
 
-    /** Lay out a screen: the root node inside a panel padded by 7, at least 176 wide. */
+    /** Lay out a screen: fixed source rectangles, or a padded adaptive tree at least 176 wide. */
     public static Result layout(JsonObject root, Measure m) {
+        // Reviewed source GUIs use explicit panel coordinates. Keep these separate
+        // from adaptive rows so neither text metrics nor padding move their slots.
+        if (root.has("absolute")) {
+            int width = root.get("width").getAsInt(), height = root.get("height").getAsInt();
+            if (width <= 0 || height <= 0) throw new IllegalArgumentException("Invalid source panel size");
+            List<Placed> leaves = new ArrayList<>();
+            java.util.Set<String> keys = new java.util.HashSet<>();
+            for (JsonElement entry : root.getAsJsonArray("absolute")) {
+                JsonObject o = entry.getAsJsonObject();
+                Node n = new Node(o);
+                if (n.kind.equals("row") || n.kind.equals("column") || n.kind.equals("space"))
+                    throw new IllegalArgumentException("Source layout expects leaves");
+                JsonArray r = o.getAsJsonArray("rect");
+                if (r == null || r.size() != 4) throw new IllegalArgumentException("Source leaf needs x,y,width,height");
+                Rect at = new Rect(r.get(0).getAsInt(), r.get(1).getAsInt(), r.get(2).getAsInt(), r.get(3).getAsInt());
+                if (at.w <= 0 || at.h <= 0) throw new IllegalArgumentException("Invalid source leaf size");
+                Placed p = new Placed(n.kind, n.id, at);
+                if (!keys.add(p.key())) throw new IllegalArgumentException("Duplicate source leaf " + p.key());
+                leaves.add(p);
+            }
+            return new Result(width, height, List.copyOf(leaves), true);
+        }
         Node n = new Node(root);
         n.measure(m);
         int width = Math.max(MIN_WIDTH, n.w + 2 * PAD);

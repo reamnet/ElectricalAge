@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": "eln:3x_graphite_rods"
+  },
+  "pattern": [
+    "I"
+  ],
+  "result": {
+    "count": 3,
+    "id": "eln:graphite_rod"
+  }
+}

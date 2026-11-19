@@ -1,0 +1,18 @@
+{
+  "command": "./gradlew --no-daemon --max-workers=2 :test cad:test",
+  "testedCodeCommit": "94c295d54bf1a27fb6b106f3f3956342b0361d0e",
+  "fluidCases": 200,
+  "suites": 112,
+  "tests": 616,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 613,
+  "skippedCases": [
+    "mods.eln.node.voxel.VoxelPreviewTest.safetyValveAndSensor()",
+    "mods.eln.node.voxel.VoxelPreviewTest.junctionsAndAdapters()",
+    "mods.eln.client.entity.BikePreviewTest.bikes()"
+  ],
+  "elapsed": "4m 51s",
+  "scope": "Complete final root regression corpus after load bank, motor drive, SCADA and surge arrester/pole-kit adapters; default 200 fluid cases. CAD and filtered native checks recorded separately."
+}

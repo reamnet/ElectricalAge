@@ -1,0 +1,69 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "scope": "Solar roof adapter for all four existing panel identities; unfinished full-fork development port.",
+  "root": {
+    "suites": 116,
+    "tests": 637,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "cad": {
+    "suites": 3,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fluidCases": 200,
+  "rootCommand": "./gradlew --no-daemon --max-workers=2 :test cad:test runClientData",
+  "rootLog": "session3-roof-root-datagen.log",
+  "native": {
+    "selected": 335,
+    "passed": 335,
+    "failed": 0,
+    "skipped": 0,
+    "roofCases": 18,
+    "filter": "eln:forkpatch_*",
+    "report": "/tmp/eln26-roof-port-final.xml",
+    "log": "session3-roof-port-final.log"
+  },
+  "datagen": {
+    "identities": 637,
+    "previousIdentities": 637,
+    "changedPreviousIdentities": [],
+    "englishEntries": 935,
+    "previousEnglishEntries": 935,
+    "changedPreviousEnglishEntries": [],
+    "nativeTextureReferences": 453,
+    "missingTextures": []
+  },
+  "imports": {
+    "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+    "targetCommit": "f4cfce5227364790c5b171ad33d3c8e86705959e",
+    "ledgerEntries": 329,
+    "uniqueSourceFiles": 206,
+    "uniqueTargetFiles": 319,
+    "declaredVerbatimEntries": 83,
+    "exactCopies": 96,
+    "passed": true,
+    "problems": [],
+    "scope": "Source hashes, target existence and declared exact copies; not full runtime parity."
+  },
+  "coverage": [
+    "All four existing panel variants in every horizontal roof direction",
+    "Eight-strip cached replicated root and ghost collisions, preserved roof stairs and native metadata0-8",
+    "Five-cell large-array reservations with three elevated uphill cells and a real return terminal",
+    "Real item placement rejection, array teardown and owner reloads",
+    "Pitched solar incidence, tracker axis and finite manual controls with actual loaded Norton circuits",
+    "Real client publication, source mesh drawing and native culling-margin checks",
+    "Saved orientation survives later support rotation; top-half stairs and old saves remain flat",
+    "Passive block-state/entity probes leave unloaded chunks unloaded"
+  ],
+  "limitations": [
+    "Interactive GPU, selection and multiplayer validation remains pending.",
+    "Source daylight sampling offsets and native weather/shadow behavior are retained.",
+    "The historical unfiltered run remains 781/783 with two unreconciled goldens; this checkpoint reruns all335 port cases, not the unfiltered suite.",
+    "No complete source-world conversion or finished release is claimed."
+  ]
+}

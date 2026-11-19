@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": "eln:lamp_socket_b_projector",
+    "P": "eln:iron_plate",
+    "S": "eln:electrical_entity_sensor"
+  },
+  "pattern": [
+    "L L",
+    " S ",
+    " P "
+  ],
+  "result": {
+    "id": "eln:outdoor_motion_floodlight"
+  }
+}

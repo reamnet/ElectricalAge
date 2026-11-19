@@ -45,6 +45,8 @@ public final class ElnRegistry {
     /** Every EA device GUI (P4): ElnNodeMenu, rebuilt on the client from its open data. */
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.gui.ElnNodeMenu>> NODE_MENU =
         MENUS.register("node", () -> net.neoforged.neoforge.common.extensions.IMenuTypeExtension.create(mods.eln.gui.ElnNodeMenu::fromNetwork));
+    public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.item.wiresnips.WireSnipsMenu>> WIRE_SNIPS_MENU =
+        MENUS.register("wire_snips", () -> new net.minecraft.world.inventory.MenuType<>(mods.eln.item.wiresnips.WireSnipsMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.item.belt.BeltMenu>> BELT_MENU =
         MENUS.register("battery_belt", () -> new net.minecraft.world.inventory.MenuType<>(mods.eln.item.belt.BeltMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.item.xray.XRayScannerMenu>> XRAY_MENU =
@@ -52,6 +54,11 @@ public final class ElnRegistry {
     /** The electric bike's trunk (Baughn 2026-10-28). */
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.bike.BikeTrunkMenu>> BIKE_TRUNK_MENU =
         MENUS.register("electric_bike", () -> new net.minecraft.world.inventory.MenuType<>(mods.eln.bike.BikeTrunkMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
+    public static final DeferredHolder<net.minecraft.world.inventory.MenuType<?>,net.minecraft.world.inventory.MenuType<mods.eln.vehicle.VehicleMenu>> ROAD_VEHICLE_MENU =
+        MENUS.register("road_vehicle",()->net.neoforged.neoforge.common.extensions.IMenuTypeExtension.create((id,inv,buf)->{
+            var entity=inv.player.level().getEntity(buf.readVarInt());
+            return new mods.eln.vehicle.VehicleMenu(id,inv,entity instanceof mods.eln.vehicle.RoadVehicleEntity car?car:null);
+        }));
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Eln.MODID);
 
     /** Every EA item, in 1.12 id order (creative tab, tests). */
@@ -61,6 +68,14 @@ public final class ElnRegistry {
         p -> p.mapColor(MapColor.METAL).strength(1.0f, 1.0f).sound(SoundType.METAL).noOcclusion().dynamicShape());
     public static final DeferredBlock<GhostBlock> GHOST_BLOCK = BLOCKS.registerBlock("ghost_block", GhostBlock::new,
         p -> p.mapColor(MapColor.METAL).strength(0.5f).noOcclusion().noLootTable());
+
+    /** ForkPatch 1.21.1 ArcClayBlock (source block/ArcClayBlock.kt): the arc furnace's aluminium product block. */
+    public static final DeferredBlock<net.minecraft.world.level.block.Block> ARC_CLAY_BLOCK = BLOCKS.registerBlock("arc_clay_block", net.minecraft.world.level.block.Block::new,
+        p -> p.mapColor(MapColor.STONE).strength(1.5f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
+
+    /** ForkPatch 1.21.1 ArcMetalBlock (source block/ArcClayBlock.kt): the arc furnace's steel product block. */
+    public static final DeferredBlock<net.minecraft.world.level.block.Block> ARC_METAL_BLOCK = BLOCKS.registerBlock("arc_metal_block", net.minecraft.world.level.block.Block::new,
+        p -> p.mapColor(MapColor.STONE).strength(1.5f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     /** Lamp/turret/teleporter light (1.12 LightBlock): level in META, no shape, no drops, replaceable. */
     public static final DeferredBlock<mods.eln.sixnode.lampsocket.LightBlock> LIGHT_BLOCK = BLOCKS.registerBlock("light_block",
@@ -210,6 +225,34 @@ public final class ElnRegistry {
     public static final DeferredItem<mods.eln.bike.ElectricBikeItem> TERRAIN_BIKE =
         registerListed("terrain_bike", p -> new mods.eln.bike.ElectricBikeItem(p, mods.eln.bike.BikeType.TERRAIN), p -> p.stacksTo(1));
 
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>,net.minecraft.world.entity.EntityType<mods.eln.vehicle.RoadVehicleEntity>> ROAD_CART_ENTITY =
+        ENTITY_TYPES.register("electric_golf_cart",()->net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.vehicle.RoadVehicleEntity>of((t,l)->new mods.eln.vehicle.RoadVehicleEntity(t,l,mods.eln.vehicle.RoadVehicleKind.CART),net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1.65f,2.15f).clientTrackingRange(12).updateInterval(1)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE,net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"electric_golf_cart"))));
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>,net.minecraft.world.entity.EntityType<mods.eln.vehicle.RoadVehicleEntity>> ROAD_COUPE_ENTITY =
+        ENTITY_TYPES.register("arc_runner_coupe",()->net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.vehicle.RoadVehicleEntity>of((t,l)->new mods.eln.vehicle.RoadVehicleEntity(t,l,mods.eln.vehicle.RoadVehicleKind.COUPE),net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1.9f,1.85f).clientTrackingRange(12).updateInterval(1)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE,net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"arc_runner_coupe"))));
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>, net.minecraft.world.entity.EntityType<mods.eln.transparentnode.industrial.ForkliftEntity>> ELECTRIC_FORKLIFT =
+        ENTITY_TYPES.register("electric_forklift", () -> net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.transparentnode.industrial.ForkliftEntity>of(mods.eln.transparentnode.industrial.ForkliftEntity::new, net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1.1f,2.1f).clientTrackingRange(8).updateInterval(2)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"electric_forklift"))));
+    public static final DeferredHolder<net.minecraft.world.entity.EntityType<?>, net.minecraft.world.entity.EntityType<mods.eln.transparentnode.industrial.PalletEntity>> EQUIPMENT_PALLET =
+        ENTITY_TYPES.register("equipment_pallet", () -> net.minecraft.world.entity.EntityType.Builder
+            .<mods.eln.transparentnode.industrial.PalletEntity>of(mods.eln.transparentnode.industrial.PalletEntity::new, net.minecraft.world.entity.MobCategory.MISC)
+            .noLootTable().sized(1f,.85f).clientTrackingRange(8).updateInterval(3)
+            .build(net.minecraft.resources.ResourceKey.create(Registries.ENTITY_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath(Eln.MODID,"equipment_pallet"))));
+    static {
+        mods.eln.vehicle.RoadVehicles.INSTANCE.setCart(ROAD_CART_ENTITY);
+        mods.eln.vehicle.RoadVehicles.INSTANCE.setCoupe(ROAD_COUPE_ENTITY);
+        mods.eln.vehicle.RoadVehicles.INSTANCE.setMenu(ROAD_VEHICLE_MENU);
+        mods.eln.transparentnode.industrial.ForkliftEntity.TYPE=ELECTRIC_FORKLIFT;
+        mods.eln.transparentnode.industrial.PalletEntity.TYPE=EQUIPMENT_PALLET;
+    }
+
     /** 1.12 dropped a vanilla spawn egg tagged eln:replicator; 26.x eggs are per entity type. */
     public static final DeferredItem<net.minecraft.world.item.SpawnEggItem> REPLICATOR_SPAWN_EGG =
         registerListed("replicator_spawn_egg", net.minecraft.world.item.SpawnEggItem::new, p -> p.spawnEgg(REPLICATOR.get()));
@@ -263,11 +306,13 @@ public final class ElnRegistry {
                 d.parentItemDamage = id;
                 Eln.itemsByName.putIfAbsent(d.name, item); // first wins: "Signal Switch" is 6081 (gate source) as in 1.12
                 return item;
-            }, p -> p.stacksTo(stack)));
+            }, p -> d.itemProperties(p.stacksTo(stack))));
         }
     }
 
     public static void register(IEventBus modBus) {
+        mods.eln.transparentnode.kitchen.KitchenFoods.register();
+        mods.eln.transparentnode.laundry.WetEquipment.register();
         for (Map.Entry<Integer, SixNodeDescriptor> e : Eln.sixNodeItem.all().entrySet()) {
             int id = e.getKey();
             SixNodeDescriptor d = e.getValue();
@@ -279,7 +324,7 @@ public final class ElnRegistry {
                 d.parentItemDamage = id;
                 Eln.itemsByName.putIfAbsent(d.name, item); // first wins: "Signal Switch" is 6081 (gate source) as in 1.12
                 return item;
-            }));
+            }, d::itemProperties));
         }
         for (Map.Entry<Integer, mods.eln.node.transparent.TransparentNodeDescriptor> e : Eln.transparentNodeItem.all().entrySet()) {
             int id = e.getKey();
@@ -290,6 +335,7 @@ public final class ElnRegistry {
             TRANSPARENT_BLOCKS.add(block);
             ALL_ITEMS.add(ITEMS.registerItem(name, p -> {
                 mods.eln.node.transparent.TransparentNodeItem item = new mods.eln.node.transparent.TransparentNodeItem(p, d, block::get);
+                if (d instanceof mods.eln.transparentnode.cord.OutletDescriptor o && o.getRating() == mods.eln.transparentnode.cord.CordRating.V120 && !o.getStrip()) Eln.itemsByName.putIfAbsent("120 V Wall Outlet", item);
                 d.parentItem = item;
                 d.parentItemDamage = id;
                 Eln.itemsByName.putIfAbsent(d.name, item); // first wins: "Signal Switch" is 6081 (gate source) as in 1.12
@@ -316,6 +362,10 @@ public final class ElnRegistry {
                 return item;
             }));
         }
+        // ForkPatch 1.21.1 ArcClayBlock's item (source creative tab "ores & materials"; the target's single EA tab)
+        ALL_ITEMS.add(ITEMS.registerItem("arc_clay_block", p -> new net.minecraft.world.item.BlockItem(ARC_CLAY_BLOCK.get(), p)));
+        // ForkPatch 1.21.1 ArcMetalBlock's item (source ArcClayBlock.kt; same creative tab)
+        ALL_ITEMS.add(ITEMS.registerItem("arc_metal_block", p -> new net.minecraft.world.item.BlockItem(ARC_METAL_BLOCK.get(), p)));
         registerShared(Eln.sharedItem, "eln:shared_item", 64);
         registerShared(Eln.sharedItemStackOne, "eln:shared_item_stack_one", 1);
         // 1.12 itemCreativeTab: an item only to be the tab's icon (texture elncreativetab), not listed in the tab
@@ -347,7 +397,10 @@ public final class ElnRegistry {
             .title(Component.literal("Electrical Age"))
             .icon(() -> new ItemStack(tabIcon.get()))
             .displayItems((params, out) -> ALL_ITEMS.forEach(i -> {
-                if (i != tabIcon && !mods.eln.node.DescriptorRegistry.isHiddenItem(i.get())) out.accept(i.get()); // 1.12 addWithoutRegistry
+                if (i != tabIcon && !mods.eln.node.DescriptorRegistry.isHiddenItem(i.get())) {
+                    if(i.get() instanceof SixNodeItem six && six.descriptor instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor cable) out.accept(cable.creativeStack());
+                    else out.accept(i.get());
+                } // 1.12 addWithoutRegistry
             }))
             .build());
         BLOCKS.register(modBus);

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:black_dye",
+    "G": "minecraft:glass",
+    "L": "eln:basic_lamp_holder",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " D ",
+    "GLG",
+    " P "
+  ],
+  "result": {
+    "id": "eln:three_arm_parking_lot_light"
+  }
+}

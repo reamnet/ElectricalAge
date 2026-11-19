@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "P": "eln:iron_plate",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "P P",
+    "CRC",
+    "PPP"
+  ],
+  "result": {
+    "id": "eln:twelve_circuit_american_breaker_panel"
+  }
+}

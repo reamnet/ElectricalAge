@@ -1,14 +1,17 @@
 {
- "column": [
-  {
-   "text": "title",
-   "sample": "Wireless Signal Transmitter"
-  },
-  {
-   "field": "channel",
-   "chars": 30,
-   "fill": true
-  }
- ],
- "gap": 4
+  "source": "ForkPatch b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "width": 232,
+  "height": 24,
+  "absolute": [
+    {
+      "field": "channel",
+      "rect": [
+        6,
+        6,
+        220,
+        12
+      ]
+    }
+  ],
+  "sourceGui": "src/main/java/mods/eln/sixnode/wirelesssignal/tx/WirelessSignalTxGui.java"
 }

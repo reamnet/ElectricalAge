@@ -1,5 +1,11 @@
 # Minecraft Mod - Codename : ELN
 
+> **ForkPatch 3.0.77 migration in progress:** this work branch brings the complete
+> `reamnet/ELN1.21.1ForkPatch` feature set into NeoForge 26.3. See
+> [the migration scope and checkpoints](docs/forkpatch-port.md) and
+> [draft PR #1](https://github.com/reamnet/ElectricalAge/pull/1).
+> This is unfinished porting work, not a completed 3.0.77 release for 26.3.
+
 [![Build Status](https://travis-ci.org/Electrical-Age/ElectricalAge.svg?branch=develop)](https://travis-ci.org/Electrical-Age/ElectricalAge)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FElectrical-Age%2FElectricalAge.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FElectrical-Age%2FElectricalAge?ref=badge_shield)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0dd12c97357f4542903a667fa82a852c)](https://www.codacy.com/app/Baughn/ElectricalAge?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Electrical-Age/ElectricalAge&amp;utm_campaign=Badge_Grade)

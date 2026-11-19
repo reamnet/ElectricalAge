@@ -50,7 +50,7 @@ public class PowerSocketElement extends SixNodeElement {
     public final Resistor link = new Resistor(sourceLoad, powerLoad);
     public static final double LINK_R = 0.1;
     /** The supply feeding it at the last look, or null. */
-    public mods.eln.sixnode.lampsupply.LampSupplyElement supply;
+    public mods.eln.utility.WirelessPowerHandle supply;
     public IProcess PowerSocketSlowProcess = new PowerSocketSlowProcess();
 
     /**
@@ -94,37 +94,25 @@ public class PowerSocketElement extends SixNodeElement {
         @Override
         public void process(double time) {
             var best = nearestSupply();
-            supply = best == null ? null : best.element;
-            if (best != null && best.element.getChannelState(best.id)) {
-                double u = best.element.powerLoad.getU();
+            supply = best;
+            if (best != null && best.getElement().getChannelState(best.getId())) {
+                double u = best.getElement().getPowerLoad().getU();
                 source.setU(u);
                 link.setR(LINK_R);
                 // what the cable draws, charged to the supply as a resistance (U / I)
                 double i = link.getCurrent();
-                if (i > 1e-6 && u > 1e-3) best.element.addToRp(u / i);
+                if (i > 1e-6 && u > 1e-3) mods.eln.utility.WirelessLoadDemand.INSTANCE.report(PowerSocketElement.this,best,u/i);
+                else mods.eln.utility.WirelessLoadDemand.INSTANCE.report(PowerSocketElement.this,null,Double.NaN);
             } else {
+                mods.eln.utility.WirelessLoadDemand.INSTANCE.report(PowerSocketElement.this,null,Double.NaN);
                 link.highImpedance();
                 source.setU(0);
             }
         }
     }
 
-    /** The nearest live lamp supply on this channel within its range (as LampSocketProcess picks one). */
-    mods.eln.sixnode.lampsupply.LampSupplyElement.PowerSupplyChannelHandle nearestSupply() {
-        var list = mods.eln.sixnode.lampsupply.LampSupplyElement.channelMap.get(channel);
-        if (list == null) return null;
-        mods.eln.sixnode.lampsupply.LampSupplyElement.PowerSupplyChannelHandle best = null;
-        double bestDistance = Double.MAX_VALUE;
-        for (var s : list) {
-            if (s.element.isBurnt() || s.element.sixNode == null || !s.element.sixNode.isAdded() || s.element.sixNode.isDestructing()) continue;
-            double d = s.element.sixNode.coordonate.trueDistanceTo(sixNode.coordonate);
-            if (d < bestDistance && d <= s.element.getRange()) {
-                bestDistance = d;
-                best = s;
-            }
-        }
-        return best;
-    }
+    /** The nearest live source wins even when its channel is OFF. */
+    mods.eln.utility.WirelessPowerHandle nearestSupply() { return mods.eln.utility.WirelessPowerChannels.INSTANCE.nearest(channel,sixNode.coordonate); }
 
     static void channelRegister(PowerSocketElement tx) {
         String channel = tx.channel;
@@ -179,12 +167,14 @@ public class PowerSocketElement extends SixNodeElement {
     public void destroy(ServerPlayer entityPlayer) {
         super.destroy(entityPlayer);
         unregister();
+        mods.eln.utility.WirelessLoadDemand.INSTANCE.disconnectOwner(this);
     }
 
     @Override
     public void unload() {
         super.unload();
         channelRemove(this);
+        mods.eln.utility.WirelessLoadDemand.INSTANCE.disconnectOwner(this);
     }
 
     void unregister() {

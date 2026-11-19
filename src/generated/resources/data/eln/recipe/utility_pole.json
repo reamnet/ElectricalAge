@@ -13,13 +13,6 @@
         "type": "neoforge:tag_empty",
         "tag": "minecraft:logs"
       }
-    },
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "neoforge:tag_empty",
-        "tag": "c:ingots/aluminum"
-      }
     }
   ],
   "type": "minecraft:crafting_shaped",

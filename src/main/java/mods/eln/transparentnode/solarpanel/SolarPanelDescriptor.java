@@ -33,7 +33,8 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
         String name,
         Obj3D obj, CableRenderDescriptor cableRender,
         GhostGroup ghostGroup, int solarOffsetX, int solarOffsetY, int solarOffsetZ,
-        Coordonate groundCoordinate, double electricalUmax, double electricalPmax,
+        Coordonate groundCoordinate, double openCircuitVoltage, double optimumVoltage,
+        double optimumCurrent, double shortCircuitCurrent,
         double electricalDropFactor,
         double alphaMin, double alphaMax
 
@@ -42,16 +43,19 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
         this.groundCoordinate = groundCoordinate;
         this.ghostGroup = ghostGroup;
 
-        electricalRs = electricalUmax * electricalUmax * electricalDropFactor
-            / electricalPmax / 2.0;
-        this.electricalPmax = electricalPmax;
+        electricalRs = optimumVoltage * electricalDropFactor / optimumCurrent / 2.0;
+        this.electricalPmax = optimumVoltage * optimumCurrent;
+        this.openCircuitVoltage = openCircuitVoltage;
+        this.optimumVoltage = optimumVoltage;
+        this.optimumCurrent = optimumCurrent;
+        this.shortCircuitCurrent = shortCircuitCurrent;
         this.solarOffsetX = solarOffsetX;
         this.solarOffsetY = solarOffsetY;
         this.solarOffsetZ = solarOffsetZ;
         this.alphaMax = alphaMax;
         this.alphaMin = alphaMin;
         basicModel = true;
-        this.electricalUmax = electricalUmax;
+        this.electricalUmax = openCircuitVoltage;
 
         this.obj = obj;
         if (obj != null) {
@@ -63,7 +67,7 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
 
         canRotate = alphaMax != alphaMin;
 
-        voltageLevelColor = VoltageLevelColor.fromVoltage(electricalUmax);
+        voltageLevelColor = VoltageLevelColor.fromVoltage(openCircuitVoltage);
     }
 
 
@@ -75,6 +79,7 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
     CableRenderDescriptor cableRender;
     double electricalUmax;
     double electricalPmax;
+    double openCircuitVoltage, optimumVoltage, optimumCurrent, shortCircuitCurrent;
 
     int solarOffsetX, solarOffsetY, solarOffsetZ;
     double alphaMin, alphaMax;
@@ -102,6 +107,28 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
         } else {
             return super.getFrontFromPlace(side, entityLiving);
         }
+    }
+
+    @Override
+    public mods.eln.node.transparent.TransparentNodeBlock newBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties p) {
+        return new SolarPanelBlock(p, this);
+    }
+
+    @Override
+    public boolean isFloor(Block below) {
+        return below instanceof net.minecraft.world.level.block.StairBlock || super.isFloor(below);
+    }
+
+    @Override
+    public Direction mountingFront(Level world, net.minecraft.core.BlockPos pos, Direction proposed) {
+        var up = SolarRoofMount.fromSupport(world, pos).getUphill();
+        return up == null ? proposed : Direction.fromIntMinecraftSide(up.getOpposite().get3DDataValue());
+    }
+
+    @Override
+    public GhostGroup getGhostGroupAt(Coordonate coord, Direction front) {
+        var roof = SolarRoofMount.at(coord.world(), coord.pos());
+        return !canRotate && !roof.getPitched() ? SolarGhostShapes.flatFootprint(ghostGroup, front) : roof.footprint(ghostGroup, front);
     }
 
     void draw(float alpha, Direction front) {

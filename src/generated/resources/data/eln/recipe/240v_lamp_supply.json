@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/copper"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": "eln:advanced_machine_block",
+    "C": "#c:ingots/copper",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " I ",
+    "ACA",
+    " I "
+  ],
+  "result": {
+    "id": "eln:240v_lamp_supply"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:terracotta",
+    "L": "eln:basic_lamp_holder",
+    "W": "minecraft:white_wool"
+  },
+  "pattern": [
+    "WWW",
+    " L ",
+    " B "
+  ],
+  "result": {
+    "id": "eln:ceramic_drum_table_lamp"
+  }
+}

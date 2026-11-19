@@ -1,0 +1,40 @@
+{
+  "tests": 359,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 356,
+  "suites": 84,
+  "portCommit": "6d072afb",
+  "scope": "All destination tests after the off-grid equipment integration",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "offgridCircuitTests": 18,
+  "datagenReport": "offgrid-datagen.json",
+  "limits": [
+    "Default 200-case fluid corpus not run.",
+    "Interactive client GPU validation not performed."
+  ],
+  "skippedCases": [
+    {
+      "name": "safetyValveAndSensor()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "junctionsAndAdapters()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "bikes()",
+      "classname": "mods.eln.client.entity.BikePreviewTest",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    }
+  ],
+  "nativeTests": 21,
+  "nativeOffgridTests": 13,
+  "nativePassed": true,
+  "nativeReport": "offgrid-native-tests.json"
+}

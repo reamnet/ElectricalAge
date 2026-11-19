@@ -361,6 +361,12 @@ public class Obj3D {
 
     public Identifier getModelResourceLocation(String name) {
         if (name == null) return null; // 1.12 built "model/<dir>/null" for a missing key; nothing to load either way
+        // ForkPatch shared material atlases use explicit resource identifiers.
+        // Windows drive paths retain the legacy filename-only fallback below.
+        if (name.indexOf(':') > 1) {
+            Identifier explicit = Identifier.tryParse(name.toLowerCase(java.util.Locale.ROOT));
+            if (explicit != null) return explicit;
+        }
         // 26.x: resource paths must be lower case (the asset files are), and some MTL files name textures by an
         // absolute Windows path of the original author's machine: keep the file name only (1.12 was lenient)
         String file = name.substring(Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\')) + 1);

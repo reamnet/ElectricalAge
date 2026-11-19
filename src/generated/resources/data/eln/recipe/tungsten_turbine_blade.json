@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": "#c:ingots/alloy",
+    "C": "eln:advanced_machine_block",
+    "T": "#eln:ingots/tungsten"
+  },
+  "pattern": [
+    "TAT",
+    "ACA",
+    "TAT"
+  ],
+  "result": {
+    "id": "eln:tungsten_turbine_blade"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "previousAssertions": 746,
+  "currentAssertions": 761,
+  "unchangedExactAssertions": 746,
+  "addedExactAssertions": [
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8053: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8054: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8055: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8056: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8057: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8058: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@8059: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: AlarmDescriptor in the 1.12 dump: spec without a 1.12 container",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fire Alarm Bell has no 1.12 container: spec from AlarmDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fire Alarm Control Panel has no 1.12 container: spec from AlarmDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fire Alarm Heat Detector has no 1.12 container: spec from AlarmDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fire Alarm Horn Strobe has no 1.12 container: spec from AlarmDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fire Alarm Pull Station has no 1.12 container: spec from AlarmDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fire Alarm Smoke Detector has no 1.12 container: spec from AlarmDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Fire Alarm Strobe has no 1.12 container: spec from AlarmDescriptor",
+      "count": 1
+    }
+  ],
+  "removedExactAssertions": [],
+  "observedLog": "/tmp/eln-fire-alarm-final-check-v5.log",
+  "nativeXml": "/tmp/eln-fire-alarm-goldens-v5.xml",
+  "scope": "All746 previous assertions remain exact. Fifteen additions cover7 source alarm identities,7 menus and their descriptor class. Historical expectations are unchanged."
+}

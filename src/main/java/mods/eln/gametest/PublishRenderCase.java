@@ -38,7 +38,7 @@ final class PublishRenderCase implements TestCase {
     }
 
     public int height() {
-        return 7;
+        return 32; // Room for the complete tall-pole catalog, without excluding any new device.
     }
 
     public int depth() {
@@ -58,7 +58,7 @@ final class PublishRenderCase implements TestCase {
     /** Devices with no render class in the port yet (Modbus RTU: modbus is off, the device unregistered). */
     static final java.util.Set<String> NO_RENDER_YET = java.util.Set.of("Modbus RTU");
     /** Need a setting this box can't give (water; a 3x3x4 free volume beside the floor): drawn in the gallery instead. */
-    static final java.util.Set<String> NOT_HERE = java.util.Set.of("Water Turbine", "Experimental Transporter");
+    static final java.util.Set<String> NOT_HERE = java.util.Set.of("Water Turbine", "Experimental Transporter", "Utility Wind Turbine 3.2kV", "Large Watermill 3.2kV");
 
     public void measure(TestContext ctx) {
         mods.eln.client.ClientRenders.registerAll();
@@ -81,7 +81,12 @@ final class PublishRenderCase implements TestCase {
             String why = null;
             for (Direction tryside : new Direction[]{Direction.YN, Direction.XN, Direction.YP}) {
                 try {
-                    if (tryside != Direction.YN) ctx.floor(p.relative(tryside.toEnumFacing()));
+                    // Hanging fixtures need their reserved cells above the stone floor as well as a ceiling.
+                    // Keep every fixture in the catalog rather than excluding models with downward clearance.
+                    var ghosts = d.getGhostGroup(tryside, mods.eln.misc.LRDU.Up);
+                    int lowest = ghosts == null ? 0 : ghosts.elementList.stream().mapToInt(g -> g.y).min().orElse(0);
+                    p = ctx.at(4, 1 - Math.min(0, lowest), 1);
+                    if (tryside != Direction.YN || p.getY() != ctx.at(4, 1, 1).getY()) ctx.floor(p.relative(tryside.toEnumFacing()));
                     node = ctx.placeSix(e.getKey(), p, tryside).sixNode;
                     side = tryside;
                     break;
@@ -106,6 +111,7 @@ final class PublishRenderCase implements TestCase {
             }
             GoldenSlotsCase.clear(ctx);
         }
+        p = ctx.at(4, 1, 1);
         for (var e : Eln.transparentNodeItem.all().entrySet()) {
             TransparentNodeDescriptor d = e.getValue();
             if (ElnRenders.transparent(d) == null || seen.put(d, true) != null || NOT_HERE.contains(d.name)) continue;
@@ -115,7 +121,14 @@ final class PublishRenderCase implements TestCase {
                 ctx.floor(p.below());
                 if (d instanceof mods.eln.oil.SubmersiblePumpDescriptor)   // (it goes in water)
                     ctx.level().setBlock(p, net.minecraft.world.level.block.Blocks.WATER.defaultBlockState(), 2);
-                node = ctx.placeTransparent(e.getKey(), p).node;
+                if (d.mustHaveWallFrontInverse() || d.mustHaveWall()) {
+                    // Source wall fixtures also include any-wall supports (e.g. festive String Lights).
+                    ctx.floor(p.south()); ctx.floor(p.south().above());
+                    ctx.floor(p.south().east()); ctx.floor(p.south().west());
+                    var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);
+                    node = ((mods.eln.node.transparent.TransparentNodeItem)d.parentItem).placeAt(d.newItemStack(), player, level, p, Direction.ZP);
+                    if (node == null) throw new IllegalStateException("Wall rendering fixture could not be placed: " + d.name);
+                } else node = ctx.placeTransparent(e.getKey(), p).node;
             } catch (RuntimeException ex) {
                 ctx.check("publish " + d.name + " placed", false, ex.getMessage());
                 GoldenSlotsCase.clear(ctx);

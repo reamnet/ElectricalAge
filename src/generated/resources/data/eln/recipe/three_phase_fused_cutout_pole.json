@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:three_phase_utility_pole",
+    "eln:pole_fuse_link",
+    "minecraft:redstone",
+    "eln:pole_fuse_link",
+    "eln:pole_fuse_link"
+  ],
+  "result": {
+    "id": "eln:three_phase_fused_cutout_pole"
+  }
+}

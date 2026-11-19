@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:230_kv_steel_transmission_tower",
+    "C": "eln:copper_cable",
+    "I": "minecraft:iron_bars",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "CCC",
+    "IBI",
+    "PPP"
+  ],
+  "result": {
+    "id": "eln:230_kv_three_phase_substation_disconnect"
+  }
+}

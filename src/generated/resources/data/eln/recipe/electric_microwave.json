@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:copper_cable",
+    "G": "minecraft:glass_pane",
+    "P": "eln:iron_plate",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "PPP",
+    "GRC",
+    "PPP"
+  ],
+  "result": {
+    "id": "eln:electric_microwave"
+  }
+}

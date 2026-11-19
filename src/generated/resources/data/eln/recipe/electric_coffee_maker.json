@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:bucket",
+    "C": "eln:copper_cable",
+    "G": "minecraft:glass_pane",
+    "I": "minecraft:iron_ingot",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " I ",
+    "GBG",
+    "PCP"
+  ],
+  "result": {
+    "id": "eln:electric_coffee_maker"
+  }
+}

@@ -175,6 +175,11 @@ public class Wp9aContent implements ElnContent {
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
         {
+            var desc = new mods.eln.sixnode.variableinductor.VariableInductorDescriptor(
+                TR_NAME(Type.NONE, "Variable inductor"), obj.getObj("PowerElectricPrimitives"));
+            sixNodeItem.addDescriptor(mods.eln.sixnode.variableinductor.VariableInductorDescriptor.ID, desc);
+        }
+        {
             subId = 36;
 
             name = TR_NAME(Type.NONE, "Power Resistor");
@@ -220,6 +225,23 @@ public class Wp9aContent implements ElnContent {
     }
 
     public static void registerSwitch(int id) {
+        var ratedSwitch = new ElectricalSwitchDescriptor(TR_NAME(Type.NONE,"5A Switch"),stdCableRender50V,obj.getObj("LowVoltageSwitch"),300,1500,.04,300,1500,cableThermalLoadInitializer.copy(),false);
+        ratedSwitch.setDefaultIcon("switch");
+        sixNodeItem.addDescriptor((id<<6)+5,ratedSwitch);
+
+        ratedSwitch.setDefaultIcon("switch");
+        sixNodeItem.addDescriptor((id<<6)+5,ratedSwitch);
+
+        var ratedSwitch20a = new ElectricalSwitchDescriptor(TR_NAME(Type.NONE,"20A Switch"),stdCableRender200V,obj.getObj("LowVoltageSwitch"),600,12000,.01,600,12000,cableThermalLoadInitializer.copy(),false);
+        ratedSwitch20a.setDefaultIcon("switch");
+        sixNodeItem.addDescriptor((id<<6)+6,ratedSwitch20a);
+        var ratedSwitch50a = new ElectricalSwitchDescriptor(TR_NAME(Type.NONE,"50A Switch"),stdCableRender800V,obj.getObj("HighVoltageSwitch"),600,30000,.005,600,30000,cableThermalLoadInitializer.copy(),false);
+        ratedSwitch50a.setDefaultIcon("switch");
+        sixNodeItem.addDescriptor((id<<6)+7,ratedSwitch50a);
+
+        var ratedSwitch100a = new ElectricalSwitchDescriptor(TR_NAME(Type.NONE,"100A Switch"),stdCableRender3200V,obj.getObj("HighVoltageSwitch"),600,60000,.0025,600,60000,cableThermalLoadInitializer.copy(),false);
+        ratedSwitch100a.setDefaultIcon("switch");
+        sixNodeItem.addDescriptor((id<<6)+9,ratedSwitch100a);
         int subId, completId;
         String name;
         IFunction function;
@@ -328,6 +350,15 @@ public class Wp9aContent implements ElnContent {
 
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+        // Source identities 0,1,2,3,7,8,9,10,11,13,14,15. Preserve the existing
+        // generic breaker at 6272; 6276-6278 belong to meters and the fuse holder.
+        int[] sourceSubIds = {0,1,2,3,7,8,9,10,11,13,14,15};
+        int[] nativeIds = {6288,6273,6274,6275,6279,6280,6281,6282,6283,6285,6286,6287};
+        int[] amps = {5,10,15,20,30,40,50,60,100,125,200,400};
+        for (int i=0;i<amps.length;i++) {
+            name = TR_NAME(Type.NONE, amps[i] + "A Electrical Breaker");
+            sixNodeItem.addDescriptor(nativeIds[i], new ElectricalBreakerDescriptor(name, obj.getObj("ElectricalBreaker"), amps[i]));
+        }
         {
             subId = 6;
 
@@ -377,10 +408,68 @@ public class Wp9aContent implements ElnContent {
             ElectricalFuseDescriptor.Companion.setBlownFuse(desc);
             sharedItem.addWithoutRegistry(subId + (id << 6), desc);
         }
-    
+        {
+            subId = 16;
+
+            name = TR_NAME(Type.NONE, "5A Lead Fuse");
+
+            ElectricalFuseDescriptor desc = new ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 5.0);
+            sharedItem.addElement(subId + (id << 6), desc);
+        }
+        {
+            subId = 17;
+
+            name = TR_NAME(Type.NONE, "10A Lead Fuse");
+
+            ElectricalFuseDescriptor desc = new ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 10.0);
+            sharedItem.addElement(subId + (id << 6), desc);
+        }
+        {
+            subId = 18;
+
+            name = TR_NAME(Type.NONE, "15A Lead Fuse");
+
+            ElectricalFuseDescriptor desc = new ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 15.0);
+            sharedItem.addElement(subId + (id << 6), desc);
+        }
+        {
+            subId = 19;
+
+            name = TR_NAME(Type.NONE, "20A Lead Fuse");
+
+            ElectricalFuseDescriptor desc = new ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 20.0);
+            sharedItem.addElement(subId + (id << 6), desc);
+        }
+        {
+            subId = 20;
+
+            name = TR_NAME(Type.NONE, "30A Lead Fuse");
+
+            ElectricalFuseDescriptor desc = new ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 30.0);
+            sharedItem.addElement(subId + (id << 6), desc);
+        }
+        {
+            subId = 21;
+
+            name = TR_NAME(Type.NONE, "50A Lead Fuse");
+
+            ElectricalFuseDescriptor desc = new ElectricalFuseDescriptor(name, null, obj.getObj("ElectricalFuse"), 50.0);
+            sharedItem.addElement(subId + (id << 6), desc);
+        }
+
     }
 
     public static void registerElectricalRelay(int id) {
+        String[] ratedNames = {"5V Control Relay 10A", "12V Control Relay 20A", "12V Control Relay 50A", "12V Control Relay 100A"};
+        String[] ratedModels = {"RelaySmall", "RelayBig", "relay800", "relay800"};
+        double[] ratedAmps = {10,20,50,100}, ratedResistance = {.04,.01,.005,.0025};
+        String[] icons = {"lowvoltagerelay","mediumvoltagerelay","highvoltagerelay","veryhighvoltagerelay"};
+        for (int i=0; i<4; i++) {
+            var relay = new ElectricalRelayDescriptor(TR_NAME(Type.NONE,ratedNames[i]),obj.getObj(ratedModels[i]),i==0?120:600,ratedAmps[i],ratedResistance[i],i==0?5:12);
+            relay.setDefaultIcon(icons[i]);
+            sixNodeItem.addDescriptor((id<<6)+5+i,relay);
+        }
+
         int subId, completId;
         String name;
         ElectricalRelayDescriptor desc;

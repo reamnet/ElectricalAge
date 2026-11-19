@@ -19,10 +19,10 @@ public class TeleporterPowerNode extends GhostNode {
 
     @Override
     public int getSideConnectionMask(Direction directionA, LRDU lrduA) {
-        if (e == null) return 0;
+        if (e == null || !mods.eln.transparentnode.cord.CordSupport.active(e) || e.isBurnt()) return 0;
         if (directionA == Direction.YP || directionA == Direction.YN) return 0;
         if (lrduA != LRDU.Down) return 0;
-        return maskElectricalPower;
+        return mods.eln.transparentnode.cord.CordSupport.mask(e, e.cordInput(), maskElectricalPower);
     }
 
     @Override
@@ -33,8 +33,8 @@ public class TeleporterPowerNode extends GhostNode {
 
     @Override
     public ElectricalLoad getElectricalLoad(Direction directionB, LRDU lrduB) {
-        if (e == null) return null;
-        return e.powerLoad;
+        if (e == null || !mods.eln.transparentnode.cord.CordSupport.active(e) || e.isBurnt()) return null;
+        return mods.eln.transparentnode.cord.CordSupport.load(e, e.cordInput());
     }
 
     @Override

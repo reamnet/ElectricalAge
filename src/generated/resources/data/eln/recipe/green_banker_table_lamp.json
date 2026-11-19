@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": "minecraft:green_stained_glass",
+    "L": "eln:basic_lamp_holder",
+    "P": "minecraft:copper_ingot"
+  },
+  "pattern": [
+    "GGG",
+    " L ",
+    " P "
+  ],
+  "result": {
+    "id": "eln:green_banker_table_lamp"
+  }
+}

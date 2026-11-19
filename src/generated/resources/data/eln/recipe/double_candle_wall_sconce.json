@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "L": "eln:basic_lamp_holder",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "L L",
+    " G ",
+    " P "
+  ],
+  "result": {
+    "id": "eln:double_candle_wall_sconce"
+  }
+}

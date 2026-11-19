@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:chest",
+    "G": "minecraft:glass_pane",
+    "P": "eln:iron_plate",
+    "R": "eln:copper_cable"
+  },
+  "pattern": [
+    "PPP",
+    "GCG",
+    "PRP"
+  ],
+  "result": {
+    "id": "eln:electric_refrigerator"
+  }
+}

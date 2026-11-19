@@ -1,0 +1,228 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "sourceVariants": 30,
+  "currentCreativeVariants": 18,
+  "currentCreativeVariantsAdapted": 18,
+  "registeredVariants": 30,
+  "hiddenLegacyVariantsAdapted": 12,
+  "hiddenLegacyVariantsPending": 0,
+  "variants": [
+    {
+      "kind": "SINGLE",
+      "sourceId": 7970,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_utility_pole"
+    },
+    {
+      "kind": "THREE",
+      "sourceId": 7971,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_utility_pole"
+    },
+    {
+      "kind": "TRANSFORMER_SINGLE",
+      "sourceId": 7972,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_transformer_pole"
+    },
+    {
+      "kind": "TRANSFORMER_THREE",
+      "sourceId": 7973,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_transformer_pole"
+    },
+    {
+      "kind": "FEEDER_THREE",
+      "sourceId": 7974,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_underground_feeder_pole"
+    },
+    {
+      "kind": "CUTOUT_SINGLE",
+      "sourceId": 7975,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_fused_cutout_pole"
+    },
+    {
+      "kind": "CUTOUT_THREE",
+      "sourceId": 7976,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_fused_cutout_pole"
+    },
+    {
+      "kind": "RECLOSER_THREE",
+      "sourceId": 7977,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_recloser_pole"
+    },
+    {
+      "kind": "SECONDARY",
+      "sourceId": 7978,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "120_240v_secondary_utility_pole"
+    },
+    {
+      "kind": "SECONDARY_LIGHT",
+      "sourceId": 7979,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "120_240v_secondary_street_light_pole"
+    },
+    {
+      "kind": "CAPACITOR_THREE",
+      "sourceId": 7980,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_pole_mounted_capacitor_bank"
+    },
+    {
+      "kind": "REGULATOR_SINGLE",
+      "sourceId": 7981,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_automatic_voltage_regulator_pole"
+    },
+    {
+      "kind": "REGULATOR_THREE",
+      "sourceId": 7982,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_automatic_voltage_regulator_pole"
+    },
+    {
+      "kind": "AIR_BREAK_THREE",
+      "sourceId": 7983,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_gang_operated_air_break_switch_pole"
+    },
+    {
+      "kind": "STREET_SINGLE",
+      "sourceId": 7984,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_transformer_street_light_pole"
+    },
+    {
+      "kind": "STREET_THREE",
+      "sourceId": 7985,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_transformer_street_light_pole"
+    },
+    {
+      "kind": "SECONDARY_FED_SINGLE",
+      "sourceId": 7989,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_secondary_fed_street_light_pole"
+    },
+    {
+      "kind": "SECONDARY_FED_THREE",
+      "sourceId": 7990,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_secondary_fed_street_light_pole"
+    },
+    {
+      "kind": "FUSED_TAP_THREE",
+      "sourceId": 7993,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_pole_with_fused_single_phase_tap"
+    },
+    {
+      "kind": "FUSED_TAP_LIGHT_THREE",
+      "sourceId": 8022,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_fused_tap_secondary_fed_street_light_pole"
+    },
+    {
+      "kind": "FUSED_TAP_TRANSFORMER_LIGHT_THREE",
+      "sourceId": 8023,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "three_phase_transformer_street_light_pole_with_fused_single_phase_tap"
+    },
+    {
+      "kind": "SERVICE_PEDESTAL",
+      "sourceId": 8032,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "fused_underground_120_240v_service_pedestal"
+    },
+    {
+      "kind": "UNDERGROUND_SINGLE",
+      "sourceId": 8033,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "12_5kv_single_phase_fused_underground_feeder"
+    },
+    {
+      "kind": "UNDERGROUND_THREE",
+      "sourceId": 8034,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "12_5kv_three_phase_fused_underground_feeder"
+    },
+    {
+      "kind": "UNDERGROUND_LIGHT_SINGLE",
+      "sourceId": 8035,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "12_5kv_single_phase_fused_underground_feeder_with_street_light"
+    },
+    {
+      "kind": "UNDERGROUND_LIGHT_THREE",
+      "sourceId": 8036,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "12_5kv_three_phase_fused_underground_feeder_with_street_light"
+    },
+    {
+      "kind": "TWIN_SECONDARY_LIGHT",
+      "sourceId": 7949,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "utility_pole_twin_led_street_light"
+    },
+    {
+      "kind": "FEEDER_SINGLE",
+      "sourceId": 8131,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_underground_feeder_pole"
+    },
+    {
+      "kind": "FEEDER_LIGHT_SINGLE",
+      "sourceId": 8132,
+      "sourceCreative": false,
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_underground_feeder_pole_with_secondary_fed_street_light"
+    },
+    {
+      "kind": "UNDERGROUND_SECONDARY_TRANSFORMER_SINGLE",
+      "sourceId": 8133,
+      "sourceCreative": true,
+      "status": "native-placement-and-power-passed",
+      "registryName": "single_phase_transformer_pole_with_underground_service_riser"
+    }
+  ],
+  "limits": [
+    "Five hidden legacy distribution adapters remain pending.",
+    "Full source-world migration, adaptive racks, other pole-family attachments and the wider ForkPatch migration remain incomplete.",
+    "Native scalar phase/service equivalents are retained.",
+    "Three optional CAD previews skipped; default 200-case fluid corpus and interactive GPU/audio validation not run."
+  ],
+  "validatedCodeCommit": "28d02d8746b4840b91709d6da8c6ed0b68da3a5c"
+}

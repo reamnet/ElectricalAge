@@ -1,0 +1,18 @@
+{
+  "tests": 467,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "suites": 95,
+  "passed": 464,
+  "portCommit": "379ce28e",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "limits": [
+    "Multicore overhead phase mapping/length payment and automatic ground tracing through chains of uncolored single wires remain pending. New multicore overhead links are rejected until adapted.",
+    "New utility spools remain creative-accessible until source wire-processing machines and survival manufacturing recipes are ported.",
+    "Inventory trimming/tools, player-contact shocks, room coupling, full source-world migration, remaining hardware and interactive client GPU/audio checks remain pending.",
+    "The default 200-case fluid corpus was not run; regression validation uses fluidCases=20."
+  ]
+}

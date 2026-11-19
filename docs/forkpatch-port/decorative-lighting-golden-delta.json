@@ -1,0 +1,96 @@
+{
+  "previousAssertions": 697,
+  "currentAssertions": 714,
+  "unchangedExactAssertions": 697,
+  "addedExactAssertions": [
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4126: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4388: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4389: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4390: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4391: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4408: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:six_node@4409: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_descriptors",
+      "assertion": "golden eln:transparent_node@4418: known in 1.12: no such item in golden/1.12/inventory.json",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Outdoor Motion Floodlight has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Classic Four Blade Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Modern Three Blade Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Industrial Five Block Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Aura Five Blade Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Tropical Patio Ceiling Fan has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: Adjustable Suspended Warehouse Light has no 1.12 container: spec from DecorativeLampDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: String Lights has no 1.12 container: spec from StringLightsDescriptor",
+      "count": 1
+    },
+    {
+      "case": "golden_slots",
+      "assertion": "golden slots: StringLightsDescriptor in the 1.12 dump: spec without a 1.12 container",
+      "count": 1
+    }
+  ],
+  "removedExactAssertions": [],
+  "observedLog": "/tmp/eln-lamps-all-validation-v6.log",
+  "nativeXml": "/tmp/eln-lamps-native-all-v6.xml",
+  "scope": "Final v6 run: all 714 exact assertions execute; all 697 prior assertions are unchanged and all 17 additions cover the seven special fixtures and String Lights. The two native test failures remain these historical 1.12 identity/container reference differences. Expectations are unchanged."
+}

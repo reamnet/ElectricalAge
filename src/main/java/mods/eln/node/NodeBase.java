@@ -262,6 +262,8 @@ public abstract class NodeBase {
     }
 
     public static void tryConnectTwoNode(NodeBase nodeA, Direction directionA, LRDU lrduA, NodeBase nodeB, Direction directionB, LRDU lrduB) {
+        if (!mods.eln.transparentnode.cord.OutletWiring.permits(nodeA, nodeB)) return;
+        if (!mods.eln.utility.WideMeterWiring.permits(nodeA,directionA,lrduA,nodeB,directionB,lrduB)) return;
         if (compareConnectionMask(nodeA.getSideConnectionMask(directionA, lrduA), nodeB.getSideConnectionMask(directionB, lrduB))) {
             ElectricalConnection eCon = null;
             ThermalConnection tCon = null;
@@ -272,16 +274,6 @@ public abstract class NodeBase {
             nodeA.newConnectionAt(directionA, lrduA);
             nodeB.newConnectionAt(directionB, lrduB);
 
-            ElectricalLoad eLoad;
-            if ((eLoad = nodeA.getElectricalLoad(directionA, lrduA)) != null) {
-
-                ElectricalLoad otherELoad = nodeB.getElectricalLoad(directionB, lrduB);
-                if (otherELoad != null) {
-                    eCon = new ElectricalConnection(eLoad, otherELoad);
-
-                    Eln.simulator.addElectricalComponent(eCon);
-                }
-            }
             ThermalLoad tLoad;
             if ((tLoad = nodeA.getThermalLoad(directionA, lrduA)) != null) {
 
@@ -295,6 +287,12 @@ public abstract class NodeBase {
             }
             NodeConnection nodeConnection = new NodeConnection(nodeA, directionA, lrduA, nodeB, directionB, lrduB, eCon, tCon);
 
+            for (var connection : mods.eln.sixnode.electricalcable.CableConnections.create(
+                    nodeA.getElectricalLoad(directionA, lrduA), nodeA.getSideConnectionMask(directionA, lrduA),
+                    nodeB.getElectricalLoad(directionB, lrduB), nodeB.getSideConnectionMask(directionB, lrduB))) {
+                Eln.simulator.addElectricalComponent(connection);
+                nodeConnection.addElectricalConnection(connection);
+            }
             nodeA.nodeConnectionList.add(nodeConnection);
             nodeB.nodeConnectionList.add(nodeConnection);
 
@@ -314,6 +312,7 @@ public abstract class NodeBase {
     }
 
     public void connectJob() {
+        mods.eln.utility.WideMeterWiring.prepare(this);
         // EXTERNAL OTHERS SIXNODE
         {
             int[] emptyBlockCoord = new int[3];
@@ -359,6 +358,8 @@ public abstract class NodeBase {
             }
         }
 
+        mods.eln.utility.WideMeterWiring.connect(this);
+        mods.eln.transparentnode.cord.OutletWiring.connect(this);
     }
 
     /**

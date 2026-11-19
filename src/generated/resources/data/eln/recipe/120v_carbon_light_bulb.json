@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "F": "minecraft:coal",
+    "G": "minecraft:glass_pane",
+    "P": "eln:iron_plate",
+    "S": "eln:low_voltage_cable"
+  },
+  "pattern": [
+    " G ",
+    "GFG",
+    "PSP"
+  ],
+  "result": {
+    "count": 4,
+    "id": "eln:120v_carbon_light_bulb"
+  }
+}

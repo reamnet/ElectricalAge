@@ -22,6 +22,6 @@ public class ElectricalAlarmScreen extends ElnScreen {
     @Override
     protected void init() {
         super.init();
-        button("mute", () -> render.mute ? tr("Sound: muted") : tr("Sound: on"), () -> render.clientSend(ElectricalAlarmElement.clientSoundToggle));
+        button("mute", () -> render.mute ? tr("Sound is muted") : tr("Sound is not muted"), () -> render.clientSend(ElectricalAlarmElement.clientSoundToggle));
     }
 }

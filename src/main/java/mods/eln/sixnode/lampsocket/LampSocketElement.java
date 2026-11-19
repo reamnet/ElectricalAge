@@ -51,7 +51,7 @@ public class LampSocketElement extends SixNodeElement {
      * Slot 0 is the bulb. Slot 1 was 1.12's cable slot (Baughn 2026-10-17: removed, the socket has a built-in LV cable);
      * kept, hidden, so a cable left in it by an older world stays in the saved data and drops when the socket is broken.
      */
-    private AutoAcceptInventoryProxy acceptingInventory =
+    protected AutoAcceptInventoryProxy acceptingInventory =
         (new AutoAcceptInventoryProxy(new SixNodeElementInventory(2, 64, this)))
             .acceptIfEmpty(0, LampDescriptor.class);
 
@@ -117,7 +117,14 @@ public class LampSocketElement extends SixNodeElement {
 
     public void networkUnserialize(DataInputStream stream) {
         try {
-            switch (stream.readByte()) {
+            readControl(stream.readUnsignedByte(), stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void readControl(int event, DataInputStream stream) throws IOException {
+            switch (event) {
                 case setGroundedId:
                     grounded = stream.readByte() != 0;
                     computeElectricalLoad();
@@ -138,9 +145,6 @@ public class LampSocketElement extends SixNodeElement {
                     needPublish();
                     break;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void setPoweredByLampSupply(boolean b) {
@@ -158,7 +162,7 @@ public class LampSocketElement extends SixNodeElement {
 
     @Override
     public void connectJob() {
-        if (!poweredByLampSupply) {
+        if (!isWirelessPower()) {
             electricalLoadList.add(positiveLoad);
             electricalComponentList.add(lampResistor);
         }
@@ -182,7 +186,7 @@ public class LampSocketElement extends SixNodeElement {
 
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu) {
-        if (poweredByLampSupply) return null;
+        if (isWirelessPower()) return null;
 
         if (grounded) return positiveLoad;
         return null;
@@ -195,7 +199,7 @@ public class LampSocketElement extends SixNodeElement {
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
-        if (poweredByLampSupply) return 0;
+        if (isWirelessPower()) return 0;
         if (grounded) return NodeBase.maskElectricalPower;
 
         if (front == lrdu) return NodeBase.maskElectricalPower;
@@ -223,7 +227,7 @@ public class LampSocketElement extends SixNodeElement {
                 info.put(I18N.tr("Channel"), channel);
             }
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", positiveLoad.getU()));
-            ItemStack lampStack = acceptingInventory.getInventory().getItem(0);
+            ItemStack lampStack = getInventory().getItem(0);
             if (!Utils.isEmpty(lampStack) && lampDescriptor != null) {
                 info.put(I18N.tr("Life"), Utils.plotValue(lampDescriptor.getLifeInTag(lampStack)));
             }
@@ -242,7 +246,7 @@ public class LampSocketElement extends SixNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeByte((grounded ? (1 << 6) : 0));
-            Utils.serialiseItemStack(stream, acceptingInventory.getInventory().getItem(LampSocketContainer.lampSlotId));
+            Utils.serialiseItemStack(stream, getInventory().getItem(LampSocketContainer.lampSlotId));
             stream.writeFloat((float) lampProcess.alphaZ);
             stream.writeBoolean(poweredByLampSupply);
             stream.writeUTF(channel);
@@ -260,7 +264,7 @@ public class LampSocketElement extends SixNodeElement {
     }
 
     public void computeElectricalLoad() {
-        ItemStack lamp = acceptingInventory.getInventory().getItem(LampSocketContainer.lampSlotId);
+        ItemStack lamp = getInventory().getItem(LampSocketContainer.lampSlotId);
         // built-in LV cable (1.12: the cable in the slot)
         mods.eln.registry.ElnDeviceRegistry.lowVoltageCableDescriptor.applyTo(positiveLoad);
 
@@ -269,8 +273,30 @@ public class LampSocketElement extends SixNodeElement {
         if (lampDescriptor == null) {
             lampResistor.setR(Double.POSITIVE_INFINITY);
         } else {
-            lampDescriptor.applyTo(lampResistor);
+            lampResistor.setR(getLampResistance(lampDescriptor));
         }
+    }
+
+    /** Legacy sockets represent one bulb; decorative fixtures override the installed count. */
+    public int getInstalledBulbs() {
+        return Utils.isEmpty(getInventory().getItem(0)) ? 0 : 1;
+    }
+
+    public double getLampResistance(LampDescriptor bulb) {
+        return bulb.getR();
+    }
+
+    public boolean isWirelessPower() { return poweredByLampSupply; }
+
+    public boolean isLampEnergized() { return true; }
+
+    public double getWirelessResistance() {
+        Object bulb = Utils.getItemObject(getInventory().getItem(0));
+        return bulb instanceof LampDescriptor descriptor ? getLampResistance(descriptor) : Double.POSITIVE_INFINITY;
+    }
+
+    public double getNominalLampPower(LampDescriptor bulb) {
+        return bulb.nominalP;
     }
 
     @Override
@@ -310,6 +336,13 @@ public class LampSocketElement extends SixNodeElement {
     public void destroy(ServerPlayer entityPlayer) {
         super.destroy(entityPlayer);
         lampProcess.destructor();
+        mods.eln.utility.WirelessLoadDemand.INSTANCE.disconnectOwner(this);
+    }
+
+    @Override
+    public void unload() {
+        super.unload();
+        mods.eln.utility.WirelessLoadDemand.INSTANCE.disconnectOwner(this);
     }
 
     void setIsConnectedToLampSupply(boolean value) {

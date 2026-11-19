@@ -1,0 +1,30 @@
+{
+  "sourceCommit": "b7444a7b8a0c5e072b1fd35eed2b74a282c3348c",
+  "targetObservedCommit": "c59e547138e53409f7a1bd282175ec25e16bb74d",
+  "sourceTrackedFiles": 7132,
+  "allTrackedPathsAccountedForOnce": true,
+  "allIndexedSourceHashesVerified": true,
+  "nativeCandidateHashesAndAdapterPathsVerified": true,
+  "workstreams": 37,
+  "workstreamReferencesAndDependencyGraphChecked": true,
+  "deterministicRegeneration": true,
+  "outputSha256": {
+    "completion-source-audit.tsv": "2dc6cb6916e57f1a666e34691ad2c5a74741f2af55569e8bc530174240330790",
+    "completion-resource-audit.tsv": "aa0aa0f40d914c753975d4c020596b0c693c92d013d7ce161949c7d840c6aef3",
+    "completion-test-audit.tsv": "e60e63b75720450de5f90e4800b7c5a49d56a324c78ecb796e23a88c7f9651ad",
+    "completion-support-audit.tsv": "4e04519658af3aa87c4c25622c17a19276d1bcbd94feb069149834db6c8313af",
+    "completion-name-audit.tsv": "6f17ede26e254e7b5c962aacd76bea1d4780f1515b5f29e4b6d6399d1d575254",
+    "completion-audit.json": "9bf01bfb416099514176f7d5085b68544b120e5df14cc53fc08f7a76372e6e06",
+    "port-completion-plan.md": "204a5802ff14a4bcc099fce18a04260389783ab11173311ece8a5f374056797d",
+    "lighting-port-matrix.md": "18d0c3a96870d348396f600b85b962ddb22965daa6f870e97276babb204d245f"
+  },
+  "generatorSha256": "f39e186f12849a4ad5ba467f6ae57ec506064178c0b8a1d78ace2836320e4aed",
+  "definitionSha256": "c7efd8676e012169975143f52db59340334cb75ff8ed306a4e06801d86d5a7ff",
+  "provenanceAudit": {
+    "entries": 1044,
+    "passed": true
+  },
+  "runtimeTestsRerun": false,
+  "runtimeEvidence": "decorative-lighting-validation.json",
+  "scope": "Completion/provenance indexes regenerated at the final tested client code commit; deterministic regeneration checked. Runtime and packaging evidence are recorded separately in decorative-lighting-validation.json and artifact-certification.json."
+}

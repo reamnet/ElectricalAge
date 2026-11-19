@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:iron_bars",
+    "C": "eln:copper_cable",
+    "I": "minecraft:stone_bricks",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    "IPI",
+    "CBC",
+    "III"
+  ],
+  "result": {
+    "id": "eln:120_240v_underground_service_handhole"
+  }
+}

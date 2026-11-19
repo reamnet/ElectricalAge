@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import kotlin.math.max
 
-class BatteryItem(name: String, private var energyStorage: Double, internal var chargePower: Double, internal var dischargePower: Double, private val priority: Int) : GenericItemUsingDamageDescriptor(name), IItemEnergyBattery {
+open class BatteryItem(name: String, private var energyStorage: Double, internal var chargePower: Double, internal var dischargePower: Double, private val priority: Int) : GenericItemUsingDamageDescriptor(name), IItemEnergyBattery {
 
     override fun setParent(item: Item, damage: Int) {
         super.setParent(item, damage)

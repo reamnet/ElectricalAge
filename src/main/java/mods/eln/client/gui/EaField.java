@@ -13,8 +13,14 @@ public class EaField extends EditBox {
     String committed;
 
     public EaField(int x, int y, int w, String initial, Consumer<String> commit) {
-        super(Minecraft.getInstance().font, x, y, w, 18, Component.empty());
+        this(x, y, w, 18, initial, commit);
+    }
+
+    public EaField(int x, int y, int w, int h, String initial, Consumer<String> commit) {
+        super(Minecraft.getInstance().font, x, y, w, h, Component.empty());
         this.commit = commit;
+        setTextColor(0xFFFFFFFF);
+        setTextColorUneditable(0xFFFFFFFF);
         setMaxLength(64);
         setValue(initial);
         committed = initial;

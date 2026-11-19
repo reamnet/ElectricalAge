@@ -1,0 +1,41 @@
+{
+  "tests": 394,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "passed": 391,
+  "suites": 87,
+  "portCommit": "97e757ce",
+  "scope": "All destination tests after floor and wall UPS integration",
+  "command": "./gradlew --no-daemon --max-workers=2 :test -PfluidCases=20",
+  "fluidCases": 20,
+  "defaultFluidCases": 200,
+  "upsCircuitTests": 16,
+  "datagenReport": "ups-datagen.json",
+  "nativeTests": 40,
+  "nativeUpsTests": 9,
+  "nativePassed": true,
+  "nativeReport": "ups-native-tests.json",
+  "skippedCases": [
+    {
+      "name": "safetyValveAndSensor()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "junctionsAndAdapters()",
+      "classname": "mods.eln.node.voxel.VoxelPreviewTest",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    },
+    {
+      "name": "bikes()",
+      "classname": "mods.eln.client.entity.BikePreviewTest",
+      "reason": "Assumption failed: -PcadPreviews=DIR"
+    }
+  ],
+  "limits": [
+    "Default 200-case fluid corpus not run.",
+    "Interactive client GPU/audio validation not performed.",
+    "Compact UPS awaits the appliance cord/socket port."
+  ]
+}

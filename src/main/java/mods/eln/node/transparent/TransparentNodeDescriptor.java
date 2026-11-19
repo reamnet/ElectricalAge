@@ -116,7 +116,7 @@ public class TransparentNodeDescriptor extends GenericItemBlockUsingDamageDescri
             && !holds(coord, Direction.ZP))
             return tr("You can't place this block at this side");
 
-        GhostGroup ghostGroup = getGhostGroup(front);
+        GhostGroup ghostGroup = getGhostGroupAt(coord, front);
         if (ghostGroup != null && ghostGroup.canBePloted(coord) == false) return tr("Not enough space for this block");
         return null;
     }
@@ -151,6 +151,15 @@ public class TransparentNodeDescriptor extends GenericItemBlockUsingDamageDescri
         return ghostGroup.newRotate(front);
     }
 
+    /** World-aware mounting hooks; ordinary devices retain their existing orientation and footprint. */
+    public Direction mountingFront(Level world, net.minecraft.core.BlockPos pos, Direction proposed) {
+        return proposed;
+    }
+
+    public GhostGroup getGhostGroupAt(Coordonate coord, Direction front) {
+        return getGhostGroup(front);
+    }
+
     public int getGhostGroupUuid() {
 
         return -1;
@@ -174,6 +183,17 @@ public class TransparentNodeDescriptor extends GenericItemBlockUsingDamageDescri
     /** Its model's hitbox, turned with its front (ModelHitbox), or null: then addCollisionBoxesToList's boxes. */
     public ModelHitbox modelHitbox() {
         return null;
+    }
+
+    /** Avoid a block-entity lookup for devices using only the legacy fixed boxes. */
+    public boolean hasOrientedShape() {
+        return modelHitbox() != null;
+    }
+
+    /** Native oriented collision/outline; null keeps the cached legacy boxes. */
+    public net.minecraft.world.phys.shapes.VoxelShape orientedShape(Direction front) {
+        ModelHitbox hitbox = modelHitbox();
+        return hitbox == null ? null : hitbox.shape(front);
     }
 
     public void addCollisionBoxesToList(AABB par5AxisAlignedBB, List list, Level world, int x, int y, int z) {
