@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T06:22:16.025104419	eln-global/EA models
+// 26.3	2026-11-19T06:50:17.34386462	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -1057,6 +1057,7 @@ bae8597b8ed36a45c91610371e4b9b26339cc1f7 assets/eln/items/string_lights.json
 2c658d4e5d66b17c75c756b27203edd352130ddc assets/eln/items/surface_linear_led_strip.json
 3713e587f793f79873a13fd7c5df295be3862b95 assets/eln/items/suspended_factory_fluorescent_light.json
 c8f42f74b6a1f46e80159e6fd2ca36368778bbf7 assets/eln/items/suspended_lamp_socket.json
+13f628dda1422c1e9c907b372668b57457f91e3f assets/eln/items/switch_100a.json
 3346f055b86994dd3b98c7953f5ee43baa3e554f assets/eln/items/switch_20a.json
 2799cad11bf1ca9327254a0b546862ce5f15333d assets/eln/items/switch_50a.json
 970df8f491ce90a6a3d6982c62f1b27c378bf60b assets/eln/items/switch_5a.json
@@ -2344,6 +2345,8 @@ ae4fc205aa97ccd6160cf775a3710167177db8fb assets/eln/models/item/suspended_factor
 460a2e2c61ee12b31505641d5c8a023dcfd248ae assets/eln/models/item/suspended_factory_fluorescent_light_3d.json
 fd7950c5f1f5119d95e33f7d5a0de3b1515130c9 assets/eln/models/item/suspended_lamp_socket.json
 d09d66966d38c7d8b9aba52800800cb443f20692 assets/eln/models/item/suspended_lamp_socket_3d.json
+29a9797e6ac278448407805a2db1d885993ff84e assets/eln/models/item/switch_100a.json
+1b596d75d9e6dc21fed8720df6f36e130e2b28ea assets/eln/models/item/switch_100a_3d.json
 bb21794d2b075aad80811f56f6d58e1a11956dfa assets/eln/models/item/switch_20a.json
 c141e6887ec260977619089b6f327a3e570428ef assets/eln/models/item/switch_20a_3d.json
 8db7a3c07afc0a2fae4d66cbc4fa12587df6dc7a assets/eln/models/item/switch_50a.json

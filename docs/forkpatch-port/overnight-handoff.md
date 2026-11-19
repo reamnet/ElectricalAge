@@ -1591,3 +1591,70 @@ shared `electricalfuse` texture, and the existing `BlownFuse` blown state. Sourc
   branch `port/forkpatch-3.0.77-26.3`), subject `Port 30a_lead_fuse and 50a_lead_fuse from
   ForkPatch 1.21.1`; inspect with `git log --oneline -1`. The external queue script handles
   pushing.
+
+## 27. Switch port — 100A Switch (2026-11-19, this session)
+
+Scope: port the assigned ForkPatch 1.21.1 item `100a_switch`, the last unported rated current
+switch (5A@6213 baseline; 20A@6214 + 50A@6215 ported 2026-11-18). Reused the existing
+`ElectricalSwitchDescriptor` registration pattern from `Wp9aContent.registerSwitch(97)` and the
+shared `switch` icon texture set. Source baseline `b7444a7b` (read-only
+`../ELN1.21.1ForkPatch`, correct paths `src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt`
++ `src/main/kotlin/mods/eln/craft/CraftingRecipes.kt`); target start HEAD `529b0a1e` (30A/50A fuses).
+
+### Item implemented
+- **100A Switch** — registry ID `eln:six_node@6217` (group 97 `sixNodeItem`, subId 9; 97×64+9=6217;
+  `@6216` is `signal_switch_with_led`, `@6217` was free in `eln-ids.json`).
+  `ElectricalSwitchDescriptor(name, stdCableRender3200V, obj.getObj("HighVoltageSwitch"),
+  600, 60000, 0.0025, 600, 60000, cableThermalLoadInitializer.copy(), false)` — exact vs source
+  `SixNodeRegistration.kt:1371-1380` (nom 600 V / 60000 W, rs 0.0025 → internal electricalRs 0.00125,
+  max 600 V / 60000 W, signalSwitch false); `setDefaultIcon("switch")`. Source `.power()` is the
+  private extension `inTab(Eln.creativeTabPowerElectronics)` (SixNodeRegistration.kt:87) — a
+  creative-tab helper only; target has no creative tabs (5A/20A/50A siblings omit it), so omitted.
+- Craft recipe `"AAI","AIA","CAC"`: `A`=rubber, `I`=`Copper Cable` (eln:copper_cable),
+  `C`=`Copper 2 AWG Cable 600V` (eln:copper_2_awg_cable_600v) — exact vs source
+  `CraftingRecipes.kt:692-693`.
+- Texture `src/main/resources/assets/eln/textures/item/switch_100a.png` copied from `switch_5a.png`
+  (md5 `158dbf77a748c3f6b20701afad541763`, byte-identical to the 5A/20A/50A icons and to source
+  `textures/blocks/switch.png`).
+- Generated (`src/generated/resources/`): `items/switch_100a.json`,
+  `models/item/switch_100a.json` (`layer0: eln:item/switch_100a`) + `switch_100a_3d.json`,
+  `data/eln/recipe/100a_switch.json`, `advancement/recipes/misc/100a_switch.json`,
+  `lang/en_us.json` +1 line (`item.eln.switch_100a: 100A Switch`), 3 `.cache` updates.
+
+### Verification (by level)
+- **[compile-verified]** `./gradlew :compileJava :compileTestJava` BUILD SUCCESSFUL in 29s
+  (log /tmp/eln-100a-compile.log).
+- **[tests-passed]** `./gradlew :test :cad:test` BUILD SUCCESSFUL in 4m36s — 723 tests
+  (708 root + 15 cad) / 0 fail / 0 err / 3 pre-existing skips (same baseline as the 30A/50A fuse
+  run; log /tmp/eln-100a-test.log).
+- **[datagen-verified + idempotent]** `runClientData` run 1 wrote exactly the expected 9 files
+  (5 new JSONs + lang +1 line + 3 caches); run 2 = **0 new changes** (git-status diff empty).
+  Recipe JSON keys exact: `A`=`#c:rubbers`, `I`=`eln:copper_cable`, `C`=`eln:copper_2_awg_cable_600v`,
+  pattern `AAI/AIA/CAC`, result `eln:switch_100a`.
+- **[automated GameTest]** `runGameTestServer`: **1552 GAME TESTS COMPLETE IN 7.657 min**;
+  2 required failures = exactly the 2 HISTORICAL golden fails (`eln:golden_descriptors` +
+  `eln:golden_slots`); new `@6217` appears inside the golden sub-assertions exactly like its
+  registered siblings `@6214`–`@6216` (`FAIL golden eln:six_node@6217: known in 1.12: no such item
+  in golden/1.12/inventory.json` — ForkPatch items absent from the 1.12 golden inventory by
+  construction) — **no new failing tests**; goldens NOT weakened (log /tmp/eln-gt-100a.log).
+- **[live registration verified — NOT gameplay]** live MC 26.3 dev server via mctest RCON:
+  `summon minecraft:item 0 100 0 {Item:{id:"eln:switch_100a",count:1b}}` → "Summoned new 100A
+  Switch"; regressions `eln:switch_50a` → "Summoned new 50A Switch", `eln:switch_20a` → "Summoned
+  new 20A Switch"; control `eln:bogus` → "Summoned new Air". Probes killed, re-scan "No entity
+  was found", server stopped, no lingering JVM.
+- **[NOT RUN — honestly labeled]** player-joined in-game in-circuit switching validation NOT
+  performed (client-join remains blocked in this environment). Switch electricals ride the same
+  `ElectricalSwitchDescriptor` path already exercised by the GameTest suite for the 5A/20A/50A
+  siblings — **live gameplay verification is NOT claimed**.
+
+### Remaining limitations
+- No player-joined in-game in-circuit switching validation (craft + switch-in-circuit behavior
+  untested in-world); no audio / multi-client / fresh-JVM save-recovery validation.
+
+### Known blockers
+- Client live-join remains blocked in this environment (unchanged); server-side RCON oracle works.
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `529b0a1e` (30A/50A fuses;
+  branch `port/forkpatch-3.0.77-26.3`), subject `Port 100a_switch from ForkPatch 1.21.1`;
+  inspect with `git log --oneline -1`. The external queue script handles pushing.

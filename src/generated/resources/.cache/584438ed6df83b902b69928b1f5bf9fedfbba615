@@ -1,8 +1,9 @@
-// 26.3	2026-11-19T06:22:16.04408152	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-19T06:50:17.35955322	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
 b2bfdcaca81904f8aebabbdd82b0e57f573870cb data/eln/advancement/recipes/misc/100a_electrical_breaker.json
+4504a5f27a9e112818ac061b53c1e24800e57339 data/eln/advancement/recipes/misc/100a_switch.json
 22a433ea6bff897352a9600bc24cd80d75af97d4 data/eln/advancement/recipes/misc/10_a_pole_fuse.json
 60e102cb907fe6a28f445f2f5b3c9e066e68048a data/eln/advancement/recipes/misc/10_kw_pole_transformer.json
 e9b18790f61c5e60d17f49af5cad947638ed8e2b data/eln/advancement/recipes/misc/10a_diode.json
@@ -726,6 +727,7 @@ e46ace98665bbeee9e00c278a1a7d497e969c14a data/eln/advancement/recipes/misc/xnor_
 f8e4a44f962bad10f4b305d872d027f720e328fe data/eln/recipe/100_a_vehicle_charging_lead.json
 3b90d8e32e8f58cd94b3d3e5c237e40e74092f03 data/eln/recipe/100_kw_pole_transformer.json
 dc77912608e67c46c81694643f4c5ee000792d7d data/eln/recipe/100a_electrical_breaker.json
+5caae1d820d1be0f0e35ded4b854ba3fd34ae6f5 data/eln/recipe/100a_switch.json
 f55afec4206959bc52edd68849f62b13b674934e data/eln/recipe/10_a_pole_fuse.json
 536966ac34935647873fe9154f02b9dba280e7b7 data/eln/recipe/10_kw_pole_transformer.json
 4f937d8d1c4645d4749a5fa22eaa93eeecbb3255 data/eln/recipe/10a_diode.json

@@ -2615,6 +2615,12 @@
   "kind": "six_node",
   "name": "switch_50a"
  },
+ "eln:six_node@6217": {
+  "descriptor": "ElectricalSwitchDescriptor",
+  "display": "100A Switch",
+  "kind": "six_node",
+  "name": "switch_100a"
+ },
  "eln:six_node@6216": {
   "descriptor": "ElectricalSwitchDescriptor",
   "display": "Signal Switch with LED",
