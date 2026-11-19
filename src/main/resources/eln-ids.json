@@ -827,11 +827,23 @@
   "kind": "shared_item",
   "name": "iron_clutch_plate"
  },
+ "eln:shared_item@7736": {
+  "descriptor": "ClutchPlateItem",
+  "display": "Gold Clutch Plate",
+  "kind": "shared_item",
+  "name": "gold_clutch_plate"
+ },
  "eln:shared_item@7737": {
   "descriptor": "ClutchPlateItem",
   "display": "Copper Clutch Plate",
   "kind": "shared_item",
   "name": "copper_clutch_plate"
+ },
+ "eln:shared_item@7738": {
+  "descriptor": "ClutchPlateItem",
+  "display": "Lead Clutch Plate",
+  "kind": "shared_item",
+  "name": "lead_clutch_plate"
  },
  "eln:shared_item@7872": {
   "descriptor": "WireScrapDescriptor",

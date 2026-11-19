@@ -1138,3 +1138,78 @@ no ore entries in source). Target start HEAD `9054fe53` (3x graphite commit).
 - Local commit for this milestone (no push): on top of `9054fe53` (3x graphite) on branch
   `port/forkpatch-3.0.77-26.3`, subject `Port 4x_graphite_rods from ForkPatch 1.21.1`; inspect
   with `git log --oneline -3`. External queue script handles pushing.
+
+## 22. Clutch plate port — Gold + Lead Clutch Plate (2026-11-19, this session)
+
+Scope: port the two in-scope ForkPatch 1.21.1 `ClutchPlateItem` items (gold subId 56, lead subId 58),
+reusing the 2026-11-18 iron/copper clutch-plate pattern (target `ClutchPlateItem.kt` + `sharedItem`
+group 120 `registerMiscItem`). Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPatch`);
+target start HEAD `2eb5f543` (4x graphite commit).
+
+### Items implemented
+- **Gold Clutch Plate** — registry ID `eln:shared_item@7736` (group 120 `shared_item`, subId=56; 120×64+56=7736).
+  Ratings `(maxEF, minEF, maxDTF, minDTF, wearSpeed, explodes)` = `10240, 2048, 1024, 512, 0.001, false`
+  — exact vs source.
+- **Lead Clutch Plate** — registry ID `eln:shared_item@7738` (group 120, subId=58; 120×64+58=7738).
+  Ratings = `15360, 1024, 1536, 768, 0.0015, false` — exact vs source.
+- Both confirmed absent in the target (unported-items rows "No matching current item name/model
+  found") and IDs `@7736`/`@7738` confirmed free before implementation.
+- Out of scope and NOT ported: `clutch` (machine — the plate consumer), `clutch_pin`,
+  `coal_clutch_plate`.
+
+### Original source behavior (ForkPatch 1.21.1)
+- `src/main/kotlin/mods/eln/mechanical/Clutch.kt:38` — `ClutchPlateItem(name, maxEF, minEF, maxDTF,
+  minDTF, wearSpeed, explodes) : GenericItemUsingDamageDescriptor(name)`: wear tracked as a `wear`
+  double in item NBT; `maxStaticEnergyF` = Linear(0→maxEF, 1→minEF), `dynamicMaxTransferF` =
+  Linear(0→maxDTF, 1→minDTF), `slipWearF` = Linear(0→0, 1000→wearSpeed); `addInformation` shows a
+  Condition line (New/Good/Used/End of life/Bad); `infiniteLifeEnabled` flag. The plates are the
+  consumable side of a clutch — actual wear/rating consumption happens in the (not ported) clutch
+  machine.
+- Registration `src/main/kotlin/mods/eln/registration/ItemRegistration.kt:1766-1782`: gold at
+  `:1767`, lead at `:1779` (iron `:1766`, copper `:1773`, coal `:1785` out of scope).
+- Recipes `src/main/kotlin/mods/eln/craft/CraftingRecipes.kt:1898` (gold) / `:1909` (lead):
+  plate center + 4 tungsten-dust cross; `'G'`/`'L'` = config dict `plateGold`/`plateLead`
+  (target-registered ore keys), `'t'` = `dustElnTungsten`.
+- Textures `assets/eln/textures/items/{gold,lead}clutchplate.png`.
+
+### Registry IDs
+- `eln:shared_item@7736` = Gold Clutch Plate; `eln:shared_item@7738` = Lead Clutch Plate.
+  `eln-ids.json` entries: `{descriptor: ClutchPlateItem, display, kind: shared_item, name}`.
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp12aContent.java` (group 120 `registerMiscItem`, after the
+  2026-11-18 iron/copper additions) — subId 56 (gold) + subId 58 (lead) with exact source ratings,
+  reusing the existing target `ClutchPlateItem` descriptor (no new class).
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — two craft recipes (identical ` t `/`tGt`/` t `
+  and ` t `/`tLt`/` t ` shapes), `'G'`/`'L'` = `plateGold`/`plateLead` (target ore keys already
+  registered for Gold Plate subId 8 / Lead Plate subId 9), `'t'` = `dustElnTungsten` (same as the
+  iron/copper recipes).
+- `src/main/resources/eln-ids.json` — added `@7736`/`@7738`.
+- Textures `src/main/resources/assets/eln/textures/items/{gold,lead}clutchplate.png` —
+  **byte-identical to source** (md5 `3eb2bc1c4bb486cff04f6d64b3e396c0` /
+  `499ae9edf458ce50aa771ea5fdf3b114`, both sides verified).
+- Generated under `src/generated/resources/`: item + model JSON (layer0 → `eln:items/{gold,lead}
+  clutchplate`), `data/eln/recipe/{gold,lead}_clutch_plate.json`, matching recipe advancements, and
+  `item.eln.{gold,lead}_clutch_plate` lang entries ("Gold Clutch Plate" / "Lead Clutch Plate").
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `:compileJava` EXIT=0 (prior agent, same working tree).
+- **[tests-passed]** `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips) — identical to the prior
+  baselines; proves the mod constructs and both plates register (prior agent run, this working tree).
+- **[datagen-verified]** `runClientData` ×2: run 2 produced no new changes to the already-staged
+  generated tree (IDEMPOTENT; prior agent run).
+- **[PASS · automated GameTest]** `runGameTestServer`: `1552 GAME TESTS COMPLETE IN 7.441 min`; exactly `2 required tests failed` = the 2 HISTORICAL golden fails (`eln:golden_descriptors` six_node + `eln:golden_slots` Lamp Socket A — documented, NOT weakened, NOT fixed); new `@7736`/`@7738` plates + recipes appear in the known "26.x recipes without a 1.12 twin" list (same pattern as iron/copper clutch plates and the graphite items — ForkPatch items absent from the 1.12 golden inventory by construction); no new failing tests. Log: `run/logs/latest.log` (2026-11-19 04:09–04:16).
+- **[PASS · live server-side registration oracle]** live MC 26.3 dev server via `mctest` RCON (this session, 2026-11-19): `eln:gold_clutch_plate` → "Summoned new Gold Clutch Plate"; `eln:lead_clutch_plate` → "Summoned new Lead Clutch Plate"; regressions `eln:iron_clutch_plate` → "Summoned new Iron Clutch Plate" and `eln:copper_clutch_plate` → "Summoned new Copper Clutch Plate" intact; control `eln:totally_bogus_item_xyz` → "Summoned new Air" (unregistered ID degrades as expected). All probes killed (4 entities), server stopped, no lingering JVM. This is a server-side registration/display-name oracle — NOT player gameplay validation (see NOT RUN below).
+- **[NOT RUN — honestly labeled]** player-joined in-game crafting/wear/Condition validation NOT
+  performed (client-join remains blocked in this environment). Plate behavior is item-level only —
+  the clutch machine that consumes wear/ratings is out of scope and not ported, so **live gameplay
+  verification is NOT claimed**.
+
+### Remaining limitations
+- `clutch` machine (plate consumer), `clutch_pin`, `coal_clutch_plate` NOT ported (out of scope) —
+  wear/Condition/electrical consumption therefore cannot be gameplay-validated in-world.
+- No player-joined in-game validation (crafting, wear, Condition toasts untested in-world).
+- No audio / multi-client / fresh-JVM save-recovery validation.
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `2eb5f543` (branch `port/forkpatch-3.0.77-26.3`), subject `Port gold_clutch_plate and lead_clutch_plate from ForkPatch 1.21.1`; inspect with `git log --oneline -1`. The external queue script handles pushing.

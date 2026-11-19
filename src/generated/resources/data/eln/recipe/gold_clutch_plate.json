@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": "#eln:high_quality_plates/gold",
+    "t": "#eln:dusts/tungsten"
+  },
+  "pattern": [
+    " t ",
+    "tGt",
+    " t "
+  ],
+  "result": {
+    "id": "eln:gold_clutch_plate"
+  }
+}

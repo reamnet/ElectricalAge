@@ -5,7 +5,17 @@ identify the last completed milestone + current task, check ONLY the files neede
 and resume immediately. Do NOT re-investigate the environment (all details below).
 
 ## Current state (keep concise; update at every milestone)
-- **ACTIVE (2026-11-19, session from be11b99b).** Local-commit only; do NOT push (external queue script handles pushing).
+- **DONE (2026-11-19, gold/lead clutch plate session).** All assigned work complete. Local commit on top of `2eb5f543` (branch `port/forkpatch-3.0.77-26.3`, subject `Port gold_clutch_plate and lead_clutch_plate from ForkPatch 1.21.1`; inspect with `git log --oneline -1`). NO push — external queue script handles pushing.
+- **TASK (completed):** port `gold_clutch_plate` + `lead_clutch_plate` (ForkPatch 1.21.1), reusing the 2026-11-18 iron/copper clutch-plate pattern.
+- **COMMITTED (this session):** `Wp12aContent.java` subId 56 gold (`10240/2048/1024/512/0.001/false` = source `ItemRegistration.kt:1767`) + subId 58 lead (`15360/1024/1536/768/0.0015/false` = `ItemRegistration.kt:1779`) in group 120 `shared_item`; `ElnRecipes.java` recipes (plate centre + 4× tungsten-dust cross, `plateGold`/`plateLead` ore keys already registered in target); `eln-ids.json` `@7736 gold_clutch_plate`, `@7738 lead_clutch_plate`; textures `goldclutchplate.png` (md5 3eb2bc1c…) / `leadclutchplate.png` (md5 499ae9ed…) byte-identical to source; generated item/model/recipe/advancement/lang resources + `.cache` updated under `src/generated/resources/`.
+- **VERIFIED (by level):** `:compileJava` EXIT=0; `:test` 704/704 (0 fail, 0 err, 3 pre-existing skips); `runClientData` ×2 idempotent (0 new writes); `runGameTestServer` 1552 complete / 7.441 min / exactly the 2 HISTORICAL golden fails (`golden_descriptors` + `golden_slots` — NOT weakened; new plates appear in the known "26.x recipes without a 1.12 twin" list); live RCON oracle on the real MC 26.3 dev server: `gold_clutch_plate` → "Summoned new Gold Clutch Plate", `lead_clutch_plate` → "Summoned new Lead Clutch Plate", iron/copper regressions intact, bogus-ID control → Air. **NOT achieved (honestly labeled): live gameplay verification** — the `clutch` machine (plate consumer) is unported; wear/Condition/electrical consumption cannot be exercised in-world.
+- **PRIOR (committed this week):** `4x_graphite_rods` (subId 3 of shared id 69), `3x_graphite_rods` (subId 2), `copper_clutch_plate` `@7737` (subId 57), `iron_clutch_plate` `@7734` (subId 54), steel/iron turbine blades, 5A/10A fuses.
+- **NOTE:** AGENTS.md "12-circuit breaker mod-load blocker" is STALE — server boots; live RCON testing works.
+- **BASELINE:** GameTest 1552 with only the 2 historical golden fails (golden_descriptors, golden_slots — do NOT fix/weaken). `:test` 704/704. Datagen repeat-run 0 writes.
+
+## Prior session state (2026-11-19, graphite rods; retained)
+
+- Repo/branch: /home/matthew/projects/electrical-age-port/ElectricalAge @ port/forkpatch-3.0.77-26.3 (session be11b99b → 4x_graphite_rods).
 - Repo: /home/matthew/projects/electrical-age-port/ElectricalAge
 - Branch: port/forkpatch-3.0.77-26.3. **HEAD: `Port 4x_graphite_rods` commit (milestone 2) on top of `9054fe53` (3x graphite); session started at `be11b99b` (50a_switch).**
 - This session's mission: port **`3x_graphite_rods` then `4x_graphite_rods`** from ForkPatch 1.21.1; one item fully (code + verification + docs + commit) before the next; reuse the existing 1x/2x `registerArc` (id 69, shared_item) pattern; validate by level (compile → `:test` → datagen → live oracle); commit locally with docs.

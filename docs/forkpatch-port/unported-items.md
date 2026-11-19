@@ -127,7 +127,7 @@ Each row retains the exact source model identifier so names can be traced withou
 | `falstad_import_tool` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `farmhouse_fireplace_tv_stand` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `fixed_shaft` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
-| `gold_clutch_plate` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
+| `gold_clutch_plate` | **Ported 2026-11-19** (ForkPatch 1.21.1): `eln:shared_item@7736` (subId 56), ratings `10240/2048/1024/512/0.001/false` exact vs source `Clutch.kt:38`; texture byte-identical (md5 `3eb2bc1c…`); craft recipe ported (gold plate center + 4 tungsten-dust cross); `:test` 704/704, `runClientData` idempotent, live server-side `summon minecraft:item` resolves to “Gold Clutch Plate” (bogus-ID control rejected). See OVERNIGHT_PORT_PROGRESS.md 2026-11-19 clutch-plate entry. |
 | `graphite_rod` | **Ported 2026-11-18** (ForkPatch 1.21.1): registered `eln:shared_item@4416`, texture byte-identical, craft + compressor recipes preserved (Coal Plate ×4 at 80 kJ). See OVERNIGHT_PORT_PROGRESS.md 2026-11-18 graphite entry. |
 | `grid_switch` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `heavy_winding` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
@@ -144,7 +144,7 @@ Each row retains the exact source model identifier so names can be traced withou
 | `large_generator` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `large_shaft_motor` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `large_steam_turbine` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
-| `lead_clutch_plate` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
+| `lead_clutch_plate` | **Ported 2026-11-19** (ForkPatch 1.21.1): `eln:shared_item@7738` (subId 58), ratings `15360/1024/1536/768/0.0015/false` exact vs source `Clutch.kt:38`; texture byte-identical (md5 `499ae9ed…`); craft recipe ported (lead plate center + 4 tungsten-dust cross); `:test` 704/704, `runClientData` idempotent, live server-side `summon minecraft:item` resolves to “Lead Clutch Plate” (bogus-ID control rejected). See OVERNIGHT_PORT_PROGRESS.md 2026-11-19 clutch-plate entry. |
 | `low_current_cable` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `medium_current_cable` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `modern_fireplace_tv_stand` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
