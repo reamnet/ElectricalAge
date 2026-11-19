@@ -1425,6 +1425,8 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
         addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("2x Graphite Rods"));
         addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("3x Graphite Rods"), findItemStack("Graphite Rod"));
+        // ForkPatch 1.21.1 CraftingRecipes.kt:1762: one Synthetic Diamond shapeless-crafts into two Diamonds.
+        addShapelessRecipe(stack(Items.DIAMOND, 2), findItemStack("Synthetic Diamond"));
     }
 
     /** ForkPatch 1.21.1 CraftingRecipes.kt:1715-1716 (misc): 3x3 Arc Clay Ingot -> Arc Clay Block; block -> 9 ingots.

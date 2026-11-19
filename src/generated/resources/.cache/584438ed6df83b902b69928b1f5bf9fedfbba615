@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T08:34:46.550725964	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-19T09:13:35.970590256	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -266,6 +266,7 @@ dbbb12bd98f307467cefd19fa6a0ec1f7271eaa5 data/eln/advancement/recipes/misc/cyan_
 d6b69f8dd08029441130928ca07430bbb1961ba6 data/eln/advancement/recipes/misc/deck_post_cap_light.json
 569b2fe1d2fcca24274846edc218e976057d0eeb data/eln/advancement/recipes/misc/deck_step_riser_light.json
 3b9835d4b736df1bd531d82237ab7ca5d3773703 data/eln/advancement/recipes/misc/deep_baffle_recessed_light.json
+e7d42d196624592fe3a09699eab655cd48f7fab7 data/eln/advancement/recipes/misc/diamond.json
 ac2011fba37a0aed61ad00c01aebe821b0cdf556 data/eln/advancement/recipes/misc/digital_watch.json
 0d7dcb5584c3b26f927ec60d795c6d92c8996395 data/eln/advancement/recipes/misc/double_candle_wall_sconce.json
 1f902bf03610073bf1c888d8541e80e59688f5ea data/eln/advancement/recipes/misc/dual_gumdrop_sidewalk_light.json
@@ -996,6 +997,7 @@ e0f38bc4eb3608f2f34e79e22d8e2b7999b3f5ea data/eln/recipe/dc_dc_converter.json
 deffa4df24b3a73ac784a719ae94cf47e2c18e21 data/eln/recipe/deck_post_cap_light.json
 a81c6ea17045af969bbb6dca4aec2b2361a32ef4 data/eln/recipe/deck_step_riser_light.json
 9dd4dd46dd9d7525f5600427e4616e84b4ae4590 data/eln/recipe/deep_baffle_recessed_light.json
+80693147c533ce616a70216d33fcc42c9d193cbd data/eln/recipe/diamond.json
 58b2964af5b266fa8c333b8769473063e53b694e data/eln/recipe/digital_watch.json
 331a09c3f6759c1784fd09ea65a42a0cb6508deb data/eln/recipe/double_candle_wall_sconce.json
 0dc382914f2319d40471cc3e30b80dbc4f8917da data/eln/recipe/dual_gumdrop_sidewalk_light.json

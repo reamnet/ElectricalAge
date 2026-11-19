@@ -182,6 +182,9 @@ public final class ElnMachineRecipes {
         // ForkPatch 1.21.1: Graphite Rod also compresses to 4 Coal Plates at 80 kJ; base recipe retained.
         add(compressorRecipes, new Recipe(findItemStack("Coal Plate", 4),
             findItemStack("Graphite Rod"), 80000.0));
+        // ForkPatch 1.21.1 CraftingRecipes.kt:2428-2435: one 4x Graphite Rods bundle compresses into one Synthetic Diamond.
+        add(compressorRecipes, new Recipe(findItemStack("4x Graphite Rods", 1),
+            findItemStack("Synthetic Diamond"), 80000.0));
         // extractorRecipes.addRecipe(new
         // Recipe("dustCinnabar",new
         // ItemStack[]{findItemStack("Purified Cinnabar Dust",1)}, 1000.0));

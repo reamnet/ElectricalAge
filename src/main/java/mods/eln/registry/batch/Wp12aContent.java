@@ -1091,11 +1091,13 @@ public class Wp12aContent implements ElnContent {
             new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Big Fuel Burner"), 25000 * fuelHeatFurnacePowerFactor, 0, 1f));
     }
     /** ForkPatch 1.21.1 registerArc sub-items in scope (source ItemRegistration.kt, id 69): Graphite Rod (subId 0),
-     * 2x Graphite Rods (subId 1), 3x Graphite Rods (subId 2), 4x Graphite Rods (subId 3), Arc Clay Ingot (subId 6),
-     * Arc Metal Ingot (subId 7).
+     * 2x Graphite Rods (subId 1), 3x Graphite Rods (subId 2), 4x Graphite Rods (subId 3), Synthetic Diamond (subId 4),
+     * Arc Clay Ingot (subId 6), Arc Metal Ingot (subId 7).
      * Plain descriptors: the source GraphiteDescriptor adds no behaviour beyond GenericItemUsingDamageDescriptor.
      * The Arc Clay Ingot carries the source ore names ingotAluminum/ingotAluminium (source ItemRegistration.kt subId 6).
-     * Synthetic Diamond (compressor input for 4x) and unreleasedium (subId 5) are unported; the compressor 4x recipe is not ported.
+     * Synthetic Diamond (source CraftingRecipes.kt:1762): one shapeless-crafts into two Diamonds, and one 4x Graphite Rods
+     * bundle compresses into one (source CraftingRecipes.kt:2428-2435, 80 kJ). No ore names (unlike subIds 6/7).
+     * Unreleasedium (subId 5) is unported.
      */
     public static void registerArc(int id) {
         int subId, completId;
@@ -1130,6 +1132,14 @@ public class Wp12aContent implements ElnContent {
             completId = subId + (id << 6);
 
             name = TR_NAME(Type.NONE, "4x Graphite Rods");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
+        {
+            subId = 4;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "Synthetic Diamond");
             sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
             // wiki (P4): Data.addResource(element.newItemStack());
         }

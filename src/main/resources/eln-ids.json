@@ -329,6 +329,12 @@
   "kind": "shared_item",
   "name": "4x_graphite_rods"
  },
+ "eln:shared_item@4420": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Synthetic Diamond",
+  "kind": "shared_item",
+  "name": "synthetic_diamond"
+ },
  "eln:shared_item@4422": {
   "descriptor": "GenericItemUsingDamageDescriptor",
   "display": "Arc Clay Ingot",

@@ -1914,3 +1914,75 @@ recipes, both ported). Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPa
   `port/forkpatch-3.0.77-26.3`), subject `Port arc_metal_ingot and arc_metal_block from
   ForkPatch 1.21.1`; inspect with `git log --oneline -1`. The external queue script handles
   pushing.
+
+## 31. Material port — Synthetic Diamond (2026-11-19, this session)
+
+Scope: port the assigned ForkPatch 1.21.1 item `synthetic_diamond`. Plain material (no
+electrical/thermal behavior in source — the only source uses are the two recipes, both ported):
+it is the compressor output of the 4x Graphite Rods bundle and shapeless-crafts into 2 Diamonds.
+Source (read-only `../ELN1.21.1ForkPatch`): descriptor `ItemRegistration.kt` id 69 subId 4
+(`registerArc(69)`); recipes `CraftingRecipes.kt:1762` (shapeless) and `CraftingRecipes.kt:2428-2435`
+(compressor). Target start HEAD `26c0c9be` (arc_metal).
+
+### Items implemented
+- **Synthetic Diamond** — registry ID `eln:shared_item@4420` (group 69 `registerArc`, subId 4;
+  `4 + (69<<6)` = 4420; siblings `@4416`–`@4419` = graphite rods, `@4422` arc clay, `@4423` arc
+  metal). `GenericItemUsingDamageDescriptor` "Synthetic Diamond" — exact vs source (plain
+  descriptor; NO ore names, unlike subIds 6/7 — grep-verified in source `ItemRegistration.kt`).
+- Recipes (both verified against source, input→output order of the target `Recipe`
+  constructor = `(input, output, energy)`, confirmed in both codebases):
+  - Shapeless 1× Synthetic Diamond → 2× Diamonds (source `CraftingRecipes.kt:1762`;
+    target `ElnRecipes.recipeForkPatchGraphite`; generated `data/eln/recipe/diamond.json` +
+    advancement).
+  - Compressor 1× `4x Graphite Rods` → 1× Synthetic Diamond @ 80 kJ (source
+    `CraftingRecipes.kt:2428-2435`; target `ElnMachineRecipes.recipeCompressor`).
+    This resolves the previously-blocked note in the `4x_graphite_rods` entry of
+    `unported-items.md` (earlier session notes had the direction backwards — source is
+    graphite IN, diamond OUT).
+- Texture `assets/eln/textures/item/synthetic_diamond.png` copied byte-identical from source
+  `assets/eln/textures/items/syntheticdiamond.png` (md5 `957cfdbeb7edd6f9c0564140e48d1469`).
+- `src/main/resources/eln-ids.json`: `eln:shared_item@4420` = "Synthetic Diamond" (kind
+  `shared_item`). JSON validated.
+- Generated (`src/generated/resources/`): item + item model (layer0 `eln:item/synthetic_diamond`),
+  recipe `diamond.json` + advancement, `en_us.json` +1 line, 3 `.cache` refreshed.
+
+### Verification (by level)
+- **[Implemented]** registration + 2 recipes + texture + `eln-ids.json` as above.
+- **[Compilation verified]** `./gradlew :compileJava :compileKotlin` BUILD SUCCESSFUL.
+- **[Automated tests passed]** `./gradlew :test`: 708 tests / 0 fail / 0 err / 3 pre-existing
+  skips (== baseline).
+- **[Datagen idempotent]** `./gradlew runClientData` run 1 wrote the synthetic_diamond files;
+  run 2: `written: 0`; `git status src/generated` unchanged between runs.
+- **[Automated GameTest]** `./gradlew runGameTestServer`: 1552 tests, "2 required tests failed"
+  = exactly the 2 HISTORICAL golden fails (`eln:golden_descriptors` + `eln:golden_slots`).
+  `eln:golden_recipes` has ZERO FAIL lines (new shapeless recipe does not break it).
+  `golden_descriptors` gained ONE same-class line: `FAIL golden eln:shared_item@4420: known in
+  1.12: no such item in golden/1.12/inventory.json` — root cause: the golden 1.12 dump
+  (`golden/1.12/inventory.json`) holds only 310 items and is missing ALL recently ported 1.12
+  items too (`@4419`, `@4422`, `@4423`, `@7735`, `@7739` all fail identically) — documented
+  dump-incompleteness, same class as the pre-existing `@2176-2205` / `@1152-1155` / `@8005` etc.
+  failures. Goldens NOT weakened; `eln:shared_item@4420` deliberately NOT added to `NEW_IN_26`
+  (it IS a genuine 1.12 item — adding it would be factually wrong).
+- **[Live registration verified — NOT gameplay]** live MC 26.3 dev server via mctest RCON
+  (port 25575): `summon minecraft:item 0 100 0 {Item:{id:"eln:synthetic_diamond",count:1b}}` →
+  "Summoned new Synthetic Diamond" (display name matches source); control bogus ID →
+  "Summoned new Air". Server stopped, no lingering JVM.
+- **[NOT achieved — honestly labeled]** live gameplay verification: plain material with no
+  in-circuit behavior in source; the compressor conversion is code-verified against source
+  pattern, not exercised in-world (compressor machine exists but no in-game run performed this
+  session).
+
+### Remaining limitations
+- Compressor conversion not exercised in a live game (max achievable level for a plain material
+  = live registration verified).
+- `golden_descriptors` line for `@4420` persists until the golden 1.12 inventory dump is
+  re-captured from source (out of scope; not weakened, not papered over).
+
+### Known blockers
+- None for this item. (The AGENTS.md panel model-load blocker is stale — the server booted
+  successfully this session.)
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `26c0c9be` (arc_metal; branch
+  `port/forkpatch-3.0.77-26.3`), subject `Port synthetic_diamond from ForkPatch 1.21.1`; inspect
+  with `git log --oneline -1`. The external queue script handles pushing.
