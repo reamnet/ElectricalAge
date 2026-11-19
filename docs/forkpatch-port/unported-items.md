@@ -89,7 +89,7 @@ Each row retains the exact source model identifier so names can be traced withou
 | `3.3v_boost_regulator_chip` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `3.3v_ldo_regulator_chip` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `30a_lead_fuse` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
-| `3x_graphite_rods` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
+| `3x_graphite_rods` | **Ported 2026-11-19** (ForkPatch 1.21.1): `eln:shared_item@4418` (id 69, subId 2; plain `GenericItemUsingDamageDescriptor`, source `GraphiteDescriptor` adds nothing); texture `textures/item/3x_graphite_rods.png` byte-identical to source (md5 `2180777c…`); recipes shaped 3x→3× rod + shapeless 3× rod→3x and 2x+1 rod→3x (source `CraftingRecipes.kt:1719-1761`); datagen item/model/lang/recipe/advancement generated, `runClientData` idempotent. `:build` EXIT=0; `:test` 704/704 (3 pre-existing skips); `runGameTestServer` 1552 tests, only the 2 historical golden fails (unchanged); live summon oracle → "3x Graphite Rods" (1x/2x regressions + bogus-ID control → Air). See OVERNIGHT_PORT_PROGRESS.md 2026-11-19 3x entry. |
 | `480_v_industrial_fluid_pump` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `4x_graphite_rods` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |
 | `50a_lead_fuse` | No matching current item name/model found; registration/recipe parity still needs acceptance testing. |

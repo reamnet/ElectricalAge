@@ -1070,8 +1070,9 @@ public class Wp12aContent implements ElnContent {
             new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Big Fuel Burner"), 25000 * fuelHeatFurnacePowerFactor, 0, 1f));
     }
     /** ForkPatch 1.21.1 registerArc sub-items in scope (source ItemRegistration.kt, id 69): Graphite Rod (subId 0),
-     * 2x Graphite Rods (subId 1). 3x/4x variants and Synthetic Diamond are out of scope. Plain descriptors: the
+     * 2x Graphite Rods (subId 1), 3x Graphite Rods (subId 2), 4x Graphite Rods (subId 3). Plain descriptors: the
      * source GraphiteDescriptor adds no behaviour beyond GenericItemUsingDamageDescriptor. No ore entries in source.
+     * Synthetic Diamond (compressor input for 4x) is unported; the compressor 4x recipe is not ported.
      */
     public static void registerArc(int id) {
         int subId, completId;
@@ -1090,6 +1091,14 @@ public class Wp12aContent implements ElnContent {
             completId = subId + (id << 6);
 
             name = TR_NAME(Type.NONE, "2x Graphite Rods");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
+        {
+            subId = 2;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "3x Graphite Rods");
             sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
             // wiki (P4): Data.addResource(element.newItemStack());
         }

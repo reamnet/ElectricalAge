@@ -1,4 +1,4 @@
-// 26.3	2026-11-18T09:24:42.957743066	eln-global/EA models
+// 26.3	2026-11-19T03:16:43.66481441	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -341,6 +341,7 @@ e008bbfb2d49445a06566c192edf2756be1addd4 assets/eln/items/30_a_pole_fuse.json
 702fe39060988466cbe70383e37c3c658a4ab560 assets/eln/items/3_2_kv_industrial_cord.json
 696432e5c05c1b0940e0a9edb98aea629174834e assets/eln/items/3_2_kv_industrial_outlet.json
 366ec6b927e11896afb4b1b66a5e8ba4459910f6 assets/eln/items/3_a_pole_fuse.json
+8f6877482aa32c657083c0a632a4ff5d03bf2825 assets/eln/items/3x_graphite_rods.json
 1d47d207b1733bb5a60c1ead11763717307cb1f0 assets/eln/items/400_a_dc_battery_disconnect.json
 0a60665120e0cb5b1291145b89ac5d3fe4fc1845 assets/eln/items/480_v_industrial_cord.json
 1313738fd457c6075ed52c5199a14d524cb84867 assets/eln/items/480_v_industrial_outlet.json
@@ -1299,6 +1300,7 @@ aebc7f62787cb3ebccee727778c9f8a5649b982e assets/eln/models/item/32_kwh_wall_moun
 9c6cbb713f7342a70ea9c6087bcc40edc705b32a assets/eln/models/item/3_2_kv_industrial_outlet.json
 9ca72ea7f1bd1ed700062b954cfc0f1f4245eb52 assets/eln/models/item/3_2_kv_industrial_outlet_3d.json
 9be16c0557e3958029faa2f9b2982f7678854d1e assets/eln/models/item/3_a_pole_fuse.json
+5f5d41b4755421e039010fe33594fbbd1dd957ed assets/eln/models/item/3x_graphite_rods.json
 ca263b098d7a9e604e54cffd8630f42fc35042bc assets/eln/models/item/400_a_dc_battery_disconnect.json
 119250c770fadc4505d9e1b4108345d1d3e8cd56 assets/eln/models/item/400_a_dc_battery_disconnect_3d.json
 2486171ca7a39027684474001995bc75c47e8f56 assets/eln/models/item/480_v_industrial_cord.json

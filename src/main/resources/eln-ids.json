@@ -317,6 +317,12 @@
   "kind": "shared_item",
   "name": "2x_graphite_rods"
  },
+ "eln:shared_item@4418": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "3x Graphite Rods",
+  "kind": "shared_item",
+  "name": "3x_graphite_rods"
+ },
  "eln:shared_item@448": {
   "descriptor": "FerromagneticCoreDescriptor",
   "display": "Cheap Ferromagnetic Core",

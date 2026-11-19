@@ -1409,11 +1409,15 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("Wall-mounted Hybrid Solar Inverter"), findItemStack("Hybrid Solar Inverter"), findItemStack("Iron Plate"));
     }
 
-    /** ForkPatch 1.21.1: Graphite Rod (shaped, 2x from 2x Graphite Rods) and 2x Graphite Rods (shapeless, 2x rod).
-     * Mutually dependent pair; both ported together. */
+    /** ForkPatch 1.21.1: Graphite Rod (shaped, 2x from 2x Graphite Rods), 2x Graphite Rods (shapeless, 2x rod)
+     * and 3x Graphite Rods (shapeless, 3x rod; split: 3x -> 3 rod, 2x + rod -> 3x). Mutually dependent trio;
+     * all ported together. Source CraftingRecipes.kt:1719-1761. */
     public static void recipeForkPatchGraphite() {
         addRecipe(findItemStack("Graphite Rod", 2), "I", 'I', findItemStack("2x Graphite Rods"));
         addShapelessRecipe(findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
+        addRecipe(findItemStack("Graphite Rod", 3), "I", 'I', findItemStack("3x Graphite Rods"));
+        addShapelessRecipe(findItemStack("3x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
+        addShapelessRecipe(findItemStack("3x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"));
     }
 
     public static void recipeSolarPanel() {

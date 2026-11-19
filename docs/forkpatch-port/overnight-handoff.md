@@ -948,3 +948,92 @@ target start HEAD `df8a8e3e` (20A switch commit).
 - Local commit for this milestone (no push): commit on top of `df8a8e3e` (20A) on branch
   `port/forkpatch-3.0.77-26.3`, subject `Port 50a_switch from ForkPatch 1.21.1`; inspect with
   `git log --oneline -3`. External queue script handles pushing.
+## 20. Graphite port — 3x Graphite Rods (2026-11-19, this session)
+
+Scope: port the assigned ForkPatch 1.21.1 plain item `3x_graphite_rods` (milestone 1 of this
+session; `4x_graphite_rods` follows as milestone 2). No new descriptor or element code — the
+existing `registerArc` (id 69) `GenericItemUsingDamageDescriptor` pattern carries the 3x rod
+verbatim (the source `GraphiteDescriptor` adds no behaviour beyond the generic item descriptor;
+no ore entries in source). Target start HEAD `be11b99b` (50A switch commit).
+
+### Items implemented
+- **3x Graphite Rods** — registry ID `eln:shared_item@4418` (id 69, subId 2; 69×64+2=4418),
+  item `eln:3x_graphite_rods`, display name "3x Graphite Rods". Confirmed absent in the target
+  (unported-items row "No matching current item name/model found") and confirmed
+  `eln:shared_item@4418` free before implementing (only `eln:transparent_node@4418`, a different
+  kind, existed).
+
+### Original source behavior (ForkPatch 1.21.1)
+- Plain stacked material: `registerArc` subId 2, `GenericItemUsingDamageDescriptor`
+  (source `ItemRegistration.kt:1223-1259`, id 69; subIds 0 "Graphite Rod", 1 "2x Graphite Rods",
+  2 "3x Graphite Rods", 3 "4x Graphite Rods").
+- Recipes (source `craft/CraftingRecipes.kt:1719-1761`, shapes confirmed against the fork's
+  generated recipe JSONs): shaped single-slot 3x → 3× Graphite Rod; shapeless 3× rod → 3x;
+  shapeless 2x + 1 rod → 3x.
+- Texture: source `textures/item/3xgraphiterods.png`.
+- The Old 480V Arc Furnace consumes 3x rods (source `CraftingRecipes.kt:2644-2650`) — that
+  machine/recipe is NOT ported (out of scope; its inputs are unported).
+
+### Registry IDs
+- `eln:shared_item@4418` (id 69, subId 2) — shared-item descriptor slot.
+- Item ID `eln:3x_graphite_rods` (eln-ids `name: "3x_graphite_rods"`), recipe files
+  `graphite_rod_2.json` (shaped, result 3× rod), `3x_graphite_rods.json` (shapeless 3× rod),
+  `3x_graphite_rods_2.json` (shapeless 2x + rod), lang key `item.eln.3x_graphite_rods`.
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp12aContent.java` — `registerArc(69)`: new subId 2
+  block after the 2x block (same `GenericItemUsingDamageDescriptor` shape); javadoc updated.
+- `src/main/resources/eln-ids.json` — new `eln:shared_item@4418` entry after `@4417`.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — `recipeForkPatchGraphite()`: shaped
+  3x→3× rod, shapeless 3× rod→3x, shapeless 2x+rod→3x; javadoc updated.
+- `src/main/resources/assets/eln/textures/item/3x_graphite_rods.png` — copied from source
+  `textures/item/3xgraphiterods.png`, **byte-identical** (md5 `2180777ce6e7ea6852897787a48f7577`
+  both sides). This makes `ElnModels.itemTexture` resolve `eln:item/3x_graphite_rods` instead of
+  the `items/missing` fallback (same mechanism as the `2x_graphite_rods.png` precedent).
+- Generated (datagen): `assets/eln/items/3x_graphite_rods.json`,
+  `assets/eln/models/item/3x_graphite_rods.json` (layer0 `eln:item/3x_graphite_rods`),
+  `data/eln/recipe/graphite_rod_2.json` (shaped, result `eln:graphite_rod` ×3),
+  `data/eln/recipe/3x_graphite_rods.json` (shapeless `eln:graphite_rod` ×3),
+  `data/eln/recipe/3x_graphite_rods_2.json` (shapeless `eln:2x_graphite_rods` +
+  `eln:graphite_rod`), advancement + lang `item.eln.3x_graphite_rods: "3x Graphite Rods"`.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `./gradlew :build` EXIT=0 (`/tmp/g3_build.log`).
+- **[tests-passed]** `:test` (inside the `:build` run): 704 tests, 0 failures, 0 errors,
+  3 pre-existing skips — identical to the 2026-11-18 baseline (counted from
+  `build/test-results/test/TEST-*.xml`).
+- **[datagen-verified]** `runClientData` run 1 generated the 3x artifacts above; run 2
+  `git status` before/after diff = **zero** (IDEMPOTENT; `/tmp/g3_idem_mid.txt` vs
+  `/tmp/g3_idem_after.txt`); both runs EXIT=0.
+- **[tests-passed]** `./gradlew runGameTestServer`: 1552 GAME TESTS COMPLETE; "2 required tests
+  failed" = `eln:golden_descriptors` + `eln:golden_slots` — the same 2 HISTORICAL failures as
+  the 2026-11-18 baseline (not weakened, not newly introduced). The new `eln:shared_item@4418`
+  appears inside the pre-existing `golden_descriptors` failure set in the same class as the
+  already-registered `@4416` (1x) and `@4417` (2x) graphite items (ForkPatch items absent from
+  the 1.12 golden inventory by construction). Log: `/tmp/g3_gametest.log`.
+- **[live server-side oracle]** live MC 26.3 dev server (boots cleanly — the AGENTS.md
+  "12-circuit-breaker mod-load blocker" is STALE) via mctest RCON:
+  `summon minecraft:item 0 -60 0 {Item:{id:"eln:3x_graphite_rods",count:1}}` → "Summoned new
+  3x Graphite Rods"; regressions `eln:graphite_rod` → "Summoned new Graphite Rod",
+  `eln:2x_graphite_rods` → "Summoned new 2x Graphite Rods"; bogus `eln:9x_graphite_rods` →
+  "Summoned new Air" (negative control). Registry ID + display name resolve at runtime. Probes
+  killed ("Killed 3 entities"); server stopped.
+- **[NOT RUN — honestly labeled]** player-joined in-game crafting/stack validation NOT performed
+  (client-join remains blocked in this environment). The item is a plain stacked material with
+  no electrical behavior; nothing beyond recipe crafting depends on it.
+
+### Remaining limitations
+- `4x_graphite_rods` — milestone 2 of this session (separate commit).
+- The 3x rod is not yet usable in any machine recipe (its source consumers — Old 480V Arc
+  Furnace etc. — are unported); recipe parity for crafting is complete.
+- No player-joined in-game validation (crafting the 3x rod in a crafting grid untested in-world).
+
+### Known blockers
+- Client live-join remains BLOCKED in this environment (unchanged from prior entries); the
+  AGENTS.md "12-circuit-breaker mod-load blocker" is confirmed STALE: `runServer` boots cleanly
+  on MC 26.3 and the live oracle ran.
+
+### Commit reference
+- Local commit for this milestone (no push): on top of `be11b99b` (50A switch) on branch
+  `port/forkpatch-3.0.77-26.3`, subject `Port 3x_graphite_rods from ForkPatch 1.21.1`; inspect
+  with `git log --oneline -3`. External queue script handles pushing.
