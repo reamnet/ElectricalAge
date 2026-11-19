@@ -2178,8 +2178,10 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', "plateCoal",
             't', "dustElnTungsten");
 
-        // ForkPatch 1.21.1: turbine blades (source CraftingRecipes.kt recipeTurbineBlades): iron + steel tiers ported
-        // 2026-11-18; alloy/tungsten tiers and the turbine consumers are out of scope.
+        // ForkPatch 1.21.1: turbine blades (source CraftingRecipes.kt recipeTurbineBlades): all four tiers ported
+        // (iron + steel 2026-11-18, alloy + tungsten 2026-11-19); the turbine consumers are out of scope.
+        // Tungsten uses the config dictionary default "ingotElnTungsten" (source
+        // runtime.dictionary.tungstenIngot default) mapped to eln:ingots/tungsten by OreDictTags.
         addRecipe(findItemStack("Iron Turbine Blade"),
             " I ",
             "IMI",
@@ -2193,6 +2195,16 @@ public final class ElnRecipes extends ElnRecipesBase {
             'S', firstExistingOre("ingotSteel", "ingotIron"),
             'I', "ingotIron",
             'M', findItemStack("Machine Block"));
+        addRecipe(findItemStack("Alloy Turbine Blade"),
+            "AIA", "ACA", "AIA",
+            'A', "ingotAlloy",
+            'I', "ingotIron",
+            'C', findItemStack("Advanced Machine Block"));
+        addRecipe(findItemStack("Tungsten Turbine Blade"),
+            "TAT", "ACA", "TAT",
+            'T', "ingotElnTungsten",
+            'A', "ingotAlloy",
+            'C', findItemStack("Advanced Machine Block"));
 
     }
 

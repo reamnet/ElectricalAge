@@ -1315,3 +1315,103 @@ target start HEAD `6ab78d9c` (gold/lead plate commit).
 - Local commit for this session (NO push): new commit on top of `6ab78d9c` (branch
   `port/forkpatch-3.0.77-26.3`), subject `Port clutch_pin and coal_clutch_plate from ForkPatch
   1.21.1`; inspect with `git log --oneline -1`. The external queue script handles pushing.
+
+## 24. Turbine blade port — Alloy + Tungsten (2026-11-19, this session)
+
+Scope: port the assigned ForkPatch 1.21.1 items `alloy_turbine_blade` + `tungsten_turbine_blade`,
+completing the 4-tier blade family (iron@1152 + steel@1153 ported 2026-11-18). Reused the existing
+`TurbineBladeItem` descriptor — the tier set (`TurbineBladeItem.kt`) extended from `{"iron","steel"}`
+to `{"iron","steel","alloy","tungsten"}` — the `ElnConfig` per-tier loop, and the `recipeMiscItem`
+datagen block. Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPatch`); target start HEAD
+`83a0ab6c` (coal_clutch_plate commit).
+
+### Items implemented
+- **Alloy Turbine Blade** — registry ID `eln:shared_item_stack_one@1154` (group 18 `sharedItemStackOne`,
+  subId=2; 18×64+2=1154). tierName=`alloy`, temperatureResistance=2.0, corrosionResistance=2.0,
+  tierDescription=`"Suitable for most fuel types"` — exact vs source `ItemRegistration.kt:1458-1500`.
+- **Tungsten Turbine Blade** — registry ID `eln:shared_item_stack_one@1155` (subId=3; 18×64+3=1155).
+  tierName=`tungsten`, temperatureResistance=3.5, corrosionResistance=3.5,
+  tierDescription=`"Handles extreme conditions"` — exact vs source `ItemRegistration.kt:1458-1500`.
+- New test `src/test/java/mods/eln/mechanical/TurbineBladeItemTest.java` (4 tests: all four tiers
+  construct; unknown tier rejected; default condition is New; config defaults match source
+  10/64/400/2000 h).
+- Out of scope and NOT ported: turbine consumer machines (`large_gas_turbine`, `large_steam_turbine`,
+  clutch/shaft/motor family) — no target consumer reads blade condition yet; behavior is item-level only.
+
+### Original source behavior (ForkPatch 1.21.1)
+- `registration/ItemRegistration.kt:1458-1500` (`registerTurbineBladeItems(18)`) defines all four tiers
+  with the resistance/description values above.
+- `item/TurbineBladeDescriptor.kt` — `BladeConfigData("alloy", 400.0)` + `BladeConfigData("tungsten",
+  2000.0)` (nominal lifetime in hours); condition (1.0 new → 0.0 broken) degrades with the fuel's
+  temperature and corrosiveness; tooltip `Nominal Lifetime` / `Condition: New/Good/Used/Bad/End of life`
+  / tier line.
+- `craft/CraftingRecipes.kt:2500-2526` — alloy `AIA`/`ACA`/`AIA` (A=alloy ingot, I=iron ingot,
+  C=Advanced Machine Block); tungsten `TAT`/`ACA`/`TAT` (T = config dictionary default
+  `runtime.dictionary.tungstenIngot` = "ingotElnTungsten", A=alloy ingot, C=Advanced Machine Block).
+
+### Registry IDs
+- `eln:shared_item_stack_one@1154` → `alloy_turbine_blade` ("Alloy Turbine Blade").
+- `eln:shared_item_stack_one@1155` → `tungsten_turbine_blade` ("Tungsten Turbine Blade").
+- Confirmed both IDs free in the target before implementation (unported-items rows read "No matching
+  current item name/model found"; `@1154`/`@1155` absent from `eln-ids.json`).
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp12aContent.java` — `registerTurbineBlade` extended with
+  subId 2 (alloy 2.0/2.0) + subId 3 (tungsten 3.5/3.5) in group 18 `sharedItemStackOne`
+  (stack_one, not stackable shared_item: blades store condition in NBT — source comment).
+- `src/main/java/mods/eln/mechanical/TurbineBladeItem.kt` — `TURBINE_BLADE_TIERS` =
+  `{iron, steel, alloy, tungsten}` (condition NBT + tooltip + per-tier config already ported with
+  iron/steel).
+- `src/main/java/mods/eln/ElnConfig.java` — `items.turbineBlades.<tier>.{nominalLifeHours,
+  infiniteLifeEnabled}` tiers extended to `{iron=10.0, steel=64.0, alloy=400.0, tungsten=2000.0}`
+  (range 0.001–87600) — exact vs source `BladeConfigData`.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — 2 shaped recipes (shapes/ingredients as above);
+  generated `data/eln/recipe/{alloy,tungsten}_turbine_blade.json` + recipe advancements.
+- `src/main/resources/eln-ids.json` — added `@1154` + `@1155`.
+- Textures `src/main/resources/assets/eln/textures/items/{alloy,tungsten}turbineblade.png` —
+  **byte-identical to source** (sha256 `80dddb33…` / `17a4df2d…`, verified on both sides).
+- Generated under `src/generated/resources/`: `assets/eln/items/{alloy,tungsten}_turbine_blade.json`,
+  `assets/eln/models/item/{alloy,tungsten}_turbine_blade.json`,
+  `data/eln/recipe/{alloy,tungsten}_turbine_blade.json`, matching recipe advancements, and
+  `item.eln.{alloy,tungsten}_turbine_blade` lang entries.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** fresh `./gradlew :compileJava :test` BUILD SUCCESSFUL in 4m50s, exit 0
+  (/tmp/tb_retest.log).
+- **[tests-passed]** `:test` 708/708 (0 fail, 0 err, 3 pre-existing skips) — 704 baseline + 4 new
+  TurbineBladeItemTest tests, all passing.
+- **[datagen-verified]** `runClientData` ×2: run 1 generated the alloy/tungsten item/model/recipe/
+  advancement/lang files; run 2 md5 diff of the generated tree = **0 lines** (idempotent).
+- **[automated GameTest]** `runGameTestServer`: **1552 GAME TESTS COMPLETE IN 7.555 min**; 2 required
+  failures = exactly the same 2 HISTORICAL golden fails as the iron/steel-tier baselines
+  (`eln:golden_descriptors`, `eln:golden_slots`) — no new failures (/tmp/tb_gametest.log). Goldens
+  NOT weakened.
+- **[live server-side oracle]** live MC 26.3 dev server via `mctest` RCON (2026-11-19; boots cleanly —
+  the AGENTS.md "12-circuit breaker mod-load blocker" is STALE): 26.x summon syntax
+  `summon minecraft:item 0 100 0 {Item:{id:"eln:NAME",count:1b}}`.
+  `eln:alloy_turbine_blade` → "Summoned new Alloy Turbine Blade"; `eln:tungsten_turbine_blade` →
+  "Summoned new Tungsten Turbine Blade"; regressions `eln:iron_turbine_blade` → "Iron Turbine Blade"
+  and `eln:steel_turbine_blade` → "Steel Turbine Blade"; control `eln:totally_bogus_item_xyz` →
+  "Summoned new Air" (unregistered ID degrades as expected). Probes killed ("Killed 3 entities");
+  server stopped; no lingering JVM. This is a server-side registration/display-name oracle —
+  NOT player gameplay validation.
+- **[NOT RUN — honestly labeled]** player-joined in-game crafting/wear/Condition validation NOT
+  performed (client-join remains blocked in this environment per the clutch entry). No consumer
+  machine exists in the target for the wear path yet (out of scope), so **live gameplay verification
+  is NOT claimed**.
+
+### Remaining limitations
+- Turbine consumer machines (`large_gas_turbine`, `large_steam_turbine`, clutch/shaft/motor family)
+  NOT ported — wear/Condition/electrical consumption of the blades therefore cannot be
+  gameplay-validated in-world.
+- No player-joined in-game validation (crafting, wear, Condition toasts untested in-world).
+- No audio / multi-client / fresh-JVM save-recovery validation.
+
+### Known blockers
+- Client live-join remains blocked in this environment (clutch-entry blockers unchanged);
+  server-side RCON oracle works.
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `83a0ab6c` (branch
+  `port/forkpatch-3.0.77-26.3`), subject `Port alloy_turbine_blade and tungsten_turbine_blade from
+  ForkPatch 1.21.1`; inspect with `git log --oneline -2`. The external queue script handles pushing.

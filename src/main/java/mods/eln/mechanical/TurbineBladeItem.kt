@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack
  * whose condition (1.0 new, 0.0 broken) degrades with the fuel's temperature and corrosiveness. The condition
  * NBT lives in the CUSTOM_DATA component via [ItemNbt] (1.12 ItemStack.getTagCompound/setTagCompound).
  * Lifetime/infinite-life come from the per-tier config (ForkPatch items.turbineBlades.<tier>.*).
- * The alloy/tungsten tiers and the turbine consumers themselves are not ported yet.
+ * All four tiers are registered (iron/steel/alloy/tungsten); the turbine consumers themselves are not ported yet.
  */
 class TurbineBladeItem(
     name: String,
@@ -63,7 +63,7 @@ class TurbineBladeItem(
     }
 
     companion object {
-        private val TURBINE_BLADE_TIERS = setOf("iron", "steel")
+        private val TURBINE_BLADE_TIERS = setOf("iron", "steel", "alloy", "tungsten")
 
         fun getDescriptor(stack: ItemStack?): TurbineBladeItem? =
             stack?.let { GenericItemUsingDamageDescriptor.getDescriptor(it) as? TurbineBladeItem }

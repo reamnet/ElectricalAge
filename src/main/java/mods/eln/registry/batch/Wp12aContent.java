@@ -1128,13 +1128,17 @@ public class Wp12aContent implements ElnContent {
     /** ForkPatch 1.21.1 turbine blades (source ItemRegistration.kt registerTurbineBladeItems(18)): the consumables a
      * large turbine runs on; condition (1.0 new to 0.0 broken) wears with the fuel's temperature and corrosiveness.
      * sharedItemStackOne, not sharedItem: blades store condition in NBT, stacking would corrupt it (source comment).
-     * Iron + steel tiers ported 2026-11-18 (ForkPatch also has alloy/tungsten tiers; the turbine consumers themselves are not ported).
+     * All four tiers ported (iron + steel 2026-11-18, alloy + tungsten 2026-11-19); the turbine consumers themselves are not ported.
      */
     public static void registerTurbineBlade(int id) {
         sharedItemStackOne.addElement(0 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
             TR_NAME(Type.NONE, "Iron Turbine Blade"), "iron", 0.8, 0.8, "Suitable for mild, clean fuels"));
         sharedItemStackOne.addElement(1 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
             TR_NAME(Type.NONE, "Steel Turbine Blade"), "steel", 1.2, 1.2, "Handles moderate conditions"));
+        sharedItemStackOne.addElement(2 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
+            TR_NAME(Type.NONE, "Alloy Turbine Blade"), "alloy", 2.0, 2.0, "Suitable for most fuel types"));
+        sharedItemStackOne.addElement(3 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
+            TR_NAME(Type.NONE, "Tungsten Turbine Blade"), "tungsten", 3.5, 3.5, "Handles extreme conditions"));
     }
 
 }

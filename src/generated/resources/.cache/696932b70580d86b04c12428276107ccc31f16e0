@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T04:43:31.648674797	eln-global/EA models
+// 26.3	2026-11-19T05:18:08.179572425	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -403,6 +403,7 @@ c4e228fc0a55e7e20a2be28757a7a9b278f15af3 assets/eln/items/advanced_electrical_mo
 2767f479c038a4fd107c9f09d7cb742e703d971a assets/eln/items/alloy_ingot.json
 0e2607a8bf3a312a1ca275a8f17682d8028bbc3d assets/eln/items/alloy_plate.json
 10eb431cf619d210cc17d5c8a1b80a54fcecfbc1 assets/eln/items/alloy_tank.json
+cb9ac6ac9fea03fa4b0d7d9c36bc4f7428e30fab assets/eln/items/alloy_turbine_blade.json
 6dc94eea4b696e8d90898dfe657110dab97efeef assets/eln/items/aluminum_1000_kcmil_cable_1000v.json
 56f431b06171e7dc7eeb3a8e4183f3a66b7908cf assets/eln/items/aluminum_1000_kcmil_cable_bare.json
 d3c445a31eb562291d495bee1a0db1254a6231e7 assets/eln/items/aluminum_1000_kcmil_cable_melted.json
@@ -1094,6 +1095,7 @@ b0e9ac661430266c12c61d5c58cde97253f1b494 assets/eln/items/tungsten_cable.json
 b3ade9333336fbfdb679453a73f6e1305814c944 assets/eln/items/tungsten_dust.json
 c1acaa29dfc25a42638aae34827c69cee46d93ba assets/eln/items/tungsten_ingot.json
 cc97206c950244d6a8d7e8f1f205d276c4aca492 assets/eln/items/tungsten_ore.json
+504d68450c2ad45d106170972cf7a4b22385351c assets/eln/items/tungsten_turbine_blade.json
 0c18495999fba11898ea8659f0b2731a4ea6124b assets/eln/items/turbine_blade_set.json
 4ad21ccf2fb5a8bbcc17b8c47d1cffaf3d8cbd95 assets/eln/items/tutorial_sign.json
 7fd1d34f1d14bee077e43bc7e67c8ef0232ca484 assets/eln/items/twelve_circuit_american_breaker_panel.json
@@ -1398,6 +1400,7 @@ e7302203eb2906a6f1805720b52f08e88f92495d assets/eln/models/item/advanced_machine
 f4c0ea441d39fa54a6fe791408e87931889a37cb assets/eln/models/item/alloy_ingot.json
 41c8d9c6ff804b8ca8397cfb3aed87e7a451bc5a assets/eln/models/item/alloy_plate.json
 fd323d20f1be3c4899d7e30d66c47b5941609713 assets/eln/models/item/alloy_tank.json
+02b21d7d9ec601c06104505cd4858982fd253a33 assets/eln/models/item/alloy_turbine_blade.json
 6a1024ac04417721c2dfb57fd6bd203fa1ccef02 assets/eln/models/item/aluminum_1000_kcmil_cable_1000v.json
 d014325e7254f89d096997a937360ef3e3f5634e assets/eln/models/item/aluminum_1000_kcmil_cable_bare.json
 6a1024ac04417721c2dfb57fd6bd203fa1ccef02 assets/eln/models/item/aluminum_1000_kcmil_cable_melted.json
@@ -2403,6 +2406,7 @@ f76e151ec0b1c3d32ca33f35311381ec93364459 assets/eln/models/item/trimless_recesse
 d78c66bf9bd68c27a17ed13f79eefaab08acf359 assets/eln/models/item/tungsten_cable.json
 1a9d8a62d2775ef16e2368f1c2c0efd4f9b32473 assets/eln/models/item/tungsten_dust.json
 7af01ae892df8b280f25babf45e8bb207fdc12f5 assets/eln/models/item/tungsten_ingot.json
+fba8fc3e18467337e77a4b67be77b87aefc08451 assets/eln/models/item/tungsten_turbine_blade.json
 8902322d354498fa83a7260d64e424d0662ebb77 assets/eln/models/item/turbine_blade_set.json
 a764a7b9d92f6698f270716f881b366571b894e9 assets/eln/models/item/tutorial_sign.json
 4d3132768b1fcd6dbcd5998362460e4713afdb60 assets/eln/models/item/tutorial_sign_3d.json

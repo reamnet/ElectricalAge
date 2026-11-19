@@ -1055,6 +1055,18 @@
   "kind": "shared_item_stack_one",
   "name": "steel_turbine_blade"
  },
+ "eln:shared_item_stack_one@1154": {
+  "descriptor": "TurbineBladeItem",
+  "display": "Alloy Turbine Blade",
+  "kind": "shared_item_stack_one",
+  "name": "alloy_turbine_blade"
+ },
+ "eln:shared_item_stack_one@1155": {
+  "descriptor": "TurbineBladeItem",
+  "display": "Tungsten Turbine Blade",
+  "kind": "shared_item_stack_one",
+  "name": "tungsten_turbine_blade"
+ },
  "eln:shared_item_stack_one@7488": {
   "descriptor": "TractionBattery",
   "display": "48 V 20 kWh Traction Battery",

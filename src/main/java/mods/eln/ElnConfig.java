@@ -153,8 +153,8 @@ public final class ElnConfig {
         b.pop();b.pop();
         // turbine blades (ForkPatch 1.21.1 items.turbineBlades.<tier>; source TurbineBladeDescriptor.kt BladeConfigData)
         b.push("items");b.push("turbineBlades");
-        String[] bladeTiers={"iron","steel"};
-        double[] bladeDefaultHours={10.0,64.0};
+        String[] bladeTiers={"iron","steel","alloy","tungsten"};
+        double[] bladeDefaultHours={10.0,64.0,400.0,2000.0};
         for(int i=0;i<bladeTiers.length;i++){
             b.push(bladeTiers[i]);
             TURBINE_BLADE_DEFAULT_HOURS.put(bladeTiers[i],bladeDefaultHours[i]);

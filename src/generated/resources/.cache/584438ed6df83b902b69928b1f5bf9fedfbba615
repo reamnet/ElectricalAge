@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T04:43:31.664435097	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-19T05:18:08.198675125	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -185,6 +185,7 @@ fa365aabe999e77b03e64373107eb501cad2b094 data/eln/advancement/recipes/misc/advan
 f70b299049c176c75a99881d9bb884024c4a16e1 data/eln/advancement/recipes/misc/allmeter.json
 44d9994058ce6f90ef2b7f32ea0381792d6ad2ec data/eln/advancement/recipes/misc/alloy_dust.json
 46a1bc5bf44016039d5a7b278377fac0d516c730 data/eln/advancement/recipes/misc/alloy_tank.json
+fdc571d821b352cf5714cb838127bb7272194fcf data/eln/advancement/recipes/misc/alloy_turbine_blade.json
 47b8b6f850850f1871c2bd3744855e41ac18bc2c data/eln/advancement/recipes/misc/aluminum_roller_wheel.json
 d5fb6b8e7356d15e8befa93dd2868cd5e615f99c data/eln/advancement/recipes/misc/amplifier.json
 2e03d362839a5ea1f104bf7a36e1fc1731b5e5e5 data/eln/advancement/recipes/misc/analog_glass_service_meter.json
@@ -638,6 +639,7 @@ f10a9eefb44cbdb04d4d1f0ca0507bbb07418460 data/eln/advancement/recipes/misc/tree_
 e4bdc0ed1b47684ab03ef7865dd8049bb67137fc data/eln/advancement/recipes/misc/trimless_recessed_downlight.json
 67b3ffcd29132e40972a3e5b82b19fd753a67cf2 data/eln/advancement/recipes/misc/tropical_patio_ceiling_fan.json
 36537e9727f2e9657a1580b66d45dac30567da2f data/eln/advancement/recipes/misc/tungsten_cable.json
+9178910e24a351838b286b4fe8b31a1d63b9d31d data/eln/advancement/recipes/misc/tungsten_turbine_blade.json
 06f7d6a9098a138ce5181dc3148a749c93e4233e data/eln/advancement/recipes/misc/turbine_blade_set.json
 16e1d11639496c6463b8c870e6765ed7444798c5 data/eln/advancement/recipes/misc/twelve_circuit_american_breaker_panel.json
 f6184c91164c30f641d0d8fbfe9f563dd44ef338 data/eln/advancement/recipes/misc/twin_adjustable_eave_floodlight.json
@@ -902,6 +904,7 @@ a423457ff31535b559770376ebc14b04c271f5e8 data/eln/recipe/advanced_machine_block.
 23dc3a28332b359aee832565c162e5f1e53db807 data/eln/recipe/allmeter.json
 3195eb3d865c65466172a7fbd6ac9ed00fbc5c40 data/eln/recipe/alloy_dust.json
 cbaccff23f3f97a836e6927f38b28d1ef2f967fe data/eln/recipe/alloy_tank.json
+c3d8d3fddf58e5bddb184c9123fdb0b1d873319a data/eln/recipe/alloy_turbine_blade.json
 47c26858195e156528ec1ac1aabc18178df8fba5 data/eln/recipe/aluminum_roller_wheel.json
 df6fff4b10786a0a7c9cec342b128d16cceeb85d data/eln/recipe/amplifier.json
 662bfd2f6977cd93ad8cda03628077ab28c922ab data/eln/recipe/analog_glass_service_meter.json
@@ -1355,6 +1358,7 @@ ba6171c46cdef5e54d351d3d002ee195daae0359 data/eln/recipe/tilted_terminal_logger.
 1e1f40001da3244c61fc02588707d10219e593e0 data/eln/recipe/trimless_recessed_downlight.json
 a71b3a4d5b96707106f21c49b01fc5508fa30cce data/eln/recipe/tropical_patio_ceiling_fan.json
 a704b9c15054e9a198a998bb306bf5ce8407501a data/eln/recipe/tungsten_cable.json
+cdbb64f7e926e5e1e22b6d1ce100a2ec632012a1 data/eln/recipe/tungsten_turbine_blade.json
 a0578d3014c4046035c4bb4b86acfcd0233f31ac data/eln/recipe/turbine_blade_set.json
 29631144a083e58de6cdc09069d786a4168958b4 data/eln/recipe/twelve_circuit_american_breaker_panel.json
 210e1270009a38d402cd5835699ae5a44809a4f1 data/eln/recipe/twin_adjustable_eave_floodlight.json

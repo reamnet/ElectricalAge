@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/iron"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": "#c:ingots/alloy",
+    "C": "eln:advanced_machine_block",
+    "I": "#c:ingots/iron"
+  },
+  "pattern": [
+    "AIA",
+    "ACA",
+    "AIA"
+  ],
+  "result": {
+    "id": "eln:alloy_turbine_blade"
+  }
+}
