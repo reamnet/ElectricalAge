@@ -1037,3 +1037,104 @@ no ore entries in source). Target start HEAD `be11b99b` (50A switch commit).
 - Local commit for this milestone (no push): on top of `be11b99b` (50A switch) on branch
   `port/forkpatch-3.0.77-26.3`, subject `Port 3x_graphite_rods from ForkPatch 1.21.1`; inspect
   with `git log --oneline -3`. External queue script handles pushing.
+
+## 21. Graphite port — 4x Graphite Rods (2026-11-19, this session)
+
+Scope: port the assigned ForkPatch 1.21.1 plain item `4x_graphite_rods` (milestone 2 of this
+session, closing the 1x→4x graphite rod family). No new descriptor or element code — the
+existing `registerArc` (id 69) `GenericItemUsingDamageDescriptor` pattern carries the 4x rod
+verbatim (the source `GraphiteDescriptor` adds no behaviour beyond the generic item descriptor;
+no ore entries in source). Target start HEAD `9054fe53` (3x graphite commit).
+
+### Items implemented
+- **4x Graphite Rods** — registry ID `eln:shared_item@4419` (id 69, subId 3; 69×64+3=4419),
+  item `eln:4x_graphite_rods`, display name "4x Graphite Rods". Confirmed absent in the target
+  (unported-items row "No matching current item name/model found") and confirmed
+  `eln:shared_item@4419` free before implementing.
+
+### Original source behavior (ForkPatch 1.21.1)
+- Plain stacked material: `registerArc` subId 3, `GenericItemUsingDamageDescriptor`
+  (source `ItemRegistration.kt` id 69 family; subIds 0 "Graphite Rod", 1 "2x Graphite Rods",
+  2 "3x Graphite Rods", 3 "4x Graphite Rods").
+- Recipes (source `craft/CraftingRecipes.kt:1721,1740-1762`, shapes confirmed against the
+  fork's generated recipe JSONs and re-verified against the target's generated JSONs):
+  shaped single-slot 4x → 4× Graphite Rod; shapeless 4× rod → 4x; shapeless 2x + 2 rod → 4x;
+  shapeless 2x + 2x → 4x; shapeless 3x + rod → 4x.
+- Texture: source `textures/item/4xgraphiterods.png`.
+- The compressor recipe "4x rods from 1 Synthetic Diamond @ 80000 J"
+  (source `CraftingRecipes.kt:2428-2435`) is NOT ported — blocked: Synthetic Diamond is
+  unported in the target (see "Known blockers").
+
+### Registry IDs
+- `eln:shared_item@4419` (id 69, subId 3) — shared-item descriptor slot.
+- Item ID `eln:4x_graphite_rods` (eln-ids `name: "4x_graphite_rods"`), recipe files
+  `graphite_rod_3.json` (shaped, result 4× rod), `4x_graphite_rods.json` (shapeless 4× rod),
+  `4x_graphite_rods_2.json` (shapeless 2x + 2 rod), `4x_graphite_rods_3.json` (shapeless
+  2x + 2x), `4x_graphite_rods_4.json` (shapeless 3x + rod), lang key `item.eln.4x_graphite_rods`.
+
+### Implementation changes (target)
+- `src/main/java/mods/eln/registry/batch/Wp12aContent.java` — `registerArc(69)`: new subId 3
+  block after the 3x block (same `GenericItemUsingDamageDescriptor` shape).
+- `src/main/resources/eln-ids.json` — new `eln:shared_item@4419` entry after `@4418`.
+- `src/main/java/mods/eln/datagen/ElnRecipes.java` — `recipeForkPatchGraphite()`: shaped
+  4x→4× rod, shapeless 4× rod→4x, shapeless 2x+2 rod→4x, shapeless 2x+2x→4x, shapeless
+  3x+rod→4x; javadoc updated.
+- `src/main/resources/assets/eln/textures/item/4x_graphite_rods.png` — copied from source
+  `textures/item/4xgraphiterods.png`, **byte-identical** (md5
+  `93ffd68a2c105a5b4202af80516bb41c` both sides). This makes `ElnModels.itemTexture` resolve
+  `eln:item/4x_graphite_rods` instead of the `items/missing` fallback (same mechanism as the
+  `2x_graphite_rods.png`/`3x_graphite_rods.png` precedents).
+- Generated (datagen): `assets/eln/items/4x_graphite_rods.json`,
+  `assets/eln/models/item/4x_graphite_rods.json` (layer0 `eln:item/4x_graphite_rods`),
+  `data/eln/recipe/graphite_rod_3.json` (shaped, result `eln:graphite_rod` ×4),
+  `data/eln/recipe/4x_graphite_rods.json` (shapeless `eln:graphite_rod` ×4),
+  `data/eln/recipe/4x_graphite_rods_2.json` (shapeless `eln:2x_graphite_rods` +
+  `eln:graphite_rod` ×2), `data/eln/recipe/4x_graphite_rods_3.json` (shapeless
+  `eln:2x_graphite_rods` ×2), `data/eln/recipe/4x_graphite_rods_4.json` (shapeless
+  `eln:3x_graphite_rods` + `eln:graphite_rod`), 5 advancements + lang
+  `item.eln.4x_graphite_rods: "4x Graphite Rods"`.
+
+### Actual test results (level labeled; nothing claimed that did not run)
+- **[compile-verified]** `./gradlew :build` EXIT=0 in 4m52s (`/tmp/g4_build.log`).
+- **[tests-passed]** `:test` (inside the `:build` run): 704 tests, 0 failures, 0 errors,
+  3 pre-existing skips — identical to the 2026-11-18/19 baseline.
+- **[datagen-verified]** `runClientData` run 1 EXIT=0 generated the 4x artifacts above;
+  run 2 EXIT=0 with md5 state before/after diff = **0 lines** (IDEMPOTENT;
+  `/tmp/g4_idem_{before,mid,after}.txt`, `/tmp/g4_datagen{1,2}.log`).
+- **[tests-passed]** `./gradlew runGameTestServer`: 1552 GAME TESTS COMPLETE in 7.405 min;
+  "2 required tests failed" = `eln:golden_descriptors` + `eln:golden_slots` — the same 2
+  HISTORICAL failures as the 2026-11-18 baseline (not weakened, not newly introduced). The new
+  `eln:shared_item@4419` appears inside the pre-existing `golden_descriptors` failure set
+  **3×, the identical count of the already-registered `@4416` (1x), `@4417` (2x) and `@4418`
+  (3x) graphite items** — same pre-existing class (ForkPatch items absent from the 1.12 golden
+  inventory by construction). No new failing tests. Log: `/tmp/g4_gametest.log`.
+- **[live server-side oracle]** live MC 26.3 dev server (boots cleanly — the AGENTS.md
+  "12-circuit-breaker mod-load blocker" is STALE) via mctest RCON:
+  `summon minecraft:item 0 -60 0 {Item:{id:"eln:4x_graphite_rods",count:1}}` → "Summoned new
+  4x Graphite Rods"; regressions `eln:graphite_rod` → "Summoned new Graphite Rod",
+  `eln:2x_graphite_rods` → "Summoned new 2x Graphite Rods", `eln:3x_graphite_rods` →
+  "Summoned new 3x Graphite Rods"; bogus `eln:9x_graphite_rods` → "Summoned new Air"
+  (negative control). Registry ID + display name resolve at runtime. Probes killed
+  ("Killed 4 entities"; follow-up scan → "No entity was found"); server stopped.
+- **[NOT RUN — honestly labeled]** player-joined in-game crafting/stack validation NOT performed
+  (client-join remains blocked in this environment). The item is a plain stacked material with
+  no electrical behavior; nothing beyond recipe crafting depends on it.
+
+### Remaining limitations
+- Compressor recipe "4x rods from 1 Synthetic Diamond @ 80000 J" (source
+  `CraftingRecipes.kt:2428-2435`) NOT ported — blocked: Synthetic Diamond unported in the
+  target.
+- The 4x rod is not yet usable in any machine recipe (its source consumers — e.g. the
+  compressor recipe above — are unported); recipe parity for crafting is complete.
+- No player-joined in-game validation (crafting the 4x rod in a crafting grid untested in-world).
+
+### Known blockers
+- Synthetic Diamond unported (blocks the 4x compressor recipe above).
+- Client live-join remains BLOCKED in this environment (unchanged from prior entries); the
+  AGENTS.md "12-circuit-breaker mod-load blocker" is confirmed STALE: `runServer` boots cleanly
+  on MC 26.3 and the live oracle ran.
+
+### Commit reference
+- Local commit for this milestone (no push): on top of `9054fe53` (3x graphite) on branch
+  `port/forkpatch-3.0.77-26.3`, subject `Port 4x_graphite_rods from ForkPatch 1.21.1`; inspect
+  with `git log --oneline -3`. External queue script handles pushing.

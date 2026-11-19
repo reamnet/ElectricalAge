@@ -1409,15 +1409,20 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("Wall-mounted Hybrid Solar Inverter"), findItemStack("Hybrid Solar Inverter"), findItemStack("Iron Plate"));
     }
 
-    /** ForkPatch 1.21.1: Graphite Rod (shaped, 2x from 2x Graphite Rods), 2x Graphite Rods (shapeless, 2x rod)
-     * and 3x Graphite Rods (shapeless, 3x rod; split: 3x -> 3 rod, 2x + rod -> 3x). Mutually dependent trio;
-     * all ported together. Source CraftingRecipes.kt:1719-1761. */
+    /** ForkPatch 1.21.1: Graphite Rod (shaped, from 2x/3x/4x Graphite Rods) and 2x/3x/4x Graphite Rods
+     * (shapeless from rods; splits: 2x -> 2 rod, 3x -> 3 rod, 4x -> 4 rod, 2x + rod -> 3x,
+     * 2x + 2 rod / 2x + 2x / 3x + rod -> 4x). All ported together. Source CraftingRecipes.kt:1719-1763. */
     public static void recipeForkPatchGraphite() {
         addRecipe(findItemStack("Graphite Rod", 2), "I", 'I', findItemStack("2x Graphite Rods"));
         addShapelessRecipe(findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
         addRecipe(findItemStack("Graphite Rod", 3), "I", 'I', findItemStack("3x Graphite Rods"));
         addShapelessRecipe(findItemStack("3x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
         addShapelessRecipe(findItemStack("3x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"));
+        addRecipe(findItemStack("Graphite Rod", 4), "I", 'I', findItemStack("4x Graphite Rods"));
+        addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
+        addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
+        addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("2x Graphite Rods"));
+        addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("3x Graphite Rods"), findItemStack("Graphite Rod"));
     }
 
     public static void recipeSolarPanel() {

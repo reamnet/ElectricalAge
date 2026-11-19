@@ -1102,6 +1102,14 @@ public class Wp12aContent implements ElnContent {
             sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
             // wiki (P4): Data.addResource(element.newItemStack());
         }
+        {
+            subId = 3;
+            completId = subId + (id << 6);
+
+            name = TR_NAME(Type.NONE, "4x Graphite Rods");
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(name));
+            // wiki (P4): Data.addResource(element.newItemStack());
+        }
     }
 
     /** ForkPatch 1.21.1 turbine blades (source ItemRegistration.kt registerTurbineBladeItems(18)): the consumables a

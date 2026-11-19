@@ -1,4 +1,4 @@
-// 26.3	2026-11-19T03:16:43.68411821	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-19T03:37:50.651577355	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -122,6 +122,10 @@ f4aecfd7f29ffe9e850a95dcc56fb67f20fde304 data/eln/advancement/recipes/misc/48_kw
 95f34279b60b075c7c140d6e522c031698c7df5e data/eln/advancement/recipes/misc/48_v_20_kwh_traction_battery.json
 a8f4788110551b4381d9c6ff23687747a4818717 data/eln/advancement/recipes/misc/48_v_machine_cord.json
 a667be8f7fcc4784531ebd6cc01cbe7e8787cea5 data/eln/advancement/recipes/misc/48_v_machine_outlet.json
+8c4952f365afc88d2346dcda8fec652f4fb97c59 data/eln/advancement/recipes/misc/4x_graphite_rods.json
+d7f43bff25d53bdb31e1d77a322715789185c5b5 data/eln/advancement/recipes/misc/4x_graphite_rods_2.json
+62724f530aa628ede6488b54c5a1b9e8315b4e60 data/eln/advancement/recipes/misc/4x_graphite_rods_3.json
+f9da9e838f5af856fdba559c48a8ea255b45a557 data/eln/advancement/recipes/misc/4x_graphite_rods_4.json
 ac76b69351ccd2d43a8f6af3895ddd15c8ec2d96 data/eln/advancement/recipes/misc/50_a_pole_fuse.json
 456038edd4972e1caa1bd306490ba86a930ed616 data/eln/advancement/recipes/misc/50_kw_pole_transformer.json
 83f5bb8fc51dc7a1c579363c236de9b2a116aef1 data/eln/advancement/recipes/misc/50a_electrical_breaker.json
@@ -334,6 +338,7 @@ b778a6d5c59a017c3c5ed76f66447aed4e634fd2 data/eln/advancement/recipes/misc/grand
 082e6a36592ee9e875496d9f044f943e8ffdc0e3 data/eln/advancement/recipes/misc/grand_halo_ring_chandelier.json
 e1e2cc77fc3231064d43dc3f7ede2a00d35e2c29 data/eln/advancement/recipes/misc/graphite_rod.json
 557ea63f252ae9e05e6e1f87053143f8ff78d1eb data/eln/advancement/recipes/misc/graphite_rod_2.json
+8b511afe1cc267c6d8744130f5ff3d17f6905435 data/eln/advancement/recipes/misc/graphite_rod_3.json
 3206c8a83c23437655d503a29cdf6acb090766cf data/eln/advancement/recipes/misc/gray_brush.json
 49b426100272a67dc0c0b6e3e1659c717c3f5de4 data/eln/advancement/recipes/misc/green_banker_table_lamp.json
 a0d612bd4f26061b5e9c15aa0f3000b426037fd0 data/eln/advancement/recipes/misc/green_brush.json
@@ -830,6 +835,10 @@ ebf1535df950bdfca23460c9e36942c5c75ad866 data/eln/recipe/48_kwh_wall_mounted_lif
 9de5f2c08c066cc00151ea1c5dfe43ba2c5989f4 data/eln/recipe/48_v_20_kwh_traction_battery.json
 1036c671e5d1600702e96f4adb52d9faa4ad0739 data/eln/recipe/48_v_machine_cord.json
 cbb59167d3c56c986572cca7adb1a5d2d7f9d3cd data/eln/recipe/48_v_machine_outlet.json
+0d0502105c2f15287e67be17eb8e2776b1c66791 data/eln/recipe/4x_graphite_rods.json
+229a3e828c087f7dc0910351f907f1c70784149f data/eln/recipe/4x_graphite_rods_2.json
+35a1e80a3117787ba88a959281f3f5fcfcf66d49 data/eln/recipe/4x_graphite_rods_3.json
+fcf37550ac26db89306c869035fb68fcc872d844 data/eln/recipe/4x_graphite_rods_4.json
 ce305a432e9aecf0f7494aba90cd5c361971eb75 data/eln/recipe/50_a_pole_fuse.json
 d32aa51c7dadf3b589a3cf71b48f7463ca4a1ce6 data/eln/recipe/50_kw_pole_transformer.json
 8bd84d4418511f910d27aa5fbd8dd7b739f88557 data/eln/recipe/50a_electrical_breaker.json
@@ -1042,6 +1051,7 @@ b24f0fdd11f4695c120a9461e33e31eef61f228e data/eln/recipe/grand_crystal_cascade_c
 b555f27224c21da539eede40269569161c931a15 data/eln/recipe/grand_halo_ring_chandelier.json
 e4072c68a93fc9d81d22f57b9f308deab9f675e0 data/eln/recipe/graphite_rod.json
 7117e1d65b78ab54b4c691d67540173d7715f453 data/eln/recipe/graphite_rod_2.json
+bd492d0545722a403a6c6ae1819af4aebe66c96c data/eln/recipe/graphite_rod_3.json
 6807bca5810c43c53a541f3192a05744bb3b73f2 data/eln/recipe/gray_brush.json
 761bb87157e0b0e45dabe6638548161f25ad54c4 data/eln/recipe/green_banker_table_lamp.json
 1fd7392f8f3c4443adbf0499d84396c5da56090d data/eln/recipe/green_brush.json
