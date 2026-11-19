@@ -59,6 +59,8 @@ public class ElnItemTags extends ItemTagsProvider {
         // dust and ingot stay EA-private, as 1.12's dictionary.tungsten=false
         tag(itemTag("c", "ores/tungsten")).add(key(BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("eln", "tungsten_ore")).asItem()));
         tag(itemTag("c", "ores")).addTag(itemTag("c", "ores/tungsten"));
+        // ForkPatch 1.21.1: the arc clay block is the aluminium storage block (the ingot's c:ingots/aluminum comes from its source ore names ingotAluminum/ingotAluminium)
+        tag(itemTag("c", "storage_blocks/aluminum")).add(key(BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("eln", "arc_clay_block")).asItem()));
         // the X-ray scanner's filters (XRayFilter): coal is what coal ore drops, but has no convention tag of its own
         tag(itemTag("eln", "ore_drops/coal")).add(key(net.minecraft.world.item.Items.COAL));
     }

@@ -1744,3 +1744,86 @@ scope). Reused the existing `Wp12aContent.registerMiscItem(120)` group-120 `shar
 - Local commit for this session (NO push): new commit on top of `e447bb6e` (100a_switch; branch
   `port/forkpatch-3.0.77-26.3`), subject `Port motor_cowling and heavy_winding from ForkPatch
   1.21.1`; inspect with `git log --oneline -1`. The external queue script handles pushing.
+
+## 29. Material port — Arc Clay Ingot + Arc Clay Block (2026-11-19, this session)
+
+Scope: port the two assigned ForkPatch 1.21.1 items `arc_clay_ingot` + `arc_clay_block`. Both are
+plain materials (no electrical/thermal behavior — the ingot is the generic aluminum material of
+ForkPatch and the block is its 9× storage form; the only source consumers are the two crafting
+recipes, both ported). Source baseline `b7444a7b` (read-only `../ELN1.21.1ForkPatch`): descriptors
+`ItemRegistration.kt` (id 69 subId 6, `registerArc(69)` at :126), block `block/ArcClayBlock.kt`,
+recipes `CraftingRecipes.kt:1715-1716`; target start HEAD `ca498620` (motor_cowling/heavy_winding).
+
+### Items implemented
+- **Arc Clay Ingot** — registry ID `eln:shared_item@4422` (group 69 `registerArc`, subId 6;
+  `6 + (69<<6)` = 4422; siblings `@4416`–`@4419` = graphite rods). `GenericItemUsingDamageDescriptor`
+  "Arc Clay Ingot" — exact vs source (the source `ArcClayDescriptor` adds nothing beyond the
+  generic descriptor). Carries the source ore names `ingotAluminum` + `ingotAluminium`
+  (`OreDictTags.addToOre`, both → tag `c:ingots/aluminum`) — this is why the ingot is the generic
+  aluminum material in ForkPatch (e.g. `Aluminum Roller Wheel` uses `M` = `ingotAluminum`,
+  `CraftingRecipes.kt:143-146`).
+  **Fix this session:** the prior handoff had miscomputed the id as `@582` (math error:
+  `6 + (69<<6)` is 4422, not 582). `:test` caught it at mod-boot (`no registry name for
+  eln:shared_item@4422`); entry moved to `eln:shared_item@4422` next to siblings, and all gates
+  re-passed.
+- **Arc Clay Block** — `ElnRegistry.ARC_CLAY_BLOCK` DeferredBlock + `BlockItem` in `ALL_ITEMS`
+  (registered before `registerShared`, after the ores loop); mapColor STONE, strength 1.5/6.0,
+  requiresCorrectToolForDrops, SoundType.STONE — exact vs source `block/ArcClayBlock.kt` (plain
+  cube block; no custom behavior).
+- Craft recipes (`ElnRecipes.recipeForkPatchArcClay`, source `CraftingRecipes.kt:1715-1716`):
+  shaped 3×3 Arc Clay Ingot → Arc Clay Block; shapeless Arc Clay Block → 9× Arc Clay Ingot.
+  No machine processing of arc clay exists in source (grep-verified).
+- Tags: ingot in `c:ingots/aluminum` (via both ore-name spellings); block in
+  `c:storage_blocks/aluminum` (`ElnItemTags`). Mineable: `minecraft:tags/block/mineable/pickaxe.json`.
+- Textures byte-identical to source: `assets/eln/textures/items/arcclayingot.png` (md5
+  `ec6f6f32eb70be6a81d3ac8b5b261288`), `assets/eln/textures/blocks/arc_clay_block.png` (md5
+  `4312e4ec13d25642acb83fb999572098`).
+- `src/main/resources/eln-ids.json`: `eln:shared_item@4422` = "Arc Clay Ingot" (kind
+  `shared_item`). JSON validated.
+- Generated (`src/generated/resources/`): blockstate, item/block/item models, 2 recipe JSONs +
+  2 advancements, `en_us.json` +3 lines, `c/tags/item/ingots/aluminum.json`,
+  `c/tags/item/storage_blocks/aluminum.json`, 4 `.cache`.
+- **Parity-restoration side effect (kept, analyzed):** with the tag no longer empty, 9 previously
+  disabled recipes + their advancements lost the `neoforge:not tag_empty c:ingots/aluminum`
+  advancement guard and are now ENABLED with `#c:ingots/aluminum` ingredients: `8kw_generator`,
+  `aluminum_roller_wheel`, `generator`, `grid_dc_dc_converter_2`, `grid_dc_dc_converter_3`,
+  `lp_steam_turbine`, `lp_steam_turbine_3`, `steam_turbine`, `steam_turbine_3`, `utility_pole`.
+  In source these recipes are active because `ingotAluminum` = Arc Clay Ingot — so this is parity
+  restoration, not a regression.
+- **Cosmetic artifact (documented, left as-is):** `data/c/tags/item/ingots.json` lists
+  `#c:ingots/aluminum` twice because both ore-name spellings (`ingotAluminum`, `ingotAluminium`)
+  resolve to the same tag via `OreDictTags`. Harmless (Minecraft dedupes tag members); removing
+  it would require changing the shared ore-tag linking logic for a purely cosmetic output.
+
+### Verification (by level)
+- **[Implemented]** code + textures + `eln-ids.json` as above.
+- **[Compilation verified]** `./gradlew :compileJava` BUILD SUCCESSFUL.
+- **[Automated tests passed]** `./gradlew :test`: 708 tests / 0 fail / 0 err / 3 pre-existing
+  skips (== baseline; log /tmp/eln-arcclay-test.log).
+- **[Datagen idempotent]** `./gradlew runClientData` run 1 wrote the expected files (list above);
+  run 2: `HashCache Caching: total files: 4052, old count: 4052, new count: 4052, removed stale:
+  0, written: 0` (idempotent); `git status src/generated` unchanged between runs.
+- **[Automated GameTest]** `./gradlew runGameTestServer`: **1552 tests running**, "2 required
+  tests failed :(" = exactly the 2 HISTORICAL golden fails (`eln:golden_descriptors` +
+  `eln:golden_slots`); no new failures; goldens NOT weakened (log /tmp/gametest-arcclay.log).
+- **[Live registration verified — NOT gameplay]** live MC 26.3 dev server via mctest RCON:
+  `summon minecraft:item 0 100 0 {Item:{id:"eln:arc_clay_ingot",count:1b}}` → "Summoned new Arc
+  Clay Ingot"; `summon ... eln:arc_clay_block` → "Summoned new Arc Clay Block";
+  `setblock 0 100 0 eln:arc_clay_block` → "Changed the block at 0, 100, 0"; control `eln:bogus` →
+  "Summoned new Air". Server stopped, no lingering JVM.
+- **[NOT achieved — honestly labeled]** live gameplay verification: both are plain materials with
+  no in-circuit behavior; max achievable level = live registration verified.
+
+### Remaining limitations
+- No player-joined in-world craft + inspect — client-join blocked in this environment; server-side
+  RCON oracle works.
+- Cosmetic duplicate `#c:ingots/aluminum` member in `c/tags/item/ingots.json` (documented above).
+
+### Known blockers
+- None for these two items.
+
+### Commit reference
+- Local commit for this session (NO push): new commit on top of `ca498620` (motor_cowling;
+  branch `port/forkpatch-3.0.77-26.3`), subject `Port arc_clay_ingot and arc_clay_block from
+  ForkPatch 1.21.1`; inspect with `git log --oneline -1`. The external queue script handles
+  pushing.

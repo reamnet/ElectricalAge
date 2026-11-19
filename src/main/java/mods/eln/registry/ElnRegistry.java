@@ -69,6 +69,10 @@ public final class ElnRegistry {
     public static final DeferredBlock<GhostBlock> GHOST_BLOCK = BLOCKS.registerBlock("ghost_block", GhostBlock::new,
         p -> p.mapColor(MapColor.METAL).strength(0.5f).noOcclusion().noLootTable());
 
+    /** ForkPatch 1.21.1 ArcClayBlock (source block/ArcClayBlock.kt): the arc furnace's aluminium product block. */
+    public static final DeferredBlock<net.minecraft.world.level.block.Block> ARC_CLAY_BLOCK = BLOCKS.registerBlock("arc_clay_block", net.minecraft.world.level.block.Block::new,
+        p -> p.mapColor(MapColor.STONE).strength(1.5f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
+
     /** Lamp/turret/teleporter light (1.12 LightBlock): level in META, no shape, no drops, replaceable. */
     public static final DeferredBlock<mods.eln.sixnode.lampsocket.LightBlock> LIGHT_BLOCK = BLOCKS.registerBlock("light_block",
         mods.eln.sixnode.lampsocket.LightBlock::new,
@@ -354,6 +358,8 @@ public final class ElnRegistry {
                 return item;
             }));
         }
+        // ForkPatch 1.21.1 ArcClayBlock's item (source creative tab "ores & materials"; the target's single EA tab)
+        ALL_ITEMS.add(ITEMS.registerItem("arc_clay_block", p -> new net.minecraft.world.item.BlockItem(ARC_CLAY_BLOCK.get(), p)));
         registerShared(Eln.sharedItem, "eln:shared_item", 64);
         registerShared(Eln.sharedItemStackOne, "eln:shared_item_stack_one", 1);
         // 1.12 itemCreativeTab: an item only to be the tab's icon (texture elncreativetab), not listed in the tab

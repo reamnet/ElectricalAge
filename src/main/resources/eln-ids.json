@@ -329,6 +329,12 @@
   "kind": "shared_item",
   "name": "4x_graphite_rods"
  },
+ "eln:shared_item@4422": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Arc Clay Ingot",
+  "kind": "shared_item",
+  "name": "arc_clay_ingot"
+ },
  "eln:shared_item@448": {
   "descriptor": "FerromagneticCoreDescriptor",
   "display": "Cheap Ferromagnetic Core",

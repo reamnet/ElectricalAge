@@ -72,6 +72,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeForkPatchStandby", ElnRecipes::recipeForkPatchStandby);
         run("recipeForkPatchUps", ElnRecipes::recipeForkPatchUps);
         run("recipeForkPatchGraphite", ElnRecipes::recipeForkPatchGraphite);
+        run("recipeForkPatchArcClay", ElnRecipes::recipeForkPatchArcClay);
         run("recipeThermalDissipatorPassiveAndActive", ElnRecipes::recipeThermalDissipatorPassiveAndActive);
         run("recipeElectricalAntenna", ElnRecipes::recipeElectricalAntenna);
         run("recipeEggIncubator", ElnRecipes::recipeEggIncubator);
@@ -1423,6 +1424,13 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("Graphite Rod"), findItemStack("Graphite Rod"));
         addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("2x Graphite Rods"), findItemStack("2x Graphite Rods"));
         addShapelessRecipe(findItemStack("4x Graphite Rods"), findItemStack("3x Graphite Rods"), findItemStack("Graphite Rod"));
+    }
+
+    /** ForkPatch 1.21.1 CraftingRecipes.kt:1715-1716 (misc): 3x3 Arc Clay Ingot -> Arc Clay Block; block -> 9 ingots.
+     * No machine processing of arc clay in source (grep-verified). */
+    public static void recipeForkPatchArcClay() {
+        addRecipe(stack(mods.eln.registry.ElnRegistry.ARC_CLAY_BLOCK.get()), "III", "III", "III", 'I', findItemStack("Arc Clay Ingot"));
+        addShapelessRecipe(findItemStack("Arc Clay Ingot", 9), stack(mods.eln.registry.ElnRegistry.ARC_CLAY_BLOCK.get()));
     }
 
     public static void recipeSolarPanel() {

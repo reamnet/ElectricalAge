@@ -15,13 +15,6 @@
       "type": "neoforge:not",
       "value": {
         "type": "neoforge:tag_empty",
-        "tag": "c:ingots/aluminum"
-      }
-    },
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "neoforge:tag_empty",
         "tag": "c:storage_blocks/iron"
       }
     }
