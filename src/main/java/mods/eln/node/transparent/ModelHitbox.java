@@ -20,11 +20,45 @@ import java.util.Map;
  * render turns the model (Direction.glRotateXnRef) and cached per front.
  */
 public final class ModelHitbox {
-    private final List<double[]> boxes;
-    private final Map<Direction, VoxelShape> shapes = new EnumMap<>(Direction.class);
+    private final List<double[]> boxes, collisionBoxes;
+    private final Map<Direction, VoxelShape> shapes = new EnumMap<>(Direction.class), collisions = new EnumMap<>(Direction.class);
 
-    private ModelHitbox(List<double[]> boxes) {
+    private ModelHitbox(List<double[]> boxes, List<double[]> collisionBoxes) {
         this.boxes = boxes;
+        this.collisionBoxes = collisionBoxes;
+    }
+
+    /**
+     * From a model's triangles (block units, front XN, the block's corner at the origin): the outline on the fine grid
+     * and the collision on the coarse one, gaps closed (ModelShape; Baughn 2026-11-04, collision choice A); null if
+     * nothing of it is in the block.
+     */
+    public static ModelHitbox computed(List<double[]> triangles) {
+        return computedParts(List.of(triangles));
+    }
+
+    /** The same from a model's parts, each tested on its own for an inside (ModelShape). */
+    public static ModelHitbox computedParts(List<List<double[]>> parts) {
+        List<double[]> outline = mods.eln.misc.ModelShape.outlineOfParts(parts);
+        if (outline.isEmpty()) return null;
+        return new ModelHitbox(outline, mods.eln.misc.ModelShape.collisionOfParts(parts));
+    }
+
+    /**
+     * Both: a model's hand-written hitbox (drawn generously on purpose, a shaft part clickable along its whole length)
+     * with its computed one (which holds what the hand boxes missed). Either may be null.
+     */
+    public static ModelHitbox union(ModelHitbox hand, ModelHitbox computed) {
+        if (hand == null || computed == null) return hand == null ? computed : hand;
+        List<double[]> outline = new ArrayList<>(hand.boxes), collision = new ArrayList<>(hand.collisionBoxes);
+        outline.addAll(computed.boxes);
+        collision.addAll(computed.collisionBoxes);
+        return new ModelHitbox(outline, collision);
+    }
+
+    /** Its outline boxes (block units, front XN). */
+    public List<double[]> boxes() {
+        return boxes;
     }
 
     /** The model's hitbox, or null (no .hitbox file, or no model). */
@@ -42,35 +76,52 @@ public final class ModelHitbox {
                 for (int i = 0; i < 6; i++) b[i] = Double.parseDouble(w[i]) / 16.0;
                 boxes.add(b);
             }
-            return boxes.isEmpty() ? null : new ModelHitbox(boxes);
+            return boxes.isEmpty() ? null : new ModelHitbox(boxes, boxes);
         } catch (Exception e) {
             return null;
         }
     }
 
-    /** Its boxes turned onto FRONT (block coordinates 0..1). */
+    /** Its outline turned onto FRONT (block coordinates 0..1). */
     public synchronized VoxelShape shape(Direction front) {
-        return shapes.computeIfAbsent(front, f -> {
-            VoxelShape s = Shapes.empty();
-            for (double[] b : boxes) {
-                double[] r = turned(b, f);
-                s = Shapes.or(s, Shapes.box(r[0], r[1], r[2], r[3], r[4], r[5]));
-            }
-            return s.optimize();
-        });
+        return shapes.computeIfAbsent(front, f -> turnedShape(boxes, f));
     }
 
-    /** A box (0..1, front XN) turned as glRotateXnRef turns the model about the block's centre line: XP 180 degrees about
-     *  y, ZP 90, ZN 270 ((x, z) -> (z, -x) for 90, centred). Vertical fronts aren't turned (shaft parts face sideways). */
-    static double[] turned(double[] b, Direction f) {
-        double x0 = b[0] - 0.5, x1 = b[3] - 0.5, z0 = b[2] - 0.5, z1 = b[5] - 0.5;
-        double nx0, nx1, nz0, nz1;
-        switch (f) {
-            case XP -> { nx0 = -x1; nx1 = -x0; nz0 = -z1; nz1 = -z0; }
-            case ZP -> { nx0 = z0; nx1 = z1; nz0 = -x1; nz1 = -x0; }
-            case ZN -> { nx0 = -z1; nx1 = -z0; nz0 = x0; nz1 = x1; }
-            default -> { nx0 = x0; nx1 = x1; nz0 = z0; nz1 = z1; }
+    /** Its collision turned onto FRONT (the outline's, for a hand-written hitbox). */
+    public synchronized VoxelShape collision(Direction front) {
+        return collisions.computeIfAbsent(front, f -> turnedShape(collisionBoxes, f));
+    }
+
+    static VoxelShape turnedShape(List<double[]> boxes, Direction f) {
+        VoxelShape s = Shapes.empty();
+        for (double[] b : boxes) {
+            double[] r = turned(b, f);
+            s = Shapes.or(s, Shapes.box(r[0], r[1], r[2], r[3], r[4], r[5]));
         }
-        return new double[]{nx0 + 0.5, b[1], nz0 + 0.5, nx1 + 0.5, b[4], nz1 + 0.5};
+        return s.optimize();
+    }
+
+    /**
+     * A box (0..1, front XN) turned as glRotateXnRef turns the model about the block's centre: XP 180 degrees about y,
+     * ZP 90 ((x, z) -> (z, -x)), ZN 270, YP -90 about z ((x, y) -> (y, -x)), YN 90 about z after a (1, -1, -1) scale
+     * ((x, y, z) -> (y, x, -z)). Up and down fronts were left unturned before (a device facing up, such as an antenna,
+     * got its sideways box).
+     */
+    static double[] turned(double[] b, Direction f) {
+        double[] p = turnedPoint(b[0] - 0.5, b[1] - 0.5, b[2] - 0.5, f), q = turnedPoint(b[3] - 0.5, b[4] - 0.5, b[5] - 0.5, f);
+        return new double[]{Math.min(p[0], q[0]) + 0.5, Math.min(p[1], q[1]) + 0.5, Math.min(p[2], q[2]) + 0.5,
+            Math.max(p[0], q[0]) + 0.5, Math.max(p[1], q[1]) + 0.5, Math.max(p[2], q[2]) + 0.5};
+    }
+
+    /** A point about the block's centre turned as glRotateXnRef turns the model (see turned). */
+    public static double[] turnedPoint(double x, double y, double z, Direction f) {
+        return switch (f) {
+            case XP -> new double[]{-x, y, -z};
+            case ZP -> new double[]{z, y, -x};
+            case ZN -> new double[]{-z, y, x};
+            case YP -> new double[]{y, -x, z};
+            case YN -> new double[]{y, x, -z};
+            default -> new double[]{x, y, z};
+        };
     }
 }

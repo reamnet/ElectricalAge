@@ -107,7 +107,11 @@ public class GhostBlock extends Block {
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
         // a kit routes to a machine's port on its ghost (the Auto Miner's power: Baughn, a click there opened its screen)
-        if (stack.getItem() instanceof mods.eln.node.voxel.PipeTool) return InteractionResult.PASS;
+        // (but a utility pole, on its ghosts too, is strung with a cable kit: Baughn 2026-11-07)
+        if (stack.getItem() instanceof mods.eln.node.voxel.PipeTool && !(stack.getItem() instanceof mods.eln.node.voxel.CableKitItem
+            && !level.isClientSide() && getElement(level, pos) instanceof GhostElement g
+            && mods.eln.gridnode.GridLink.getElementFromCoordinate(g.getObservatorCoordonate()) != null))
+            return InteractionResult.PASS;
         return activate(level, pos, player, hit);
     }
 
@@ -132,6 +136,18 @@ public class GhostBlock extends Block {
         if (g == null) return ItemStack.EMPTY;
         var n = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(g.getObservatorCoordonate());
         return n instanceof mods.eln.node.Node node ? node.pickItem(null, level) : ItemStack.EMPTY;
+    }
+
+    /**
+     * The machine a ghost cell at pos belongs to, on the server: its transparent node's element, or null (Jade shows its
+     * lines on every cell of a multiblock, not "Electrical Age Multiblock Part").
+     */
+    public static mods.eln.node.transparent.TransparentNodeElement owner(Level world, BlockPos pos) {
+        if (Eln.ghostManager == null || world.isClientSide()) return null;
+        GhostElement g = Eln.ghostManager.getGhost(new Coordonate(pos, world));
+        if (g == null) return null;
+        var n = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(g.getObservatorCoordonate());
+        return n instanceof mods.eln.node.transparent.TransparentNode t ? t.element : null;
     }
 
     GhostElement getElement(Level world, BlockPos pos) {

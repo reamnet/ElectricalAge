@@ -69,15 +69,16 @@ public class TransparentNodeBlock extends NodeBlock implements net.minecraft.wor
         return shape;
     }
 
-    /** Its descriptor's native shape turned to the device's front (read from the block entity, as SixNodeBlock reads its faces),
-     *  if it has one and the front is known; else shape(). */
+    /** Its model's hitbox turned to the device's front (read from the block entity, as SixNodeBlock reads its faces),
+     *  if it has one; else shape(). */
     net.minecraft.world.phys.shapes.VoxelShape shape(net.minecraft.world.level.BlockGetter level, BlockPos pos) {
-        if (descriptor.hasOrientedShape() && level.getBlockEntity(pos) instanceof TransparentNodeEntity e) {
-            mods.eln.misc.Direction front = e.front();
-            if (front != null) {
-                var oriented = descriptor.orientedShape(front);
-                if (oriented != null) return oriented;
-            }
+        // (a device without a front, or before the client knows it, takes its model's own: front XN. The small solar
+        // panel fell back to its old half-block box: AdventurAgent)
+        if (level.getBlockEntity(pos) instanceof TransparentNodeEntity e) {
+            var at = descriptor.shapeAt(e, false);
+            if (at != null) return at;
+            var oriented = descriptor.orientedShape(frontOr(e));
+            if (oriented != null) return oriented;
         }
         return shape();
     }
@@ -88,10 +89,24 @@ public class TransparentNodeBlock extends NodeBlock implements net.minecraft.wor
         return shape(level, pos);
     }
 
+    /** Its collision: its model hitbox's (coarser, gaps closed: Baughn 2026-11-04, choice A), else shape(). */
     @Override
     protected net.minecraft.world.phys.shapes.VoxelShape getCollisionShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos,
                                                                             net.minecraft.world.phys.shapes.CollisionContext context) {
-        return shape(level, pos);
+        ModelHitbox h = descriptor.modelHitbox();
+        if (level.getBlockEntity(pos) instanceof TransparentNodeEntity e) {
+            var at = descriptor.shapeAt(e, true);
+            if (at != null) return at;
+            var oriented = descriptor.orientedShape(frontOr(e));
+            if (h != null && oriented == h.shape(frontOr(e))) return h.collision(frontOr(e));
+            if (oriented != null) return oriented;
+        }
+        return shape();
+    }
+
+    static mods.eln.misc.Direction frontOr(TransparentNodeEntity e) {
+        mods.eln.misc.Direction f = e.front();
+        return f == null ? mods.eln.misc.Direction.XN : f;
     }
 
     @Override

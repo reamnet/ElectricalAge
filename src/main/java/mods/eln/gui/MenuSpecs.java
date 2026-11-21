@@ -32,6 +32,13 @@ public final class MenuSpecs {
     }
 
     /** The menu of a device descriptor (the closest registered class), or SCREEN_ONLY. Called on both sides. */
+    /**
+     * A converter's winding slot takes a winding only: made by a wire-drawing machine, or wound by hand (Baughn
+     * 2026-11-08: cables and kits no longer go in, but those already in a slot stay and still count, a turn a cable item
+     * or a block of kit).
+     */
+    static final java.util.function.Predicate<net.minecraft.world.item.ItemStack> WINDING_OR_CABLE = mods.eln.node.voxel.WindingItem::is;
+
     public static MenuSpec of(Object descriptor) {
         for (Class<?> c = descriptor.getClass(); c != null; c = c.getSuperclass()) {
             Function<Object, MenuSpec> f = BY_DESCRIPTOR.get(c);
@@ -52,18 +59,19 @@ public final class MenuSpecs {
 
     static final Class<?>[] CABLE = {ElectricalCableDescriptor.class};
 
+    /** An electrical cable: a 1.12 cable item, or a cable kit (Baughn 2026-11-07: kits replace the items), whose spec counts. */
     static SlotSpec cableSlot(int id, int x, int y, int limit) {
-        return six(id, x, y, limit, CABLE, MEDIUM, tr("Electrical cable slot"));
+        return SlotSpec.cablePiece(id, x, y, mods.eln.node.voxel.CableItems::isElectrical, MEDIUM, tr("Electrical cable slot: a cable kit (takes a block of it)"));
     }
 
     static {
         // ---- six-node devices
         // Baughn 2026-10-17: no more "a piece of cable in the GUI before it works" (notes/port26/cable-slots.md). The
         // ground cable, energy meters, electrical/voltage probes, thermal probe and lamp sockets lost their cable slot
-        // (built-in cable); the ground cable lost its GUI. Kept: breaker (trip rating), hub (which sides), transformer
+        // (built-in cable); the ground cable lost its GUI. Kept: hub (which sides), transformer
         // (turns); the lamp supply's and temperature probe's slots are optional (range, mode).
-        put(mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor.class, d -> MenuSpec.of(
-            cableSlot(0, 150, 21, 1)).panel(176, 140, 8, 58));
+        // the breaker lost its slot too (Baughn 2026-11-17: its trip current is set in its GUI)
+        put(mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor.class, d -> MenuSpec.of().panel(176, 140, 8, 58));
         put(mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerDescriptor.class, d -> MenuSpec.of(
             filter(mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerContainer.paperSlotId, 176 / 2 - 44, 125, 64,
                 item(Items.PAPER), MEDIUM, "Paper Slot"),
@@ -75,7 +83,9 @@ public final class MenuSpecs {
         put(mods.eln.sixnode.electricalmath.ElectricalMathDescriptor.class, d -> MenuSpec.of(
             // (the editor screen, board #45: ElectricalMathScreen's sizes)
             filter(mods.eln.sixnode.electricalmath.ElectricalMathContainer.restoneSlotId, 41, 202, 64,
-                mods.eln.sixnode.electricalmath.ElectricalMathElement::isChip, MEDIUM, tr("Chip slot: cheap chips, or advanced chips (8 cheap chips each)"))).panel(466, 266, 132, 188));
+                mods.eln.sixnode.electricalmath.ElectricalMathElement::isChip, MEDIUM, tr("Chip slot: cheap chips, or advanced chips (8 cheap chips each)"))).panel(
+                mods.eln.sixnode.electricalmath.ElectricalMathScreen.WIDTH, mods.eln.sixnode.electricalmath.ElectricalMathScreen.HEIGHT,
+                mods.eln.sixnode.electricalmath.ElectricalMathScreen.INV_X, mods.eln.sixnode.electricalmath.ElectricalMathScreen.INV_Y));
         put(mods.eln.sixnode.electricalsensor.ElectricalSensorDescriptor.class, d -> MenuSpec.of()
             .panel(176, d.voltageOnly ? 121 : 166, 8, d.voltageOnly ? 39 : 84));
         put(mods.eln.sixnode.electricalwatch.ElectricalWatchDescriptor.class, d -> MenuSpec.of(
@@ -91,8 +101,8 @@ public final class MenuSpecs {
         put(mods.eln.sixnode.lampsocket.LampSocketDescriptor.class, d -> MenuSpec.of(
             lamp(mods.eln.sixnode.lampsocket.LampSocketContainer.lampSlotId, 70, 57, 1, d.socketType)));
         put(mods.eln.sixnode.lampsupply.LampSupplyDescriptor.class, d -> MenuSpec.of(
-            six(0, 184, 144, 64, CABLE, MEDIUM,
-                tr("Electrical cable slot (optional)\nBase range is 32 blocks.\nEach cable\nincreases range by one.").split("\n"))).panel(220, 205, 8, 125));
+            filter(0, 184, 144, 64, mods.eln.node.voxel.CableItems::isElectrical, MEDIUM,
+                tr("Cable kit slot (optional)\nBase range is 32 blocks.\nEach block of cable\nincreases range by one.").split("\n"))).panel(220, 205, 8, 125));
         put(mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixDescriptor.class, d -> MenuSpec.of(
             filter(mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixContainer.redId, 132, 8, 13, item(Items.REDSTONE), MEDIUM,
                 tr("Redstone slot"), tr("(Increases capacity)")),
@@ -109,8 +119,8 @@ public final class MenuSpecs {
         put(mods.eln.sixnode.resistor.ResistorDescriptor.class, d -> resistor());
         // the thermal probe: built-in Copper Thermal Cable; the temperature probe: an optional mode slot
         put(mods.eln.sixnode.thermalsensor.ThermalSensorDescriptor.class, d -> d.temperatureOnly ? MenuSpec.of(
-            six(0, 152, 62, 1, new Class<?>[]{ThermalCableDescriptor.class, ElectricalCableDescriptor.class}, MEDIUM,
-                tr("Cable slot (optional)"), tr("Empty: on electrical cables"), tr("Thermal cable: on thermal cables")))
+            SlotSpec.cablePiece(0, 152, 62, s -> mods.eln.node.voxel.CableItems.isElectrical(s) || mods.eln.node.voxel.CableItems.isThermal(s), MEDIUM,
+                tr("Cable slot (optional)"), tr("Empty: on electrical cables"), tr("Thermal cable kit: on thermal cables")))
             : MenuSpec.of());
         put(mods.eln.sixnode.batterycharger.BatteryChargerDescriptor.class, d -> MenuSpec.of(
             battery(0, 26 - 18 + 0, 6 + 0),
@@ -118,7 +128,7 @@ public final class MenuSpecs {
             battery(2, 26 - 18 + 0, 6 + 18),
             battery(3, 26 - 18 + 18, 6 + 18),
             descriptor(mods.eln.sixnode.batterycharger.BatteryChargerContainer.boosterSlotId, 80 - 18, 6 + 18 / 2, 5,
-                MachineBoosterDescriptor.class, MEDIUM, tr("Booster slot"))).panel(176, 126, 8, 44).wearing(4, 98, 6));
+                MachineBoosterDescriptor.class, MEDIUM, tr("Booster slot"))).panel(176, 126, 8, 44).wearing(8, 98, 6).withArmor());
         put(mods.eln.sixnode.electricalfiredetector.ElectricalFireDetectorDescriptor.class, d -> d.batteryPowered ? MenuSpec.of(
             descriptor(0, 184 / 2 - 12, 8, 1, BatteryItem.class, MEDIUM, tr("Portable battery slot"))) : MenuSpec.SCREEN_ONLY);
 
@@ -198,7 +208,8 @@ public final class MenuSpecs {
         // P4b layout (ElectricalFurnaceScreen): input -> arrow -> output, heater and regulator to the right
         put(mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceDescriptor.class, d -> MenuSpec.of(
             SlotSpec.output(mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceElement.outSlotId, 86, 25, BIG),
-            SlotSpec.smeltable(mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceElement.inSlotId, 28, 25, MEDIUM, tr("Input")),
+            SlotSpec.smeltable(mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceElement.inSlotId, 28, 25,
+                s -> mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess.treatmentFor(s) != null, MEDIUM, tr("Input")),   // (heat treatments: laminations, rubber compound)
             descriptor(2, 130, 25, 1, HeatingCorpElement.class, MEDIUM, tr("Heating element slot")),
             descriptor(3, 80 + 18, -2000, 1, ThermalIsolatorElement.class, MEDIUM, tr("Thermal isolator slot")),
             regulator(4, 150, 25, 1, new RegulatorType[]{RegulatorType.OnOff, RegulatorType.Analog}, MEDIUM,
@@ -208,6 +219,43 @@ public final class MenuSpecs {
             SlotSpec.filter(mods.eln.anvil.ElectricalAnvilElement.TOOL, 28, 25, 1, s -> s.isDamageableItem() || s.getMaxStackSize() == 1, BIG, tr("Tool")),
             SlotSpec.filter(mods.eln.anvil.ElectricalAnvilElement.MATERIAL, 86, 25, 64, mods.eln.anvil.ElectricalAnvilElement::materialMayGo, MEDIUM,
                 tr("Repair material"))).publishing(1).inventoryAt(150));
+        // the utility pole (Baughn 2026-11-08): its transformer, stasis anchor and streetlights (north, east, south, west)
+        put(mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor.class, d -> {
+            java.util.List<SlotSpec> slots = new java.util.ArrayList<>();
+            slots.add(SlotSpec.filter(mods.eln.gridnode.electricalpole.ElectricalPoleElement.TRANSFORMER, 8, 25, 1,
+                s -> mods.eln.gridnode.electricalpole.PoleInventory.fits(mods.eln.gridnode.electricalpole.ElectricalPoleElement.TRANSFORMER, s), MEDIUM, tr("Pole transformer")));
+            slots.add(SlotSpec.filter(mods.eln.gridnode.electricalpole.ElectricalPoleElement.ANCHOR, 26, 25, 1,
+                s -> mods.eln.gridnode.electricalpole.PoleInventory.fits(mods.eln.gridnode.electricalpole.ElectricalPoleElement.ANCHOR, s), MEDIUM, tr("Stasis anchor")));
+            String[] sides = {tr("Streetlight facing north"), tr("Streetlight facing east"), tr("Streetlight facing south"), tr("Streetlight facing west")};
+            for (int k = 0; k < 4; k++) {
+                int slot = mods.eln.gridnode.electricalpole.ElectricalPoleElement.LAMP0 + k;
+                slots.add(SlotSpec.filter(slot, 50 + 18 * k, 25, 1, s -> mods.eln.gridnode.electricalpole.PoleInventory.fits(slot, s), MEDIUM, sides[k]));
+            }
+            return MenuSpec.of(slots.toArray(new SlotSpec[0])).publishing(1).inventoryAt(120);
+        });
+        // the wire-drawing machines (Baughn 2026-11-06, Wires stage 4): copper, rubber, the kit or winding
+        put(mods.eln.transparentnode.wiredrawing.WireDrawingDescriptor.class, d -> MenuSpec.of(
+            SlotSpec.filter(mods.eln.transparentnode.wiredrawing.WireDrawingElement.COPPER, 8, 25, 64,
+                mods.eln.transparentnode.wiredrawing.WireDrawingElement::isCopper, MEDIUM, tr("Copper: ingots or dust")),
+            SlotSpec.filter(mods.eln.transparentnode.wiredrawing.WireDrawingElement.RUBBER, 26, 25, 64,
+                mods.eln.transparentnode.wiredrawing.WireDrawingElement::isRubber, MEDIUM, tr("Rubber")),
+            SlotSpec.output(mods.eln.transparentnode.wiredrawing.WireDrawingElement.OUT, 86, 25, BIG),
+            SlotSpec.filter(mods.eln.transparentnode.wiredrawing.WireDrawingElement.CORE, 44, 25, 64,
+                mods.eln.transparentnode.wiredrawing.WireDrawingElement::isCore, MEDIUM, tr("Ferromagnetic core: for pole transformers"))).publishing(1).inventoryAt(200));
+        // the robotics computer (Baughn 2026-11-05): 8 chip slots of 1 MB under its terminal, then floppy drives A and B
+        put(mods.eln.robotics.computer.ComputerDescriptor.class, d -> {
+            java.util.List<SlotSpec> slots = new java.util.ArrayList<>();
+            int y = mods.eln.robotics.computer.ComputerScreen.SLOTS_Y;
+            for (int k = 0; k < mods.eln.robotics.computer.ComputerElement.CHIP_SLOTS; k++)
+                slots.add(SlotSpec.filter(k, 9 + 18 * k, y, 1, mods.eln.robotics.computer.ComputerElement::chipMayGo, MEDIUM,
+                    k == 0 ? tr("Chip slot 1: the computer starts here (a ROM)") : tr("Chip slot %1$: RAM or ROM", k + 1)));
+            for (int k = 0; k < 2; k++)
+                slots.add(SlotSpec.filter(mods.eln.robotics.computer.ComputerElement.DRIVE_A + k, 9 + 18 * 8 + 14 + 18 * k, y, 1,
+                    mods.eln.robotics.computer.ComputerElement::floppyMayGo, MEDIUM, k == 0 ? tr("Drive A") : tr("Drive B")));
+            return MenuSpec.of(slots.toArray(new SlotSpec[0])).panel(mods.eln.robotics.computer.ComputerScreen.WIDTH,
+                mods.eln.robotics.computer.ComputerScreen.HEIGHT, mods.eln.robotics.computer.ComputerScreen.INV_X,
+                mods.eln.robotics.computer.ComputerScreen.INV_Y);
+        });
         put(mods.eln.oil.SteamOvenDescriptor.class, d -> MenuSpec.of(
             SlotSpec.output(mods.eln.oil.SteamOvenElement.outSlotId, 86, 25, BIG),
             SlotSpec.smeltable(mods.eln.oil.SteamOvenElement.inSlotId, 28, 25, MEDIUM, tr("Input"))).publishing(1).inventoryAt(122));
@@ -264,10 +312,11 @@ public final class MenuSpecs {
             descriptor(2, 64, 158, 1, FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot")),
             descriptor(3, 88, 158, 1, CaseItemDescriptor.class, MEDIUM, tr("Casing slot"))).panel(368, 294, 8, 210));
         put(mods.eln.transparentnode.transformer.TransformerDescriptor.class, d -> MenuSpec.of(
-            six(mods.eln.transparentnode.transformer.TransformerContainer.primaryCableSlotId, 58, 30, 4, CABLE, MEDIUM,
-                tr("Electrical cable slot")),
-            six(mods.eln.transparentnode.transformer.TransformerContainer.secondaryCableSlotId, 100, 30, 4, CABLE, MEDIUM,
-                tr("Electrical cable slot")),
+            // up to 64 turns a side (Baughn 2026-11-06; 1.12: 4), one cable a turn; or one machine-made winding
+            SlotSpec.filter(mods.eln.transparentnode.transformer.TransformerContainer.primaryCableSlotId, 58, 30, 64, WINDING_OR_CABLE, MEDIUM,
+                tr("Winding slot: a winding (from a wire-drawing machine,"), tr("or wound by hand from Copper Cable and rubber or leather)")),
+            SlotSpec.filter(mods.eln.transparentnode.transformer.TransformerContainer.secondaryCableSlotId, 100, 30, 64, WINDING_OR_CABLE, MEDIUM,
+                tr("Winding slot: a winding (from a wire-drawing machine,"), tr("or wound by hand from Copper Cable and rubber or leather)")),
             descriptor(mods.eln.transparentnode.transformer.TransformerContainer.ferromagneticSlotId, 58 + (100 - 58) / 2, 30, 1,
                 FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot")),
             descriptor(mods.eln.transparentnode.transformer.TransformerContainer.CasingSlotId, 130, 74, 1, CaseItemDescriptor.class,

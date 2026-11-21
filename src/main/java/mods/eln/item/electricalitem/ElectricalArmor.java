@@ -50,17 +50,34 @@ public class ElectricalArmor extends Item implements IItemEnergyBattery {
 
     private static final EquipmentSlot[] ARMOR = {EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD};
 
+    /**
+     * Registers the absorption as a modifier of the armour step, so it runs inside actuallyHurt: after the hit cooldown.
+     * Done in LivingIncomingDamageEvent itself it ran before the cooldown check, so the armour paid for every hit that
+     * i-frames then threw away: on a magma block (a hit every tick) a 240 kJ Stasis E-Coal set emptied in ~8 s (nero,
+     * Baughn 2026-11-10: "Move it to after i-frames. That's just a bug."). The order against Protection is unchanged.
+     */
     public static void onIncomingDamage(LivingIncomingDamageEvent event) {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide() || event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) return;
+        for (EquipmentSlot slot : ARMOR)
+            if (entity.getItemBySlot(slot).getItem() instanceof ElectricalArmor) {
+                event.getContainer().addModifier(net.neoforged.neoforge.common.damagesource.DamageContainer.Reduction.ARMOR,
+                    (container, reduction) -> reduction + absorb(entity, container.getNewDamage() - reduction));
+                return;
+            }
+    }
+
+    /** Absorbs a share of {@code amount} with the worn pieces' energy and pays for it; returns the damage absorbed. */
+    static float absorb(LivingEntity entity, float amount) {
+        if (amount <= 0) return 0;
         double total = 0;
         double[] ratios = new double[ARMOR.length];
         for (int i = 0; i < ARMOR.length; i++) {
             ItemStack s = entity.getItemBySlot(ARMOR[i]);
             if (s.getItem() instanceof ElectricalArmor a) total += ratios[i] = a.absorbRatio(s);
         }
-        if (total <= 0) return;
-        double damage = event.getAmount() * 25.0;
+        if (total <= 0) return 0;
+        double damage = amount * 25.0;
         double scale = total > 1 ? 1 / total : 1;
         double left = damage;
         for (int i = 0; i < ARMOR.length; i++) {
@@ -73,7 +90,7 @@ public class ElectricalArmor extends Item implements IItemEnergyBattery {
                 left -= absorb;
             }
         }
-        event.setAmount((float) Math.max(0, left / 25.0));
+        return (float) Math.min(amount, (damage - Math.max(0, left)) / 25.0);
     }
 
     private CompoundTag nbt(ItemStack stack) {
@@ -121,6 +138,21 @@ public class ElectricalArmor extends Item implements IItemEnergyBattery {
 
     @Override
     public void electricalItemUpdate(ItemStack stack, double time) {
+    }
+
+    /** Stored energy and its share (nero 2026-11-10: the armour showed no charge when hovered in a charger). */
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, net.minecraft.world.item.component.TooltipDisplay display,
+                                java.util.function.Consumer<net.minecraft.network.chat.Component> out, net.minecraft.world.item.TooltipFlag flag) {
+        super.appendHoverText(stack, ctx, display, out, flag);
+        double e = getEnergy(stack);
+        out.accept(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Stored energy: %1$J (%2$%)",
+            mods.eln.misc.Utils.plotValue(e), (int) (e / energyStorage * 100))).withStyle(net.minecraft.ChatFormatting.GRAY));
+        // (nero: show its armour stats; it has no armour points, the stored energy absorbs a share of the damage)
+        out.accept(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Absorbs %1$% of damage now (up to %2$% charged)",
+            Math.round(absorbRatio(stack) * 100), Math.round(ratioMax * 100))).withStyle(net.minecraft.ChatFormatting.BLUE));
+        out.accept(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Each damage point absorbed costs %1$J",
+            mods.eln.misc.Utils.plotValue(energyPerDamage))).withStyle(net.minecraft.ChatFormatting.GRAY));
     }
 
     // R5: energy as the vanilla item bar (see ElnItem)

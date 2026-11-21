@@ -14,7 +14,7 @@ unless a path says otherwise. Fluid physics and the MNA itself: see simulation.m
 | `PipePart` / `ValvePart` / `SafetyValvePart` / `PipeSensorPart` / `AdapterPart` | both | Pipes and fittings (`PipeSensorPart`: a signal output joined to the block's signal cables, as a control valve's input; no longer made since 2026-11-02, loaded and working where fitted); `AdapterPart.tanks` is the fluid capability (capabilities.md) |
 | `CableNet` | server | Groups a node's cable pieces into `Conductor`s and builds their loads |
 | `CableRouter`, `PipeRouter` | server | A* routers, pure Java (world behind a `Space` interface) |
-| `CablePlacer`, `PipePlacer`, `KitPreview` | server | Kit UX: start, waypoints, finish; preview outlines sent as `Eln.packetKitPreview` |
+| `CablePlacer`, `PipePlacer`, `KitPreview` | server | Kit UX: start, waypoints, finish; preview outlines sent as `Eln.packetKitPreview`; a failed click's reason (no route, can't reach a waypoint, can't lay) as `Eln.packetRouteNote`, drawn by client `RouteNoteHud` above the action bar for 3 s, since the preview's length line takes the action bar at once (Baughn 2026-11-18, #521) |
 | `KitItem`, `KitRecipes`, `CableKitItem`, `PipeKitItem`, `CableKitRecipes`, `PipeKitRecipes` | both | Kits: length in custom data "kitLen" (1024 voxels max). One shared fill/unroll code for both kinds (`KitRecipes`): coils or plates into a kit, a lone kit back to one block of coil or plates, kits merge up to a full kit with the rest left in the grid |
 | `Mimic`, `ChiselItem`, `ChiselBrush` | server (`ChiselBrush`: both, pure) | Imitate passive decorative blocks (stairs, slabs, fences, walls, panes, bars, carpets); carve plain blocks (see Chisel) |
 | `CableConverter` | server | Six-node block -> voxel node and back |
@@ -59,6 +59,41 @@ transparent neighbour).
   each is an `End` of its own, offset voxels from the edge's middle toward `side.applyLRDU(lrdu.left())`, and that edge
   then has no middle point. In a plain six-node block such an element falls back to one connection an edge.
 
+### Stored links (routing phase 3a)
+
+Every part has an id unique in its block, never reused (`VoxelPart.id`, `VoxelNode.nextPartId`, assigned in
+`changed()` and after load). Every cable piece keeps joints (`CablePart.joints`, `CableLinks`): what each end (0, 1; a
+knuckle's port index) or its body (-1) connects to: CONT (the next piece, here or across a face; on both pieces), SPLICE
+(an end on another piece's line; on the branch), TERM_ELEMENT (a device in this or the neighbouring voxel block: slot,
+edge, terminal offset), TERM_NEIGHBOUR (a machine in a non-voxel neighbour: EA's edge rule, a bus peer, a face pin),
+TERM_FITTING (a valve's or pipe sensor's signal), TOUCH (bodies touching across a face). Networks are still built by
+the rules above; the joints are kept alongside:
+- **Implied** joints (flag `IMPLIED`): every rule that links a piece records one (`CableNet.build`, `connectElementsToCables`,
+  `connectPins`, valves and sensors, `connectVoxel`, `connectTouching`, `pinToCables`, `newConnectionAt`, bus peers,
+  `connectPeerPins`). `CableLinks.clearImplied` drops them at each `connectJob` (and the neighbours' into the block),
+  so they say what the network had; joints toward a block out of the simulation and burnt pieces' are kept.
+- **Editors' joints:** `Laying.lay` writes CONT/SPLICE between consecutive pieces of a route (`CableLinks.laid`; the
+  route's free ends stay implied); `removePart` drops joints pointing at the piece (`forgetPiece`), a block broken or
+  reverted drops all joints into it (`forget`); a device put on a cable hands the old piece's joints to the cut's pieces
+  (`CableLinks.cut`); a recolour keeps id and joints (`copyStateFrom`).
+- **Check:** `CableVerify` compares the joints' groups with the live conductors, and their links (electrical, thermal,
+  bus; conductor to anything) with the blocks' own link lists; it also counts blocks out of the simulation, blocks never
+  connected under stored links (`VoxelNode.linksRecorded`, NBT `lk`) and ends meeting a block out of the simulation with
+  no joint. `/elnlab links verify [r]` (report `eln-links.txt`), and the GameTest harness after every test
+  (`ElnGameTests.links`).
+- **Networks from joints (routing phase 3b, config `[cables] linksBuild`, default true):** `connectFromJoints` runs the
+  rules in record-only mode (`recordOnly`: joints, no simulator objects or flags); each joint they give is confirmed for
+  this connect (`CableLinks.pass`). Then the links are made from confirmed joints only: `CableNet.buildFromJoints`
+  (conductors = same-cable same-face pieces joined by same-block CONT/SPLICE; other same-block joints pair conductors,
+  one link per pair), `elementsFromJoints` (face elements' ends, off-centre pins), `fittingsFromJoints`,
+  `acrossFromJoints` (CONT one NodeConnection each, TERM_ELEMENT either side, pins across, TOUCH one per conductor pair).
+  Links that aren't a cable's (pin to pin, element to element across a face; `nonCableOnly`) and links to non-voxel
+  neighbours (`connectLegacy`: EA's edge rule, bus peers, face pins) stay rule-made. Editors' joints no rule gives now are
+  logged (`[eln links]`), not linked. `linksBuild = false` is `connectByRules` (3a). Implied joints are still recorded
+  afresh at every connect, so the network is the rules' (neutral); the "freeze" (joints persist, rules stop) is a later
+  step. `ElnGameTests.linksNeutral` reconnects every test's voxel blocks with the switch off and on and compares links and
+  connection flags (`gametest/LinksDiff`); `/elnlab links diff [r]` does the same on a world (`eln-links-diff.txt`).
+
 ## Devices off centre (chips)
 
 - A voxel block has `SixNode.SLOTS` element slots: 0..5 are the faces (a device centred on face f, as six-node blocks
@@ -69,10 +104,16 @@ transparent neighbour).
   rule: the model box (`SixNodeDescriptor.footprint()`, chips drawn at `CHIP_SCALE` 0.75: a case 6 voxels across) is
   clear, with a voxel of air all round, except where a pin touches a cable of a matching kind or meets another
   device's pin tip to tip.
+- A device that goes anywhere always goes off centre, a click in the middle of a free face too, and connects only at
+  its pins: no face slot, so no cable stubs drawn to the face's edges and no edge-rule link to a machine beside it
+  (Baughn 2026-11-18, #515: "I'd like all cables to be explicit"; a cable is laid to the machine). Devices placed
+  earlier in a face slot stay there and keep working as they were.
 - Ports are pins (`VoxelNode.pins`): a tip on the face plane at the model's edge, and a contact box just outside it.
   `connectPins` links a pin to every cable conductor whose boxes take its contact box, and to another device's pin
   that meets it. These devices draw no cable stubs to the block's edges. The cable kit ends at the nearest pin; routes
-  keep their usual clearance (`CableRouter.CLEARANCE`).
+  keep their usual clearance (`CableRouter.CLEARANCE`). In the block's outline (what the crosshair hits) each pin's box
+  is grown by `VoxelNodeEntity.PIN_AIM` (1 voxel), so a click just beside a pin still ends the kit there (Baughn
+  2026-11-18, #515); the drawn box, the highlight and the used voxels stay the pin's own.
 - A pin at the block's edge reaches the next voxel block (`connectPinsAcross`): a cable there taking its contact voxel,
   or a pin there tip to tip (a NodeConnection, dropped when either block disconnects).
 - A device whose model is not a square round its centre gives its model's bounds across the face
@@ -80,16 +121,18 @@ transparent neighbour).
   `drawPlaced`); its body then reaches toward each edge as far as the turned model, rounded up to an odd number of voxels
   (`bodyExtents`: with the centre on an even voxel, each pin's tip is on an even voxel, where the kit can end), and the
   grey pin boxes are drawn from the model's edge. Without bounds the body is a square of `bodyHalf`. Since the body and
-  pins follow the front, a wrench turn of a device off centre is refused where the turned device would not fit
-  (`VoxelNode.turnError`); a device whose pins are joined to cables turns to the next front at which pins of the same
-  kinds sit where those are, so a two-pin device in line turns straight round, or not at all (`VoxelNode.wrenchTurn`). Placing anywhere and its preview honour a device's allowed sides (`allowedOnSide`: the power
+  pins follow the front, a wrench turn of a device off centre skips fronts where the turned device would not fit
+  (`VoxelNode.turnError`) and goes to the next clockwise that does (Baughn 2026-11-18, #512); with none it stays and
+  says why. A device whose pins are joined to cables turns to the next front at which pins of the same kinds sit where
+  those are, so a two-pin device in line turns straight round, or not at all (`VoxelNode.wrenchTurn`). Placing anywhere and its preview honour a device's allowed sides (`allowedOnSide`: the power
   sockets and the anemometer, walls only).
 - Placed anywhere (Baughn): chips, the small sensors and sources of a0d38750, and the relays (drawn and measured at half
   scale), the four probes, the wireless receiver, transmitter and repeater, the Electrical Timer, the LED vuMeter, the
   Signal Switch with LED, the pipe sensor devices (see Pipe sensor devices), the power sockets, the Ground Cable, the Hub and the anemometer; the Energy Meter and Advanced Energy Meter (in line on a power run: its sign follows
   which way it faces), the Weak 50V, 50V and 200V Battery Chargers (four power pins, one load) and the Nuclear and
   Standard Alarms; the in-line passives (Baughn, batch 3: the 10A, 25A and Signal Diodes, Power Capacitor, Power
-  Inductor, Power Resistor, Rheostat, Thermistor and Electrical Fuse Holder). Their models run their base and leads edge
+  Inductor, Power Resistor, Rheostat, Thermistor and Electrical Fuse Holder), and the Electrical Breaker (Baughn
+  2026-11-17, drawn as the fuse holder). Their models run their base and leads edge
   to edge for the face slot, which is kept as it was; off centre the same model is drawn with the base and leads
   stretched by `SixNodeDescriptor.SHORT_LEADS` (6/8) along them so they end at the pins, 6 voxels from the centre, and
   the body is the core (`inlineBounds`). Their renders don't call `super.draw()`, so they call `drawPins()` themselves.
@@ -118,10 +161,18 @@ transparent neighbour).
   coloured by their cable: copper for thermal, pale for signal, dark grey for power.
 - Pins that change after placement (a Hub's with its slots, a Temperature Probe's back pin) are published when they
   change (`VoxelNode.pinsChanged`), and one that now lands on something is logged; links follow the kind as always.
-- `placeErrorAt` builds a stand-in element to read its pins and unloads it after (a Wireless Signal Repeater joins the
-  wireless spots as it is made; left there, its empty spot crashed the receivers' process).
+- `placeErrorAt` and `DevicePlacer.masks` build a stand-in element to read its pins and unload it after. Devices join
+  their static registries (wireless channels and spots, power socket channels) in `initialize`, which a stand-in never
+  gets: a Wireless Signal Repeater made here used to join the spots (its empty spot crashed the receivers' process),
+  and a Wireless Button left a phantom transmitter on "Default channel" for every probe the preview built.
+  `VoxelDeviceCases.ProbesLeaveNoTraceCase` checks every device that goes anywhere.
 - Holding such a device shows it see-through where a click would put it (`DevicePreview`, client
-  `DevicePreviewRender`, `GlFrame.ghost`), reddish where it may not go. A click on a device in a voxel block places on
+  `DevicePreviewRender`, `GlFrame.ghost`), reddish where it may not go. A press of the wrench key (C) with it in hand
+  turns it before it is placed (Baughn 2026-11-18, #513; `DevicePreview.wrenchPressed`, sent as the key's down state):
+  to the next front clockwise at which the preview shows another place it may go, as a wrench click on a placed device
+  skips fronts that don't fit; the turn is kept per player for that kind of device and applied by every placement path
+  (`DevicePreview.placeFront`, `SixNode.frontFor`, `DevicePlacer.plan`). Not while aiming at a device in a voxel block
+  or another EA block (C there is for turning it). A click on a device in a voxel block places on
   that device's face (`placeFace`).
 - `CableConverter.revert` refuses a block holding such devices.
 
@@ -140,7 +191,7 @@ transparent neighbour).
   laid a second pipe beside the first).
 - Its kind shows on the body's top: a coloured plate (pressure blue, temperature red, quality green) with a raised white
   letter P, T or Q for colourblind players. Jade's three headline lines: the reading, the output volts, the full scale.
-- Its own hidden items are out of the creative tab (`addWithoutRegistry`) and JEI (`ElnJeiPlugin.onRuntimeAvailable`).
+- Its own hidden items are out of the creative tab (`addWithoutRegistry`) and JEI (`compat/JeiPages.hidden`).
 - Its port is `PORT_HEIGHT` (4) voxels off the face over its centre (`PipeTransmitterElement.port`), clear of its
   2-voxel body. `PipePlacer.devicePort` makes it a routing end any way round (dir -1) when a pipe kit clicks the
   device, for a route's start and its finish (laid with `lay`; the piece ends capped at the port). `KitPreview` does
@@ -164,7 +215,8 @@ others, including voxel nodes via `VoxelNode.slowProcesses()`) -> `Conductor.bur
   `"parts"` (count), `"p<i>"` (one compound per part, `"kind"` + the part's keys).
 - `CablePart`: `"tier"` (descriptor name), `"face"`, `"pts"`, `"burnt"` (FailureCause name), `"conv"` (laid by the
   converter), `"paid"` (voxels returned on break), `"u"`, `"t"` (voltage, temperature: `CableNet.save()` copies them in
-  before a write or rebuild).
+  before a write or rebuild), `"hang"`/`"hang2"` (drawn hang), `"j"` (joints: a list of int arrays, sorted; see Stored links).
+- Each part `"id"` (in its `p<i>` compound), the node `"nextPartId"`.
 - `PipePart`: `"tier"`, `"pts"`, `"burst"`, `"burstDir"`, `"w"`, `"a"`, `"u"`. `ValvePart`: `"at"`, `"open"`.
   `SafetyValvePart`: `"at"`, `"set"`. `PipeSensorPart`: `"at"` (x, y, z, outlet, bore, kind), `"scale"`, its output. `AdapterPart`: `"face"`. Unknown kinds load as nothing (dropped).
 - Client publish: part count, then kind + length-prefixed bytes per part, then SixNode's elements
@@ -188,12 +240,122 @@ others, including voxel nodes via `VoxelNode.slowProcesses()`) -> `Conductor.bur
   `SixNodeItem` treats old cable items as coils and puts new devices into voxel blocks.
 - Commands: `/elnlab voxelcables convert|dry|revert <r>` (`gametest/LabCommands.java`).
 
+## Kits in devices (`CableItems`)
+
+Baughn 2026-11-07: recipes take bare Copper Cable, hand recipes make cable kits, and the 1.12 LV/MV/HV/VHV cable
+items leave the creative tab (`ElnDeviceRegistry`: `addWithoutRegistry`). Devices that took a cable item take a kit:
+`node/voxel/CableItems` gives a stack's `ElectricalCableDescriptor` (a 1.12 item's, or the kit's spec:
+`CableSpec.descriptor(tier)`, the preset's if it has none), its thermal descriptor, tier, blocks (16 voxels) and
+`take(stack, voxels)` (a kit piece keeps the spec). Old items stay valid wherever they are, so saves need nothing.
+- The breaker has no slot since 2026-11-17 (Baughn): its contacts are a Medium Voltage Cable's, its trip current is set
+  in its GUI; a piece in an old breaker's slot sets that current once on load and drops with it.
+- Hub slots, the temperature probe's: `SlotSpec.cablePiece` (kind `CablePiece`) takes a block of a kit
+  (`ElnSlot.safeInsert` for clicks, `ElnNodeMenu.quickMoveStack` for shift-clicks); the spec sets contacts, trip
+  current and thermals.
+- Lamp supply: range + blocks (`AutoAcceptInventoryProxy.acceptCable`: a right click adds a block).
+- DC-DC converters: a kit's blocks are turns (as the items were one a turn); windings are the efficient way; the
+  one-time rewind skips kits.
+- Utility poles: a kit of the pole's tier (any cross-section), `ceil(distance)` blocks taken; the line keeps the
+  piece (dropped on a break) and its Rs from the spec. Lines saved with 1.12 items still load and drop them.
+- Clients get only the item id (`Utils.serialiseItemStack`): a spec kit in a device draws as its tier's preset.
+Tests: `gametest/cases/KitDeviceCases`.
+
 ## Routers
 
-- `CableRouter`: lattice 2 voxels, states (point, attach face, last dir), moves along a face / inner corner / outer
-  corner (knuckle); `BEND` 4, `BLOCK_ENTERED` 1, `MAX_EXPANSIONS` 400000, budget `PipeRouter.TIME_BUDGET_MS` (200 ms).
-- `PipeRouter`: lattice 4, `BEND` 6, unsupported steps cost more (`UNSUPPORTED`), waypoints as legs; gives up on the
-  wall-clock budget (Baughn: it runs on the server thread).
+One router for cables and pipes (Baughn 2026-11-11): `Router` holds the A* core (queue, best costs, expansion limit,
+wall-clock deadline) and the moves by the `RouteKind`'s placement; `RouteKind` carries what the search needs
+(placement, cross-section, lattice, bend and block costs, clearance, margin, support). `CableRouter` and `PipeRouter`
+are the kinds' entry points (same signatures) and output stages (`pieces`, `perBlock`). `RouterDifferentialTest`
+holds them to frozen copies of the routers before the merge (`LegacyCableRouter`, `LegacyPipeRouter`).
+- SURFACE kinds (cables): lattice 2 voxels, states (point, attach face, last dir), moves along a face / inner corner /
+  outer corner (knuckle); `BEND` 4, `BLOCK_ENTERED` 1, `MAX_EXPANSIONS` 400000, budget `PipeRouter.TIME_BUDGET_MS`
+  (200 ms).
+- A device end (`End.dir` >= 0) is left straight out, or round an outer corner at the pin; it is reached arriving
+  along `dir`, or round an outer corner at the pin from the face whose support lies toward `dir` (Baughn 2026-11-18,
+  #514: a pin at the edge of a block on a pillar took routes from it, down the pillar's side, but none to it).
+  `CableAirCases.ToPinOnPillarCase`.
+- Air runs (Baughn 2026-11-11, D5): a SURFACE kind's `airTiers` let it leave its support: cables `RouteKind.CABLE_AIR`,
+  up to 10 voxels off any support at +4 per step and up to 20 at +16, never further (the same for every tier, Baughn
+  2026-11-12). The state gains `air` (voxels since the last support, carried across waypoint legs). An air stretch is
+  one straight line: off an edge, or lifted off a face (a turn as if a wall stood straight ahead, only from a support),
+  to where it lands (a supported step, or an inner corner onto a wall). No bends in the air: they made the search ~10x
+  dearer. A state reached as cheaply with no more air behind it prunes this one. An air piece is an ordinary flat
+  piece whose plane is off any surface; whether it is supported is read live (`CablePlacer.supported`): no device goes
+  on its face (`VoxelNode.placeFace`) and no branch starts on it (`endAt`), so air allowances can't chain.
+- How air cables hang (Baughn 2026-11-12: energy minimisation once at placement; route, preview and hitbox stay as
+  routed): `CableHang` finds the free spans (from where the cable leaves a support to where it lands, round corners: a
+  drop past an air block onto a floor is one span) and searches, for each, where it leaves the surface before (peeling
+  back up to 8 voxels), where it lands after, and a curve between: a Hermite curve along the surfaces' directions there,
+  lowered by a smooth bump. Score over the same stretch of route for every candidate: gravity per voxel of length,
+  bending (turn squared per voxel), tension per voxel of length (so a short slant wins over a vertical drop and a
+  right angle; length may exceed the route's by 5 %, so a straight bridge can sag), and a cost per voxel peeled;
+  candidates whose cable would touch a blocked voxel are out (none fits: drawn as routed). Coarse grid, then a local
+  search; ~5-10 ms a span. Each piece stores its share (`CablePart.hang2`: the arc range of its own polyline the curve
+  replaces, the curve's points, normals and tangents; NBT `hang2`, its own stream slot after the old `hang` slot).
+  `VoxelGeometry.cable` draws the boxes outside those ranges and `sweep` carries the cross-section along the curve with
+  a turning frame. Cables laid by the 11-12 jar keep their `hang` (drawn through the same path).
+- FREE kinds (pipes): lattice 4, `BEND` 6, unsupported steps cost more (`UNSUPPORTED`), off-lattice ports jog onto the
+  lattice, waypoints as legs; gives up on the wall-clock budget (Baughn: it runs on the server thread).
+
+- Pipe junctions (Baughn 2026-11-11, LabAgent's review): where a route joins a pipe's body or another pipe's end,
+  `VoxelNode.addJoined` cuts the pipe and adds a `JunctionPart` at the point: its own fluid node, never lumped, 3/4
+  block of its bore in volume (smaller nodes troubled the core: #374, #370), a wall as a pipe's, and filled with its
+  share of the pipe it was cut into (after `FluidWorld.writeBackOf`). `fluidJoins` never joins at a junction;
+  `fluidLinks` links each arm's end to it (the end's own conductance and height; a level end an opening as tall as the
+  bore, the junction an opening as tall as its body, so a vertical arm gets the counter-flow pair: a sealed riser drains,
+  `FluidDevice.Link.spanA/spanB`). So each branch is its own run. It takes up to four arms, isn't aimed at on its own
+  (`partAt` gives the nearest arm), and goes when fewer than two arms are left, its contents into the last. Over its
+  arms' rating an arm at it bursts. Old saves' coinciding ends (no part) stay lumped until the phase 3 converter.
+  `FluidWorld` reports any node under `MIN_RELIABLE_VOLUME` (1e-6 m^3) once (Baughn). Tests: `JunctionCases`.
+
+## Laying and the kit UX
+
+- `Laying`: all or nothing for both kits. Every new part is checked against the world and the route's other parts in
+  its block (pieces of one cable may overlap where they touch), then all are placed; a late failure takes back what
+  was placed. Pipe junctions (`VoxelNode.joinError`) are checked before anything is laid.
+- Both kits work alike (Baughn 2026-11-11): start at a port, on an old run (a branch) or any surface; waypoints are
+  points on clicked surfaces (pipes: in the block in front, as near the face as the lattice allows,
+  `PipePlacer.surfacePoint`); finish at a port, on a run, or by clicking the last waypoint again (the run ends there,
+  a pipe capped); sneak-click takes back a waypoint or cancels; a route lapses each tick (another dimension or item, a
+  minute idle, too far). The pipe kit's old one-straight-block click is gone (Baughn). A pipe route may start and end
+  on pipes (`PipePlacer.layJoined` with both joins).
+- Tests: `RouteLeakCases` (lay/break/re-lay rounds leave nothing in the simulator or fluid world),
+  `PipeCases` (`pipe_laying_all_or_nothing`, `pipe_kit_starts_anywhere_and_caps`, `pipe_kit_branches_pipe_to_pipe`).
+
+## Toolbag
+
+- `ToolbagItem` (`eln:toolbag`; Baughn 2026-11-18, todos #510/#517): a bag of cable and pipe kits used in place of a
+  kit. Its contents are a `DataComponents.CONTAINER` of `SLOTS` 16: kit slots 0..14 (three rows of five; cable and pipe
+  kits only) and `SHEARS_SLOT` 15 (vanilla shears: the cutting below). `ToolbagMenu` /
+  client `ToolbagScreen` as the battery belt's (written back on every change, its hotbar slot locked). The chosen kind
+  (`Kind`: pipe or cable tier, a power cable's mm² index and colour) is in its custom data (`toolbagKind`).
+- Placers read the main hand through `KitSupply` (a kit, or the bag's kits of its chosen kind taken together:
+  `ToolbagItem.supply`, its length their sum, `take` from the first slots on, emptied kits removed).
+- Right-click: the air opens it (sneaking: the radial); a cable or pipe (no route on) takes its kind (a cable laid
+  without a spec is its tier's preset; colour must match) and starts or finishes a route from it as that kit would,
+  else "No ... kit in the toolbag" (`KitPreview.note`); anywhere else with no route on, or sneaking, opens the radial
+  (`packetToolbagRadial` -> client `ToolbagRadial`, `RadialMenu` with `stayOpen`): kind or voltage, then cross-section,
+  then colour, only what it holds; a pick that leaves no choice beyond, or the centre, sends `packetToolbagChoice`.
+  The click that opened it is kept (`PENDING`, 30 s, same dimension, within 10 blocks) and replayed as the route's
+  start once the kind is chosen. With a route on the radial adds Undo and Cancel (the bag's sneak-click is the radial),
+  and a new kind restarts the route from its start click (`STARTED`), a cable's waypoints kept for a cable.
+- Client `ToolbagHud`: the chosen kind and a terse usage line above the route note while the bag is in hand.
+- A kit or bag click must be within reach, its point on or in the clicked block (`CablePlacer.reachable`; else "Out
+  of reach"; the player's reach plus `REACH_SLACK` 0.25, where the server itself takes a block more): AdventurAgent's
+  clicks past reach made waypoints. With the bag in hand
+  the client sends its sneak state before a click (`ClientKeys.beforeClick`), so a sneak-click opens the radial even
+  when shift goes down in the same tick. Its tooltip lists the kits by kind only (the container's own list hidden).
+- Shears (`ToolbagShears`, #517): with shears in the bag, a left-click on a cable or pipe (no block is broken with the
+  bag) starts a cut; the run through that piece is found once (a cable by its CONT joints, stopping at a device
+  joint, at an end where several pieces or a splice meet, and before a piece another's end splices onto; a pipe by its
+  ends, in the block or across a face, stopping at fittings and where several pipes meet), and the span from the first
+  piece to the one aimed at is outlined red (KitPreview's outline packet, sent from `KitPreview.tick` instead of the
+  route preview) with its length on the action bar. A second left-click removes the span (`VoxelNode.partItem` for
+  each: burnt pieces give nothing), puts it back into the bag (its kits of that kind topped up, then empty slots, the
+  rest dropped at the player) and wears the shears by one. A right-click, or the bag leaving the hand, cancels.
+- `ToolbagCases`: slots; a cable click lays its kind across two kits; a kind it lacks; the radial starts at the click
+  and a new kind keeps the start; a pipe click; Cancel; reach, sneak on a pipe route, Undo; the shears (a span back
+  into the bag, not past a junction; a full bag drops; no shears; cancel; a pipe run).
 
 ## Chisel
 

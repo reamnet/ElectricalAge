@@ -15,6 +15,7 @@ JDKs: Gradle and the mod use JDK 25, and NeoForge's data and game-test runs also
 |---|---|
 | Build the jar (`build/libs/eln-26.3-0.1.0-port.jar`) | `./gradlew build` |
 | Unit and property tests (JUnit 5 + vintage, jqwik) | `./gradlew test` |
+| The API jars for other mods (`build/libs/eln-api-*.jar`, `eln-api-testkit-*.jar`, sources, javadoc; also in `build`) and their leak check | `./gradlew apiJar apiTestkitJar compileApiConsumerTest` |
 | All GameTests headless (exit code = number of failed tests) | `./gradlew runGameTestServer` |
 | Cable benchmark instead of the tests | `./gradlew runGameTestServer -PelnBench=result.json [-PelnBenchLabel=name]` |
 | Datagen: lang, tags, recipes, item models into `src/generated/resources` | `./gradlew runClientData` |
@@ -29,8 +30,8 @@ JDKs: Gradle and the mod use JDK 25, and NeoForge's data and game-test runs also
 
 ## Commits and branches
 
-- Work on `port-26` (or a topic branch off it). Push with `git push upstream HEAD:ports/26.3`; upstream is
-  github.com/Electrical-Age/ElectricalAge.
+- Work on `develop` (or a topic branch off it), which is the most up-to-date branch (Baughn 2026-11-04). Push with
+  `git push upstream HEAD:develop`; upstream is github.com/Electrical-Age/ElectricalAge.
 - One logical change per commit. Messages are plain English: a short subject that says what changed for the
   player or the code (e.g. "Keep nodes this version cannot load instead of deleting them"), then a body that
   says why and notes any save-format or gameplay impact. Note Baughn's decisions where they drove the change.
@@ -64,4 +65,6 @@ JDKs: Gradle and the mod use JDK 25, and NeoForge's data and game-test runs also
 - [docs/content.md](docs/content.md): items, ores and worldgen, oil, recipes and machine recipe lists, datagen, tags, config, tools/ and script/.
 - [docs/testing.md](docs/testing.md): unit/property tests, the GameTest harness, golden data, the cable benchmark, how to add a test.
 - [docs/cad.md](docs/cad.md): the checked model library (cad/): solids, emitters, the checker, textures, previews.
+- [docs/animation.md](docs/animation.md): the animation library (`mods.eln.anim`: spins, levers, blinks, particles, LEDs, glow, levels, progress, belts) and the index of every animated device. New animations use it.
+- [docs/api.md](docs/api.md): the Machine API and its low level for other mods: task-oriented guide, compiled samples, testing.
 - [docs/porting-notes.md](docs/porting-notes.md): 26.x decisions, differences from 1.12, gameplay changes, deferred work.

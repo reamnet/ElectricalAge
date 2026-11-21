@@ -83,7 +83,8 @@ final class GoldenSlotsCase implements TestCase {
     static java.util.Set<Integer> removedCableSlots(Object d) {
         if (d instanceof mods.eln.sixnode.energymeter.EnergyMeterDescriptor
             || d instanceof mods.eln.sixnode.electricalsensor.ElectricalSensorDescriptor
-            || d instanceof mods.eln.sixnode.thermalsensor.ThermalSensorDescriptor t && !t.temperatureOnly) return Set.of(0);
+            || d instanceof mods.eln.sixnode.thermalsensor.ThermalSensorDescriptor t && !t.temperatureOnly
+            || d instanceof mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor) return Set.of(0);   // (breaker: Baughn 2026-11-17)
         if (d instanceof mods.eln.sixnode.lampsocket.LampSocketDescriptor) return Set.of(1);
         return Set.of();
     }
@@ -154,7 +155,7 @@ final class GoldenSlotsCase implements TestCase {
         for (JsonElement e : golden) {
             JsonObject dev = e.getAsJsonObject();
             String name = dev.get("device").getAsString();
-            Object d = byName.get(name);
+            Object d = byName.get(GoldenCase.renamed(name));
             if (d == null && REMOVED.contains(name)) continue;
             if (GUI_REMOVED.contains(name)) {
                 ctx.line("INFO golden slots: known difference: " + name + " has no GUI (its cable slot was removed)");
@@ -211,7 +212,9 @@ final class GoldenSlotsCase implements TestCase {
 
             List<Slot> device = new ArrayList<>();
             int playerSlots = 0;
-            for (Slot s : menu.slots) {
+            for (int i = 0; i < menu.slots.size(); i++) {
+                Slot s = menu.slots.get(i);
+                if (i >= menu.inventoryEnd) continue;   // (the worn slots: armour and Curios, the charger's)
                 if (s.container instanceof Inventory) playerSlots++;
                 else device.add(s);
             }
@@ -259,6 +262,16 @@ final class GoldenSlotsCase implements TestCase {
                     known.add(name + " slot 2 takes 4 combustion chambers (1.12: 2; Baughn 2026-10-26)");
                     wantLimit = 4;
                 }
+                // (Baughn 2026-11-06: windings up to 64 turns a side for the real-world voltages; 1.12: 4)
+                if ("DC-DC Converter".equals(name) && i < 2 && wantLimit == 4 && limit == 64) {
+                    known.add(name + " slot " + i + " takes 64 turns (1.12: 4; Baughn 2026-11-06)");
+                    wantLimit = 64;
+                }
+                // (Baughn 2026-11-08: windings only, from the wire-drawing machine or wound by hand; cables no longer go in)
+                if ("DC-DC Converter".equals(name) && i < 2 && got.isEmpty() && !want.isEmpty()) {
+                    known.add(name + " slot " + i + " takes windings only, no cables (Baughn 2026-11-08)");
+                    want = got;
+                }
                 boolean ok = index == g.get("index").getAsInt() && limit == wantLimit && got.equals(want);
                 slotsAll++;
                 if (ok) slotsOk++;
@@ -279,7 +292,7 @@ final class GoldenSlotsCase implements TestCase {
         ctx.check("golden slots: slots match", slotsOk == slotsAll, slotsOk + " of " + slotsAll);
         // every descriptor with slots is a golden device: a subclass inheriting a spec 1.12 didn't give it would show here
         Set<String> goldenNames = new HashSet<>();
-        for (JsonElement e : golden) goldenNames.add(e.getAsJsonObject().get("device").getAsString());
+        for (JsonElement e : golden) goldenNames.add(GoldenCase.renamed(e.getAsJsonObject().get("device").getAsString()));
         for (var e : byName.entrySet())
             if (MenuSpecs.of(e.getValue()) != MenuSpec.SCREEN_ONLY && !goldenNames.contains(e.getKey()) && !GoldenCase.NEW_IN_26_NAMES.contains(e.getKey()))
                 ctx.check("golden slots: " + e.getKey() + " has no 1.12 container", false, "spec from " + MenuSpecs.registeredClass(e.getValue()).getSimpleName());
@@ -292,7 +305,10 @@ final class GoldenSlotsCase implements TestCase {
     /** Other device classes new in 26.x with a menu spec (no 1.12 container to match). */
     static final Set<Class<?>> NEW_SPECS = Set.of(mods.eln.transparentnode.smelter.SmelterDescriptor.class,
         mods.eln.anvil.ElectricalAnvilDescriptor.class,   // (the electrical anvil: Baughn 2026-10-28)
-        mods.eln.mechanical.SteamTurbineDescriptor.class);   // (the shaft steam turbine's controls: Baughn 2026-10-29)
+        mods.eln.mechanical.SteamTurbineDescriptor.class,   // (the shaft steam turbine's controls: Baughn 2026-10-29)
+        mods.eln.robotics.computer.ComputerDescriptor.class,
+        mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor.class,   // (the utility pole's equipment: Baughn 2026-11-08)
+        mods.eln.transparentnode.wiredrawing.WireDrawingDescriptor.class);   // (the wire-drawing machines: Wires stage 4)   // (the computer's chips and drives: Baughn 2026-11-05)
 
     /** A spec without its filters (lambdas): kind, index, position, limit per slot. */
     static List<String> shape(MenuSpec spec) {

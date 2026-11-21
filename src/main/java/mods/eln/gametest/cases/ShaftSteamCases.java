@@ -39,6 +39,7 @@ public final class ShaftSteamCases {
         cases.add(new OldSaveLoads());
         cases.add(new Overspeed(false));
         cases.add(new Overspeed(true));
+        cases.add(new ThrottleShut());
     }
 
     static final int GENERATOR_8KW = 16 + (4 << 6), MOTOR = 17 + (4 << 6);
@@ -73,10 +74,10 @@ public final class ShaftSteamCases {
         return e;
     }
 
-    /** A resistor drawing about `watts` at 3200 V from a generator's terminals (added to the simulator). */
+    /** A resistor drawing about `watts` at HVU (the generators' nominal volts) from a generator's terminals (added to the simulator). */
     static Resistor load(GeneratorElement g, double watts) {
         ElectricalLoad in = field(g, "inputLoad");
-        Resistor r = new Resistor(in, null).setR(3200.0 * 3200.0 / watts);
+        Resistor r = new Resistor(in, null).setR(mods.eln.Eln.HVU * mods.eln.Eln.HVU / watts);
         Eln.simulator.addElectricalComponent(r);
         return r;
     }
@@ -359,7 +360,7 @@ public final class ShaftSteamCases {
                 double w = shaft(t).getRads();
                 if (tick == 600) {
                     before = w;
-                    r.setR(3200.0 * 3200.0 / 8000);
+                    r.setR(mods.eln.Eln.HVU * mods.eln.Eln.HVU / 8000);
                 }
                 if (tick > 600) {
                     min = Math.min(min, w);
@@ -499,6 +500,40 @@ public final class ShaftSteamCases {
                 ctx.check("overspeed: automatic, pushed to 920 it trips and coasts down", sawTrip && t.tripped && !burst && shaft(t).getRads() < 915,
                     String.format("tripped %s, now %.0f rad/s", sawTrip, shaft(t).getRads()));
             }
+        }
+    }
+
+    /**
+     * A throttle at 0 % is the turbine's stop valve, shut tight (Baughn 2026-11-10): an unloaded turbine under manual
+     * control with its throttle at 0 on rated steam passes none and its shaft stays still.
+     */
+    static final class ThrottleShut implements TestCase {
+        ShaftSteamTurbineElement t;
+        IProcess feed;
+        double passed;
+
+        public String id() {
+            return "shaft_steam_turbine_throttle_shut_is_tight";
+        }
+
+        public int ticks() {
+            return 200;
+        }
+
+        public void build(TestContext ctx) {
+            t = (ShaftSteamTurbineElement) ctx.placeTransparent(STEAM_TURBINE, ctx.at(3, 1, 1));
+            t.controls.manual = true;
+            t.controls.throttle = 0;
+            Eln.simulator.addSlowProcess(feed = dt -> {
+                steam(t);
+                if (t.turbine != null && t.turbine.edge != null) passed += Math.max(0, t.turbine.edge.fVapour) * dt;
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            Eln.simulator.removeSlowProcess(feed);
+            ctx.check("throttle at 0: no steam goes through", passed < 1e-9, String.format("%.3g kg", passed));
+            ctx.check("throttle at 0: the shaft stays still", shaft(t).getRads() < 1, String.format("%.2f rad/s", shaft(t).getRads()));
         }
     }
 

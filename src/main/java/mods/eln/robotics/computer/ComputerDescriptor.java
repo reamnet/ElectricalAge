@@ -1,0 +1,118 @@
+package mods.eln.robotics.computer;
+
+import mods.eln.Eln;
+import mods.eln.api.Brownout;
+import mods.eln.api.CablePosition;
+import mods.eln.api.MachineSpec;
+import mods.eln.api.RelativeFace;
+import mods.eln.api.Tier;
+import mods.eln.misc.Obj3D;
+import mods.eln.node.transparent.TransparentNodeDescriptor;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.Collections;
+import java.util.List;
+
+import static mods.eln.i18n.I18N.tr;
+
+/**
+ * The robotics computer (Baughn 2026-11-05): an RV32 machine with 8 chip slots of 1 MB (RAM or ROM; it starts at
+ * 0x1000 in slot 1's chip) and two floppy drives, running off the server thread (hw.Runner). 50 V on the back; the
+ * RS485 bus pin on the right flank's floor edge, at its right end (left and right facing the flank), as on the servo
+ * drive. Its draw follows how busy it is. Its CRT monitor stands on it, in the block above (a ghost), and shows
+ * the screen. Model: mods.eln.cad.models.ComputerParts.
+ */
+public class ComputerDescriptor extends TransparentNodeDescriptor {
+    /** Idle (asleep or waiting) and flat-out draw, W. */
+    public static final double IDLE_WATTS = 2, RATED_WATTS = 60;
+    final Obj3D obj;
+
+    public ComputerDescriptor(String name, String model) {
+        super(name, ComputerElement.class, ComputerRender.class);
+        obj = Eln.obj.getObj(model);
+        voltageLevelColor = mods.eln.sixnode.electricalcable.ElectricalCableDescriptor.voltageLevelColorOf(
+            mods.eln.registry.ElnDeviceRegistry.lowVoltageCableDescriptor);
+        // its monitor stands in the block above (Baughn 2026-11-18: a 1 x 2 multiblock)
+        mods.eln.ghost.GhostGroup g = new mods.eln.ghost.GhostGroup();
+        g.addElement(0, 1, 0);
+        setGhostGroup(g);
+    }
+
+    /** The CRT's glass, block units centred as the model (ComputerParts.SCREEN_*: px x, rows y, columns z), 0.1 px out. */
+    static final float GLASS_X = (0.5f - 0.1f) / 16 - 0.5f, GLASS_Y0 = 20.0f / 16 - 0.5f, GLASS_Y1 = (20.0f + 12.8f / 1.92f) / 16 - 0.5f,
+        GLASS_Z0 = 1.6f / 16 - 0.5f, GLASS_Z1 = 14.4f / 16 - 0.5f;
+
+    /** The monitor's picture on its glass, full bright: its top row at the top, its first column on the left seen from the front. */
+    void drawPicture(net.minecraft.resources.Identifier texture, float aspect) {
+        // the glass is the 80 x 25 screen's shape; another shape (120 x 40) gets bars, the glass's own dark showing
+        float gw = GLASS_Z1 - GLASS_Z0, gh = GLASS_Y1 - GLASS_Y0, ph = Math.min(gh, gw / aspect), pw = Math.min(gw, gh * aspect);
+        float z0 = GLASS_Z0 + (gw - pw) / 2, z1 = z0 + pw, y0 = GLASS_Y0 + (gh - ph) / 2, y1 = y0 + ph;
+        mods.eln.gl.GL11.bindTexture(texture);
+        mods.eln.gl.GL11.setFullBright(true);
+        mods.eln.misc.UtilsClient.disableCulling();
+        mods.eln.gl.GL11.glColor4f(1, 1, 1, 1);
+        mods.eln.gl.GL11.glBegin(mods.eln.gl.GL11.GL_QUADS);
+        mods.eln.gl.GL11.glTexCoord2f(0, 0);
+        mods.eln.gl.GL11.glVertex3f(GLASS_X, y1, z0);
+        mods.eln.gl.GL11.glTexCoord2f(0, 1);
+        mods.eln.gl.GL11.glVertex3f(GLASS_X, y0, z0);
+        mods.eln.gl.GL11.glTexCoord2f(1, 1);
+        mods.eln.gl.GL11.glVertex3f(GLASS_X, y0, z1);
+        mods.eln.gl.GL11.glTexCoord2f(1, 0);
+        mods.eln.gl.GL11.glVertex3f(GLASS_X, y1, z1);
+        mods.eln.gl.GL11.glEnd();
+        mods.eln.misc.UtilsClient.enableCulling();
+        mods.eln.gl.GL11.setFullBright(false);
+    }
+
+    /**
+     * A 50 V consumer that stops on a brownout: the computer then pauses with its RAM kept, and goes on when the line
+     * comes back (a sag shouldn't cost a program its state).
+     */
+    public static MachineSpec spec() {
+        return MachineSpec.consumer(Tier.V48).ratedWatts(RATED_WATTS).idleWatts(IDLE_WATTS).onBrownout(Brownout.STOP)
+            .power(RelativeFace.BACK)
+            .bus(RelativeFace.RIGHT, CablePosition.FLOOR_RIGHT)
+            .build();
+    }
+
+    void draw(byte status) {
+        if (obj == null) return;
+        var m = obj.getPart("main");
+        if (m != null) m.draw();
+        var lamp = obj.getPart("lamp");
+        if (lamp == null) return;
+        // a lamp glows: drawn unlit while on, so it shows at night (AdventurAgent's check)
+        boolean on = status == ComputerElement.RUNNING || status == ComputerElement.SLEEPING || status == ComputerElement.HALTED;
+        switch (status) {
+            case ComputerElement.RUNNING -> mods.eln.gl.GL11.glColor4f(0.35f, 1f, 0.35f, 1f);
+            case ComputerElement.SLEEPING -> mods.eln.gl.GL11.glColor4f(0.15f, 0.6f, 0.15f, 1f);
+            case ComputerElement.HALTED -> mods.eln.gl.GL11.glColor4f(1f, 0.15f, 0.1f, 1f);
+            default -> mods.eln.gl.GL11.glColor4f(0.25f, 0.25f, 0.25f, 1f);
+        }
+        if (on) mods.eln.misc.UtilsClient.disableLight();
+        lamp.draw();
+        var lamp2 = obj.getPart("lamp2");   // the monitor's power lamp: lit while it is on
+        if (lamp2 != null) lamp2.draw();
+        if (on) mods.eln.misc.UtilsClient.enableLight();
+        mods.eln.gl.GL11.glColor4f(1f, 1f, 1f, 1f);
+    }
+
+    @Override
+    public boolean hasItemDraw() {
+        return true;
+    }
+
+    @Override
+    public void drawItem(boolean entity) {
+        draw(ComputerElement.OFF);
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void addInformation(ItemStack itemStack, Player entityPlayer, List list, boolean par4) {
+        super.addInformation(itemStack, entityPlayer, list, par4);
+        Collections.addAll(list, tr("A programmable computer: 8 chip slots\n(a ROM in slot 1, RAM after it)\nand two floppy drives.\n48V power on the back.\nRS485 bus pin on the right flank's\nfloor edge, at its right end.").split("\n"));
+    }
+}

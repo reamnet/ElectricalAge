@@ -55,8 +55,38 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   couldn't feed the HP's own 20 bar boiler. Its motor load now goes with the pressure it really pumps against. Speed
   still scales the flow only (the head stays at any speed). Was a straight line to a 15 bar shut-off for all.
   `CondensatePumpTest`, `oil_condensate_return_*`, `plant_condenser_pump_into_*`.
+  Shut-off 1.8 x since 2026-11-14 (Baughn; it was 2 x): boilers at their full mark shut their feed floats, the
+  condensate line then stands at the shut-off head, and 20 bar was over what its iron pipe works to. Small/Steam
+  Condenser: shut-off 18 bar, ~4.9 / 19.4 g/s at 10 bar, 3.0 / 11.9 at 15 (7.3 / 29 free), short of full-power
+  condensate above ~16.7 bar. Plant Steam Condenser: shut-off 36 bar, 97 g/s at 20 bar, 59 at 30 (145 free).
+  Level control since 2026-11-14 (Baughn, from a player's plant on Incognito: two turbines' condensers on one
+  condensate line to boilers at their full mark; one pump fed the boilers on makeup water passing through its
+  hotwell while the other delivered nothing, and that one's hotwell filled with its turbine's condensate until it
+  flooded the turbine). The pump now follows its hotwell's level: at or under the makeup's shut level (25 %) it has
+  1.6 x the rating as shut-off head (16 bar on a 10 bar turbine) and 30 % of its flow, and both rise with the water
+  to the whole curve at 40 %. A low hotwell's pump shuts off first against throttling feed floats and the fuller
+  one delivers; under 16 bar a hotwell at 40 % passes more than its turbine's condensate, so it can't fill to the
+  flood level (50 %) while its pump turns. A running condenser's level now sits between 25 and 40 % (it sat under
+  25 %). Makeup alone still fills cold boilers and replaces losses, into boilers up to 1.6 x the rating. Jade's
+  "Pump outlet" says "holding back, its hotwell is low" when that is why nothing flows. `ParallelCondensateTest`.
+  The boiler's feed float goes with it: its opening is now the cube of the level's distance under the full mark
+  (it was a straight line over the same 10 % band). The straight line was so steep at the full mark that the boiler
+  took its feed in single-step gulps, the condensate line swung between 14 and 17 bar with each, and during a gulp
+  both pumps delivered whatever their levels (with one turbine idling, the other's hotwell still flooded). A boiler
+  on a steady feed now sits about 0.4 % under its full mark; filling from cold is as fast as before.
+  Jade on both condensers (Baughn 2026-11-14): "Water level" is in the headline, as a share of the level that floods
+  the turbine or drowns the tubes (100 % = half the vessel), in place of "Fill" (a share of the vessel, in the
+  details); "Contents" moved to the details. A turbine burnt by its flooded condenser says "water damage: its
+  condenser flooded, its water isn't leaving" (`FailureCause.FLOODED`, appended), one that took water through its
+  steam line "water damage: water came in with its steam".
   Jade on both condensers, "Pump outlet": the pressure it works against and its flow there as a share of its rated
   (free) flow at its speed, or "shut off, needs a pipe pump" (Baughn 2026-11-03).
+- Iron pipe works to 20 bar and bursts at 25 (Baughn 2026-11-14; it was 10 and 40). A sound 10 bar plant's
+  condensate line stood over the old working pressure and smoked its warning all the time (a player's plant on
+  Incognito); now the warning comes just under the burst and means it. A pipe on a live server between 25 and 40 bar
+  bursts on update. A safety valve newly fitted to an iron pipe is still set to 10 bar (`PipePart.RELIEF_PA`), the
+  small turbine's rating; alloy pipes' valves start at their working pressure as before. `fluid_safety_valve_*`,
+  `CondensatePumpTest`.
 - Small Steam Condenser / Steam Condenser vessels hold 12 buckets, as a tank block (Baughn 2026-11-03: "133 m^3 is a
   bit much for a 1m^3 block"); they were 5 / 20 L (74 000 / 296 000 mB). Saves without the "tank3" tag load trimmed:
   water over the float valve's shut level (25 %) and air over 1 atm's worth go, at the temperature they had (kept, a
@@ -66,6 +96,10 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   boiler's analog fill, through a comparator, can say when the plant wants water): a 0-50 V input on its left flank
   scales what its float valve lets in, 0 V shut; unconnected, the float valve alone as before. That flank takes no
   thermal cable now. Jade's Makeup valve says whether its signal holds it. `oil_condenser_makeup_signal`.
+- Steam condenser makeup float valve: its opening goes with the cube of the level's distance under its shut mark, as
+  the boiler's feed float does (2026-11-17, a player's plant whose makeup inlet was teed into its own condensate line:
+  the straight-line float passed the pump's surplus back in gulps, the line swung 1.5..10 bar and the fluid network
+  cost ~25 ms a step). Wide open it fills as before. `fluid_makeup_teed_into_condensate_line`.
 - Shaft redo, part 1 (Baughn 2026-10-29: the old shaft turbines had no steam input; redo them on the new steam logic).
   The shaft Steam Turbine (same id) takes steam by EA pipe on top and lets it out of its back (piped on, or into the
   air); work = 0.75 x the isentropic drop from the inlet to the exhaust's pressure, onto the shaft; 16 kW at 20 bar
@@ -103,6 +137,230 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   how many are piped. Each flange's nozzle runs in past the shell all round its bore and is closed at its end (it was
   cut at the shell's centre line, so the curving shell left gaps at its sides one could look into).
   `tank_flanges_where_piped`.
+- Crude is a mixture (Baughn 2026-11-10): `eln:crude_oil` stays a fluid (buckets, the pump's tank, other mods), but in a
+  node it is heavy oil 35 / diesel 25 / gasoline 20 / residue 15 / natural gas 5 % by mass (the species JSON's "mixture";
+  sulphur counts in the residue). Live, with its gas, only from the oil pump's sealed line; from a bucket or any
+  capability it goes in dead ("the buckets don't have lids"), the four liquids renormalised; crude a save holds loads
+  dead. A pumped crude line needs a purge valve (or a pipe taking its gas). Out of a node, a mixed liquid is named by its
+  main species and taken whole (EaUnits.drainLayer), so a bucket can't distil a mix. The old column takes the cuts' mix as
+  crude until it is a still. `fluid_crude_is_a_mixture`.
+- Oil pump and tar sand separator on fluid nodes (Baughn 2026-11-10: PortBridge push becomes the device's pump): each
+  one's tank is a vessel node, and a centrifugal pump in the core's solve sends it from the vessel's floor to a small
+  outlet node behind the flange (free flow 200 mB/s of crude, shut-off at 6 bar, the old push's rate and head).
+  - The pump's vessel is a sealed wellhead: the well's natural gas goes down the line through a check valve from its
+    top (the casing gas), as live crude's gas went before. The separator's basin is open (tar sand's crude is dead):
+    a float vent and a vacuum breaker, as the furnace's tank.
+  - Each stops making when its vessel is full or its vessel or line is at the 6 bar head, so a dead-ended line stops
+    at it instead of the well's gas pushing it on (`oil_pump_dead_end`).
+  - Unpiped, the pump stands and the vessel's liquid goes into the block on the flange's face through its view
+    (FluidExport), as the old push did; the pump's gas then leaves by a float vent to the air.
+  - Their views name a liquid layer still in crude's proportions (80 % overlap, as the column's inlet) crude, so a
+    bucket or another mod's pipe takes the pump's crude as crude (Baughn: buckets from the pump), though no one species
+    of it is 90 %. Other devices' views keep the 90 % rule.
+  `oil_pump_dead_end`, `oil_pump_legacy_tank`, `oil_separator_legacy_tank`.
+- Industrial resin collector on a fluid node (2026-11-14, the first of the recipe machines whose private tanks become
+  vessels): its tank is an open basin with the same outlet pump (200 mB/s of latex free, shut-off at 6 bar) to the
+  flange on its top; latex goes in as it is tapped, not by the whole mB. Unpiped it still gives its latex to whatever
+  takes fluid above it. It stops tapping when the basin holds 4000 mB or its line is at 6 bar (it had stopped only on
+  a full tank, which a blocked line then filled). `resin_collector_taps`, `resin_collector_legacy_tank`.
+- Carbon black burner on a fluid node (2026-11-14, `fluid/DeviceInlet`, the first inlet of the recipe machines): its
+  tank is a fuel vessel that the line on its IN flange fills through a filling valve at its top, a check valve it
+  opens by the room left under 90 % full (`Vessels.fillOpening`), so the vessel keeps a gas cap and never sees the
+  line's pressure. It burns in `beforeFluidStep`, between the view's sync and show. Gameplay:
+  - The inlet is passive: the line's pressure or head fills it. The old port pulled 200 mB/s from the whole run
+    whatever its pressure. Cold residue (50 Pa s) barely flows without pressure; hot from the tower it does.
+  - It takes whatever the line carries (the old port left a wrong fluid in the pipe). Its fuel is the lowest liquid
+    layer whose main species is residue or heavy oil, or one still in crude's proportions, burnt whole: a residue
+    layer with some diesel in it is residue. Water under it runs out of a drain at the floor (100 mB/s, lost: a
+    still's stripping steam condenses in every cut, and nothing else gets it out from under oil). Any other liquid
+    stays, and with no fuel over it Jade says what blocks the burner; the right fuel on top dilutes it until the
+    layer burns, and breaking the burner empties it. Gas that comes down the line leaves by its float vent.
+  `carbon_burner_water_drains`, `carbon_burner_wrong_oil`, `oil_on_pipes_carbon_burner_in`.
+- 230V compressor's latex tanks on fluid nodes (2026-11-14): the IN tank is a vessel the line fills (as the carbon
+  black burner's: passive, takes what the line carries, water drains, another liquid blocks it), the OUT tank an open
+  basin with the outlet pump (200 mB/s free, shut-off at 6 bar), as the resin collector's. It presses dandelions only
+  while the basin has room for 250 mB and its line is under 6 bar. A pressing's latex leaves the IN vessel at the next
+  fluid step. `compressor_presses_latex`, `compressor_presses_dandelions`, `compressor_legacy_tanks`.
+- Desulfuriser's tanks on fluid nodes (2026-11-14): the IN tank is a vessel the line fills (as the carbon black
+  burner's: passive, breathing, water drains, a liquid it can't treat blocks it with a Jade line), the OUT tank a
+  basin with the outlet pump. The treated cut is the feed layer's whole mix at its temperature: a diesel with a fifth
+  of gasoline in it comes out as that (the old tanks held one fluid, and the port counted the layer as its main
+  cut). So the old rule "the OUT tank must hold the same fluid or be empty" is gone: the basin takes any treated
+  cut, and they mix there as in any vessel. Rate, power and Sulfur Dust are unchanged; the power is drawn per
+  tick, the cut moves at the fluid step. `desulfuriser_closed_outlet`, `desulfuriser_legacy_tanks`,
+  `desulfuriser_passes_mix`, `desulfuriser_water_drains`.
+- Polymeriser's feed on a fluid node (2026-11-14): its feed tank is a sealed vessel the line fills through a filling
+  valve (passive: the line's pressure fills it; butadiene stands in it as liquid under its own 2.4 bar). Switched
+  on, the polymeriser draws the next Raw Rubber's 20 mB out of it: liquid first, then the gas, and with the gas
+  everything else in it (the air a new line pushes ahead of the butadiene leaves that way; drawing butadiene alone
+  left the air in and the feed out). It never draws the vessel under 1 atm, so the gas the vessel holds at 1 atm
+  (about 8 mB as liquid) stays in it, and Jade counts what it can use. Water in it drains; another liquid stays
+  and Jade names it. Rate, power and Soul Dust are unchanged. `polymeriser`, `polymeriser_vapour` (100 mB make 4
+  Raw Rubber, was 5), `polymeriser_legacy_feed`, `oil_on_pipes_polymeriser_in`.
+- Steam cracker's tanks on fluid nodes (2026-11-14): gasoline stands in a breathing vessel like the other liquid
+  feeds (water in it drains). Steam is in a sealed vessel sized to hold the old tank's 4000 mB at 6 bar; the
+  condensate drains, and switched on the cracker draws a second's steam (125 mB) ahead, with whatever else is in
+  the vessel's gas, down to 1 atm and no further: the last 1 atm of steam (about 600 mB) stays in it, and "no
+  steam" now means under 1 atm of it. Butadiene is made into a sealed vessel under its own pressure and leaves by
+  a pump that keeps a sump (about 120 mB stay; on a film the pump drew gas, emptied the vessel and froze it).
+  Natural gas is made into a sealed gas vessel and leaves by its own pressure through a check valve, to 6 bar.
+  Neither product vents or leaves without a pipe: an outlet that is full stops the cracker as before. Rates,
+  ratios and power are unchanged. `steam_cracker` (4000 mB of steam crack ~266 mB, was 320),
+  `steam_cracker_legacy_tanks`, `oil_on_pipes_cracker_*`.
+- Gas turbine's fuel on a fluid node (2026-11-14, `fluid/DeviceInlet`): its 16-bucket fuel tank is a sealed vessel
+  behind its top flange, filled by the line's pressure or head through a filling valve (the old port pulled 2000
+  mB/s out of the run whatever the pressure). It takes gasoline, diesel and heavy oil as liquids and natural gas as
+  gas, through the one flange. Burning, it takes the vessel's gas first, the whole mix down to 1 atm (the fuel gas
+  in it burns; the air a new line pushed ahead leaves through the burner, so a liquid under a low head fills the
+  vessel once the turbine runs: at standstill the head only squeezes the air cap, which is enough to light), then
+  the liquid fuel layer, every species in it by its share. Gameplay: fuel now counts at the species' real heating
+  values, as the fuel heat furnace's (gasoline 44 MJ/kg = ~2200 J/mB, was 1743; diesel 43 MJ/kg = ~2440 J/mB, was
+  2640; heavy oil 41 MJ/kg; natural gas unchanged at 50 MJ/kg), fuel gas under 1 atm can't be burnt (Jade says
+  so), water in the vessel drains, and another liquid (crude, residue) stays and blocks it, named by Jade. Other
+  mods' fuels that are not fluid species no longer go in. `gas_turbine_low_head_fuel`, `gas_turbine_legacy_tank`,
+  `gas_turbine_real_gas`, `oil_on_pipes_turbine_fuel`.
+- A vessel boiled dry no longer stalls its network (2026-11-14, `fluidcore` `WaterAir.pinned`, `MixFluid`): a
+  vessel emptied under a steady heat ends at the 4000 K cap with more energy than its trace of gas holds there. The
+  solver still told the network that its temperature followed its energy, so every Newton step was misled: most
+  ticks ran out of sub-steps (16 of 200 random heated networks; one multi-fluid network took a second a tick). At
+  the cap, or the 120 K floor, the temperature's slopes are now zero, and the multi-fluid solve answers at the bound
+  without bisecting towards it. The random open-network tests (`openNetworksKeepTheBooks`) run again: they book heat
+  over the time each step covered, and require that no step is cut short.
+- Idle machines' fluid networks sleep (2026-11-14, `fluidcore` `Network`): a machine with a filling valve standing
+  idle kept its little network awake for good, at about 0.03 ms a step each. Two causes. A check valve's stream was a
+  bare softplus, which passes a little forward at balance and an exponential tail below it, so the dead-end stub
+  behind a shut filling valve drained through it, slower and slower, for over an hour: a check valve now passes
+  nothing at or under balance, exactly, and opens smoothly above it (`Network.checkSp`; far above, it is the pipe's
+  conductance about 18 Pa late, 1.8 mm of water: a cracking pressure). And a sleeping network woke when any input
+  differed in a single bit, so a device that sets its valve from its vessel's state woke it every 5 s by a rounding:
+  inputs now count as changed past 1e-9 of themselves (`Network.changedInput`). The comparison now also covers every
+  field a step reads: the old hash left out a pump's speed and a turbine's throttle, so in the core a network asleep
+  round a stopped pump slept on when the pump started (`PoolSleepTest.pumpStartingWakesIt`). `idle_inlets_sleep`,
+  `PoolSleepTest`, `FluxShapeTest`. The same for the other one-way laws: a pump past its shut-off head, a regulator
+  past its set point and a turbine's nozzle with no drop across it pass nothing, exactly (`Network.checkGate`,
+  `checkRoot`; an open turbine at standstill passed steam with no pressure drop, and pumped its inlet under its
+  exhaust). Far above the band each is its old law about 20-30 Pa late. `PoolSleepTest.shutDevicesSleep`,
+  `FluxShapeTest.shutOffShapes`. `/elnlab fluidstats` says for each
+  network how much of the time it slept, how often an input woke it and which one ("node 1 m[2]", "edge 0 speed"),
+  and how often its core was rebuilt. A machine that makes or uses fluid every tick (a resin collector dripping)
+  stays awake with no solves: its contents are an input.
+- Open pipes mix at rest (2026-11-14, `fluidcore` `Network`): a plain pipe carries two smooth streams whose difference is
+  exactly g·Δp, so at balance each still carries g·S·ln 2 (S the 10 Pa band): the contents of two joined vessels mix
+  slowly, as they would through an open pipe (about 6 mg/s of gas through a machine port). Anything meant to be shut
+  at rest is a one-way edge, which passes nothing at or under balance: machine vents are a gas-out and an air-in pair.
+  A plain edge to the atmosphere airs a vessel out (`FluidCoreTest.communicatingVesselsLevelOut` uses the pair).
+- Flare stack on a fluid node: its 4-bucket tank is a fluid node behind its front flange (half way up; buckets put
+  any species in). Its tip passes every gas over the air's pressure between steps, each species by its share: natural
+  gas and oil vapours burn, steam and air just go up, so a flare burns all the gas a pipe brings (the 1.12 tank took
+  250 mB/s of anything and backed up). Liquids still burn at up to 250 mB/s, the bottom layer whole; water boils away.
+  A float vent on its tip relieves a step's surge (gas only) and a vacuum breaker lets air in as liquid burns down.
+  What goes up it without burning shows as what it is (`anim.Plume`): water as steam, a furnace's flue gas as smoke
+  (Baughn 2026-11-13; it showed nothing, having no fluid to name it by).
+  `oil_flare_live_gas`, `oil_flare_flue`, `oil_flare_legacy_tank`.
+- Fuel heat furnace on a fluid node (Baughn 2026-11-10: "mixed on the machines"; real numbers): its 2-bucket tank is a
+  fluid node (flange 4 px up on its front; buckets put any species' liquid in). Its breather on top is two vents: gas
+  out (gas only, its float shut once the liquid nears the top) and air in (a vacuum breaker), each opening only past
+  300 Pa, so live crude's gas leaves and air comes in as it burns, but a standing tank doesn't breathe its fuel away
+  and a full one spills nothing (an open vent lost ~44 mB of gasoline an hour idle and spilled ~4 buckets when filled
+  from a pressurised tank). `fuel_furnace_idle_breather`, `fuel_furnace_overfill`. The burner draws the bottom liquid layer whole and gets each species' `heating_value` (J/kg, new
+  in the species JSON: gasoline 44, diesel 43, heavy oil 41, residue 40, natural gas 50 MJ/kg) times
+  `heatFurnaceFuelFactor`, so a mix burns as the mix. Gasoline gives ~32 % more than the 1.12 table (a unit slip there);
+  the others within 5 %. Coking follows the coking index of what burns (each species' `coking`, new in the species JSON:
+  residue 1, heavy oil 0.15, diesel 0.01, light cuts 0) against `COKE_BALANCE` 0.05, a plausible refinery's fuel
+  (Baughn 2026-11-11): over it the burner cokes, scaled so dead crude cokes as before (residue ~6x faster, heavy oil
+  ~0.6x); under it the burner clears as it burns ("the ash gets pulled out with the smoke eventually"). Water at
+  a burning burner drowns it (Baughn 2026-11-11): a flash of steam up its stack (into its flue pipe if any), the fire
+  out and its switch dropped; it won't light while water is at the burner, only once drained (buckets take the top
+  layer, or its flange) and switched on. Other mods' fuels with no species no longer go in (none
+  on Incognito). `fuel_furnace_mixed_fuel`, `fuel_furnace_coke_balance`, `fuel_furnace_water_drowns_fire`,
+  `fuel_furnace_legacy_tank`.
+- Fuel heat furnace under pressure (Baughn 2026-11-11, todo #399/#400; the pressure-fed burner is superseded by the
+  combustion chamber, todo #504, below; the relief, burst and gas rules stand): its burner is pressure-fed: over the breather's
+  300 Pa its tank's gauge pressure feeds it 1 + gauge / 1 bar times its setting (an air or gas line on its one flange
+  pressurises the tank against its small breather; 1 bar doubles it; past its rating it overheats as before). Its
+  breather gained a relief valve (opens at 3 bar, as large as its flange), and past 6 bar gauge the tank bursts
+  (Failure.pressureVessel): a 20 bar line outruns the relief. No fire rule: the pressure bursts it. Fuel gas in its
+  head space (natural gas, not a liquid fuel's vapour) burns first, as far as the flame takes it; fuel gas escaping by
+  its vents over 0.05 g/s (averaged over 2 s) with the fire lit sets the blocks around it alight (an ad-hoc rule while
+  rooms and spills aren't tracked). Jade shows the overfiring and the venting. A pump-fed furnace now overfires by its
+  line's pressure unless the line is regulated. GameTests `fuel_furnace_forced_air`, `_relief`, `_burst`, `_gas_first`,
+  `_gas_fire`.
+- Fuel heat furnace's combustion air and the 230V Air Blower (`eln:transparent_node@5396`, new; todo #471, Baughn
+  2026-11-15; the air register and the tank-fed air are superseded by the combustion chamber, todo #504, below; the
+  blower and the breathing vent stand). Pressure-fed, the burner now takes its combustion air out of its tank, 0.4 kg per MJ of fire (any
+  hydrocarbon's ~3 MJ per kg of air, 20 % excess), through an air register metered to that rate inside the fluid solve;
+  at or under the breather's deadband (natural draught) it draws the room's air as before and nothing changed. The
+  breather's float vent is a breathing vent now, 200 x narrower than its vacuum breaker (it was a ~2 cm hole: 146 g/s
+  of air at 1.5 bar, 20 x the combustion air, and that hot air carried oil vapour out: 15 % more oil for 2 % less
+  fire); it passes under 1 g/s at 1.4 bar, and a gas main still escapes through it (1 g/s) and sets the fire. Relief
+  (3 bar) and burst (6 bar) unchanged. The Air Blower: an electric centrifugal blower (230 V on its front, a speed
+  signal on its back setting its pressure with the speed's square) blowing air from around it into the pipe on its
+  right flank; 1.8 bar shut-off, 0.04 m^3/s free flow, power = flow x rise / 0.9 + 20 W idling. One feeds two Big
+  burners: at full speed ~1.5 bar, 20 g/s, 2.8 kW; at 55 % ~0.45 bar, 11 g/s, 0.47 kW. Measured on one Boiler, two Big
+  burners and an HP turbine (2.71 kW electric by natural draught): 7.58 kW electric - 2.77 kW = 4.81 kW net, or
+  4.18 - 0.47 = 3.71 kW net slowed; the 16 kW plant with four blowers 15.77 - 5.05 = 10.72 kW net. Stand-in model,
+  render and icon (the Inline Pump's); placeholder recipe. GameTests `air_blower_blocked_outlet_stalls`,
+  `hp_plant_furnace_fired_blowers`, `hp_plant_midgame_one_blower`, `_low`, `hp_plant_full_blowers_16kw`.
+- Fuel heat furnace as a combustion chamber (todo #504/#503; Baughn 2026-11-17: the burner must feel its exhaust's
+  back-pressure for the Air Blower to be realistic; flanges on the sides or back, not the front). Its flue's node is
+  now its firebox: air comes in by natural draught (a tiny gas pump from the room, 1 x the air of the burner's setting
+  at 0.4 kg/MJ, nothing against 150 Pa) or, through the new air port on its back (y 8, z 8 px, above the thermal pad; y 6 until #520),
+  by its windbox and damper (a check valve, an orifice opening with the setting, sized so 1.4 bar across it passes
+  2.5 x the air of the big burner's full setting); a pipe on the air port shuts the draught entirely (Baughn
+  2026-11-17: "a blower would normally require shutting draught entirely"). The fire is its setting x
+  min(2.5, air in / air needed), the air measured over the last fluid step. The combustion is a sink of the air burnt
+  and a source of eln:flue_gas (that air plus the fuel), its heat what the sink took plus 35 % of the flame (mass and
+  smoke heat kept: what leaves carries 35 % of the flame over the air; smoke ~1100 K, was 573 K at 3 x the mass). Unpiped, a
+  wide stack vent keeps the firebox within a Pa of the air; piped, the pipe's back-pressure throttles the air (a
+  dead-ended flue puts the fire out, the firebox stalls at the blower's head). Natural draught can't push through an
+  iron pipe: one block of it to the open air fires a natural-draught furnace 0.02 x (0.25 x at a 2000 Pa draught), one
+  block of large pipe 0.71 x (GameTests `fuel_furnace_draught_*`, measured, not pinned). The tank's
+  pressure no longer overfires it (the old 1 + gauge / 1 bar and the air register are gone): a gas main on the fuel
+  flange burns at the setting. The fuel flange moved to the top beside the flue (x 13, z 8 px; Baughn 2026-11-17: "on
+  top is fine"): pipes on the front of furnaces built before are no longer connected. Both flanges have their names
+  printed on their faces, AIR and FUEL, small enough to read only up close (todo #506). Piped plants put a thermal
+  cable between furnace and boiler (Baughn: "piped plants would normally use thermal cables"). The Air Blower's
+  output per watt is a multiplier, `AirBlowerDescriptor.OUTPUT_PER_WATT` (the work it draws is divided by it; its air
+  unchanged), 2 pending Baughn. Drowning flashes its steam into the firebox over ~1 s.
+  Saves: new key `windbox` (old saves: empty at 1 atm). Two Big burners can no longer fire a Boiler past its limit
+  (`hp_plant_boiler_limit_over` now holds). GameTests `fuel_furnace_natural_draught`, `_flue_back_pressure`,
+  `_blower_speed`, `_drown_flue`, `_air_port_abuse`, `_port_spots`.
+- Pipe Mixer (`eln:transparent_node@5308`, new; Baughn 2026-11-11): a signal-controlled pipe T that works as two
+  steerable check valves, not molar valves. Inlet A on its left flank, B on its right, the outlet out of its back, all
+  4 px up; a signal on its front opens A by s and B by 1 - s (no signal: half each). Each inlet is a check valve with a
+  port's conductance; the mix follows the pressures on its inlets and outlet, so a set mix takes pressure math or
+  feedback from the outlet's contents (Jade shows both inlets' flows and the outlet's composition). Model
+  `mods.eln.cad.models.PipeMixer`, icon drawn in tools/icons/shaft. GameTests `pipe_mixer_a_only`, `_b_only`, `_half`,
+  `_b_stronger`, `_no_backflow`.
+- Fuel heat furnace inertia from thermal mass (Baughn 2026-11-11, 30 s): its flame follows the setting at once (it
+  still takes `oilLightSeconds` to light; the `oilLagSeconds` config is gone) and heats its burner, a lumped mass of
+  0.3 J/K per W of rating plus the fuel in its tank (2000 J/(kg K)), which passes the heat on through G = rating /
+  100 K: tau = 30 s with an empty tank, ~35 s for a small burner on a full one. Fuel is drawn and coking counted by
+  the flame; heat given, smoke and Jade's power by the burner. Water at the burner quenches it. GameTest
+  `fuel_furnace_inertia`.
+- Fuel heat furnace thermostat allows for the heat still in its burner (Baughn 2026-11-14): a regulator in its slot
+  cut the flame when the furnace reached its setting, and the burner's stored heat then took an unloaded one 230
+  degrees further (set to 700 it burnt out). The regulator now goes by the furnace's temperature plus its rate of
+  change times the burner's lag, which is the temperature it would have were the flame's heat given at once: the
+  furnace comes up to its setting with the burner's lag (95 % in ~1.5 min) and stays under it, and reacts to a load
+  as before. With it: a burner still giving 1 % of its rating relights in 0.25 s instead of `oilLightSeconds`
+  (`Fire.hot`; the lighting time held a cycling thermostat 40-110 degrees low), and an on/off regulator keeps its
+  last command between its thresholds (1.12 handed the furnace to the manual setting there) and through a save.
+  GameTest `fuel_furnace_thermostat`, `FireTest.aHotBurnerCatchesAtOnce`.
+- Fuel burners are 2, 5 and 10 kW (were 5, 10 and 25: sized for natural draft, Baughn 2026-11-11, so forced air means
+  something) and made of alloy plates instead of stone combustion chambers.
+- Natural gas (and syngas) at real heating values (Baughn 2026-11-11: "we'll make the gas numbers real"): 1.12
+  multiplied gases by 1000 ("Minecraft gases are heavily pressurized"). Now a mB of natural gas is what a fluid node
+  holds as gas, 1e-6 kg x M/M_water, times methane's 50 MJ/kg: ~44 J/mB, 1/55 of before. The gas turbine burns
+  ~0.5 g/s (~560 mB/s) at 7 kW; its fuel flange takes up to 2000 mB/s (was 200) to keep up. Burning associated gas is
+  a small efficiency gain, not a power source. `gas_turbine_real_gas`.
+- Pipe Purge Valve (Baughn 2026-11-10: "a valve that lets out only gas, never liquid ... it goes by phase, not species;
+  it'll let out steam"): a safety valve with a float (shapeless: safety valve + bowl; blue cap). It vents the gas of the
+  run under it to the air above its set pressure (1.1 bar to start, the safety valve's slider), shuts as the liquid
+  reaches its outlet, and lets nothing back in (a gas-only, one-way vent: `Network.Edge.gasOnly`).
+  `pipe_purge_valve_bleeds_the_gas`, `pipe_purge_valve_keeps_the_liquid`.
+- Tanks need no floor (Baughn 2026-11-10): a tank, lone or a box, stays when the block under it goes, so a pipe can
+  run to its underside port (it used to break). `tank_stands_without_a_floor`.
 - Tank sight glass (Baughn 2026-11-03: "a viewglass"): a 3 px window in brass on the tank's front (was a 1.5 px slit
   in a texture half pale), the water in blue to its level and, when the vessel's gas is mostly steam, steam above it
   (else the dark of an empty glass: air). A box draws one glass on its front, the box's height but its own width.
@@ -129,7 +387,16 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   signal on its front sets the valve by hand; the rest of the heat leaves as air at 500 C out of its back (a large
   pipe's port) or vents. Counterflow Heat Exchanger (transparent_node@5304): blocks stack 2 x 2 across and up to 8 long along their
   fronts into one exchanger (HeatExchangerGroup, as tank boxes: merge, split on break, shares saved per block), 50 W/K
-  a 2 x 2 slice (Baughn 2026-10-29), 8 L a side a block; a lone block or any other shape is a quarter slice (12.5 W/K).
+  a 2 x 2 slice (Baughn 2026-10-29), 1 B a side a block (Baughn 2026-11-15; it was 8 L, 113 B, 14 x a boiler, and an
+  economizer soaked up minutes of feed); a lone block or any other shape is a quarter slice (12.5 W/K). At 1 B its slices'
+  ports are a large pipe's end times slice volume over 1 L, its joints a tenth of that, and a side has at least 30 mL a
+  slice (a lone block 2 slices, a stack 8): with the old conductances on 8.8 mL slices the fluid core crawled at 257
+  sub-steps a step, and with joints as wide as its ports it crawled whenever water circulated through it (2026-11-16;
+  softer, they also mix the slices less: counterflow reaches its ideal; a gas stream drops more, ~4 kPa over a 2 x 2 x 4
+  stack's joints for 44 g/s of 2.4 bar steam). Saves
+  without its "sideV" key (8 L) load at the state they had at 1 B; the rest is vented, logged, kept in "ventAW"/"ventBW"
+  and shown in Jade ("Resized"): spilled into a closed plant it would drown a boiler or flood a hotwell.
+  `HeatExchangerCases` (feed heater, cooler, wrong uses, old save).
   Effectiveness-NTU for counterflow from last step's inflows (a boiling or condensing side, steam nearly all of its
   pressure, takes any heat at saturation); ports on the two end faces, A at their centres, B up high: A in at the back
   end, B in at the front. Separate jobs (economizer, steam raiser, reheat) are separate exchangers piped in series.
@@ -150,6 +417,10 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   (`TransparentNodeElement.wrenchTurn`, `FluidPlacement.turn`). Tanks and exchangers in a box or stack don't turn. Before,
   placing turned the device and its neighbours to meet the most ports, and nothing turned them back.
   `machines_face_the_player_and_the_wrench_turns_them`.
+- Toolbag (new, Baughn 2026-11-18, todos #510/#517; `node/voxel/ToolbagItem`): a bag of 15 cable and pipe kits (and a
+  shears slot for the cutting to come) that lays routes as a kit does, the kind taken from the cable clicked or chosen
+  on a radial (voltage or pipe, cross-section, colour). Recipe: leather round a chest, an iron ingot on top (a default
+  pending Baughn). docs/voxel-cables.md, Toolbag.
 - Battery Belt (new, Baughn 2026-10-27; `item/belt`, first shipped in Stasis Delvers, which aliases its old id
   `stasisdelvers:battery_belt` to this one): a Curios belt (optional dependency) with four pockets for EA portable
   batteries/condensators and `#eln:battery_belt_items`; right-click opens them, sneak-right-click wears it. An EA item
@@ -204,8 +475,8 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   (Baughn 2026-10-26). `pipe_throttle_and_control_valves`.
 - 50V/200V steam turbines take water damage: over 10% of the inlet liquid while the shaft turns above 20% speed burns them out (`FailureCause.WATER`, repairable; the repair drains the inlet). Baughn 2026-10-26; `oil_steam_turbine_floods`. A casing drain throws away 0.5% of the inlet volume a second in liquid water (Baughn 2026-10-29: condensate must get out, slugs stay fatal).
 - Cable slots removed: meters, electrical/voltage/thermal probes and lamp sockets have a built-in cable (LV, MV for the
-  200V socket, copper thermal cable); Ground Cable has no GUI. Kept: transformer (turns), hub (side selection), breaker
-  (trip rating); lamp supply and temperature probe slots are optional. Old cables stay in the hidden slot and drop on
+  200V socket, copper thermal cable); Ground Cable has no GUI. Kept: transformer (turns), hub (side selection); the
+  breaker's went too (Baughn 2026-11-17: MV contacts, trip current in its GUI; an old piece sets that once); lamp supply and temperature probe slots are optional. Old cables stay in the hidden slot and drop on
   break. Guarded by `CableSlotCases`, `GoldenSlotsCase.removedCableSlots`.
 - Six-node blocks (and voxel blocks) are waterloggable (`SixNodeBlock`, `VoxelNodeBlock`; test
   `port26_waterlogged_cable` in `PortHelperCases`). Shorting in water: not done.
@@ -221,9 +492,93 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   GuideME optional). Book + 4 copper cables; every player gets one once, when a slot is free (persisted NBT
   `eln_handbook_given`). EA ships a stub start page; a content mod adds pages under `guides/eln/handbook/` in its own
   namespace and calls `Handbook.setStartPage` (`mods/eln/handbook`, `HandbookCases`).
+- New in 26.x: the servo layer (`mods/eln/robotics`; Baughn 2026-11-02: the servo layer first, 200 V only, players ride
+  the carriage now: "an elevator would be the earliest truly useful output"). The first device is an elevator:
+  - A Linear Servo Drive (`eln:transparent_node@5504`) with a Servo Rail mast on its top, 2 to 32 blocks, moves an
+    elevator car up and down on the drive's front side: a cabin 3 x 3 x 3 outside (Baughn 2026-11-05; about 2.5
+    inside) over the 3 x 3 blocks in front of the drive, its back wall on the rail side, the side walls and roof solid,
+    the front (away from the rail) open. The plate is the car entity (3 x 3 x 1/16); the walls and roof are its part
+    entities (`CabinWall`, thin boxes from the car's frame), solid as the plate is: on the client to its own player,
+    on the server to every creature but players. The whole cabin sweeps the shaft (a block or a creature outside it in
+    the way stops it); creatures already in the cabin go with it. A stopped car has floor ghosts under all 9 blocks.
+    GameTest `servo_elevator_cabin_walls_hold`.
+  - The car's panel (`ElevatorPanel`, a thin board inside the back wall; Baughn 2026-11-05: real parts in it): 3 x 4
+    slots, each empty or holding an Addressable Button or Light, put in by clicking a slot with one in hand (sneak with
+    an empty hand: it comes back). Slot i's address is the panel's first address (the drive's screen, "Car panel
+    from") plus i, left to right and top to bottom as a rider sees them. A button slot sends `press` from its address
+    when clicked; `power` to a slot's address lights its lamp. The drive keeps the slots (NBT `panel`, `panelBase`,
+    `panelLit`; they drop when it's broken) and a bus port per filled slot on its own bus (the travelling cable:
+    nothing moves block to block); the car shows them (synced entity data). GameTest `servo_elevator_car_panel`.
+  - Floor Sensor (`sixnode/busdevice`, id `6 + (117 << 6)`; Baughn 2026-11-05: floors found by sensors, not markers):
+    the proximity sensor's model, an address in its screen, a bus pin in a voxel block. Register 0 is 1 while a car
+    stands with its floor level with the floor of the sensor's block, up to 4 blocks across; when that starts it sends
+    `arrive` (index 0) to everyone from its address. Recipe: an Electrical Entity Sensor, a cheap chip and Field Bus
+    Cable. GameTest `servo_elevator_floor_sensor`. The car's floor
+    stops level with the drive's foot at the bottom and with the top rail block at the top.
+  - Commands (Baughn 2026-11-05: the drive is a plain actuator, an addressed RS485 device; no Station Markers, no
+    setpoint bands, no panel stepping): its setpoint wire, a share of the travel to the nearest block, while connected;
+    else its registers on the bus: 0 target (blocks above its foot), 1 position, 2 speed limit (m/s, 0 none), 3 state
+    (idle, in position, moving, fault), 4 load (kg). It takes `write` (0 and 2), answers `read` with `reply` to the
+    asker, and sends `fault` (its code) to everyone when a fault starts. Its address (17..255, NBT `addr`) is set in
+    its screen (an empty hand). Every planned stop is on a whole block. The Station Marker stays registered (worlds
+    that hold one load cleanly) but has no recipe, isn't in the tab, and a click says it's no longer used; the old
+    `proportional` NBT key is ignored. The car's panel says how the elevator is driven (it has no buttons yet).
+  - Connections: 200 V on the back. Every pin is on a flank's floor edge (Baughn 2026-11-05: a ceiling pin can't be
+    wired with the rail on top; several pins per edge, as the displays): seen facing the flank, the left flank has the
+    setpoint in the middle, in-position on its left and position (share of the travel) on its right; the right flank
+    enable in the middle (unconnected counts as enabled), fault on its left and the bus on its right. A plain cable
+    meets only the middles; voxel cables meet each pin (Machine API 1.1: `CablePosition.FLOOR_LEFT`/`FLOOR_RIGHT`,
+    `bus(face, position)`, `FacePins`, `VoxelNode.connectPeerPins`). GameTests `servo_elevator_driven_over_the_bus`,
+    `servo_elevator_follows_its_setpoint_wire`.
+  - Electrics: a Machine API consumer (`Machines.forElement`, the API's first new device): 200 V, rated ~3 kW (40 W
+    idle plus lifting 120 kg net, two riders over the counterweight, at full speed; tsugumi-lab's choice),
+    `Brownout.SLOW`. Each tick it asks for its step's work against the net weight over 80 % (a counterweight balances
+    the car and 40 kg; players count 80 kg, other creatures by size): a car carrying more than 40 kg pays to go up, an
+    empty or lighter one pays to go down (it lifts the counterweight), and the other way costs only the idle draw. It
+    moves only as far as what it got pays for: short, it goes on from there at the speed paid for, its new top speed what the line keeps
+    delivering (continuous in position; the speed steps down, a lift braked by its load). So a weak or starved line, or
+    a load over its rating, makes a slower car that still arrives; the machine's buffer (two ticks of rated power) can
+    pay for a faster first second. Top speed also follows the line: 2 m/s at 200 V, 1 m/s^2, a sag or recovery
+    mid-move retargets it (up only once energy piles up in the buffer, so a starved car doesn't surge and fall back);
+    below 30 % of 200 V it holds, and runs again after half a second over 35 %. On a line weaker than it, the API keeps
+    it at the line's maximum power (about half the volts) instead of pulling the line down.
+  - Heat and trips (the API's heat model): 4 kJ/K, 4 W/K to the ambient where it stands (EA's Ambient), heated by
+    the idle draw and the motor's losses; 80 K over its ambient (as the old drive: 100 C at 20 C, 170 C in the
+    Nether, where it idles at 100 C) it trips, faults and holds, and runs again 3 s after it is 30 K under that (as the
+    old drive's 50 K over ambient). The API's trip is a rise over ambient, so a hot biome costs it no margin. Over 1.3x 200 V it trips (fault "overvoltage") and
+    holds until the line has been under 1.1x for 3 s: a servo amplifier's protection, so it never burns. A trip stops
+    the car dead, as any fault; a dead line brakes it where it can (lifting, it stops at once). Reloaded mid-move, its machine runs
+    on (the API keeps a running machine's state).
+  - Safety: before each step the car and its riders are swept to the next position; a block or a creature that isn't
+    riding stops it dead (fault; it clears on the next call or an enable toggle). Disabled, it stops at the next whole
+    block it can; a dead line brakes it where it can.
+  - Sync (design: Argon's review): the drive owns the motion (a Segment on its own saved clock, which stops while its
+    chunks are unloaded) and places the car on the server; clients get the segment (`SegmentPayload`) and run it on a
+    local clock, carrying their own player after its tick. The car has no vanilla position sync and is not saved. On
+    the server it is solid to mobs and items, which it carries, but not to players, whose positions there are a round
+    trip late. A stopped car has a floor ghost under its plate (a player logging in on it stands on that). A mixin
+    keeps a rider from the floating kick when allow-flight is off.
+  - Departures from the design: the panel is a part entity (the car's collider is only its plate, so the plate can't
+    also be the panel's hitbox; its id is the server's entity counter's, sent in the car's spawn packet, never assumed
+    to be the car's + 1); joiners get the segment in the car's pairing bundle rather than in startSeenByPlayer
+    (which runs after the spawn bundle); on the server, riders' sweep is clipped to the car's column (a rider's
+    overhang meets the landing, it doesn't fault the car) and a player up to 1 m off the top (a round trip late) still counts as a rider.
+  - Tests: `ServoCases`, `DriveTest`, `SegmentPropertyTest`, `StationsTest`, `RidersTest`, `SegmentPayloadTest`.
 - Tools (Baughn 2026-11-03): a pickaxe breaks machines, devices and pipes as fast as stone, shears break cables as fast
   as wool; in a block holding both, the part under the crosshair decides. No part breaks in under two ticks, so with
   vanilla's pause after each block it is at best one part per 7 ticks (`node/BreakTool`, `BreakToolCases`).
+- All cables explicit (Baughn 2026-11-18, #515: first the probes, then "the same for every other device as well; I'd
+  like all cables to be explicit"): every device that goes anywhere is placed off centre, with pins, also when clicked
+  in the middle of a free face. Before, that click put it in the face's own slot, where it drew cable stubs to the
+  face's edges and met a machine beside it by EA's edge rule; now a cable is laid to the machine. Devices already in a
+  face slot are left as they are and keep working. Devices that never went anywhere (the redstone converters, power
+  switches, analog vuMeter, loggers, signal processor, bus devices, lamp sockets and supplies, ...) still take the face.
+  A pin's click target is a voxel larger than the pin is drawn. `ProbeInMiddleCase`, `GeometryCase`.
+- Turning voxel devices (Baughn 2026-11-18, #512/#513): a wrench click on a device placed off centre skips fronts at
+  which it doesn't fit and turns to the next one clockwise that does (with none it stays and says why); a press of the
+  wrench key (C) with such a device in hand turns its placement preview the same way, and the click places it as shown.
+  The chosen turn is kept per player for that kind of device until changed (or logout), not reset after placing.
+  `WrenchSkipsCase`, `TurnBeforePlacingCase`.
 
 ### Multi-fluid pipes (2026-11-03)
 - Baughn: EA pipes carry oil "the complex way": fluids are data (datapack species JSON), Raoult mixing within a
@@ -234,6 +589,19 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   so a pipe end can meet it (Baughn: "definitely move it"); the pipe router reaches flanges off its lattice by a jog.
 - A pipe's open end passes liquid as far as it is wet (Baughn: a part-full run held its puddle; water too).
 
+- **Real-world voltages and realistic converters** (2026-11-06, board #55): tiers 48 V / 230 V / 400 V / 11 kV (1.12: 50 /
+  200 / 800 / 3200 V), signals 0-5 V (1.12: 0-50 V), names follow ("48V Macerator"); the 230 V cable carries 3 kW. DC-DC
+  converters take up to 64 turns a side; a core has a volts-per-turn limit (cheap 4, average 8, optimal 16 V): past it the
+  core saturates, draws a magnetising current and heats, and the converter burns; a winding over 1.3 x its cable's
+  current heats it too. The Signal-Tapped DC-DC Converter taps its secondary by a signal on its front. Old converters are
+  rewound once and kept as built (no saturation) until changed (docs/persistence.md).
+- **Static device parts are drawn by the chunk** (2026-11-12, board #67): the client's frame at a base of machines
+  went mostly to device geometry sent again every frame. Of three options (coarser coil ends, geometry kept on the
+  GPU, static parts as chunk geometry) Baughn chose the last as the end state. Past the 64 blocks a block entity is
+  drawn within, a device used to vanish whole; its parts in the chunk now stay, without what moves or glows ("keep
+  them visible; it's an improvement even without the details"). Client config `rendering.staticPartsInChunks` turns
+  it off (docs/rendering.md).
+
 ## Behaviour changes vs 1.12
 
 - Meters, probes and power sockets no longer burn at their (former slot) cable's voltage: those watchdogs are off.
@@ -243,6 +611,11 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   their thermal loads in the simulation: they cool to ambient and do nothing else, make no working sound or
   animation, give no light, and a right-click only says what repairs them (a meter still reads them); no GUI.
   Contents drop when broken. See simulation.md "Failures"; `BurntCases`.
+- Stone heat furnace leaves its fuel's crafting remainder (nero 2026-11-14: it ate Occultism's unbreakable core piece,
+  which a vanilla furnace gives back): it asks the stack (`ItemStack.getCraftingRemainder()`, so per-stack remainders
+  count) and leaves the remainder in the fuel slot, or drops it at the furnace if more fuel is still in the slot. 1.12
+  gave an empty bucket for items named "bucket" and nothing else. It is EA's only slot that burns items. GameTest
+  "wp10b heat furnace leaves its fuel's remainder".
 - Repair parts cost less than the device (Baughn: a stone heat furnace took a Machine Block, which cost more than the
   furnace). Jade shows a burnt device's cause and repair part.
 
@@ -323,6 +696,26 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
 - Logic and analog chips are drawn at 0.75 (a case 6 voxels across; Baughn) and, in voxel blocks, go anywhere on a
   face; pins that touch connect (docs/voxel-cables.md, devices off centre).
 
+- The macerator, compressor, magnetizer and plate machine (50 V and 200 V; the tar sand separator shares their
+  element) and the FE exporter run on the Machine API (`Machines.forElement`; Baughn: the four main machines and the
+  exporter first, to test the API). Same nominal volts, rated power, energy per item and FE per joule; at or under
+  nominal volts they draw exactly what their resistor drew (`MachineApiCases` runs that model alongside, at 1x and
+  0.7x the line). Differences: above nominal volts they no longer speed up past their rating (the exporter takes no more than its
+  maximum power); they start half a
+  second after power comes (the API's power-up hold); overvoltage (over 1.3x nominal, either polarity for the
+  machines) burns them at once instead of after the watchdog's budget, and a repair brings them back; the exporter
+  no longer burns on a reverse voltage under -0.2x nominal; its machine holds up to two ticks of power in front of
+  the FE buffer (lost when it is broken, as the buffer is). A machine's progress on the item in hand is saved now
+  (it restarted on every load). Jade's "Power consumption" is the power drawn (it showed the power times the
+  boosters' efficiency). Their terminal's series resistance is the LV cable's for every voltage: a 200 V machine's is
+  0.025 instead of the MV cable's 0.1 ohm, at its 10 A 0.75 V less drop (under 1% more power).
+  On a line weaker than the machine (its resistance above the machine's), they now draw the line's maximum power at
+  about half its volts instead of their resistor's power far below that: the API's slow consumers plan on the line
+  the solver shows them (its Thevenin equivalent at their terminal, read after each step), so alone they never pull it down past its maximum power (found with the Linear Servo Drive). A row of
+  them on one weak line shares it as their resistors did (in proportion to their ratings, settling at their rated
+  resistances when only the row together is heavier than the line); one heavier than the line takes the most it can
+  beside the others (`BenchTest.slowConsumersShareAWeakLine`).
+
 ## Bugs fixed
 
 - Shafts stored mass^2 x 0.25 J per rad/s (linear in speed): a line's inertia grew with the square of its total mass,
@@ -359,8 +752,57 @@ In the port:
   `BatteryPackRecipe` sums their charge into the pack; `golden_recipes` accepts a custom recipe in a shapeless one's
   place when the 1.12 grid makes the same item. Test: `battery_pack_keeps_charge`.
 
+- A six-node device's screen stayed open after that face was broken while the block stayed (another device or a cable
+  on it, a voxel block), and its contents were both on the ground and in the screen: a dupe, or a loss for anything put
+  in after. The screen now closes with its device, and dropped contents leave the inventory
+  (`six_node_device_menu_closes_when_its_face_is_broken`).
+
 - Two devices on adjacent faces of one block shared heat only on some corners: `SixNode.tryConnectTwoInternalElement`
   paired the wrong thermal loads (1.12). Test: `six_node_inner_corner_a_temperature_probe_reads_a_wall_cable_s_heat`.
+
+- GUI packets were trusted (review of 2026-11-09): a modified client could store a NaN FE exporter power factor
+  (its process then threw in every simulator tick, and the factor was saved: the server crashed again on start), a
+  negative teleporter or turret power (a negative resistance), an index past the signal hub's links, the wireless
+  receiver's or a lamp supply's aggregators (a throw in the tick, saved), sensor bounds of Infinity (a NaN signal;
+  the stock text box sends Infinity for "1e39"), NaN through the `max(lo, min(hi, x))` clamps of the heater, gate
+  source and steam valve, and names of any length. Every handler now goes through `ClientValues` (slider values
+  clamped, typed numbers finite, indices in range, strings cut to 64 characters); bad saved values are clamped on
+  load; the Modbus RTU caps its Tx and Rx entries at 32 each. Two bugs the same test found: a Modbus RTU with two
+  or more transmitters threw on unload, and a fuel heat furnace's switch turned on with no burner was off after a
+  reload (it now turns on only with a burner, as loading kept it). Test: `gui_packets_reject_bad_values_*`.
+- One NaN input (0/0 from two pins at 0 V) stuck in a signal processor's `rc`, `integrate`, `pid` or `derivate` for
+  good, and was saved: the program output 0 V until it was retyped. A step whose new state would not be finite is
+  skipped (the state holds, as `ramp` already did), and a NaN in a save loads as 0. A watchdog that saw one NaN sample
+  never fired again; it now skips the sample and reports it through NanGuard. Inductors and voltage sources load a
+  non-finite saved value as 0. Tests `StatefulNanTest`, `ValueWatchdogNanTest`, `NanGuardTest`.
+- A turret ended its search at the first entity in its window that its filter spared, so a cow in front of a zombie
+  kept it from firing (1.12). It skips that entity now. Test `turret_looks_past_a_spared_entity`.
+- Range checks ignored the dimension (1.12 `trueDistanceTo` compared x, y and z): a wireless transmitter or lamp supply
+  in the Nether reached devices at the same coordinates in the Overworld, and two utility poles in different dimensions
+  could be linked for a few blocks of cable. The distance between dimensions is infinite now, a starting pole in
+  another dimension is forgotten, and so is a player's starting pole on logout. Test
+  `dimensions_keep_wireless_and_poles_apart`.
+- Auto Miner below y = 0 (1.12 never went there): each pipe segment's ghost id was its height, so the segment at
+  y = -1 had the machine's own id and breaking it broke the miner. Pipe segments share one id now. The stacks waiting
+  for room in the chest are saved and dropped when the miner is broken (1.12 lost them). Test `autominer_below_zero`.
+- The Auto Miner mined anything but air, liquids, obsidian and bedrock, and with silk touch handed out spawners, budding
+  amethyst and end portal frames as items. It leaves alone blocks with a destroy speed below 0, the
+  `#minecraft:wither_immune` and `#minecraft:features_cannot_replace` blocks (spawners, trial spawners, vaults, chests,
+  reinforced deepslate, command blocks) and budding amethyst: in the shaft they end it as bedrock does, around it they
+  are skipped. A finished or waiting miner looks for work once a second (1.12: every tick, rescanning its whole layer).
+  Test `autominer_refuses_unbreakable_blocks`.
+- The Hub's screen was a fixed picture (slot 3 on top, 0 right, 2 bottom, 1 left), which is the hub as seen on a
+  wall, or on a floor by a player facing east. For a player facing south over a floor hub it was a quarter turn off:
+  the left and right slots were the north and south sides, the top and bottom ones east and west (AdventurAgent). The
+  screen now shows the hub as the player sees it when it opens (`sixnode/hub/HubSlots`): on a floor the top slot is
+  the side the player faces and left is their left; on a ceiling the top is behind them (the view looking up); on a
+  wall the top is up. The links are drawn between their slots, and an empty slot's tooltip names its side of the
+  world. The device is unchanged (slot i is still edge `LRDU` i of the face, link ids as saved), so placed hubs keep
+  their connections. Tests `HubSlotsTest`, `hub_slots_as_seen`.
+- Cable routes to a device's pin at the edge of a block that stands alone (a three-channel logger on a pillar) found
+  no way, though routes started at that pin came down the pillar's side: the router's end only took a cable arriving
+  flat along the face, not one coming over the edge onto the pin. It now does, as a start may leave that way
+  (Baughn 2026-11-18, #514; `CableAirCases.ToPinOnPillarCase`).
 
 ## Deferred
 
@@ -368,8 +810,10 @@ In the port:
 - Modbus RTU: element ported, render and GUI not; registered without a creative entry while `Eln.modbusEnable` is false.
 - Other languages: only the generated `en_us`; 1.12's 40+ `.lang` files to convert.
 - Config: the rest of the 1.12 balancing values.
-- Chunk baking of static device geometry (voxel nodes are already baked into the chunk mesh); only if playtests need it.
 - In-game wiki guide (`wiki/Data.java` only collects descriptor groups), ore regeneration.
+- Servo layer: horizontal rails (the car and its payload carry an axis; the drive only scans up), larger platforms, bus
+  I/O on the drive, the drive's own screen. Other players and mobs riding a car are drawn by vanilla's interpolation,
+  so they may trail the car by a tick or two; only the local player is carried in step with it.
 
 ## Open questions
 
@@ -381,7 +825,7 @@ In the port:
 
 ## History and next steps
 
-The 1.12 tree is `upstream/ports/1.12` (local `port-1.12`); this port is pushed as `ports/26.3`. Phase Q (after
+The 1.12 tree is `upstream/ports/1.12` (local `port-1.12`); this port lives on `develop` (it was `ports/26.3` until 2026-11-04). Phase Q (after
 parity and Baughn's sign-off): port the age-series fork's features (github.com/age-series/ElectricalAge, ~654 commits
 on 1.7.10) onto 26.x.
 
@@ -391,12 +835,16 @@ on 1.7.10) onto 26.x.
   capacitors keep their charge and take the new leak on load. GameTest `power_capacitor_leaks_like_the_bank`.
 
 - Oil lakes (todo #138, Baughn 2026-10-30, after Argon's review): new lakes are `oilLakes.sizeMultiplier` (2) times as
-  big, all by depth (same footprint; the scale is saved in the lake's structure piece, 1 for older lakes). Below
-  `oilLakes.tailShare` (20 %) of its capacity an oil lake seeps instead of running dry: one budget per lake, `seepShare`
-  (18 %) of a 200V oil pump's nominal rate (~5.6 mB/s), shared by all its pumps (Baughn 2026-10-30); the lake stays at
-  its tail level. Steam pushed down a
-  second well casing through the Steam Injection Wellhead (`eln:transparent_node@5200`, new; above the casing's head of
-  crude, ~0.08 bar a block) pays for crude at `steamKgPerBucket` (0.2 kg), and the lake's pumps run at full rate on it
+  big, all by depth (same footprint; the scale is saved in the lake's structure piece, 1 for older lakes). An oil lake
+  refills by seepage lerped by its fill (Baughn 2026-11-11, "so it's easier to tell what's going on"): none when full,
+  rising linearly to `oilLakes.seepMaxShare` (25 %) of a 230V oil pump's nominal rate (~7.8 mB/s) at `seepFullAt` (25 %)
+  full and below. (Until 2026-11-11: 18 % below a 20 % tail, refilling only up to the tail; the new config keys keep the
+  old defaults out of existing configs.) The seepage goes into the lake (Baughn 2026-11-08: more pumps don't mean more
+  oil), caught up lazily by game time in closed form (`seep_time` per lake in `eln:oil_recovery`), so a lake left alone
+  refills, ever more slowly, towards full. Surface ponds (`oil-pond:`) don't refill (Baughn 2026-11-08). GameTest
+  `oil_lake_refills_by_fill`. Steam pushed down a second well casing through the Steam Injection Wellhead
+  (`eln:transparent_node@5200`, new; above the casing's head of crude, ~0.08 bar a block) pays for crude at
+  `steamKgPerBucket` (0.2 kg), which raises the seepage by the same lerp to `seepSteamShare` (100 %) of a pump's rate
   (credit per lake in SavedData `eln:oil_recovery`, at most a pump tank's worth). Water lakes still run dry. Residue is a
   fuel for the fuel heat furnace (~41.7 MJ/l); heavy oil already was. GameTests `oil_lake_seepage`, `oil_lake_steam`,
   `oil_lake_weak_steam`, `oil_heavy_cuts_burn`, `oil_lake_sizes`.
@@ -485,6 +933,32 @@ on 1.7.10) onto 26.x.
   the channels in use as `3 light_blue  12.5V` with writer clashes, Jade on a module lists `Terminal 5: 3 light_blue,
   in 30V`. The pins themselves carry no number tag yet. Tests `BusNetTest`, `BusNetPropertyTest`, `BusChannelTest`,
   GameTest `bus_cable_across_blocks`.
+- Field bus packets (Baughn 2026-11-05: the bus becomes an RS485 bus). A packet is `[target][source][type][payload]`
+  (`Packet`, `PacketType`): target 0 is a broadcast, 1..16 the colour channels (dye id + 1), 17..255 devices; source
+  is the sender's address. Each type has a fixed payload (an index byte, a float, or both): 1 signal, 2 press,
+  3 power, 4 write, 5 read, 6 reply, 7 fault, 8 arrive; `Packet.decode` drops unknown types and wrong lengths. What
+  ports send in a tick is delivered at the start of the next (`Bus.swap`), ordered by source, then by order of
+  sending, at most `Bus.CAP` (64) a bus a tick; the rest are dropped and counted (Jade on the cable: `Packets`). A
+  packet reaches every listening port it is for except its sender: a broadcast all of them, a channel's the ports
+  claiming that channel, a device's the port with that address (`BusPort.setAddress`, 17..255 only). Packets wait in
+  a port's inbox (64, oldest dropped first) until polled, so a device needn't run every tick; packets still queued
+  move with their sender when the bus is rebuilt. Tests `PacketTest`, `BusNetPropertyTest`.
+  Colour channels are held levels set by signal packets, and the last write wins (Baughn 2026-11-05; it was the
+  highest of each tick's writes, cleared every tick). Writers (Bus I/O terminals, signal processors, `MachineBus`)
+  still write every tick, but `BusPort.write` sends a signal only on a change of 1e-4 (5 mV) or more, onto or off 0
+  or 1, or when asked again; a port holds the channels it writes, and a tick without a write lets go: then the other
+  holders send theirs again, or the channel falls to 0. A dropped signal is sent again, and every writer sends again
+  on a rebuilt bus. Tests `BusNetTest`, GameTest `bus_module_last_writer_wins` (was `bus_module_highest_writer_wins`).
+  Jade on a bus cable lists the device addresses on the bus (`Devices: 17, 30 (2x, DUPLICATE)`). A Bus I/O Module's
+  terminal pins wear their channel's dye, so tuning one in the screen recolours the module (Baughn); unused ones stay
+  signal-cable white.
+- Addressable Button and Addressable Light (RS485 bus devices, Baughn 2026-11-05; `sixnode/busdevice`, ids
+  `2 + (117 << 6)` and `3 + (117 << 6)`): a bus pin on the front edge in a voxel block (none in a plain block), and an
+  address, 17..255, set in a small screen (`gui/bus_address.json`, NBT `addr`; anything else means none). The button
+  wears the Signal Button's model: a click sends `press` (index 0) to every device from its address, and its lamp shows
+  the last `power` sent to it (over half: lit, NBT `lit`); sneaking opens its screen, as the wrench turns it. The light
+  wears the LED vuMeter's model and shines as bright as the last `power` sent to it, block light up to 7 (NBT `level`).
+  Recipes: the Signal Button or LED vuMeter, a cheap chip and Field Bus Cable, shapeless. GameTests `bus_device_*`.
 - Bus I/O Module (the field bus, `mods.eln.bus`; Baughn: 9 terminals), id `1 + (117 << 6)` beside the Modbus RTU,
   whose model it wears without the door (a proper model later). On a face, its front edge takes Field Bus Cable; its
   left, back and right edges hold three signal terminals each, numbered 1 to 9 round from the bus edge, pins 4 voxels

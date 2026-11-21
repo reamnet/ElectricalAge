@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -66,19 +65,36 @@ abstract public class GridElement extends TransparentNodeElement {
     public boolean onBlockActivated(Player player, Direction side, float x, float y, float z) {
         ItemStack stack=player.getMainHandItem();
         var item=GenericItemBlockUsingDamageDescriptor.getDescriptor(stack);
-        if (!(item instanceof ElectricalCableDescriptor cable)) return false;
+        boolean bare = OverheadCableItem.is(stack);
+        ElectricalCableDescriptor cable = item instanceof ElectricalCableDescriptor c ? c : null;
+        if (!bare && cable == null) return false;
         UUID id=player.getUUID();
         int terminal=selectedGridTerminal(side);
-        if (!allowsNewGridLinks() || !acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || !GridCablePlan.acceptsChannels(cable,gridLoads(terminal).size())) {
+        if (!allowsNewGridLinks() || gridLoads(terminal).isEmpty() || (!bare && (!acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || !GridCablePlan.acceptsChannels(cable,gridLoads(terminal).size())))) {
             Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Select an overhead grid terminal and intact power cable"));pending.remove(id);return true;
         }
         var first=pending.get(id);
-        GridElement other=first==null?null:GridLink.getElementFromCoordinate(first.coordinate());
+        GridElement other=first==null || first.coordinate().dimention != coordonate().dimention ? null :GridLink.getElementFromCoordinate(first.coordinate());
         if (other==this) { pending.remove(id);Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Cancelled connection"));return true; }
         if (other==null) {
             pending.put(id,new Pending(coordonate(),terminal));Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Setting starting point"));return true;
         }
         pending.remove(id);
+        if (bare) {
+            try {
+                if (!canConnect(other) || !validLOS(other))
+                    throw new IllegalArgumentException(mods.eln.i18n.I18N.tr("Cannot connect these two objects"));
+                int cost = GridLink.addBareLink(other, this, first.terminal(), terminal, stack);
+                if (cost > 0) {
+                    if (!player.isCreative()) OverheadCableItem.take(stack, cost);
+                    player.getInventory().setChanged();
+                }
+                Utils.sendMessage(player, mods.eln.i18n.I18N.tr(cost > 0 ? "Added connection" : "Already connected"));
+            } catch (IllegalArgumentException ex) {
+                Utils.sendMessage(player, ex.getMessage());
+            }
+            return true;
+        }
         int length=GridCablePlan.requiredUnits(cable,(int)Math.ceil(other.coordonate().trueDistanceTo(coordonate())),gridLoads(terminal).size());
         var utility=cable instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire?wire:null;
         boolean enough=utility==null?stack.getCount()>=length:stack.getCount()==1 && (player.isCreative() || utility.getRemainingLengthMeters(stack)+1e-6>=length);
@@ -160,7 +176,16 @@ abstract public class GridElement extends TransparentNodeElement {
         }
     }
 
+    /** Forgets a player's starting pole (logout). */
+    public static void forget(UUID player) {
+        pending.remove(player);
+    }
+
     abstract protected ElectricalLoad getGridElectricalLoad(Direction side);
+
+    /** A span was added or removed. */
+    protected void onLinksChanged() {
+    }
 
     // TODO: This should check if the wire isn't passing through blocks.
     private boolean validLOS(GridElement other) {
@@ -263,6 +288,8 @@ abstract public class GridElement extends TransparentNodeElement {
                     Vec3 end=target.renderedGridCablePoint(remote,i).add(offset.x,offset.y,offset.z);
                     writeVec(stream,start);writeVec(stream,end);
                 }
+                // the stasis halo: either pole anchored (Baughn 2026-11-08)
+                stream.writeBoolean(timeExempt() || target.timeExempt());
             }
         } catch (IOException e) {
             e.printStackTrace();

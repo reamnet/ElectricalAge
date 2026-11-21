@@ -7,6 +7,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -22,7 +24,8 @@ import java.util.Map;
 /**
  * Jade (26.x's WAILA; Baughn: on Incognito) for every EA node: the device's own probe lines (getWaila, as 1.12's WAILA
  * showed them), from the server. A headline always; the full details while sneaking, or always with the config
- * probe.details (ElnConfig). Loaded by Jade only when it is installed.
+ * probe.details (ElnConfig). And for any other block with the eln:machine capability (a Machine API machine at
+ * another mod's block): MachineLines.hosted, from the server. Loaded by Jade only when it is installed.
  */
 @WailaPlugin
 public class ElnJadePlugin implements IWailaPlugin {
@@ -30,14 +33,22 @@ public class ElnJadePlugin implements IWailaPlugin {
     /** Lines shown without details. */
     static final int HEADLINE = 3;
 
+    /** The Machine API's machines at other mods' blocks. */
+    static final Identifier MACHINE_UID = Identifier.fromNamespaceAndPath("eln", "machine");
+
     @Override
     public void register(IWailaCommonRegistration registration) {
         registration.registerBlockDataProvider(Server.INSTANCE, NodeBlockEntity.class);
+        // (a multiblock's other cells: its owner's lines, as on the owner's own block)
+        registration.registerBlockDataProvider(Server.INSTANCE, mods.eln.ghost.GhostBlock.class);
+        registration.registerBlockDataProvider(MachineServer.INSTANCE, BlockEntity.class);
     }
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(Client.INSTANCE, NodeBlock.class);
+        registration.registerBlockComponent(Client.INSTANCE, mods.eln.ghost.GhostBlock.class);
+        registration.registerBlockComponent(MachineClient.INSTANCE, Block.class);
     }
 
     /** The device's lines, ordered: key TAB value. */
@@ -68,7 +79,8 @@ public class ElnJadePlugin implements IWailaPlugin {
             var h = acc.getHitResult().getLocation();
             var p = acc.getPosition();
             var a = v.aimed(h.x - p.getX(), h.y - p.getY(), h.z - p.getZ());
-            return a.element() >= 0 ? v.sideElementList[a.element()] : null;
+            if (a.element() >= 0) return v.sideElementList[a.element()];
+            return a.part() >= 0 && v.parts.get(a.part()) instanceof mods.eln.node.voxel.CablePart c ? v.burnableOf(c) : null;
         }
         if (node instanceof mods.eln.node.transparent.TransparentNode t) return t.element;
         if (node instanceof mods.eln.node.six.SixNode s && be instanceof mods.eln.node.six.SixNodeEntity se) {
@@ -96,14 +108,16 @@ public class ElnJadePlugin implements IWailaPlugin {
         var h = acc.getHitResult().getLocation();
         var p = acc.getPosition();
         double x = h.x - p.getX(), y = h.y - p.getY(), z = h.z - p.getZ();
-        var a = v.aimed(x, y, z);
-        int el = a.element(), pi = a.part();
-        if (el >= 0 && v.sideElementList[el] != null) return v.sideElementList[el].sixNodeElementDescriptor.name;
-        if (pi < 0) return null;
-        var part = v.parts.get(pi);
-        if (part instanceof mods.eln.node.voxel.CablePart c) return mods.eln.node.voxel.CablePart.TIERS[c.tier].name();
-        if (part instanceof mods.eln.node.voxel.PipePart pp) return (switch (pp.tier) { case 0 -> "Iron"; case 1 -> "Alloy"; default -> "Large Alloy"; }) + " Pipe";
-        return null;
+        return v.nameAt(x, y, z);
+    }
+
+    /**
+     * The machine a multiblock's other cell (a ghost block) belongs to, on the server: its transparent node's element
+     * (the Large Boiler's seven ghost cells showed only "Electrical Age Multiblock Part"), or null.
+     */
+    static mods.eln.node.transparent.TransparentNodeElement ghostOwner(BlockAccessor acc) {
+        if (!(acc.getBlock() instanceof mods.eln.ghost.GhostBlock) || !(acc.getLevel() instanceof net.minecraft.world.level.Level w)) return null;
+        return mods.eln.ghost.GhostBlock.owner(w, acc.getPosition());
     }
 
     enum Server implements IServerDataProvider<BlockAccessor> {
@@ -112,24 +126,26 @@ public class ElnJadePlugin implements IWailaPlugin {
         @Override
         public void appendServerData(CompoundTag tag, BlockAccessor acc) {
             // (all of it: the client cuts it to the headline unless the player sneaks or the config asks for details)
+            var owner = ghostOwner(acc);
             Map<String, String> m;
             try {
-                m = lines(acc, true);
+                m = owner != null ? owner.getWaila() : lines(acc, true);
             } catch (RuntimeException e) {
                 return;   // (a device mid-change: no lines this time)
             }
-            String title = title(acc);
+            String title = owner != null ? owner.node.pickItem(null, acc.getLevel()).getHoverName().getString() : title(acc);
             if (title != null) tag.putString("elnTitle", title);
-            var b = burnable(acc);
+            var b = owner != null ? owner : burnable(acc);
             if (b != null && b.isBurnt()) {   // (first, in the headline: what happened and what repairs it)
                 var lines = new java.util.LinkedHashMap<String, String>();
                 lines.put(mods.eln.i18n.I18N.tr("Burnt out"), b.getBurnt().text);
-                lines.put(mods.eln.i18n.I18N.tr("Repair with"), "1 " + mods.eln.sim.process.destruct.Repair.partName(b));
+                lines.put(mods.eln.i18n.I18N.tr("Repair with"), b.getBurntKind() == mods.eln.sim.process.destruct.Failure.Kind.CABLE
+                    ? mods.eln.i18n.I18N.tr("a matching cable kit (right-click the cable)") : "1 " + mods.eln.sim.process.destruct.Repair.partName(b));
                 if (m != null) lines.putAll(m);
                 m = lines;
             }
             if (m == null || m.isEmpty()) return;
-            if (hasHeat(acc)) {   // (the ambient it cools towards: by biome, height, depth; Baughn 2026-10-26)
+            if (owner != null ? !owner.thermalLoadList.isEmpty() : hasHeat(acc)) {   // (the ambient it cools towards: by biome, height, depth; Baughn 2026-10-26)
                 m = new java.util.LinkedHashMap<>(m);
                 m.put(mods.eln.i18n.I18N.tr("Ambient"), mods.eln.misc.Utils.plotCelsius("", mods.eln.sim.Ambient.relative(acc.getLevel(), acc.getPosition())));
             }
@@ -164,6 +180,54 @@ public class ElnJadePlugin implements IWailaPlugin {
         @Override
         public Identifier getUid() {
             return UID;
+        }
+    }
+
+    /**
+     * A machine at another mod's block, by the eln:machine capability on the server (the live machine): its lines
+     * under elnMachine. EA's own blocks are the node provider's (an element machine's lines are in its getWaila).
+     */
+    enum MachineServer implements IServerDataProvider<BlockAccessor> {
+        INSTANCE;
+
+        @Override
+        public void appendServerData(CompoundTag tag, BlockAccessor acc) {
+            if (acc.getBlockEntity() == null || acc.getBlockEntity() instanceof NodeBlockEntity) return;
+            Map<String, String> m;
+            try {
+                m = mods.eln.api.impl.MachineLines.at(acc.getLevel(), acc.getPosition());
+            } catch (RuntimeException e) {
+                return;   // (a block mid-change: no lines this time)
+            }
+            if (m.isEmpty()) return;
+            ListTag list = new ListTag();
+            for (var e : m.entrySet()) list.add(StringTag.valueOf(e.getKey() + "\t" + e.getValue()));
+            tag.put("elnMachine", list);
+        }
+
+        @Override
+        public Identifier getUid() {
+            return MACHINE_UID;
+        }
+    }
+
+    /** The lines MachineServer sent, all of them (a machine's are few). */
+    enum MachineClient implements IBlockComponentProvider {
+        INSTANCE;
+
+        @Override
+        public void appendTooltip(ITooltip tooltip, BlockAccessor acc, IPluginConfig config) {
+            var list = acc.getServerData().getListOrEmpty("elnMachine");
+            for (int i = 0; i < list.size(); i++) {
+                String s = list.getStringOr(i, "");
+                int t = s.indexOf('\t');
+                tooltip.add(t < 0 ? Component.literal(s) : Component.literal(s.substring(0, t) + ": ").append(Component.literal(s.substring(t + 1).trim())));
+            }
+        }
+
+        @Override
+        public Identifier getUid() {
+            return MACHINE_UID;
         }
     }
 }

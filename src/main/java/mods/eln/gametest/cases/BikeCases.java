@@ -375,11 +375,18 @@ public final class BikeCases {
     }
 
     /**
-     * The front lamp (Baughn 2026-10-29: like EA's flashlight): its rider switches it on, only with charge; it lights
-     * the air ahead with short-lived light blocks, draws its watts from the trunk battery even standing, and goes out
+     * The front lamp (Baughn 2026-10-29: like EA's flashlight): its rider switches it on, only with charge; the rider
+     * casts its beam as with a flashlight (one light block where clients draw beams), draws its watts from the trunk battery even standing, and goes out
      * when the battery is flat.
      */
     static final class Lamp implements TestCase {
+        static int lights(TestContext ctx, BlockPos a, BlockPos b) {
+            int n = 0;
+            for (BlockPos q : BlockPos.betweenClosed(a, b))
+                if (ctx.level().getBlockState(q).is(ElnRegistry.LIGHT_BLOCK.get())) n++;
+            return n;
+        }
+
         public String id() {
             return "bike_front_lamp";
         }
@@ -423,14 +430,18 @@ public final class BikeCases {
                 ctx.check("with charge, the rider's toggle turns it on", bike.lampOn(), "");
                 var bb = BatteryBeltItem.battery(bike.trunk.getItem(0));
                 double e0 = bb.getEnergy(bike.trunk.getItem(0));
-                for (int t = 0; t < 100; t++) bike.serverTick();   // 5 s, standing still
-                double used = e0 - bb.getEnergy(bike.trunk.getItem(0));
-                ctx.check("it draws its " + BikePhysics.LAMP_WATTS + " W standing still (5 s)", Math.abs(used - BikePhysics.LAMP_WATTS * 5) < 5, used + " J");
-                int lit = 0;
+                p.setYRot(0);
+                p.setXRot(0);
+                bike.positionRider(p);
                 BlockPos at = bike.blockPosition();
-                for (BlockPos q : BlockPos.betweenClosed(at.offset(-2, -1, 1), at.offset(2, 2, 9)))
-                    if (ctx.level().getBlockState(q).is(ElnRegistry.LIGHT_BLOCK.get())) lit++;
-                ctx.check("the air ahead is lit", lit > 0, lit + " light blocks ahead");
+                // the rider casts the beam (clients draw it): one light block, at the eyes
+                for (int t = 0; t < 80; t++) bike.serverTick();   // 4 s, standing still (at 5 s it may tip over with the rider)
+                int near = lights(ctx, at.offset(-3, -1, -3), at.offset(3, 4, 12));
+                ctx.check("the rider casts the lamp's beam, as with a flashlight", mods.eln.item.electricalitem.LampItem.beamLight(p) == ElectricBike.LAMP_LIGHT,
+                    "" + mods.eln.item.electricalitem.LampItem.beamLight(p));
+                ctx.check("one light block, no trail of them (Baughn)", near == 1, near + " light blocks");
+                double used = e0 - bb.getEnergy(bike.trunk.getItem(0));
+                ctx.check("it draws its " + BikePhysics.LAMP_WATTS + " W standing still (4 s)", Math.abs(used - BikePhysics.LAMP_WATTS * 4) < 5, used + " J");
                 bb.setEnergy(bike.trunk.getItem(0), 0);
                 bike.serverTick();
                 ctx.check("flat, it goes out", !bike.lampOn(), "");
@@ -485,6 +496,14 @@ public final class BikeCases {
             ctx.level().setBlockAndUpdate(ctx.at(1, 1, 3), Blocks.STONE.defaultBlockState());
             ctx.level().setBlockAndUpdate(ctx.at(4, 1, 3), Blocks.STONE.defaultBlockState());
             ctx.level().setBlockAndUpdate(ctx.at(4, 2, 3), Blocks.STONE.defaultBlockState());
+            // a whole block from a dirt path (Baughn 2026-11-06: it threw him riding over grass and paths), from mud;
+            // a block with a slab on it stops it
+            for (int z = 0; z < 3; z++) ctx.level().setBlockAndUpdate(ctx.at(2, 0, z), Blocks.DIRT_PATH.defaultBlockState());
+            ctx.level().setBlockAndUpdate(ctx.at(2, 1, 3), Blocks.STONE.defaultBlockState());
+            for (int z = 0; z < 3; z++) ctx.level().setBlockAndUpdate(ctx.at(3, 0, z), Blocks.MUD.defaultBlockState());
+            ctx.level().setBlockAndUpdate(ctx.at(3, 1, 3), Blocks.STONE.defaultBlockState());
+            ctx.level().setBlockAndUpdate(ctx.at(6, 1, 3), Blocks.STONE.defaultBlockState());
+            ctx.level().setBlockAndUpdate(ctx.at(6, 2, 3), Blocks.SMOOTH_STONE_SLAB.defaultBlockState());
         }
 
         double ride(TestContext ctx, int x) {
@@ -507,6 +526,10 @@ public final class BikeCases {
             double one = ride(ctx, 1), two = ride(ctx, 4);
             ctx.check("the terrain bike rides up a whole block", one > 5.9, "went " + one);
             ctx.check("a two-block wall stops it", two < 1.2, "went " + two);
+            double path = ride(ctx, 2), mud = ride(ctx, 3), slab = ride(ctx, 6);
+            ctx.check("it rides up a whole block from a dirt path", path > 5.9, "went " + path);
+            ctx.check("...and from mud", mud > 5.9, "went " + mud);
+            ctx.check("a block and a half stops it", slab < 1.2, "went " + slab);
             double peak = BikePhysics.jumpPeak(BikePhysics.jumpVelocity(1, T.jumpVy()));
             ctx.check("its full jump peaks at about 2.5 blocks", peak > 2.3 && peak < 2.7, "" + peak);
             ctx.check("its motor draws 150 W at full speed, the same top speed", Math.abs(BikePhysics.motorWatts(BikePhysics.VMAX_POWERED, T.motorWatts()) - 150) < 1e-6, "");
@@ -690,6 +713,11 @@ ctx.check("it saves as eln:terrain_bike (what it loads back as)", id.equals("eln
         public void build(TestContext ctx) {
             ctx.level().setBlockAndUpdate(ctx.at(1, 1, 3), Blocks.SMOOTH_STONE_SLAB.defaultBlockState());
             ctx.level().setBlockAndUpdate(ctx.at(4, 1, 3), Blocks.STONE.defaultBlockState());
+            // a slab from a dirt path (15/16 high), from mud (7/8)
+            for (int z = 0; z < 3; z++) ctx.level().setBlockAndUpdate(ctx.at(7, 0, z), Blocks.DIRT_PATH.defaultBlockState());
+            ctx.level().setBlockAndUpdate(ctx.at(7, 1, 3), Blocks.SMOOTH_STONE_SLAB.defaultBlockState());
+            for (int z = 0; z < 3; z++) ctx.level().setBlockAndUpdate(ctx.at(8, 0, z), Blocks.MUD.defaultBlockState());
+            ctx.level().setBlockAndUpdate(ctx.at(8, 1, 3), Blocks.SMOOTH_STONE_SLAB.defaultBlockState());
         }
 
         String last = "";
@@ -715,9 +743,15 @@ ctx.check("it saves as eln:terrain_bike (what it loads back as)", id.equals("eln
             double slab = ride(ctx, 1);
             String a = last;
             double stone = ride(ctx, 4);
+            String b = last;
+            double path = ride(ctx, 7);
+            String c = last;
+            double mud = ride(ctx, 8);
             ctx.check("a half slab is a step it rides over", slab > 5.9, a);
-            ctx.check("a full block stops it", stone < 1.2, last);
+            ctx.check("a full block stops it", stone < 1.2, b);
             ctx.check("its step height is under a block", BikePhysics.STEP_HEIGHT < 1, "");
+            ctx.check("a half slab from a dirt path is a step too", path > 5.9, c);
+            ctx.check("...and from mud", mud > 5.9, last);
         }
     }
 

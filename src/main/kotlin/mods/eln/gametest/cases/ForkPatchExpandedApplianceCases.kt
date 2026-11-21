@@ -208,7 +208,7 @@ object ForkPatchExpandedApplianceCases {
                 c.check("bulb ${r.title}: source ratings and technology",d.nominalU==r.volts&&d.nominalP==r.watts&&d.nominalLife==r.seconds&&d.type==r.type,"")
                 val stack=d.newItemStack();d.setLifeInTag(stack,.37);c.check("bulb ${r.title}: saved condition remains on item",d.getLifeInTag(stack)==.37&&d.r==r.volts*r.volts/r.watts,"")
             }
-            c.check("bulb migration: native50V/200V bulbs keep original IDs",(Eln.sharedItem.getDescriptor(293)as mods.eln.item.LampDescriptor).nominalU==50.0&&(Eln.sharedItem.getDescriptor(294)as mods.eln.item.LampDescriptor).nominalU==200.0,"")
+            c.check("bulb migration: stock 48 V and 230 V bulbs keep original IDs",(Eln.sharedItem.getDescriptor(293)as mods.eln.item.LampDescriptor).nominalU==Eln.LVU&&(Eln.sharedItem.getDescriptor(294)as mods.eln.item.LampDescriptor).nominalU==Eln.MVU,"")
         }
     }
     private class Processes:Base(){

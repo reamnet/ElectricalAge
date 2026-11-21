@@ -110,14 +110,31 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
         set(value) {
             if (value == field) return
             field = value
+            T = 0.0   // (a new fuse starts cold: the blown one's heat stayed, and the next blew at once; AdventurAgent)
             refreshSwitchResistor()
             needPublish()
         }
 
     private var T = 0.0
 
+    /**
+     * Its rating, A (Baughn 2026-11-06: set in its screen, one fuse item for every cable); 0: the installed fuse's own
+     * cable's nominal current, as the four 1.12 fuses had. It blows at about 1.08 x its rating.
+     */
+    var ratingAmps = 0.0
+
+    /** The rating now, A: the set one, else the working fuse's own, else a Lead Fuse's (shown with no fuse in). */
+    fun ratingNow(): Double {
+        if (ratingAmps > 0) return ratingAmps
+        val c = installedFuse?.cableDescriptor ?: ElnDeviceRegistry.lowVoltageCableDescriptor
+        return c.electricalNominalPower / c.electricalNominalVoltage
+    }
+
     private val fuseProcess = IProcess { time ->
-        val I = aLoad.current
+        val cable = installedFuse?.cableDescriptor
+        // the fuse's cable's heat model, its current scaled so it blows at 1.08 x the rating
+        var I = aLoad.current
+        if (cable != null && ratingAmps > 0 && installedFuse?.isUsable() == true) I *= cable.electricalNominalPower / cable.electricalNominalVoltage / ratingAmps
         val fuse = installedFuse
         if (fuse == null || !fuse.isUsable()) {
             T = 0.0
@@ -157,6 +174,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
             }
 
             T = nbt.getDoubleOr("T", 0.0)
+            ratingAmps = nbt.getDoubleOr("rating", 0.0)
         }
     }
 
@@ -170,6 +188,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
             }
 
             nbt.putDouble("T", T)
+            nbt.putDouble("rating", ratingAmps)
         }
     }
 
@@ -191,6 +210,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
 
     override fun getWaila(): MutableMap<String, String> {
         val infos = mutableMapOf(Pair(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(aLoad.current))))
+        infos[I18N.tr("Rating")] = Utils.plotAmpere("", ratingNow())
         return infos
     }
 
@@ -201,6 +221,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
         if (stream != null) {
             try {
                 Utils.serialiseItemStack(stream, installedFuse?.newItemStack())
+                stream.writeFloat(ratingNow().toFloat())
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -218,6 +239,32 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
 
     override fun initialize() {
         computeElectricalLoad()
+    }
+
+    override fun hasGui() = true
+
+    override fun networkUnserialize(stream: DataInputStream?) {
+        super.networkUnserialize(stream)
+        try {
+            when (stream?.readByte()?.toInt()) {
+                SET_RATING -> {
+                    val a = stream.readFloat().toDouble()
+                    ratingAmps = if (a.isFinite() && a > 0) Math.min(a, 100000.0) else 0.0
+                    needPublish()
+                }
+                TAKE_OUT -> installedFuse?.let {
+                    installedFuse = null
+                    sixNode.dropItem(it.newItemStack())
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    companion object {
+        const val SET_RATING = 1
+        const val TAKE_OUT = 2
     }
 
     fun computeElectricalLoad() {
@@ -239,11 +286,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
                 takenOutFuse = installedFuse
                 installedFuse = fuseDescriptor
             }
-        } else {
-            // The player takes out the fuse and does not install a new one at all.
-            takenOutFuse = installedFuse
-            installedFuse = null
-        }
+        } else return false   // (an empty hand opens its screen: the rating, and taking the fuse out)
 
         // What do we do with the fuse just taken out?
         takenOutFuse?.let {
@@ -257,7 +300,8 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
 class ElectricalFuseHolderRender(tileEntity: SixNodeEntity, side: Direction, descriptor: SixNodeDescriptor) :
     SixNodeElementRender(tileEntity, side, descriptor) {
     private val descriptor = descriptor as ElectricalFuseHolderDescriptor
-    private var installedFuse: ElectricalFuseDescriptor? = null
+    var installedFuse: ElectricalFuseDescriptor? = null
+    var rating = 0f
 
     override fun draw() {
         drawPins()   // (off centre)
@@ -269,6 +313,7 @@ class ElectricalFuseHolderRender(tileEntity: SixNodeEntity, side: Direction, des
         super.publishUnserialize(stream)
         if (stream != null) {
             installedFuse = GenericItemUsingDamageDescriptor.getDescriptor(Utils.unserialiseItemStack(stream)) as? ElectricalFuseDescriptor
+            rating = try { stream.readFloat() } catch (e: IOException) { 0f }
         }
     }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * The pipe sensors as devices on a face (Baughn 2026-11-02): placed by the pipe sensor items on a floor, wall or
- * ceiling, pipe laid from the device's port to the run to measure, 0-50 V out on its signal pin.
+ * ceiling, pipe laid from the device's port to the run to measure, 0-SVU out on its signal pin.
  */
 public final class PipeTransmitterCases {
     private PipeTransmitterCases() {
@@ -52,8 +52,9 @@ public final class PipeTransmitterCases {
     static void steam(TestContext c, BlockPos... blocks) {
         for (BlockPos p : blocks)
             for (VoxelPart q : node(c, p).parts)
-                if (q instanceof PipePart pipe) {
-                    var f = pipe.fluid;
+                if (q instanceof PipePart || q instanceof mods.eln.node.voxel.JunctionPart) {
+                    // (a junction too: a cold fitting on a line of hot steam condenses it all, as cold iron would)
+                    var f = q instanceof PipePart pipe ? pipe.fluid : ((mods.eln.node.voxel.JunctionPart) q).fluid;
                     f.fill(0, 1, 423.15);
                     mods.eln.sim.fluid.EaUnits.addWater(f, 6e5 * f.volume / (461.5 * 423.15), 423.15, true);
                     mods.eln.fluid.FluidWorld.changed(node(c, p));
@@ -84,7 +85,7 @@ public final class PipeTransmitterCases {
     /**
      * A pressure sensor clicked onto the middle of a floor, a pipe kit's route laid from its port (aimed at the device) to
      * the open end of a two-block run, the run full of steam: it reads the run's absolute pressure, and its signal cable
-     * carries reading / 25 bar x 50 V. An empty-hand right-click steps the full scale to 50 bar, which a save keeps.
+     * carries reading / 25 bar x SVU. An empty-hand right-click steps the full scale to 50 bar, which a save keeps.
      */
     static final class FloorPressure implements TestCase {
         BlockPos a, b, c2;
@@ -134,7 +135,7 @@ public final class PipeTransmitterCases {
                 run.P() / 1e5, t.reading, t.connected, t.outputGate.getU(), u, t.getWaila()));
             c.check("pipe transmitter: connected through the routed pipe", t.connected && t.pipe() != null, "");
             c.check("pipe transmitter: reads the run's absolute pressure", Math.abs(t.reading - run.P() / 1e5) < 0.05 && t.reading > 2, String.format("%.2f", t.reading));
-            Wp9cCases.within(c, "pipe transmitter: its signal cable carries reading / 25 bar x 50 V", u, t.reading / 25 * 50, 0.5);
+            Wp9cCases.within(c, "pipe transmitter: its signal cable carries reading / 25 bar x SVU", u, t.reading / 25 * mods.eln.Eln.SVU, 0.01 * mods.eln.Eln.SVU);
             c.check("pipe transmitter: Jade gives mode, reading, full scale and volts", t.getWaila().containsKey("Pressure sensor")
                 && t.getWaila().containsKey("Full scale") && t.getWaila().containsKey("Output"), "" + t.getWaila());
             // an empty-hand right-click steps the full scale; it survives the element's NBT
@@ -152,7 +153,7 @@ public final class PipeTransmitterCases {
 
     /**
      * A temperature sensor on a wall (its signal pin down the wall), pipe laid from its port along the wall into the next
-     * block, both full of steam at 150 C: it reads the run's temperature, its cable carries reading / 200 C x 50 V. One on a
+     * block, both full of steam at 150 C: it reads the run's temperature, its cable carries reading / 200 C x SVU. One on a
      * ceiling goes there too, its port 4 voxels under the ceiling, and reads "not connected" without a pipe.
      */
     static final class WallTemperature implements TestCase {
@@ -206,7 +207,7 @@ public final class PipeTransmitterCases {
                 run.T() - 273.15, t.reading, t.outputGate.getU(), u));
             c.check("pipe transmitter: its signal pin points down the wall", out(t) == Direction.YN, "" + out(t));
             c.check("pipe transmitter: reads the run's temperature", Math.abs(t.reading - (run.T() - 273.15)) < 1 && t.reading > 50, String.format("%.0f", t.reading));
-            Wp9cCases.within(c, "pipe transmitter: its signal cable carries reading / 200 C x 50 V", u, Math.min(1, t.reading / 200) * 50, 0.5);
+            Wp9cCases.within(c, "pipe transmitter: its signal cable carries reading / 200 C x SVU", u, Math.min(1, t.reading / 200) * mods.eln.Eln.SVU, 0.01 * mods.eln.Eln.SVU);
         }
     }
 
@@ -361,6 +362,8 @@ public final class PipeTransmitterCases {
             var t = device(c, a);
             Vec3 body = new Vec3(a.getX() + (8 + t.ox) / 16.0, a.getY() + 1 / 16.0, a.getZ() + (8 + t.oz) / 16.0);
             var sl = c.level();
+            double px = fp.getX(), py = fp.getY(), pz = fp.getZ();
+            fp.snapTo(a.getX() + 0.5, a.getY() + 0.5, a.getZ() + 0.5, 0, 90);   // (by the rig: a click must be within reach)
             PipePlacer.use(fp, sl, r, net.minecraft.core.Direction.WEST, kit, 0, new Vec3(r.getX(), r.getY() + 0.25, r.getZ() + 0.5));
             PipePlacer.use(fp, sl, a, net.minecraft.core.Direction.UP, kit, 0, body);
             if (t.pipe() == null) errRoute = "the first route didn't reach the port";
@@ -368,6 +371,7 @@ public final class PipeTransmitterCases {
             PipePlacer.use(fp, sl, r, net.minecraft.core.Direction.EAST, kit, 0, new Vec3(r.getX() + 1, r.getY() + 0.25, r.getZ() + 0.5));
             boolean handled = PipePlacer.use(fp, sl, a, net.minecraft.core.Direction.UP, kit, 0, body);
             piecesAfter = (int) node(c, a).parts.stream().filter(q -> q instanceof PipePart).count();
+            fp.snapTo(px, py, pz, 0, 0);
             if (!handled) errRoute = "the second click on the device wasn't taken";
             PipePlacer.forget(fp.getUUID());
         }

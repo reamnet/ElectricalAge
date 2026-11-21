@@ -103,7 +103,7 @@ class OutletElement(node: TransparentNode,d: TransparentNodeDescriptor): Transpa
         try { when(b.toInt()) {
             81 -> { reservations.indices.forEach { disconnectSocket(it) };id=UUID.randomUUID();needPublish() }
             82 -> { wireless=!wireless;wirelessPower.disconnect();reconnect();timer=0.0;needPublish() }
-            83 -> { val next=s.readUTF().take(128);if(next!=channel) { channel=next;wirelessPower.disconnect();timer=0.0;needPublish() } }
+            83 -> { val next=mods.eln.network.ClientValues.readString(s);if(next!=channel) { channel=next;wirelessPower.disconnect();timer=0.0;needPublish() } }
             84 -> { horizontal=!horizontal;val world=node.coordonate.world();val pos=node.coordonate.pos();val state=world.getBlockState(pos);if(state.block is OutletBlock)world.setBlock(pos,state.setValue(OutletBlock.HORIZONTAL,horizontal),3);known.mapNotNull { it?.get() }.filter { CordSupport.active(it.owner) }.forEach { it.poll() };needPublish() }
             85 -> disconnectSocket(s.readInt())
         } }catch(_: IOException) {}

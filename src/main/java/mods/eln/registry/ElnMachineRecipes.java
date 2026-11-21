@@ -149,6 +149,16 @@ public final class ElnMachineRecipes {
 
         add(maceratorRecipes, new Recipe(new ItemStack(Blocks.DIRT),
             new ItemStack[]{new ItemStack(Blocks.SAND)}, 1.0 * f));
+
+        // the rubber chain (Baughn 2026-11-07). Vanilla's sulfur blocks can't be farmed, so a block gives twice an
+        // ore's dust (4, 40% a 5th); the stonecut variants are one block each, a spike a quarter, potent sulfur nine.
+        for (var block : new net.minecraft.world.level.block.Block[]{Blocks.SULFUR, Blocks.POLISHED_SULFUR, Blocks.SULFUR_BRICKS, Blocks.CHISELED_SULFUR})
+            add(maceratorRecipes, new Recipe(new ItemStack(block), new ItemStack(ElnRegistry.SULFUR_DUST.get(), 4), 1.0 * f).withExtra(3, 2));
+        add(maceratorRecipes, new Recipe(new ItemStack(Blocks.SULFUR_SPIKE), new ItemStack(ElnRegistry.SULFUR_DUST.get(), 1), 0.5 * f));
+        add(maceratorRecipes, new Recipe(new ItemStack(Blocks.POTENT_SULFUR), new ItemStack(ElnRegistry.SULFUR_DUST.get(), 36), 4.0 * f));
+        // soul sand: the vulcanising activator (Baughn); the macerator gives off souls while it grinds it
+        add(maceratorRecipes, new Recipe(new ItemStack(Blocks.SOUL_SAND), new ItemStack(ElnRegistry.SOUL_DUST.get(), 2), 1.0 * f));
+        add(maceratorRecipes, new Recipe(new ItemStack(Blocks.SOUL_SOIL), new ItemStack(ElnRegistry.SOUL_DUST.get(), 2), 1.0 * f));
     }
 
     public static void recipePlateMachine() {
@@ -196,8 +206,12 @@ public final class ElnMachineRecipes {
         add(compressorRecipes, new Recipe(new ItemStack(Blocks.SAND),
             findItemStack("Dielectric", 4), 2000.0));
 
-        add(compressorRecipes, new Recipe(new ItemStack(Blocks.OAK_LOG),
-            findItemStack("Tree Resin"), 3000.0));
+        // resin from logs (Baughn 2026-11-07): two rubber logs give three resin, two of any other log one (it was one
+        // a log). The rubber log comes first: the other recipe takes any log (minecraft:logs).
+        compressorRecipes.addRecipe(new Recipe(new ItemStack(mods.eln.rubber.RubberTrees.LOG_ITEM.get(), 2),
+            findItemStack("Tree Resin", 3), 6000.0));
+        add(compressorRecipes, new Recipe(new ItemStack(Blocks.OAK_LOG, 2),
+            findItemStack("Tree Resin"), 6000.0));
 
     }
 
@@ -206,6 +220,9 @@ public final class ElnMachineRecipes {
             new ItemStack[]{findItemStack("Basic Magnet")}, 5000.0));
         add(magnetiserRecipes, new Recipe(findItemStack("Alloy Ingot", 2),
             new ItemStack[]{findItemStack("Advanced Magnet")}, 15000.0));
+        // field annealing (Baughn 2026-11-06, after Argon): the big energy draw of the Optimal core, on the grid
+        add(magnetiserRecipes, new Recipe(findItemStack("Nanocrystalline Core Blank"),
+            new ItemStack[]{findItemStack("Optimal Ferromagnetic Core")}, 200000.0));
     }
 
     public static void recipeMaceratorModOres() {

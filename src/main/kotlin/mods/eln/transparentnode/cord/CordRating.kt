@@ -16,6 +16,7 @@ enum class CordRating(val volts: Double,val plug: String,val socket: String,val 
     V240_30(240.0,"NEMA 10-30P","NEMA 10-30R",I18N.TR_NAME(I18N.Type.NONE,"240 V 30 A Dryer Cord"),I18N.TR_NAME(I18N.Type.NONE,"240 V 30 A Dryer Outlet"),30);
     val industrial get()=this!=V120 && this!=V240 && this!=V240_30
     val color get()=when(this) { V120->floatArrayOf(.22f,.52f,.80f);V240,V240_30->floatArrayOf(.85f,.48f,.10f);V24->floatArrayOf(.52f,.32f,.68f);V48->floatArrayOf(.6f,.62f,.65f);V200->floatArrayOf(.25f,.65f,.40f);V480->floatArrayOf(.85f,.18f,.12f);V800->floatArrayOf(.12f,.15f,.18f);V3200->floatArrayOf(.95f,.73f,.12f) }
-    fun accepts(nominal: Double)=nominal.isFinite() && abs(nominal-volts)<1.0
+    fun accepts(nominal: Double) =
+        nominal.isFinite() && (abs(nominal - volts) < 1.0 || this == V200 && nominal == mods.eln.Eln.MVU)
     companion object { fun read(name: String)=entries.firstOrNull { it.name==name }  }
 }

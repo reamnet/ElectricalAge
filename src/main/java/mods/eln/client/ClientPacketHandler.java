@@ -38,6 +38,8 @@ public final class ClientPacketHandler {
                     case Eln.packetKitPreview -> mods.eln.client.render.KitOutline.read(stream);
                     case Eln.packetDevicePreview -> mods.eln.client.render.DevicePreviewRender.read(stream);
                     case Eln.packetValveScreen -> mods.eln.client.ThrottleValveScreen.open(stream, level);
+                    case Eln.packetRouteNote -> RouteNoteHud.read(stream);
+                    case Eln.packetToolbagRadial -> ToolbagRadial.open(stream);
                     default -> {
                     }
                 }
@@ -62,5 +64,6 @@ public final class ClientPacketHandler {
         }
         if (publish) node.serverPublishUnserialize(stream);
         else node.serverPacketUnserialize(stream);
+        mods.eln.client.render.bake.ChunkBake.published(be);
     }
 }

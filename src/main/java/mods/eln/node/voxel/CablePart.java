@@ -71,6 +71,8 @@ public final class CablePart extends VoxelPart {
         }
     }
 
+    /** The kinds of cable. A power cable's cross-section comes from its spec (CableSpec.width/height: tierInfo), not
+     *  from these sizes, which are used only by signal, thermal and bus cables and as names. */
     public static final Tier[] TIERS = {
         new Tier("Signal Cable", 1, 1),
         new Tier("Low Voltage Cable", 2, 1),
@@ -90,6 +92,8 @@ public final class CablePart extends VoxelPart {
     }
 
     public final int tier;
+    /** A power cable's spec (cross-section, colour; its tier is its insulation), null for signal, thermal and bus. */
+    public final CableSpec spec;
     /** The attachment face (net.minecraft.core.Direction 3D value: 0 down .. 5 east), -1 for a knuckle. */
     public final int face;
     /** The centre line on the face's plane, x y z per point, in voxels (the face's own coordinate is 0 or 16). */
@@ -104,15 +108,134 @@ public final class CablePart extends VoxelPart {
         return paid >= 0 ? paid : isKnuckle() ? 0 : length();
     }
 
+    /**
+     * How this piece hangs across the air (Baughn 2026-11-12: chain physics run once when it is laid, CableHang): per air
+     * stretch through it, {axis, the routed line's y in eighths of a voxel, count, then count points x y z in eighths},
+     * block-local, the chain's part inside this block (its ends on the block's faces or at the stretch's ends). Only
+     * drawn: boxes, connections and the saved line stay as routed. Null: straight.
+     */
+    public int[] hang;
+
+    /**
+     * How this piece hangs (Baughn 2026-11-12: energy minimisation at laying, CableHang), replacing `hang`: per hung span
+     * through it, {s0, s1: the arc range of this piece's own polyline it is drawn over (eighths of a voxel, from its first
+     * point), count, then count points x y z (eighths, block-local), normals and tangents (64ths)}. Only drawn. Null: none.
+     */
+    public int[] hang2;
+
+    /** One drawn span: the piece's arc range it replaces, and the cable's centre line, normals and tangents over it
+     *  (tangents null: work them out from the points). */
+    public record Drawn(double s0, double s1, double[][] pts, double[][] nrm, double[][] tan) {
+    }
+
+    /** The drawn spans (hang2, or the older hang converted), or an empty list. */
+    public List<Drawn> drawn() {
+        List<Drawn> out = new ArrayList<>();
+        if (hang2 != null) {
+            for (int i = 0; i + 2 < hang2.length; ) {
+                int n = hang2[i + 2];
+                if (i + 3 + 9 * n > hang2.length) break;
+                double[][] p = new double[n][3], nr = new double[n][3], tn = new double[n][3];
+                for (int k = 0; k < n; k++)
+                    for (int c = 0; c < 3; c++) {
+                        p[k][c] = hang2[i + 3 + 9 * k + c] / 8.0;
+                        nr[k][c] = hang2[i + 6 + 9 * k + c] / 64.0;
+                        tn[k][c] = hang2[i + 9 + 9 * k + c] / 64.0;
+                    }
+                out.add(new Drawn(hang2[i] / 8.0, hang2[i + 1] / 8.0, p, nr, tn));
+                i += 3 + 9 * n;
+            }
+            return out;
+        }
+        if (hang == null || isKnuckle()) return out;
+        // (a hang laid by the 11-12 jar: its chain along one axis of a straight segment; its arc range from where that
+        // segment lies on the polyline)
+        int nAxis = normalAxis(face);
+        double[] up = new double[3];
+        up[nAxis] = face % 2 == 0 ? 1 : -1;
+        for (int i = 0; i + 2 < hang.length; ) {
+            int n = hang[i + 2], axis = hang[i];
+            if (i + 3 + 3 * n > hang.length) break;
+            double[][] p = new double[n][3], nr = new double[n][3];
+            for (int k = 0; k < n; k++) {
+                for (int c = 0; c < 3; c++) p[k][c] = hang[i + 3 + 3 * k + c] / 8.0;
+                nr[k] = up.clone();
+            }
+            double s0 = arcOf(axis, p[0][axis]), s1 = arcOf(axis, p[n - 1][axis]);
+            if (s1 < s0) {
+                double t = s0;
+                s0 = s1;
+                s1 = t;
+                for (int a = 0, b = n - 1; a < b; a++, b--) {
+                    double[] t1 = p[a];
+                    p[a] = p[b];
+                    p[b] = t1;
+                }
+            }
+            if (!Double.isNaN(s0) && !Double.isNaN(s1)) out.add(new Drawn(s0, s1, p, nr, null));
+            i += 3 + 3 * n;
+        }
+        return out;
+    }
+
+    /** The arc length (from the first point) where the polyline's segment along axis reaches u, or NaN. */
+    double arcOf(int axis, double u) {
+        double s = 0;
+        for (int i = 3; i < points.length; i += 3) {
+            double a = points[i - 3 + axis], b = points[i + axis];
+            int len = Math.abs(points[i] - points[i - 3]) + Math.abs(points[i + 1] - points[i - 2]) + Math.abs(points[i + 2] - points[i - 1]);
+            if (a != b && u >= Math.min(a, b) - 1e-6 && u <= Math.max(a, b) + 1e-6) return s + Math.abs(u - a);
+            s += len;
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * What it connects to (routing phase 3; nothing reads them before 3b): each a {kind, end, ...} array (CableLinks:
+     * the kinds and their fields), end 0/1 for its ends (a knuckle: its two ports) or -1 for the piece as a whole.
+     * NBT "j": a list of int arrays.
+     */
+    public List<int[]> joints = new ArrayList<>();
+
+    /** Everything but its geometry and spec from c (a recoloured piece is the same piece: its id and links stay). */
+    public void copyStateFrom(CablePart c) {
+        id = c.id;
+        burnt = c.burnt;
+        paid = c.paid;
+        hang = c.hang;
+        hang2 = c.hang2;
+        byConverter = c.byConverter;
+        u = c.u;
+        t = c.t;
+        joints = new ArrayList<>();
+        for (int[] j : c.joints) joints.add(j.clone());
+    }
+
     /** Laid by the converter (a knuckle round an outer corner): a revert takes it out. */
     public boolean byConverter;
     /** Saved state (server): voltage and temperature, restored into its conductor. */
     public double u, t;
 
+    /** A piece of its tier's preset spec (power tiers). */
     public CablePart(int tier, int face, int[] points) {
+        this(tier, CableSpec.power(tier) ? CableSpec.preset(tier) : null, face, points);
+    }
+
+    public CablePart(int tier, CableSpec spec, int face, int[] points) {
         this.tier = tier;
+        this.spec = CableSpec.power(tier) ? (spec != null ? spec : CableSpec.preset(tier)) : null;
         this.face = face;
         this.points = points;
+    }
+
+    /** The same cable (tier and spec): pieces of one conductor, one kit. */
+    public boolean sameCable(CablePart o) {
+        return tier == o.tier && java.util.Objects.equals(spec, o.spec);
+    }
+
+    /** Its electrical constants: its spec's, or its tier's (signal); null for thermal and bus. */
+    public ElectricalCableDescriptor descriptor() {
+        return spec != null ? spec.descriptor(tier) : TIERS[tier].descriptor();
     }
 
     /**
@@ -120,6 +243,10 @@ public final class CablePart extends VoxelPart {
      * the middle of each edge toward `dirs` (3D values, along the face); two opposite arms are one straight piece.
      */
     public static List<CablePart> arms(int tier, int face, int... dirs) {
+        return arms(tier, null, face, dirs);
+    }
+
+    public static List<CablePart> arms(int tier, CableSpec spec, int face, int... dirs) {
         int n = normalAxis(face);
         int[] c = {8, 8, 8};
         c[n] = plane(face);
@@ -128,12 +255,12 @@ public final class CablePart extends VoxelPart {
         if (dirs.length >= 2) {
             int[] a = edge(c, dirs[0]), b = edge(c, dirs[1]);
             boolean straight = dirs[0] / 2 == dirs[1] / 2;
-            out.add(new CablePart(tier, face, straight ? new int[]{a[0], a[1], a[2], b[0], b[1], b[2]}
+            out.add(new CablePart(tier, spec, face, straight ? new int[]{a[0], a[1], a[2], b[0], b[1], b[2]}
                 : new int[]{a[0], a[1], a[2], c[0], c[1], c[2], b[0], b[1], b[2]}));
         }
         for (int i = dirs.length >= 2 ? 2 : 0; i < dirs.length; i++) {
             int[] e = edge(c, dirs[i]);
-            out.add(new CablePart(tier, face, new int[]{c[0], c[1], c[2], e[0], e[1], e[2]}));
+            out.add(new CablePart(tier, spec, face, new int[]{c[0], c[1], c[2], e[0], e[1], e[2]}));
         }
         return out;
     }
@@ -147,7 +274,11 @@ public final class CablePart extends VoxelPart {
     }
 
     public static CablePart knuckle(int tier, int x, int y, int z) {
-        return new CablePart(tier, -1, new int[]{x, y, z});
+        return knuckle(tier, null, x, y, z);
+    }
+
+    public static CablePart knuckle(int tier, CableSpec spec, int x, int y, int z) {
+        return new CablePart(tier, spec, -1, new int[]{x, y, z});
     }
 
     @Override
@@ -155,8 +286,12 @@ public final class CablePart extends VoxelPart {
         return KIND;
     }
 
+    private Tier info;
+
     public Tier tierInfo() {
-        return TIERS[tier];
+        if (spec == null) return TIERS[tier];
+        if (info == null) info = new Tier(TIERS[tier].name, spec.width(tier), spec.height(tier), TIERS[tier].kind);
+        return info;   // (its spec's cross-section)
     }
 
     public boolean isKnuckle() {
@@ -204,7 +339,7 @@ public final class CablePart extends VoxelPart {
         // all on one plane, the cross-section inside the block (on a block face, or on a step inside one)
         int n = normalAxis(face);
         for (int i = n; i < points.length; i += 3) if (points[i] != points[n]) return false;
-        int h = TIERS[tier].height;
+        int h = tierInfo().height;
         if (face % 2 == 0 ? points[n] + h > 16 : points[n] - h < 0) return false;
         for (int i = 3; i < points.length; i += 3) {
             int axes = 0;
@@ -347,11 +482,25 @@ public final class CablePart extends VoxelPart {
     @Override
     public void write(CompoundTag tag) {
         tag.putString("tier", TIERS[tier].name);
+        if (spec != null) {
+            tag.putInt("mm2", spec.mm2());
+            tag.putInt("col", spec.colour());
+        }
         tag.putInt("face", face);
         tag.putIntArray("pts", points);
         if (burnt != null) tag.putString("burnt", burnt.name());
         if (byConverter) tag.putBoolean("conv", true);
         if (paid >= 0) tag.putInt("paid", paid);
+        if (hang != null) tag.putIntArray("hang", hang);
+        if (hang2 != null) tag.putIntArray("hang2", hang2);
+        if (!joints.isEmpty()) {
+            net.minecraft.nbt.ListTag l = new net.minecraft.nbt.ListTag();
+            // (in a fixed order: implied joints are recorded afresh at each connect, in whatever order the rules run)
+            List<int[]> sorted = new ArrayList<>(joints);
+            sorted.sort(java.util.Arrays::compare);
+            for (int[] j : sorted) l.add(new net.minecraft.nbt.IntArrayTag(j));
+            tag.put("j", l);
+        }
         tag.putDouble("u", u);
         tag.putDouble("t", t);
     }
@@ -359,7 +508,10 @@ public final class CablePart extends VoxelPart {
     static CablePart read(CompoundTag tag) {
         int tier = tierOf(tag.getStringOr("tier", ""));
         if (tier < 0) return null;
-        CablePart p = new CablePart(tier, tag.getIntOr("face", 0), tag.getIntArray("pts").orElse(new int[0]));
+        // (a power cable saved before specs is its tier's preset: Baughn's in-place upgrade)
+        CableSpec spec = CableSpec.power(tier) && tag.contains("mm2")
+            ? new CableSpec(tag.getIntOr("mm2", 0), tag.getIntOr("col", 0)) : null;
+        CablePart p = new CablePart(tier, spec, tag.getIntOr("face", 0), tag.getIntArray("pts").orElse(new int[0]));
         if (!p.valid()) return null;
         String b = tag.getStringOr("burnt", "");
         if (!b.isEmpty()) {
@@ -371,6 +523,13 @@ public final class CablePart extends VoxelPart {
         }
         p.byConverter = tag.getBooleanOr("conv", false);
         p.paid = tag.getIntOr("paid", -1);
+        int[] hg = tag.getIntArray("hang").orElse(null);
+        if (hg != null && hg.length >= 3) p.hang = hg;
+        int[] hg2 = tag.getIntArray("hang2").orElse(null);
+        if (hg2 != null && hg2.length >= 3) p.hang2 = hg2;
+        tag.getList("j").ifPresent(l -> {
+            for (int i = 0; i < l.size(); i++) l.getIntArray(i).filter(a -> a.length >= 2).ifPresent(a -> p.joints.add(a));
+        });
         p.u = tag.getDoubleOr("u", 0);
         p.t = tag.getDoubleOr("t", 0);
         return p;
@@ -379,18 +538,40 @@ public final class CablePart extends VoxelPart {
     @Override
     public void serialize(java.io.DataOutputStream out) throws java.io.IOException {
         out.writeByte(tier | (burnt != null ? 0x80 : 0));
+        if (spec != null) {
+            out.writeByte(spec.mm2());
+            out.writeByte(spec.colour());
+        }
         out.writeByte(face);
         out.writeByte(points.length / 3);
         for (int v : points) out.writeByte(v);
+        out.writeShort(hang == null ? 0 : hang.length);
+        if (hang != null) for (int v : hang) out.writeShort(v);
+        // (a slot of its own after the old one: a client on the older jar reads the old slot and stops)
+        out.writeShort(hang2 == null ? 0 : hang2.length);
+        if (hang2 != null) for (int v : hang2) out.writeShort(v);
     }
 
     static CablePart deserialize(java.io.DataInputStream in) throws java.io.IOException {
         int b = in.readByte();
+        int tier = Math.max(0, Math.min(TIERS.length - 1, b & 0x7F));
+        CableSpec spec = CableSpec.power(tier) ? new CableSpec(in.readByte(), in.readByte()) : null;
         int face = in.readByte();
         int n = in.readByte();
         int[] pts = new int[3 * n];
         for (int i = 0; i < pts.length; i++) pts[i] = in.readByte();
-        CablePart p = new CablePart(Math.max(0, Math.min(TIERS.length - 1, b & 0x7F)), face, pts);
+        CablePart p = new CablePart(tier, spec, face, pts);
+        // (a phase 1 server sends no hang: nothing more in the stream)
+        int nh = in.available() >= 2 ? in.readShort() : 0;
+        if (nh > 0) {
+            p.hang = new int[nh];
+            for (int i = 0; i < nh; i++) p.hang[i] = in.readShort();
+        }
+        int nh2 = in.available() >= 2 ? in.readShort() : 0;
+        if (nh2 > 0 && in.available() >= 2 * nh2) {
+            p.hang2 = new int[nh2];
+            for (int i = 0; i < nh2; i++) p.hang2[i] = in.readShort();
+        }
         if ((b & 0x80) != 0) p.burnt = mods.eln.sim.process.destruct.FailureCause.OVERHEAT;
         return p;
     }

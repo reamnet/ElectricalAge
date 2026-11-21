@@ -70,7 +70,8 @@ public class SixNode extends Node {
     public net.minecraft.world.item.ItemStack pickItem(net.minecraft.world.phys.BlockHitResult hit, net.minecraft.world.level.LevelReader level) {
         int mask = 0;
         for (Direction d : Direction.values()) if (getElement(d) != null) mask |= 1 << d.getInt();
-        Direction side = hit == null ? null : SixNodeBlock.sideAt(mask, coordonate.pos(), hit);
+        Direction side = hit == null ? null : SixNodeBlock.sideAt(mask,
+            i -> SixNodeBlock.boxOf(sideElementList[i] == null ? null : sideElementList[i].sixNodeElementDescriptor, i), coordonate.pos(), hit);
         for (int i = 0; side == null && i < 6; i++) if ((mask & (1 << i)) != 0) side = Direction.fromInt(i);
         return side == null ? net.minecraft.world.item.ItemStack.EMPTY : getElement(side).getDropItemStack();
     }
@@ -117,9 +118,10 @@ public class SixNode extends Node {
 
     /** A device into a slot: on face direction, its centre (ox, oy, oz) world voxels from the face's centre (0 for the
      *  six face slots). */
-    /** The front a device placed on side gets: the player's facing, by the descriptor. */
+    /** The front a device placed on side gets: the player's facing, by the descriptor, turned as the player chose with
+     *  the wrench key before placing (DevicePreview.placeFront). */
     protected LRDU frontFor(SixNodeDescriptor d, Direction side, Player player) {
-        return d.getFrontFromPlace(side, player);
+        return mods.eln.node.voxel.DevicePreview.placeFront(d, side, player);
     }
 
     public boolean createSubBlockAt(ItemStack itemStack, int slot, Direction direction, int ox, int oy, int oz, Player player) {
@@ -315,6 +317,7 @@ public class SixNode extends Node {
                 sideElementList[idx] = null;
                 sideElementIdList[idx] = 0;
             } else {
+                SixNodeElement built = null;
                 try {
                     SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(sideElementId);
                     if (descriptor == null) throw new IllegalStateException("no six-node device " + sideElementId + " in this version");
@@ -325,10 +328,19 @@ public class SixNode extends Node {
                     e.oy = at[2];
                     e.oz = at[3];
                     sideElementList[idx] = e;
+                    built = e;
                     e.readFromNBT(nbt.getCompoundOrEmpty("ED" + idx));
                     sideElementList[idx].initialize();
                 } catch (Exception e) {
-                    // (a half-built element must not stay: it would run, save and drop as if it had loaded)
+                    // (a half-built element must not stay: it would run, save and drop as if it had loaded; nor stay in a
+                    // wireless channel or a supply's list that its readFromNBT or initialize joined)
+                    if (built != null) {
+                        try {
+                            built.unload();
+                        } catch (RuntimeException u) {
+                            e.addSuppressed(u);
+                        }
+                    }
                     sideElementList[idx] = null;
                     sideElementIdList[idx] = 0;
                     CompoundTag kept = new CompoundTag();

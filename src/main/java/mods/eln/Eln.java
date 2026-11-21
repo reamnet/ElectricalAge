@@ -112,7 +112,8 @@ public class Eln {
         new mods.eln.registry.batch.Wp12bContent(),
         new mods.eln.registry.batch.Wp12cContent(),
         new mods.eln.registry.batch.Wp12dContent(),
-        new mods.eln.registry.batch.Wp12eContent());
+        new mods.eln.registry.batch.Wp12eContent(),
+        new mods.eln.robotics.Robotics());   // (26.x: the servo layer, Baughn 2026-11-02)
 
     // EA packet ids (first byte of an ElnNet.Data payload), as in 1.12
     public static final byte packetPlayerKey = 14;
@@ -132,11 +133,19 @@ public class Eln {
     public static final byte packetDevicePreview = 25;
     /** 26.x, server -> client: open a throttle valve's screen (x, y, z, part index, setting; node.voxel.VoxelNode). */
     public static final byte packetValveScreen = 26;
+    /** 26.x, server -> client: why a kit's route click failed, shown above the action bar for a while (UTF string;
+     *  node.voxel.KitPreview.note, client.RouteNoteHud). */
+    public static final byte packetRouteNote = 27;
+    /** 26.x, server -> client: open the Toolbag's radial (route on, chosen kind, the kinds held: node.voxel.ToolbagItem). */
+    public static final byte packetToolbagRadial = 28;
+    /** 26.x, client -> server: the Toolbag radial's choice (action, kind: ToolbagItem.choice). */
+    public static final byte packetToolbagChoice = 29;
 
-    // Voltage / power levels, as in 1.12
+    // Voltage / power levels: real-world values (Baughn 2026-11-06: 48 V, 230 V, 400 V and 11 kV replace 1.12's 50, 200,
+    // 800 and 3200 V; signals are 0-5 V instead of 0-50 V). Cable resistances follow from U and P, so power limits stay.
     public static final double gateOutputCurrent = 0.100;
-    public static final double SVU = 50, SVII = gateOutputCurrent / 50, SVUinv = 1.0 / SVU;
-    public static final double LVU = 50, MVU = 200, HVU = 800, VVU = 3200;
+    public static final double SVU = 5, SVII = gateOutputCurrent / SVU, SVUinv = 1.0 / SVU;
+    public static final double LVU = 48, MVU = 230, HVU = 400, VVU = 11000;
     public static final double SVP = gateOutputCurrent * SVU;
     /** config balancing.cablePowerFactor (1.12 default 1.0; config arrives with the ModConfigSpec) */
     public static double cablePowerFactor = 1.0;
@@ -145,8 +154,9 @@ public class Eln {
         return 1000 * cablePowerFactor;
     }
 
+    /** 13 A at 230 V (Baughn: 3 kW; 1.12's 200 V tier carried 2 kW). */
     public static double MVP() {
-        return 2000 * cablePowerFactor;
+        return 3000 * cablePowerFactor;
     }
 
     public static double HVP() {
@@ -288,6 +298,7 @@ public class Eln {
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.ItemCraftedEvent.class, mods.eln.node.voxel.CableKitRecipes::crafted);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.ItemCraftedEvent.class, mods.eln.node.voxel.PipeKitRecipes::crafted);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock.class, mods.eln.node.voxel.ChiselItem::onLeftClick);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock.class, mods.eln.node.voxel.ToolbagShears::onLeftClick);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.class, mods.eln.node.voxel.ChiselItem::forget);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post.class, mods.eln.node.voxel.KitPreview::tick);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post.class, mods.eln.node.voxel.DevicePreview::tick);
@@ -296,12 +307,17 @@ public class Eln {
             e -> {
                 mods.eln.node.voxel.KitPreview.forget(e.getEntity().getUUID());
                 mods.eln.node.voxel.DevicePreview.forget(e.getEntity().getUUID());
+                mods.eln.node.voxel.ToolbagItem.forget(e.getEntity().getUUID());
+                mods.eln.node.voxel.ToolbagShears.forget(e.getEntity().getUUID());
             });
         // pipe routes being laid: forgotten on logout and death
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.class,
             e -> mods.eln.node.voxel.PipePlacer.forget(e.getEntity().getUUID()));
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.living.LivingDeathEvent.class,
             e -> mods.eln.node.voxel.PipePlacer.forget(e.getEntity().getUUID()));
+        // ... and the starting pole of an overhead line
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.class,
+            e -> mods.eln.gridnode.GridElement.forget(e.getEntity().getUUID()));
         // ... and cable routes (Baughn: they never timed out)
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.class,
             e -> mods.eln.node.voxel.CablePlacer.forget(e.getEntity().getUUID()));
@@ -318,8 +334,10 @@ public class Eln {
         mods.eln.registry.ElnDeviceRegistry.registerBatch1();
         for (ElnContent c : CONTENT) c.preInit();
         mods.eln.registry.ElnRegistry.register(modBus);
+        mods.eln.robotics.Robotics.register(modBus);
         mods.eln.item.belt.CuriosCompat.register(modBus);
         mods.eln.oil.Oil.register(modBus);
+        mods.eln.rubber.RubberTrees.register(modBus);   // rubber trees (Baughn 2026-11-07)
         mods.eln.sound.ElnSounds.register(modBus);
         mods.eln.datagen.ElnDataGen.register(modBus);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.RegisterCommandsEvent.class, e -> e.getDispatcher().register(
@@ -327,6 +345,7 @@ public class Eln {
                 .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                 .executes(c -> {int count=mods.eln.sixnode.lampsocket.SourceLampLife.requestReset();c.getSource().sendSuccess(() -> net.minecraft.network.chat.Component.literal("Reset lifetime of "+count+" installed source-rated bulbs in loaded fixtures."),true);return count;}))));
         mods.eln.gametest.LabCommands.register(); // /elnlab: render-port scenes (op only)
+        mods.eln.introspect.Introspect.register(modBus); // /eln describe, eln:describe (op only)
         mods.eln.node.voxel.CableConverter.register(); // six-node cables to voxel cables as chunks load (config)
         mods.eln.network.ServerPacketHandler.register();
         mods.eln.node.NodeServer nodeServer = new mods.eln.node.NodeServer();
@@ -380,6 +399,8 @@ public class Eln {
             mods.eln.registry.ElnDeviceRegistry.lightBlock = mods.eln.registry.ElnRegistry.LIGHT_BLOCK.get();
         });
         mods.eln.network.ElnNet.register(modBus);
+        mods.eln.api.impl.HostedMachines.register(modBus);   // machines at other mods' block entities (ElnApi.machines())
+        mods.eln.apitest.ApiTestMachines.register(modBus);   // the hidden eln:api_test_machine (GameTests of the above)
         mods.eln.gametest.ElnGameTests.register(modBus);
         LOG.info("Electrical Age (26.x port, P0) loaded");
     }

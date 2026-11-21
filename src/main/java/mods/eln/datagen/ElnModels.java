@@ -62,7 +62,10 @@ public class ElnModels implements DataProvider {
         if (name.equals("steam_injection_wellhead")) return itemTexture("50v_oil_pump", item);   // (until its own icon)
         if (name.endsWith("electric_heater")) return itemTexture("large_rheostat", item);
         if (name.endsWith("_transmitter") && name.startsWith("pipe_")) return itemTexture(name.replace("_transmitter", "_sensor"), item);   // (the pipe sensor devices: their items' icons)
-        if (name.equals("boiler")) return itemTexture("electrical_furnace", item);
+        if (name.equals("boiler") || name.equals("large_boiler")) return itemTexture("electrical_furnace", item);   // (large_boiler: PROTOTYPE, the Boiler's icon)
+        if (name.equals("addressable_button")) return itemTexture("signal_button", item);   // (until their own icons)
+        if (name.equals("addressable_light")) return itemTexture("led_vumeter", item);
+        if (name.equals("floor_sensor")) return itemTexture("electrical_entity_sensor", item);
         if (name.startsWith("fractionating_column")) return itemTexture("fuel_heat_furnace", item);
         if (name.equals("flare_stack")) return itemTexture("fuel_heat_furnace", item);
         if (name.endsWith("compact_steam_turbine")) return itemTexture("50v_turbine", item);   // (until its own icon)
@@ -130,6 +133,40 @@ public class ElnModels implements DataProvider {
                 continue;
             } else if (id.getPath().equals("crude_oil") || id.getPath().equals("reservoir_oil") || id.getPath().equals("tar_sand") || id.getPath().equals("well_casing")) {
                 continue;   // oil: hand-written in src/main/resources (fluids)
+            } else if (id.getPath().startsWith("rubber_")) {
+                continue;   // rubber trees: hand-written in src/main/resources
+            } else if (b instanceof mods.eln.robotics.servo.ServoRailBlock || b instanceof mods.eln.robotics.servo.StationMarkerBlock) {
+                // robotics: the checked library's models (src/cadmodels ServoParts), turned to FACING; the rail's points up,
+                // the marker's north
+                boolean rail = b instanceof mods.eln.robotics.servo.ServoRailBlock;
+                JsonObject variants = new JsonObject();
+                for (var f : net.minecraft.core.Direction.values()) {
+                    JsonObject v = obj("model", "eln:block/" + name);
+                    int[] r = rail ? ROD_ROT[f.get3DDataValue()] : NORTH_ROT[f.get3DDataValue()];
+                    if (r[0] != 0) v.addProperty("x", r[0]);
+                    if (r[1] != 0) v.addProperty("y", r[1]);
+                    variants.add("facing=" + f.getSerializedName(), v);
+                }
+                out.add(DataProvider.saveStable(cache, obj("variants", variants), assets.resolve("blockstates/" + name + ".json")));
+                continue;
+            } else if (b instanceof mods.eln.apitest.ApiTestMachineBlock) {
+                // the GameTests' hidden fixture: a furnace's look (it is furnace-like: FACING and LIT), turned to FACING
+                for (boolean lit : new boolean[]{false, true})
+                    out.add(DataProvider.saveStable(cache, obj("parent", "minecraft:block/orientable", "textures",
+                            obj("front", "minecraft:block/furnace_front" + (lit ? "_on" : ""), "side", "minecraft:block/furnace_side",
+                                "top", "minecraft:block/furnace_top")),
+                        assets.resolve("models/block/" + name + (lit ? "_on" : "") + ".json")));
+                JsonObject variants = new JsonObject();
+                for (var f : net.minecraft.core.Direction.values())
+                    for (boolean lit : new boolean[]{false, true}) {
+                        JsonObject v = obj("model", "eln:block/" + name + (lit ? "_on" : ""));
+                        int[] r = NORTH_ROT[f.get3DDataValue()];
+                        if (r[0] != 0) v.addProperty("x", r[0]);
+                        if (r[1] != 0) v.addProperty("y", r[1]);
+                        variants.add("facing=" + f.getSerializedName() + ",lit=" + lit, v);
+                    }
+                out.add(DataProvider.saveStable(cache, obj("variants", variants), assets.resolve("blockstates/" + name + ".json")));
+                continue;
             } else if (b instanceof mods.eln.node.voxel.VoxelNodeBlock) {
                 // baked from its parts (client/render/VoxelModel)
                 out.add(DataProvider.saveStable(cache, obj("variants", obj("", obj("type", "eln:voxel_node"))), assets.resolve("blockstates/" + name + ".json")));
@@ -238,6 +275,11 @@ public class ElnModels implements DataProvider {
     public String getName() {
         return "EA models";
     }
+
+    /** Vanilla direction (3D data value: down, up, north, south, west, east) -> {x, y} turning a model that points up. */
+    static final int[][] ROD_ROT = {{180, 0}, {0, 0}, {90, 0}, {90, 180}, {90, 270}, {90, 90}};
+    /** The same for a model that points north. */
+    static final int[][] NORTH_ROT = {{90, 0}, {270, 0}, {0, 0}, {0, 180}, {0, 270}, {0, 90}};
 
     /** FRONT (vanilla direction index, 6 = unknown) -> {x, y} rotation of the north-facing converter model. */
     static final int[][] CONVERTER_ROT = {{90, 0}, {270, 0}, {0, 0}, {0, 180}, {0, 270}, {0, 90}, {0, 0}};

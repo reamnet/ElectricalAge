@@ -7,6 +7,7 @@ import mods.eln.misc.Direction;
 import mods.eln.misc.GhostPowerNode;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
+import mods.eln.network.ClientValues;
 import mods.eln.node.AutoAcceptInventoryProxy;
 import mods.eln.node.NodeBase;
 import mods.eln.node.transparent.TransparentNode;
@@ -195,11 +196,8 @@ public class SolarPanelElement extends TransparentNodeElement {
         try {
             switch (packetType) {
                 case unserializePannelAlpha:
-                    float requested = stream.readFloat();
-                    if (Float.isFinite(requested)) {
-                        panelAlpha = descriptor.alphaTrunk(requested);
-                        needPublish();
-                    }
+                    panelAlpha = ClientValues.clamp(stream.readFloat(), descriptor.alphaMin, descriptor.alphaMax, panelAlpha);
+                    needPublish();
                     break;
 
                 default:

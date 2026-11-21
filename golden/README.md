@@ -53,3 +53,17 @@ It distinguishes added source identities/menus, changed solar ratings and new
 battery probes from runtime regressions. The two initial behavioral fixture
 failures were fixed by restoring shared test-player facing after oriented
 renewable placement, then verified by the unfiltered rerun.
+
+`golden_descriptors` (`GoldenCase.CHANGED`, `TIERS`): real-world voltages (Baughn 2026-11-06). The tiers are 48 V, 230 V,
+400 V and 11 kV instead of 50, 200, 800 and 3200 V; signals are 0-5 V instead of 0-50 V; the 230 V cable carries 3 kW
+(13 A; 1.12's 200 V cable 2 kW). Every descriptor whose numbers follow a tier differs: cables (Rs follows U^2/P, so
+power limits are unchanged), switches, chargers, batteries, turbines, antennas, the 48/230 V machines, heaters, lamps,
+the Generator (400 V instead of 3200 V). Board #55.
+`golden_slots` (`GoldenSlotsCase`): the DC-DC Converter's two winding slots take 64 (1.12: 4), for 5:24 (48 V to 230 V)
+and the like (Baughn 2026-11-06, board #55).
+`golden_recipes` (`GoldenRecipesCase.REMOVED`): the Average and Optimal Ferromagnetic Cores aren't crafted from the core
+below any more (Baughn 2026-11-06, board #55): Silicon Steel Laminations annealed in the Electrical Furnace make the
+Average one, a Nanocrystalline Core Blank field-annealed in the Magnetizer the Optimal one.
+`golden_recipes` (`GoldenRecipesCase.REMOVED`) and `golden_descriptors` (`GoldenCase.renamed`): one Lead Fuse for every
+cable, its rating set in the holder (Baughn 2026-11-06): "Lead Fuse for low voltage cables" is "Lead Fuse", and the
+fuses for the other tiers are no longer made (old ones still work).

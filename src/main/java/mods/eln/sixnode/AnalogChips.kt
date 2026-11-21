@@ -1,5 +1,6 @@
 package mods.eln.sixnode
 
+import mods.eln.network.ClientValues
 import mods.eln.sixnode.logicgate.CHIP_SCALE
 import mods.eln.gl.GL11
 
@@ -166,7 +167,7 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
                 else if (pin.stateHigh()) "1" else "?").append(", ")
             }
         }
-        builder.append(I18N.tr(" O: ")).append(if (outputProcess.u == 50.0) "1" else "0")
+        builder.append(I18N.tr(" O: ")).append(if (outputProcess.u == Eln.SVU) "1" else "0")
         return builder.toString()
     }
 
@@ -314,9 +315,10 @@ class PIDRegulatorElement(node: SixNode, side: Direction, sixNodeDescriptor: Six
         super.networkUnserialize(stream)
         try {
             when (stream?.readByte()?.toInt()) {
-                KpParameterChangedEvent -> (function as PIDRegulator).Kp = stream.readFloat().toDouble()
-                KiParameterChangedEvent -> (function as PIDRegulator).Ki = stream.readFloat().toDouble()
-                KdParameterChangerEvent -> (function as PIDRegulator).Kd = stream.readFloat().toDouble()
+                // (the screen's sliders: Kp 0..50, Ki and Kd 0..5)
+                KpParameterChangedEvent -> (function as PIDRegulator).apply { Kp = ClientValues.clamp(stream.readFloat().toDouble(), 0.0, 50.0, Kp) }
+                KiParameterChangedEvent -> (function as PIDRegulator).apply { Ki = ClientValues.clamp(stream.readFloat().toDouble(), 0.0, 5.0, Ki) }
+                KdParameterChangerEvent -> (function as PIDRegulator).apply { Kd = ClientValues.clamp(stream.readFloat().toDouble(), 0.0, 5.0, Kd) }
             }
             needPublish()
         } catch (e: IOException) {
@@ -355,7 +357,8 @@ open class VoltageControlledSawtoothOscillator : AnalogFunction() {
     private var out = 0.0
 
     override fun process(inputs: Array<Double?>, deltaTime: Double): Double {
-        out += Math.pow(50.0, (inputs[0] ?: 0.0) / 50) * 2 * deltaTime
+        // (1.12's rates on its 0-50 V scale, kept in cycles per second on today's SVU: 0.04 Hz at 0 to 2 Hz at full)
+        out += Math.pow(50.0, (inputs[0] ?: 0.0) / Eln.SVU) * 2 * (Eln.SVU / 50) * deltaTime
         if (out > Eln.SVU) {
             out = 0.0
         }
@@ -373,7 +376,7 @@ open class VoltageControlledSawtoothOscillator : AnalogFunction() {
 
 class VoltageControlledSineOscillator : VoltageControlledSawtoothOscillator() {
     override fun process(inputs: Array<Double?>, deltaTime: Double) =
-        25.0 + 25.0 * Math.sin(Math.PI * super.process(inputs, deltaTime) / 25.0)
+        Eln.SVU / 2 + Eln.SVU / 2 * Math.sin(2 * Math.PI * super.process(inputs, deltaTime) / Eln.SVU)
 }
 
 class Amplifier : AnalogFunction() {
@@ -426,7 +429,8 @@ class AmplifierElement(node: SixNode, side: Direction, sixNodeDescriptor: SixNod
 
         try {
             when (stream?.readByte()?.toInt()) {
-                GainChangedEvent -> (function as Amplifier).gain = stream.readFloat().toDouble()
+                // (typed: any finite gain)
+                GainChangedEvent -> (function as Amplifier).apply { gain = ClientValues.finite(stream.readFloat().toDouble(), gain) }
             }
             needPublish()
         } catch (e: IOException) {
@@ -457,11 +461,14 @@ class VoltageControlledAmplifier : AnalogFunction() {
     override val inputCount = 2
     override val infos = I18N.tr("A voltage-controlled amplifier (VCA)\nis an electronic amplifier that varies\nits gain depending on the control voltage.")
 
-    override fun process(inputs: Array<Double?>, deltaTime: Double) = (inputs[1] ?: 5.0) / 5.0 * (inputs[0] ?: 0.0)
+    // gain 0 to 10 over the control's range (1 at a tenth of SVU, the default when unconnected)
+    override fun process(inputs: Array<Double?>, deltaTime: Double) = gain(inputs) * (inputs[0] ?: 0.0)
+
+    private fun gain(inputs: Array<Double?>) = (inputs[1] ?: (Eln.SVU / 10)) / (Eln.SVU / 10)
 
     override fun getWaila(inputs: Array<Double?>, output: Double): MutableMap<String, String> {
         val info = super.getWaila(inputs, output)
-        info["Gain"] = Utils.plotValue((inputs[1] ?: 5.0) / 5.0)
+        info["Gain"] = Utils.plotValue(gain(inputs))
         return info
     }
 }
@@ -523,9 +530,10 @@ class SummingUnitElement(node: SixNode, side: Direction, sixNodeDescriptor: SixN
 
         try {
             when (stream?.readByte()?.toInt()) {
-                GainChangedEvents[0] -> (function as SummingUnit).gains[0] = stream.readFloat().toDouble()
-                GainChangedEvents[1] -> (function as SummingUnit).gains[1] = stream.readFloat().toDouble()
-                GainChangedEvents[2] -> (function as SummingUnit).gains[2] = stream.readFloat().toDouble()
+                // (typed: any finite gains)
+                GainChangedEvents[0] -> (function as SummingUnit).gains.let { it[0] = ClientValues.finite(stream.readFloat().toDouble(), it[0]) }
+                GainChangedEvents[1] -> (function as SummingUnit).gains.let { it[1] = ClientValues.finite(stream.readFloat().toDouble(), it[1]) }
+                GainChangedEvents[2] -> (function as SummingUnit).gains.let { it[2] = ClientValues.finite(stream.readFloat().toDouble(), it[2]) }
             }
             needPublish()
         } catch (e: IOException) {
@@ -588,7 +596,7 @@ class Filter: AnalogFunction() {
     private var output = 0.0
 
     override fun process(inputs: Array<Double?>, deltaTime: Double): Double {
-        output = Utils.limit(output + ((inputs[0] ?: 0.0) - output) * feedback * deltaTime, 0.0, 50.0)
+        output = Utils.limit(output + ((inputs[0] ?: 0.0) - output) * feedback * deltaTime, 0.0, Eln.SVU)
         return output
     }
 
@@ -638,7 +646,8 @@ class FilterElement(node: SixNode, side: Direction, sixNodeDescriptor: SixNodeDe
 
         try {
             when (stream.readByte()) {
-                Event.CUTOFF_FREQUENCY_CHANGED.value -> cutOffFrequency = stream.readFloat().toDouble()
+                // (the screen's steps: 1 mHz to 5 Hz)
+                Event.CUTOFF_FREQUENCY_CHANGED.value -> cutOffFrequency = ClientValues.clamp(stream.readFloat().toDouble(), 0.001, 5.0, cutOffFrequency)
             }
             needPublish()
         } catch (e: IOException) {

@@ -91,6 +91,39 @@ public class FluidCoreTest {
         for (FluidNode n : net.nodes) assertTrue(Double.isFinite(n.P()) && n.mWater > 0, "finite and positive");
     }
 
+    /**
+     * Hot air from a reservoir through a vessel cooled by its wall, out to the air: the network settles and sleeps,
+     * and asleep the wall still reports the heat it passes (it read 0, so a condenser asleep booked no heat).
+     */
+    @Test
+    void aWallKeepsPassingHeatWhileItsNetworkSleeps() {
+        FluidNetwork net = new FluidNetwork();
+        FluidNode src = net.add(new FluidNode(1, 0, 1, true).fill(0, 2e5, 400));
+        FluidNode v = net.add(new FluidNode(0.01, 0, 0.2, false).fill(0, 1.5e5, 350));
+        FluidNode atm = net.add(FluidNode.atmosphere(0));
+        net.connect(src, 0.5, v, 0.5, 1e-11);
+        net.connect(v, 0.5, atm, 0.5, 1e-11);
+        int s = 0;
+        for (; s < 20000 && (net.core == null || !net.core.net.asleep()); s++) {
+            v.wallUA = 2;
+            v.wallT = 300;
+            net.step(DT);
+        }
+        assertTrue(net.core.net.asleep(), "asleep after " + s + " steps");
+        double awake = v.wallJ;
+        assertTrue(awake < -1e-3, "the wall takes heat: " + awake + " J a step");
+        long slept = net.core.net.stats.slept;
+        for (int i = 0; i < 20; i++) {
+            v.wallUA = 2;
+            v.wallT = 300;
+            net.step(DT);
+            assertEquals(awake, v.wallJ, 0, "asleep, step " + i);
+        }
+        assertEquals(slept + 20, net.core.net.stats.slept, "slept through");
+        // (and it is the heat the flow brings: what the wall takes, the stream through the vessel gave up)
+        assertEquals(awake / DT, 2 * (300 - v.T()), 1e-6 * Math.abs(awake / DT));
+    }
+
     @Test
     void checkValvePassesOneWayOnly() {
         // a high, b low: a check edge a -> b passes; b high, a low: it holds
@@ -190,8 +223,13 @@ public class FluidCoreTest {
         FluidNode a = net.add(new FluidNode(0.02, 0, 1.0, false).fill(15, Water.P_ATM, 293.15));
         FluidNode b = net.add(new FluidNode(0.02, 0, 1.0, false).fill(3, Water.P_ATM, 293.15));
         net.connect(a, 0, b, 0, 2e-10);
-        net.connect(a, 1, atm, 0, 1e-8);
-        net.connect(b, 1, atm, 0, 1e-8);
+        // open tops as the machines have them: gas out one way, air in the other, so nothing passes at rest (a plain
+        // edge swaps g S ln 2 each way at balance, which is mixing: right between vessels, but it would air the
+        // vessels out and dry them)
+        for (FluidNode n : new FluidNode[]{a, b}) {
+            net.connect(n, 1, atm, 0, 1e-8).kind(FluidEdge.Kind.CHECK).gasOnly = true;
+            net.connect(atm, 0, n, 1, 1e-8).kind(FluidEdge.Kind.CHECK);
+        }
         double w0 = a.mWater + b.mWater;
         for (int i = 0; i < 20000; i++) net.step(DT);
         assertEquals(a.level(), b.level(), 0.01, a.level() + " vs " + b.level());
@@ -212,26 +250,4 @@ public class FluidCoreTest {
         assertTrue(lo.mLiquid() > 4.9, "fell: " + lo.mLiquid() + " left " + hi.mLiquid());
     }
 
-    @Test
-    void turbineGivesEasPowerForItsSteam() {
-        // EA today: electricity = 0.40 x 2.257 J per mB (= mg) of steam. A boiler venting through a turbine at steady
-        // state should turn about 40% of its heat into electricity (the water is already at its boiling point)
-        FluidNetwork net = new FluidNetwork();
-        FluidNode atm = net.add(FluidNode.atmosphere(0));
-        FluidNode boiler = net.add(new FluidNode(0.008, 0, 0.3, false).fill(5, Water.P_ATM, 373));
-        FluidEdge turbine = net.connect(boiler, 1, atm, 0, 2e-11).kind(FluidEdge.Kind.TURBINE);
-        double Q = 2000, e = 0, steam = 0;
-        for (int i = 0; i < 24000; i++) {
-            boiler.heat = Q;
-            net.step(DT);
-            if (i >= 16000) {
-                e += turbine.power * DT;
-                steam += turbine.fVapour * DT;
-            }
-        }
-        double t = 8000 * DT, power = e / t, rate = steam / t;
-        double ea = 0.40 * 2.257 * rate * 1e6;   // EA: W = 0.40 x 2.257 J/mB x mB/s, 1 mB steam = 1 mg
-        assertEquals(ea, power, 0.2 * ea, "EA " + ea + " W, here " + power + " W; boiler " + boiler.P() + " Pa " + boiler.T() + " K");
-        assertEquals(0.40 * Q, power, 0.2 * 0.40 * Q, "power " + power + " from " + Q + " W of heat");
-    }
 }

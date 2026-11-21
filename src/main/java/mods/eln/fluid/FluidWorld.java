@@ -29,9 +29,12 @@ public final class FluidWorld implements IProcess {
     private final List<FluidNetwork> networks = new ArrayList<>();
     private final List<FluidDevice.Vent> vents = new ArrayList<>();
     private final List<FluidDevice.Link> links = new ArrayList<>();
+    private final List<FluidDevice.Flow> flows = new ArrayList<>();
     /** Pipe runs lumped into one node each (DESIGN.md section 5): lump -> its members, and member -> lump. */
     private final Map<FluidNode, List<FluidNode>> lumps = new IdentityHashMap<>();
     private final Map<FluidNode, FluidNode> lumpOf = new IdentityHashMap<>();
+    /** Lumps handed back to their pieces for editing since the last step (handBack): the pieces are the authority until then. */
+    private final Set<FluidNode> handedBack = java.util.Collections.newSetFromMap(new IdentityHashMap<>());
     private boolean dirty;
 
     private FluidWorld() {
@@ -56,8 +59,10 @@ public final class FluidWorld implements IProcess {
         INSTANCE.networks.clear();
         INSTANCE.vents.clear();
         INSTANCE.links.clear();
+        INSTANCE.flows.clear();
         INSTANCE.lumps.clear();
         INSTANCE.lumpOf.clear();
+        INSTANCE.handedBack.clear();
         INSTANCE.dirty = false;
         return INSTANCE;
     }
@@ -94,23 +99,99 @@ public final class FluidWorld implements IProcess {
         return INSTANCE.lumpOf.getOrDefault(n, n);
     }
 
-    /** Write a run's lump back into its pieces now (before saving a piece whose run changed since the step). */
+    /**
+     * Write a run's lump back into its pieces now (before saving a piece whose run changed since the step); not a run
+     * handed back for editing since the step (handBack), whose pieces hold it now (its lump is stale).
+     */
     public static void writeBackOf(FluidNode piece) {
         FluidNode lump = INSTANCE.lumpOf.get(piece);
-        if (lump == null) return;
+        if (lump == null || INSTANCE.handedBack.contains(lump)) return;
         for (FluidNode m : INSTANCE.lumps.get(lump)) {
             m.setShareOf(lump, m.volume / lump.volume);
             m.update();
         }
     }
 
-    /** The edges at a node this step (its ports' couplings and vents). */
+    /**
+     * Write a run's lump back into its pieces before editing them between steps (a pipe cut for a junction, a junction's
+     * contents given to its last arm): a rebuild before the next step then keeps the pieces as edited, where it would
+     * otherwise write the run's lump over them (a later write into that lump before the step is lost at a rebuild).
+     */
+    public static void handBack(FluidNode piece) {
+        writeBackOf(piece);
+        FluidNode lump = INSTANCE.lumpOf.get(piece);
+        if (lump != null) INSTANCE.handedBack.add(lump);
+    }
+
+    /**
+     * The edges at a node this step (its ports' couplings, links and vents), without prescribed flows (flowsOf): callers
+     * ask whether a node is piped, or sum what its pipes carried, and a device's own source is neither.
+     */
     public static List<FluidEdge> edgesOf(FluidNode n) {
+        return edgesOf(n, false);
+    }
+
+    /** The prescribed flows (FluidDevice.Flow's edges, FluidEdge.Kind.FLOW) at a node this step. */
+    public static List<FluidEdge> flowsOf(FluidNode n) {
+        return edgesOf(n, true);
+    }
+
+    private static List<FluidEdge> edgesOf(FluidNode n, boolean flows) {
         List<FluidEdge> out = new ArrayList<>();
         FluidNetwork net = networkOf(n);
         n = INSTANCE.lumpOf.getOrDefault(n, n);
-        if (net != null) for (FluidEdge e : net.edges) if (e.a == n || e.b == n) out.add(e);
+        if (net != null)
+            for (FluidEdge e : net.edges) if ((e.a == n || e.b == n) && (e.kind == FluidEdge.Kind.FLOW) == flows) out.add(e);
         return out;
+    }
+
+    /** /elnlab fluidstats: every network by its stepping cost, with where one of its devices is. */
+    public static List<String> stats() {
+        INSTANCE.rebuildIfDirty();
+        List<FluidNetwork> ns = new ArrayList<>(INSTANCE.networks);
+        ns.sort((x, y) -> Long.compare(y.nanos, x.nanos));
+        long total = 0, steps = 0;
+        for (FluidNetwork n : ns) {
+            total += n.nanos;
+            steps = Math.max(steps, n.steps);
+        }
+        List<String> out = new ArrayList<>();
+        out.add(String.format("%d networks, %.3f ms/tick in all", ns.size(), steps == 0 ? 0 : total / 1e6 / steps));
+        for (FluidNetwork n : ns) {
+            String where = "?";
+            outer:
+            for (FluidDevice d : INSTANCE.devices)
+                for (FluidDevice.FluidPort p : d.fluidPorts())
+                    if (n.nodes.contains(nodeFor(p.node()))) {
+                        where = d.getClass().getSimpleName() + " " + net.minecraft.core.BlockPos.of(p.pos()).toShortString();
+                        break outer;
+                    }
+            out.add(n.stats() + "; " + where);
+        }
+        return out;
+    }
+
+    /** A network's progress after a step (CoreStep), onto its nodes and their runs' pieces (FluidNode.stallNow). */
+    public static void recordProgress(List<FluidNode> nodes, double stall, double dropped) {
+        for (FluidNode n : nodes) {
+            List<FluidNode> pieces = INSTANCE.lumps.get(n);
+            if (pieces != null) for (FluidNode p : pieces) progress(p, stall, dropped);
+            progress(n, stall, dropped);
+        }
+    }
+
+    private static void progress(FluidNode n, double stall, double dropped) {
+        n.stallNow = stall;
+        n.longestStall = Math.max(n.longestStall, stall);
+        n.droppedTime += dropped;
+    }
+
+    /** How many pieces n's run is made of (1 for a node in no run with others). */
+    public static int runSize(FluidNode n) {
+        INSTANCE.rebuildIfDirty();
+        FluidNode lump = INSTANCE.lumpOf.get(n);
+        List<FluidNode> ms = lump == null ? null : INSTANCE.lumps.get(lump);
+        return ms == null ? 1 : ms.size();
     }
 
     @Override
@@ -120,16 +201,158 @@ public final class FluidWorld implements IProcess {
         // crashed on a ConcurrentModificationException when a steam turbine's casing burst; the ones gone are skipped)
         List<FluidDevice> stepping = new ArrayList<>(devices);
         for (FluidDevice d : stepping) if (devices.contains(d)) d.beforeFluidStep(time);
-        for (FluidDevice.Vent v : vents) v.edge.open = v.open;
+        // a run's wall: its pieces' heat links summed, at their mean wall temperature
+        for (var e : lumps.entrySet()) {
+            double ua = 0, uat = 0;
+            for (FluidNode m : e.getValue()) {
+                ua += m.wallUA;
+                uat += m.wallUA * m.wallT;
+            }
+            e.getKey().wallUA = ua;
+            e.getKey().wallT = ua > 0 ? uat / ua : 0;
+        }
+        for (FluidDevice.Vent v : vents) {
+            v.edge.open = v.open;
+            if (v.edge.kind == FluidEdge.Kind.REGULATOR) v.edge.setPa = v.setPa;   // (a safety valve's slider)
+        }
         for (FluidDevice.Link l : links) {
             l.edge.open = l.open;
             l.edge.boost = l.boost;
+            l.edge.speed = l.speed;
+            l.edge.qMax = l.qMax;
+            l.edge.h0 = l.h0;
+            l.edge.gas = l.gas;
+            l.edge.anyPhase = l.anyPhase;
+            l.edge.drop = l.drop;
+            l.edge.conductance = l.conductance;
+            l.edge.setPa = l.setPa;
+            l.edge.relief = l.relief;
         }
+        for (FluidDevice.Flow f : flows) settings(f);
         for (FluidNetwork n : networks) n.step(time);
+        // (what each flow moved, onto its device's Flow at once: a trace below may rebuild the networks and their edges)
+        for (FluidDevice.Flow f : flows) {
+            f.delivered = f.edge.flow;
+            f.deliveredW = f.edge.fEnthalpy;
+            if (f.edge.fSpecies != null) {
+                if (f.deliveredSpecies == null || f.deliveredSpecies.length != f.edge.fSpecies.length) f.deliveredSpecies = new double[f.edge.fSpecies.length];
+                System.arraycopy(f.edge.fSpecies, 0, f.deliveredSpecies, 0, f.edge.fSpecies.length);
+            }
+        }
         if (traceSteps > 0 && traceNode != null) trace();
-        writeBack();
+        if (scanSteps > 0) scan();
+        if (watchAll) watch();
+        writeBack(false);
+        handedBack.clear();
         burstThisStep.clear();
         for (FluidDevice d : stepping) if (devices.contains(d)) d.afterFluidStep(time);
+    }
+
+    /** Keep a rolling record of every node's step-to-step flips (the GameTest harness's limit-cycle check). */
+    public static boolean watchAll;
+    /** Per node: {P(t-1), P(t-2), flip history bits (1: it turned back by over 0.05 bar that step), the step last seen}. */
+    private static final Map<FluidNode, double[]> watched = new IdentityHashMap<>();
+    private static long watchStep;
+
+    private void watch() {
+        watchStep++;
+        // (nodes of removed devices: dropped once they have been gone 100 steps)
+        if (watchStep % 100 == 0) watched.values().removeIf(r -> r[3] < watchStep - 100);
+        for (FluidNetwork net : networks)
+            for (FluidNode n : net.nodes) {
+                if (n.fixed) continue;
+                double p = n.P();
+                double[] r = watched.computeIfAbsent(n, k -> new double[]{Double.NaN, Double.NaN, 0, 0});
+                long bits = (long) r[2] << 1;
+                if (!Double.isNaN(r[1])) {
+                    double d1 = p - r[0], d0 = r[0] - r[1];
+                    if (d1 * d0 < 0 && Math.abs(d1) > 5e3 && Math.abs(d0) > 5e3) bits |= 1;
+                }
+                r[2] = bits & 0xFFFFF;
+                r[1] = r[0];
+                r[0] = p;
+                r[3] = watchStep;
+            }
+    }
+
+    /** How many of a node's (its run's) last 20 steps it flipped, while watchAll. */
+    public static int recentFlips(FluidNode n) {
+        double[] r = watched.get(nodeFor(n));
+        return r == null ? 0 : Long.bitCount((long) r[2]);
+    }
+
+    /** The devices in the world now (a copy). */
+    public static List<FluidDevice> devices() {
+        return new ArrayList<>(INSTANCE.devices);
+    }
+
+    /** /elnlab fluidscan: steps left to watch, and per node its last two pressures and flip / swing tallies. */
+    public static int scanSteps;
+    private static final Map<FluidNode, double[]> scanned = new IdentityHashMap<>();
+
+    /** Start a scan of every network for n steps (a fresh tally). */
+    public static void startScan(int n) {
+        scanned.clear();
+        scanSteps = n;
+    }
+
+    /**
+     * Per node: {P(t-1), P(t-2), steps seen, flips (the pressure turned back each step by over 0.05 bar), biggest swing}.
+     * A period-2 limit cycle (the boiler feed valve's of 2026-11-04, before check valves entered the solve open) flips every step.
+     */
+    private void scan() {
+        scanSteps--;
+        for (FluidNetwork net : networks)
+            for (FluidNode n : net.nodes) {
+                if (n.fixed) continue;
+                double p = n.P();
+                // (5 min, 6 max, 7 the last turning point's pressure, 8 its direction (+1 rising, -1 falling), 9 slow reversals
+                // of over 0.1 bar: a hunting loop swings back and forth over many steps)
+                double[] r = scanned.computeIfAbsent(n, k -> new double[]{Double.NaN, Double.NaN, 0, 0, 0, p, p, p, 0, 0});
+                r[5] = Math.min(r[5], p);
+                r[6] = Math.max(r[6], p);
+                if (r[8] >= 0 && p < r[7] - 1e4) {
+                    if (r[8] > 0) r[9]++;
+                    r[8] = -1;
+                    r[7] = p;
+                } else if (r[8] <= 0 && p > r[7] + 1e4) {
+                    if (r[8] < 0) r[9]++;
+                    r[8] = 1;
+                    r[7] = p;
+                } else if (r[8] > 0 ? p > r[7] : p < r[7]) r[7] = p;
+                if (!Double.isNaN(r[1])) {
+                    double d1 = p - r[0], d0 = r[0] - r[1];
+                    if (d1 * d0 < 0 && Math.abs(d1) > 5e3 && Math.abs(d0) > 5e3) r[3]++;
+                    r[4] = Math.max(r[4], Math.abs(d1));
+                }
+                r[1] = r[0];
+                r[0] = p;
+                r[2]++;
+            }
+        if (scanSteps == 0) scanReport();
+    }
+
+    /** Log the nodes that flipped most steps, with where their devices are. */
+    private void scanReport() {
+        Map<FluidNode, String> where = new IdentityHashMap<>();
+        for (FluidDevice d : devices)
+            for (FluidDevice.FluidPort p : d.fluidPorts()) {
+                var b = BlockPos.of(p.pos());
+                where.putIfAbsent(nodeFor(p.node()), d.getClass().getSimpleName() + " " + b.getX() + "," + b.getY() + "," + b.getZ());
+            }
+        List<Map.Entry<FluidNode, double[]>> hits = new ArrayList<>();
+        for (var e : scanned.entrySet()) {
+            double[] r = e.getValue();
+            if (r[2] > 4 && (r[3] / (r[2] - 2) > 0.5 || r[9] >= 4)) hits.add(e);
+        }
+        hits.sort((a, b) -> Double.compare(b.getValue()[4], a.getValue()[4]));
+        StringBuilder b = new StringBuilder(String.format("fluidscan: %d nodes watched, %d flip most steps or hunt", scanned.size(), hits.size()));
+        for (var e : hits)
+            b.append(String.format("%n  %s: flips %.0f of %.0f steps (step swing up to %.3f bar), %.0f slow reversals over %.3f..%.3f bar, P now %.3f bar, V %.5f m3",
+                where.getOrDefault(e.getKey(), "?"), e.getValue()[3], e.getValue()[2] - 2, e.getValue()[4] / 1e5, e.getValue()[9],
+                e.getValue()[5] / 1e5, e.getValue()[6] / 1e5, e.getKey().P() / 1e5, e.getKey().volume));
+        mods.eln.Eln.LOG.info(b.toString());
+        scanned.clear();
     }
 
     /** /elnlab fluidtrace: the node whose network is logged after each step, for traceSteps more steps. */
@@ -157,13 +380,19 @@ public final class FluidWorld implements IProcess {
         mods.eln.Eln.LOG.info(b.toString());
     }
 
-    /** Each lumped run's contents back into its members, by volume (they are what is saved and what is rebuilt from). */
-    private void writeBack() {
+    /**
+     * Each lumped run's contents back into its members, by volume (they are what is saved and what is rebuilt from); at a
+     * rebuild (skipHanded), not the runs handed back to their pieces for editing since the step (handBack).
+     */
+    private void writeBack(boolean skipHanded) {
         for (var e : lumps.entrySet()) {
             FluidNode lump = e.getKey();
+            if (skipHanded && handedBack.contains(lump)) continue;
             for (FluidNode m : e.getValue()) {
                 m.setShareOf(lump, m.volume / lump.volume);
                 m.update();
+                // (the heat through the run's walls, back to each piece's wall by its share of the link)
+                m.wallJ = lump.wallUA > 0 ? lump.wallJ * m.wallUA / lump.wallUA : 0;
             }
         }
     }
@@ -171,9 +400,16 @@ public final class FluidWorld implements IProcess {
     private void rebuildIfDirty() {
         if (!dirty) return;
         dirty = false;
+        // (between steps a run's lump holds its contents: what a device, a command or a test put into it since the step's
+        // write-back was lost when the new lumps were summed from the pieces, as a test's feed fill was when another
+        // test's device joined (batch-flake, 2026-11-16); written back first, a rebuild keeps it. A run handed back for
+        // editing keeps its pieces' edits instead)
+        writeBack(true);
+        handedBack.clear();
         networks.clear();
         vents.clear();
         links.clear();
+        flows.clear();
         lumps.clear();
         lumpOf.clear();
         // ports by (level, block, face)
@@ -188,11 +424,18 @@ public final class FluidWorld implements IProcess {
         for (FluidDevice d : devices) {
             for (FluidDevice.FluidPort p : d.fluidPorts()) addNode(p.node(), parent, all, levelOf, d.fluidLevel());
             for (FluidDevice.Vent v : d.fluidVents()) addNode(v.node, parent, all, levelOf, d.fluidLevel());
+            for (FluidDevice.Flow f : d.fluidFlows()) addNode(f.node, parent, all, levelOf, d.fluidLevel());
             for (FluidDevice.Link l : d.fluidLinks()) {
                 addNode(l.a, parent, all, levelOf, d.fluidLevel());
                 addNode(l.b, parent, all, levelOf, d.fluidLevel());
             }
         }
+        // (Baughn 2026-11-12, after the junction volume near-miss: a node too small to compute reliably is an error)
+        for (FluidDevice d : devices)
+            for (FluidNode n : nodesOf(d))
+                if (!n.fixed && n.volume < MIN_RELIABLE_VOLUME && TOO_SMALL.add(n))
+                    mods.eln.Eln.LOG.error("FluidWorld: a fluid node of {} m^3 in {} is too small to compute reliably (under {} m^3)",
+                        String.format("%.2g", n.volume), d, MIN_RELIABLE_VOLUME);
         List<FluidDevice.Link> allLinks = new ArrayList<>();
         for (FluidDevice d : devices) allLinks.addAll(d.fluidLinks());
         List<Object[]> couplings = new ArrayList<>();   // {portA, portB}
@@ -294,10 +537,37 @@ public final class FluidWorld implements IProcess {
             FluidNode a = repr.apply(l.a), b = repr.apply(l.b);
             if (a == b) continue;   // (both sides in one run: the valve can't hold anything back)
             double r = 1 / l.k + (a != l.a ? runR.get(a) / 2 : 0) + (b != l.b ? runR.get(b) / 2 : 0);
+            double lsA = spanOn(a, l.a, l.spanA), lsB = spanOn(b, l.b, l.spanB);
+            if ((lsA > 0) != (lsB > 0)) {
+                // an opening on a point (a pipe arm's end into a junction): the couplings' counter-flow pair, above
+                FluidNode o = lsA > 0 ? a : b, d = lsA > 0 ? b : a;
+                double dO = drawOn(o, lsA > 0 ? l.a : l.b, lsA > 0 ? l.drawA : l.drawB), dD = drawOn(d, lsA > 0 ? l.b : l.a, lsA > 0 ? l.drawB : l.drawA);
+                double span = Math.max(lsA, lsB);
+                var net = byRoot.get(find(a, parent));
+                l.edge = net.connect(o, dO, d, dD, 1 / r).kind(FluidEdge.Kind.CHECK);
+                l.edge.spanA = span;
+                net.connect(d, dD, o, dO, 1 / r).kind(FluidEdge.Kind.CHECK).entrySpan = span;
+                links.add(l);
+                continue;
+            }
             l.edge = byRoot.get(find(a, parent)).connect(a, drawOn(a, l.a, l.drawA), b, drawOn(b, l.b, l.drawB), 1 / r).kind(l.kind);
+            l.edge.spanA = lsA;   // (two openings, as two pipes' side ends: the mix over their spans; valves 0)
+            l.edge.spanB = lsB;
             l.edge.area = l.area;
             l.edge.open = l.open;
             l.edge.boost = l.boost;
+            l.edge.qMax = l.qMax;
+            l.edge.h0 = l.h0;
+            l.edge.gas = l.gas;
+            l.edge.anyPhase = l.anyPhase;
+            l.edge.setPa = l.setPa;
+            l.edge.relief = l.relief;
+            l.edge.speed = l.speed;
+            l.edge.eta = l.eta;
+            l.edge.nozzle = l.nozzle;
+            l.edge.drop = l.drop;
+            l.edge.conductance = l.conductance;
+            l.edge.band = l.band;
             links.add(l);
         }
         Map<FluidNetwork, FluidNode> air = new IdentityHashMap<>();
@@ -306,10 +576,61 @@ public final class FluidWorld implements IProcess {
                 FluidNode vn = repr.apply(v.node);   // (a burst pipe vents its whole run)
                 FluidNetwork net = byRoot.get(find(vn, parent));
                 FluidNode atm = air.computeIfAbsent(net, k -> k.add(FluidNode.atmosphere(vn.z + vn.height)));
-                v.edge = net.connect(vn, drawOn(vn, v.node, v.draw), atm, 0, v.k);
+                v.edge = v.inward ? net.connect(atm, 0, vn, drawOn(vn, v.node, v.draw), v.k).kind(FluidEdge.Kind.CHECK)
+                    : net.connect(vn, drawOn(vn, v.node, v.draw), atm, 0, v.k);
                 v.edge.open = v.open;
+                if (v.setPa > 0 && !v.inward && !v.gasOnly) {
+                    v.edge.kind(FluidEdge.Kind.REGULATOR);
+                    v.edge.relief = true;
+                    v.edge.setPa = v.setPa;
+                }
+                if (v.gasOnly && !v.inward) {
+                    v.edge.gasOnly = true;
+                    v.edge.kind(FluidEdge.Kind.CHECK);
+                }
                 vents.add(v);
             }
+        // prescribed flows: as vents, to the network's air node (a source's far end is the outside it brings mass from, a
+        // sink's the outside it sends it to; the core carries a source's own mix, so the air node's contents don't matter)
+        for (FluidDevice d : devices)
+            for (FluidDevice.Flow f : d.fluidFlows()) {
+                FluidNode fn = repr.apply(f.node);   // (into a pipe: its run's lump)
+                FluidNetwork net = byRoot.get(find(fn, parent));
+                FluidNode atm = air.computeIfAbsent(net, k -> k.add(FluidNode.atmosphere(fn.z + fn.height)));
+                double dr = drawOn(fn, f.node, f.draw);
+                f.edge = (f.in ? net.connect(atm, 0, fn, dr, 0) : net.connect(fn, dr, atm, 0, 0)).kind(FluidEdge.Kind.FLOW);
+                settings(f);
+                flows.add(f);
+            }
+    }
+
+    /** A flow's settings onto its edge (before each step). */
+    private static void settings(FluidDevice.Flow f) {
+        f.edge.rate = Math.max(0, f.rate);
+        f.edge.shares = f.in ? f.shares : null;
+        f.edge.kelvin = f.kelvin;
+        f.edge.phase = f.phase;
+        f.edge.minPa = f.minPa;
+        f.edge.maxPa = f.maxPa;
+    }
+
+    /** The smallest node volume (m^3) the core is trusted with: a voxel of iron pipe is ~2e-6 (LabAgent: the trouble in
+     *  #374 and #370 came from nodes near PipePart's 1e-7 floor). */
+    public static final double MIN_RELIABLE_VOLUME = 1e-6;
+    /** Nodes already reported (once each). */
+    private static final java.util.Set<FluidNode> TOO_SMALL = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
+
+    /** A device's nodes: its ports', vents', flows' and links' (as the rebuild gathers them). */
+    private static List<FluidNode> nodesOf(FluidDevice d) {
+        List<FluidNode> out = new ArrayList<>();
+        for (FluidDevice.FluidPort p : d.fluidPorts()) out.add(p.node());
+        for (FluidDevice.Vent v : d.fluidVents()) out.add(v.node);
+        for (FluidDevice.Flow f : d.fluidFlows()) out.add(f.node);
+        for (FluidDevice.Link l : d.fluidLinks()) {
+            out.add(l.a);
+            out.add(l.b);
+        }
+        return out;
     }
 
     /** A port's draw on its node, as a draw on the node standing for it (the same height in the world). */

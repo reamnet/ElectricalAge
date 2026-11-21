@@ -37,17 +37,41 @@ public class TransformerRender extends TransparentNodeElementRender {
         });
 
         coordinate = new Coordonate(tileEntity);
-        doorOpen = new PhysicalInterpolator(0.4f, 4.0f, 0.9f, 0.05f);
+        doorOpen = mods.eln.anim.Travel.spring(0.4f, 4.0f, 0.9f, 0.05f);
     }
 
     @Override
     public void draw() {
         GL11.glPushMatrix();
         front.glRotateXnRef();
-        descriptor.draw(feroPart, primaryStackSize, secondaryStackSize, hasCasing, doorOpen.get());
+        if (window > 0) {
+            double total = primaryTurns * mods.eln.node.voxel.CableSpec.MM2[primaryMm2] + secondaryTurns * mods.eln.node.voxel.CableSpec.MM2[secondaryMm2];
+            descriptor.drawCoils(feroPart, Coil.of(primaryTurns, mods.eln.node.voxel.CableSpec.MM2[primaryMm2], window, total), rgb(primaryColour),
+                Coil.of(secondaryTurns, mods.eln.node.voxel.CableSpec.MM2[secondaryMm2], window, total), rgb(secondaryColour), hasCasing, doorOpen.get());
+        } else descriptor.draw(feroPart, primaryStackSize, secondaryStackSize, hasCasing, doorOpen.get());
         GL11.glPopMatrix();
         cableRenderType = drawCable(front.down(), priRender, priConn, cableRenderType);
         cableRenderType = drawCable(front.down(), secRender, secConn, cableRenderType);
+    }
+
+    /** The windings as published: turns, wire (CableSpec.MM2 index), insulation colour (DyeColor id), tier; the core's window. */
+    int primaryTurns, secondaryTurns, primaryMm2, secondaryMm2, primaryColour, secondaryColour, primaryTier, secondaryTier;
+    float window;
+
+    static int rgb(int dye) {
+        return net.minecraft.world.item.DyeColor.byId(dye).getTextureDiffuseColor() & 0xFFFFFF;
+    }
+
+    /** A winding's cable look (for the cables joining it): its tier's cable. */
+    static CableRenderDescriptor tierRender(int tier) {
+        ElectricalCableDescriptor d = switch (tier) {
+            case 1 -> mods.eln.registry.ElnDeviceRegistry.lowVoltageCableDescriptor;
+            case 2 -> mods.eln.registry.ElnDeviceRegistry.meduimVoltageCableDescriptor;
+            case 3 -> mods.eln.registry.ElnDeviceRegistry.highVoltageCableDescriptor;
+            case 4 -> mods.eln.registry.ElnDeviceRegistry.veryHighVoltageCableDescriptor;
+            default -> null;
+        };
+        return d == null ? null : d.render;
     }
 
     private byte primaryStackSize;
@@ -55,12 +79,16 @@ public class TransformerRender extends TransparentNodeElementRender {
     private CableRenderDescriptor priRender;
     private CableRenderDescriptor secRender;
     public boolean isIsolator;
+    /** For its screen: switched on, both sides' voltages, the core's volts a turn, the window used, saturated. */
+    public boolean switchedOn = true, saturated;
+    public float primaryU, secondaryU, coreVoltsPerTurn, windowUsed;
 
     private Obj3DPart feroPart;
     private boolean hasCasing = false;
 
     private final Coordonate coordinate;
-    private final PhysicalInterpolator doorOpen;
+    /** The casing's doors, swinging open on a spring when a player is near. */
+    private final mods.eln.anim.Travel doorOpen;
 
     @Override
     public void networkUnserialize(DataInputStream stream) {
@@ -76,14 +104,14 @@ public class TransformerRender extends TransparentNodeElementRender {
                 feroPart = feroDesc.feroPart;
 
             ItemStack priStack = Utils.unserialiseItemStack(stream);
-            ElectricalCableDescriptor priDesc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(priStack, ElectricalCableDescriptor.class);
+            ElectricalCableDescriptor priDesc = mods.eln.node.voxel.CableItems.descriptor(priStack);
             if (priDesc == null)
                 priRender = null;
             else
                 priRender = priDesc.render;
 
             ItemStack secStack = Utils.unserialiseItemStack(stream);
-            ElectricalCableDescriptor secDesc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(secStack, ElectricalCableDescriptor.class);
+            ElectricalCableDescriptor secDesc = mods.eln.node.voxel.CableItems.descriptor(secStack);
             if (secDesc == null)
                 secRender = null;
             else
@@ -91,22 +119,38 @@ public class TransformerRender extends TransparentNodeElementRender {
 
             eConn.deserialize(stream);
 
+            cableRenderType = null;
+            isIsolator = stream.readBoolean();
+
+            load.setTarget(stream.readFloat());
+            hasCasing = stream.readBoolean();
+            primaryTurns = stream.readShort();
+            primaryMm2 = Math.max(0, Math.min(mods.eln.node.voxel.CableSpec.MM2.length - 1, stream.readByte()));
+            primaryColour = stream.readByte() & 15;
+            primaryTier = stream.readByte();
+            secondaryTurns = stream.readShort();
+            secondaryMm2 = Math.max(0, Math.min(mods.eln.node.voxel.CableSpec.MM2.length - 1, stream.readByte()));
+            secondaryColour = stream.readByte() & 15;
+            secondaryTier = stream.readByte();
+            window = stream.readFloat();
+            switchedOn = stream.readBoolean();
+            primaryU = stream.readFloat();
+            secondaryU = stream.readFloat();
+            coreVoltsPerTurn = stream.readFloat();
+            windowUsed = stream.readFloat();
+            saturated = stream.readBoolean();
+            // (a winding isn't a cable item: its cables join with its tier's look)
+            if (priRender == null && primaryTurns > 0) priRender = tierRender(primaryTier);
+            if (secRender == null && secondaryTurns > 0) secRender = tierRender(secondaryTier);
             priConn.mask = 0;
             secConn.mask = 0;
             for (LRDU lrdu : LRDU.values()) {
                 if (!eConn.get(lrdu) || front.down().applyLRDU(lrdu) == front.left() || front.down().applyLRDU(lrdu) == front.right())
                     continue;
                 CableRenderDescriptor render = getCableRender(front.down().applyLRDU(lrdu), LRDU.Down);
-
                 if (render == priRender) priConn.set(lrdu, true);
                 if (render == secRender) secConn.set(lrdu, true);
-
             }
-            cableRenderType = null;
-            isIsolator = stream.readBoolean();
-
-            load.setTarget(stream.readFloat());
-            hasCasing = stream.readBoolean();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -142,9 +186,9 @@ public class TransformerRender extends TransparentNodeElementRender {
 
         if (hasCasing) {
             if (!Utils.isPlayerAround(tileEntity.getLevel(), coordinate.moved(front).getAxisAlignedBB(0)))
-                doorOpen.setTarget(0f);
+                doorOpen.to(false);
             else
-                doorOpen.setTarget(1f);
+                doorOpen.to(true);
             doorOpen.step(deltaT);
         }
     }

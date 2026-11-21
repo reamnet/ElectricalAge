@@ -56,7 +56,21 @@ lakes) and well casing. Lake records are the saved data `eln:oil_reservoirs` (`R
 fractionating column, flare stack, electric heater, steam generator) are registered in `registry/batch/Wp10aContent`.
 Over half the lakes (a fixed roll on the lake's key) a small surface pond, its own reservoir `oil-pond:<lake>`, rimmed
 with tar sand, is dug once the chunks over the lake's middle are loaded, in new and old worlds alike (`oil/OilPonds`,
-Baughn 2026-10-28; none where the ground isn't flat, dry and natural). Tests: `gametest/cases/OilCases`. The tar sand separator's list is `Eln.separatorRecipes`.
+Baughn 2026-10-28; none where the ground isn't flat, dry and natural). Tests: `gametest/cases/OilCases`.
+
+Oil survey maps (todo #470): loot function `eln:oil_survey_map` (`oil/OilSurveyMapFunction`) turns a
+filled map into one centred on an oil lake picked at random among those `min_distance`..`max_distance` blocks (600-3000)
+from where it is made, marked with a decoration, the position in the lore. `oil/OilSurvey` finds lakes from the
+structure set's placement arithmetic (no chunk loaded), skipping lakes under a quarter full and start chunks generated
+without a lake. Sold by cartographers at level 3 (`data/eln/villager_trade/cartographer/3/`, added to the vanilla tag
+`#minecraft:cartographer/level_3`; 12 emeralds + compass, 3 uses), by the wandering trader
+(`data/eln/villager_trade/wandering_trader/`, in `#minecraft:wandering_trader/uncommon`; 14 emeralds, 1 use), and found
+in chests: NeoForge global loot modifiers (`data/eln/loot_modifiers/`, `neoforge:add_table` with a `loot_table_id` and a
+`random_chance` condition) add the table `eln:chests/oil_survey_map` to village cartographer chests (30 %), shipwreck map
+chests (25 %), buried treasure (25 %), abandoned mineshafts (15 %), desert pyramids and ruined portals (10 % each). A
+chest's map is made around the chest; with no origin in the loot context the map is discarded. Name and lore are lang
+keys `item.eln.oil_survey_map` and `.lore` (ElnLang). Tests: `OilSurveyTest`, GameTests `oil_survey_map` and
+`oil_survey_chest`. The tar sand separator's list is `Eln.separatorRecipes`.
 
 Oil goes on EA pipes (Baughn 2026-11-03: data-driven multi-fluid pipes; species in "Fluid species" below): each oil
 device keeps its own tank and puts it on a pipe through a small port node on its drawn flange (`fluid/PortBridge`):
@@ -66,18 +80,36 @@ draw-off (front; natural gas as a gas); into the column base's crude nozzle (rig
 gas turbine's fuel flange (top). Out-ports push up to 200 mB/s against up to 6 bar (constants in each descriptor).
 With no EA pipe on the flange, a device with a drawn outlet pushes its tank into whatever block there takes fluid
 (`fluid/FluidExport`: another mod's pipe, a column base, a flare stack, an EA tank), and every device offers its
-tanks on every face. The fuel heat furnace takes fuel on a flange low on its front into a two-bucket tank (gasoline,
+tanks on every face. Latex (the rubber chain, 2026-11-07): the 230V compressor (CompressorPortsElement) takes it in at its blue IN flange (back, 4 px up, 13 across) and presses it to Raw Rubber, and pushes the latex it presses from dandelions out of its red OUT flange (back, 9 px up); the Industrial Resin Collector (transparentnode/resincollector) pushes the latex it taps out of a flange on top (face centre). The Steam Cracker (transparentnode/steamcracker, 400 V, 4 kW) takes gasoline and steam at two blue flanges on its back (4 px up, at 4 and 12 across) and gives butadiene and natural gas out of two red flanges on its front (the same spots); its four tanks are fluid nodes (gasoline a breathing DeviceInlet, steam a sealed one, butadiene a sealed DeviceOutlet with a sump pump, natural gas a sealed gas-only one); it has no FluidExport fallback and no capability (the two outlets side by side would mix). The Polymeriser (transparentnode/polymeriser, 230 V, 1 kW) takes butadiene, liquid or vapour (a sealed DeviceInlet vessel; counted by mass), at a blue flange on its back, and with Soul Dust from above or the sides (one per 8) makes Raw Rubber (20 mB and 5 kJ each) into a hopper below. PipePlacer.portAt picks the port nearest the click where a face has several. The fuel heat furnace takes fuel on a flange low on its front into a two-bucket tank (gasoline,
 diesel, heavy oil, residue, crude). Crude cokes its burner (residue at half that rate), and a coked burner fires that
 much less: half after an hour at full power on crude, at most 90 % coked. A right click with wool cleans it. Burning
 crude or residue puts out black smoke (Baughn 2026-11-03). Tests: `OilCases` oil_pump_into_pipe*, oil_on_pipes_*,
 fuel_furnace_coke.
+
+**Fuel quality** (refinery milestone M1, `sim/fluid/FuelQuality.java`; Baughn 2026-11-15) is one mechanism for the
+furnace burner and the engines. The liquid layer a device burns is rated: its mass share boiling outside the engine's
+window (a species without a boiling point, residue, is too heavy for any window) and its coking index. An engine loses
+2 % of its power per 1 % outside the window (the fuel burns all the same: the heat goes out of the exhaust). Fuel whose
+coking index is over the device's balance fouls it, up to 90 %, at `FOUL_PER_INDEX` x (index - balance) per 2 h of full
+power; under the balance it clears at the same law; engines foul and clear 4 times slower (`ENGINE_SLOWER`, Baughn
+2026-11-15: time to consider a fix); wool cleans it at once; nothing is damaged. Balances: furnace burner 0.05, engines 0.02 (diesel with over 7 % heavy oil or 1 % residue fouls an engine). The Gas Turbine's window is
+330 to 720 K, so gasoline, diesel and heavy oil all give full power, and heavy oil fouls it by ~10 % an hour at full
+power (diesel clears 0.8 % an hour, gasoline 1.5 %). Jade on the turbine shows the rating, whether the fuel fouls, the
+fuel's viscosity, and the fouling. Saved as `foul`, `fuelLight`, `fuelHeavy`, `fuelCoking` (absent: clean). The Fuel
+Generator keeps its fuel in a 2000 mB vessel that breathes (a `DeviceInlet` as the turbine's; pipe on its top flange, or
+buckets as before) and burns as much per joule as its old two-bucket tank did; its window is 330 to 400 K (gasoline
+and naphtha), so diesel or residue in its gasoline derate it, and coking fuel fouls it by the engines' law. An old
+save's tank (`tankLevel` x 2000 mB of `tankFluid`) goes into the vessel; an unknown fluid name (1.7.10 saved "lava")
+becomes gasoline, as the old tank burnt every fuel alike. GameTests gas_turbine_off_spec_derates,
+gas_turbine_heavy_oil_fouls, gas_turbine_clean_fuel_clears, fuel_generator_gasoline, fuel_generator_piped, fuel_generator_off_spec_derates, fuel_generator_diesel_derates, fuel_generator_restarts_after_dilution,
+fuel_generator_clean_fuel_clears, fuel_generator_old_save; unit test FuelQualityTest.
 
 ### Fluid species (`src/main/java/mods/eln/fluid/SpeciesLoader.java`)
 - Datapack JSON `data/<ns>/eln/fluid_species/<name>.json` defines species `<ns>:<name>` for the fluid core (fields in
   the loader's javadoc: kind curve/none/gas, group, density, heat capacities, molar mass, boiling point, latent heat,
   critical temperature, liquid viscosity at two temperatures, colour, the NeoForge fluids it is). Water and air are
   built in. EA ships crude_oil, gasoline, diesel, heavy_oil (hydrocarbons, one group), residue (never boils, denser
-  than water) and natural_gas. A modpack can add species or retune these; a file that fails its checks (the vapour's
+  than water), natural_gas, latex (the rubber chain: its own group, never boils; mods.eln.oil.Latex, not a column cut) and butadiene (the Steam Cracker's product: a hydrocarbon boiling at 268.7 K, ~2.3 bar at 20 °C, so liquid in pipes; liquid eln:butadiene and vapour eln:butadiene_gas, no bucket; mods.eln.oil.Butadiene). A modpack can add species or retune these; a file that fails its checks (the vapour's
   energy must stay above the liquid's below the critical point) is skipped with a log line. Optional `flammable`
   {flash_point, autoignition} (K): a leak's jet (`node/voxel/SteamJet.burn`) of a species that burns catches by itself
   at its autoignition temperature, over its flash point from a flame within 2 blocks (fire, lava, a torch, a lit
@@ -91,6 +123,28 @@ see [bike.md](bike.md).
 The electrical anvil (`anvil/ElectricalAnvil*`, transparent node `eln:transparent_node@5440`, `electrical_anvil`; Baughn
 2026-10-28): see [anvil.md](anvil.md). Its companion, the capacitor bank (`transparentnode/capacitorbank`,
 `eln:transparent_node@5444`, `capacitor_bank`) and its Capacitor Cell (`eln:capacitor_cell`), is in the same file.
+
+The wire-drawing machines (`transparentnode/wiredrawing`, `eln:transparent_node@5632` `wire_drawing_machine_48v` and
+`@5636` `wire_drawing_machine_230v`; Baughn 2026-11-06, Wires stage 4) draw copper (ingots or dust) and rubber into
+cable kits of any `CableSpec` and into Windings (`eln:winding`, `node/voxel/WindingItem`: turns, tier, mm2, col in
+custom data). The 48 V machine makes up to 6 mm² and 230 V insulation, the 230 V machine everything. Costs per block of
+wire (a turn is 1/8 block): copper 1/3 ingot x mm²/2.5, rubber 2/3 x insulation layers (1, 1.5, 2, 4) x
+sqrt(mm²/2.5), energy 1 kJ x sqrt(mm²/2.5). Whole items go into buffers (saved `copper`, `rubber`) that keep the
+fractions; progress is `done` (blocks). A DC-DC converter slot takes cables (one a turn) or one Winding. Every converter
+must fit its core's window (turns x mm² over both sides, a cable counting its tier's preset cross-section: 150 cheap,
+300 average, 800 optimal), or it disconnects until corrected (Baughn: old converters too). JEI: `compat/jei/WireDrawingCategory`.
+Both machines also draw Overhead Cable (`eln:overhead_cable`, `gridnode/OverheadCableItem`: blocks and mm2 in custom
+data, up to 500 blocks; Baughn 2026-11-09): bare copper at a kit's copper cost, no rubber, the only thing utility poles,
+downlinks and grid transformers are strung with (they refuse cable kits). A span's Rs is its cross-section's cable
+resistance x its length; the poles' line is 11 kV, set by their insulators. Spans strung with kits before then load and
+keep their kits' tier. Pieces of one cross-section combine by clicking one onto the other.
+
+The servo layer (`robotics`, Baughn 2026-11-02: the servo layer first, 200 V only): the Linear Servo Drive (transparent
+node `eln:transparent_node@5504`, `linear_servo_drive`), `eln:servo_rail` and `eln:station_marker` (plain blocks with
+checked models, `ServoParts`), and the elevator car entity `eln:elevator_car` (not saved, not summonable). Recipes: the
+drive is an Electrical Motor in a Machine Block with a Medium Voltage Cable, two Signal Cables and four iron plates; 8
+rails from 6 iron ingots and 3 iron plates; a marker from an iron plate, a stone button and a Signal Cable. Behaviour:
+porting-notes.md ("New in 26.x: the servo layer").
 
 `entity/ReplicatorEntity` (`ElnRegistry.REPLICATOR`, spawn egg `REPLICATOR_SPAWN_EGG`), plus its AI classes in
 `entity/`. `entity/ReplicatorPopProcess`: during thunderstorms it spawns replicators near players in the overworld
@@ -116,6 +170,14 @@ type `data/eln/damage_type/scald.json` (steam jets) is tagged `bypasses_armor`.
   macerator list's `RecipesList.fallback`; Baughn 2026-10-25). An ore that drops itself (ancient debris) has none.
 - Golden comparison against 1.12 (crafting, smelting and the machine lists): `gametest/GoldenRecipesCase`
   (`golden_recipes`). See testing.md.
+- JEI (Baughn 2026-11-06): every EA item JEI lists can be made by clicking its recipe, then its ingredients', down
+  to vanilla. `compat/JeiPages` (no JEI classes) holds what the plugin `compat/jei/ElnJeiPlugin` shows beyond the
+  game's recipes: the machine lists, resin, annealing and wire-drawing pages, information pages (ores, tar sand, oil
+  and its cuts, the blown fuse, the data logger print, creative-only items; text `jei.eln.info.*`) and the items kept
+  out of the list (dead ends: old 50 V/200 V turbines, ferrite ingot, the cinnabar chain; other-tier fuses; pipe
+  sensor devices). JEI lists what the creative tabs list, so the fuel buckets are in the tab (`ElnRegistry.TAB_EXTRAS`).
+  `gametest/cases/JeiAuditCases` (`jei_every_item_reachable`) grows the obtainable set from vanilla over all of it
+  and names any listed item left out. A new item needs a recipe, a page, or a place in `hidden()`.
 
 ## Datagen
 
@@ -158,6 +220,10 @@ Not "none": `src/main/java/mods/eln/ElnConfig.java` is a SYNCED `ModConfigSpec` 
 `probe.details`, `bike.*` (the electric bike's tunables, [bike.md](bike.md)), `anvil.*` and `capacitorBank.*` (the electrical anvil's and the capacitor bank's, [anvil.md](anvil.md)). It is registered in the `Eln` constructor and copied into statics on load and reload. Every other
 1.12 config value is a plain static with its 1.12 default in `Eln.java` (power factors, lamp lives, ranges,
 `xRayScannerRange` 7.5...).
+
+`src/main/java/mods/eln/client/ElnClientConfig.java` is the CLIENT spec (`config/eln-client.toml`), registered in the
+`ElnClient` constructor: `rendering.staticPartsInChunks` (true), whether the chunk draws the devices' unchanging
+parts ([rendering.md](rendering.md)); it applies as soon as the file changes.
 
 ## Decisions and removed content
 

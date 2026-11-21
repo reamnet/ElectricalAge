@@ -1,6 +1,7 @@
 package mods.eln.sixnode.hub;
 
 
+import mods.eln.network.ClientValues;
 import mods.eln.registry.ElnDeviceRegistry;
 import mods.eln.Eln;
 import mods.eln.misc.Direction;
@@ -184,27 +185,13 @@ public class HubElement extends SixNodeElement {
         ElectricalCableDescriptor cableDescriptor;
         ItemStack cable;
         cable = inventory.getItem(HubContainer.cableSlotId + lrdu.toInt());
-        cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        cableDescriptor = mods.eln.node.voxel.CableItems.descriptor(cable);
         return cableDescriptor;
     }
 
+    /** The two edges link `id` joins (the table is HubSlots', which also draws the screen from it). */
     static LRDU[] connectionIdToSide(int id) {
-        switch (id) {
-            case 0:
-                return new LRDU[]{LRDU.Left, LRDU.Down};
-            case 1:
-                return new LRDU[]{LRDU.Right, LRDU.Up};
-            case 2:
-                return new LRDU[]{LRDU.Down, LRDU.Right};
-            case 3:
-                return new LRDU[]{LRDU.Up, LRDU.Left};
-            case 4:
-                return new LRDU[]{LRDU.Left, LRDU.Right};
-            case 5:
-                return new LRDU[]{LRDU.Down, LRDU.Up};
-        }
-
-        return null;
+        return HubSlots.linkEdges(id);
     }
 
     @Override
@@ -224,6 +211,7 @@ public class HubElement extends SixNodeElement {
             switch (stream.readByte()) {
                 case clientConnectionGridToggle:
                     int id = stream.readByte();
+                    if (!ClientValues.index(id, connectionGrid.length)) break;
                     connectionGrid[id] = !connectionGrid[id];
                     sixNode.disconnect();
                     setup();

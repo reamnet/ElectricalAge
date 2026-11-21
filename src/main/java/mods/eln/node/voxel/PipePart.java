@@ -24,6 +24,9 @@ public final class PipePart extends VoxelPart {
      * the large alloy pipe 6 voxels, the old alloy look). Volume per block of length (m^3), conductance per block (m^3).
      */
     public static final int[] GRID = {2, 2, 6};
+    /** Half-size of the cube round a junction point where a joining pipe may overlap the old one: the router frees it
+     *  and addJoined allows it (one number for both, so a route the router finds is never refused when laid). */
+    public static final int JOIN_CLEAR = java.util.Arrays.stream(GRID).max().getAsInt() / 2 + 1;
     public static final double[] DRAWN = {1.0, 1.5, 6.0};
     /** Before 2026-10-29: the grid widths saved in fittings' "at" arrays (no "g" key): iron 4, alloy 6. */
     static int oldBore(int saved) {
@@ -41,15 +44,33 @@ public final class PipePart extends VoxelPart {
     /** What saves before 2026-10-25 had (no "v" key): read scales their contents to the new volume. */
     static final double[] OLD_VOLUME_PER_BLOCK = {0.00015, 0.00015 * 2.25, 0.00015 * 2.25 * LARGE_D * LARGE_D};
     public static final double[] K_PER_BLOCK = {3e-11, 3e-11 * 2.25, 3e-11 * 2.25 * Math.pow(LARGE_D, 2.5)};
+    /**
+     * Its wall (Baughn 2026-11-10: pipes have walls): iron with its heat capacity (J/K a block: a small pipe's 0.4 kg a
+     * metre, by its bore for the others), a heat link to the gas
+     * or liquid inside (W/K a block, inside the fluid core's step) and one to the air (W/K a block, bare iron in still air,
+     * about 10 W/m^2K over its outside). Gas expanding into a vacuum warms back from the iron instead of falling to the
+     * EOS's floor; a hot line loses a little heat to the air, slowly, as its iron cools.
+     */
+    public static final double[] WALL_C_PER_BLOCK = {180, 180 * 1.5, 180 * 1.5 * LARGE_D},
+        WALL_IN_UA_PER_BLOCK = {2, 2 * 1.5, 2 * 1.5 * LARGE_D},
+        WALL_UA_PER_BLOCK = {0.25, 0.25 * 1.5, 0.25 * 1.5 * LARGE_D};
+    /** Its wall's temperature (K; NaN: not set yet, the air's). Not saved: a reloaded wall starts at its contents'. */
+    public double wallTemp = Double.NaN;
     public static final String[] TIER_NAME = {"iron", "alloy", "large alloy"};
     /** A device port made to take a large alloy pipe (m^3): its end's conductance (LP turbine, condenser, tanks). */
     public static final double LARGE_END_K = 2 * K_PER_BLOCK[2] * 16;
     /**
      * Ratings (DESIGN.md 6a): working and burst pressure (Pa), and the temperature (K) from which the rating falls,
-     * linearly to half at SOFT_SPAN above it. Iron: 1850s-60s wrought iron; alloy: a Cr-Mo steam-line steel.
+     * linearly to half at SOFT_SPAN above it. Iron: 1850s-60s wrought iron; alloy: a Cr-Mo steam-line steel. Iron works
+     * to 20 bar and bursts at 25 (Baughn 2026-11-14; it was 10 and 40): a 10 bar plant's condensate line stands at up to
+     * twice its turbine's rating when the boilers are full, so the warning at 10 bar came on in a sound plant, and with
+     * the burst close above it the warning now means something.
      */
-    public static final double[] WORKING_PA = {10e5, 100e5, 40e5}, BURST_PA = {40e5, 300e5, 120e5}, SOFT_K = {573.15, 873.15, 873.15};
+    public static final double[] WORKING_PA = {20e5, 100e5, 40e5}, BURST_PA = {25e5, 300e5, 120e5}, SOFT_K = {573.15, 873.15, 873.15};
     static final double SOFT_SPAN = 100;
+    /** What a safety valve fitted to the pipe is set to at first (Pa): its working pressure, but an iron pipe's stays 10
+     *  bar, the small turbine's rating, which the plants built on iron pipe run at. */
+    public static final double[] RELIEF_PA = {10e5, 100e5, 40e5};
     /** A burst pipe vents through this (m^3): a crack, about a third of an open bore (a jet that lasts: Gemini). */
     static final double BURST_VENT_K = 1e-11;
 
@@ -136,6 +157,11 @@ public final class PipePart extends VoxelPart {
         return BURST_PA[tier] * derate(T);
     }
 
+    /** The set pressure of a safety valve newly fitted to it (Pa). */
+    public double reliefPa() {
+        return RELIEF_PA[tier];
+    }
+
     public double workingPa(double T) {
         return WORKING_PA[tier] * derate(T);
     }
@@ -152,6 +178,21 @@ public final class PipePart extends VoxelPart {
         if (src == null) return;
         fluid.setShareOf(src, share);
         fluid.update();
+    }
+
+    /** Its wall's link to its contents for the next fluid step (VoxelNode.beforeFluidStep). */
+    void wallBefore(double ambientK) {
+        if (fluid == null) return;
+        if (Double.isNaN(wallTemp)) wallTemp = fluid.mass() > 0 ? fluid.T() : ambientK;
+        fluid.wallUA = WALL_IN_UA_PER_BLOCK[tier] * length() / 16.0;
+        fluid.wallT = wallTemp;
+    }
+
+    /** After a fluid step of dt: the iron gives what passed to its contents (fluid.wallJ) and trades with the air. */
+    void wallAfter(double ambientK, double dt) {
+        if (fluid == null || Double.isNaN(wallTemp)) return;
+        double blocks = length() / 16.0, c = WALL_C_PER_BLOCK[tier] * blocks;
+        wallTemp += (-fluid.wallJ - WALL_UA_PER_BLOCK[tier] * blocks * (wallTemp - ambientK) * dt) / c;
     }
 
     void makeNode(int blockY, double T, double[] saved) {
@@ -220,6 +261,7 @@ public final class PipePart extends VoxelPart {
             t.putDouble("a", fluid.mAir);
             t.putDouble("u", fluid.energy);
             t.putDouble("v", fluid.volume);
+            t.putInt("fv", mods.eln.fluid.FluidSaves.FORMAT);
             mods.eln.fluid.FluidSaves.putExtra(t, "s", fluid);
         }
     }
@@ -230,19 +272,26 @@ public final class PipePart extends VoxelPart {
         p.burstDir = t.getIntOr("burstDir", -1);
         double[] saved = t.contains("w") ? new double[]{t.getDoubleOr("w", 0), t.getDoubleOr("a", 0), t.getDoubleOr("u", 0)} : null;
         p.makeNode(blockY, saved);
+        double v0 = saved == null ? 0 : t.getDoubleOr("v", Math.max(1e-7, p.length() / 16.0 * OLD_VOLUME_PER_BLOCK[p.tier]));
+        // (a legacy solver's save: the temperature its Flash found for these contents, in the volume they were saved in)
+        double tLegacy = Double.NaN;
         if (saved != null) {
             p.fluid.extra = mods.eln.fluid.FluidSaves.extra(t, "s");
+            if (t.getIntOr("fv", 0) < mods.eln.fluid.FluidSaves.FORMAT && p.fluid.mass() > 0)
+                tLegacy = new mods.eln.sim.fluid.Flash().solve(p.fluid.mWater, p.fluid.mAir, p.fluid.extra, p.fluid.energy, v0 > 0 ? v0 : p.fluid.volume, 300).T;
             p.fluid.update();
         }
         // contents saved for another volume (before 2026-10-25 iron pipe held 0.15 L per block, now 0.03): kept at the
         // same state (pressure, temperature, mix), scaled to the new volume, or they'd load at 5x the pressure
-        if (saved != null) {
-            double v0 = t.getDoubleOr("v", Math.max(1e-7, p.length() / 16.0 * OLD_VOLUME_PER_BLOCK[p.tier]));
-            if (v0 > 0 && Math.abs(v0 - p.fluid.volume) > 1e-12) {
-                double f = p.fluid.volume / v0;
-                p.fluid.setShareOf(p.fluid, f);
-                p.fluid.update();
-            }
+        if (saved != null && v0 > 0 && Math.abs(v0 - p.fluid.volume) > 1e-12) {
+            double f = p.fluid.volume / v0;
+            p.fluid.setShareOf(p.fluid, f);
+            p.fluid.update();
+        }
+        // (and then the fluid core's energy at that temperature: FluidSaves.fromLegacy, done after the rescale)
+        if (Double.isFinite(tLegacy) && tLegacy > 0) {
+            p.fluid.energy = p.fluid.energyAt(tLegacy);
+            p.fluid.update();
         }
         return p;
     }

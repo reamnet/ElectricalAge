@@ -97,6 +97,9 @@ public final class Wp10bCases {
         cases.add(new TeleporterCase());
         cases.add(new IdleCase());
         cases.add(new HeatFurnaceExternalCase());
+        cases.add(new HeatFurnaceFuelRemainder());
+        cases.add(new HeatFurnaceToggleKeepsSettings());
+        cases.add(new SteamExplained());
         cases.add(new HeatFurnaceTrimmerCase());
         cases.add(new HeatFurnaceModelCase());
         cases.add(new FuelHeatFurnaceModelCase());
@@ -220,9 +223,9 @@ public final class Wp10bCases {
     }
 
     /**
-     * Large Rheostat (core: 24 coal dust -> E12 from 1 ohm, index 24 = 100 ohm), control pin at 50 V (normalized 1 ->
-     * R = (1 + 0.01) / 1.01 * 100 = 100 ohm), between a 50 V source (LV cable) and a ground cable.
-     * I = 50 / (Rs(src) + 2 Rs(cable) + Rs(a) + R + Rs(b) + Rs(ground)); heat = I^2 R into its thermal load.
+     * Large Rheostat (core: 24 coal dust -> E12 from 1 ohm, index 24 = 100 ohm), control pin at SVU (normalized 1 ->
+     * R = (1 + 0.01) / 1.01 * 100 = 100 ohm), between an LVU source (LV cable) and a ground cable.
+     * I = LVU / (Rs(src) + 2 Rs(cable) + Rs(a) + R + Rs(b) + Rs(ground)); heat = I^2 R into its thermal load.
      */
     static final class LargeRheostatCase implements TestCase {
         LargeRheostatElement rh;
@@ -254,7 +257,7 @@ public final class Wp10bCases {
             ElectricalSourceElement s = (ElectricalSourceElement) l.six(SIGNAL_SOURCE, cp);
             s.networkUnserialize(ctx.stream(o -> {
                 o.writeByte(ElectricalSourceElement.setVoltageId);
-                o.writeFloat(50F);
+                o.writeFloat((float) Eln.SVU);
             }));
         }
 
@@ -262,10 +265,10 @@ public final class Wp10bCases {
             LargeRheostatDescriptor d = (LargeRheostatDescriptor) rh.getDescriptor();
             ctx.checkValue("wp10b large rheostat nominal R [ohm] (E12 index 24 = 100)", rh.getNominalRs(), 100);
             Resistor r = rh.getResistor();
-            ctx.checkValue("wp10b large rheostat R at control 50 V [ohm] ((1 + 0.01) / 1.01 * nominal)", r.getR(), rh.getNominalRs());
+            ctx.checkValue("wp10b large rheostat R at control SVU [ohm] ((1 + 0.01) / 1.01 * nominal)", r.getR(), rh.getNominalRs());
             double rt = src.getElectricalLoad(LRDU.Up).getRs() + 2 * cable.getElectricalLoad(LRDU.Up).getRs()
                 + tload(rh, rh.front.right()).getRs() + r.getR() + tload(rh, rh.front.left()).getRs() + gnd.getElectricalLoad(LRDU.Up).getRs();
-            ctx.checkValue("wp10b large rheostat current [A] (50 V / R_total)", Math.abs(r.getI()), 50 / rt);
+            ctx.checkValue("wp10b large rheostat current [A] (LVU / R_total)", Math.abs(r.getI()), Eln.LVU / rt);
             ctx.check("wp10b large rheostat heats (I^2 R > 0 into its thermal load)", rh.getThermalLoad().Tc > 0,
                 f("T %.4f K above ambient, %s", rh.getThermalLoad().Tc, d.name));
         }
@@ -273,7 +276,7 @@ public final class Wp10bCases {
 
     /**
      * 50V Turbine, warm side set to 150 K above the cool side, nothing connected (open circuit): the source voltage is
-     * the descriptor's TtoU(dT) (table scaled to nominal dT 250 K / 50 V: dT 150 K -> 50 V), evaluated at the measured
+     * the descriptor's TtoU(dT) (table scaled to nominal dT 250 K / LVU: dT 150 K -> LVU), evaluated at the measured
      * dT; no current -> no heat drawn.
      */
     static final class TurbineCase implements TestCase {
@@ -296,13 +299,13 @@ public final class Wp10bCases {
         public void measure(TestContext ctx) {
             TurbineDescriptor d = (TurbineDescriptor) turbine.getDescriptor();
             double dT = turbine.warmLoad.Tc - turbine.coolLoad.Tc;
-            ctx.checkValue("wp10b turbine table TtoU(150 K) [V] (= nominal 50 V)", d.TtoU.getValue(150), 50);
+            ctx.checkValue("wp10b turbine table TtoU(150 K) [V] (= nominal LVU)", d.TtoU.getValue(150), Eln.LVU);
             ctx.checkValue(f("wp10b turbine open-circuit voltage [V] (TtoU(dT = %.2f K))", dT), turbine.positiveLoad.getU(), d.TtoU.getValue(dT));
         }
     }
 
     /**
-     * 50V Fuel Generator (nominal 300 W * fuelGeneratorPowerFactor, Umax = 52.5 V, tank 2 buckets, tank energy =
+     * 50V Fuel Generator (nominal 300 W * fuelGeneratorPowerFactor, Umax = 1.05 LVU, tank 2 buckets, tank energy =
      * tank seconds * nominal P). Lava is no fuel: a lava bucket is refused (tank 0, bucket kept). A bucket of a
      * registered gasoline fuel (if any and bucketable) fills half the tank and comes back empty. With fuel, a click
      * starts it: open circuit -> U = Umax; tank drains at the minimum load 0.1 * P_nom with efficiency factor 1.375:
@@ -326,7 +329,7 @@ public final class Wp10bCases {
         public void build(TestContext ctx) {
             gen = ctx.placeTransparent(FUEL_GENERATOR_50V, ctx.at(2, 1, 1));
             afterLava = click(ctx, gen, new ItemStack(Items.LAVA_BUCKET));
-            lavaLevel = field(gen, "tankLevel");
+            lavaLevel = ((mods.eln.transparentnode.FuelGeneratorElement) gen).getTankLevel();
             for (net.minecraft.world.level.material.Fluid fl : mods.eln.fluid.FuelRegistry.INSTANCE.fluidListToFluids(mods.eln.fluid.FuelRegistry.INSTANCE.getGasolineList())) {
                 String name = mods.eln.fluid.FuelRegistry.INSTANCE.fluidName(fl);
                 ItemStack bucket = new ItemStack(fl.getBucket()); // 26.x: the fluid's bucket item (AIR if none)
@@ -335,10 +338,10 @@ public final class Wp10bCases {
                 afterFuel = click(ctx, gen, bucket);
                 break;
             }
-            level0 = field(gen, "tankLevel");
+            level0 = ((mods.eln.transparentnode.FuelGeneratorElement) gen).getTankLevel();
             if (fuelName == null) {
                 level0 = 0.5;
-                setField(gen, "tankLevel", level0);
+                ((mods.eln.transparentnode.FuelGeneratorElement) gen).inlet.put(mods.eln.oil.Oil.Cut.GASOLINE.source.get(), 1000, 293.15);
             }
             click(ctx, gen, ItemStack.EMPTY); // switch on
             t0 = ctx.world().getGameTime();
@@ -346,22 +349,23 @@ public final class Wp10bCases {
 
         public void measure(TestContext ctx) {
             double t = elapsed(ctx, t0);
-            ctx.check("wp10b fuel generator refuses lava (not a fuel): tank empty, bucket kept", lavaLevel == 0
+            ctx.check("wp10b fuel generator refuses lava (not a fuel): tank empty, bucket kept", lavaLevel == 0 && gen.getWaila().get(mods.eln.i18n.I18N.tr("Fuel")) != null
                 && afterLava.getItem() == Items.LAVA_BUCKET, "level " + lavaLevel + ", hand " + afterLava);
             if (fuelName == null) {
                 ctx.line("wp10b fuel generator: SKIP bucket fill (no bucketable gasoline fuel registered); tank set to 0.5");
             } else {
                 ctx.check("wp10b fuel generator takes a bucket of " + fuelName + ": half tank, empty bucket back",
-                    Math.abs(level0 - 0.5) < 1e-9 && afterFuel.getItem() == Items.BUCKET, "level " + level0 + ", hand " + afterFuel);
+                    Math.abs(level0 - 0.5) < 1e-3 && afterFuel.getItem() == Items.BUCKET, "level " + level0 + ", hand " + afterFuel);
             }
             boolean on = (Boolean) callPrefix(gen, "getOn");
-            double umax = 50 * 1.05;
+            double umax = Eln.LVU * 1.05;
             ElectricalLoad pos = field(gen, "positiveLoad");
             ctx.check("wp10b fuel generator running", on, "on " + on);
-            ctx.checkValue("wp10b fuel generator open-circuit voltage [V] (Umax = 1.05 * 50)", pos.getU(), umax);
+            ctx.checkValue("wp10b fuel generator open-circuit voltage [V] (Umax = 1.05 * LVU)", pos.getU(), umax);
             double pNom = 300 * Eln.fuelGeneratorPowerFactor;
             double rate = 1.375 * 0.1 * pNom / (Eln.fuelGeneratorTankCapacity * pNom);
-            double level = field(gen, "tankLevel");
+            // (the fuel it burnt, as a share of the old tank: its vessel's liquid also flashes a little into its gas cap)
+            double level = level0 - ((mods.eln.transparentnode.FuelGeneratorElement) gen).burntMb / mods.eln.transparentnode.FuelGeneratorElement.TANK_MB;
             within(ctx, f("wp10b fuel generator fuel used in %.2f s (1.375 * 0.1 P_nom / tank energy * t)", t), level0 - level, rate * t,
                 rate * 1.5 * TICK + rate * t * 0.01);
         }
@@ -629,6 +633,141 @@ public final class Wp10bCases {
             within(ctx, "wp10b heat furnace: full signal on its right side, full gain", off.furnaceProcess.getGain(), 1.0, 0.05);
             ctx.check("wp10b heat furnace: a signal takes fuel (left and right)", half.getTakeFuel() && off.getTakeFuel(),
                 "left " + half.getTakeFuel() + ", right " + off.getTakeFuel());
+        }
+    }
+
+    /**
+     * A stone heat furnace leaves what its fuel leaves when burnt (nero 2026-11-14: it ate Occultism's unbreakable core
+     * piece, which a vanilla furnace gives back): a lava bucket leaves its bucket in the fuel slot, coal leaves nothing.
+     */
+    static final class HeatFurnaceFuelRemainder implements TestCase {
+        HeatFurnaceElement lava, coal;
+
+        public String name() {
+            return "wp10b heat furnace leaves its fuel's remainder";
+        }
+
+        public int width() {
+            return 7;
+        }
+
+        public int ticks() {
+            return 40;
+        }
+
+        HeatFurnaceElement place(TestContext ctx, int x, net.minecraft.world.item.ItemStack fuel) {
+            HeatFurnaceElement f = (HeatFurnaceElement) ctx.placeTransparent(HEAT_FURNACE, ctx.at(x, 1, 1));
+            f.getInventory().setItem(mods.eln.transparentnode.heatfurnace.HeatFurnaceContainer.combustibleId, fuel);
+            f.setTakeFuel(true);
+            f.furnaceProcess.setGain(1);
+            return f;
+        }
+
+        public void build(TestContext ctx) {
+            lava = place(ctx, 1, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.LAVA_BUCKET));
+            coal = place(ctx, 5, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COAL));
+        }
+
+        public void measure(TestContext ctx) {
+            var l = lava.getInventory().getItem(mods.eln.transparentnode.heatfurnace.HeatFurnaceContainer.combustibleId);
+            var c = coal.getInventory().getItem(mods.eln.transparentnode.heatfurnace.HeatFurnaceContainer.combustibleId);
+            ctx.check("wp10b heat furnace: a burnt lava bucket leaves its bucket in the fuel slot",
+                l.is(net.minecraft.world.item.Items.BUCKET) && l.getCount() == 1 && lava.furnaceProcess.combustibleEnergy > 0, String.valueOf(l));
+            ctx.check("wp10b heat furnace: burnt coal leaves nothing", c.isEmpty() && coal.furnaceProcess.combustibleEnergy > 0, String.valueOf(c));
+        }
+    }
+
+    /**
+     * Steam explained in game (Erisi's chat review of 2026-10-27, todo #111): a stone heat furnace's Jade says its power
+     * now and at full fire with its combustion chambers counted, and what controls it; a boiler's says at what
+     * temperature its water boils at its pressure.
+     */
+    static final class SteamExplained implements TestCase {
+        HeatFurnaceElement f;
+        mods.eln.oil.BoilerElement b;
+
+        public String name() {
+            return "wp10b steam explained in jade";
+        }
+
+        public int width() {
+            return 5;
+        }
+
+        public int ticks() {
+            return 20;
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            BlockPos p = ctx.at(1, 1, 1);
+            f = (HeatFurnaceElement) ctx.placeTransparent(HEAT_FURNACE, p);
+            l.used.add(p);
+            f.getInventory().setItem(mods.eln.transparentnode.heatfurnace.HeatFurnaceContainer.combustrionChamberId, mods.eln.Eln.findItemStack("Combustion Chamber", 2));
+            b = (mods.eln.oil.BoilerElement) l.device(8 + (82 << 6), 3, 1);
+            b.fromTanks(4000, 0);
+        }
+
+        public void measure(TestContext ctx) {
+            var w = f.getWaila();
+            ctx.line("steam explained: furnace " + w + "; boiler " + b.getWaila());
+            ctx.check("furnace Jade: power with its combustion chambers counted", String.valueOf(w.get("Power")).contains("(2 of 4 combustion chambers)"), "" + w.get("Power"));
+            ctx.check("furnace Jade: without a regulator, its gauge controls it", String.valueOf(w.get("Control")).startsWith("its gauge"), "" + w.get("Control"));
+            ctx.check("boiler Jade: where its water boils at its pressure", String.valueOf(b.getWaila().get("Boils at")).contains("°C at its"), "" + b.getWaila().get("Boils at"));
+        }
+    }
+
+    /**
+     * Toggling to external control and back gives the player's settings back (AdventurAgent 1567270870605504572: the
+     * gauge came back at 10 % and the fuel declined): gauge 60 %, taking fuel; external with no signal (it declines fuel,
+     * gauge at its 10 % floor); internal again: 60 %, taking fuel.
+     */
+    static final class HeatFurnaceToggleKeepsSettings implements TestCase {
+        HeatFurnaceElement f;
+        int tick;
+        double inExternal = Double.NaN;
+        boolean fuelInExternal = true;
+        mods.eln.sim.IProcess watch;
+
+        public String name() {
+            return "wp10b heat furnace control toggle keeps the settings";
+        }
+
+        public int width() {
+            return 3;
+        }
+
+        public int ticks() {
+            return 40;
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            BlockPos p = ctx.at(1, 1, 1);
+            f = (HeatFurnaceElement) ctx.placeTransparent(HEAT_FURNACE, p);
+            l.used.add(p);
+            f.networkUnserialize(ctx.stream(o -> {
+                o.writeByte(HeatFurnaceElement.unserializeGain);
+                o.writeFloat(0.6f);
+            }));
+            f.networkUnserialize(ctx.stream(o -> o.writeByte(HeatFurnaceElement.unserializeToogleTakeFuelId)));
+            f.networkUnserialize(ctx.stream(o -> o.writeByte(HeatFurnaceElement.unserializeToogleControlExternalId)));
+            mods.eln.Eln.simulator.addSlowProcess(watch = dt -> {
+                if (++tick == 20) {   // (the signal has driven it a while: read, then back to internal control)
+                    inExternal = f.furnaceProcess.getGain();
+                    fuelInExternal = f.getTakeFuel();
+                    f.networkUnserialize(ctx.stream(o -> o.writeByte(HeatFurnaceElement.unserializeToogleControlExternalId)));
+                }
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            mods.eln.Eln.simulator.removeSlowProcess(watch);
+            within(ctx, "wp10b heat furnace: external, no signal: the gauge at its floor", inExternal, 0.1, 0.01);
+            ctx.check("wp10b heat furnace: external, no signal: it declines fuel", !fuelInExternal, "");
+            ctx.check("wp10b heat furnace: back to internal control", !f.getControlExternal(), "");
+            within(ctx, "wp10b heat furnace: internal again: the gauge where the player left it", f.furnaceProcess.getGain(), 0.6, 0.001);
+            ctx.check("wp10b heat furnace: internal again: taking fuel, as the player left it", f.getTakeFuel(), "");
         }
     }
 

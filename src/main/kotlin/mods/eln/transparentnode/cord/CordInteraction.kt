@@ -26,7 +26,7 @@ object CordInteraction {
         return when(n) {
             is TransparentNode->n.element
             is VoxelNode->{val p=hit.location;val x=p.x-hit.blockPos.x;val y=p.y-hit.blockPos.y;val z=p.z-hit.blockPos.z;var slot=n.elementAt(x,y,z,0);if(slot<0 && n.partAt(x,y,z)<0)slot=n.elementAt(x,y,z,2);n.getElement(slot)}
-            is SixNode->{val mask=(0..5).fold(0) { bits,i->if(n.getElement(i)!=null)bits or (1 shl i) else bits };SixNodeBlock.sideAt(mask,hit.blockPos,hit)?.let { n.getElement(it) }}
+            is SixNode->{val entity = world.getBlockEntity(hit.blockPos) as? mods.eln.node.six.SixNodeEntity; entity?.let { SixNodeBlock.sideAt(it, hit.blockPos, hit) }?.let { n.getElement(it) }}
             else->null
         }
     }

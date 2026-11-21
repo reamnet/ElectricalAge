@@ -1,6 +1,7 @@
 package mods.eln.sixnode.thermalsensor;
 
 
+import mods.eln.network.ClientValues;
 import mods.eln.registry.ElnDeviceRegistry;
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
@@ -68,7 +69,7 @@ public class ThermalSensorElement extends SixNodeElement {
 
         if (this.descriptor.temperatureOnly) {
             inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
-                .acceptIfEmpty(0, ThermalCableDescriptor.class, ElectricalCableDescriptor.class);
+                .acceptCable(0, 1, true);
         } else {
             inventory = new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this));
         }
@@ -91,8 +92,8 @@ public class ThermalSensorElement extends SixNodeElement {
         byte value = nbt.getByteOr("front", (byte) 0);
         front = LRDU.fromInt((value >> 0) & 0x3);
         typeOfSensor = nbt.getByteOr("typeOfSensor", (byte) 0);
-        lowValue = nbt.getFloatOr("lowValue", 0f);
-        highValue = nbt.getFloatOr("highValue", 0f);
+        lowValue = ClientValues.finite(nbt.getFloatOr("lowValue", 0f), 0f);
+        highValue = ClientValues.finite(nbt.getFloatOr("highValue", 0f), 50f);
     }
 
     @Override
@@ -201,12 +202,13 @@ public class ThermalSensorElement extends SixNodeElement {
             return;
         }
         ItemStack cable = getInventory().getItem(ThermalSensorContainer.cableSlotId);
-        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(cable);
-        if (descriptor != null && descriptor.getClass() == ThermalCableDescriptor.class) {
-            ((ThermalCableDescriptor) descriptor).setThermalLoad(thermalLoad);
+        ThermalCableDescriptor thermal = mods.eln.node.voxel.CableItems.thermal(cable);   // (1.12 item or thermal kit)
+        if (thermal != null) {
+            thermal.setThermalLoad(thermalLoad);
             thermalLoad.setAsFast();
         } else {
-            ElectricalCableDescriptor cableDescriptor = descriptor instanceof ElectricalCableDescriptor e ? e
+            ElectricalCableDescriptor e = mods.eln.node.voxel.CableItems.descriptor(cable);
+            ElectricalCableDescriptor cableDescriptor = e != null ? e
                 : ElnDeviceRegistry.lowVoltageCableDescriptor; // empty slot: as an LV cable (Baughn 2026-10-17)
             cableDescriptor.applyTo(thermalLoad);
             thermalLoad.Rp = 1000000000.0;
@@ -216,8 +218,7 @@ public class ThermalSensorElement extends SixNodeElement {
 
     boolean isItemThermalCable() {
         if (!descriptor.temperatureOnly) return false; // the thermal probe's slot is gone
-        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(getInventory().getItem(ThermalSensorContainer.cableSlotId));
-        return descriptor != null && descriptor.getClass() == ThermalCableDescriptor.class;
+        return mods.eln.node.voxel.CableItems.isThermal(getInventory().getItem(ThermalSensorContainer.cableSlotId));
     }
 
     @Override
@@ -243,12 +244,17 @@ public class ThermalSensorElement extends SixNodeElement {
         try {
             switch (stream.readByte()) {
                 case setTypeOfSensorId:
-                    typeOfSensor = stream.readByte();
+                    int t = stream.readByte();
+                    if (t < 0 || t > temperatureType) break;
+                    typeOfSensor = t;
                     needPublish();
                     break;
                 case setValueId:
-                    lowValue = stream.readFloat();
-                    highValue = stream.readFloat();
+                    // (typed: any finite numbers; a bound of Infinity made every output NaN, and was saved)
+                    float low = stream.readFloat(), high = stream.readFloat();
+                    if (!Float.isFinite(low) || !Float.isFinite(high)) break;
+                    lowValue = low;
+                    highValue = high;
                     if (lowValue == highValue) highValue += 0.0001;
                     needPublish();
                     break;

@@ -117,7 +117,11 @@ public abstract class NodeBlock extends Block implements EntityBlock {
         if (mods.eln.misc.Utils.getItemObject(stack) instanceof mods.eln.transparentnode.cord.CordDescriptor)
             return mods.eln.transparentnode.cord.CordInteraction.use(stack, player, level, hit);
         // a pipe kit routes from and to devices' ports: the kit's use, not the device's (AdventurAgent)
-        if (stack.getItem() instanceof mods.eln.node.voxel.PipeTool) return InteractionResult.PASS;
+        // (but a utility pole is strung with a cable kit: Baughn 2026-11-07)
+        if (stack.getItem() instanceof mods.eln.node.voxel.PipeTool
+            && !(stack.getItem() instanceof mods.eln.node.voxel.CableKitItem && !level.isClientSide()
+            && mods.eln.gridnode.GridLink.getElementFromCoordinate(new mods.eln.misc.Coordonate(pos, level)) != null))
+            return InteractionResult.PASS;
         return activate(level, pos, player, hit);
     }
 

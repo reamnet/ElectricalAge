@@ -71,7 +71,7 @@ open class StringLightsElement(node: TransparentNode,d: TransparentNodeDescripto
         val id=super.networkUnserialize(stream)
         when(id.toInt()) {
             80->{ val value=stream.readInt();if((value==120 || value==240) && machineCord()?.cord?.plugged!=true) { nominalVolts=value;configure() } }
-            81->{ powerChannel=stream.readUTF().trim().take(128);unplugWireless() }
+            81->{ powerChannel=mods.eln.network.ClientValues.readString(stream).trim();unplugWireless() }
         }
         needPublish();return id
     }

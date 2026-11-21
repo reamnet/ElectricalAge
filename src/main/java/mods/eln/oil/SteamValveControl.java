@@ -1,6 +1,7 @@
 package mods.eln.oil;
 
 import mods.eln.misc.Utils;
+import mods.eln.network.ClientValues;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
 import mods.eln.sim.nbt.NbtElectricalGateInput;
@@ -15,7 +16,7 @@ import java.util.function.DoubleSupplier;
  * A steam turbine's controls (Baughn 2026-10-26: a screen as the heat furnace's), shared by the 50V/200V Steam Turbines
  * and the shaft Steam Turbine (Baughn 2026-10-29): a regulator slot; internal control sets the throttle (the most the
  * steam valve may open) or, with a regulator, a target inlet pressure the regulator holds by closing the valve when the
- * inlet falls below it (so the boiler keeps its pressure); external control: a signal (0-50 V: 0-100%) sets the
+ * inlet falls below it (so the boiler keeps its pressure); external control: a signal (0-5 V: 0-100%) sets the
  * throttle. The turbine's speed governor works within that limit. The screen is SteamGeneratorScreen, through
  * {@link Render}.
  */
@@ -90,9 +91,10 @@ public final class SteamValveControl {
         switch (type) {
             case TOGGLE_EXTERNAL -> controlExternal = !controlExternal;
             case TOGGLE_MANUAL -> manual = !manual;
-            case SET_THROTTLE -> throttle = Math.max(0, Math.min(1, stream.readFloat()));
+            // (a NaN passed max/min: not a number changes nothing)
+            case SET_THROTTLE -> throttle = ClientValues.clamp(stream.readFloat(), 0, 1, throttle);
             case SET_TARGET -> {
-                targetBar = Math.max(TARGET_MIN_BAR, Math.min(targetMaxBar, stream.readFloat()));
+                targetBar = ClientValues.clamp(stream.readFloat(), TARGET_MIN_BAR, targetMaxBar, targetBar);
                 pressure.setTarget(-targetBar);
             }
             default -> {
@@ -123,8 +125,8 @@ public final class SteamValveControl {
     public void readFromNBT(CompoundTag nbt, double defaultTargetBar) {
         controlExternal = nbt.getBooleanOr("controlExternal", false);
         manual = nbt.getBooleanOr("manual", false);
-        throttle = nbt.getDoubleOr("throttle", 1);
-        targetBar = nbt.getDoubleOr("targetBar", defaultTargetBar);
+        throttle = ClientValues.load(nbt.getDoubleOr("throttle", 1), 0, 1, 1);
+        targetBar = ClientValues.load(nbt.getDoubleOr("targetBar", defaultTargetBar), TARGET_MIN_BAR, targetMaxBar, defaultTargetBar);
         pressure.readFromNBT(nbt, "pressure");
     }
 

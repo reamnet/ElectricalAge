@@ -29,14 +29,19 @@ public final class OilCases {
         cases.add(new Dam());
         cases.add(new CatchUp());
         cases.add(new LakeSizes());
+        OilSurveyCases.addTo(cases);
         cases.add(new Separator());
         cases.add(new Outlet(true));
         cases.add(new Outlet(false));
         cases.add(new PumpIntoPipe(1000));
         cases.add(new PumpIntoPipe(120));
+        cases.add(new PumpIntoPipe(1000, 3));
+        for (String v : ProducerNode.VARIANTS) cases.add(new ProducerNode(v));
         for (String v : OilOnPipes.VARIANTS) cases.add(new OilOnPipes(v));
         cases.add(new Basin());
         cases.add(new Coke());
+        for (String v : FuelBySpecies.VARIANTS) cases.add(new FuelBySpecies(v));
+        for (String v : FurnacePressure.VARIANTS) cases.add(new FurnacePressure(v));
         cases.add(new SeparatorSound());
         cases.add(new Pump(false));
         cases.add(new Pump(true));
@@ -49,12 +54,25 @@ public final class OilCases {
         cases.add(new TurbineHoldsPressure());
         cases.add(new CondenserFloods());
         cases.add(new CondenserMakeupFloat());
+        cases.add(new CondenserDryMakeupStub());
+        cases.add(new CondenserOnABench());
+        cases.add(new LegacyEnergyLoads());
+        cases.add(new CrudeIsAMixture());
         cases.add(new CondenserLegacyLoad());
         cases.add(new CondenserMakeupSignal());
         cases.add(new CondensateReturn(10e5, false));
         cases.add(new CondensateReturn(14e5, false));
         cases.add(new CondensateReturn(21e5, false));
         cases.add(new CondensateReturn(21e5, true));
+        cases.add(new ClosedPlant());
+        cases.add(new TwoUnitPlant());
+        cases.add(new TwoUnitPlant.Long());
+        cases.add(new TwoUnitPlant.Long.Unloaded());
+        cases.add(new CasingDrainTrap());
+        cases.add(new MakeupPlantRefills());
+        cases.add(new MakeupPlantRefills(13));
+        cases.add(new MakeupPlantRefills(14));
+        cases.add(new TeedMakeupPlant());
         cases.add(new TurbineLoadDrop());
         cases.add(new TurbineRunaway());
         cases.add(new StackedPlant());
@@ -70,12 +88,20 @@ public final class OilCases {
         cases.add(new DryBoiler());
         cases.add(new SafetyValvePlant(4000, 1200, "fluid_safety_valve_holds_the_plant"));
         cases.add(new SafetyValvePlant(8000, 1400, "fluid_safety_valve_relieves_steadily"));
+        cases.add(new SafetyValvePlant(8000, 1400, "fluid_safety_valve_down_a_run_relieves_steadily", 6));
+        // (Baughn 2026-11-12: his workshop's safety valve sirened, on the pipe from a boiler to a steam turbine whose
+        // analog regulator holds 12 bar; the valve at 13. Swept over plausible heats, the boiler kept fed)
+        for (int kw : new int[]{3, 5, 6, 8, 10, 12, 16, 20}) cases.add(new SafetyValveTurbine(kw * 1000, true));
+        // (unfed, the steam rises slowly past the valve's setting as the governor throttles back: where it sirened)
+        for (int kw : new int[]{6, 7}) cases.add(new SafetyValveTurbine(kw * 1000, false));
         cases.add(new SteamJetScalds());
         cases.add(new OldBoilerSave());
         cases.add(new Buckets2());
         cases.add(new Column());
         cases.add(new ColumnFold());
-        cases.add(new Flare());
+        cases.add(new Flare(false));
+        cases.add(new Flare(true));
+        for (String v : FlareNode.VARIANTS) cases.add(new FlareNode(v));
     }
 
     /** Build the lake (full) and sweep it in. */
@@ -242,20 +268,19 @@ public final class OilCases {
             sep.getInventory().setItem(sep.inSlotId, new ItemStack(mods.eln.oil.OilWorldgen.TAR_SAND_ITEM.get(), 1));
             sep.getInventory().setChanged();
             // 20 kJ a block at 200 W is 100 s: run it 4x faster for the test (800 W, within the LV source and cable)
-            mods.eln.sim.ElectricalStackMachineProcess proc = Wp10aCases.field(sep, "slowRefreshProcess");
-            proc.setSpeedUp(4);
+            sep.machine.respec(sep.spec(4));
         }
 
         public void measure(TestContext ctx) {
             ItemStack in = sep.getInventory().getItem(sep.inSlotId), out = sep.getInventory().getItem(sep.outSlotId);
-            var tank = (mods.eln.fluid.ElementFluidHandler) sep.getFluidHandler();
+            int crudeMb = sep.outlet.view.amount(mods.eln.fluid.NodeFluidView.LIQUID);
             mods.eln.sim.ElectricalStackMachineProcess proc = Wp10aCases.field(sep, "slowRefreshProcess");
             ctx.check("oil: separator used the tar sand and made sand", in.isEmpty() && out.is(net.minecraft.world.item.Items.SAND) && out.getCount() == 1,
                 "in " + in + ", out " + out + ", recipes " + mods.eln.Eln.separatorRecipes.getRecipes().size() + ", can " + proc.smeltCan()
                     + ", extra " + proc.extraCondition.getAsBoolean() + ", P " + proc.getPower() + ", state " + proc.processState());
-            ctx.check("oil: 100 mB crude in its tank", tank.getFluidAmount() == 100, tank.getFluidAmount() + " mB");
+            ctx.check("oil: 100 mB crude in its basin", Math.abs(crudeMb - 100) <= 1, crudeMb + " mB, " + sep.getWaila());
             var cap = ctx.level().getCapability(net.neoforged.neoforge.capabilities.Capabilities.Fluid.BLOCK, sep.node.coordonate.pos(), null);
-            ctx.check("oil: the tank is the block's fluid capability (pipes can drain it)", cap == tank, "" + cap);
+            ctx.check("oil: its basin's view is the block's fluid capability (pipes can drain it)", cap == sep.getFluidHandler(), "" + cap);
         }
     }
 
@@ -267,7 +292,8 @@ public final class OilCases {
      */
     static final class Outlet implements TestCase {
         final boolean separator;
-        mods.eln.fluid.ElementFluidHandler from, into, beside;
+        mods.eln.transparentnode.electricalmachine.OilSeparatorElement into, beside;
+        mods.eln.fluid.DeviceOutlet from;
 
         Outlet(boolean separator) {
             this.separator = separator;
@@ -287,17 +313,128 @@ public final class OilCases {
             var e = ctx.placeTransparent(separator ? 0 + (80 << 6) : 0 + (81 << 6), p);
             mods.eln.misc.Direction out = separator ? ((mods.eln.transparentnode.electricalmachine.OilSeparatorElement) e).outlet()
                 : ((mods.eln.oil.OilPumpElement) e).discharge();
-            from = (mods.eln.fluid.ElementFluidHandler) e.getFluidHandler();
-            from.fill(new net.neoforged.neoforge.fluids.FluidStack(Oil.CRUDE.get(), 1000), true);
-            into = (mods.eln.fluid.ElementFluidHandler) ctx.placeTransparent(0 + (80 << 6), p.relative(out.toEnumFacing())).getFluidHandler();
-            beside = (mods.eln.fluid.ElementFluidHandler) ctx.placeTransparent(0 + (80 << 6), p.relative(out.left().toEnumFacing())).getFluidHandler();
+            if (separator) {
+                var s = (mods.eln.transparentnode.electricalmachine.OilSeparatorElement) e;
+                from = s.outlet;
+                s.putFluid(Oil.CRUDE.get(), 1000);
+            } else {
+                var pump = (mods.eln.oil.OilPumpElement) e;
+                from = pump.discharge;
+                pump.putFluid(Oil.CRUDE.get(), 1000);
+            }
+            into = (mods.eln.transparentnode.electricalmachine.OilSeparatorElement) ctx.placeTransparent(0 + (80 << 6), p.relative(out.toEnumFacing()));
+            beside = (mods.eln.transparentnode.electricalmachine.OilSeparatorElement) ctx.placeTransparent(0 + (80 << 6), p.relative(out.left().toEnumFacing()));
         }
 
         public void measure(TestContext ctx) {
             String what = separator ? "separator outlet" : "pump discharge";
-            ctx.check("oil: the " + what + " pushed its crude into the block there", from.getFluidAmount() == 0 && into.getFluidAmount() == 1000,
-                from.getFluidAmount() + " mB left, " + into.getFluidAmount() + " mB there");
-            ctx.check("oil: nothing out of its other faces", beside.getFluidAmount() == 0, beside.getFluidAmount() + " mB");
+            int left = from.view.amount(mods.eln.fluid.NodeFluidView.LIQUID), there = into.outlet.view.amount(mods.eln.fluid.NodeFluidView.LIQUID);
+            // (the pump's crude is live: its gas stays behind in its vessel, the liquid goes, as crude)
+            ctx.check("oil: the " + what + " pushed its crude into the block there", left <= 1 && Math.abs(there - (separator ? 1000 : 950)) <= 60,
+                left + " mB left, " + there + " mB there (" + from.exported + " mB exported), there " + into.getWaila());
+            ctx.check("oil: nothing out of its other faces", beside.outlet.liquidMb() < 1, beside.outlet.liquidMb() + " mB");
+        }
+    }
+
+    /**
+     * The producers on fluid nodes (Baughn 2026-11-10: PortBridge push becomes the device's pump):
+     * <ul>
+     * <li>pump_legacy_tank, separator_legacy_tank: an old save's fluid tank of crude loads into the vessel, as crude's
+     *     cuts (dead), every kg of it;</li>
+     * <li>pump_dead_end: the pump makes live crude (8 mB/s, as on a lake) into a pipe capped a block on: the line stops at
+     *     its 6 bar head (the pump stops making when its line or vessel is at it, so the well's gas can't push it on).</li>
+     * </ul>
+     */
+    static final class ProducerNode implements TestCase {
+        static final String[] VARIANTS = {"pump_legacy_tank", "separator_legacy_tank", "pump_dead_end"};
+        final String variant;
+        String legacy = "", err;
+        mods.eln.oil.OilPumpElement pump;
+        mods.eln.sim.IProcess making;
+        double made;
+
+        ProducerNode(String variant) {
+            this.variant = variant;
+        }
+
+        public String id() {
+            return "oil_" + variant;
+        }
+
+        public int width() {
+            return 5;
+        }
+
+        public int ticks() {
+            return variant.equals("pump_dead_end") ? 600 : 60;
+        }
+
+        public void build(TestContext ctx) {
+            var p = ctx.at(1, 1, 1);
+            if (variant.equals("pump_dead_end")) {
+                pump = (mods.eln.oil.OilPumpElement) ctx.placeTransparent(0 + (81 << 6), p);
+                for (var f : new mods.eln.misc.Direction[]{mods.eln.misc.Direction.XN, mods.eln.misc.Direction.ZN, mods.eln.misc.Direction.XP, mods.eln.misc.Direction.ZP})
+                    if (f.right() == mods.eln.misc.Direction.XP) pump.front = f;
+                pump.reconnect();
+                // (a pipe from its flange, 6 px up on its east face, capped half way into the next block)
+                try {
+                    PipeCases.lay(ctx, ctx.at(2, 1, 1), 0, 0, 6, 8, 8, 6, 8);
+                } catch (IllegalStateException e) {
+                    err = e.getMessage();
+                }
+                mods.eln.Eln.simulator.addSlowProcess(making = t -> {
+                    if (pump.discharge.vessel == null || !pump.discharge.room(1)) return;
+                    pump.discharge.made(Oil.CRUDE.get(), 8 * t);
+                    made += 8 * t;
+                });
+                return;
+            }
+            boolean sep = variant.startsWith("separator");
+            ctx.placeTransparent(sep ? 0 + (80 << 6) : 0 + (81 << 6), p);
+            int tankMb = sep ? mods.eln.transparentnode.electricalmachine.OilSeparatorDescriptor.TANK_MB : mods.eln.oil.OilPumpDescriptor.TANK_MB;
+            ctx.after(2, () -> {
+                try {
+                    var r = mods.eln.gametest.Reload.node(ctx.level(), p, t -> {
+                        var el = FuelBySpecies.holding(t, "vesselW");
+                        for (String k : new String[]{"vesselW", "vesselA", "vesselU", "vesselS", "vesselFv"}) el.remove(k);
+                        var old = new mods.eln.fluid.ElementFluidHandler(tankMb);
+                        old.fill(new net.neoforged.neoforge.fluids.FluidStack(Oil.CRUDE.get(), 1500), true);
+                        old.writeToNBT(el, "tank");
+                        return t;
+                    });
+                    var el = ((mods.eln.node.transparent.TransparentNode) r.fresh).element;
+                    var v = sep ? ((mods.eln.transparentnode.electricalmachine.OilSeparatorElement) el).outlet.vessel
+                        : ((mods.eln.oil.OilPumpElement) el).discharge.vessel;
+                    var reg = mods.eln.sim.fluid.SpeciesRegistry.get();
+                    double total = 0;
+                    StringBuilder sb = new StringBuilder();
+                    for (String k : new String[]{"eln:heavy_oil", "eln:diesel", "eln:gasoline", "eln:residue", "eln:natural_gas"}) {
+                        double m = v.liquid(reg.id(k)) + v.vapour(reg.id(k));
+                        total += m;
+                        sb.append(k).append(' ').append(String.format("%.5f", m)).append("; ");
+                    }
+                    double want = 1500 * mods.eln.fluid.FluidSpecies.kgPerMb(reg.id("eln:crude_oil"), false);
+                    double heavy = v.liquid(reg.id("eln:heavy_oil")) / total, gas = v.vapour(reg.id("eln:natural_gas")) + v.liquid(reg.id("eln:natural_gas"));
+                    legacy = Math.abs(total - want) < 0.01 * want && Math.abs(heavy - 0.35 / 0.95) < 0.01 && gas == 0 ? ""
+                        : sb + String.format("total %.5f kg, want %.5f", total, want);
+                } catch (ReflectiveOperationException e) {
+                    legacy = e.toString();
+                }
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            if (!variant.equals("pump_dead_end")) {
+                ctx.check(variant + ": an old save's tank of crude is in the vessel, as its cuts (dead)", legacy.isEmpty(), legacy);
+                return;
+            }
+            mods.eln.Eln.simulator.removeSlowProcess(making);
+            ctx.check("pump dead end: the capped pipe is laid on its flange", err == null && pump.discharge.piped(), err + ", " + pump.dischargeRunForTests());
+            double line = mods.eln.fluid.FluidWorld.nodeFor(pump.discharge.outlet).P(), vessel = pump.discharge.vessel.P();
+            String state = String.format("line %.2f bar, vessel %.2f bar, made %.0f mB; %s", line / 1e5, vessel / 1e5, made, pump.dischargeRunForTests());
+            ctx.line("pump dead end: " + state);
+            ctx.check("pump dead end: it made crude and pushed the line up", made > 20 && line > 3e5, state);
+            ctx.check("pump dead end: the line and the vessel stop at its 6 bar head", line < 6.3e5 && vessel < 6.3e5, state);
         }
     }
 
@@ -310,16 +447,28 @@ public final class OilCases {
         /** What the pump has to give (mB): 1000, or 120, less than half the pipe (Baughn 2026-11-03: a part-full run
          *  held its puddle until it was half full, its open end drawing from mid-bore; now some reaches the tank). */
         final int mB;
+        /** How far above the pump the tank stands (blocks): Baughn 2026-11-09, a pipe up 3 blocks into a tank got nothing. */
+        String purgeErr;
+        final int rise;
         mods.eln.oil.OilPumpElement pump;
         mods.eln.oil.TankElement tank;
         String err;
 
         PumpIntoPipe(int mB) {
+            this(mB, 0);
+        }
+
+        PumpIntoPipe(int mB, int rise) {
             this.mB = mB;
+            this.rise = rise;
+        }
+
+        public int height() {
+            return rise > 0 ? 7 : 4;   // (floor_5x7x3)
         }
 
         public String id() {
-            return mB == 1000 ? "oil_pump_into_pipe" : "oil_pump_into_pipe_little";
+            return rise > 0 ? "oil_pump_into_pipe_uphill" : mB == 1000 ? "oil_pump_into_pipe" : "oil_pump_into_pipe_little";
         }
 
         public int width() {
@@ -327,7 +476,8 @@ public final class OilCases {
         }
 
         public int ticks() {
-            return 140;
+            // (the little one 240: crude's mix is thicker than the old crude species, its residue at 50 Pa s cold)
+            return rise > 0 ? 400 : mB == 1000 ? 140 : 240;
         }
 
         public void build(TestContext ctx) {
@@ -336,35 +486,49 @@ public final class OilCases {
             for (var f : new mods.eln.misc.Direction[]{mods.eln.misc.Direction.XN, mods.eln.misc.Direction.ZN, mods.eln.misc.Direction.XP, mods.eln.misc.Direction.ZP})
                 if (f.right() == mods.eln.misc.Direction.XP) pump.front = f;
             pump.reconnect();
-            tank = (mods.eln.oil.TankElement) ctx.placeTransparent(PlumbingCases.IRON_TANK, ctx.at(3, 1, 1));
+            if (rise > 0) for (int y = 1; y <= rise; y++) ctx.floor(ctx.at(3, y, 1));   // (the tank on a pillar)
+            tank = (mods.eln.oil.TankElement) ctx.placeTransparent(PlumbingCases.IRON_TANK, ctx.at(3, 1 + rise, 1));
             tank.front = mods.eln.misc.Direction.XP;   // (its back, with a low side port, to the west)
             tank.reconnect();
+            // (a purge valve on the tank's top: the well's crude is live, its natural gas comes out in the tank; Baughn
+            // 2026-11-10)
+            PipeCases.lay(ctx, ctx.at(3, 2 + rise, 1), 0, 8, 0, 8, 8, 12, 8);
+            purgeErr = PipeCases.node(ctx, ctx.at(3, 2 + rise, 1)).addSafetyValveNear(0.5, 8 / 16.0, 0.5, true);
             // (routed as a player's pipe kit routes it: the flange is 6 px up, off the router's lattice)
             var level = ctx.level();
             var a = mods.eln.node.voxel.PipePlacer.portAtForTests(level, p, net.minecraft.core.Direction.EAST);
-            var b = mods.eln.node.voxel.PipePlacer.portAtForTests(level, ctx.at(3, 1, 1), net.minecraft.core.Direction.WEST);
+            var b = mods.eln.node.voxel.PipePlacer.portAtForTests(level, ctx.at(3, 1 + rise, 1), net.minecraft.core.Direction.WEST);
             if (a == null || b == null) err = "ports not found: " + a + " " + b;
             else {
                 var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(level), 4, a, java.util.List.of(), b);
                 err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(level, 0, r.points, null);
             }
-            ((mods.eln.fluid.ElementFluidHandler) pump.getFluidHandler()).fill(new net.neoforged.neoforge.fluids.FluidStack(Oil.CRUDE.get(), mB), true);
+            // (uphill: a full pump tank, more than the riser holds, as a pump on a lake keeps it supplied)
+            // (into its vessel, live as the well gives it; uphill 6000 of its 8000 mB of dead crude, as a pump on a lake keeps
+            // it supplied: that much live crude at once would hold ~200 bar of gas in its vessel)
+            pump.putFluid(Oil.CRUDE.get(), rise > 0 ? 6000 : mB, rise == 0);
         }
 
         public void measure(TestContext ctx) {
             ctx.check("oil pump: a pipe goes from its discharge flange to the tank", err == null, "" + err);
+            ctx.check("oil pump: a purge valve fits on the tank's top pipe", purgeErr == null, "" + purgeErr);
             if (mB != 1000) {
                 int crude = mods.eln.sim.fluid.SpeciesRegistry.get().id("eln:crude_oil");
-                double inTank = tank.vessel == null ? 0 : tank.vessel.mass(crude) / mods.eln.fluid.FluidSpecies.kgPerMb(crude, false);
-                ctx.check("oil pump: a little crude, less than half the pipe holds, still reaches the tank", inTank > 20, String.format("%.1f of %d mB in the tank", inTank, mB));
+                double inTank = crudeMb(tank.vessel);
+                // (over 10 mB: crude's thicker mix, residue and heavy oil, leaves more standing in the pipe than the old
+                // single species did; 16-19 mB arrive)
+                ctx.check("oil pump: a little crude, less than half the pipe holds, still reaches the tank", inTank > 10, String.format("%.1f of %d mB in the tank", inTank, mB));
                 return;
             }
             int crude = mods.eln.sim.fluid.SpeciesRegistry.get().id("eln:crude_oil");
-            int left = ((mods.eln.fluid.ElementFluidHandler) pump.getFluidHandler()).getFluidAmount();
-            double inTank = tank.vessel == null ? 0 : tank.vessel.mass(crude) / mods.eln.fluid.FluidSpecies.kgPerMb(crude, false);
+            int left = (int) Math.round(pump.discharge.liquidMb());
+            double inTank = crudeMb(tank.vessel);
             ctx.line("oil pump into pipe: " + left + " mB left in the pump, tank " + tank.getWaila());
-            ctx.check("oil pump: its crude went into the pipe", left < 500, left + " mB left");
-            ctx.check("oil pump: and along it into the tank, as crude", inTank > 200, String.format("%.0f mB of crude in the tank", inTank));
+            ctx.line("oil pump into pipe: discharge " + pump.dischargeRunForTests());
+            ctx.check("oil pump: its crude went into the pipe", left < (rise > 0 ? 5500 : 500), left + " mB left");
+            // (uphill: the riser fills first, ~2000 mB in 10 s, then the crude spills into the tank, faster than a pump lifts it)
+            ctx.check("oil pump: and along it into the tank, as crude" + (rise > 0 ? ", up a 3-block riser" : ""), inTank > (rise > 0 ? 100 : 200),
+                String.format("%.0f mB of crude in the tank", inTank));
         }
     }
 
@@ -379,10 +543,32 @@ public final class OilCases {
      * separator_out: the tar sand separator's crude out of its back flange (4 px up, off centre) into a tank;
      * fuel_furnace_in: a tank of gasoline into the fuel heat furnace's front flange (4 px up), into its tank;
      * fuel_furnace_crude: the same with crude oil (Baughn: it burns every EA oil that makes sense in it);
-     * fuel_furnace_buckets: a bucket's worth of each EA oil a burner fires goes into an empty one (Baughn: by bucket).
+     * fuel_furnace_buckets: a bucket's worth of each EA oil a burner fires goes into an empty one (Baughn: by bucket);
+     * compressor_latex_out: the 230V compressor's latex out of its red OUT flange (its back, 9 px up) into a tank;
+     * compressor_latex_in: a tank's latex into its blue IN flange (4 px up, the same face), into its press tank;
+     * resin_collector_out: the Industrial Resin Collector's latex up out of its top flange, over and down into a tank;
+     * carbon_burner_in: a tank's crude into the Carbon Black Burner's blue IN flange (its back, 4 px up), which burns it;
+     * desulfuriser_in: a tank's diesel into the Desulfuriser's blue IN flange (its back, 4 px up), into its IN tank;
+     * cracker_gasoline_in / cracker_steam_in: a tank's gasoline (or hot steam at 3 bar) into the Steam Cracker's blue C8
+     * (H2O) flange on its back, picked by the click as a player would, into that tank only;
+     * cracker_butadiene_out / cracker_gas_out: its butadiene (natural gas) out of its red C4H6 (CH4) flange on its front
+     * into a tank, and nothing of the other;
+     * polymeriser_in: a tank's butadiene into the Polymeriser's blue IN flange (its back, 4 px up), into its feed;
+     * cracker_to_polymeriser: the Steam Cracker's butadiene straight into a Polymeriser's IN flange.
      */
+    /** The 230V compressor (latex ports since 2026-11-07). */
+    static final int COMPRESSOR_230 = 4 + (35 << 6);
+    /** The Industrial Resin Collector (2026-11-07). */
+    static final int RESIN_COLLECTOR = 0 + (92 << 6);
+    /** The Steam Cracker (2026-11-07). */
+    static final int STEAM_CRACKER = 0 + (95 << 6);
+    /** The Carbon Black Burner (2026-11-07). */
+    static final int CARBON_BURNER = 0 + (93 << 6);
+
     static final class OilOnPipes implements TestCase {
-        static final String[] VARIANTS = {"column_in", "residue_out", "segment_out", "flare_in", "turbine_fuel", "separator_out", "fuel_furnace_in", "fuel_furnace_crude", "fuel_furnace_buckets"};
+        static final String[] VARIANTS = {"column_in", "column_refuses_heavy_oil", "residue_out", "segment_out", "flare_in", "turbine_fuel", "separator_out", "fuel_furnace_in", "fuel_furnace_crude", "fuel_furnace_buckets",
+            "compressor_latex_out", "compressor_latex_in", "resin_collector_out", "carbon_burner_in", "desulfuriser_in",
+            "cracker_gasoline_in", "cracker_steam_in", "cracker_butadiene_out", "cracker_gas_out", "polymeriser_in", "cracker_to_polymeriser"};
         final String variant;
         mods.eln.node.transparent.TransparentNodeElement west, east;
         mods.eln.oil.TankElement tank;
@@ -442,12 +628,12 @@ public final class OilCases {
             var XP = mods.eln.misc.Direction.XP;
             var XN = mods.eln.misc.Direction.XN;
             switch (variant) {
-                case "column_in" -> {
+                case "column_in", "column_refuses_heavy_oil" -> {
                     tank = tank(ctx, w, XP);   // (its back east: low side port 4 px up)
                     east = ctx.placeTransparent(0 + (83 << 6), e);
                     face(east, mods.eln.misc.Direction::right, XN);
                     lay(ctx, mid, 0, 4, 8, 8, 4, 8, 8, 8, 8, 16, 8, 8);
-                    put(ctx, w, Oil.CRUDE.get(), 9000);
+                    put(ctx, w, variant.equals("column_in") ? Oil.CRUDE.get() : Oil.Cut.HEAVYOIL.source.get(), 9000);
                 }
                 case "residue_out" -> {
                     west = ctx.placeTransparent(0 + (83 << 6), w);
@@ -496,14 +682,18 @@ public final class OilCases {
                         var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
                         err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
                     }
-                    ((mods.eln.fluid.ElementFluidHandler) west.getFluidHandler()).fill(new net.neoforged.neoforge.fluids.FluidStack(Oil.CRUDE.get(), 2000), true);
+                    ((mods.eln.transparentnode.electricalmachine.OilSeparatorElement) west).putFluid(Oil.CRUDE.get(), 2000);
                 }
                 case "fuel_furnace_in", "fuel_furnace_crude" -> {
                     tank = tank(ctx, w, XP);
                     east = ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, e);
-                    east.front = XN;   // (its front, with the fuel flange 4 px up, west)
+                    east.front = XN;
                     east.reconnect();
-                    lay(ctx, mid, 0, 4, 8, 16, 4, 8);
+                    // (its fuel flange on top, beside the flue: todo #504; the router lays the pipe up and over)
+                    String err = mods.eln.node.voxel.PipePlacer.routeForTests(ctx.level(), 0,
+                        mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), w, net.minecraft.core.Direction.EAST),
+                        CombustionCases.fuelPort(ctx, (mods.eln.transparentnode.FuelHeatFurnaceElement) east));
+                    if (err != null) throw new IllegalStateException("tank to the furnace's fuel flange: " + err);
                     put(ctx, w, variant.equals("fuel_furnace_crude") ? Oil.CRUDE.get() : Oil.Cut.GASOLINE.source.get(), 6000);
                 }
                 case "fuel_furnace_buckets" -> {
@@ -523,6 +713,133 @@ public final class OilCases {
                         ctx.level().removeBlock(p, false);
                     }
                 }
+                case "compressor_latex_out", "compressor_latex_in" -> {
+                    boolean out = variant.endsWith("out");
+                    west = ctx.placeTransparent(COMPRESSOR_230, w);
+                    west.front = XN;   // (its back, with both flanges, east)
+                    west.reconnect();
+                    tank = tank(ctx, e, XN);
+                    int y = out ? mods.eln.transparentnode.electricalmachine.CompressorPortsDescriptor.OUT_Y
+                        : mods.eln.transparentnode.electricalmachine.CompressorPortsDescriptor.IN_Y;
+                    int at = mods.eln.fluid.PortBridge.endSpot(XN, XP, y, mods.eln.transparentnode.electricalmachine.CompressorPortsDescriptor.FLANGE_Z);
+                    // (the player's click picks the flange nearest it, PipePlacer.portAt)
+                    var hit = new net.minecraft.world.phys.Vec3(w.getX() + 1, w.getY() + (at / 17) / 16.0, w.getZ() + (at % 17) / 16.0);
+                    var a = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), w, net.minecraft.core.Direction.EAST, hit);
+                    var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
+                    if (a == null || b == null || a.y() % 16 != at / 17) err = "ports: " + a + " " + b + " (want y " + at / 17 + ")";
+                    else {
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
+                    }
+                    if (out) ((mods.eln.transparentnode.electricalmachine.CompressorPortsElement) west).putLatex(false, 2000);
+                    else put(ctx, e, mods.eln.oil.Latex.SOURCE.get(), 6000);
+                }
+                case "cracker_gasoline_in", "cracker_steam_in", "cracker_butadiene_out", "cracker_gas_out" -> {
+                    boolean in = variant.endsWith("_in");
+                    boolean zb = variant.equals("cracker_steam_in") || variant.equals("cracker_gas_out");
+                    var cracker = (mods.eln.transparentnode.steamcracker.SteamCrackerElement) ctx.placeTransparent(STEAM_CRACKER, w);
+                    west = cracker;
+                    cracker.front = in ? XN : XP;   // (IN: its back east; OUT: its front east)
+                    cracker.reconnect();
+                    tank = tank(ctx, e, XN);
+                    int at = mods.eln.fluid.PortBridge.endSpot(cracker.front, XP, mods.eln.transparentnode.steamcracker.SteamCrackerDescriptor.FLANGE_Y,
+                        zb ? mods.eln.transparentnode.steamcracker.SteamCrackerDescriptor.FLANGE_Z_B : mods.eln.transparentnode.steamcracker.SteamCrackerDescriptor.FLANGE_Z_A);
+                    var hit = new net.minecraft.world.phys.Vec3(w.getX() + 1, w.getY() + (at / 17) / 16.0, w.getZ() + (at % 17) / 16.0);
+                    var a = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), w, net.minecraft.core.Direction.EAST, hit);
+                    var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
+                    if (a == null || b == null || Math.floorMod(a.z(), 16) != at % 17) err = "ports: " + a + " " + b + " (want z " + at % 17 + ")";
+                    else {
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
+                    }
+                    switch (variant) {
+                        case "cracker_gasoline_in" -> put(ctx, e, Oil.Cut.GASOLINE.source.get(), 6000);
+                        case "cracker_steam_in" -> {
+                            var v = tank.vessel;
+                            v.fill(0, 1, 423.15);
+                            mods.eln.sim.fluid.EaUnits.addWater(v, 3e5 * v.volume / (461.5 * 423.15), 423.15, true);   // (~3 bar of steam at 150 C)
+                            v.update();
+                        }
+                        case "cracker_butadiene_out" -> cracker.fillOut(new net.neoforged.neoforge.fluids.FluidStack(mods.eln.oil.Butadiene.SOURCE.get(), 600));   // (sealed: more would crush its air past the pump's head)
+                        default -> cracker.fillOut(new net.neoforged.neoforge.fluids.FluidStack(Oil.Cut.NATURALGAS.source.get(), 1000));
+                    }
+                }
+                case "cracker_to_polymeriser" -> {
+                    var cracker = (mods.eln.transparentnode.steamcracker.SteamCrackerElement) ctx.placeTransparent(STEAM_CRACKER, w);
+                    west = cracker;
+                    cracker.front = XP;
+                    cracker.reconnect();
+                    east = ctx.placeTransparent(0 + (96 << 6), e);
+                    east.front = XP;   // (its back, with the IN flange, west)
+                    east.reconnect();
+                    int at = mods.eln.fluid.PortBridge.endSpot(XP, XP, mods.eln.transparentnode.steamcracker.SteamCrackerDescriptor.FLANGE_Y,
+                        mods.eln.transparentnode.steamcracker.SteamCrackerDescriptor.FLANGE_Z_A);
+                    var hit = new net.minecraft.world.phys.Vec3(w.getX() + 1, w.getY() + (at / 17) / 16.0, w.getZ() + (at % 17) / 16.0);
+                    var a = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), w, net.minecraft.core.Direction.EAST, hit);
+                    var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
+                    if (a == null || b == null) err = "ports: " + a + " " + b;
+                    else {
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
+                    }
+                    // (sealed: 1000 mB at once would crush its air past the pump's head; and the pipe between holds a few hundred)
+                    for (int at2 = 0; at2 <= 120; at2 += 40)
+                        ctx.after(at2 + 1, () -> cracker.fillOut(new net.neoforged.neoforge.fluids.FluidStack(mods.eln.oil.Butadiene.SOURCE.get(), 500)));
+                }
+                case "polymeriser_in" -> {
+                    tank = tank(ctx, w, XP);
+                    east = ctx.placeTransparent(0 + (96 << 6), e);
+                    east.front = XP;   // (its back, with the IN flange, west)
+                    east.reconnect();
+                    var a = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), w, net.minecraft.core.Direction.EAST);
+                    var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
+                    if (a == null || b == null) err = "ports: " + a + " " + b;
+                    else {
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
+                    }
+                    put(ctx, w, mods.eln.oil.Butadiene.SOURCE.get(), 6000);
+                }
+                case "desulfuriser_in" -> {
+                    tank = tank(ctx, w, XP);
+                    east = ctx.placeTransparent(0 + (94 << 6), e);
+                    east.front = XP;   // (its back, with the IN flange, west)
+                    east.reconnect();
+                    var a = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), w, net.minecraft.core.Direction.EAST);
+                    var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
+                    if (a == null || b == null) err = "ports: " + a + " " + b;
+                    else {
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
+                    }
+                    put(ctx, w, Oil.Cut.DIESEL.source.get(), 6000);
+                }
+                case "carbon_burner_in" -> {
+                    tank = tank(ctx, w, XP);
+                    east = ctx.placeTransparent(CARBON_BURNER, e);
+                    east.front = XP;   // (its back, with the IN flange, west)
+                    east.reconnect();
+                    var a = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), w, net.minecraft.core.Direction.EAST);
+                    var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
+                    if (a == null || b == null) err = "ports: " + a + " " + b;
+                    else {
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
+                    }
+                    put(ctx, w, Oil.CRUDE.get(), 6000);   // (cold residue barely flows in a pipe, by its species: crude shows the flange works)
+                }
+                case "resin_collector_out" -> {
+                    west = ctx.placeTransparent(RESIN_COLLECTOR, w);
+                    tank = tank(ctx, e, XN);
+                    var a = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), w, net.minecraft.core.Direction.UP);
+                    var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
+                    if (a == null || b == null) err = "ports: " + a + " " + b;
+                    else {
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
+                    }
+                    ((mods.eln.transparentnode.resincollector.IndustrialResinCollectorElement) west).putLatex(2000);
+                }
                 default -> throw new IllegalStateException(variant);
             }
         }
@@ -531,6 +848,10 @@ public final class OilCases {
             ctx.check("oil on pipes " + variant + ": the pipe goes in", err == null, "" + err);
             var reg = mods.eln.sim.fluid.SpeciesRegistry.get();
             switch (variant) {
+                case "column_refuses_heavy_oil" -> {
+                    int c = ((mods.eln.oil.ColumnBaseElement) east).tanks.crude();
+                    ctx.check("oil on pipes: heavy oil piped into the column base isn't taken as crude", c == 0, c + " mB of crude in the base, tank " + tank.getWaila());
+                }
                 case "column_in" -> {
                     int c = ((mods.eln.oil.ColumnBaseElement) east).tanks.crude();
                     ctx.check("oil on pipes: the tank's crude went into the column base", c > 500, c + " mB of crude in the base, tank " + tank.getWaila());
@@ -548,24 +869,72 @@ public final class OilCases {
                         String.format("%.0f mB in the tank, %d left in the segment", got, ((mods.eln.oil.ColumnSegmentElement) west).tank.getFluidAmount()));
                 }
                 case "flare_in" -> {
-                    int id = reg.id("eln:crude_oil");
-                    double left = tank.vessel.mass(id) / mods.eln.fluid.FluidSpecies.kgPerMb(id, false);
+                    double left = crudeMb(tank.vessel);
                     ctx.check("oil on pipes: the flare stack took the tank's crude", left < 8500, String.format("%.0f mB left in the tank, flare %s", left, east.getWaila()));
                 }
                 case "separator_out" -> {
-                    int id = reg.id("eln:crude_oil");
-                    double got = tank.vessel.mass(id) / mods.eln.fluid.FluidSpecies.kgPerMb(id, false);
+                    double got = crudeMb(tank.vessel);
                     ctx.check("oil on pipes: the separator's crude went into the tank", got > 500,
-                        String.format("%.0f mB in the tank, %d left in the separator", got, ((mods.eln.fluid.ElementFluidHandler) west.getFluidHandler()).getFluidAmount()));
+                        String.format("%.0f mB in the tank, %.0f left in the separator", got, ((mods.eln.transparentnode.electricalmachine.OilSeparatorElement) west).outlet.liquidMb()));
+                }
+                case "compressor_latex_out" -> {
+                    int id = reg.id("eln:latex");
+                    double got = tank.vessel.mass(id) / mods.eln.fluid.FluidSpecies.kgPerMb(id, false);
+                    ctx.check("latex on pipes: the 230V compressor's latex went out of its OUT flange into the tank", got > 500,
+                        String.format("%.0f mB in the tank, compressor %s", got, west.getWaila()));
+                }
+                case "cracker_gasoline_in", "cracker_steam_in" -> {
+                    var cr = (mods.eln.transparentnode.steamcracker.SteamCrackerElement) west;
+                    boolean steam = variant.equals("cracker_steam_in");
+                    int got = steam ? cr.steamMb() : cr.gasolineMb(), other = steam ? cr.gasolineMb() : cr.steamMb();
+                    ctx.check("oil on pipes: the steam cracker's " + (steam ? "H2O" : "C8") + " flange took the tank's " + (steam ? "steam" : "gasoline"),
+                        got > 200 && other == 0, got + " mB in, " + other + " in the other tank; " + cr.getWaila());
+                }
+                case "cracker_butadiene_out", "cracker_gas_out" -> {
+                    boolean gas = variant.equals("cracker_gas_out");
+                    int id = reg.id(gas ? "eln:natural_gas" : "eln:butadiene"), not = reg.id(gas ? "eln:butadiene" : "eln:natural_gas");
+                    double got = tank.vessel.mass(id) / mods.eln.fluid.FluidSpecies.kgPerMb(id, gas), wrong = tank.vessel.mass(not);
+                    ctx.check("oil on pipes: the steam cracker's " + (gas ? "natural gas went out of its CH4" : "butadiene went out of its C4H6") + " flange into the tank",
+                        got > 300 && wrong == 0, String.format("%.0f mB in the tank (other: %.2g kg), cracker %s", got, wrong, west.getWaila()));
+                }
+                case "cracker_to_polymeriser" -> {
+                    double in = ((mods.eln.transparentnode.polymeriser.PolymeriserElement) east).butadieneMb();
+                    var cr = (mods.eln.transparentnode.steamcracker.SteamCrackerElement) west;
+                    ctx.check("oil on pipes: the steam cracker's butadiene went straight into a polymeriser", in > 200,
+                        String.format("%.0f mB in its feed, %s; cracker still holds %d at %.2f bar, %.0f K, %s", in, east.getWaila(), cr.butadieneMb(),
+                            cr.butadieneOut.vessel.P() / 1e5, cr.butadieneOut.vessel.T(), cr.getWaila()));
+                }
+                case "polymeriser_in" -> {
+                    double in = ((mods.eln.transparentnode.polymeriser.PolymeriserElement) east).butadieneMb();
+                    ctx.check("oil on pipes: the tank's butadiene went into the polymeriser's IN flange", in > 200, String.format("%.0f mB in its feed, %s; tank %s", in, east.getWaila(), tank.getWaila()));
+                }
+                case "desulfuriser_in" -> {
+                    int in = ((mods.eln.transparentnode.desulfuriser.DesulfuriserElement) east).inMb();
+                    ctx.check("oil on pipes: the tank's diesel went into the desulfuriser's IN flange", in > 500, in + " mB in its IN tank, " + east.getWaila());
+                }
+                case "carbon_burner_in" -> {
+                    var cb = (mods.eln.transparentnode.carbonblack.CarbonBlackBurnerElement) east;
+                    ctx.check("oil on pipes: the tank's crude went into the carbon black burner, which burns it", cb.burnt() > 20 || cb.getWaila().toString().contains("burning"),
+                        String.format("%.0f mB burnt, %s", cb.burnt(), cb.getWaila()));
+                }
+                case "resin_collector_out" -> {
+                    int id = reg.id("eln:latex");
+                    double got = tank.vessel.mass(id) / mods.eln.fluid.FluidSpecies.kgPerMb(id, false);
+                    ctx.check("latex on pipes: the resin collector's latex went out of its top flange into the tank", got > 500,
+                        String.format("%.0f mB in the tank, collector %s", got, west.getWaila()));
+                }
+                case "compressor_latex_in" -> {
+                    int in = ((mods.eln.transparentnode.electricalmachine.CompressorPortsElement) west).latexIn();
+                    ctx.check("latex on pipes: the tank's latex went into the 230V compressor's IN flange", in > 500, in + " mB in its press tank, " + west.getWaila());
                 }
                 case "fuel_furnace_buckets" -> ctx.check("oil: the fuel heat furnace takes a bucket of every EA oil a burner fires", allBuckets, bucketed);
                 case "fuel_furnace_in", "fuel_furnace_crude" -> {
-                    var cap = ctx.level().getCapability(net.neoforged.neoforge.capabilities.Capabilities.Fluid.BLOCK, ctx.at(3, 1, 1), net.minecraft.core.Direction.UP);
-                    long got = cap == null ? 0 : cap.getAmountAsLong(0);
-                    ctx.check("oil on pipes: the fuel heat furnace's tank filled from the pipe on its front flange", got > 10, got + " mB, " + east.getWaila());
+                    // (its tank's liquid, whatever mix: crude is its cuts, which a bucket wouldn't take as one fluid)
+                    double got = ((mods.eln.transparentnode.FuelHeatFurnaceElement) east).fuelMb();
+                    ctx.check("oil on pipes: the fuel heat furnace's tank filled from the pipe on its top flange", got > 10, String.format("%.0f mB, %s", got, east.getWaila()));
                 }
                 case "turbine_fuel" -> {
-                    int f = ((mods.eln.mechanical.GasTurbineElement) east).tank.getFluidAmount();
+                    double f = ((mods.eln.mechanical.GasTurbineElement) east).fuelMb();
                     ctx.check("oil on pipes: the gas turbine's fuel tank filled from the pipe", f > 500, f + " mB of fuel, tank " + tank.getWaila());
                 }
             }
@@ -628,7 +997,7 @@ public final class OilCases {
                 o.writeByte(mods.eln.transparentnode.FuelHeatFurnaceElement.Companion.getSetManualControlValueEvent());
                 o.writeFloat(1f);
             }));
-            ((mods.eln.fluid.ElementFluidHandler) f.getFluidHandler()).fill(new net.neoforged.neoforge.fluids.FluidStack(fuel, 2000), true);
+            f.putFuel(fuel, 1800);
             f.setCoke(coke);
             return f;
         }
@@ -668,6 +1037,528 @@ public final class OilCases {
     }
 
     /**
+     * The fuel heat furnace's tank under pressure (Baughn 2026-11-11):
+     * <ul>
+     * <li>forced_air: an air line at ~1.2 bar on its air port (todo #504) goes through its damper into its firebox, not
+     * into its tank: it fires ~2.2x its setting, against one beside it on natural draught;</li>
+     * <li>relief: its tank at 4.5 bar (a line's doing) lets air out by its relief valve too, and holds;</li>
+     * <li>burst: a 20 bar line outruns the relief: past 6 bar gauge the tank bursts;</li>
+     * <li>gas_first: a little natural gas in its head space burns in the flame, none escapes, nothing catches fire;</li>
+     * <li>gas_fire: natural gas fed in faster than the flame takes it escapes by its vents with the fire lit and sets the
+     * blocks around it alight; the main's pressure doesn't fire it over its setting (todo #504);</li>
+     * <li>inertia: a small burner lit at full: its flame is at full at once, the heat it gives follows through its burner's
+     * mass, 63 % in ~30 s (Baughn 2026-11-11), and it keeps giving heat for a while after the flame goes out;</li>
+     * <li>buckets: two buckets of diesel go in, whole, through its capability (AdventurAgent 2026-11-11: the second
+     * didn't fit); one of diesel and one of water too;</li>
+     * <li>thermostat: four big-burner furnaces with nothing taking their heat, an on/off and an analogue regulator set to
+     * 600 and to 700 degrees: none goes over its setting, each holds it (Baughn 2026-11-14: the thermostat allows for
+     * the heat still in the burner; they peaked at 830-930 and the two at 700 burnt out).</li>
+     * </ul>
+     */
+    static final class FurnacePressure implements TestCase {
+        static final String[] VARIANTS = {"forced_air", "relief", "burst", "gas_first", "gas_fire", "inertia", "buckets", "thermostat"};
+        final String variant;
+        mods.eln.transparentnode.FuelHeatFurnaceElement a, b;
+        mods.eln.sim.fluid.FluidDevice fx, watch;
+        mods.eln.sim.fluid.FluidNode main;
+        double heatA0, heatB0, heatA1, heatB1, over, gaugeAt, maxGauge, gas0, main0, afterOff = -1;
+        int tick, litAt = -1, at63 = -1;
+        mods.eln.sim.IProcess clock;
+        /** The thermostat variant's furnaces: regulator (sub-id) and set point each, the hottest each got and its sum over the third minute. */
+        static final int[][] THERMOSTATS = {{0, 600}, {8, 600}, {0, 700}, {8, 700}};
+        final mods.eln.transparentnode.FuelHeatFurnaceElement[] th = new mods.eln.transparentnode.FuelHeatFurnaceElement[THERMOSTATS.length];
+        final double[] thMax = new double[THERMOSTATS.length], thSum = new double[THERMOSTATS.length];
+
+        /** A lit big-burner furnace with a regulator item (sub-id), set to so many degrees over the ambient, nothing taking its heat. */
+        static mods.eln.transparentnode.FuelHeatFurnaceElement thermostat(TestContext ctx, int x, int regulator, float set) {
+            var f = FuelBySpecies.lit(ctx, x);
+            f.getInventory().setItem(mods.eln.transparentnode.FuelHeatFurnaceContainer.Companion.getRegulatorSlot(),
+                mods.eln.Eln.sharedItem.getDescriptor(regulator + (3 << 6)).newItemStack());
+            f.inventoryChange(f.getInventory());
+            f.networkUnserialize(ctx.stream(o -> {
+                o.writeByte(mods.eln.transparentnode.FuelHeatFurnaceElement.Companion.getSetTemperatureEvent());
+                o.writeFloat(set);
+            }));
+            f.putFuel(Oil.Cut.DIESEL.source.get(), 1800);
+            return f;
+        }
+
+        FurnacePressure(String variant) {
+            this.variant = variant;
+        }
+
+        public String id() {
+            return "fuel_furnace_" + variant;
+        }
+
+        public int width() {
+            return variant.equals("thermostat") ? 9 : 7;
+        }
+
+        public int ticks() {
+            return variant.equals("inertia") ? 1300 : variant.equals("thermostat") ? 3600 : 300;
+        }
+
+        static int ng() {
+            return mods.eln.sim.fluid.SpeciesRegistry.get().id("eln:natural_gas");
+        }
+
+        static double gauge(mods.eln.transparentnode.FuelHeatFurnaceElement f) {
+            return f.getVessel().P() - mods.eln.sim.fluid.Water.P_ATM;
+        }
+
+        /** A big gas main (1 m^3) at gauge Pa: air, or natural gas if gas. */
+        static mods.eln.sim.fluid.FluidNode main(double y, double pa, boolean gas) {
+            if (!gas) return new mods.eln.sim.fluid.FluidNode(1.0, y, 1.0, false).fill(0, mods.eln.sim.fluid.Water.P_ATM + pa, 293.15);
+            var n = new mods.eln.sim.fluid.FluidNode(1.0, y, 1.0, false).fill(0, 100, 293.15);
+            mods.eln.sim.fluid.EaUnits.add(n, ng(), (mods.eln.sim.fluid.Water.P_ATM + pa) * 0.01604 / (8.314 * 293.15), 293.15, true);
+            n.update();
+            return n;
+        }
+
+        /** The main coupled to its fuel flange on its top (a pipe's end on it). */
+        static mods.eln.sim.fluid.FluidDevice onFlange(mods.eln.transparentnode.FuelHeatFurnaceElement f, mods.eln.sim.fluid.FluidNode main) {
+            var pos = f.node.coordonate.pos();
+            return GasPlantCases.fixtures(f.fluidLevel(), new Object[]{pos.above(), 0, main,
+                mods.eln.fluid.PortBridge.topSpot(f.front, mods.eln.transparentnode.FuelHeatFurnaceElement.FUEL_X, mods.eln.transparentnode.FuelHeatFurnaceElement.FUEL_Z)});
+        }
+
+        /** The main coupled to its air port on its back (todo #504). */
+        static mods.eln.sim.fluid.FluidDevice onAirPort(mods.eln.transparentnode.FuelHeatFurnaceElement f, mods.eln.sim.fluid.FluidNode main) {
+            return GasPlantCases.fixtures(f.fluidLevel(), CombustionCases.airFixture(f, main));
+        }
+
+        /** A fluid device with no ports that runs step after each fluid step (to read the tank's pressure as it stands). */
+        static mods.eln.sim.fluid.FluidDevice after(mods.eln.transparentnode.FuelHeatFurnaceElement f, Runnable step) {
+            var d = new mods.eln.sim.fluid.FluidDevice() {
+                public Object fluidLevel() {
+                    return f.fluidLevel();
+                }
+
+                public java.util.List<FluidPort> fluidPorts() {
+                    return java.util.List.of();
+                }
+
+                public void afterFluidStep(double dt) {
+                    step.run();
+                }
+            };
+            mods.eln.fluid.FluidWorld.add(d);
+            return d;
+        }
+
+        public void build(TestContext ctx) {
+            double y = ctx.at(0, 1, 0).getY();
+            switch (variant) {
+                case "forced_air" -> {
+                    a = FuelBySpecies.lit(ctx, 1);
+                    a.putFuel(Oil.Cut.DIESEL.source.get(), 800);
+                    b = FuelBySpecies.lit(ctx, 4);
+                    b.putFuel(Oil.Cut.DIESEL.source.get(), 800);
+                    fx = onAirPort(a, main = main(y, 1.2e5, false));
+                    // (over 100 ticks once both burn steadily: on its bench nothing takes the heat, so it overheats later)
+                    ctx.after(60, () -> {
+                        heatA0 = a.getHeatGivenJ();
+                        heatB0 = b.getHeatGivenJ();
+                    });
+                    ctx.after(140, () -> {
+                        heatA1 = a.getHeatGivenJ();
+                        heatB1 = b.getHeatGivenJ();
+                        over = a.airFactor();
+                        gaugeAt = gauge(a);
+                    });
+                }
+                case "relief" -> {
+                    // (its tank pumped up to ~4.5 bar gauge, as a line would leave it, then left alone)
+                    a = (mods.eln.transparentnode.FuelHeatFurnaceElement) ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, ctx.at(3, 1, 1));
+                    a.putFuel(Oil.Cut.DIESEL.source.get(), 800);
+                    var v = a.getVessel();
+                    mods.eln.sim.fluid.EaUnits.add(v, mods.eln.sim.fluid.SpeciesRegistry.AIR, 4.5e5 * (v.volume - v.liquidVolume()) * 0.029 / (8.314 * v.T()), v.T(), true);
+                    v.update();
+                    maxGauge = gauge(a);
+                }
+                case "burst" -> {
+                    a = (mods.eln.transparentnode.FuelHeatFurnaceElement) ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, ctx.at(3, 1, 1));
+                    a.putFuel(Oil.Cut.DIESEL.source.get(), 800);
+                    fx = onFlange(a, main = main(y, 20e5, false));
+                }
+                case "inertia" -> {
+                    a = FuelBySpecies.lit(ctx, 3);
+                    a.getInventory().setItem(mods.eln.transparentnode.FuelHeatFurnaceContainer.Companion.getFuelBurnerSlot(),
+                        mods.eln.Eln.sharedItemStackOne.getDescriptor(0 + (124 << 6)).newItemStack());   // (the small one: it doesn't overheat on its bench)
+                    a.inventoryChange(a.getInventory());
+                    a.putFuel(Oil.Cut.DIESEL.source.get(), 800);
+                    mods.eln.Eln.simulator.addSlowProcess(clock = dt -> {
+                        tick++;
+                        if (litAt < 0 && a.getFlamePower() > 0) litAt = tick;
+                        if (litAt >= 0 && at63 < 0 && a.heatPower() >= 0.632 * a.getFlamePower() && a.getFlamePower() > 0) at63 = tick;
+                        if (tick == 1100) a.networkUnserialize(ctx.stream(o -> {
+                            o.writeByte(mods.eln.transparentnode.FuelHeatFurnaceElement.Companion.getSetManualControlValueEvent());
+                            o.writeFloat(0f);
+                        }));
+                        if (tick == 1200) afterOff = a.heatPower();
+                    });
+                }
+                case "thermostat" -> {
+                    for (int i = 0; i < th.length; i++) th[i] = thermostat(ctx, 1 + 2 * i, THERMOSTATS[i][0], THERMOSTATS[i][1]);
+                    mods.eln.Eln.simulator.addSlowProcess(clock = dt -> {
+                        tick++;
+                        for (int i = 0; i < th.length; i++) {
+                            double t = th[i].thermalLoadList.get(0).Tc;
+                            thMax[i] = Math.max(thMax[i], t);
+                            if (tick > 2400) thSum[i] += t;
+                        }
+                    });
+                }
+                case "buckets" -> {
+                    a = (mods.eln.transparentnode.FuelHeatFurnaceElement) ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, ctx.at(1, 1, 1));
+                    b = (mods.eln.transparentnode.FuelHeatFurnaceElement) ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, ctx.at(4, 1, 1));
+                    ctx.after(2, () -> {
+                        OilOnPipes.put(ctx, ctx.at(1, 1, 1), Oil.Cut.DIESEL.source.get(), 1000);
+                        OilOnPipes.put(ctx, ctx.at(4, 1, 1), Oil.Cut.DIESEL.source.get(), 1000);
+                    });
+                    ctx.after(6, () -> {
+                        OilOnPipes.put(ctx, ctx.at(1, 1, 1), Oil.Cut.DIESEL.source.get(), 1000);
+                        OilOnPipes.put(ctx, ctx.at(4, 1, 1), net.minecraft.world.level.material.Fluids.WATER, 1000);
+                    });
+                }
+                case "gas_first" -> {
+                    a = FuelBySpecies.lit(ctx, 3);
+                    a.putFuel(Oil.Cut.DIESEL.source.get(), 800);
+                    ctx.after(100, () -> {
+                        var v = a.getVessel();
+                        mods.eln.sim.fluid.EaUnits.add(v, ng(), 5e-6, v.T(), true);
+                        v.update();
+                        gas0 = a.getGasBurntKg();
+                    });
+                }
+                case "gas_fire" -> {
+                    a = FuelBySpecies.lit(ctx, 3);
+                    a.putFuel(Oil.Cut.DIESEL.source.get(), 800);
+                    ctx.after(60, () -> {
+                        fx = onFlange(a, main = main(y, 1e5, true));
+                        main0 = main.vapour(ng());
+                    });
+                }
+            }
+        }
+
+        static int fires(TestContext ctx, net.minecraft.core.BlockPos p) {
+            int n = 0;
+            for (var q : net.minecraft.core.BlockPos.betweenClosed(p.offset(-2, -1, -2), p.offset(2, 2, 2)))
+                if (ctx.level().getBlockState(q).is(net.minecraft.world.level.block.Blocks.FIRE)) n++;
+            return n;
+        }
+
+        public void measure(TestContext ctx) {
+            if (fx != null) mods.eln.fluid.FluidWorld.remove(fx);
+            if (watch != null) mods.eln.fluid.FluidWorld.remove(watch);
+            switch (variant) {
+                case "forced_air" -> {
+                    double pa = heatA1 - heatA0, pb = heatB1 - heatB0;
+                    String what = String.format("tank at %.2f bar gauge, fires %.2fx; %.0f J vs %.0f J beside it; %s", gaugeAt / 1e5, over, pa, pb, a.getWaila());
+                    ctx.line("forced air: " + what);
+                    // (todo #504: the air goes to its air port and through its damper into the firebox, not into its tank)
+                    ctx.check("fuel furnace: an air line on its air port leaves its tank alone (under 0.01 bar)", Math.abs(gaugeAt) < 1e3, what);
+                    ctx.check("fuel furnace: ... and it fires 2-2.5x its setting by the air (DAMPER_DP passes 2.5x)", over > 2 && over <= 2.5, what);
+                    ctx.check("fuel furnace: ... that much more heat than one beside it on natural draught (within 15 %)",
+                        pb > 0 && Math.abs(pa / pb - over) < 0.15 * over, what);
+                }
+                case "relief" -> ctx.check("fuel furnace: its tank at 4.5 bar lets air out by its relief valve, and holds",
+                    a.getReliefKg() > 0 && gauge(a) < 0.1e5 && ctx.level().getBlockEntity(ctx.at(3, 1, 1)) != null && !a.isBurnt(),
+                    String.format("started at %.2f bar, now %.3f bar, %.6f kg out by the relief", maxGauge / 1e5, gauge(a) / 1e5, a.getReliefKg()));
+                case "burst" -> ctx.check("fuel furnace: a 20 bar air line outruns its relief: past 6 bar it bursts",
+                    ctx.level().getBlockEntity(ctx.at(3, 1, 1)) == null || a.isBurnt(), "" + ctx.level().getBlockState(ctx.at(3, 1, 1)));
+                case "buckets" -> {
+                    double water = b.getVessel().liquid(mods.eln.sim.fluid.SpeciesRegistry.WATER) / mods.eln.sim.fluid.EaUnits.KG_PER_MB_WATER;
+                    String what = String.format("%.0f mB in the first; %.0f mB in the second, %.0f of it water", a.fuelMb(), b.fuelMb(), water);
+                    ctx.check("fuel furnace: two buckets of diesel go in", Math.abs(a.fuelMb() - 2000) < 20, what);
+                    ctx.check("fuel furnace: a bucket of water goes in over one of diesel", Math.abs(b.fuelMb() - 2000) < 20 && water > 950, what);
+                }
+                case "thermostat" -> {
+                    mods.eln.Eln.simulator.removeSlowProcess(clock);
+                    int n = Math.max(1, tick - 2400);
+                    for (int i = 0; i < th.length; i++) {
+                        int set = THERMOSTATS[i][1];
+                        String name = (THERMOSTATS[i][0] == 0 ? "an on/off" : "an analogue") + " thermostat set to " + set;
+                        String what = String.format("peak %.0f, mean %.0f over the third minute, burnt %s, %d ticks", thMax[i], thSum[i] / n, th[i].isBurnt(), tick);
+                        ctx.check("fuel furnace: " + name + " never takes it over its setting (the burner's stored heat took it 230 over)", !th[i].isBurnt() && thMax[i] < set + 10, what);
+                        ctx.check("fuel furnace: " + name + " holds it there", thSum[i] / n > set - 30 && thSum[i] / n < set + 5, what);
+                    }
+                }
+                case "inertia" -> {
+                    mods.eln.Eln.simulator.removeSlowProcess(clock);
+                    String what = String.format("lit at %.1f s, 63 %% of its flame's heat %.1f s later; 5 s after the flame went out it gives %.0f W", litAt / 20.0, (at63 - litAt) / 20.0, afterOff);
+                    ctx.line("inertia: " + what);
+                    ctx.check("fuel furnace: its heat follows the flame through its burner's mass, 63 % in 25-45 s", litAt > 0 && at63 > 0 && at63 - litAt > 25 * 20 && at63 - litAt < 45 * 20, what);
+                    ctx.check("fuel furnace: ... and it still gives heat 5 s after the flame goes out", afterOff > 0, what);
+                }
+                case "gas_first" -> {
+                    double burnt = a.getGasBurntKg() - gas0, left = a.getVessel().vapour(ng());
+                    String what = String.format("%.6f kg burnt, %.6f kg left, %d fire blocks", burnt, left, fires(ctx, ctx.at(3, 1, 1)));
+                    ctx.check("fuel furnace: a little gas in its head space mostly burns in the flame", burnt > 3e-6 && left < 1e-7, what);
+                    ctx.check("fuel furnace: ... and nothing catches fire", fires(ctx, ctx.at(3, 1, 1)) == 0, what);
+                }
+                case "gas_fire" -> {
+                    String what = String.format("%.4f kg from the main, %.4f kg burnt, escaping %.6f kg/s, %d fire blocks",
+                        main0 - main.vapour(ng()), a.getGasBurntKg(), a.getGasEscapingKgS(), fires(ctx, ctx.at(3, 1, 1)));
+                    ctx.check("fuel furnace: a gas main on its flange outruns the flame: the gas escapes and sets fire around it", fires(ctx, ctx.at(3, 1, 1)) > 0, what);
+                    // (todo #504: the tank's pressure no longer feeds the burner more)
+                    ctx.check("fuel furnace: ... and the gas main's pressure doesn't overfire it", a.getFlamePower() <= 1.02 * CombustionCases.bigW() && a.airFactor() <= 1.01,
+                        String.format("flame %.0f W, air factor %.2f", a.getFlamePower(), a.airFactor()));
+                }
+            }
+        }
+    }
+
+    /**
+     * The fuel heat furnace's tank is a fluid node, and its burner burns what it holds species by species, by their
+     * heating values (Baughn 2026-11-10: "mixed on the machines"; real numbers):
+     * <ul>
+     * <li>mixed_fuel: gasoline and diesel half and half burn as the mix: the heat it gave is what it drew times the mix's
+     * heating value, between gasoline's and diesel's;</li>
+     * <li>coke_balance: coking follows the coking index of what burns against a plausible refinery's fuel (Baughn
+     * 2026-11-11): residue cokes faster than crude, heavy oil slower than crude but still cokes, and diesel clears a
+     * coked burner as it burns ("the ash gets pulled out with the smoke eventually");</li>
+     * <li>water_drowns_fire: water poured into a burning furnace sinks to its burner and puts the fire out (Baughn
+     * 2026-11-11): a flash of steam, its switch drops, no more heat; switched on again with the water there it stays out;
+     * the water drained, switched on, it burns again;</li>
+     * <li>legacy_tank: an old save's 2-bucket tank of crude loads into the vessel, as crude's cuts.</li>
+     * </ul>
+     */
+    static final class FuelBySpecies implements TestCase {
+        static final String[] VARIANTS = {"mixed_fuel", "coke_balance", "water_drowns_fire", "legacy_tank", "idle_breather", "overfill"};
+        final String variant;
+        mods.eln.transparentnode.FuelHeatFurnaceElement a, b, c, d;
+        double kg0, perKg0, perKgGasoline, perKgDiesel, heatEarly = -1, heatDrowned = -1, heatWet = -1;
+        int atBurnerEarly = -9;
+        boolean litBefore, switchAfter = true, litWet = true;
+        String legacy = "";
+
+        FuelBySpecies(String variant) {
+            this.variant = variant;
+        }
+
+        public String id() {
+            return "fuel_furnace_" + variant;
+        }
+
+        public int width() {
+            return 7;
+        }
+
+        public int ticks() {
+            return switch (variant) {
+                case "water_drowns_fire" -> 400;
+                case "idle_breather" -> 2400;
+                case "overfill" -> 600;
+                default -> 200;
+            };
+        }
+
+        static mods.eln.transparentnode.FuelHeatFurnaceElement lit(TestContext ctx, int x) {
+            var f = (mods.eln.transparentnode.FuelHeatFurnaceElement) ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, ctx.at(x, 1, 1));
+            f.getInventory().setItem(mods.eln.transparentnode.FuelHeatFurnaceContainer.Companion.getFuelBurnerSlot(),
+                mods.eln.Eln.sharedItemStackOne.getDescriptor(2 + (124 << 6)).newItemStack());
+            f.inventoryChange(f.getInventory());
+            f.networkUnserialize(ctx.stream(o -> o.writeByte(mods.eln.transparentnode.FuelHeatFurnaceElement.Companion.getMainSwitchToggleEvent())));
+            f.networkUnserialize(ctx.stream(o -> {
+                o.writeByte(mods.eln.transparentnode.FuelHeatFurnaceElement.Companion.getSetManualControlValueEvent());
+                o.writeFloat(1f);
+            }));
+            return f;
+        }
+
+        static double hv(String key) {
+            var reg = mods.eln.sim.fluid.SpeciesRegistry.get();
+            return reg.byId(reg.id(key)).heatingValue * mods.eln.ElnConfig.heatFurnaceFuelFactor;
+        }
+
+        public void build(TestContext ctx) {
+            switch (variant) {
+                case "mixed_fuel" -> {
+                    a = lit(ctx, 1);
+                    a.putFuel(Oil.Cut.GASOLINE.source.get(), 900);
+                    a.putFuel(Oil.Cut.DIESEL.source.get(), 900);
+                    perKg0 = a.heatPerKgAtBurner();
+                    perKgGasoline = hv("eln:gasoline");
+                    perKgDiesel = hv("eln:diesel");
+                }
+                case "coke_balance" -> {
+                    a = lit(ctx, 0);
+                    a.putFuel(Oil.Cut.RESIDUE.source.get(), 1500);
+                    b = lit(ctx, 2);
+                    b.putFuel(Oil.CRUDE.get(), 1500);
+                    c = lit(ctx, 4);
+                    c.putFuel(Oil.Cut.DIESEL.source.get(), 1500);
+                    c.setCoke(0.2);
+                    d = lit(ctx, 6);
+                    d.putFuel(Oil.Cut.HEAVYOIL.source.get(), 1500);
+                }
+                case "water_drowns_fire" -> {
+                    a = lit(ctx, 1);
+                    a.putFuel(Oil.Cut.GASOLINE.source.get(), 1000);
+                    ctx.after(100, () -> {
+                        litBefore = a.getFire().level > 0 && a.getHeatGivenJ() > 0;
+                        a.putFuel(net.minecraft.world.level.material.Fluids.WATER, 300);
+                    });
+                    ctx.after(140, () -> {
+                        atBurnerEarly = a.getAtBurner();
+                        heatEarly = a.getHeatGivenJ();
+                        switchAfter = a.switchedOn();
+                        a.networkUnserialize(ctx.stream(o -> o.writeByte(mods.eln.transparentnode.FuelHeatFurnaceElement.Companion.getMainSwitchToggleEvent())));
+                    });
+                    ctx.after(240, () -> {
+                        heatWet = a.getHeatGivenJ() - heatEarly;
+                        litWet = a.getFire().level > 0;
+                        var v = a.getVessel();
+                        mods.eln.sim.fluid.EaUnits.drainLiquid(v, mods.eln.sim.fluid.SpeciesRegistry.WATER, v.liquid(mods.eln.sim.fluid.SpeciesRegistry.WATER));
+                        v.update();
+                        if (!a.switchedOn()) a.networkUnserialize(ctx.stream(o -> o.writeByte(mods.eln.transparentnode.FuelHeatFurnaceElement.Companion.getMainSwitchToggleEvent())));
+                        heatDrowned = a.getHeatGivenJ();
+                    });
+                }
+                case "idle_breather" -> {
+                    // (no burner: it only stands there, a tank of gasoline at the ambient with its breather open)
+                    a = (mods.eln.transparentnode.FuelHeatFurnaceElement) ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, ctx.at(1, 1, 1));
+                    a.putFuel(Oil.Cut.GASOLINE.source.get(), 1000);
+                    perKgGasoline = mods.eln.fluid.FluidSpecies.kgPerMb(mods.eln.fluid.FluidSpecies.of(Oil.Cut.GASOLINE.source.get()).id(), false);
+                    // (the first minute: its head space fills with gasoline vapour, which pushes some gas out once)
+                    perKg0 = gasoline(a.getVessel());
+                    ctx.after(1200, () -> kg0 = gasoline(a.getVessel()));
+                }
+                case "overfill" -> {
+                    // (as oil_on_pipes_fuel_furnace_in, but on until it is full: a pressurised tank pushes on)
+                    OilOnPipes.tank(ctx, ctx.at(1, 1, 1), mods.eln.misc.Direction.XP);
+                    a = (mods.eln.transparentnode.FuelHeatFurnaceElement) ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, ctx.at(3, 1, 1));
+                    a.front = mods.eln.misc.Direction.XN;
+                    a.reconnect();
+                    // (its fuel flange on top, beside the flue: todo #504; the router lays the pipe up and over)
+                    String err = mods.eln.node.voxel.PipePlacer.routeForTests(ctx.level(), 0,
+                        mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), ctx.at(1, 1, 1), net.minecraft.core.Direction.EAST), CombustionCases.fuelPort(ctx, a));
+                    if (err != null) throw new IllegalStateException("tank to the furnace's fuel flange: " + err);
+                    OilOnPipes.put(ctx, ctx.at(1, 1, 1), Oil.Cut.GASOLINE.source.get(), 9000);
+                    perKgGasoline = mods.eln.fluid.FluidSpecies.kgPerMb(mods.eln.fluid.FluidSpecies.of(Oil.Cut.GASOLINE.source.get()).id(), false);
+                    ctx.after(2, () -> kg0 = gasolineIn(ctx));   // (the tank takes what was put in at its first step)
+                }
+                case "legacy_tank" -> {
+                    a = lit(ctx, 1);
+                    var p = ctx.at(1, 1, 1);
+                    ctx.after(2, () -> {
+                        try {
+                            var r = mods.eln.gametest.Reload.node(ctx.level(), p, t -> {
+                                var el = holding(t, "vesselW");
+                                for (String k : new String[]{"vesselW", "vesselA", "vesselU", "vesselS", "vesselFv"}) el.remove(k);
+                                var old = new mods.eln.fluid.PreciseElementFluidHandler(2000);
+                                old.fill(new net.neoforged.neoforge.fluids.FluidStack(Oil.CRUDE.get(), 1500), true);
+                                old.writeToNBT(el, "tank");
+                                return t;
+                            });
+                            var fresh = (mods.eln.transparentnode.FuelHeatFurnaceElement) ((mods.eln.node.transparent.TransparentNode) r.fresh).element;
+                            var v = fresh.getVessel();
+                            var reg = mods.eln.sim.fluid.SpeciesRegistry.get();
+                            double total = 0;
+                            StringBuilder sb = new StringBuilder();
+                            for (String k : new String[]{"eln:heavy_oil", "eln:diesel", "eln:gasoline", "eln:residue"}) {
+                                double m = v.liquid(reg.id(k)) + v.vapour(reg.id(k));
+                                total += m;
+                                sb.append(k).append(' ').append(String.format("%.4f", m)).append("; ");
+                            }
+                            double want = 1500 * mods.eln.fluid.FluidSpecies.kgPerMb(reg.id("eln:crude_oil"), false);
+                            double heavy = v.liquid(reg.id("eln:heavy_oil")) / total;
+                            legacy = Math.abs(total - want) < 0.01 * want && Math.abs(heavy - 0.35 / 0.95) < 0.01 ? "" : sb + String.format("total %.4f kg, want %.4f", total, want);
+                        } catch (ReflectiveOperationException e) {
+                            legacy = e.toString();
+                        }
+                    });
+                }
+            }
+        }
+
+        /** A node's gasoline (kg, both phases). */
+        static double gasoline(mods.eln.sim.fluid.FluidNode n) {
+            int id = mods.eln.fluid.FluidSpecies.of(Oil.Cut.GASOLINE.source.get()).id();
+            return n.liquid(id) + n.vapour(id);
+        }
+
+        /** The overfill rig's gasoline (kg, both phases): its tank, the pipe between and the furnace's vessel. */
+        double gasolineIn(TestContext ctx) {
+            int id = mods.eln.fluid.FluidSpecies.of(Oil.Cut.GASOLINE.source.get()).id();
+            var t = (mods.eln.oil.TankElement) ((mods.eln.node.transparent.TransparentNode) mods.eln.node.NodeManager.instance
+                .getNodeFromCoordonate(new mods.eln.misc.Coordonate(ctx.at(1, 1, 1), ctx.level()))).element;
+            double kg = 0;
+            for (var n : new mods.eln.sim.fluid.FluidNode[]{t.vessel, a.getVessel()})
+                if (n != null) kg += n.liquid(id) + n.vapour(id);
+            for (var part : PipeCases.node(ctx, ctx.at(2, 1, 1)).parts)
+                if (part instanceof mods.eln.node.voxel.PipePart pp && pp.fluid != null) {
+                    mods.eln.fluid.FluidWorld.writeBackOf(pp.fluid);
+                    kg += pp.fluid.liquid(id) + pp.fluid.vapour(id);
+                }
+            return kg;
+        }
+
+        /** The compound (at any depth) that holds key. */
+        static net.minecraft.nbt.CompoundTag holding(net.minecraft.nbt.CompoundTag t, String key) {
+            if (t.contains(key)) return t;
+            for (String k : t.keySet())
+                if (t.get(k) instanceof net.minecraft.nbt.CompoundTag c) {
+                    var h = holding(c, key);
+                    if (h != null) return h;
+                }
+            return null;
+        }
+
+        public void measure(TestContext ctx) {
+            switch (variant) {
+                case "mixed_fuel" -> {
+                    // (by its flame's heat: what the burner's mass gives on lags it, Baughn 2026-11-11)
+                    double drawn = a.getFuelBurntKg(), given = a.getFlameJ();
+                    String jade = a.getWaila().get(mods.eln.i18n.I18N.tr("Power")), want = mods.eln.misc.Utils.plotPower("", a.heatPower());
+                    ctx.check("fuel furnace: Jade shows the power it fires at", want.equals(jade), jade + " against " + want);
+                    ctx.check("fuel furnace: a gasoline and diesel mix burns", given > 0 && drawn > 0, given + " J from " + drawn + " kg");
+                    ctx.check("fuel furnace: the mix's heating value lies between gasoline's and diesel's",
+                        perKg0 < perKgGasoline && perKg0 > perKgDiesel, String.format("%.4g J/kg (gasoline %.4g, diesel %.4g)", perKg0, perKgGasoline, perKgDiesel));
+                    // (what it drew is either given or still in its bank, at most a step's heat)
+                    double banked = drawn * perKg0 - given;
+                    ctx.check("fuel furnace: the heat it gave is what it drew times the mix's heating value",
+                        banked >= -0.02 * given && banked < 0.05 * drawn * perKg0 + 0.1 * a.heatPower(),
+                        String.format("drew %.5f kg x %.4g J/kg = %.0f J, gave %.0f J", drawn, perKg0, drawn * perKg0, given));
+                }
+                case "coke_balance" -> {
+                    ctx.check("fuel furnace: residue cokes its burner faster than crude", a.getCoke() > 3 * b.getCoke() && b.getCoke() > 0,
+                        String.format("residue %.5f, crude %.5f", a.getCoke(), b.getCoke()));
+                    ctx.check("fuel furnace: heavy oil cokes it, slower than crude", d.getCoke() > 0 && d.getCoke() < b.getCoke(),
+                        String.format("heavy oil %.5f, crude %.5f", d.getCoke(), b.getCoke()));
+                    ctx.check("fuel furnace: diesel clears a coked burner as it burns", c.getCoke() < 0.2 && c.heatPower() > 0, c.getCoke() + ", " + c.heatPower() + " W");
+                }
+                case "water_drowns_fire" -> {
+                    String what = String.format("lit before %b; at burner %d, switch after %b, steamed %.4f kg; switched on wet: +%.0f J, lit %b; drained: +%.0f J; %s",
+                        litBefore, atBurnerEarly, switchAfter, a.getSteamedKg(), heatWet, litWet, a.getHeatGivenJ() - heatDrowned, a.getWaila());
+                    ctx.check("fuel furnace: water poured into it burning sinks to its burner and drowns the fire (steam, switch off)",
+                        litBefore && atBurnerEarly == mods.eln.sim.fluid.SpeciesRegistry.WATER && !switchAfter && a.getSteamedKg() > 0, what);
+                    ctx.check("fuel furnace: switched on with the water still there, it stays out", !litWet && heatWet == 0, what);
+                    ctx.check("fuel furnace: the water drained and switched on, it burns again", a.getHeatGivenJ() > heatDrowned && a.getFire().level > 0, what);
+                }
+                case "legacy_tank" -> ctx.check("fuel furnace: an old save's tank of crude loads into its vessel as crude's cuts", legacy.isEmpty(), legacy);
+                case "idle_breather" -> {
+                    // (by its vessel's gasoline: nothing else goes in or out)
+                    double first = (perKg0 - kg0) / perKgGasoline, mb = (perKg0 - gasoline(a.getVessel())) / perKgGasoline, perHour = (mb - first) * 3600 / (1200 * 0.05);
+                    ctx.check("fuel furnace: a tank of gasoline standing idle breathes out under 1 mB as its head space saturates", first < 1,
+                        String.format("%.3f mB in its first 60 s", first));
+                    ctx.check("fuel furnace: then it loses under 2 mB an hour through its breather", perHour < 2,
+                        String.format("%.3f mB in the next 60 s (%.2f mB/h), %.0f mB left", mb - first, perHour, a.fuelMb()));
+                }
+                case "overfill" -> {
+                    // (by the rig's gasoline: the tank, the pipe and the furnace; only the breather lets any out)
+                    double gone = (kg0 - gasolineIn(ctx)) / perKgGasoline;
+                    ctx.check("fuel furnace: filled from a pressurised tank, no liquid leaves by its breather", gone < 1 && a.fuelMb() > 1900,
+                        String.format("%.2f mB gone from the rig, %.0f mB in it, %s", gone, a.fuelMb(), a.getWaila()));
+                }
+            }
+        }
+    }
+
+    /**
      * Baughn 2026-11-03: the separator's basin shows its oil rising as its tank fills. Half a tank (nothing at its
      * outlet) publishes a basin half full, the last float of its packet (what ElectricalMachineRender.basin reads).
      */
@@ -680,8 +1571,7 @@ public final class OilCases {
 
         public void build(TestContext ctx) {
             sep = (mods.eln.transparentnode.electricalmachine.OilSeparatorElement) ctx.placeTransparent(0 + (80 << 6), ctx.at(3, 1, 1));
-            ((mods.eln.fluid.ElementFluidHandler) sep.getFluidHandler()).fill(new net.neoforged.neoforge.fluids.FluidStack(Oil.CRUDE.get(),
-                mods.eln.transparentnode.electricalmachine.OilSeparatorDescriptor.TANK_MB / 2), true);
+            sep.putFluid(Oil.CRUDE.get(), mods.eln.transparentnode.electricalmachine.OilSeparatorDescriptor.TANK_MB / 2);
         }
 
         public void measure(TestContext ctx) {
@@ -742,9 +1632,8 @@ public final class OilCases {
         }
 
         public void measure(TestContext ctx) {
-            var tank = (mods.eln.fluid.ElementFluidHandler) pump.getFluidHandler();
-            int got = tank.getFluidAmount();
-            var fluid = tank.getFluid().getFluid();
+            int got = (int) pump.producedMb;
+            var fluid = pump.lastWater ? net.minecraft.world.level.material.Fluids.WATER : Oil.CRUDE.get();
             BlockPos under = ctx.at(2, 0, 1).below();
             ctx.line("oil: pump " + (water ? "water" : "lake") + ": " + got + " mB in 5 s, " + pump.getWaila() + ", at(under) "
                 + ReservoirData.get(ctx.level()).at(ctx.level(), under) + ", block under " + ctx.level().getBlockState(under) + ", casing " + ctx.level().getBlockState(ctx.at(2, 0, 1)));
@@ -891,6 +1780,10 @@ public final class OilCases {
             return "oil_steam_turbine";
         }
 
+        public boolean checkLimitCycles() {
+            return false;   // (steam() tops the inlet up 0.5 g at a time under 10 bar: a sawtooth by design)
+        }
+
         public int width() {
             return 7;
         }
@@ -951,6 +1844,10 @@ public final class OilCases {
 
         public String id() {
             return "oil_steam_turbine_low_pressure";
+        }
+
+        public boolean checkLimitCycles() {
+            return false;   // (steam() tops the inlet up 0.5 g at a time under 10 bar: a sawtooth by design)
         }
 
         public int width() {
@@ -1060,6 +1957,20 @@ public final class OilCases {
         }
     }
 
+    /**
+     * Crude in a node (mB): crude is a mixture alias now (Baughn 2026-11-10), so its five cuts and natural gas, by mass,
+     * counted as crude's mB (the species itself, from an old save, too).
+     */
+    static double crudeMb(mods.eln.sim.fluid.FluidNode n) {
+        if (n == null) return 0;
+        var reg = mods.eln.sim.fluid.SpeciesRegistry.get();
+        int crude = reg.id("eln:crude_oil");
+        double kg = n.mass(crude);
+        double[][] mix = reg.mixture(crude, false);
+        if (mix != null) for (double c : mix[0]) kg += n.mass((int) c);
+        return kg / mods.eln.fluid.FluidSpecies.kgPerMb(crude, false);
+    }
+
     /** A turbine with a condenser against its exhaust side (right of its front: +z for a front of XN), and its load. */
     static mods.eln.oil.SteamGeneratorElement[] plant(Wp10aCases.Layout l, int dx, boolean condenser) {
         var t = (mods.eln.oil.SteamGeneratorElement) l.device(12 + (82 << 6), dx, 1);
@@ -1093,6 +2004,10 @@ public final class OilCases {
 
         public String id() {
             return "oil_steam_turbine_condenser";
+        }
+
+        public boolean checkLimitCycles() {
+            return false;   // (steam() tops the inlet up 0.5 g at a time under 10 bar: a sawtooth by design)
         }
 
         public int width() {
@@ -1133,17 +2048,108 @@ public final class OilCases {
                 && alone.vessel.T() > 273 && alone.vessel.T() < 320 && Math.abs(alone.heatW) < 50, alone == null ? "none" : alone.getWaila().toString());
             // (its outlet is dead-ended: it pumps, or stands at its shut-off head)
             ctx.check("oil: its condensate pump runs with the shaft", c.v.speed > 0.9 && (c.pumped > 0 || c.floodShare() < 0.01
-                || c.v.backPa > 0.95 * c.v.curve.shutoffPa), String.format("%.0f%% speed, %.0f mB/s pumped against %.2f bar", c.v.speed * 100, c.pumped, c.v.backPa / 1e5));
+                || c.v.backPa > 0.95 * c.v.headPa), String.format("%.0f%% speed, %.0f mB/s pumped against %.2f bar (head %.2f bar, hotwell %.1f%%)",
+                c.v.speed * 100, c.pumped, c.v.backPa / 1e5, c.v.headPa / 1e5, c.floodShare() * 100));
             // Jade says whether the pump runs, and why not (Baughn: a cold start gave no hint)
             String running = c.getWaila().get(mods.eln.i18n.I18N.tr("Condensate pump")), idle = alone.getWaila().get(mods.eln.i18n.I18N.tr("Condensate pump"));
             ctx.check("oil: Jade: the running condenser's pump shows its share and flow", running != null && running.endsWith("mB/s"), "" + running);
             ctx.check("oil: Jade: a condenser without a turning turbine says its pump is stopped", idle != null && idle.startsWith("stopped"), "" + idle);
-            ctx.check("oil: Jade: its fill", c.getWaila().containsKey(mods.eln.i18n.I18N.tr("Fill")), "" + c.getWaila());
+            ctx.check("oil: Jade: its water level, in the headline", new java.util.ArrayList<>(c.getWaila().keySet()).indexOf(mods.eln.i18n.I18N.tr("Water level")) == 1,
+                "" + c.getWaila());
         }
     }
 
     /** The makeup flange's float valve (Baughn: a 200V pump on it filled a condenser to the flood line): with makeup
      *  water at 10 bar behind it, a condenser 30 % full takes none, one 5 % full takes it in. */
+    /**
+     * A condenser on its running turbine with a dry dead-end pipe stub on its makeup flange and its float valve open: the
+     * stub's air drains into the vacuum, cooling as it expands (a node drained like this once fell under the EOS's 120 K
+     * floor and its network stopped converging). The harness checks the network keeps making progress, and the pipe's
+     * wall keeps the gas near the air's temperature. The ejector, a gas pump, takes some of the vessel's steam too.
+     */
+    static final class CondenserDryMakeupStub implements TestCase {
+        mods.eln.oil.SteamGeneratorElement t;
+        mods.eln.oil.CondenserElement c;
+        mods.eln.sim.IProcess feed;
+        BlockPos stub;
+        boolean primed;
+
+        public String id() {
+            return "oil_condenser_dry_makeup_stub";
+        }
+
+        public int width() {
+            return 3;
+        }
+
+        public int ticks() {
+            return 600;
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            t = plant(l, 1, true)[0];
+            stub = ctx.at(1, 2, 2);
+            PipeCases.lay(ctx, stub, 0, 8, 0, 8, 8, 8, 8);
+            mods.eln.Eln.simulator.addSlowProcess(feed = x -> {
+                if (c == null) c = condenserOf(ctx, ctx.at(1, 1, 2));
+                if (c == null || c.vessel == null || t.inlet == null) return;
+                if (!primed) {
+                    primed = true;
+                    // (5 % water: under the float valve's open level)
+                    mods.eln.sim.fluid.EaUnits.addWater(c.vessel, 0.05 * c.vessel.volume * mods.eln.sim.fluid.Water.RHO_L, 300, false);
+                }
+                steam(t);
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            mods.eln.Eln.simulator.removeSlowProcess(feed);
+            var run = PipeCases.node(ctx, stub);
+            var n = run == null ? null : mods.eln.fluid.FluidWorld.nodeFor(((mods.eln.node.voxel.PipePart) run.parts.get(0)).fluid);
+            ctx.line("dry makeup stub: condenser " + (c == null ? "none" : c.getWaila()) + "; stub "
+                + (n == null ? "none" : String.format("%.4f bar, %.0f K, %.3g kg", n.P() / 1e5, n.T(), n.mass())));
+            ctx.check("condenser: on its running turbine it pulls a vacuum with the stub on (under 0.5 bar)", c != null && c.vessel.P() < 0.5e5,
+                c == null ? "none" : String.format("%.3f bar", c.vessel.P() / 1e5));
+            ctx.check("condenser: the stub's wall keeps its air near the air's temperature (over 250 K)", n != null && n.T() > 250,
+                n == null ? "none" : String.format("%.0f K", n.T()));
+            // (the ejector is a gas pump to the air: it takes the vessel's steam with its air, Baughn 2026-11-10: make it real)
+            ctx.check("condenser: its ejector takes air and some steam out", c != null && c.v.totalAirKg > 0 && c.v.totalEjectedSteamKg > 0,
+                c == null ? "none" : String.format("air %.3g kg, steam %.3g kg", c.v.totalAirKg, c.v.totalEjectedSteamKg));
+        }
+    }
+
+    /**
+     * A condenser on a bench, nothing connected (Baughn 2026-11-10: it shouldn't draw a vacuum): its ejector has no
+     * motive steam, so it holds its air at 1 atm.
+     */
+    static final class CondenserOnABench implements TestCase {
+        mods.eln.oil.CondenserElement c;
+
+        public String id() {
+            return "oil_condenser_on_a_bench_no_vacuum";
+        }
+
+        public int width() {
+            return 3;
+        }
+
+        public int ticks() {
+            return 400;
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            l.device(28 + (82 << 6), 1, 1);
+        }
+
+        public void measure(TestContext ctx) {
+            c = condenserOf(ctx, ctx.at(1, 1, 1));
+            ctx.check("condenser on a bench: no vacuum (over 0.9 bar)", c != null && c.vessel.P() > 0.9e5,
+                c == null ? "none" : String.format("%.3f bar", c.vessel.P() / 1e5));
+        }
+    }
+
     static final class CondenserMakeupFloat implements TestCase {
         mods.eln.oil.CondenserElement full, low;
         mods.eln.sim.IProcess feed;
@@ -1166,6 +2172,9 @@ public final class OilCases {
             Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
             l.device(28 + (82 << 6), 1, 1);
             l.device(28 + (82 << 6), 3, 1);
+            // (a pipe stub on each makeup flange: unpiped, the flange is blind)
+            PipeCases.lay(ctx, ctx.at(1, 2, 1), 0, 8, 0, 8, 8, 8, 8);
+            PipeCases.lay(ctx, ctx.at(3, 2, 1), 0, 8, 0, 8, 8, 8, 8);
             mods.eln.Eln.simulator.addSlowProcess(feed = x -> {
                 if (full == null) full = condenserOf(ctx, ctx.at(1, 1, 1));
                 if (low == null) low = condenserOf(ctx, ctx.at(3, 1, 1));
@@ -1204,8 +2213,8 @@ public final class OilCases {
      * The condensate pump's curve (Baughn 2026-11-03: a turbine at its rated pressure works on its own, an overclocked
      * one needs a pipe pump): a loaded 50V turbine on steam at boilerPa into a Small Steam Condenser whose front feeds a
      * boiler held at boilerPa (a fixed node, half water). At the rating (10 bar) the pump returns what the turbine
-     * exhausts and the level holds, and so at 14 bar (a governed 10 bar turbine's boiler, AdventurAgent on live: the
-     * first cut's 13 bar shut-off flooded it); at 21 bar (past its 20 bar shut-off) it returns nothing and the vessel
+     * exhausts and the level holds (in the band of its level control), and so at 14 bar (a governed 10 bar turbine's boiler, AdventurAgent on live: the
+     * first cut's 13 bar shut-off flooded it); at 21 bar (past its 18 bar shut-off) it returns nothing and the vessel
      * fills; with a 200V Inline Pump between them at 21 bar it keeps up again.
      */
     static final class CondensateReturn extends PlumbingCases.Big {
@@ -1260,7 +2269,7 @@ public final class OilCases {
                 var s = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) ctx.placeSix(Wp11Cases.SOURCE, src);
                 s.networkUnserialize(ctx.stream(out -> {
                     out.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                    out.writeFloat(200f);
+                    out.writeFloat((float) mods.eln.Eln.MVU);
                 }));
                 boilerAt = pp.west();
                 spot = mods.eln.oil.TankElement.sideSpot(5, mods.eln.oil.InlinePumpElement.LINE_Y);
@@ -1282,8 +2291,8 @@ public final class OilCases {
                 if (t.inlet == null || c.vessel == null || inlinePump && pump.inlet == null) return;
                 if (!primed) {
                     primed = true;
-                    // (20 % water: the pump's port draws liquid; under the float valve's shut level)
-                    mods.eln.sim.fluid.EaUnits.addWater(c.vessel, 0.2 * c.vessel.volume * mods.eln.sim.fluid.Water.RHO_L, 320, false);
+                    // (32 % water: in the band the pump's level control works in, about where it settles at full power)
+                    mods.eln.sim.fluid.EaUnits.addWater(c.vessel, 0.32 * c.vessel.volume * mods.eln.sim.fluid.Water.RHO_L, 320, false);
                     if (inlinePump) for (var n : new mods.eln.sim.fluid.FluidNode[]{pump.inlet, pump.outlet}) {
                         var m = mods.eln.fluid.FluidWorld.nodeFor(n);
                         m.fill(0.95 * m.volume * mods.eln.sim.fluid.Water.RHO_L, mods.eln.sim.fluid.Water.P_ATM, 300);
@@ -1315,7 +2324,7 @@ public final class OilCases {
             if (boilerPa <= mods.eln.oil.CondensatePump.RATED_OVER_NOMINAL * mods.eln.oil.SteamGeneratorDescriptor.NOMINAL_PA || inlinePump) {
                 ctx.check(id + ": its condensate goes back to the boiler (over 90 %)", pumped > 0.9 * steam,
                     String.format("%.1f of %.1f g", pumped * 1000, steam * 1000));
-                ctx.check(id + ": the level holds (no rise, under the float valve's shut level)", fill <= fill0 + 0.01 && fill < mods.eln.oil.CondenserVessel.MAKEUP_SHUT,
+                ctx.check(id + ": the level holds (no rise, within the pump's level band)", fill <= fill0 + 0.01 && fill < mods.eln.oil.CondenserVessel.LEVEL_FULL,
                     String.format("%.1f%% -> %.1f%%", fill0 * 100, fill * 100));
                 ctx.check(id + ": Jade: the pump's back-pressure and its share of rated flow", jade.startsWith("against") && jade.endsWith("of its rated flow"), jade);
             } else {
@@ -1324,6 +2333,681 @@ public final class OilCases {
                 ctx.check(id + ": and the vessel fills", fill > fill0 + 0.005, String.format("%.1f%% -> %.1f%%", fill0 * 100, fill * 100));
                 ctx.check(id + ": Jade: shut off, needs a pipe pump", jade.startsWith("against 21") && jade.endsWith("shut off, needs a pipe pump"), jade);
             }
+        }
+    }
+
+    /**
+     * A closed steam plant (Baughn 2026-11-04: no GameTest built one, so the boiler feed valve's limit cycle passed them
+     * all): a heated boiler, an iron pipe from its top to a loaded 50V turbine, a Small Steam Condenser on the turbine's
+     * exhaust, and an iron pipe from the condenser's pump back into the boiler's feed flange. Its firing steps from
+     * 4 kW to 7 kW halfway (under what the turbine can take, so the boiler stays under the pump's shut-off head). The feed pipe holds one pressure (no step-to-step flips), the condensate goes back to the
+     * boiler, the condenser doesn't flood, the boiler neither boils dry nor overfills, and the turbine makes power.
+     */
+    static final class ClosedPlant implements TestCase {
+        mods.eln.oil.BoilerElement boiler;
+        mods.eln.oil.SteamGeneratorElement turbine;
+        mods.eln.oil.CondenserElement c;
+        mods.eln.sim.IProcess fire;
+        BlockPos feedAt;
+        int tick, flips, steps;
+        double heat = 4000, p1 = Double.NaN, p2 = Double.NaN, lo = 1e9, hi, steam0, pumped0, fillLo = 1e9, fillHi, floodHi, power;
+        static final int STEP = 1400, WATCH = 2200;
+
+        public String id() {
+            return "fluid_closed_plant_feed_loop";
+        }
+
+        public int width() {
+            return 7;
+        }
+
+        public int ticks() {
+            return 2800;
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            boiler = (mods.eln.oil.BoilerElement) l.device(8 + (82 << 6), 1, 1);
+            boiler.front = mods.eln.misc.Direction.XN;   // (feed flange south)
+            boiler.reconnect();
+            boiler.thermal.Tc = 99 - (mods.eln.sim.PhysicalConstant.Tref - mods.eln.sim.PhysicalConstant.TCelsius);
+            boiler.fromTanks(5600, 0);
+            boiler.showTanks();
+            turbine = plant(l, 4, true)[0];
+            c = condenserOf(ctx, ctx.at(4, 1, 2));
+            for (int i = 0; i < 4 && c.front != mods.eln.misc.Direction.XN; i++) mods.eln.fluid.FluidPlacement.turn(c);
+            // steam: up out of the boiler, east, down into the turbine (as pipe_boiler_to_turbine)
+            PipeCases.lay(ctx, ctx.at(1, 2, 1), 0, 8, 0, 8, 8, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(2, 2, 1), 0, 0, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(3, 2, 1), 0, 0, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(4, 2, 1), 0, 0, 8, 8, 8, 8, 8, 8, 0, 8);
+            // condensate: west out of the condenser's front, along, then north into the boiler's feed flange
+            feedAt = ctx.at(2, 1, 2);
+            PipeCases.lay(ctx, ctx.at(3, 1, 2), 0, 16, 8, 8, 0, 8, 8);
+            PipeCases.lay(ctx, feedAt, 0, 16, 8, 8, 0, 8, 8);
+            PipeCases.lay(ctx, ctx.at(1, 1, 2), 0, 16, 8, 8, 8, 8, 8, 8, 8, 0);
+            for (int x = 1; x <= 3; x++) l.used.add(ctx.at(x, 1, 2));
+            mods.eln.Eln.simulator.addSlowProcess(fire = t -> {
+                if (c.vessel == null || boiler.vessel == null) return;
+                if (tick == 0) {   // (28 % water: in the pump's level band, about where it settles at this pressure)
+                    mods.eln.sim.fluid.EaUnits.addWater(c.vessel, 0.28 * c.vessel.volume * mods.eln.sim.fluid.Water.RHO_L, 320, false);
+                    // the feed run full of water, as a plant that has run a while: a liquid-full pipe is stiff, the case
+                    // where a check valve decided at the step's start flipped it (Baughn's base)
+                    var run = mods.eln.fluid.FluidWorld.nodeFor(boiler.feed);
+                    run.fill(0.995 * run.volume * mods.eln.sim.fluid.Water.RHO_L, mods.eln.sim.fluid.Water.P_ATM, 300);
+                    run.update();
+                }
+                if (++tick == STEP) heat = 7000;
+                boiler.thermal.moveEnergyTo(heat * t);
+                if (tick == WATCH) {
+                    steam0 = c.v.totalSteamKg;
+                    pumped0 = c.v.totalPumpedKg;
+                }
+                if (tick > WATCH) {
+                    // the feed pipe, step to step: a flip is a turn back by over 0.05 bar both ways
+                    // (the run is lumped with the boiler's feed stub)
+                    double p = mods.eln.fluid.FluidWorld.nodeFor(boiler.feed).P();
+                    if (!Double.isNaN(p2) && (p - p1) * (p1 - p2) < 0 && Math.abs(p - p1) > 5e3 && Math.abs(p1 - p2) > 5e3) flips++;
+                    steps++;
+                    p2 = p1;
+                    p1 = p;
+                    lo = Math.min(lo, p);
+                    hi = Math.max(hi, p);
+                    fillLo = Math.min(fillLo, boiler.fill());
+                    fillHi = Math.max(fillHi, boiler.fill());
+                    floodHi = Math.max(floodHi, c.floodShare());
+                    power += turbine.source.getEffectiveP() / (ticks() - WATCH);
+                }
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            mods.eln.Eln.simulator.removeSlowProcess(fire);
+            double steam = c.v.totalSteamKg - steam0, pumped = c.v.totalPumpedKg - pumped0;
+            ctx.line(String.format("closed plant: feed pipe %.2f..%.2f bar, %d flips in %d steps; %.1f g condensed, %.1f g pumped; boiler fill %.0f..%.0f%%, "
+                    + "condenser up to %.0f%%; %.0f W; boiler %s; turbine %s; condenser %s", lo / 1e5, hi / 1e5, flips, steps, steam * 1000, pumped * 1000,
+                fillLo * 100, fillHi * 100, floodHi * 100, power, boiler.getWaila(), turbine.getWaila(), c.getWaila()));
+            boolean joined = false;
+            for (var q : c.fluidPorts()) joined |= mods.eln.fluid.FluidWorld.networkOf(q.node()) == mods.eln.fluid.FluidWorld.networkOf(boiler.feed);
+            ctx.check("closed plant: the condenser's pump feeds the boiler (one network)", joined && mods.eln.fluid.FluidWorld.networkOf(boiler.feed) != null, "");
+            ctx.check("closed plant: the turbine makes power after the firing step", power > 300, String.format("%.0f W", power));
+            ctx.check("closed plant: the feed pipe holds one pressure (no step-to-step flips)", steps > 100 && flips < steps / 10,
+                flips + " of " + steps + String.format(", %.2f..%.2f bar", lo / 1e5, hi / 1e5));
+            ctx.check("closed plant: the condensate goes back to the boiler (90 %+)", steam > 0.02 && pumped > 0.9 * steam,
+                String.format("%.1f of %.1f g", pumped * 1000, steam * 1000));
+            ctx.check("closed plant: the condenser doesn't flood", floodHi < mods.eln.oil.CondenserVessel.LEVEL_FULL, String.format("%.0f%%", floodHi * 100));
+            ctx.check("closed plant: the boiler neither boils dry nor overfills", fillLo > 0.3 && fillHi < 1.02, String.format("%.0f..%.0f%%", fillLo * 100, fillHi * 100));
+        }
+    }
+
+    /**
+     * Two turbine units on one boiler and one condensate line (todo #468; a player's plant, 2026-11-14): a heated boiler
+     * feeds two loaded 50V turbines, the second throttled to 15 %, each with a Small Steam Condenser; both condensers'
+     * pumps return into one iron line, tee'd into the boiler's feed flange, and each condenser's makeup flange has water
+     * at 2 bar behind its float valve. Before the pumps followed their hotwells, the line stood at the pumps' shut-off
+     * head and which pump delivered was arbitrary: one condenser fed the boiler on makeup water while the busy one
+     * flooded and burnt its turbine. Neither condenser floods now, makeup stays near the plant's losses, and both
+     * turbines run.
+     */
+    static class TwoUnitPlant implements TestCase {
+        mods.eln.oil.BoilerElement boiler;
+        mods.eln.oil.SteamGeneratorElement busy, light;
+        mods.eln.oil.CondenserElement cBusy, cLight;
+        mods.eln.sim.IProcess fire;
+        int tick;
+        double makeup, makeup0, pumped0, ejected0, boiler0, busy0, light0, floodBusy, floodLight, fillLo = 1e9, fillHi, power;
+        static final int WATCH = 2400, TICKS = 6000;
+        /** The load heaters (Long keeps them cool: without a regulator they heat until their watchdog burns them). */
+        final java.util.List<mods.eln.oil.ElectricHeaterElement> heaters = new java.util.ArrayList<>();
+
+        public String id() {
+            return "fluid_two_unit_plant_shares_condensate";
+        }
+
+        /** Whether the light unit has its load (Long.unloaded: no, it idles at speed on its governor). */
+        boolean lightLoaded() {
+            return true;
+        }
+
+        /** Whether water may not pile up in a hotwell over the watch (Long checks that it settles instead). */
+        boolean checkPileUp() {
+            return true;
+        }
+
+        /** A sample every so often (Long); called each tick after WATCH's bookkeeping. */
+        void sample() {
+        }
+
+        /** Where the plant's water is (g): boiler, hotwells busy/light, feed line, makeup stubs, turbine inlets, the rest (steam pipes). */
+        String breakdown(double total) {
+            double b = boiler.vessel.mWater, hb = cBusy.vessel.mWater, hl = cLight.vessel.mWater;
+            var feed = mods.eln.fluid.FluidWorld.nodeFor(boiler.feed);
+            double f = feed.mWater, mk = mods.eln.fluid.FluidWorld.nodeFor(cBusy.inlet).mWater + mods.eln.fluid.FluidWorld.nodeFor(cLight.inlet).mWater;
+            var ib = mods.eln.fluid.FluidWorld.nodeFor(busy.inlet);
+            var il = mods.eln.fluid.FluidWorld.nodeFor(light.inlet);
+            double in = ib.mWater + (il == ib ? 0 : il.mWater), inL = ib.mLiquid() + (il == ib ? 0 : il.mLiquid());
+            double restL = 0;
+            var counted = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<mods.eln.sim.fluid.FluidNode, Boolean>());
+            for (var n : new mods.eln.sim.fluid.FluidNode[]{boiler.vessel, cBusy.vessel, cLight.vessel, feed, mods.eln.fluid.FluidWorld.nodeFor(cBusy.inlet),
+                mods.eln.fluid.FluidWorld.nodeFor(cLight.inlet), ib, il}) counted.add(n);
+            var net = mods.eln.fluid.FluidWorld.networkOf(boiler.vessel);
+            if (net != null) for (var n : net.nodes) if (!n.fixed && !counted.contains(n)) restL += n.mLiquid();
+            return String.format("boiler %.1f, hotwells %.1f / %.1f, feed %.1f, makeup stubs %.1f, turbine inlets %.2f (liquid %.2f), rest %.2f (liquid on the boiler's network %.2f)",
+                b * 1000, hb * 1000, hl * 1000, f * 1000, mk * 1000, in * 1000, inL * 1000, (total - b - hb - hl - f - mk - in) * 1000, restL * 1000);
+        }
+
+        /** The water in the plant (kg): every node of the networks the boiler, the condensers and the turbines are on. */
+        double inventory() {
+            var nets = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<mods.eln.sim.fluid.FluidNetwork, Boolean>());
+            for (var n : new mods.eln.sim.fluid.FluidNode[]{boiler.vessel, boiler.feed, cBusy.vessel, cLight.vessel, cBusy.inlet, cLight.inlet,
+                cBusy.outlet, cLight.outlet, busy.inlet, light.inlet}) {
+                var net = n == null ? null : mods.eln.fluid.FluidWorld.networkOf(n);
+                if (net != null) nets.add(net);
+            }
+            double m = 0;
+            for (var net : nets) for (var n : net.nodes) if (!n.fixed) m += n.mWater;
+            return m;
+        }
+
+        public int width() {
+            return 9;
+        }
+
+        public int height() {
+            return 7;
+        }
+
+        public int depth() {
+            return 7;
+        }
+
+        public int floorDepth() {
+            return 7;
+        }
+
+        public int ticks() {
+            return TICKS;
+        }
+
+        public boolean checkLimitCycles() {
+            return false;   // (the makeup flanges are topped up in small amounts: a sawtooth by design)
+        }
+
+        static mods.eln.oil.SteamGeneratorElement unit(Wp10aCases.Layout l, int dz) {
+            return unit(l, dz, null);
+        }
+
+        static mods.eln.oil.SteamGeneratorElement unit(Wp10aCases.Layout l, int dz, java.util.List<mods.eln.oil.ElectricHeaterElement> heaters) {
+            return unit(l, dz, heaters, true);
+        }
+
+        /** A turbine facing west with its condenser south of it, and (loaded) its load heater east of it. */
+        static mods.eln.oil.SteamGeneratorElement unit(Wp10aCases.Layout l, int dz, java.util.List<mods.eln.oil.ElectricHeaterElement> heaters, boolean loaded) {
+            var t = (mods.eln.oil.SteamGeneratorElement) l.device(12 + (82 << 6), 4, dz);
+            t.front = mods.eln.misc.Direction.XN;
+            t.reconnect();
+            if (loaded) {
+                var h = (mods.eln.oil.ElectricHeaterElement) l.device(0 + (82 << 6), 5, dz);
+                if (heaters != null) heaters.add(h);
+                h.front = mods.eln.misc.Direction.ZN;
+                h.reconnect();
+            }
+            l.device(28 + (82 << 6), 4, dz + 1);
+            return t;
+        }
+
+        static mods.eln.oil.CondenserElement facingWest(TestContext ctx, BlockPos p) {
+            var c = condenserOf(ctx, p);
+            for (int i = 0; i < 4 && c.front != mods.eln.misc.Direction.XN; i++) mods.eln.fluid.FluidPlacement.turn(c);
+            return c;
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            boiler = (mods.eln.oil.BoilerElement) l.device(8 + (82 << 6), 1, 1);
+            boiler.front = mods.eln.misc.Direction.XN;   // (feed flange south)
+            boiler.reconnect();
+            boiler.thermal.Tc = 99 - (mods.eln.sim.PhysicalConstant.Tref - mods.eln.sim.PhysicalConstant.TCelsius);
+            boiler.fromTanks(8000, 0);
+            boiler.showTanks();
+            busy = unit(l, 1, heaters);
+            light = unit(l, 4, heaters, lightLoaded());
+            light.controls.throttle = lightLoaded() ? 0.15 : 1;
+            cBusy = facingWest(ctx, ctx.at(4, 1, 2));
+            cLight = facingWest(ctx, ctx.at(4, 1, 5));
+            // steam: up out of the boiler and east to the busy turbine; a tee at x 3 runs south to the light one
+            PipeCases.lay(ctx, ctx.at(1, 2, 1), 0, 8, 0, 8, 8, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(2, 2, 1), 0, 0, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(3, 2, 1), 0, 0, 8, 8, 16, 8, 8);
+            String err = PipeCases.node(ctx, ctx.at(3, 2, 1)).addJoined(new mods.eln.node.voxel.PipePart(0, new int[]{8, 8, 8, 8, 8, 16}), 8, 8, 8);
+            if (err != null) throw new IllegalStateException("steam tee: " + err);
+            PipeCases.lay(ctx, ctx.at(4, 2, 1), 0, 0, 8, 8, 8, 8, 8, 8, 0, 8);
+            PipeCases.lay(ctx, ctx.at(3, 2, 2), 0, 8, 8, 0, 8, 8, 16);
+            PipeCases.lay(ctx, ctx.at(3, 2, 3), 0, 8, 8, 0, 8, 8, 16);
+            PipeCases.lay(ctx, ctx.at(3, 2, 4), 0, 8, 8, 0, 8, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(4, 2, 4), 0, 0, 8, 8, 8, 8, 8, 8, 0, 8);
+            // condensate: west out of each condenser's front; the light one's line runs north along x 2 into a tee on
+            // the busy one's, which goes on into the boiler's feed flange
+            PipeCases.lay(ctx, ctx.at(3, 1, 2), 0, 16, 8, 8, 0, 8, 8);
+            PipeCases.lay(ctx, ctx.at(2, 1, 2), 0, 16, 8, 8, 0, 8, 8);
+            err = PipeCases.node(ctx, ctx.at(2, 1, 2)).addJoined(new mods.eln.node.voxel.PipePart(0, new int[]{8, 8, 8, 8, 8, 16}), 8, 8, 8);
+            if (err != null) throw new IllegalStateException("condensate tee: " + err);
+            PipeCases.lay(ctx, ctx.at(1, 1, 2), 0, 16, 8, 8, 8, 8, 8, 8, 8, 0);
+            PipeCases.lay(ctx, ctx.at(3, 1, 5), 0, 16, 8, 8, 0, 8, 8);
+            PipeCases.lay(ctx, ctx.at(2, 1, 5), 0, 16, 8, 8, 8, 8, 8, 8, 8, 0);
+            PipeCases.lay(ctx, ctx.at(2, 1, 4), 0, 8, 8, 16, 8, 8, 0);
+            PipeCases.lay(ctx, ctx.at(2, 1, 3), 0, 8, 8, 16, 8, 8, 0);
+            for (int[] b : new int[][]{{1, 2}, {2, 2}, {3, 2}, {2, 3}, {2, 4}, {2, 5}, {3, 5}}) l.used.add(ctx.at(b[0], 1, b[1]));
+            // (a pipe stub on each makeup flange: unpiped, the flange is blind)
+            PipeCases.lay(ctx, ctx.at(4, 2, 2), 0, 8, 0, 8, 8, 8, 8);
+            PipeCases.lay(ctx, ctx.at(4, 2, 5), 0, 8, 0, 8, 8, 8, 8);
+            mods.eln.Eln.simulator.addSlowProcess(fire = t -> {
+                if (cBusy.vessel == null || cLight.vessel == null || boiler.vessel == null || cBusy.inlet == null || cLight.inlet == null) return;
+                if (tick == 0) {   // (28 % water in each: in the pump's level band; the feed run full, as a plant that has run)
+                    for (var c : new mods.eln.oil.CondenserElement[]{cBusy, cLight})
+                        mods.eln.sim.fluid.EaUnits.addWater(c.vessel, 0.28 * c.vessel.volume * mods.eln.sim.fluid.Water.RHO_L, 320, false);
+                    var run = mods.eln.fluid.FluidWorld.nodeFor(boiler.feed);
+                    run.fill(0.995 * run.volume * mods.eln.sim.fluid.Water.RHO_L, mods.eln.sim.fluid.Water.P_ATM, 300);
+                    run.update();
+                }
+                tick++;
+                boiler.thermal.moveEnergyTo(7000 * t);
+                // makeup water at 2 bar behind each float valve (into the run's lump; CondenserMakeupFloat), counted
+                for (var c : new mods.eln.oil.CondenserElement[]{cBusy, cLight}) {
+                    var n = mods.eln.fluid.FluidWorld.nodeFor(c.inlet);
+                    for (int k = 0; k < 100 && n.P() < 2e5; k++) {
+                        mods.eln.sim.fluid.EaUnits.addWater(n, 2e-5, 300, false);
+                        makeup += 2e-5;
+                    }
+                }
+                if (tick == WATCH) {
+                    makeup0 = makeup;
+                    pumped0 = cBusy.v.totalPumpedKg + cLight.v.totalPumpedKg;
+                    ejected0 = cBusy.v.totalEjectedSteamKg + cLight.v.totalEjectedSteamKg;
+                    boiler0 = boiler.vessel.mLiquid();
+                    busy0 = cBusy.vessel.mWater;
+                    light0 = cLight.vessel.mWater;
+                }
+                if (tick > WATCH) {
+                    floodBusy = Math.max(floodBusy, cBusy.floodShare());
+                    floodLight = Math.max(floodLight, cLight.floodShare());
+                    fillLo = Math.min(fillLo, boiler.fill());
+                    fillHi = Math.max(fillHi, boiler.fill());
+                    power += (busy.source.getEffectiveP() + light.source.getEffectiveP()) / (ticks() - WATCH);
+                }
+                sample();
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            mods.eln.Eln.simulator.removeSlowProcess(fire);
+            double pumped = cBusy.v.totalPumpedKg + cLight.v.totalPumpedKg - pumped0, made = makeup - makeup0;
+            double ejected = cBusy.v.totalEjectedSteamKg + cLight.v.totalEjectedSteamKg - ejected0, toBoiler = boiler.vessel.mLiquid() - boiler0;
+            double busyGain = cBusy.vessel.mWater - busy0, lightGain = cLight.vessel.mWater - light0;
+            ctx.line(String.format("two units: condensers up to %.0f%% (busy) and %.0f%% (light); over the watch %.1f g pumped, %.1f g makeup, %.1f g ejected "
+                    + "as steam, boiler %+.1f g, hotwells %+.1f / %+.1f g; boiler fill %.0f..%.0f%%; %.0f W; busy %s; light %s; condensers %s / %s",
+                floodBusy * 100, floodLight * 100, pumped * 1000, made * 1000, ejected * 1000, toBoiler * 1000, busyGain * 1000, lightGain * 1000,
+                fillLo * 100, fillHi * 100, power, busy.getWaila(), light.getWaila(), cBusy.getWaila(), cLight.getWaila()));
+            ctx.check("two units: neither condenser floods", floodBusy < mods.eln.oil.CondenserVessel.LEVEL_FULL && floodLight < mods.eln.oil.CondenserVessel.LEVEL_FULL,
+                String.format("%.0f%% / %.0f%%", floodBusy * 100, floodLight * 100));
+            ctx.check("two units: both turbines run, neither burnt", !busy.isBurnt() && !light.isBurnt() && power > 300, String.format("%.0f W", power));
+            ctx.check("two units: the condensate goes back (pumps return water)", pumped > 0.02, String.format("%.1f g", pumped * 1000));
+            // (makeup refills what the plant lost or what the boiler is still taking up. With the level control by head
+            // alone (LOW_FLOW 1, 2026-11-15) the light unit's makeup-level pump passes water while the line is under its
+            // head, so the busy hotwell rises in its level band until its head holds the line there: +30 g, 25 -> 29 %, over
+            // this watch. It settles there, under LEVEL_FULL (fluid_two_unit_plant_long: 33.8 % at 40 minutes, the
+            // plant's water steady); none may pile up in the light one)
+            if (checkPileUp()) ctx.check("two units: no water piles up in the light condenser (the busy one rises in its band)",
+                lightGain < 0.01 * cLight.vessel.volume * 1000 && floodBusy < mods.eln.oil.CondenserVessel.LEVEL_FULL - 0.05,
+                String.format("%+.1f / %+.1f g, busy up to %.0f%%", busyGain * 1000, lightGain * 1000, floodBusy * 100));
+            ctx.check("two units: the boiler neither boils dry nor overfills", fillLo > 0.3 && fillHi < 1.02, String.format("%.0f..%.0f%%", fillLo * 100, fillHi * 100));
+        }
+        /**
+         * The same plant at steady load for 40 simulated minutes (Baughn 2026-11-15, todo #493: does the busy hotwell
+         * settle, and where?). The load heaters are kept cool (unregulated, they burn at 800 C after ~9000 ticks and the
+         * turbines lose their load). Every 2400 ticks it logs the levels, the line, where the water is, and the plant's
+         * water against what came in (makeup) and went out (ejected steam, the casing drains to the ground) since WATCH:
+         * water moves between the hotwells, none is made or lost. Unloaded: the light unit idles at speed on its governor
+         * (its pump turns full on next to no condensate, the worst case for the busy hotwell).
+         */
+        static class Long extends TwoUnitPlant {
+            static final int LONG_TICKS = 48000, SETTLE = LONG_TICKS - 12000;
+            double inv0, settleBusy, settleMakeup, settleInv, out0, worstImbalance;
+
+            public String id() {
+                return "fluid_two_unit_plant_long";
+            }
+
+            public int ticks() {
+                return LONG_TICKS;
+            }
+
+            @Override
+            boolean checkPileUp() {
+                return false;
+            }
+
+            double outKg() {
+                return cBusy.v.totalEjectedSteamKg + cLight.v.totalEjectedSteamKg + busy.drainedAwayKg + light.drainedAwayKg;
+            }
+
+            @Override
+            void sample() {
+                for (var h : heaters) h.thermal.Tc = 20;
+                if (tick < WATCH) return;
+                double inv = inventory();
+                if (tick == WATCH) {
+                    inv0 = inv - makeup;
+                    out0 = outKg();
+                }
+                double out = outKg() - out0, imbalance = inv - (inv0 + makeup - out);
+                worstImbalance = Math.max(worstImbalance, Math.abs(imbalance));
+                if (tick == SETTLE) {
+                    settleBusy = cBusy.floodShare();
+                    settleMakeup = makeup;
+                    settleInv = inv;
+                }
+                if (tick == WATCH || tick == LONG_TICKS) {   // (what the "rest" is: the nodes outside the named groups holding water)
+                    var net = mods.eln.fluid.FluidWorld.networkOf(boiler.vessel);
+                    if (net != null) for (var n : net.nodes)
+                        if (!n.fixed && n.mWater > 0.002) mods.eln.Eln.LOG.info(String.format("[%s] node z %.1f vol %.3g: %.1f g (liquid %.1f g) at %.2f bar%s", id(), n.z, n.volume,
+                            n.mWater * 1000, n.mLiquid() * 1000, n.P() / 1e5, n == boiler.vessel ? " (boiler)" : n == mods.eln.fluid.FluidWorld.nodeFor(boiler.feed) ? " (feed)" : ""));
+                }
+                if (tick % 2400 == 0)
+                    mods.eln.Eln.LOG.info(String.format("[%s] t %5d: hotwells %.2f%% / %.2f%%, line %.2f bar, boiler %.0f%% %.2f bar, %.0f + %.0f W, speeds %.0f / %.0f%%, "
+                            + "pumps %.3f / %.3f g/s; water %.2f g (%s) = at WATCH %.2f + makeup since %.2f - out %.2f %+.3f",
+                        id(), tick, cBusy.floodShare() * 100, cLight.floodShare() * 100, mods.eln.fluid.FluidWorld.nodeFor(boiler.feed).P() / 1e5,
+                        boiler.fill() * 100, boiler.vessel.P() / 1e5, busy.source.getEffectiveP(), light.source.getEffectiveP(), busy.omega * 100, light.omega * 100,
+                        cBusy.v.flowShare() * cBusy.v.curve.freeKgPerS * 1000, cLight.v.flowShare() * cLight.v.curve.freeKgPerS * 1000,
+                        inv * 1000, breakdown(inv), (inv0 + makeup0) * 1000, (makeup - makeup0) * 1000, out * 1000, imbalance * 1000));
+            }
+
+            @Override
+            public void measure(TestContext ctx) {
+                super.measure(ctx);
+                double drift = cBusy.floodShare() - settleBusy, rate = (makeup - settleMakeup) / ((LONG_TICKS - SETTLE) / 20.0), gained = inventory() - settleInv;
+                ctx.line(String.format("two units long: busy hotwell %.2f%% -> %.2f%% over the last %d ticks, makeup %.4f g/s there, the plant's water %+.2f g; water unaccounted at most %.3f g",
+                    settleBusy * 100, cBusy.floodShare() * 100, LONG_TICKS - SETTLE, rate * 1000, gained * 1000, worstImbalance * 1000));
+                ctx.check("two units long: the plant's water is makeup less what left (no water made or lost)", worstImbalance < 1e-3,
+                    String.format("%.3f g", worstImbalance * 1000));
+                ctx.check("two units long: the busy hotwell settles under LEVEL_FULL", Math.abs(drift) < 0.005 && cBusy.floodShare() < mods.eln.oil.CondenserVessel.LEVEL_FULL,
+                    String.format("%.2f%% -> %.2f%%", settleBusy * 100, cBusy.floodShare() * 100));
+                // (the makeup goes on at the plant's loss, the ejector's steam: ~0.01 g/s; none of it may stay)
+                ctx.check("two units long: the makeup only replaces what leaves (the plant's water steady)", Math.abs(gained) < 1e-3,
+                    String.format("%+.2f g over %d ticks, makeup %.4f g/s", gained * 1000, LONG_TICKS - SETTLE, rate * 1000));
+            }
+
+            /** The light unit unloaded, idling at speed. */
+            static final class Unloaded extends Long {
+                public String id() {
+                    return "fluid_two_unit_plant_long_idle";
+                }
+
+                @Override
+                boolean lightLoaded() {
+                    return false;
+                }
+            }
+        }
+    }
+
+
+    /**
+     * A small plant on makeup water that had lost water (a player's plant, 2026-11-15: its boiler ran dry at 10 bar): a
+     * boiler heated through its shell from a 300 C source (heat furnaces' worth), alloy steam pipe to a 48V turbine
+     * holding 10 bar at its inlet (regulator), a Small Steam Condenser, its pump back into the boiler's feed flange, and
+     * makeup water at 5 bar behind the condenser's float valve. It starts low: the boiler at 10 % of its gauge glass, the
+     * hotwell at the makeup's shut level. The steam line loses heat to the air and the turbine's casing drain throws that
+     * condensate away, so the makeup runs. The boiler must fill back up to its feed float, not sit with its heating
+     * surface uncovered.
+     */
+    static final class MakeupPlantRefills implements TestCase {
+        mods.eln.oil.BoilerElement boiler;
+        mods.eln.oil.SteamGeneratorElement turbine;
+        mods.eln.oil.CondenserElement c;
+        mods.eln.sim.IProcess fire;
+        int tick;
+        double makeup, makeup0, makeupLate0, floodHi, fillEnd, fillHalf, power;
+        static final int TICKS = 9000, WATCH = 6000, LATE = 8000;
+        /** The 13-bar variant runs longer (its pump has less head to spare over the boiler: a slower refill). */
+        int ticksN() {
+            return bar == 10 ? TICKS : 4 * TICKS;
+        }
+
+        int watchN() {
+            return ticksN() - (TICKS - WATCH);
+        }
+
+        int lateN() {
+            return ticksN() - (TICKS - LATE);
+        }
+        /** The turbine's regulator set point (bar): 10 as the player's; 13 and 14, a boiler held over its rated pressure (a
+         *  governed turbine's boiler sits at ~14 bar, CondensatePump). */
+        final double bar;
+        /** The load heater (kept cool in the longer variant: unregulated, it burns at 800 C after ~9000 ticks). */
+        final java.util.List<mods.eln.oil.ElectricHeaterElement> heaters = new java.util.ArrayList<>();
+        /** The boiler's fill every 3000 ticks (the longer variant's log). */
+        final StringBuilder fills = new StringBuilder();
+
+        MakeupPlantRefills() {
+            this(10);
+        }
+
+        MakeupPlantRefills(double bar) {
+            this.bar = bar;
+        }
+
+        public String id() {
+            return bar == 10 ? "fluid_makeup_plant_refills_boiler" : String.format("fluid_makeup_plant_refills_boiler_%.0fbar", bar);
+        }
+
+        public int width() {
+            return 7;
+        }
+
+        public int ticks() {
+            return ticksN();
+        }
+
+        public boolean checkLimitCycles() {
+            return false;   // (the makeup flange is topped up in small amounts: a sawtooth by design)
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            boiler = (mods.eln.oil.BoilerElement) l.device(8 + (82 << 6), 1, 1);
+            boiler.front = mods.eln.misc.Direction.XN;   // (feed flange south)
+            boiler.reconnect();
+            boiler.thermal.Tc = 200 - (mods.eln.sim.PhysicalConstant.Tref - mods.eln.sim.PhysicalConstant.TCelsius);
+            boiler.fromTanks(800, 0);
+            boiler.showTanks();
+            turbine = TwoUnitPlant.unit(l, 1, heaters);
+            turbine.controls.inventory.setItem(mods.eln.oil.SteamValveControl.REGULATOR_SLOT, mods.eln.Eln.sharedItem.getDescriptor(8 + (3 << 6)).newItemStack());
+            turbine.controls.targetBar = bar;
+            turbine.controls.computeInventory();
+            c = TwoUnitPlant.facingWest(ctx, ctx.at(4, 1, 2));
+            // steam: alloy pipe up out of the boiler, east, down into the turbine (as the player's)
+            PipeCases.lay(ctx, ctx.at(1, 2, 1), 1, 8, 0, 8, 8, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(2, 2, 1), 1, 0, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(3, 2, 1), 1, 0, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(4, 2, 1), 1, 0, 8, 8, 8, 8, 8, 8, 0, 8);
+            // condensate: west out of the condenser's front, along, then north into the boiler's feed flange
+            PipeCases.lay(ctx, ctx.at(3, 1, 2), 0, 16, 8, 8, 0, 8, 8);
+            PipeCases.lay(ctx, ctx.at(2, 1, 2), 0, 16, 8, 8, 0, 8, 8);
+            PipeCases.lay(ctx, ctx.at(1, 1, 2), 0, 16, 8, 8, 8, 8, 8, 8, 8, 0);
+            for (int x = 1; x <= 3; x++) l.used.add(ctx.at(x, 1, 2));
+            PipeCases.lay(ctx, ctx.at(4, 2, 2), 0, 8, 0, 8, 8, 8, 8);   // (a stub on the makeup flange)
+            mods.eln.Eln.simulator.addSlowProcess(fire = t -> {
+                // (and the turbine joined to its steam and its condenser before the start-up state is set)
+                if (c.vessel == null || boiler.vessel == null || c.inlet == null || turbine.inlet == null || turbine.condenser == null) return;
+                if (tick == 0) {   // (the hotwell at the makeup's shut level; the feed run full, as a plant that has run)
+                    mods.eln.sim.fluid.EaUnits.addWater(c.vessel, 0.25 * c.vessel.volume * mods.eln.sim.fluid.Water.RHO_L, 310, false);
+                    // the boiler as the player's was found: hot, at 10 bar, its water at 10 % of the gauge glass, the turbine turning
+                    double tb = mods.eln.sim.fluid.Water.tsat(bar * 1e5);
+                    boiler.vessel.fill(0.10 * mods.eln.oil.BoilerElement.RATED_KG, mods.eln.sim.fluid.Water.psat(tb), tb);
+                    turbine.omega = 0.9;
+                    var run = mods.eln.fluid.FluidWorld.nodeFor(boiler.feed);
+                    run.fill(0.995 * run.volume * mods.eln.sim.fluid.Water.RHO_L, mods.eln.sim.fluid.Water.P_ATM, 300);
+                    run.update();
+                }
+                tick++;
+                if (bar != 10) for (var h : heaters) h.thermal.Tc = 20;
+                if (tick % 3000 == 0) fills.append(String.format(" %.0f", boiler.fill() * 100));
+                // the furnaces: a 300 C source through 40 W/K (a thermostat'd furnace's worth: ~5 kW into a 180 C shell)
+                double shellC = boiler.thermal.Tc + mods.eln.sim.PhysicalConstant.Tref - mods.eln.sim.PhysicalConstant.TCelsius;
+                boiler.thermal.moveEnergyTo(Math.max(0, 40 * (300 - shellC)) * t);
+                var n = mods.eln.fluid.FluidWorld.nodeFor(c.inlet);
+                for (int k = 0; k < 100 && n.P() < 5e5; k++) {
+                    mods.eln.sim.fluid.EaUnits.addWater(n, 2e-5, 290, false);
+                    makeup += 2e-5;
+                }
+                if (tick == watchN()) {
+                    makeup0 = makeup;
+                    fillHalf = boiler.fill();
+                }
+                if (tick == lateN()) makeupLate0 = makeup;
+                if (tick > watchN()) {
+                    floodHi = Math.max(floodHi, c.floodShare());
+                    power += turbine.source.getEffectiveP() / (ticksN() - watchN());
+                }
+                fillEnd = boiler.fill();
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            mods.eln.Eln.simulator.removeSlowProcess(fire);
+            ctx.line(String.format("makeup plant: boiler fill %.0f%% at %d ticks, %.0f%% at the end; condenser up to %.0f%%; %.1f g makeup over the watch, %.3f g/s over the last %d ticks; %.0f W; "
+                    + "boiler %s; turbine %s; condenser %s", fillHalf * 100, watchN(), fillEnd * 100, floodHi * 100, (makeup - makeup0) * 1000,
+                (makeup - makeupLate0) * 1000 / ((ticksN() - lateN()) / 20.0), ticksN() - lateN(), power,
+                boiler.getWaila(), turbine.getWaila(), c.getWaila()));
+            ctx.line("makeup plant: boiler fill every 3000 ticks (%):" + fills);
+            ctx.check("makeup plant: the boiler fills back up to its float (over 60 %)", fillEnd > 0.6, String.format("%.0f%%", fillEnd * 100));
+            ctx.check("makeup plant: the condenser doesn't flood", floodHi < mods.eln.oil.CondenserVessel.LEVEL_FULL, String.format("%.0f%%", floodHi * 100));
+            ctx.check("makeup plant: the turbine runs, not burnt", !turbine.isBurnt() && power > 300, String.format("%.0f W", power));
+        }
+    }
+
+    /**
+     * A player's small plant (2026-11-17) whose condenser's makeup flange is piped into its own condensate line, the
+     * pump's discharge to the boiler: the makeup float valve sees the line's 10 bar and passes the pump's surplus back
+     * into the hotwell. With a float opening in a straight line from its shut mark it did so in gulps (~150 g/s one tick
+     * in ten), the line swung between ~1.5 and 10 bar, and the fluid core took 100-300 Newton iterations a step, every
+     * step. The float (CondenserVessel.floatOpening) must hold a steady opening: the line stays up, the boiler is fed,
+     * and the network's steps are cheap. The rig is MakeupPlantRefills' with the boiler half full and the hotwell at
+     * the float's shut mark.
+     */
+    static final class TeedMakeupPlant implements TestCase {
+        mods.eln.oil.BoilerElement boiler;
+        mods.eln.oil.SteamGeneratorElement turbine;
+        mods.eln.oil.CondenserElement c;
+        mods.eln.sim.IProcess fire;
+        String err;
+        int tick, watched, shutTicks;
+        long it0, steps0;
+        double lineLo = Double.MAX_VALUE, lineHi, floatLo = Double.MAX_VALUE, floatHi, floodHi, fillLo = Double.MAX_VALUE, power, iterations, makeup, fillWatch, fillEnd;
+        static final int TICKS = 2400, WATCH = 1200;
+        final java.util.List<mods.eln.oil.ElectricHeaterElement> heaters = new java.util.ArrayList<>();
+
+        public String id() {
+            return "fluid_makeup_teed_into_condensate_line";
+        }
+
+        public int width() {
+            return 7;
+        }
+
+        public int ticks() {
+            return TICKS;
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            boiler = (mods.eln.oil.BoilerElement) l.device(8 + (82 << 6), 1, 1);
+            boiler.front = mods.eln.misc.Direction.XN;   // (feed flange south)
+            boiler.reconnect();
+            boiler.thermal.Tc = 200 - (mods.eln.sim.PhysicalConstant.Tref - mods.eln.sim.PhysicalConstant.TCelsius);
+            boiler.fromTanks(800, 0);
+            boiler.showTanks();
+            turbine = TwoUnitPlant.unit(l, 1, heaters);
+            turbine.controls.inventory.setItem(mods.eln.oil.SteamValveControl.REGULATOR_SLOT, mods.eln.Eln.sharedItem.getDescriptor(8 + (3 << 6)).newItemStack());
+            turbine.controls.targetBar = 10;
+            turbine.controls.computeInventory();
+            c = TwoUnitPlant.facingWest(ctx, ctx.at(4, 1, 2));
+            PipeCases.lay(ctx, ctx.at(1, 2, 1), 1, 8, 0, 8, 8, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(2, 2, 1), 1, 0, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(3, 2, 1), 1, 0, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(4, 2, 1), 1, 0, 8, 8, 8, 8, 8, 8, 0, 8);
+            PipeCases.lay(ctx, ctx.at(3, 1, 2), 0, 16, 8, 8, 0, 8, 8);
+            PipeCases.lay(ctx, ctx.at(2, 1, 2), 0, 16, 8, 8, 0, 8, 8);
+            PipeCases.lay(ctx, ctx.at(1, 1, 2), 0, 16, 8, 8, 8, 8, 8, 8, 8, 0);
+            for (int x = 1; x <= 3; x++) l.used.add(ctx.at(x, 1, 2));
+            // the makeup flange (the condenser's top) routed into the condensate line mid-run: a tee onto the discharge
+            var level = ctx.level();
+            var a = mods.eln.node.voxel.PipePlacer.portAtForTests(level, ctx.at(4, 1, 2), net.minecraft.core.Direction.UP);
+            BlockPos j = ctx.at(2, 1, 2);
+            err = mods.eln.node.voxel.PipePlacer.routeAndJoinForTests(level, 0, a, new long[]{j.getX() * 16L + 8, j.getY() * 16L + 8, j.getZ() * 16L + 8});
+            mods.eln.Eln.simulator.addSlowProcess(fire = t -> {
+                if (c.vessel == null || boiler.vessel == null || c.inlet == null || turbine.inlet == null || turbine.condenser == null) return;
+                if (tick == 0) {   // (the hotwell at the float's shut mark, the boiler hot and half full, the line full)
+                    mods.eln.sim.fluid.EaUnits.addWater(c.vessel, 0.25 * c.vessel.volume * mods.eln.sim.fluid.Water.RHO_L, 310, false);
+                    double tb = mods.eln.sim.fluid.Water.tsat(10e5);
+                    boiler.vessel.fill(0.5 * mods.eln.oil.BoilerElement.RATED_KG, mods.eln.sim.fluid.Water.psat(tb), tb);
+                    turbine.omega = 0.9;
+                    // (the feed run and the makeup's run full, as a plant that has run)
+                    for (var port : new mods.eln.sim.fluid.FluidNode[]{boiler.feed, c.inlet}) {
+                        var run = mods.eln.fluid.FluidWorld.nodeFor(port);
+                        run.fill(0.995 * run.volume * mods.eln.sim.fluid.Water.RHO_L, mods.eln.sim.fluid.Water.P_ATM, 300);
+                        run.update();
+                    }
+                }
+                tick++;
+                // (the player's makeup: a pump into the line, here topped up to 5 bar: it only runs when the line falls under that)
+                var in = mods.eln.fluid.FluidWorld.nodeFor(c.inlet);
+                for (int k = 0; k < 100 && in.P() < 5e5; k++) {
+                    mods.eln.sim.fluid.EaUnits.addWater(in, 2e-5, 290, false);
+                    makeup += 2e-5;
+                }
+                if (tick == WATCH) fillWatch = boiler.fill();
+                if (tick % 200 == 0) mods.eln.Eln.LOG.info(String.format("[%s] t %d: line %.2f bar, float %.3g, hotwell %.2f%%, boiler %.1f%%, makeup %.1f g", id(), tick,
+                    mods.eln.fluid.FluidWorld.nodeFor(boiler.feed).P() / 1e5, c.v.floatOpen, c.floodShare() * 100, boiler.fill() * 100, makeup * 1000));
+                double shellC = boiler.thermal.Tc + mods.eln.sim.PhysicalConstant.Tref - mods.eln.sim.PhysicalConstant.TCelsius;
+                boiler.thermal.moveEnergyTo(Math.max(0, 40 * (300 - shellC)) * t);
+                var net = mods.eln.fluid.FluidWorld.networkOf(mods.eln.fluid.FluidWorld.nodeFor(boiler.vessel));
+                var st = net == null ? null : net.coreStats();
+                if (tick == WATCH && st != null) {
+                    it0 = st.iterations;
+                    steps0 = st.steps;
+                }
+                if (tick > WATCH && st != null) {
+                    watched++;
+                    double line = mods.eln.fluid.FluidWorld.nodeFor(boiler.feed).P();
+                    lineLo = Math.min(lineLo, line);
+                    lineHi = Math.max(lineHi, line);
+                    floatLo = Math.min(floatLo, c.v.floatOpen);
+                    floatHi = Math.max(floatHi, c.v.floatOpen);
+                    if (c.v.floatOpen <= 0) shutTicks++;
+                    floodHi = Math.max(floodHi, c.floodShare());
+                    fillLo = Math.min(fillLo, boiler.fill());
+                    fillEnd = boiler.fill();
+                    power += turbine.source.getEffectiveP() / (TICKS - WATCH);
+                    iterations = (st.iterations - it0) / (double) Math.max(1, st.steps - steps0);
+                }
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            mods.eln.Eln.simulator.removeSlowProcess(fire);
+            ctx.line(String.format("teed makeup: %.1f Newton iterations a step over the last %d ticks; line %.2f..%.2f bar; float %.4f..%.4f open, shut %d ticks; hotwell up to %.1f%%; "
+                    + "boiler down to %.0f%%; %.0f W; condenser %s", iterations, TICKS - WATCH, lineLo / 1e5, lineHi / 1e5, floatLo, floatHi, shutTicks, floodHi * 100,
+                fillLo * 100, power, c.getWaila()));
+            ctx.check("teed makeup: the makeup flange is routed into the condensate line", err == null, String.valueOf(err));
+            ctx.check("teed makeup: the float holds a steady opening (never shut, under 1 % wide)", shutTicks == 0 && floatHi - floatLo < 0.01,
+                String.format("%.4f..%.4f, shut %d of %d ticks", floatLo, floatHi, shutTicks, watched));
+            ctx.check("teed makeup: the condensate line stays up at the boiler (no gulps)", lineLo > 9e5, String.format("%.2f..%.2f bar", lineLo / 1e5, lineHi / 1e5));
+            ctx.check("teed makeup: the network's steps are cheap (under 10 Newton iterations a step)", iterations < 10, String.format("%.1f", iterations));
+            ctx.check("teed makeup: the boiler is fed (holds its level), the hotwell doesn't flood, the turbine runs",
+                fillEnd > fillWatch - 0.02 && fillLo > 0.3 && floodHi < mods.eln.oil.CondenserVessel.LEVEL_FULL && power > 300,
+                String.format("boiler %.1f%% -> %.1f%% (down to %.1f%%), hotwell %.1f%%, %.0f W", fillWatch * 100, fillEnd * 100, fillLo * 100, floodHi * 100, power));
         }
     }
 
@@ -1377,7 +3061,7 @@ public final class OilCases {
     /**
      * The makeup's signal (Baughn 2026-11-03: the boiler's fill through a comparator says when the plant wants water):
      * two condensers 5 % full with makeup water at 10 bar on top, a signal source on each one's left flank: at 0 V its
-     * makeup stays shut, at 50 V the float valve lets it in. Jade says which.
+     * makeup stays shut, at SVU the float valve lets it in. Jade says which.
      */
     static final class CondenserMakeupSignal extends PlumbingCases.Big {
         mods.eln.oil.CondenserElement off, on;
@@ -1402,7 +3086,10 @@ public final class OilCases {
 
         public void build(TestContext ctx) {
             off = place(ctx, ctx.at(3, 1, 5), 0);
-            on = place(ctx, ctx.at(6, 1, 5), 50);
+            on = place(ctx, ctx.at(6, 1, 5), mods.eln.Eln.SVU);
+            // (a pipe stub on each makeup flange: unpiped, the flange is blind)
+            PipeCases.lay(ctx, ctx.at(3, 2, 5), 0, 8, 0, 8, 8, 8, 8);
+            PipeCases.lay(ctx, ctx.at(6, 2, 5), 0, 8, 0, 8, 8, 8, 8);
             mods.eln.Eln.simulator.addSlowProcess(feed = x -> {
                 if (off.inlet == null || on.inlet == null) return;
                 if (!primed) {
@@ -1423,10 +3110,10 @@ public final class OilCases {
         public void measure(TestContext ctx) {
             mods.eln.Eln.simulator.removeSlowProcess(feed);
             String jOff = "" + off.getWaila().get(mods.eln.i18n.I18N.tr("Makeup valve")), jOn = "" + on.getWaila().get(mods.eln.i18n.I18N.tr("Makeup valve"));
-            ctx.line("makeup signal: 0 V " + off.getWaila() + "; 50 V " + on.getWaila());
+            ctx.line("makeup signal: 0 V " + off.getWaila() + "; SVU " + on.getWaila());
             ctx.check("condenser: its left flank takes the signal", off.signalled() && on.signalled(), "");
             ctx.check("condenser: makeup signal at 0 V: none comes in", off.vessel.mWater <= off0 + 1e-6, String.format("%.4f -> %.4f kg", off0, off.vessel.mWater));
-            ctx.check("condenser: at 50 V the float valve lets it in", on.vessel.mWater > on0 + 0.001, String.format("%.4f -> %.4f kg", on0, on.vessel.mWater));
+            ctx.check("condenser: at SVU the float valve lets it in", on.vessel.mWater > on0 + 0.001, String.format("%.4f -> %.4f kg", on0, on.vessel.mWater));
             ctx.check("condenser: Jade: shut by its signal", jOff.startsWith("shut by its signal") && jOff.contains("signal 0%"), jOff);
             ctx.check("condenser: Jade: the signal lets it", jOn.contains("signal 100%") && !jOn.startsWith("shut by"), jOn);
         }
@@ -1468,7 +3155,8 @@ public final class OilCases {
         public void measure(TestContext ctx) {
             mods.eln.Eln.simulator.removeSlowProcess(feed);
             ctx.check("oil: condenser placed, and the turbine ran before the flood", c != null && ranBefore, "" + t.getWaila());
-            ctx.check("oil: flooded, the turbine takes water damage", t.getBurnt() == mods.eln.sim.process.destruct.FailureCause.WATER, "" + t.getBurnt());
+            ctx.check("oil: flooded, the turbine takes water damage, and says its condenser flooded", t.getBurnt() == mods.eln.sim.process.destruct.FailureCause.FLOODED,
+                "" + t.getBurnt());
         }
     }
 
@@ -1543,6 +3231,10 @@ public final class OilCases {
             return "oil_steam_turbine_floods";
         }
 
+        public boolean checkLimitCycles() {
+            return false;   // (steam() tops the inlet up 0.5 g at a time under 10 bar: a sawtooth by design)
+        }
+
         public int width() {
             return 9;
         }
@@ -1598,6 +3290,75 @@ public final class OilCases {
             flooded.repair();
             ctx.check("oil: repaired, the flooded turbine is drained and works", !flooded.isBurnt() && flooded.waterShare() < 0.001,
                 String.format("burnt %s, water %.1f%%", flooded.getBurnt(), flooded.waterShare() * 100));
+        }
+    }
+
+    /**
+     * The casing drain as a steam trap (Baughn 2026-11-15: into the condenser "when the condenser has space"): two
+     * stopped turbines, each with a Small Steam Condenser on its exhaust side, get 1 % of their inlets as water (~3 % of
+     * a hotwell). The one whose hotwell is at 30 % drains it into its condenser's vessel; the one whose hotwell is at 42 %
+     * (over the pump's LEVEL_FULL) drains it to the ground and its vessel gets none.
+     */
+    static final class CasingDrainTrap implements TestCase {
+        mods.eln.oil.SteamGeneratorElement roomy, full;
+        mods.eln.oil.CondenserElement cRoomy, cFull;
+        mods.eln.sim.IProcess feed;
+        double roomy0, full0, water;
+        int tick;
+
+        public String id() {
+            return "oil_steam_turbine_drain_trap";
+        }
+
+        public int width() {
+            return 7;
+        }
+
+        public int ticks() {
+            return 300;
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            roomy = (mods.eln.oil.SteamGeneratorElement) l.device(12 + (82 << 6), 1, 1);
+            full = (mods.eln.oil.SteamGeneratorElement) l.device(12 + (82 << 6), 4, 1);
+            for (var t : new mods.eln.oil.SteamGeneratorElement[]{roomy, full}) {
+                t.front = mods.eln.misc.Direction.XN;
+                t.reconnect();
+            }
+            l.device(28 + (82 << 6), 1, 2);
+            l.device(28 + (82 << 6), 4, 2);
+            mods.eln.Eln.simulator.addSlowProcess(feed = t -> {
+                if (cRoomy == null) {
+                    cRoomy = condenserOf(ctx, ctx.at(1, 1, 2));
+                    cFull = condenserOf(ctx, ctx.at(4, 1, 2));
+                }
+                if (cRoomy == null || cFull == null || cRoomy.vessel == null || cFull.vessel == null || roomy.inlet == null || full.inlet == null
+                    || roomy.condenser == null || full.condenser == null) return;
+                if (++tick == 1) {
+                    mods.eln.sim.fluid.EaUnits.addWater(cRoomy.vessel, 0.30 * cRoomy.vessel.volume * mods.eln.sim.fluid.Water.RHO_L, 310, false);
+                    mods.eln.sim.fluid.EaUnits.addWater(cFull.vessel, 0.42 * cFull.vessel.volume * mods.eln.sim.fluid.Water.RHO_L, 310, false);
+                }
+                if (tick == 20) {
+                    roomy0 = cRoomy.vessel.mWater;
+                    full0 = cFull.vessel.mWater;
+                    water = 0.01 * roomy.inlet.volume * mods.eln.sim.fluid.Water.RHO_L;
+                    TurbineFloods.water(roomy, 0.01);
+                    TurbineFloods.water(full, 0.01);
+                }
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            mods.eln.Eln.simulator.removeSlowProcess(feed);
+            double gotRoomy = cRoomy.vessel.mWater - roomy0, gotFull = cFull.vessel.mWater - full0;
+            ctx.line(String.format("drain trap: %.2f g into each inlet; hotwell at 30%%: %.2f g into the condenser, %.2f g away, vessel %+.2f g; at 42%%: %.2f g in, %.2f g away, vessel %+.2f g",
+                water * 1000, roomy.drainedToCondenserKg * 1000, roomy.drainedAwayKg * 1000, gotRoomy * 1000, full.drainedToCondenserKg * 1000,
+                full.drainedAwayKg * 1000, gotFull * 1000));
+            ctx.check("drain trap: with room, the drain goes into the condenser", roomy.drainedToCondenserKg > 0.5 * water && roomy.drainedAwayKg == 0
+                && Math.abs(gotRoomy - roomy.drainedToCondenserKg) < 0.01 * water, String.format("%.2f g in, vessel %+.2f g", roomy.drainedToCondenserKg * 1000, gotRoomy * 1000));
+            ctx.check("drain trap: over LEVEL_FULL, it goes to the ground", full.drainedAwayKg > 0.5 * water && full.drainedToCondenserKg == 0
+                && Math.abs(gotFull) < 0.01 * water, String.format("%.2f g away, vessel %+.2f g", full.drainedAwayKg * 1000, gotFull * 1000));
         }
     }
 
@@ -1912,7 +3673,7 @@ public final class OilCases {
 
     /**
      * A sealed plant heated hard (Baughn: no caps; the pipe bursts, not the boiler): a boiler with one block of iron pipe
-     * on its top port, capped. The pressure climbs past 10 bar without pause, the pipe bursts at 40 and vents, and the
+     * on its top port, capped. The pressure climbs past 10 bar without pause, the pipe bursts at 25 and vents, and the
      * boiler survives.
      */
     static final class SealedPlant implements TestCase {
@@ -2022,19 +3783,26 @@ public final class OilCases {
     static final class SafetyValvePlant implements TestCase {
         mods.eln.oil.BoilerElement boiler;
         mods.eln.sim.IProcess fire;
-        double peak, time, lo = 1e9, hi, lastLift, liftSum;
+        double peak, time, lo = 1e9, hi, lastLift, liftSum, liftLo = 1e9, liftHi, qLo = 1e9, qHi, qSum;
+        mods.eln.node.voxel.VoxelNode valveNode;
         int flips;
         net.minecraft.core.BlockPos pipeAt;
         String err;
         mods.eln.node.voxel.SafetyValvePart valve;
         final double heat;
-        final int ticks;
+        final int ticks, run;
         final String id;
 
         SafetyValvePlant(double heat, int ticks, String id) {
+            this(heat, ticks, id, 0);
+        }
+
+        /** With the valve at the end of a level run this many blocks from the boiler (Baughn's siren, 2026-11-12). */
+        SafetyValvePlant(double heat, int ticks, String id, int run) {
             this.heat = heat;
             this.ticks = ticks;
             this.id = id;
+            this.run = run;
         }
 
         public String id() {
@@ -2042,7 +3810,7 @@ public final class OilCases {
         }
 
         public int width() {
-            return 3;
+            return 3 + run;
         }
 
         public int ticks() {
@@ -2055,11 +3823,20 @@ public final class OilCases {
             boiler.thermal.Tc = 175 - (mods.eln.sim.PhysicalConstant.Tref - mods.eln.sim.PhysicalConstant.TCelsius);
             boiler.fromTanks(8000, 0);
             boiler.showTanks();
-            pipeAt = ctx.at(1, 2, 1);
-            mods.eln.node.voxel.PipeKitItem.place(ctx.level(), pipeAt, new mods.eln.node.voxel.PipePart(0, new int[]{8, 0, 8, 8, 12, 8}), null);
+            if (run > 0) {
+                // (up from the boiler's top port, then east along the run; the valve on its last block)
+                PipeCases.lay(ctx, ctx.at(1, 2, 1), 0, 8, 0, 8, 8, 8, 8, 16, 8, 8);
+                for (int x = 2; x < 1 + run; x++) PipeCases.lay(ctx, ctx.at(x, 2, 1), 0, 0, 8, 8, 16, 8, 8);
+                pipeAt = ctx.at(1 + run, 2, 1);
+                PipeCases.lay(ctx, pipeAt, 0, 0, 8, 8, 12, 8, 8);
+            } else {
+                pipeAt = ctx.at(1, 2, 1);
+                mods.eln.node.voxel.PipeKitItem.place(ctx.level(), pipeAt, new mods.eln.node.voxel.PipePart(0, new int[]{8, 0, 8, 8, 12, 8}), null);
+            }
             var n = (mods.eln.node.voxel.VoxelNode) ((mods.eln.node.voxel.VoxelNodeEntity) ctx.level().getBlockEntity(pipeAt)).getNode();
             err = n.addSafetyValveNear(0.5, 8 / 16.0, 0.5);
             for (var p : n.parts) if (p instanceof mods.eln.node.voxel.SafetyValvePart sv) valve = sv;
+            valveNode = n;
             mods.eln.Eln.simulator.addSlowProcess(fire = t -> {
                 boiler.thermal.moveEnergyTo(heat * t);
                 peak = Math.max(peak, boiler.vessel.P());
@@ -2071,6 +3848,14 @@ public final class OilCases {
                     if (lastLift < 0.02 && valve.lift >= 0.02) flips++;
                     lastLift = valve.lift;
                     liftSum += valve.lift * t;
+                    liftLo = Math.min(liftLo, valve.lift);
+                    // (what it lets out, kg/s: the whistle follows it)
+                    double q = 0;
+                    for (var v : valveNode.fluidVents()) if (v.edge != null) q += v.edge.flow;
+                    qLo = Math.min(qLo, q);
+                    qHi = Math.max(qHi, q);
+                    qSum += q * t;
+                    liftHi = Math.max(liftHi, valve.lift);
                 }
             });
         }
@@ -2080,8 +3865,8 @@ public final class OilCases {
             var n = (mods.eln.node.voxel.VoxelNode) ((mods.eln.node.voxel.VoxelNodeEntity) ctx.level().getBlockEntity(pipeAt)).getNode();
             boolean burst = false;
             for (var p : n.parts) if (p instanceof mods.eln.node.voxel.PipePart pp && pp.burst) burst = true;
-            ctx.line("fluid: plant with a safety valve " + boiler.getWaila() + String.format(", peak %.1f bar; last 20 s %.2f-%.2f bar, %d openings, mean lift %.3f, lift %.2f",
-                peak / 1e5, lo / 1e5, hi / 1e5, flips, liftSum / 20, valve == null ? -1 : valve.lift));
+            ctx.line("fluid: plant with a safety valve " + boiler.getWaila() + String.format(", peak %.1f bar; last 20 s %.2f-%.2f bar, %d openings, mean lift %.3f, lift %.2f (%.3f-%.3f); flow %.3f-%.3f g/s, mean %.3f",
+                peak / 1e5, lo / 1e5, hi / 1e5, flips, liftSum / 20, valve == null ? -1 : valve.lift, liftLo, liftHi, qLo * 1e3, qHi * 1e3, qSum / 20 * 1e3));
             ctx.check("fluid: a safety valve fits on the pipe", err == null, "" + err);
             ctx.check("fluid: it holds the plant near its 10 bar setting", peak > 9e5 && peak < 12e5, String.format("peak %.1f bar", peak / 1e5));
             ctx.check("fluid: the pipe doesn't burst", !burst, "");
@@ -2108,6 +3893,126 @@ public final class OilCases {
             // (Baughn 2026-10-27: it pulsed; it acts on the averaged pressure now) relieving 8 kW, it holds steady
             if (heat > 5000) ctx.check("fluid: relieving, it holds the boiler steady (no pulsing)", flips <= 1 && hi - lo < 0.5e5,
                 String.format("%d openings, %.2f-%.2f bar in the last 20 s", flips, lo / 1e5, hi / 1e5));
+            // (Baughn 2026-11-12: it sirened, the lift swinging with the averaged pressure) relieving, it converges: a steady
+            // pressure and a steady lift, so a constant whistle
+            if (heat > 5000) ctx.check("fluid: relieving, pressure and lift converge (no siren)", hi - lo < 0.05e5 && qSum > 0 && qHi - qLo < 0.2 * qSum / 20,
+                String.format("%.3f-%.3f bar, flow %.3f-%.3f g/s in the last 20 s", lo / 1e5, hi / 1e5, qLo * 1e3, qHi * 1e3));
+        }
+    }
+
+    /**
+     * Baughn's workshop (2026-11-12): boiler -> pipe with a safety valve at 13 bar -> 50V steam turbine with an analog
+     * regulator holding 12 bar at its inlet, a condenser on its exhaust, a 1 kW heater as its load. Whatever the heat,
+     * the boiler settles: the turbine takes what it can at 12 bar, the valve lets out the rest at a steady flow (a
+     * steady whistle, no siren), and neither cycles.
+     */
+    static final class SafetyValveTurbine implements TestCase {
+        final double heat;
+        mods.eln.oil.BoilerElement boiler;
+        mods.eln.oil.SteamGeneratorElement t;
+        mods.eln.node.voxel.VoxelNode valveNode;
+        String err;
+        mods.eln.sim.IProcess fire;
+        double time, lo = 1e9, hi, qLo = 1e9, qHi, qSum, gLo = 1e9, gHi, peak, qMax;
+
+        final boolean fed;
+
+        SafetyValveTurbine(double heat, boolean fed) {
+            this.heat = heat;
+            this.fed = fed;
+        }
+
+        double water() {
+            return boiler.vessel == null ? 0 : boiler.vessel.mLiquid() / mods.eln.sim.fluid.EaUnits.KG_PER_MB_WATER;
+        }
+
+        public String id() {
+            return "fluid_safety_valve_turbine_" + (int) (heat / 1000) + "kw" + (fed ? "" : "_unfed");
+        }
+
+        public int width() {
+            return 6;
+        }
+
+        public int ticks() {
+            return fed ? 3600 : 2400;
+        }
+
+        public void build(TestContext ctx) {
+            Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
+            boiler = (mods.eln.oil.BoilerElement) l.device(8 + (82 << 6), 1, 1);
+            boiler.thermal.Tc = 175 - (mods.eln.sim.PhysicalConstant.Tref - mods.eln.sim.PhysicalConstant.TCelsius);
+            boiler.fromTanks(8000, 0);
+            boiler.showTanks();
+            t = plant(l, 3, true)[0];
+            t.inventory.setItem(mods.eln.oil.SteamGeneratorElement.REGULATOR_SLOT, mods.eln.Eln.findItemStack("Analogic Regulator"));
+            t.inventoryChange(t.inventory);
+            t.controls.targetBar = 12;
+            t.inventoryChange(t.inventory);
+            PipeCases.lay(ctx, ctx.at(1, 2, 1), 1, 8, 0, 8, 8, 8, 8, 16, 8, 8);   // up out of the boiler, then east
+            PipeCases.lay(ctx, ctx.at(2, 2, 1), 1, 0, 8, 8, 16, 8, 8);
+            PipeCases.lay(ctx, ctx.at(3, 2, 1), 1, 0, 8, 8, 8, 8, 8, 8, 0, 8);   // down into the turbine
+            valveNode = PipeCases.node(ctx, ctx.at(2, 2, 1));
+            err = valveNode.addSafetyValveNear(0.5, 8 / 16.0, 0.5);
+            for (var p : valveNode.parts) if (p instanceof mods.eln.node.voxel.SafetyValvePart sv) sv.setPa = 13e5;
+            mods.eln.Eln.simulator.addSlowProcess(fire = dt -> {
+                boiler.thermal.moveEnergyTo(heat * dt);
+                // (fed smoothly with water at 27 C, as a feed pump on a level controller would; 1 mB is ~1/16 g here)
+                if (fed && boiler.vessel != null) {
+                    double mB = Math.max(0, Math.min(400 * dt, (6000 - water()) * 0.5 * dt));
+                    double kg = mB * mods.eln.sim.fluid.EaUnits.KG_PER_MB_WATER;
+                    // (the feed takes the condensate over the makeup level first, as the condenser's pump into the feed
+                    // line would: with its pump dead-ended the hotwell filled until it flooded the turbine, at ~190 s on
+                    // its own and inside the run once the casing drain trapped the turbine's start-up condensate into it)
+                    var hw = t.condenser == null ? null : t.condenser.v.vessel;
+                    if (hw != null) {
+                        double back = Math.min(kg, Math.max(0, hw.mLiquid() - mods.eln.oil.CondenserVessel.MAKEUP_SHUT * hw.volume * mods.eln.sim.fluid.Water.RHO_L));
+                        if (back > 0) {
+                            double T = hw.T();
+                            hw.mWater -= back;
+                            hw.energy -= back * mods.eln.sim.fluid.Water.hLiquid(T);
+                            hw.update();
+                            mods.eln.sim.fluid.EaUnits.addWater(boiler.vessel, back, T, false);
+                            kg -= back;
+                        }
+                    }
+                    mods.eln.sim.fluid.EaUnits.addWater(boiler.vessel, kg, 300, false);
+                }
+                time += dt;
+                peak = Math.max(peak, boiler.vessel.P());
+                for (var v : valveNode.fluidVents()) if (v.edge != null) qMax = Math.max(qMax, v.edge.flow);
+                if (time > ticks() / 20.0 - 30) {
+                    double P = boiler.vessel.P(), q = 0;
+                    for (var v : valveNode.fluidVents()) if (v.edge != null) q += v.edge.flow;
+                    lo = Math.min(lo, P);
+                    hi = Math.max(hi, P);
+                    qLo = Math.min(qLo, q);
+                    qHi = Math.max(qHi, q);
+                    qSum += q * dt;
+                    gLo = Math.min(gLo, t.limit);
+                    gHi = Math.max(gHi, t.limit);
+                }
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            mods.eln.Eln.simulator.removeSlowProcess(fire);
+            double qMean = qSum / 30;
+            ctx.line(String.format("safety valve + turbine at %.0f kW: boiler %.2f-%.2f bar (peak %.2f), valve %.3f-%.3f g/s (mean %.3f), turbine valve %.2f-%.2f; turbine %s",
+                heat / 1000, lo / 1e5, hi / 1e5, peak / 1e5, qLo * 1e3, qHi * 1e3, qMean * 1e3, gLo, gHi, t.getWaila()));
+            ctx.check("safety valve + turbine: the valve fits", err == null, "" + err);
+            if (fed) {
+                ctx.check("safety valve + turbine: the boiler settles (under 0.3 bar of swing in the last 30 s)", hi - lo < 0.3e5,
+                    String.format("%.2f-%.2f bar", lo / 1e5, hi / 1e5));
+                ctx.check("safety valve + turbine: the valve's flow is steady, or it stays shut (no siren)",
+                    qHi < 1e-5 || qHi - qLo < 0.2 * Math.max(qMean, 1e-9), String.format("%.3f-%.3f g/s", qLo * 1e3, qHi * 1e3));
+            } else {
+                // (with the averaged lift the valve opened late as the steam crept past 13 bar, blew a puff of ~14 g/s,
+                // shut, and rang for seconds, 13.10/12.95/13.04/12.96 bar, every time the steam came up again)
+                ctx.check("safety valve + turbine: rising slowly past its setting it neither overshoots nor puffs (under 13.05 bar, 1.5 g/s)",
+                    peak < 13.05e5 && qMax < 1.5e-3, String.format("peak %.3f bar, %.3f g/s at most", peak / 1e5, qMax * 1e3));
+            }
+            ctx.check("safety valve + turbine: under 14 bar", peak < 14e5, String.format("%.2f bar", peak / 1e5));
         }
     }
 
@@ -2198,11 +4103,112 @@ public final class OilCases {
         }
     }
 
+    /**
+     * A node saved by the legacy solver (no format marker) loads at the temperature that solver gave it: 2 kg of water in
+     * 8 L at 180 C, its energy by the legacy EOS (whose vapour energies are lower than the core's), comes back at 180 C;
+     * the same contents saved by the core round-trip unchanged (FluidSaves.FORMAT).
+     */
+    static final class LegacyEnergyLoads implements TestCase {
+        double tLegacy, tCore, uDiff;
+
+        public String id() {
+            return "fluid_legacy_energy_loads_at_its_temperature";
+        }
+
+        public int ticks() {
+            return 1;
+        }
+
+        public void build(TestContext ctx) {
+            double T = 453.15, V = 0.008, mw = 2.0, ma = 0.002;
+            var tag = new net.minecraft.nbt.CompoundTag();
+            tag.putDouble("kW", mw);
+            tag.putDouble("kA", ma);
+            tag.putDouble("kU", mods.eln.sim.fluid.Flash.energyAt(mw, ma, V, T));
+            var n = new mods.eln.sim.fluid.FluidNode(V, 0, 1, false);
+            mods.eln.fluid.FluidSaves.restore(n, mods.eln.fluid.FluidSaves.array(tag, "k"));
+            n.update();
+            tLegacy = n.T();
+            var out = new net.minecraft.nbt.CompoundTag();
+            mods.eln.fluid.FluidSaves.put(out, "k", n);
+            var m = new mods.eln.sim.fluid.FluidNode(V, 0, 1, false);
+            mods.eln.fluid.FluidSaves.restore(m, mods.eln.fluid.FluidSaves.array(out, "k"));
+            m.update();
+            tCore = m.T();
+            uDiff = m.energy - n.energy;
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.check("fluid: a legacy save loads at the temperature it had (180 C, within 0.3 K)", Math.abs(tLegacy - 453.15) < 0.3,
+                String.format("%.2f K", tLegacy));
+            ctx.check("fluid: saved again by the core, it round-trips unchanged", uDiff == 0 && Math.abs(tCore - tLegacy) < 1e-9,
+                String.format("%.4f K, energy %+.3g J", tCore, uDiff));
+        }
+    }
+
+    /**
+     * Crude is a mixture alias (Baughn 2026-11-10): heavy oil 35 / diesel 25 / gasoline 20 / residue 15 / natural gas 5 %.
+     * Put into a node as from a bucket it is dead (no lids: its gas long gone), the four liquids by their shares; live, as
+     * the oil pump's line delivers it, it has its gas too; and crude a save holds loads dead.
+     */
+    static final class CrudeIsAMixture implements TestCase {
+        String deadMix, liveMix, savedMix;
+        double deadGas, liveGas, deadSum, savedSum;
+
+        public String id() {
+            return "fluid_crude_is_a_mixture";
+        }
+
+        public int ticks() {
+            return 1;
+        }
+
+        public void build(TestContext ctx) {
+            var reg = mods.eln.sim.fluid.SpeciesRegistry.get();
+            int crude = reg.id("eln:crude_oil"), gas = reg.id("eln:natural_gas");
+            int[] cuts = {reg.id("eln:heavy_oil"), reg.id("eln:diesel"), reg.id("eln:gasoline"), reg.id("eln:residue")};
+            var dead = new mods.eln.sim.fluid.FluidNode(0.01, 0, 1, false);
+            dead.fill(0, mods.eln.sim.fluid.Water.P_ATM, 300);
+            mods.eln.sim.fluid.EaUnits.add(dead, crude, 1.0, 300, false);
+            var live = new mods.eln.sim.fluid.FluidNode(0.01, 0, 1, false);
+            live.fill(0, mods.eln.sim.fluid.Water.P_ATM, 300);
+            mods.eln.sim.fluid.EaUnits.add(live, crude, 1.0, 300, false, true);
+            var tag = new net.minecraft.nbt.CompoundTag();
+            var sp = new net.minecraft.nbt.CompoundTag();
+            sp.putDouble("eln:crude_oil", 1.0);
+            tag.put("kS", sp);
+            double[] extra = mods.eln.fluid.FluidSaves.extra(tag, "kS");
+            StringBuilder d = new StringBuilder(), l = new StringBuilder(), sv = new StringBuilder();
+            for (int c : cuts) {
+                d.append(String.format(" %.3f", dead.mass(c)));
+                l.append(String.format(" %.3f", live.mass(c)));
+                double kg = extra != null && c - 2 < extra.length ? extra[c - 2] : 0;
+                sv.append(String.format(" %.3f", kg));
+                deadSum += dead.mass(c);
+                savedSum += kg;
+            }
+            deadMix = d.toString();
+            liveMix = l.toString();
+            savedMix = sv.toString();
+            deadGas = dead.mass(gas);
+            liveGas = live.mass(gas);
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.line("crude: dead" + deadMix + " gas " + deadGas + "; live" + liveMix + " gas " + liveGas + "; saved" + savedMix);
+            ctx.check("crude: from a bucket it goes in dead, the four liquids by their shares (35/25/20/15 of 95)",
+                deadGas == 0 && Math.abs(deadSum - 1) < 1e-12 && deadMix.startsWith(" 0.368"), deadMix + ", gas " + deadGas);
+            ctx.check("crude: from the well it goes in live, with its 5 % natural gas", Math.abs(liveGas - 0.05) < 1e-12 && liveMix.startsWith(" 0.350"),
+                liveMix + ", gas " + liveGas);
+            ctx.check("crude: crude a save holds loads dead", Math.abs(savedSum - 1) < 1e-12 && savedMix.equals(deadMix), savedMix);
+        }
+    }
+
     /** Buckets on EA fluid devices (Baughn: manual bootstrap): water into the boiler; crude out of the pump. */
     static final class Buckets2 implements TestCase {
         mods.eln.oil.BoilerElement boiler;
         mods.eln.oil.OilPumpElement pump;
-        ItemStack afterWater, afterEmpty, afterSteamTry;
+        ItemStack afterWater, afterEmpty, afterSteamTry, afterTank;
         int waterAfter, crudeAfter;
 
         public String id() {
@@ -2232,9 +4238,15 @@ public final class OilCases {
             afterWater = use(ctx, boiler, new ItemStack(net.minecraft.world.item.Items.WATER_BUCKET));
             waterAfter = boiler.tanks.water();
             afterSteamTry = use(ctx, boiler, new ItemStack(net.minecraft.world.item.Items.BUCKET));   // water stays in, steam has no bucket
-            pump.tank.fill(new net.neoforged.neoforge.fluids.FluidStack(mods.eln.oil.Oil.CRUDE.get(), 1500), true);
+            pump.putFluid(mods.eln.oil.Oil.CRUDE.get(), 1500);
             afterEmpty = use(ctx, pump, new ItemStack(net.minecraft.world.item.Items.BUCKET));
-            crudeAfter = pump.tank.getFluidAmount();
+            crudeAfter = pump.discharge.view.amount(mods.eln.fluid.NodeFluidView.LIQUID);
+            // a tank of crude buckets out as crude too (Baughn 2026-11-11: a reservoir gave a bucket, a tank didn't)
+            var tank = OilOnPipes.tank(ctx, ctx.at(1, 1, 4), mods.eln.misc.Direction.XP);
+            ctx.after(2, () -> {
+                OilOnPipes.put(ctx, ctx.at(1, 1, 4), mods.eln.oil.Oil.CRUDE.get(), 3000);
+                ctx.after(4, () -> afterTank = use(ctx, tank, new ItemStack(net.minecraft.world.item.Items.BUCKET)));
+            });
         }
 
         public void measure(TestContext ctx) {
@@ -2243,7 +4255,9 @@ public final class OilCases {
             // (a little of it evaporates into the vessel's air space: since the pipes' phase 2 the tanks show the vessel)
             ctx.check("oil: an empty bucket can't take the boiler's water", boiler.tanks.water() >= 990 && afterSteamTry.is(net.minecraft.world.item.Items.BUCKET),
                 boiler.tanks.water() + " mB, hand " + afterSteamTry);
-            ctx.check("oil: an empty bucket takes 1000 mB of crude from the pump", crudeAfter == 500 && afterEmpty.is(mods.eln.oil.Oil.CRUDE_BUCKET.get()),
+            // (its live crude's gas is out of the liquid: ~1425 mB of it shows as crude)
+            ctx.check("oil: an empty bucket takes crude from a tank of crude", afterTank != null && afterTank.is(mods.eln.oil.Oil.CRUDE_BUCKET.get()), "hand " + afterTank);
+            ctx.check("oil: an empty bucket takes 1000 mB of crude from the pump", Math.abs(crudeAfter - 425) <= 30 && afterEmpty.is(mods.eln.oil.Oil.CRUDE_BUCKET.get()),
                 crudeAfter + " mB, hand " + afterEmpty);
         }
     }
@@ -2322,12 +4336,20 @@ public final class OilCases {
         }
     }
 
-    /** The flare stack burns what it's given at 250 mB/s. */
+    /**
+     * The flare stack burns what it's given at 250 mB/s. Water (variant water) boils off at that rate without a flame
+     * (Baughn 2026-11-11: the flare shouldn't "burn" water): the client is told a plume, and Jade says "Boiling off".
+     */
     static final class Flare implements TestCase {
+        final boolean water;
         mods.eln.oil.FlareStackElement flare;
 
+        Flare(boolean water) {
+            this.water = water;
+        }
+
         public String id() {
-            return "oil_flare";
+            return water ? "oil_flare_water" : "oil_flare";
         }
 
         public int ticks() {
@@ -2337,12 +4359,137 @@ public final class OilCases {
         public void build(TestContext ctx) {
             Wp10aCases.Layout l = new Wp10aCases.Layout(ctx, width());
             flare = (mods.eln.oil.FlareStackElement) l.device(8 + (83 << 6), 2, 1);
-            flare.tank.fill(new net.neoforged.neoforge.fluids.FluidStack(mods.eln.oil.Oil.Cut.RESIDUE.source.get(), 1000), true);
+            flare.putFluid(water ? net.minecraft.world.level.material.Fluids.WATER : mods.eln.oil.Oil.Cut.RESIDUE.source.get(), 1000);
         }
 
         public void measure(TestContext ctx) {
-            int burnt = 1000 - flare.tank.getFluidAmount();
-            ctx.check("oil: the flare stack burns ~250 mB/s (2 s)", burnt >= 400 && burnt <= 550, burnt + " mB");
+            double burnt = 1000 - flare.liquidMb();
+            var jade = flare.getWaila();
+            if (water) {
+                ctx.check("oil: the flare stack boils water off at ~250 mB/s (2 s)", burnt >= 400 && burnt <= 550, String.format("%.0f mB", burnt));
+                ctx.check("oil: water at the flare goes up as a plume, not a flame", flare.plume() && flare.burning().equals("water"), flare.burning());
+                ctx.check("oil: Jade doesn't say the flare burns water", jade.containsKey("Boiling off") && !jade.containsKey("Burning"), "" + jade);
+            } else {
+                ctx.check("oil: the flare stack burns ~250 mB/s (2 s)", burnt >= 400 && burnt <= 550, String.format("%.0f mB", burnt));
+                ctx.check("oil: residue at the flare burns with a flame", !flare.plume() && flare.burning().equals("residue"), flare.burning());
+                ctx.check("oil: Jade says the flare is burning", jade.containsKey("Burning") && !jade.containsKey("Boiling off"), "" + jade);
+            }
+        }
+    }
+
+    /**
+     * The flare stack's tank is a fluid node behind its flange:
+     * <ul>
+     * <li>live_gas: natural gas under pressure in a tank, piped to its flange: it burns it (by mass: what left the tank and
+     * pipe is what it burnt), and its vessel doesn't fill up;</li>
+     * <li>flue: a furnace's flue gas piped to it instead goes up as smoke (Baughn 2026-11-13): the client is told flue_gas,
+     * a plume without a flame, and Jade says "Letting off";</li>
+     * <li>legacy_tank: an old save's 4-bucket tank of residue loads into the vessel.</li>
+     * </ul>
+     */
+    static final class FlareNode implements TestCase {
+        static final String[] VARIANTS = {"live_gas", "flue", "legacy_tank"};
+        final String variant;
+        mods.eln.oil.FlareStackElement flare;
+        mods.eln.oil.TankElement tank;
+        double ng0;
+        String legacy = "", told = "";
+        boolean plume;
+        java.util.Map<String, String> jade = java.util.Map.of();
+
+        FlareNode(String variant) {
+            this.variant = variant;
+        }
+
+        public String id() {
+            return "oil_flare_" + variant;
+        }
+
+        public int width() {
+            return 5;
+        }
+
+        public int ticks() {
+            return 300;
+        }
+
+        /** The gas in the tank: natural gas, or a flue's. */
+        int ng() {
+            return mods.eln.sim.fluid.SpeciesRegistry.get().id(variant.equals("flue") ? "eln:flue_gas" : "eln:natural_gas");
+        }
+
+        public void build(TestContext ctx) {
+            switch (variant) {
+                case "live_gas", "flue" -> {
+                    // (as oil_on_pipes_flare_in, with natural gas at ~3 bar in the tank instead of crude)
+                    tank = OilOnPipes.tank(ctx, ctx.at(1, 1, 1), mods.eln.misc.Direction.XP);
+                    flare = (mods.eln.oil.FlareStackElement) ctx.placeTransparent(8 + (83 << 6), ctx.at(3, 1, 1));
+                    flare.front = mods.eln.misc.Direction.XN;
+                    flare.reconnect();
+                    PipeCases.lay(ctx, ctx.at(2, 1, 1), 0, 0, 4, 8, 8, 4, 8, 8, 8, 8, 16, 8, 8);
+                    mods.eln.sim.fluid.EaUnits.add(tank.vessel, ng(), 1.4 * tank.vessel.volume, tank.vessel.T(), true);
+                    tank.vessel.update();
+                    ctx.after(1, () -> ng0 = ngIn(ctx));
+                    ctx.after(60, () -> {   // (while it flows)
+                        told = flare.burning();
+                        plume = flare.plume();
+                        jade = flare.getWaila();
+                    });
+                }
+                case "legacy_tank" -> {
+                    flare = (mods.eln.oil.FlareStackElement) ctx.placeTransparent(8 + (83 << 6), ctx.at(1, 1, 1));
+                    var p = ctx.at(1, 1, 1);
+                    ctx.after(2, () -> {
+                        try {
+                            var r = mods.eln.gametest.Reload.node(ctx.level(), p, t -> {
+                                var el = FuelBySpecies.holding(t, "vesselW");
+                                for (String k : new String[]{"vesselW", "vesselA", "vesselU", "vesselS", "vesselFv"}) el.remove(k);
+                                var old = new mods.eln.fluid.ElementFluidHandler(mods.eln.oil.FlareStackDescriptor.TANK_MB);
+                                old.fill(new net.neoforged.neoforge.fluids.FluidStack(Oil.Cut.RESIDUE.source.get(), 1000), true);
+                                old.writeToNBT(el, "tank");
+                                return t;
+                            });
+                            var fresh = (mods.eln.oil.FlareStackElement) ((mods.eln.node.transparent.TransparentNode) r.fresh).element;
+                            int id = mods.eln.sim.fluid.SpeciesRegistry.get().id("eln:residue");
+                            double kg = fresh.vessel.liquid(id), want = 1000 * mods.eln.fluid.FluidSpecies.kgPerMb(id, false);
+                            legacy = Math.abs(kg - want) < 0.01 * want ? "" : String.format("%.5f kg of residue, want %.5f", kg, want);
+                        } catch (ReflectiveOperationException e) {
+                            legacy = e.toString();
+                        }
+                    });
+                }
+            }
+        }
+
+        /** The rig's natural gas (kg): the tank, the pipe between and the flare's vessel. */
+        double ngIn(TestContext ctx) {
+            int id = ng();
+            double kg = tank.vessel.vapour(id) + flare.vessel.vapour(id);
+            for (var part : PipeCases.node(ctx, ctx.at(2, 1, 1)).parts)
+                if (part instanceof mods.eln.node.voxel.PipePart pp && pp.fluid != null) {
+                    mods.eln.fluid.FluidWorld.writeBackOf(pp.fluid);
+                    kg += pp.fluid.vapour(id);
+                }
+            return kg;
+        }
+
+        public void measure(TestContext ctx) {
+            switch (variant) {
+                case "live_gas" -> {
+                    double gone = ng0 - ngIn(ctx), dp = flare.vessel.P() - mods.eln.sim.fluid.Water.P_ATM;
+                    String what = String.format("%.6f kg gone from the rig (of %.6f), %.6f kg burnt, flare at %+.0f Pa, %s", gone, ng0, flare.gasBurntKg, dp, flare.getWaila());
+                    // (by mass: only its tip's float vent lets gas out unburnt, and only over 300 Pa)
+                    ctx.check("flare stack: the natural gas piped in burns", gone > 0.3 * ng0 && flare.gasBurntKg > 0.95 * gone && flare.gasBurntKg < 1.01 * gone, what);
+                    ctx.check("flare stack: its vessel doesn't fill up with gas", dp < 2000, what);
+                }
+                case "flue" -> {
+                    double gone = ng0 - ngIn(ctx);
+                    ctx.check("flare stack: the flue gas piped in goes up it", gone > 0.3 * ng0, String.format("%.6f kg gone from the rig (of %.6f)", gone, ng0));
+                    ctx.check("flare stack: flue gas goes up as smoke, not a flame", plume && told.equals("flue_gas"), told);
+                    ctx.check("flare stack: Jade says it lets the smoke off", jade.containsKey("Letting off") && !jade.containsKey("Burning"), "" + jade);
+                }
+                case "legacy_tank" -> ctx.check("flare stack: an old save's tank of residue loads into its vessel", legacy.isEmpty(), legacy);
+            }
         }
     }
 

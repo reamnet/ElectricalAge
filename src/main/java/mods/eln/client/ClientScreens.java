@@ -50,14 +50,21 @@ final class ClientScreens {
         layout("transparentnode.smelter.SmelterDescriptor", "smelter");
         layout("oil.SteamOvenDescriptor", "steam_oven");
         layout("anvil.ElectricalAnvilDescriptor", "electrical_anvil");
+        layout("transparentnode.wiredrawing.WireDrawingDescriptor", "wire_drawing");
+        layout("gridnode.electricalpole.ElectricalPoleDescriptor", "utility_pole");
         layout("sixnode.electricalsource.ElectricalSourceDescriptor", "electrical_source");
         layout("sixnode.wirelesssignal.tx.WirelessSignalTxDescriptor", "wireless_tx");
         layout("sixnode.wirelesssignal.source.WirelessSignalSourceDescriptor", "wireless_source");
         layout("sixnode.wirelesssignal.rx.WirelessSignalRxDescriptor", "wireless_rx");
         layout("sixnode.busmodule.BusModuleDescriptor", "bus_module");
+        layout("sixnode.busdevice.AddressableButtonDescriptor", "bus_address");
+        layout("sixnode.busdevice.AddressableLightDescriptor", "bus_address");
+        layout("sixnode.busdevice.FloorSensorDescriptor", "bus_address");
+        layout("robotics.servo.LinearServoDriveDescriptor", "servo_drive");
         layout("sixnode.electricalalarm.ElectricalAlarmDescriptor", "electrical_alarm");
         layout("sixnode.electricalrelay.ElectricalRelayDescriptor", "electrical_relay");
         layout("sixnode.electricalgatesource.ElectricalGateSourceDescriptor", "gate_source");
+        layout("sixnode.ElectricalFuseHolderDescriptor", "fuse_holder");
         layout("sixnode.electricaltimeout.ElectricalTimeoutDescriptor", "electrical_timeout");
         layout("sixnode.electricalbreaker.ElectricalBreakerDescriptor", "electrical_breaker");
         layout("sixnode.batterycharger.BatteryChargerDescriptor", "battery_charger");
@@ -102,15 +109,23 @@ final class ClientScreens {
         ElnScreens.register(mods.eln.transparentnode.smelter.SmelterDescriptor.class, mods.eln.transparentnode.smelter.SmelterScreen::new);
         ElnScreens.register(mods.eln.oil.SteamOvenDescriptor.class, mods.eln.oil.SteamOvenScreen::new);
         ElnScreens.register(mods.eln.anvil.ElectricalAnvilDescriptor.class, mods.eln.anvil.ElectricalAnvilScreen::new);
+        ElnScreens.register(mods.eln.transparentnode.wiredrawing.WireDrawingDescriptor.class, mods.eln.transparentnode.wiredrawing.WireDrawingScreen::new);
+        ElnScreens.register(mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor.class, mods.eln.gridnode.electricalpole.PoleScreen::new);
         ElnScreens.register(mods.eln.sixnode.electricalsource.ElectricalSourceDescriptor.class,
             mods.eln.sixnode.electricalsource.ElectricalSourceScreen::new);
         reg(mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxDescriptor.class, mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxScreen::new);
         reg(mods.eln.sixnode.wirelesssignal.source.WirelessSignalSourceDescriptor.class, mods.eln.sixnode.wirelesssignal.source.WirelessSignalSourceScreen::new);
         reg(mods.eln.sixnode.wirelesssignal.rx.WirelessSignalRxDescriptor.class, mods.eln.sixnode.wirelesssignal.rx.WirelessSignalRxScreen::new);
         reg(mods.eln.sixnode.busmodule.BusModuleDescriptor.class, mods.eln.sixnode.busmodule.BusModuleScreen::new);
+        reg(mods.eln.sixnode.busdevice.AddressableButtonDescriptor.class, mods.eln.sixnode.busdevice.BusAddressScreen::new);
+        reg(mods.eln.sixnode.busdevice.AddressableLightDescriptor.class, mods.eln.sixnode.busdevice.BusAddressScreen::new);
+        reg(mods.eln.sixnode.busdevice.FloorSensorDescriptor.class, mods.eln.sixnode.busdevice.BusAddressScreen::new);
+        reg(mods.eln.robotics.servo.LinearServoDriveDescriptor.class, mods.eln.robotics.servo.LinearServoDriveScreen::new);
+        reg(mods.eln.robotics.computer.ComputerDescriptor.class, mods.eln.robotics.computer.ComputerScreen::new);
         reg(mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor.class, mods.eln.sixnode.electricalalarm.ElectricalAlarmScreen::new);
         reg(mods.eln.sixnode.electricalrelay.ElectricalRelayDescriptor.class, mods.eln.sixnode.electricalrelay.ElectricalRelayScreen::new);
         reg(mods.eln.sixnode.electricalgatesource.ElectricalGateSourceDescriptor.class, mods.eln.sixnode.electricalgatesource.ElectricalGateSourceScreen::new);
+        reg(mods.eln.sixnode.ElectricalFuseHolderDescriptor.class, mods.eln.sixnode.ElectricalFuseHolderScreen::new);
         reg(mods.eln.sixnode.electricaltimeout.ElectricalTimeoutDescriptor.class, mods.eln.sixnode.electricaltimeout.ElectricalTimeoutScreen::new);
         // S1c
         reg(mods.eln.sixnode.electricalmath.ElectricalMathDescriptor.class, mods.eln.sixnode.electricalmath.ElectricalMathScreen::new);

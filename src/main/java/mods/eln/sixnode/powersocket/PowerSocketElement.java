@@ -3,6 +3,7 @@ package mods.eln.sixnode.powersocket;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
+import mods.eln.network.ClientValues;
 import mods.eln.node.NodeBase;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
@@ -85,8 +86,6 @@ public class PowerSocketElement extends SixNodeElement {
         voltageWatchdog
             .set(powerLoad)
             .set(new Failure(this).electronics());
-
-        channelRegister(this);
     }
 
     class PowerSocketSlowProcess implements IProcess {
@@ -158,9 +157,12 @@ public class PowerSocketElement extends SixNodeElement {
         return null;
     }
 
+    /** Joins the channel here, not in the constructor: a placement probe is built and never initialised. */
     @Override
     public void initialize() {
         setupFromInventory();
+        channelRemove(this);
+        channelRegister(this);
     }
 
     @Override
@@ -210,8 +212,9 @@ public class PowerSocketElement extends SixNodeElement {
         try {
             switch (stream.readByte()) {
                 case setChannelId:
+                    String c = ClientValues.readString(stream);
                     channelRemove(this);
-                    channel = stream.readUTF();
+                    channel = c;
                     needPublish();
                     channelRegister(this);
                     break;

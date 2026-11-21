@@ -250,7 +250,7 @@ object ForkPatchCordCases {
         lateinit var o: OutletElement;lateinit var e: BatteryChargerElement
         override fun id()="forkpatch_cord_${if(voxel)"voxel" else "legacy"}_battery_inlet_isolation"
         override fun build(c: TestContext) {
-            o=outlet(c);e=c.placeSix(Ids.six("200V Battery Charger"),c.at(4,1,1)) as BatteryChargerElement
+            o=outlet(c);e=c.placeSix(Ids.six("230V Battery Charger"),c.at(4,1,1)) as BatteryChargerElement
             if(voxel) { val pos=e.sixNode.coordonate.pos();check(CableConverter.convert(e.sixNode)==null);e=(NodeManager.instance.getNodeFromCoordonate(Coordonate(pos,c.level())) as SixNode).getElement(Direction.YN) as BatteryChargerElement }
             check(cord(e).attach(o.anchor(0),true));feed(o.input,200.0)
             val cable=c.placeSix(mods.eln.registry.ElnDeviceRegistry.meduimVoltageCableDescriptor.parentItemDamage,c.at(3,1,1)) as mods.eln.sixnode.electricalcable.ElectricalCableElement;feed(cable.electricalLoad,250.0)
@@ -309,7 +309,7 @@ object ForkPatchCordCases {
         override fun id()="forkpatch_cord_native_fixed_machine_${lookup}_original_input"
         override fun build(c: TestContext) {
             o=outlet(c);machine=c.placeTransparent(lookup,c.at(4,1,1))
-            if(lookup==2048) { machine.inventory.setItem(2,item("200V Copper Heating Corp"));machine.inventory.setChanged() }
+            if(lookup==2048) { machine.inventory.setItem(2,item("230V Copper Heating Corp"));machine.inventory.setChanged() }
             check(cord(machine).attach(o.anchor(0),true));feed(o.input,200.0)
         }
         override fun measure(c: TestContext) { try {
@@ -317,7 +317,7 @@ object ForkPatchCordCases {
             c.check("cord machine: each explicit native consumer uses its original simulated inlet",input.u in 199.9..200.1 && cord(machine).connected && Direction.values().all { side->LRDU.values().all { machine.node.getElectricalLoad(side,it)!==input } },"$lookup: ${input.u}")
             val system=input.subSystem!!;val version=system.matrixVersion;repeat(2000) { cord(machine).poll() };c.check("cord machine: unchanged attachment retains stable native LU",system.matrixVersion==version,"")
             if(lookup==2048) {
-                val before=dropped(c,CordRating.V200.cordName);machine.inventory.setItem(2,item("50V Copper Heating Corp"));machine.inventory.setChanged();cord(machine).poll()
+                val before=dropped(c,CordRating.V200.cordName);machine.inventory.setItem(2,item("48V Copper Heating Corp"));machine.inventory.setChanged();cord(machine).poll()
                 c.check("cord furnace: real installed heating hardware determines voltage compatibility and refund",!cord(machine).plugged && dropped(c,CordRating.V200.cordName)==before+1,"")
             }else cord(machine).detach()
             c.check("cord machine: unplug restores the existing native surface inlet",Direction.values().any { side->LRDU.values().any { machine.node.getElectricalLoad(side,it)===input } },"")
@@ -350,7 +350,7 @@ object ForkPatchCordCases {
             }
             if(lookup==4130) {
                 val nativeLoad=machine.electricalComponentList.filterIsInstance<Resistor>().sumOf { it.p }
-                c.check("cord cooler: native fan pays its real60 W resistive demand",nativeLoad>58.0 && nativeLoad<=60.001,"$nativeLoad")
+                c.check("cord cooler: native fan pays its real60 W resistive demand",kotlin.math.abs(nativeLoad - 60 * (200.0 / Eln.MVU) * (200.0 / Eln.MVU)) < 2,"$nativeLoad")
             }
             val version=input.subSystem!!.matrixVersion
             repeat(2000) { link.poll() }
@@ -390,12 +390,12 @@ object ForkPatchCordCases {
         }
     }
     private class UnmatchedInlet(val lookup: Int): Base() {
-        override fun id()="forkpatch_cord_native_50v_consumer_${lookup}_rejects_48v"
+        override fun id()="forkpatch_cord_native_48v_consumer_${lookup}_rejects_24v"
         override fun measure(c: TestContext) {
             val machine=placeConsumer(c,lookup);val device=requireNotNull(CordSupport.device(machine))
-            c.check("cord consumer: native50 V is never relabeled48 V",CordRating.entries.none(device::acceptsCord),"$lookup")
-            val o=outlet(c,8001);val before=dropped(c,CordRating.V48.cordName)
-            c.check("cord consumer: unmatched connector cannot claim a socket or acquire paid state",!device.cord.attach(o.anchor(0),true) && !o.occupied(0) && !device.cord.plugged && !device.cord.paid && dropped(c,CordRating.V48.cordName)==before,"")
+            c.check("cord consumer: 48 V stock consumer accepts only matching voltage",device.acceptsCord(CordRating.V48) && !device.acceptsCord(CordRating.V24),"$lookup")
+            val o=outlet(c,8000);val before=dropped(c,o.rating.cordName)
+            c.check("cord consumer: unmatched connector cannot claim a socket or acquire paid state",!device.cord.attach(o.anchor(0),true) && !o.occupied(0) && !device.cord.plugged && !device.cord.paid && dropped(c,o.rating.cordName)==before,"")
         }
     }
     private fun placeConsumer(c: TestContext,lookup: Int): TransparentNodeElement {

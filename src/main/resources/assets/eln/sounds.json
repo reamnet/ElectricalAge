@@ -300,7 +300,7 @@
         "sounds": [
             {
                 "name": "eln:heat_furnace_fire",
-                "stream": false
+                "stream": true
             }
         ]
     },

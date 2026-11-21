@@ -48,7 +48,8 @@ final class MenusOpenCase implements TestCase {
     }
 
     /** A click toggles these; their screen opens with the wrench key held (GuiPacketCase). */
-    static final java.util.Set<String> CLICK_TOGGLES = java.util.Set.of("Wireless Button", "Wireless Switch");
+    static final java.util.Set<String> CLICK_TOGGLES = java.util.Set.of("Wireless Button", "Wireless Switch",
+        "Addressable Button");   // (a click presses it; sneaking opens its screen)
 
     public void measure(TestContext ctx) {
         FakePlayer fp = FakePlayerFactory.get(ctx.level(), new com.mojang.authlib.GameProfile(
@@ -117,6 +118,11 @@ final class MenusOpenCase implements TestCase {
             fp.setShiftKeyDown(name.equals("Red Handle Service Disconnect")
                 || node instanceof TransparentNode tn && tn.element instanceof mods.eln.transparentnode.firealarm.AlarmElement alarm
                     && alarm.getKind()==mods.eln.transparentnode.firealarm.AlarmKind.PULL);
+
+            // (empty-handed: the fake player is shared, and another test may have left an item in its hand, which a
+            // device takes instead of opening its screen: a Lamp Supply took one, menus_open failed now and then)
+            fp.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.ItemStack.EMPTY);
+            fp.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, net.minecraft.world.item.ItemStack.EMPTY);
             Vec3 hitAt = new Vec3(at.getX() + local.x, at.getY() + local.y, at.getZ() + local.z);
             fp.setPos(hitAt.x - 1.5, at.getY(), hitAt.z);
             var state = ctx.level().getBlockState(at);

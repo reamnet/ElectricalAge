@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:iron_nugget",
+    "minecraft:iron_nugget",
+    "#c:rubbers"
+  ],
+  "result": {
+    "id": "eln:floppy_disk"
+  }
+}

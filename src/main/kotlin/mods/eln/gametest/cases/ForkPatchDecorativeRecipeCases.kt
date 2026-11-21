@@ -27,11 +27,11 @@ object ForkPatchDecorativeRecipeCases {
             val stringGrid=CraftingInput.of(2,1,listOf(led,string))
             val strings=craft(stringGrid)
             c.check("source String Lights bootstrap consumes rated120VLED and materialString with yield two",same(strings,Eln.findItemStack("String Lights",2)) && strings.count==2,strings.toString())
-            for(single in listOf(led,string,Eln.findItemStack("50V LED Bulb",1))) {
+            for(single in listOf(led,string,Eln.findItemStack("48V LED Bulb",1))) {
                 val missing=craft(CraftingInput.of(1,1,listOf(single)))
                 c.check("String Lights bootstrap rejects missing ingredient or legacy bulb alone",!same(missing,Eln.findItemStack("String Lights",1)),missing.toString())
             }
-            val wrongRating=craft(CraftingInput.of(2,1,listOf(Eln.findItemStack("50V LED Bulb",1),string)))
+            val wrongRating=craft(CraftingInput.of(2,1,listOf(Eln.findItemStack("48V LED Bulb",1),string)))
             c.check("String Lights bootstrap requires the source rated120VLED",!same(wrongRating,Eln.findItemStack("String Lights",1)),wrongRating.toString())
             for(s in source) {
                 val expected=Eln.findItemStack(s.name,s.count)

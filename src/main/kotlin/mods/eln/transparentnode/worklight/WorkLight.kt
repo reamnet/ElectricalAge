@@ -96,16 +96,40 @@ class WorkLightElement(node:TransparentNode,d:TransparentNodeDescriptor):FuelGen
         when(id.toInt()){
             80->{if(on)on=false else if(!wireless&&!cord.plugged&&tankLevel>0){on=true;voltageGracePeriod=FuelGeneratorDescriptor.VoltageStabilizationGracePeriod};reconnect()}
             81->{wireless=!wireless;if(wireless){on=false;powerSource.p=0.0};feed.clear();reconnect()}
-            82->{channel=s.readUTF().trim().take(128);feed.clear()}
+            82->{channel=mods.eln.network.ClientValues.readString(s).trim();feed.clear()}
             in 83..86->aim.set((id.toInt()-83)/2,(id.toInt()-83)%2,s.readDouble())
         };needPublish();return id
     }
     fun writeConfigTool(t:CompoundTag,invoker:Player){aim.write(t)}
     fun readConfigTool(t:CompoundTag,invoker:Player){aim.read(t);needPublish()}
     private fun settings(t:CompoundTag){wireless=t.getBooleanOr("wireless",false);channel=t.getStringOr("channel","Default channel").trim().take(128);aim.read(t)}
-    override fun readFromNBT(t:CompoundTag?){super.readFromNBT(t);if(t!=null){settings(t);tankLevel=tankLevel.takeIf{it.isFinite()}?.coerceIn(0.0,1.0)?:0.0}}
-    override fun writeToNBT(t:CompoundTag?){super.writeToNBT(t);if(t!=null){t.putBoolean("wireless",wireless);t.putString("channel",channel);aim.write(t)}}
-    override fun getItemStackNBT()=CompoundTag().apply{putDouble("tankLevel",tankLevel);putString("tankFluid",tankFluid);putBoolean("wireless",wireless);putString("channel",channel);aim.write(this)}
-    override fun readItemStackNBT(t:CompoundTag?){if(t!=null){tankLevel=t.getDoubleOr("tankLevel",0.0).takeIf{it.isFinite()}?.coerceIn(0.0,1.0)?:0.0;tankFluid=t.getStringOr("tankFluid","").takeIf{it in fuels}?:fuels.firstOrNull().orEmpty();settings(t);on=false}}
+    override fun readFromNBT(t: CompoundTag?) {
+        super.readFromNBT(t)
+        if (t != null) settings(t)
+    }
+
+    override fun writeToNBT(t: CompoundTag?) {
+        super.writeToNBT(t)
+        if (t != null) {
+            t.putBoolean("wireless", wireless)
+            t.putString("channel", channel)
+            aim.write(t)
+        }
+    }
+
+    override fun getItemStackNBT() = CompoundTag().also {
+        writeFuel(it)
+        it.putBoolean("wireless", wireless)
+        it.putString("channel", channel)
+        aim.write(it)
+    }
+
+    override fun readItemStackNBT(t: CompoundTag?) {
+        if (t != null) {
+            readFuel(t)
+            settings(t)
+            on = false
+        }
+    }
     override fun networkSerialize(s:DataOutputStream){super.networkSerialize(s);s.writeDouble(tankLevel);s.writeBoolean(wireless);s.writeUTF(channel);s.writeInt(brightness);s.writeInt(bulbCount);s.writeUTF(bulb?.let{SourceLampLife.technology(it).takeIf{v->v>=0}?.let{t->SourceLampLife.technologies[t]}}?:"led");s.writeDouble(operatingVoltage);aim.write(s)}
 }

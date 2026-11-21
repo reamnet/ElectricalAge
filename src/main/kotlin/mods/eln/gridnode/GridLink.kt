@@ -26,6 +26,9 @@ class GridLink : INBTTReady {
     fun thermalLoads()=thermals.map { it.load }
     fun insulationDamaged()=thermals.any { it.insulationDamaged }
     val connected get()=connections.isNotEmpty()
+    fun isConnected() = connected
+    fun cableStack() = cable.copy()
+    fun rs() = rs
     constructor(a: Coordonate,b: Coordonate,sideA: Direction,sideB: Direction,cable: ItemStack,rs: Double):this(a,b,sideA.int,sideB.int,cable,rs)
     constructor(a: Coordonate,b: Coordonate,from: Int,to: Int,cable: ItemStack,rs: Double) {
         this.a=a;this.b=b;this.from=from;this.to=to;this.cable=cable.copy();this.rs=rs
@@ -106,7 +109,7 @@ class GridLink : INBTTReady {
     }
     companion object {
         private fun publish(e: GridElement) {
-            e.updateIdealRenderAngle();e.needPublish()
+            e.updateIdealRenderAngle();e.needPublish();e.onLinksChanged()
             e.gridLinkList.forEach { it.getOtherElement(e)?.needPublish() }
         }
         @JvmStatic fun getElementFromCoordinate(c: Coordonate?): GridElement?=if(c==null)null else NodeManager.instance?.getTransparentNodeFromCoordinate(c) as? GridElement
@@ -116,6 +119,46 @@ class GridLink : INBTTReady {
             require(a!==b && a.coordonate().dimention==b.coordonate().dimention) { tr("Invalid grid cable span") }
             require(a.allowsNewGridLinks() && b.allowsNewGridLinks()) { tr("Terminate overhead wires at a Service Weatherhead; use placed wall cables for meters and panels") }
             require(a.acceptsGridCable(cable) && b.acceptsGridCable(cable) && GridCablePolicy.acceptsTerminal(cable,from) && GridCablePolicy.acceptsTerminal(cable,to)) { tr("Grid links require an intact power cable") }
+            validateRoute(a, b, from, to)
+            val x = a.gridLoads(from)
+            val y = b.gridLoads(to)
+            val distance = a.coordonate().trueDistanceTo(b.coordonate())
+            val minimum=GridCablePlan.requiredUnits(cable,kotlin.math.ceil(distance).toInt(),x.size)
+            require(length>=minimum && length>0 && (cable is UtilityCableDescriptor || length<=cable.newItemStack().maxStackSize)) { tr("Grid cable item does not match the paid length") }
+            if (duplicate(a, b, x, y)) return false
+            val stack=paid?.copy() ?: if(cable is UtilityCableDescriptor)cable.newItemStack().also { cable.setRemainingLengthMeters(it,length.toDouble()) } else cable.newItemStack(length)
+            val correct=if(cable is UtilityCableDescriptor)stack.count==1 && kotlin.math.abs(cable.getRemainingLengthMeters(stack)-length)<=UtilityCableDescriptor.LENGTH_METERS_EPSILON else stack.count==length
+            require(correct && mods.eln.generic.GenericItemBlockUsingDamageDescriptor.getDescriptor(stack)===cable) { tr("Grid cable item does not match the paid length") }
+            val ohms=if(cable is UtilityCableDescriptor)cable.resistanceOhms(GridCablePlan.coreMeters(length.toDouble(),x.size,GridCablePlan.bundled(cable))) else cable.electricalRs*length/x.size
+            val link=GridLink(a.coordonate(),b.coordonate(),from,to,stack,ohms).also { it.jacketLength=GridCablePlan.bundled(cable) }
+            return install(link)
+        }
+
+        @JvmStatic fun addLink(a: GridElement, b: GridElement, sideA: Direction, sideB: Direction, paid: ItemStack, ohms: Double): Boolean {
+            val from = a.selectedGridTerminal(sideA)
+            val to = b.selectedGridTerminal(sideB)
+            validateRoute(a, b, from, to)
+            require(!paid.isEmpty && ohms.isFinite() && ohms >= 0)
+            if (duplicate(a, b, a.gridLoads(from), b.gridLoads(to))) return false
+            return install(GridLink(a.coordonate(), b.coordonate(), from, to, paid, ohms))
+        }
+
+        @JvmStatic fun addBareLink(a: GridElement, b: GridElement, from: Int, to: Int, spool: ItemStack): Int {
+            validateRoute(a, b, from, to)
+            val x = a.gridLoads(from)
+            val y = b.gridLoads(to)
+            val span = kotlin.math.ceil(a.coordonate().trueDistanceTo(b.coordonate())).toInt()
+            val cost = span * x.size
+            require(cost in 1..OverheadCableItem.blocks(spool)) { tr("You need %1$ units of cable", cost) }
+            if (duplicate(a, b, x, y)) return 0
+            val piece = OverheadCableItem.make(OverheadCableItem.mm2(spool), cost)
+            install(GridLink(a.coordonate(), b.coordonate(), from, to, piece, OverheadCableItem.rsPerBlock(spool) * span))
+            return cost
+        }
+
+        private fun validateRoute(a: GridElement, b: GridElement, from: Int, to: Int) {
+            require(a !== b && a.coordonate().dimention == b.coordonate().dimention) { tr("Invalid grid cable span") }
+            require(a.allowsNewGridLinks() && b.allowsNewGridLinks()) { tr("Select an overhead grid terminal") }
             val x=a.gridLoads(from);val y=b.gridLoads(to)
             require(x.isNotEmpty() && x.size==y.size) { tr("Select matching grid terminal circuits") }
             val ka=a.gridCircuitKey(from);val kb=b.gridCircuitKey(to)
@@ -124,22 +167,25 @@ class GridLink : INBTTReady {
             if(x.size==1)require(GridPhaseRouting.compatible(a,from,b,to)) { tr("This single-phase run is already connected to a different HV phase") }
             val distance=a.coordonate().trueDistanceTo(b.coordonate())
             require(distance<=minOf(a.connectRange,b.connectRange)) { tr("Grid cable span exceeds the endpoint range") }
-            val minimum=GridCablePlan.requiredUnits(cable,kotlin.math.ceil(distance).toInt(),x.size)
-            require(length>=minimum && length>0 && (cable is UtilityCableDescriptor || length<=cable.newItemStack().maxStackSize)) { tr("Grid cable item does not match the paid length") }
+        }
+
+        private fun duplicate(a: GridElement, b: GridElement, x: List<ElectricalLoad>, y: List<ElectricalLoad>): Boolean {
             val old=a.gridLinkList+b.gridLinkList
-            if(old.any { link->
+            return old.any { link->
                 if(!link.links(a,b))return@any false
                 val ox=a.gridLoads(link.getTerminal(a));val oy=b.gridLoads(link.getTerminal(b))
                 ox.zip(oy).any { (u,v)->x.indices.any { u===x[it] && v===y[it] } }
-            })return false
-            val stack=paid?.copy() ?: if(cable is UtilityCableDescriptor)cable.newItemStack().also { cable.setRemainingLengthMeters(it,length.toDouble()) } else cable.newItemStack(length)
-            val correct=if(cable is UtilityCableDescriptor)stack.count==1 && kotlin.math.abs(cable.getRemainingLengthMeters(stack)-length)<=UtilityCableDescriptor.LENGTH_METERS_EPSILON else stack.count==length
-            require(correct && mods.eln.generic.GenericItemBlockUsingDamageDescriptor.getDescriptor(stack)===cable) { tr("Grid cable item does not match the paid length") }
-            val ohms=if(cable is UtilityCableDescriptor)cable.resistanceOhms(GridCablePlan.coreMeters(length.toDouble(),x.size,GridCablePlan.bundled(cable))) else cable.electricalRs*length/x.size
-            val link=GridLink(a.coordonate(),b.coordonate(),from,to,stack,ohms).also { it.jacketLength=GridCablePlan.bundled(cable) }
-            if(!link.connect()) { link.onBreakElement();throw IllegalArgumentException(tr("Grid endpoint is no longer available")) }
+            }
+        }
+
+        private fun install(link: GridLink): Boolean {
+            if (!link.connect()) {
+                link.onBreakElement()
+                throw IllegalArgumentException(tr("Grid endpoint is no longer available"))
+            }
             return true
         }
+
     }
 }
 

@@ -13,7 +13,20 @@ public class NodeConnection {
     ElectricalConnection EC;
     ThermalConnection TC;
     private final java.util.List<ElectricalConnection> extra = new java.util.ArrayList<>();
-    public void addElectricalConnection(ElectricalConnection connection) { extra.add(connection); }
+    public void addElectricalConnection(ElectricalConnection connection) {
+        if (EC == null) EC = connection;
+        else extra.add(connection);
+    }
+
+    /** Its electrical link, or null. */
+    public ElectricalConnection electrical() {
+        return EC;
+    }
+
+    /** Its thermal link, or null. */
+    public ThermalConnection thermal() {
+        return TC;
+    }
 
     /** The node at the other end from n. */
     public NodeBase other(NodeBase n) {

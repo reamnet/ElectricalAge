@@ -13,6 +13,14 @@ class FabricatorDescriptor(name: String) : TransparentNodeDescriptor(name, Fabri
     private val body = requireNotNull(model.getPart("Cube.002_Cube.013"))
     private val etcherX = requireNotNull(model.getPart("Cube.003_Cube.012"))
     private val etcherZ = requireNotNull(model.getPart("Cube.001_Cube.010"))
+    override fun hitboxParts(): List<List<DoubleArray>> = listOf(body, etcherX, etcherZ).map { part ->
+        val triangles = mutableListOf<DoubleArray>()
+        part.triangles(triangles)
+        // Match the model's offset in draw() at its resting pose.
+        for (triangle in triangles) for (z in 2 until 9 step 3) triangle[z] += 1.0
+        triangles
+    }
+
     override fun addInformation(stack: ItemStack?, player: Player?, lines: MutableList<String>, advanced: Boolean) {
         super.addInformation(stack, player, lines, advanced)
         lines.add(tr("Creates chips from silicon wafers and copper plates"))

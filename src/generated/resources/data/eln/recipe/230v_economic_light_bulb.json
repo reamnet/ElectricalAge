@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": "#c:rubbers",
+    "F": "minecraft:glowstone_dust",
+    "G": "minecraft:glass_pane",
+    "S": "eln:copper_cable"
+  },
+  "pattern": [
+    " G ",
+    "GFG",
+    "ASA"
+  ],
+  "result": {
+    "count": 4,
+    "id": "eln:200v_economic_light_bulb"
+  }
+}

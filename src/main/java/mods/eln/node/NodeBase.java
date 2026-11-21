@@ -307,6 +307,17 @@ public abstract class NodeBase {
 
     public abstract ElectricalLoad getElectricalLoad(Direction directionB, LRDU lrduB);
 
+    /**
+     * The load on side at lrdu for a connection of kind mask (maskElectricalPower, maskElectricalGate...): the
+     * two-argument load when the side's connection mask shares a kind bit (the low 16, as compareConnectionMask) with
+     * mask, else null. A node with several loads on one position (one per kind or colour) overrides it. Used to reach
+     * an existing port from outside (the Machine API's PortRef).
+     */
+    public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu, int mask) {
+        if ((getSideConnectionMask(side, lrdu) & mask & 0xFFFF) == 0) return null;
+        return getElectricalLoad(side, lrdu);
+    }
+
     public void checkCanStay(boolean onCreate) {
 
     }
@@ -483,6 +494,14 @@ public abstract class NodeBase {
      */
     public static volatile java.util.function.ToDoubleFunction<NodeBase> timeScale;
 
+    /**
+     * For Stasis Delvers: true when this node asks to keep running in stopped land (a utility pole with a stasis anchor,
+     * Baughn 2026-11-08). EA only reports it; Stasis decides.
+     */
+    public boolean timeExempt() {
+        return false;
+    }
+
     /** How fast time runs at this node (timeScale; at least 1). */
     public double timeScale() {
         var f = timeScale;
@@ -492,6 +511,13 @@ public abstract class NodeBase {
     /** Is the node in the simulation (connected)? */
     public boolean isAdded() {
         return isAdded;
+    }
+
+    private boolean connecting;
+
+    /** True while connect() runs its connectInit and connectJob (before the node counts as added). */
+    public boolean isConnecting() {
+        return connecting;
     }
 
     public void connect() {
@@ -506,8 +532,13 @@ public abstract class NodeBase {
             return;
         }
 
-        connectInit();
-        connectJob();
+        connecting = true;
+        try {
+            connectInit();
+            connectJob();
+        } finally {
+            connecting = false;
+        }
 
         isAdded = true;
 
@@ -648,11 +679,15 @@ public abstract class NodeBase {
         return null;
     }
 
+    /** GameTests: told of every packet publishToAllPlayer sends (what a client watching the node gets), else null. */
+    public static java.util.function.BiConsumer<NodeBase, byte[]> publishWatch;
+
     public void publishToAllPlayer() {
         Level w = coordonate.world();
         if (w instanceof ServerLevel) {
             ByteArrayOutputStream bos = getPublishPacket();
             if (bos != null) mods.eln.network.ElnNet.sendToTracking((ServerLevel) w, coordonate.x, coordonate.z, bos);
+            if (bos != null && publishWatch != null) publishWatch.accept(this, bos.toByteArray());
         }
         if (needNotify) {
             needNotify = false;
@@ -673,10 +708,17 @@ public abstract class NodeBase {
         }
     }
 
+    /**
+     * Drops every stack of the inventory and empties its slots: the item entity gets the stack itself, so a slot that
+     * kept it would share it with the entity (a menu still open on the inventory could take it out again).
+     */
     public void dropInventory(Container inventory) {
         if (inventory == null) return;
         for (int idx = 0; idx < inventory.getContainerSize(); idx++) {
-            dropItem(inventory.getItem(idx));
+            ItemStack stack = inventory.getItem(idx);
+            if (Utils.isEmpty(stack)) continue;
+            inventory.removeItemNoUpdate(idx);
+            dropItem(stack);
         }
     }
 

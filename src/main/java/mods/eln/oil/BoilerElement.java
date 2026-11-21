@@ -39,9 +39,9 @@ import java.util.Map;
  * rated BURST_PA, above any pipe, so a sealed plant bursts a pipe first, and a boiler with nowhere to go bursts.
  */
 public class BoilerElement extends TransparentNodeElement implements FluidDevice {
-    final BoilerDescriptor desc;
+    public final BoilerDescriptor desc;
     public final NbtThermalLoad thermal = new NbtThermalLoad("thermal");
-    public final BoilerTanks tanks = new BoilerTanks();
+    public final BoilerTanks tanks;
     public static final double VOLUME = 0.008, SHELL_C = 700, SHELL_TO_WATER_K_PER_W = 0.005;
     public static final double BURST_PA = 350e5, PORT_K = 6e-11;
     /** The vessel (built in initialize, where the block's height is known). */
@@ -55,8 +55,18 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
      * The feed inlet's float valve (Baughn 2026-11-04: a boiler shouldn't overfill): it closes over this band of the
      * gauge glass below full (fill() 1). Without it a condensate pump fed the boiler everything its makeup drew from a
      * tank, eight times its rated fill, and the boiler had all that to heat.
+     * Its opening goes with the cube of the level's distance under full: a straight line opened so steeply that at the
+     * full mark it took a step's worth of feed in one gulp and shut again, the condensate line swung by bars with every
+     * gulp, and condensate pumps could not share a line by their heads (2026-11-14, a player's plant). With the cube it
+     * holds a steady feed about 0.4 % under the full mark.
      */
     public static final double FEED_FLOAT_BAND = 0.1;
+
+    /** The feed float's opening (0..1) at this fill() of the gauge glass. */
+    public static double feedFloat(double fill) {
+        double x = Math.max(0, Math.min(1, (1 - fill) / FEED_FLOAT_BAND));
+        return x * x * x;
+    }
     /** Its rated fill (kg of water): the gauge glass's full mark, where its feed float closes and its view stops taking. */
     public static final double RATED_KG = BoilerTanks.WATER_MB * EaUnits.KG_PER_MB_WATER;
     private double[] loaded, loadedFeed;
@@ -94,6 +104,7 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
     public BoilerElement(TransparentNode node, TransparentNodeDescriptor d) {
         super(node, d);
         desc = (BoilerDescriptor) d;
+        tanks = new BoilerTanks(desc.waterMb, desc.volume);
         thermalLoadList.add(thermal);
         electricalLoadList.add(phaseOut);
         electricalComponentList.add(phaseOutProcess);
@@ -105,7 +116,7 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
         });
         slowProcessList.add(new NodePeriodicPublishProcess(node, 2, 1));
         // dry and very hot: it fails (no explosion this round)
-        slowProcessList.add(new ThermalLoadWatchDog().set(thermal).setTMax(400).set(new Failure(this).machine()));
+        slowProcessList.add(new ThermalLoadWatchDog().set(thermal).setTMax(desc.shellMaxK).set(new Failure(this).machine()));
     }
 
     @Override
@@ -118,8 +129,20 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
         if (feed == null) return ports;
         // (the feed flange turns with the boiler: a wrench turns it, and the network is rebuilt on the reconnect)
         var all = new java.util.ArrayList<>(ports);
-        all.add(new FluidPort(feed, node.coordonate.pos().asLong(), front.right().toEnumFacing().get3DDataValue(), 0.5, PORT_K));
+        all.add(feedPort());
         return all;
+    }
+
+    /** The feedwater flange's port on the feed stub: the Boiler's is on its right flank. */
+    protected FluidPort feedPort() {
+        return new FluidPort(feed, node.coordonate.pos().asLong(), front.right().toEnumFacing().get3DDataValue(), 0.5, PORT_K);
+    }
+
+    /** The steam ports on the vessel: the Boiler's dome flange underneath and its top port. */
+    protected List<FluidPort> steamPorts() {
+        long pos = node.coordonate.pos().asLong();
+        return List.of(new FluidPort(vessel, pos, 0, 0.97, PORT_K),    // the dome pipe's flange, underneath
+            new FluidPort(vessel, pos, 1, 1.0, PORT_K));                  // the top port
     }
 
     @Override
@@ -135,7 +158,7 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
     /** How full it is, as its gauge glass shows it: liquid against the water tank's capacity (0..1; the vessel's
      *  own volume is mostly steam space). */
     public double fill() {
-        return vessel.mLiquid() / RATED_KG;
+        return vessel.mLiquid() / desc.ratedKg();
     }
 
     /** Take in what pipes put in or took out since the last step (each step, and before saving). */
@@ -147,22 +170,20 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
     @Override
     public void beforeFluidStep(double dt) {
         syncTanks();
-        if (feedCheck != null) feedCheck.open = Math.max(0, Math.min(1, (1 - fill()) / FEED_FLOAT_BAND));
-        // the shell heats the water (EA thermal temperatures are relative to the ambient, Tref)
-        double shellK = thermal.Tc + mods.eln.sim.PhysicalConstant.Tref;
-        double q = (shellK - vessel.T()) / SHELL_TO_WATER_K_PER_W * heatingShare();
-        // (at most half the way to the shell's temperature in a step, as the condenser: a boiler boiled dry holds only
-        // a little air and vapour, next to no heat capacity, and the explicit step overshot it to 1300 C and on into its
-        // pipes, with the pressure swinging 0.5-3.6 bar: AdventurAgent)
-        double toShell = (vessel.energyAt(shellK) - vessel.energy) / dt;
-        q = toShell >= 0 ? Math.max(0, Math.min(q, 0.5 * toShell)) : Math.min(0, Math.max(q, 0.5 * toShell));
-        vessel.heat += q;
-        thermal.moveEnergyTo(-q * dt);
-        if (q > 0 && vessel.mLiquid() > 1e-6 && vessel.T() > Water.tsat(vessel.P()) - 2) meterBoil += q * dt;
+        if (feedCheck != null) feedCheck.open = feedFloat(fill());
+        // the shell heats the water through a heat link inside the fluid core's step (EA thermal temperatures are relative
+        // to the ambient, Tref): implicit, so a boiler boiled dry, next to no heat capacity, settles at its shell's
+        // temperature instead of overshooting it (the explicit heat needed a limiter: AdventurAgent saw 1300 C)
+        vessel.wallT = thermal.Tc + mods.eln.sim.PhysicalConstant.Tref;
+        vessel.wallUA = heatingShare() / desc.shellToWater;
     }
 
     @Override
     public void afterFluidStep(double dt) {
+        // the heat that went through the shell this step comes out of (or back into) its thermal load
+        double q = vessel.wallJ;
+        thermal.moveEnergyTo(-q);
+        if (q > 0 && vessel.mLiquid() > 1e-6 && vessel.T() > Water.tsat(vessel.P()) - 2) meterBoil += q;
         // steam out through the ports and the valve, for the meter
         double gone = 0;
         for (FluidEdge e : FluidWorld.edgesOf(vessel)) gone += (e.a == vessel ? e.fVapour : -e.fVapour) * dt;
@@ -177,12 +198,22 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
         }
         showTanks();
         // over its rating the vessel bursts: what's in it flashes (explosion strength by that energy)
-        if (vessel.P() > BURST_PA) {
+        if (vessel.P() > desc.burstPa) {
             var v = vessel;
-            new mods.eln.sim.process.destruct.Failure(this).pressureVessel(
-                () -> Math.max(0, v.energy - v.mWater * Water.uLiquid(Water.TB) - v.mAir * Water.uAir(Water.T_AMBIENT)))
+            new mods.eln.sim.process.destruct.Failure(this).pressureVessel(this::flashEnergy).strengthCap(desc.maxBoom)
                 .fail(mods.eln.sim.process.destruct.FailureCause.OVERPRESSURE, v.P());
         }
+    }
+
+    /** What flashes if the vessel bursts now (J): its contents' energy over water at 100 C and air at the ambient. */
+    public double flashEnergy() {
+        var v = vessel;
+        return v == null ? 0 : Math.max(0, v.energy - v.mWater * Water.uLiquid(Water.TB) - v.mAir * Water.uAir(Water.T_AMBIENT));
+    }
+
+    /** The explosion a burst would be now: by the flash energy, up to this boiler's cap (BoilerDescriptor.maxBoom). */
+    public float burstStrength() {
+        return mods.eln.sim.process.destruct.Failure.explosionStrength(flashEnergy(), desc.maxBoom);
     }
 
     /** A new boiler, or one saved before the vessel (old saves): its tanks' water and steam (mB), air for the rest, at
@@ -246,15 +277,14 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
         // a well-insulated kettle: the water's heat capacity is the vessel's now (8 B is ~540 g in EA's scale, ~2.3
         // kJ/K); the shell keeps ~0.7 kJ/K and loses ~80 W at 100 degrees. From cold, a 1 kW heater brings it to the
         // boil in ~5 minutes.
-        thermal.set(0.01, 1.0, SHELL_C);
+        thermal.set(desc.faceRs, desc.lossRp, desc.shellC);
         var c = node.coordonate;
-        vessel = new FluidNode(VOLUME, c.y, 1.0, false);
+        vessel = new FluidNode(desc.volume, c.y, desc.height, false);
         if (loaded != null) {
             mods.eln.fluid.FluidSaves.restore(vessel, loaded);
             vessel.update();
         } else fromTanks(tanks.water(), tanks.steam());
         showTanks();
-        long pos = c.pos().asLong();
         feed = new FluidNode(FEED_VOLUME, c.y + FEED_DRAW, 0.1, false);
         if (loadedFeed != null) {
             mods.eln.fluid.FluidSaves.restore(feed, loadedFeed);
@@ -263,8 +293,7 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
         feed.lumpable = true;   // (it merges into the pipe on its flange: no stub to fill first)
         feed.resistance = 1 / PORT_K;
         feedCheck = new Link(feed, 0, vessel, FEED_DRAW, PORT_K).kind(FluidEdge.Kind.CHECK);
-        ports = List.of(new FluidPort(vessel, pos, 0, 0.97, PORT_K),    // the dome pipe's flange, underneath
-            new FluidPort(vessel, pos, 1, 1.0, PORT_K));                  // the top port
+        ports = steamPorts();
         connect();
     }
 
@@ -330,16 +359,21 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
 
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> info = new HashMap<>();
-        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermal.Tc));
+        Map<String, String> info = new java.util.LinkedHashMap<>();   // (in order: Jade's headline is the first lines)
         if (vessel != null) {
-            // (dry, it is the gas's: AdventurAgent read "Water temperature" with no water)
-            info.put(vessel.mLiquid() > 1e-6 ? I18N.tr("Water temperature") : I18N.tr("Gas temperature"), String.format("%.0f °C", vessel.T() - Water.T0));
             info.put(I18N.tr("Pressure"), String.format("%.2f bar of %s", vessel.P() / 1e5, EaUnits.contents(vessel)));
+            info.put(I18N.tr("Contents"), EaUnits.composition(vessel));
         }
+        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermal.Tc));
+        if (vessel != null)   // (dry, it is the gas's: AdventurAgent read "Water temperature" with no water)
+            info.put(vessel.mLiquid() > 1e-6 ? I18N.tr("Water temperature") : I18N.tr("Gas temperature"), String.format("%.0f °C", vessel.T() - Water.T0));
+        // (Erisi's chat review: how the heater's temperature and the pressure relate: it boils only under its shell's)
+        if (vessel != null && vessel.mLiquid() > 1e-6)
+            info.put(I18N.tr("Boils at"), String.format(I18N.tr("%.0f °C at its %.1f bar: the shell must be hotter to make steam"),
+                Water.tsat(Math.max(vessel.P(), Water.P_ATM)) - Water.T0, vessel.P() / 1e5));
         // (the vessel's own water, not the capability's view capped at the rating: an overfilled boiler showed 8000)
         int water = vessel != null ? (int) Math.floor(vessel.mLiquid() / EaUnits.KG_PER_MB_WATER) : tanks.water();
-        info.put(I18N.tr("Water"), water + " / " + BoilerTanks.WATER_MB + " mB" + (water > BoilerTanks.WATER_MB ? I18N.tr(": overfull") : ""));
+        info.put(I18N.tr("Water"), water + " / " + desc.waterMb + " mB" + (water > desc.waterMb ? I18N.tr(": overfull") : ""));
         // (Baughn: steam in grams, not mB)
         info.put(I18N.tr("Steam to give"), EaUnits.steamGrams(tanks.steam()));
         info.put(I18N.tr("Steam made"), EaUnits.steamGrams(steamRate) + "/s");

@@ -117,6 +117,18 @@ public class Wp9cContent implements ElnContent {
             sixNodeItem.addDescriptor(subId + (id << 6), new mods.eln.sixnode.busmodule.BusModuleDescriptor(name, obj.getObj("RTU")));
         }
         {
+            // RS485 bus devices with their own address (Baughn 2026-11-05)
+            subId = 2;
+            name = TR_NAME(Type.NONE, "Addressable Button");
+            sixNodeItem.addDescriptor(subId + (id << 6), new mods.eln.sixnode.busdevice.AddressableButtonDescriptor(name, obj.getObj("ledswitch")));
+            subId = 3;
+            name = TR_NAME(Type.NONE, "Addressable Light");
+            sixNodeItem.addDescriptor(subId + (id << 6), new mods.eln.sixnode.busdevice.AddressableLightDescriptor(name, obj.getObj("Led")));
+            subId = 6;
+            name = TR_NAME(Type.NONE, "Floor Sensor");
+            sixNodeItem.addDescriptor(subId + (id << 6), new mods.eln.sixnode.busdevice.FloorSensorDescriptor(name, obj.getObj("ProximitySensor")));
+        }
+        {
             subId = 8;
             name = TR_NAME(Type.NONE, "Tutorial Sign");
 
@@ -477,11 +489,11 @@ public class Wp9cContent implements ElnContent {
     /** registerLampSocket(64) sub-UIDs 15/16. */
     public static void registerEmergencyLamps(int id) {
         sixNodeItem.addDescriptor(15 + (id << 6),
-            new EmergencyLampDescriptor(TR_NAME(Type.NONE, "50V Emergency Lamp"),
+            new EmergencyLampDescriptor(TR_NAME(Type.NONE, "48V Emergency Lamp"),
                 lowVoltageCableDescriptor, 10 * 60 * 10, 10, 5, 6, obj.getObj("EmergencyExitLighting")));
 
         sixNodeItem.addDescriptor(16 + (id << 6),
-            new EmergencyLampDescriptor(TR_NAME(Type.NONE, "200V Emergency Lamp"),
+            new EmergencyLampDescriptor(TR_NAME(Type.NONE, "230V Emergency Lamp"),
                 meduimVoltageCableDescriptor, 10 * 60 * 20, 25, 10, 8, obj.getObj("EmergencyExitLighting")));
     }
 

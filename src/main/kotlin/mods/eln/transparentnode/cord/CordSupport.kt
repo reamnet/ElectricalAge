@@ -26,7 +26,7 @@ interface CordDevice {
     val cordPortable: Boolean get() = false
     fun acceptsCord(rating: CordRating): Boolean
 }
-open class MachineCordDevice(val owner: Any,val input: NbtElectricalLoad,val nominal: ()->Double): CordDevice {
+open class MachineCordDevice(val owner: Any,val input: ElectricalLoad,val nominal: ()->Double): CordDevice {
     override val cordPortable get() = owner is mods.eln.sixnode.lampsocket.DecorativeLampElement && owner.style.tableLamp
     override val cord by lazy { ApplianceCord(this,owner,input) }
     override fun acceptsCord(rating: CordRating)=rating.accepts(nominal())

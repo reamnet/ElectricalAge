@@ -19,6 +19,9 @@ import org.jspecify.annotations.Nullable;
 public class TransparentNodeRender implements BlockEntityRenderer<TransparentNodeEntity, TransparentNodeRender.State> {
     public static class State extends BlockEntityRenderState {
         TransparentNodeElementRender render;
+        TransparentNodeEntity entity;
+        /** Beyond the renderer's range: a far frame, which only keeps the chunk's copy current. */
+        boolean far;
     }
 
     @Override
@@ -36,12 +39,30 @@ public class TransparentNodeRender implements BlockEntityRenderer<TransparentNod
             state.lightCoords = mods.eln.transparentnode.cord.OutletWall.faceLight(
                 be.getLevel(), be.getBlockPos(), outlet.front, state.lightCoords);
         }
+
+        state.entity = be;
+        // (the same answer shouldRender got: the same camera position in the same frame)
+        state.far = !(state.render instanceof mods.eln.utility.TransmissionRender)
+            && !BlockEntityRenderer.super.shouldRender(be, cameraPosition);
+    }
+
+    /** Beyond the renderer's range, a device that bakes is drawn when it is due a far frame. */
+    @Override
+    public boolean shouldRender(TransparentNodeEntity be, Vec3 cameraPosition) {
+        if (be.elementRender instanceof mods.eln.utility.TransmissionRender pole) return pole.visibleFrom(cameraPosition);
+        if (BlockEntityRenderer.super.shouldRender(be, cameraPosition)) return true;
+        return be.elementRender != null && !be.elementRender.burnt && mods.eln.client.render.bake.ChunkBake.farDue(be);
     }
 
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
-        if (state.render == null) return;
-        GlFrame frame = GlSubmit.open(poseStack);
+        if (state.render == null || state.far && state.render.burnt) return;
+        long probe = mods.eln.gl.RenderProbe.start();
+        GlFrame frame = GlSubmit.openBlock(poseStack);
+        // (a burnt device draws twice, the second time as a soot overlay that needs the first one's depth)
+        if (state.render.burnt) frame.noBake(mods.eln.gl.Bake.BURNT);
+        else mods.eln.client.render.bake.ChunkBake.attach(frame, state.entity, state.far);
+        if (mods.eln.gl.BakeStats.ON && !state.far) mods.eln.gl.BakeStats.device(state.blockPos.asLong(), state.render.getClass().getSimpleName());
         try {
             GL11.glTranslatef(.5f, .5f, .5f);
             UtilsClient.glDefaultColor();
@@ -58,15 +79,11 @@ public class TransparentNodeRender implements BlockEntityRenderer<TransparentNod
         } catch (RuntimeException e) {
             ElnRenderErrors.report("transparent-node", e);
         } finally {
+            mods.eln.gl.BakeStats.endDevice();
             GlFrame.close();
+            if (probe != 0) mods.eln.gl.RenderProbe.device(probe, state.far);
         }
-        GlSubmit.submit(frame, poseStack, collector, state.lightCoords);
-    }
-
-    @Override
-    public boolean shouldRender(TransparentNodeEntity be, Vec3 camera) {
-        if (be.elementRender instanceof mods.eln.utility.TransmissionRender pole) return pole.visibleFrom(camera);
-        return BlockEntityRenderer.super.shouldRender(be, camera);
+        if (!state.far) GlSubmit.submit(frame, poseStack, collector, state.lightCoords);
     }
 
     /** Multiblock devices (turbines, solar panels, poles) reach past their block: don't cull them by it. */

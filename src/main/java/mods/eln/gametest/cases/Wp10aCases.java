@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Selftest cases of device batch Wp10a (registry/batch/Wp10aContent). Every case feeds its device from a 50 V
+ * Selftest cases of device batch Wp10a (registry/batch/Wp10aContent). Every case feeds its device from an LVU
  * electrical source through one LV cable laid on the side the device takes power from (read from the placed
  * element's front, so the cases don't depend on the fake player's facing). Model as in SelfTest.measure: two loads
  * connect through Rs(a) + Rs(b); source, LV cable and every load set by lowVoltageCableDescriptor/applySmallRs have
@@ -75,15 +75,18 @@ public final class Wp10aCases {
     static final int CORE_OPTIMAL = 2 + (7 << 6);  // cableMultiplicator 1
     static final int COPPER_CABLE = 0 + (65 << 6);
     static final int DIELECTRIC = 52 + (120 << 6);
-    static final double U = 50.0;
+    static final double U = Eln.LVU;
 
     public static void addTo(List<TestCase> cases) {
         cases.add(new EggIncubatorCase());
         cases.add(new FurnaceCase());
         cases.add(new FurnaceCharCase());
+        cases.add(new FurnaceAnnealCase());
+        cases.add(new FurnaceVulcaniseCase());
         cases.add(new SmelterCase());
         cases.add(new MachinesCase());
         cases.add(new MaceratorProcessCase());
+        cases.add(new MaceratorSwitchCase());
         cases.add(new MaceratorReverseCase());
         cases.add(new MaceratorFieldSpeedCase());
         cases.add(new SingleUseChargeCase());
@@ -93,6 +96,12 @@ public final class Wp10aCases {
         cases.add(new TransformerCase(true, false));
         cases.add(new TransformerCase(true, true));
         cases.add(new TransformerIncompleteCase());
+        cases.add(new TransformerRewoundCase());
+        cases.add(new TransformerSaturatesCase());
+        cases.add(new TransformerLegacyCase());
+        cases.add(new TransformerWindingCase());
+        cases.add(new ConverterSwitchCase());
+        cases.add(new VariableTransformerCase());
         cases.add(new CapacitorCase());
         cases.add(new InductorCase());
         cases.add(new AutoMinerCase());
@@ -195,15 +204,20 @@ public final class Wp10aCases {
             return ctx.placeSix(damage, p);
         }
 
-        /** LV cable on `side` of the device at p, and the 50 V source next to it. Returns {source, cable}. */
+        /** LV cable on `side` of the device at p, and the LVU source next to it. Returns {source, cable}. */
         public SixNodeElement[] feed(BlockPos device, Direction side) {
+            return feed(device, side, LV_CABLE, U);
+        }
+
+        /** A cable (six-node id) on `side` of the device at p, and a source of volts next to it. Returns {source, cable}. */
+        public SixNodeElement[] feed(BlockPos device, Direction side, int cableId, double volts) {
             BlockPos cp = off(device, side);
             if (!onPlatform(cp) || used.contains(cp)) throw new IllegalStateException("feed side " + side + " blocked at " + cp);
-            SixNodeElement cable = six(LV_CABLE, cp);
+            SixNodeElement cable = six(cableId, cp);
             ElectricalSourceElement src = (ElectricalSourceElement) six(SOURCE, next(cp, side));
             src.networkUnserialize(ctx.stream(out -> {
                 out.writeByte(ElectricalSourceElement.setVoltageId);
-                out.writeFloat((float) U);
+                out.writeFloat((float) volts);
             }));
             return new SixNodeElement[]{src, cable};
         }
@@ -211,7 +225,7 @@ public final class Wp10aCases {
 
     // ---- cases ----
 
-    /** Egg incubator: with an egg its resistor is Rp = Unom^2/Pnom = 50 ohm (50 V, 50 W). */
+    /** Egg incubator: with an egg its resistor is Rp = Unom^2/Pnom (LVU, 50 W). */
     static final class EggIncubatorCase implements TestCase {
         EggIncubatorElement inc;
         SixNodeElement cable;
@@ -232,7 +246,7 @@ public final class Wp10aCases {
             double rp = U * U / 50.0, r = rs();
             // src(rs)-cable(rs): 2rs; cable(rs)-incubator powerLoad(rs, LV cable): 2rs; Rp to ground
             double i = U / (4 * r + rp);
-            ctx.line(String.format("wp10a egg incubator model: Rp = 50 ohm, I = U/(4Rs+Rp) = %.5f A, P = %.4f W", i, i * i * rp));
+            ctx.line(String.format("wp10a egg incubator model: Rp = LVU^2 / 50 W, I = U/(4Rs+Rp) = %.5f A, P = %.4f W", i, i * i * rp));
             ctx.checkValue("wp10a egg incubator R [ohm]", inc.powerResistor.getR(), rp);
             ctx.checkValue("wp10a egg incubator voltage [V]", inc.powerLoad.getU(), i * rp);
             ctx.checkValue("wp10a egg incubator power [W]", inc.powerResistor.getP(), i * i * rp);
@@ -243,7 +257,7 @@ public final class Wp10aCases {
     /**
      * Electrical furnace, fed on its back: cobblestone (vanilla smelting recipe) in the input slot makes the
      * auto-shutdown logic switch it on. With the Small 50V heating corp (wp12): regulator "none" keeps
-     * R = Unom^2/Pnom = 2500/150 ohm and the thermal load warms up.
+     * R = Unom^2/Pnom = LVU^2/150 ohm and the thermal load warms up.
      */
     static final class FurnaceCase implements TestCase {
         ElectricalFurnaceElement furnace;
@@ -317,6 +331,139 @@ public final class Wp10aCases {
 
         public void measure(TestContext ctx) {
             ctx.check("wp10a oven: beef cooks at 250 C, chars at 270 C over the room; ore smelts; a nugget burns 400 ticks", ok, got);
+        }
+    }
+
+    /**
+     * Annealing (Baughn 2026-11-06, after Argon): Silicon Steel Laminations in an Electrical Furnace on 230 V with a 230V
+     * Tungsten Heating Corp, Thermal Insulation and an Analogic Regulator set to 650 C anneal into an Average
+     * Ferromagnetic Core; laminations below 550 C make no progress, and above 750 C spoil to Iron Dust.
+     */
+    static final class FurnaceAnnealCase implements TestCase {
+        ElectricalFurnaceElement furnace;
+        String probe = "";
+        boolean probeOk, items;
+        double hottest;
+        int tick;
+        mods.eln.sim.IProcess watch;
+
+        public String name() {
+            return "wp10a electrical furnace anneals laminations";
+        }
+
+        public int ticks() {
+            return 2000;
+        }
+
+        public void build(TestContext ctx) {
+            Layout l = new Layout(ctx, width());
+            furnace = (ElectricalFurnaceElement) l.device(FURNACE, 3);
+            l.feed(ctx.at(3, 1, 1), furnace.front.getInverse(), 8 + (32 << 6), Eln.MVU);   // a Medium Voltage Cable
+            ItemStack lam = Eln.findItemStack("Silicon Steel Laminations"), corp = Eln.findItemStack("230V Tungsten Heating Corp"),
+                ins = Eln.findItemStack("Thermal Insulation"), reg = Eln.findItemStack("Analogic Regulator");
+            items = !lam.isEmpty() && !corp.isEmpty() && !ins.isEmpty() && !reg.isEmpty();
+            if (!items) return;
+            // the rules, at set temperatures, on the furnace's own process
+            mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess pr = field(furnace, "slowRefreshProcess");
+            ThermalLoad t = field(furnace, "thermalLoad");
+            furnace.getInventory().setItem(ElectricalFurnaceElement.inSlotId, lam.copy());
+            double tamb = mods.eln.sim.PhysicalConstant.Tamb;
+            t.Tc = 500 - tamb;
+            boolean cold = !pr.annealProgresses();
+            t.Tc = 620 - tamb;
+            ItemStack warm = pr.getSmeltResult();
+            boolean warmGoes = pr.annealProgresses();
+            t.Tc = 800 - tamb;
+            ItemStack hot = pr.getSmeltResult();
+            t.Tc = 0;
+            probe = "500 C progresses " + !cold + ", 620 C " + warm + " progresses " + warmGoes + ", 800 C " + hot;
+            probeOk = cold && warmGoes && warm.is(Eln.findItemStack("Average Ferromagnetic Core").getItem()) && hot.is(Eln.findItemStack("Iron Dust").getItem());
+            furnace.getInventory().setItem(ElectricalFurnaceElement.heatingCorpSlotId, corp);
+            furnace.getInventory().setItem(ElectricalFurnaceElement.thermalIsolatorSlotId, ins);
+            furnace.getInventory().setItem(ElectricalFurnaceElement.thermalRegulatorSlotId, reg);
+            furnace.getInventory().setChanged();
+            furnace.networkUnserialize(ctx.stream(o -> {
+                o.writeByte(ElectricalFurnaceElement.unserializeTemperatureTarget);
+                o.writeFloat(650f);
+            }));
+            Eln.simulator.addSlowProcess(watch = dt -> hottest = Math.max(hottest, t.Tc + tamb));
+        }
+
+        public void measure(TestContext ctx) {
+            Eln.simulator.removeSlowProcess(watch);
+            if (!items) {
+                ctx.line("SKIP wp10a anneal: an item isn't registered");
+                return;
+            }
+            ItemStack out = furnace.getInventory().getItem(ElectricalFurnaceElement.outSlotId);
+            ctx.line("anneal: " + probe + "; hottest " + Math.round(hottest) + " C, out " + out + ", in "
+                + furnace.getInventory().getItem(ElectricalFurnaceElement.inSlotId));
+            ctx.check("anneal: no progress at 500 C, anneals at 620 C, spoils at 800 C", probeOk, probe);
+            ctx.check("anneal: a regulated tungsten furnace makes an Average core", out.is(Eln.findItemStack("Average Ferromagnetic Core").getItem()), out.toString());
+            ctx.check("anneal: ... without overshooting into spoiling", hottest < mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess.ANNEAL_SPOIL_C, "" + hottest);
+        }
+    }
+
+    /**
+     * Vulcanising (Baughn 2026-11-07: in the temperature-controlled oven, as the core): Rubber Compound in an Electrical
+     * Furnace regulated to 160 C vulcanises to 8 Rubber; below 130 C it makes no progress, above 230 C it chars.
+     */
+    static final class FurnaceVulcaniseCase implements TestCase {
+        ElectricalFurnaceElement furnace;
+        String probe = "";
+        boolean probeOk;
+        double hottest;
+        mods.eln.sim.IProcess watch;
+
+        public String name() {
+            return "electrical furnace vulcanises rubber compound";
+        }
+
+        public int ticks() {
+            return 2000;
+        }
+
+        public void build(TestContext ctx) {
+            Layout l = new Layout(ctx, width());
+            furnace = (ElectricalFurnaceElement) l.device(FURNACE, 3);
+            l.feed(ctx.at(3, 1, 1), furnace.front.getInverse(), 8 + (32 << 6), Eln.MVU);   // a Medium Voltage Cable
+            ItemStack compound = new ItemStack(mods.eln.registry.ElnRegistry.RUBBER_COMPOUND.get(), 2);
+            ItemStack corp = Eln.findItemStack("230V Tungsten Heating Corp"), ins = Eln.findItemStack("Thermal Insulation"),
+                reg = Eln.findItemStack("Analogic Regulator");
+            mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess pr = field(furnace, "slowRefreshProcess");
+            ThermalLoad t = field(furnace, "thermalLoad");
+            furnace.getInventory().setItem(ElectricalFurnaceElement.inSlotId, compound);
+            double tamb = mods.eln.sim.PhysicalConstant.Tamb;
+            t.Tc = 120 - tamb;
+            boolean cold = !pr.annealProgresses();
+            t.Tc = 160 - tamb;
+            ItemStack warm = pr.getSmeltResult();
+            boolean warmGoes = pr.annealProgresses();
+            t.Tc = 250 - tamb;
+            ItemStack hot = pr.getSmeltResult();
+            t.Tc = 0;
+            probe = "120 C progresses " + !cold + ", 160 C " + warm + " progresses " + warmGoes + ", 250 C " + hot;
+            probeOk = cold && warmGoes && warm.is(Eln.findItemStack("Rubber").getItem()) && warm.getCount() == 8
+                && hot.is(mods.eln.registry.ElnRegistry.CHARCOAL_NUGGET.get());
+            furnace.getInventory().setItem(ElectricalFurnaceElement.heatingCorpSlotId, corp);
+            furnace.getInventory().setItem(ElectricalFurnaceElement.thermalIsolatorSlotId, ins);
+            furnace.getInventory().setItem(ElectricalFurnaceElement.thermalRegulatorSlotId, reg);
+            furnace.getInventory().setChanged();
+            furnace.networkUnserialize(ctx.stream(o -> {
+                o.writeByte(ElectricalFurnaceElement.unserializeTemperatureTarget);
+                o.writeFloat(160f);
+            }));
+            Eln.simulator.addSlowProcess(watch = dt -> hottest = Math.max(hottest, t.Tc + tamb));
+        }
+
+        public void measure(TestContext ctx) {
+            Eln.simulator.removeSlowProcess(watch);
+            ItemStack out = furnace.getInventory().getItem(ElectricalFurnaceElement.outSlotId);
+            ctx.line("vulcanise: " + probe + "; hottest " + Math.round(hottest) + " C, out " + out + ", in "
+                + furnace.getInventory().getItem(ElectricalFurnaceElement.inSlotId));
+            ctx.check("vulcanise: no progress at 120 C, 8 Rubber at 160 C, chars at 250 C", probeOk, probe);
+            ctx.check("vulcanise: a regulated furnace makes Rubber from the compound", out.is(Eln.findItemStack("Rubber").getItem()) && out.getCount() >= 8, out.toString());
+            ctx.check("vulcanise: ... without overshooting into charring", hottest < mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess.VULCANISE_SPOIL_C, "" + hottest);
         }
     }
 
@@ -444,10 +591,9 @@ public final class Wp10aCases {
                 else s.append(" ").append(MACHINES[k]);
             }
             ctx.check("wp10a machines placed", ok == MACHINES.length, ok + "/" + MACHINES.length + (s.length() > 0 ? ", wrong:" + s : ""));
-            ElectricalLoad load = field(machines[0], "electricalLoad");
-            Resistor res = field(machines[0], "electricalResistor");
-            ctx.checkValue("wp10a idle macerator node voltage [V] (empty input: resistor open)", load.getU(), U);
-            ctx.check("wp10a idle macerator draws no power", Math.abs(res.getP()) < 0.01, String.format("P = %.6f W", res.getP()));
+            var macerator = ((ElectricalMachineElement) machines[0]).machine;
+            ctx.checkValue("wp10a idle macerator node voltage [V] (empty input: draws nothing)", macerator.powerLoad().getU(), U);
+            ctx.check("wp10a idle macerator draws no power", Math.abs(macerator.watts()) < 0.01, String.format("P = %.6f W", macerator.watts()));
         }
     }
 
@@ -486,6 +632,59 @@ public final class Wp10aCases {
             ItemStack dust = Eln.findItemStack("Copper Dust");
             ctx.check("macerator: vanilla copper ingot (c:ingots/copper) -> 1 EA Copper Dust", in.isEmpty()
                 && out.getItem() == dust.getItem() && out.getCount() == 1, "in " + in + ", out " + out);
+        }
+    }
+
+    /**
+     * The macerator's on/off lever (Nero 2026-11-08): switched off by a sneaking right-click, it grinds nothing in the
+     * time that grinds a copper ingot, and draws next to nothing; a second sneaking click switches it on again.
+     */
+    static final class MaceratorSwitchCase implements TestCase {
+        ElectricalMachineElement macerator;
+        String clicks = "";
+
+        public String name() {
+            return "wp10a macerator switched off does nothing";
+        }
+
+        public int width() {
+            return 6;
+        }
+
+        public int ticks() {
+            return 260;
+        }
+
+        public void build(TestContext ctx) {
+            Layout l = new Layout(ctx, width());
+            macerator = (ElectricalMachineElement) l.device(MACHINES[0], 2, 1);
+            l.feed(ctx.at(2, 1, 1), macerator.front.left());
+            macerator.getInventory().setItem(macerator.inSlotId, new ItemStack(Items.COPPER_INGOT));
+            macerator.getInventory().setChanged();
+            var p = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(ctx.level());
+            p.setShiftKeyDown(true);
+            try {
+                boolean a = macerator.onBlockActivated(p, Direction.YP, 0.5f, 0.5f, 0.5f);
+                clicks = a + "," + macerator.onOff.on;
+            } finally {
+                p.setShiftKeyDown(false);
+            }
+        }
+
+        public void measure(TestContext ctx) {
+            ItemStack in = macerator.getInventory().getItem(macerator.inSlotId);
+            ItemStack out = macerator.getInventory().getItem(macerator.outSlotId);
+            ctx.check("switch: a sneaking right-click switches it off", clicks.equals("true,false"), clicks);
+            ctx.check("switch: off, it ground nothing", in.getCount() == 1 && out.isEmpty(), "in " + in + ", out " + out);
+            ctx.check("switch: off, it draws next to nothing", macerator.machine.watts() < 1, macerator.machine.watts() + " W");
+            var p = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(ctx.level());
+            p.setShiftKeyDown(true);
+            try {
+                macerator.onBlockActivated(p, Direction.YP, 0.5f, 0.5f, 0.5f);
+            } finally {
+                p.setShiftKeyDown(false);
+            }
+            ctx.check("switch: clicked again, it's on", macerator.onOff.on, "");
         }
     }
 
@@ -535,7 +734,7 @@ public final class Wp10aCases {
 
     /**
      * Baughn 2026-10-27, a live Cost Oriented Battery with both protection chips burnt (OVERHEAT, 76): nearly empty (1.5%,
-     * ~4 V) on a 50 V bus. Here: the same battery at 1.5%, both chips fitted, 50 V on its positive side, its negative
+     * ~4 V) on a 50 V bus. Here: the same battery at 1.5%, both chips fitted, LVU on its positive side, its negative
      * grounded. It must not burn, and must stay under its warm limit.
      */
     static final class ProtectedEmptyBatteryCase implements TestCase {
@@ -546,7 +745,7 @@ public final class Wp10aCases {
         boolean wasCut, limited;
 
         public String name() {
-            return "battery protection: an empty battery put on 50 V";
+            return "battery protection: an empty battery put on LVU";
         }
 
         public int width() {
@@ -566,7 +765,7 @@ public final class Wp10aCases {
             SixNodeElement[] plus = l.feed(ctx.at(3, 1, 1), battery.front.left());
             ((ElectricalSourceElement) plus[0]).networkUnserialize(ctx.stream(out -> {
                 out.writeByte(ElectricalSourceElement.setVoltageId);
-                out.writeFloat(50f);
+                out.writeFloat((float) Eln.LVU);
             }));
             SixNodeElement[] minus = l.feed(ctx.at(3, 1, 1), battery.front.right());
             ((ElectricalSourceElement) minus[0]).networkUnserialize(ctx.stream(out -> {
@@ -587,7 +786,7 @@ public final class Wp10aCases {
             mods.eln.Eln.simulator.removeSlowProcess(watch);
             ctx.line(String.format("battery protection: peak Tc %.1f (warm limit %.0f), %d cuts, charge %.3f, burnt %s, current %.1f A",
                 peak, battery.descriptor.thermalWarmLimit, cuts, battery.batteryProcess.getCharge(), battery.isBurnt(), battery.batteryProcess.getDischargeCurrent()));
-            ctx.check("battery protection: an empty protected battery on 50 V doesn't burn", !battery.isBurnt(), "");
+            ctx.check("battery protection: an empty protected battery on LVU doesn't burn", !battery.isBurnt(), "");
             ctx.check("battery protection: it stays under its cut (no cut needed)", peak < battery.descriptor.thermalWarmLimit * 2 / 3, String.format("peak %.1f, %d cuts", peak, cuts));
             ctx.check("battery protection: the chip limits the charge current to about the rated current", limited
                 && peakCharge < battery.descriptor.electricalStdI * 1.3, String.format("peak %.1f A, rated %.1f A", peakCharge, battery.descriptor.electricalStdI));
@@ -658,7 +857,7 @@ public final class Wp10aCases {
     }
 
     /**
-     * The macerator fed -50 V (Baughn: a generator on one side and a ground cable on the other burned one as "overvoltage"):
+     * The macerator fed -LVU (Baughn: a generator on one side and a ground cable on the other burned one as "overvoltage"):
      * a resistor to ground on one pin, so either polarity runs it: it processes the copper and isn't burnt; and a
      * voltage watchdog tripped below its minimum names the cause reverse voltage.
      */
@@ -743,7 +942,7 @@ public final class Wp10aCases {
         }
 
         static double pw(ElectricalMachineElement m) {
-            return Batch1Cases.<mods.eln.sim.mna.component.Resistor>field(m, "electricalResistor").getP();
+            return m.machine.watts();
         }
 
         public void measure(TestContext ctx) {
@@ -757,10 +956,10 @@ public final class Wp10aCases {
     }
 
     /**
-     * DC-DC converter: primary (left) 2 LV cables, secondary (right) 1 LV cable, cheap core (wp12); secondary open:
-     * U2 = U1 * n2/n1 = 25 V. Without a core both windings are open: only the primary side is checked.
+     * DC-DC converter: primary (left) 14 LV cables, secondary (right) 7 LV cables, cheap core (wp12; 4 V a turn: 48 V needs
+     * 12 turns at least, Baughn 2026-11-06); secondary open: U2 = U1 * n2/n1 = 24 V. Without a core both windings are open: only the primary side is checked.
      */
-    static final class TransformerCase implements TestCase {
+    static class TransformerCase implements TestCase {
         private final boolean isolated, loaded;
         private mods.eln.sim.mna.component.Resistor testLoad;
         TransformerCase() { this(false, false); }
@@ -779,12 +978,13 @@ public final class Wp10aCases {
             tr = (TransformerElement) l.device(TRANSFORMER, 3);
             primary = l.feed(p, tr.front.left())[1];
             secondary = l.six(LV_CABLE, off(p, tr.front.right()));
-            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(2));
-            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(1));
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(14));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(7));
             ItemStack c = shared(CORE_CHEAP, FerromagneticCoreDescriptor.class, 1);
             core = !c.isEmpty();
             if (core) tr.getInventory().setItem(TransformerContainer.ferromagneticSlotId, c);
             tr.getInventory().setChanged();
+            tr.switchOn();
             if (isolated) tr.networkUnserialize(ctx.stream(out -> out.writeByte(TransformerElement.toogleIsIsolator)));
             if (loaded) {
                 testLoad = new mods.eln.sim.mna.component.Resistor(tr.getElectricalLoad(tr.front.right(), mods.eln.misc.LRDU.Down), null).setR(100);
@@ -801,6 +1001,359 @@ public final class Wp10aCases {
             }
             ctx.checkValue("wp10a transformer secondary voltage [V] (U1 * 1/2)", loadU(secondary), U / 2);
             if (loaded) ctx.check("isolated transformer: real load receives power", testLoad.getP() > 5.0, "P=" + testLoad.getP());
+        }
+    }
+
+    /**
+     * A core past its volts per turn saturates (Baughn 2026-11-06: like real transformers): 2:1 LV windings on a cheap core
+     * (4 V a turn) at 48 V carry 24 V a turn. It draws its magnetising current, heats, and burns within the test.
+     */
+    static class TransformerSaturatesCase extends TransformerCase {
+        boolean sawSaturated;
+        mods.eln.sim.IProcess watch;
+
+        @Override
+        public String name() {
+            return "wp10a transformer saturates and burns";
+        }
+
+        @Override
+        public int ticks() {
+            return 600;
+        }
+
+        @Override
+        public void build(TestContext ctx) {
+            super.build(ctx);
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(2));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(1));
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+            Eln.simulator.addSlowProcess(watch = dt -> sawSaturated |= tr.saturated);
+        }
+
+        @Override
+        public void measure(TestContext ctx) {
+            Eln.simulator.removeSlowProcess(watch);
+            if (!core) {
+                ctx.line("SKIP wp10a transformer saturates: Cheap Ferromagnetic Core not registered (wp12)");
+                return;
+            }
+            ctx.check("converter: 24 V a turn on a 4 V core saturates it", sawSaturated, "");
+            ctx.check("converter: ... and it burns", tr.isBurnt(), tr.getWaila().toString());
+        }
+    }
+
+    /**
+     * A converter saved before the real-world voltages keeps working as built: 2:1 on a cheap core at 48 V (it would
+     * saturate) doesn't saturate after loading, until its windings change.
+     */
+    static class TransformerLegacyCase extends TransformerCase {
+        boolean legacyAfterLoad, saturatedAsLegacy, legacyAfterEdit;
+        mods.eln.sim.IProcess watch;
+        int tick;
+
+        @Override
+        public String name() {
+            return "wp10a transformer as built before 48 V";
+        }
+
+        @Override
+        public int ticks() {
+            return 300;
+        }
+
+        @Override
+        public void build(TestContext ctx) {
+            super.build(ctx);
+            if (!core) return;
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(2));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(1));
+            net.minecraft.nbt.CompoundTag nbt = new net.minecraft.nbt.CompoundTag();
+            tr.writeToNBT(nbt);
+            nbt.remove("tierGen");   // as saved by an older EA
+            tr.readFromNBT(nbt);
+            legacyAfterLoad = tr.legacy;
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+            Eln.simulator.addSlowProcess(watch = dt -> {
+                tick++;
+                if (tick < 150) saturatedAsLegacy |= tr.saturated;
+                if (tick == 150) {   // a player rewinds it: as any converter now (14:7 is within the cheap core)
+                    tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(14));
+                    tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(7));
+                    tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+                }
+                if (tick == 160) legacyAfterEdit = tr.legacy;
+            });
+        }
+
+        @Override
+        public void measure(TestContext ctx) {
+            Eln.simulator.removeSlowProcess(watch);
+            if (!core) {
+                ctx.line("SKIP wp10a transformer as built before 48 V: Cheap Ferromagnetic Core not registered (wp12)");
+                return;
+            }
+            ctx.check("converter: loaded from an old save, it is as built", legacyAfterLoad, "");
+            ctx.check("converter: ... and doesn't saturate (2:1 on a cheap core at 48 V)", !saturatedAsLegacy && !tr.isBurnt(), "");
+            ctx.check("converter: changed by a player, it is an ordinary converter", !legacyAfterEdit, "");
+        }
+    }
+
+    /**
+     * Machine-made windings (Wires stage 4): 20 turns of 2.5 mm² 48 V wire in, 10 out, on a cheap core: half the voltage;
+     * the primary's resistance is its wire's for 20 eighth-blocks (x the core's loss factor). A 100-turn secondary
+     * (20 x 2.5 + 100 x 2.5 = 300 mm² turns) overfills the cheap core's 150: the converter disconnects. Cables count too.
+     */
+    static class TransformerWindingCase extends TransformerCase {
+        static final mods.eln.node.voxel.CableSpec LV_WIRE = new mods.eln.node.voxel.CableSpec(4, mods.eln.node.voxel.CableSpec.BROWN);
+
+        @Override
+        public String name() {
+            return "wp10a transformer wound with windings";
+        }
+
+        @Override
+        public void build(TestContext ctx) {
+            super.build(ctx);
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, mods.eln.node.voxel.WindingItem.make(1, LV_WIRE, 20));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, mods.eln.node.voxel.WindingItem.make(1, LV_WIRE, 10));
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+        }
+
+        @Override
+        public void measure(TestContext ctx) {
+            if (!core) {
+                ctx.line("SKIP wp10a transformer wound with windings: Cheap Ferromagnetic Core not registered (wp12)");
+                return;
+            }
+            ctx.checkValue("converter: windings 20:10, secondary open-circuit voltage [V]", loadU(secondary), U / 2);
+            double rs = ((mods.eln.sim.ElectricalLoad) field(tr, "primaryLoad")).getRs();
+            double want = 20 * mods.eln.node.voxel.WindingItem.BLOCKS_PER_TURN * LV_WIRE.ohmsPerBlock() / 2 * 10;
+            ctx.check("converter: a winding's resistance is its wire's", Math.abs(rs - want) < 1e-9 + 1e-6 * want, rs + " vs " + want);
+            ctx.check("converter: 20:10 of 2.5 mm² fits a cheap core", !tr.windowFull(), "");
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, mods.eln.node.voxel.WindingItem.make(1, LV_WIRE, 100));
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+            ctx.check("converter: 20:100 of 2.5 mm² overfills a cheap core", tr.windowFull(), "");
+            ctx.check("converter: ... and it disconnects", tr.getElectricalLoad(tr.front.right(), mods.eln.misc.LRDU.Down) == null, "");
+            // cables are held to the window too (Baughn: they disconnect until corrected)
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(64));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(64));
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+            ctx.check("converter: 64:64 LV cables (320 mm² turns) overfill a cheap core and disconnect", tr.windowFull()
+                && tr.getElectricalLoad(tr.front.right(), mods.eln.misc.LRDU.Down) == null, "");
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(14));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(7));
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+            ctx.check("converter: ... and reconnect when corrected (14:7)", !tr.windowFull()
+                && tr.getElectricalLoad(tr.front.right(), mods.eln.misc.LRDU.Down) != null, "");
+        }
+    }
+
+    /**
+     * Baughn 2026-11-08: a converter comes up switched off when a winding changes: its primary terminal is live (48 V), its
+     * secondary dead, the windings coupled to nothing. Switched on, they're coupled. Burnt and repaired, it's off again.
+     * Its windings are hand-wound ones (HandWindingRecipe: Copper Cable and leather or rubber, 8 turns a cable, 1.5 mm²,
+     * 230 V, up to 64 turns; windings of one wire combine).
+     */
+    static class ConverterSwitchCase extends TransformerCase {
+        String recipes = "";
+
+        @Override
+        public String name() {
+            return "wp10a converter comes up off; hand windings";
+        }
+
+        static net.minecraft.world.item.crafting.CraftingInput grid(ItemStack... items) {
+            return net.minecraft.world.item.crafting.CraftingInput.of(3, 3, java.util.Arrays.asList(java.util.Arrays.copyOf(
+                java.util.Arrays.stream(items).toArray(ItemStack[]::new), 9)).stream().map(x -> x == null ? ItemStack.EMPTY : x).toList());
+        }
+
+        @Override
+        public void build(TestContext ctx) {
+            super.build(ctx);
+            var spec = mods.eln.node.voxel.HandWindingRecipe.spec();
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, mods.eln.node.voxel.WindingItem.make(2, spec, 16));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, mods.eln.node.voxel.WindingItem.make(2, spec, 32));
+            tr.getInventory().setChanged();   // (left off)
+            // an isolated (variable) converter left off ticks without its sources' process (it crashed the server: a lab test)
+            if (core) {
+                var vt = (mods.eln.transparentnode.transformer.VariableTransformerElement) ctx.placeTransparent(mods.eln.transparentnode.transformer.VariableTransformerDescriptor.ID, ctx.at(1, 1, 2));
+                vt.getInventory().setItem(TransformerContainer.primaryCableSlotId, mods.eln.node.voxel.WindingItem.make(2, spec, 16));
+                vt.getInventory().setItem(TransformerContainer.secondaryCableSlotId, mods.eln.node.voxel.WindingItem.make(2, spec, 32));
+                vt.getInventory().setItem(TransformerContainer.ferromagneticSlotId, Eln.findItemStack("Cheap Ferromagnetic Core", 1));
+                vt.getInventory().setChanged();
+            }
+            ItemStack cu = Eln.findItemStack("Copper Cable", 1), leather = new ItemStack(net.minecraft.world.item.Items.LEATHER),
+                rubber = new ItemStack(Eln.itemsByName.get("Rubber"));
+            ItemStack one = mods.eln.node.voxel.HandWindingRecipe.result(grid(cu, leather));
+            ItemStack three = mods.eln.node.voxel.HandWindingRecipe.result(grid(cu, cu, cu, rubber, rubber, leather));
+            ItemStack nine = mods.eln.node.voxel.HandWindingRecipe.result(grid(cu, cu, cu, cu, cu, cu, cu, cu, cu));
+            ItemStack both = mods.eln.node.voxel.HandWindingRecipe.result(grid(one, three));
+            ItemStack odd = mods.eln.node.voxel.HandWindingRecipe.result(grid(one, mods.eln.node.voxel.WindingItem.make(1, LV_WIRE_HAND, 8)));
+            recipes = turns(one) + "," + turns(three) + "," + turns(nine) + "," + turns(both) + "," + turns(odd)
+                + "," + (mods.eln.node.voxel.WindingItem.is(one) ? mods.eln.node.voxel.WindingItem.tier(one) + "/" + mods.eln.node.voxel.WindingItem.spec(one).mm2() : "-");
+        }
+
+        static final mods.eln.node.voxel.CableSpec LV_WIRE_HAND = new mods.eln.node.voxel.CableSpec(4, mods.eln.node.voxel.CableSpec.BROWN);
+
+        static int turns(ItemStack s) {
+            return mods.eln.node.voxel.WindingItem.is(s) ? mods.eln.node.voxel.WindingItem.turns(s) : 0;
+        }
+
+        @Override
+        public void measure(TestContext ctx) {
+            ctx.check("hand windings: a cable and leather wind 8 turns; 3 cables and 3 insulators 24; 9 cables alone nothing;"
+                + " 8 + 24 combine to 32; different wires don't combine; 1.5 mm² at 230 V", recipes.equals("8,24,0,32,0,2/3"), recipes);
+            if (!core) return;
+            ctx.check("converter: a winding changed, it's off", !tr.switchedOn, "");
+            ctx.checkValue("converter: off, its primary terminal is live [V]", loadU(primary), U);
+            ctx.check("converter: off, its secondary is dead", Math.abs(loadU(secondary)) < 1, loadU(secondary) + " V");
+            tr.switchOn();
+            ctx.check("converter: switched on, its windings are coupled", tr.switchedOn && tr.electricalComponentList.contains(field(tr, "transformer")), "");
+            tr.burn(mods.eln.sim.process.destruct.FailureCause.values()[0], mods.eln.sim.process.destruct.Failure.Kind.values()[0]);
+            boolean offBurnt = !tr.switchedOn;
+            tr.repair();
+            ctx.check("converter: burnt, it's off, and still off once repaired", offBurnt && !tr.switchedOn && !tr.isBurnt(), offBurnt + "," + tr.switchedOn);
+        }
+    }
+
+    /**
+     * The Variable DC-DC Converter (Baughn 2026-11-06): 14 LV turns in, 28 MV turns out, cheap core; the signal on its front
+     * taps the secondary: half of SVU -> 14 turns, 48 V out; all of SVU -> 28 turns, 96 V.
+     */
+    static ElectricalSourceElement source(TestContext ctx, BlockPos at, double volts) {
+        ElectricalSourceElement src = (ElectricalSourceElement) ctx.placeSix(SOURCE, at);
+        src.networkUnserialize(ctx.stream(out -> {
+            out.writeByte(ElectricalSourceElement.setVoltageId);
+            out.writeFloat((float) volts);
+        }));
+        return src;
+    }
+
+    static class VariableTransformerCase implements TestCase {
+        mods.eln.transparentnode.transformer.VariableTransformerElement tr;
+        SixNodeElement secondary;
+        mods.eln.sim.mna.component.VoltageSource signal;
+        boolean core;
+        double half = Double.NaN, full = Double.NaN;
+        int tick;
+        mods.eln.sim.IProcess watch;
+
+        public String name() {
+            return "wp10a variable transformer follows its signal";
+        }
+
+        public int ticks() {
+            return 200;
+        }
+
+        public int width() {
+            return 9;   // (floor_9x7x7: room for the signal feed on its front)
+        }
+
+        public int height() {
+            return 7;
+        }
+
+        public int depth() {
+            return 7;
+        }
+
+        public int floorDepth() {
+            return 7;
+        }
+
+        public void build(TestContext ctx) {
+            BlockPos p = ctx.at(4, 1, 3);
+            tr = (mods.eln.transparentnode.transformer.VariableTransformerElement) ctx.placeTransparent(mods.eln.transparentnode.transformer.VariableTransformerDescriptor.ID, p);
+            // (placed by hand: Layout's platform is 3 deep, and the signal comes in on the front)
+            ctx.placeSix(LV_CABLE, off(p, tr.front.left()));
+            source(ctx, off(off(p, tr.front.left()), tr.front.left()), U);
+            secondary = ctx.placeSix(8 + (32 << 6), off(p, tr.front.right()));   // a Medium Voltage Cable
+            // the signal: a source straight on its gate load (the harness's own wiring, as PipeCases drives a pin)
+            signal = new mods.eln.sim.mna.component.VoltageSource("tap signal", tr.tap, null);
+            signal.setU(Eln.SVU / 2);
+            Eln.simulator.addElectricalComponent(signal);
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(14));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, Eln.sixNodeItem.getDescriptor(8 + (32 << 6)).newItemStack(28));
+            ItemStack c = shared(CORE_CHEAP, FerromagneticCoreDescriptor.class, 1);
+            core = !c.isEmpty();
+            if (core) tr.getInventory().setItem(TransformerContainer.ferromagneticSlotId, c);
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+            Eln.simulator.addSlowProcess(watch = dt -> {
+                tick++;
+                if (tick == 100) signal.setU(Eln.SVU);
+                if (tick == 90) half = loadU(secondary);
+                if (tick == 190) full = loadU(secondary);
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            Eln.simulator.removeSlowProcess(watch);
+            Eln.simulator.removeElectricalComponent(signal);
+            if (!core) {
+                ctx.line("SKIP wp10a variable transformer: Cheap Ferromagnetic Core not registered (wp12)");
+                return;
+            }
+            mods.eln.sim.power.SafeTransformerProcess coupling = field(tr, "interSystemProcess");
+            ctx.line("variable converter: " + tr.getWaila() + ", " + coupling.getStatus()
+                + ", " + tr.multiMeterString(tr.front.left()) + ", " + tr.multiMeterString(tr.front.right()));
+            ctx.checkValue("variable converter: half signal taps 14 of 28 turns: 48 V [V]", half, U);
+            ctx.checkValue("variable converter: full signal taps all 28: 96 V [V]", full, 2 * U);
+        }
+    }
+
+    /**
+     * Real-world voltages (Baughn 2026-11-06): a converter saved before them (no "tierGen") wound 1:4 (1.12's 50 V to
+     * 200 V) comes back 5:24 (48 V up to 230.4 V); one saved since is left as it is; a winding holds 64.
+     */
+    static final class TransformerRewoundCase extends TransformerCase {
+        int oldP, oldS, keptP, keptS, bigS;
+
+        @Override
+        public String name() {
+            return "wp10a transformer rewound for real voltages";
+        }
+
+        @Override
+        public void build(TestContext ctx) {
+            super.build(ctx);
+            if (!core) return;
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(1));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(4));
+            net.minecraft.nbt.CompoundTag nbt = new net.minecraft.nbt.CompoundTag();
+            tr.writeToNBT(nbt);
+            nbt.remove("tierGen");   // as saved by an older EA
+            tr.readFromNBT(nbt);
+            oldP = tr.getInventory().getItem(TransformerContainer.primaryCableSlotId).getCount();
+            oldS = tr.getInventory().getItem(TransformerContainer.secondaryCableSlotId).getCount();
+            nbt = new net.minecraft.nbt.CompoundTag();
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(1));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(4));
+            tr.writeToNBT(nbt);   // saved since: with tierGen, untouched
+            tr.readFromNBT(nbt);
+            keptP = tr.getInventory().getItem(TransformerContainer.primaryCableSlotId).getCount();
+            keptS = tr.getInventory().getItem(TransformerContainer.secondaryCableSlotId).getCount();
+            // (back to 14:7: 230 V on its LV windings would burn it)
+            tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(14));
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(7));
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+            // 64 a side fits
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(64));
+            bigS = tr.getInventory().getItem(TransformerContainer.secondaryCableSlotId).getCount();
+            tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(7));
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
+        }
+
+        @Override
+        public void measure(TestContext ctx) {
+            if (!core) {
+                ctx.line("SKIP wp10a transformer rewound: Cheap Ferromagnetic Core not registered (wp12)");
+                return;
+            }
+            ctx.check("converter: an old 1:4 comes back 5:24", oldP == 5 && oldS == 24, oldP + ":" + oldS);
+            ctx.check("converter: one saved since keeps 1:4", keptP == 1 && keptS == 4, keptP + ":" + keptS);
+            ctx.check("converter: a winding holds 64", bigS == 64, "" + bigS);
         }
     }
 
@@ -831,7 +1384,7 @@ public final class Wp10aCases {
             secondary = l.six(LV_CABLE, off(p, tr.front.right()));
             tr.getInventory().setItem(TransformerContainer.primaryCableSlotId, lvCables(2));
             tr.getInventory().setItem(TransformerContainer.secondaryCableSlotId, lvCables(1));
-            tr.getInventory().setChanged();
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
         }
 
         public void measure(TestContext ctx) {
@@ -844,7 +1397,7 @@ public final class Wp10aCases {
             ItemStack c = shared(CORE_CHEAP, FerromagneticCoreDescriptor.class, 1);
             if (c.isEmpty()) return;
             tr.getInventory().setItem(TransformerContainer.ferromagneticSlotId, c);
-            tr.getInventory().setChanged();
+            tr.getInventory().setChanged();   tr.switchOn();   // (it comes up off: Baughn 2026-11-08)
             ctx.check("wp10a transformer with the core in connects", tr.getConnectionMask(tr.front.left(), mods.eln.misc.LRDU.Down) != 0
                 && tr.getElectricalLoad(tr.front.right(), mods.eln.misc.LRDU.Down) != null, "");
         }

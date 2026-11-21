@@ -39,6 +39,8 @@ import java.util.Map;
 public abstract class TransparentNodeElement implements GhostObserver, IPlayer, INodeElement, IBurnable {
 
     public ArrayList<IProcess> slowProcessList = new ArrayList<IProcess>(4);
+    /** Run each tick before the electrical step (Simulator's slow pre-processes), e.g. to plan the step's loads. */
+    public ArrayList<IProcess> slowPreProcessList = new ArrayList<IProcess>(1);
 
     public ArrayList<IProcess> electricalProcessList = new ArrayList<IProcess>(4);
     public ArrayList<Component> electricalComponentList = new ArrayList<Component>(4);
@@ -67,6 +69,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
         if (node != null && node.isDestructing()) return;
         
         Eln.simulator.addAllSlowProcess(slowProcessList);
+        for (IProcess p : slowPreProcessList) Eln.simulator.addSlowPreProcess(p);
 
         Eln.simulator.addAllElectricalComponent(electricalComponentList);
         for (State load : electricalLoadList) Eln.simulator.addElectricalLoad(load);
@@ -79,12 +82,23 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
         Eln.simulator.addAllThermalFastProcess(thermalFastProcessList);
     }
 
+    /** Its pins on side's edges with several pins (FacePins), or none. */
+    public java.util.List<mods.eln.node.FacePins.FacePin> facePins(mods.eln.misc.Direction side) {
+        return java.util.List.of();
+    }
+
+    /** Its field bus port on side, or null (TransparentNode links it to a voxel bus cable on that face). */
+    public mods.eln.bus.BusPort busPortOn(mods.eln.misc.Direction side) {
+        return null;
+    }
+
     /** The ambient where it stands, on the Tc scale (Ambient; stamped on its thermal loads in connectJob). */
     public double ambient;
 
     public void disconnectJob() {
         mods.eln.transparentnode.cord.CordSupport.beforeDisconnect(this);
         Eln.simulator.removeAllSlowProcess(slowProcessList);
+        for (IProcess p : slowPreProcessList) Eln.simulator.removeSlowPreProcess(p);
 
         Eln.simulator.removeAllElectricalComponent(electricalComponentList);
         for (State load : electricalLoadList) Eln.simulator.removeElectricalLoad(load);
@@ -131,6 +145,11 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     }
 
     public boolean hasGui() {
+        return false;
+    }
+
+    /** Stasis Delvers: keep this device running in stopped land (NodeBase.timeExempt). */
+    public boolean timeExempt() {
         return false;
     }
 
@@ -388,7 +407,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
         }
 
         INBTTReady.readAll(nbt, electricalLoadList, thermalLoadList, electricalComponentList,
-            slowProcessList, electricalProcessList, thermalFastProcessList);
+            slowProcessList, electricalProcessList, thermalFastProcessList, slowPreProcessList);
 
         byte b = nbt.getByteOr("others", (byte) 0);
         front = Direction.fromInt(b & 0x7);
@@ -411,7 +430,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
         }
 
         INBTTReady.writeAll(nbt, electricalLoadList, thermalLoadList, electricalComponentList,
-            slowProcessList, electricalProcessList, thermalFastProcessList);
+            slowProcessList, electricalProcessList, thermalFastProcessList, slowPreProcessList);
 
 
         nbt.putByte("others", (byte) (front.getInt() + (grounded ? 8 : 0)));

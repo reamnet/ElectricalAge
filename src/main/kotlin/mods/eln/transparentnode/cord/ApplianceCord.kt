@@ -6,14 +6,14 @@ import mods.eln.node.NodeManager
 import mods.eln.node.transparent.*
 import mods.eln.sim.IProcess
 import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.ElectricalLoad
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import java.util.UUID
 
 /** One paid physical link; polling and reconnect trials cannot advance a device's work clock. */
-class ApplianceCord(private val device: CordDevice,val owner: Any,val input: NbtElectricalLoad) {
+class ApplianceCord(private val device: CordDevice,val owner: Any,val input: ElectricalLoad) {
     var moving=false;private set
     var anchor: CordAnchor?=null;private set
     var token=UUID.randomUUID();private set

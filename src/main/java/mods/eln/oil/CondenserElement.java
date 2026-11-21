@@ -29,7 +29,7 @@ import java.util.Map;
  * Each fluid step: the shell takes the vessel's heat, the air ejector pulls air out, the condensate pump (open as far as
  * the turbine turns) pushes water from the vessel's bottom to the front flange. Makeup water by the flange on top,
  * through a float valve: open below MAKEUP_OPEN of its volume as water, shut by MAKEUP_SHUT (Baughn's makeup pump
- * filled one to the flood line). A signal on its left flank (0-50 V) holds the makeup: 0 V shut, full as the float valve
+ * filled one to the flood line). A signal on its left flank (0-5 V) holds the makeup: 0 V shut, full as the float valve
  * has it, unconnected as the float valve has it (Baughn 2026-11-03: the boiler's fill, through a comparator, can then
  * say when the plant wants water; the condenser can't know which boiler it feeds).
  */
@@ -82,11 +82,6 @@ public class CondenserElement extends TransparentNodeElement implements FluidDev
         return v.floodShare();
     }
 
-    /** The turbine's exhaust: m kg of steam (and air kg of air) with its enthalpy per kg after the work (J/kg). */
-    public void exhaust(double m, double air, double hSteam, double tAir) {
-        v.exhaust(m, air, hSteam, tAir);
-    }
-
     @Override
     public Object fluidLevel() {
         return node.coordonate.dimention;
@@ -99,14 +94,19 @@ public class CondenserElement extends TransparentNodeElement implements FluidDev
 
     @Override
     public List<FluidDevice.Link> fluidLinks() {
-        return v.pump == null ? List.of() : List.of(v.pump, v.makeup);
+        return v.pump == null ? List.of() : List.of(v.pump, v.makeup, v.ejector);
     }
 
-    /** The condensate pump turns with the turbine's shaft; the ejector always works (its steam jet). */
+    /**
+     * The condensate pump turns with the turbine's shaft; the ejector is a steam jet on the turbine's inlet steam, full
+     * from EJECTOR_MOTIVE_PA (Baughn 2026-11-10: no vacuum on a bench with nothing connected).
+     */
     @Override
     public void beforeFluidStep(double dt) {
         v.makeupGate = signalled() ? makeupSignal.getNormalized() : 1;
-        v.before(dt, 1, 1, turbine == null ? 0 : turbine.omega);
+        double motive = turbine == null || turbine.inlet == null ? 0
+            : Math.max(0, Math.min(1, (turbine.inlet.P() - Water.P_ATM) / (CondenserDescriptor.EJECTOR_MOTIVE_PA - Water.P_ATM)));
+        v.before(dt, 1, motive, turbine == null ? 0 : turbine.omega);
     }
 
     @Override
@@ -225,19 +225,22 @@ public class CondenserElement extends TransparentNodeElement implements FluidDev
 
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> info = new HashMap<>();
+        Map<String, String> info = new java.util.LinkedHashMap<>();   // (in order: Jade's headline is the first lines)
         info.put(I18N.tr("Turbine"), turbine == null ? I18N.tr("none: place it against a turbine's exhaust side") : I18N.tr("connected"));
         if (vessel != null) {
+            // (Baughn 2026-11-14: the level in the headline, 100 % where it floods the turbine; the contents are details)
+            info.put(I18N.tr("Water level"), String.format(I18N.tr("%.0f%% of what floods the turbine (%.0f mB)"), floodShare() / CondenserDescriptor.FLOOD * 100,
+                vessel.mLiquid() / EaUnits.KG_PER_MB_WATER));
             info.put(I18N.tr("Pressure"), String.format("%.2f bar of %s", vessel.P() / 1e5, EaUnits.contents(vessel)));
             info.put(I18N.tr("Temperature"), String.format("%.0f °C", vessel.T() - Water.T0));
-            info.put(I18N.tr("Fill"), String.format("%.0f%% (%.0f mB)", floodShare() * 100, vessel.mLiquid() / EaUnits.KG_PER_MB_WATER));
+            info.put(I18N.tr("Contents"), EaUnits.composition(vessel));
         }
         info.put(I18N.tr("Heat rejected"), Utils.plotPower("", Math.max(0, heatW)));   // (no -28 mW while idle: AdventurAgent)
         var makeup = v.makeup;
         if (makeup != null) {
             // (Baughn 2026-11-03: whether its signal holds it)
-            String state = makeup.open >= 0.99 ? I18N.tr("open") : v.floatOpen <= 0.01 ? I18N.tr("shut (full enough)")
-                : v.makeupGate <= 0.01 ? I18N.tr("shut by its signal") : String.format("%.0f%% open", makeup.open * 100);
+            String state = makeup.open >= 0.99 ? I18N.tr("open") : v.floatOpen <= 1e-6 ? I18N.tr("shut (full enough)")
+                : v.makeupGate <= 0.01 ? I18N.tr("shut by its signal") : String.format(makeup.open < 0.01 ? "%.2f%% open" : "%.0f%% open", makeup.open * 100);
             String held = !signalled() ? I18N.tr("; no signal: its float valve alone")
                 : String.format(I18N.tr("; signal %.0f%%"), Math.max(0, Math.min(1, v.makeupGate)) * 100);
             info.put(I18N.tr("Makeup valve"), state + held);

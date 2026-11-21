@@ -106,7 +106,7 @@ public class VoxelNodeEntity extends mods.eln.node.six.SixNodeEntity {
         List<int[]> hb = server ? (v == null ? List.of() : v.hostBoxes()) : clientHostBoxes();
         // (each Shapes.or optimises its result again: AdventurAgent measured 2-3 us per box per query when only the parts
         // were kept; so the whole outline and collision of a carved block are kept too)
-        var outline = VoxelNodeBlock.outlineOf(ps, deviceBoxes());
+        var outline = VoxelNodeBlock.outlineOf(ps, aimBoxes());
         var collision = VoxelNodeBlock.shapeOf(ps, 0);
         var carvedHost = VoxelNodeBlock.union(hb, 0);
         c = new Shapes(stamp, h, mask, devices, List.copyOf(hb), outline, collision, carvedHost,
@@ -121,6 +121,26 @@ public class VoxelNodeEntity extends mods.eln.node.six.SixNodeEntity {
         List<int[]> out = new ArrayList<>();
         for (int f = 0; f < mods.eln.node.six.SixNode.SLOTS; f++) out.addAll(slotBoxes(f));
         return out;
+    }
+
+    /** How far a pin's box is grown in the block's outline (voxels): the target for a cable kit's click (Baughn
+     *  2026-11-18, #515: slightly larger than the pin is drawn). */
+    public static final int PIN_AIM = 1;
+
+    /** The devices' boxes as they are aimed at (the block's outline): deviceBoxes, each pin of a device off centre grown
+     *  by PIN_AIM (not past the block). Server and client alike, so the kit's preview and its click agree. */
+    public List<int[]> aimBoxes() {
+        List<int[]> out = new ArrayList<>();
+        for (int f = 0; f < mods.eln.node.six.SixNode.SLOTS; f++) {
+            List<int[]> bs = slotBoxes(f);
+            for (int i = 0; i < bs.size(); i++) out.add(f >= 6 && i > 0 ? grown(bs.get(i), PIN_AIM) : bs.get(i));   // (body first, then its pins)
+        }
+        return out;
+    }
+
+    static int[] grown(int[] b, int g) {
+        return new int[]{Math.max(0, b[0] - g), Math.max(0, b[1] - g), Math.max(0, b[2] - g), Math.min(16, b[3] + g), Math.min(16, b[4] + g),
+            Math.min(16, b[5] + g)};
     }
 
     /** The boxes of the device in a slot (none if empty). */
@@ -176,6 +196,9 @@ public class VoxelNodeEntity extends mods.eln.node.six.SixNodeEntity {
 
     /** Client: the glowing surface strips of hot thermal cables (Incandescence.cableSurface). */
     public volatile List<float[]> clientGlow = List.of();
+
+    /** Client: when a cable here was last seen to burn (game time), or MIN_VALUE. */
+    public volatile long clientBurnt = Long.MIN_VALUE;
 
     /** Client: the parts as last published. */
     public volatile List<VoxelPart> clientParts = List.of();
@@ -238,6 +261,11 @@ public class VoxelNodeEntity extends mods.eln.node.six.SixNodeEntity {
                 for (int[] b : read[i].boxes()) glow.add(new float[]{c, b[0], b[1], b[2], b[3], b[4], b[5]});
             }
             clientGlow = glow.isEmpty() ? List.of() : List.copyOf(mods.eln.misc.Incandescence.cableSurface(glow));
+            // (a cable that burnt while we watched smoulders for a while: VoxelNodeBlock.animateTick)
+            int burntNow = 0, burntBefore = 0;
+            for (VoxelPart p : ps) if (p instanceof CablePart c && c.burnt != null) burntNow++;
+            for (VoxelPart p : clientParts) if (p instanceof CablePart c && c.burnt != null) burntBefore++;
+            if (burntNow > burntBefore && !clientParts.isEmpty() && level != null) clientBurnt = level.getGameTime();
             if (hash != partsHash || clientParts.size() != ps.size()) {
                 partsHash = hash;
                 partsChanged = true;

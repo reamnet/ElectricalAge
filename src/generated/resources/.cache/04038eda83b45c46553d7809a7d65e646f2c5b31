@@ -1,11 +1,11 @@
-// 26.3	2026-11-19T08:34:46.506837264	eln-global/Tags for minecraft:item mod id eln
+// 26.3	2026-11-08T22:53:43.390705831	eln-global/Tags for minecraft:item mod id eln
 84e660d99ec050723c2cbcd48806f26355cdd0fa data/c/tags/item/casings.json
 b1c2dbaac22ebe066a8de4d98af4e881ddef621f data/c/tags/item/casings/machine.json
 864234b02478871ab4edcaaf9bbb5976971370f5 data/c/tags/item/casings/machine_advanced.json
 5da67a77979c512b793ac34b33aa5857c183f8fc data/c/tags/item/circuits.json
 81d4a44dab12cfc684d9fff1d873edbc21aea006 data/c/tags/item/circuits/advanced.json
 c857d5d471235ece5d7ee4adcfb1314ab0237d9d data/c/tags/item/circuits/basic.json
-fbbdd2a293fd8d5e9ab64cd653a1fac5d70ac939 data/c/tags/item/dusts.json
+f9f341f8b969c3807679827c05e2e534e6d5f4e9 data/c/tags/item/dusts.json
 b54871e0d72812d7dc6f53d440f4f3bd093a9be9 data/c/tags/item/dusts/alloy.json
 00ec4c2e9a59c9298ea3638b99829ddbd3651862 data/c/tags/item/dusts/cinnabar.json
 e6e8e09d8ee604aa26beb51c6fb4e0977d684768 data/c/tags/item/dusts/coal.json
@@ -16,13 +16,15 @@ e6e8e09d8ee604aa26beb51c6fb4e0977d684768 data/c/tags/item/dusts/coal.json
 dc1d7f95a0bc73ade6c037271030990072dc7ca3 data/c/tags/item/dusts/lapis.json
 ab702d221148a3f3f5538cca2c65b8c1430ccbd3 data/c/tags/item/dusts/lead.json
 099e4e0599ca07b880296f2bd1db25254dc3ac7c data/c/tags/item/dusts/silicon.json
-b3f38832cda07b6def549a0525932453525730e3 data/c/tags/item/ingots.json
+f48af7320030e33b00ea9fac50efbed71c48854a data/c/tags/item/dusts/tungsten.json
+b778bfc6eec32f7e88f3f961f9ea2cdf83956198 data/c/tags/item/ingots.json
 a0b4bfe15d9df0c07b7a4e7a591f6ab78660ef36 data/c/tags/item/ingots/alloy.json
 4ddcad6e2152a528149e406cf56f4fa7776ae9ca data/c/tags/item/ingots/aluminum.json
 faddda2a328ef2bf5622c70d46376f7bca1358e0 data/c/tags/item/ingots/ferrite.json
 d941123117e2543cf4733b89375860087cf9bf5c data/c/tags/item/ingots/lead.json
 de9263e8109a0fb9c323772ee182757202b21f85 data/c/tags/item/ingots/silicon.json
 d3b1cb39f0a70f4fef0de98d8a8cbaae43dfc50f data/c/tags/item/ingots/steel.json
+1e45613c086e995b0dd09f0caa446f850b1fb151 data/c/tags/item/ingots/tungsten.json
 1d0d4dad1135cfca57e3c3e70a1747f909ae12cf data/c/tags/item/ores.json
 2b6951f8fd96baa6c173700469c8988bb9beb54b data/c/tags/item/ores/cinnabar.json
 a60b9ff352cb9ed896432253517c1c54aeb9897e data/c/tags/item/ores/lead.json
@@ -52,3 +54,9 @@ c878309f02ed8719e9c1b955f3d2e5791fda50fc data/eln/tags/item/high_quality_plates/
 1e45613c086e995b0dd09f0caa446f850b1fb151 data/eln/tags/item/ingots/tungsten.json
 05abdd0d8560b0671f8c122f795fcb1bc2155276 data/eln/tags/item/ore_drops/coal.json
 c4d5e840a138209dffa934f3802ed4e360f264eb data/eln/tags/item/ores/tungsten.json
+1bb8cef862d367a4fda88222ce9d9794c91528c4 data/minecraft/tags/item/enchantable/chest_armor.json
+8cb088f35404b5be151b6a9d079fab5ec77d6f7d data/minecraft/tags/item/enchantable/durability.json
+8cb088f35404b5be151b6a9d079fab5ec77d6f7d data/minecraft/tags/item/enchantable/equippable.json
+ef343bf2f2c9f0d3c4eb10debcc6da2bea3ab587 data/minecraft/tags/item/enchantable/foot_armor.json
+04adfb6d6de913358d2573b47d45561193a351a6 data/minecraft/tags/item/enchantable/head_armor.json
+d7a8d7d762fa599eb1eb0d869a6aa686d0debe07 data/minecraft/tags/item/enchantable/leg_armor.json

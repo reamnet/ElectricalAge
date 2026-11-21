@@ -40,6 +40,7 @@ Guard: `SimulatorTimingTest.simulatedTimeTracksGameTime`, `SimulatorTimingTest.s
 | `thermalProcessList` (six) / `thermalFastProcessList` (transparent) | `addThermalFastProcess` |
 | `thermalSlowProcessList` (six only; transparent has none) | `addThermalSlowProcess` |
 | `slowProcessList` | `addSlowProcess` |
+| `slowPreProcessList` (transparent only) | `addSlowPreProcess` (before the electrical step) |
 
 - `NodeBase.connect()` -> `connectJob()` -> element `connectJob()`; `disconnect()` -> `disconnectJob()` removes the same.
   Element `connectJob` is a no-op while the node `isDestructing()`; `TransparentNode` skips a burnt element.
@@ -54,6 +55,24 @@ Guard: `SimulatorTimingTest.simulatedTimeTracksGameTime`, `SimulatorTimingTest.s
   many times faster time runs at a node. `ElectricalMachineElement` checks it once a second and multiplies its speed-up
   by it (as boosters do: the resistor drops, so the machine draws that much more power and finishes that much sooner,
   for the same energy per item). Test: `wp10a_macerator_in_a_3x_acceleration_field`.
+
+### Machines on elements (`api/Machines.forElement`, `api/impl/ElementHost`)
+
+An element builds its machine in its constructor; the machine's power terminal (an `NbtElectricalLoad` with a
+cable's small Rs), signal gates, resistor (or source) go into the element's lists. In one tick:
+
+1. slow pre-processes: the machine's `beforeStep` plans the step (`MnaMachine.applyBeforeStep`: the load for what
+   the owner asked last tick, or the source on or off);
+2. the electrical step;
+3. slow processes: the machine's `afterStep` (inserted first in the element's list: it books the step's energy,
+   updates the state, runs trip listeners), then the element's own processes, where the owner takes or gives;
+4. queued failures: a `burnsOnOvervoltage(Machines.BURNS_OUT)` trip burns the element through `Failure` (kind MACHINE). An element back
+   in the simulation unburnt (repaired, or the burn called off for a worse failure nearby) repairs its machine.
+
+So the owner works between `afterStep` and the next `beforeStep`, as `MachineCore` wants, whatever order the element
+adds its processes in. Faces: `RelativeFace` against the element's `front` (`api/impl/Faces`). One machine per
+element; a bus face gives it a bus port, which `TransparentNode` links to a voxel bus cable on that face. Converted so far: the electrical machines
+and the FE exporter. Tests: `api/ElementHostTest`, `MachineApiCases`, `Wp11Cases` (exporter).
 
 ## MNA (`src/main/java/mods/eln/sim/mna/`)
 
@@ -159,8 +178,11 @@ prefix `""`, so keys are `name + suffix` and names must be unique within one ele
   species in and out; `FluidNode.energyAt(T)` is a node's whole contents' energy (heat exchange). Tanks' sight glasses
   draw each liquid layer in its species' colour.
   Per step (20 Hz): heat in; one compressibility per phase per node (the stiffer of a small and a 2% flash step); an
-  implicit pressure solve, repeated if a check valve runs backwards or a flow runs against the side its packet was
-  taken from (a check valve enters every solve open, carrying its upstream side's packet; the solve shuts the worst
+  implicit pressure solve, which also solves for the liquid each node with a port under its liquid gains, so the
+  weight of that liquid on its low ports is taken at the step's end (`FluidNetwork.headResponse`; at the step's start,
+  two tanks coupled low and high sloshed their oil through the low ports every step: Baughn 2026-11-09,
+  `MultiFluidTest.tanksCoupledLowAndHighEvenTheirLevelsWithoutSloshing`, `tank_box_settles_after_break`), repeated
+  if a check valve runs backwards or a flow runs against the side its packet was taken from (a check valve enters every solve open, carrying its upstream side's packet; the solve shuts the worst
   back-flowing one per pass and opens a shut one again if its drive turns forward, so a feed valve on the edge of
   opening neither stays shut for a whole step on its starting drive nor shuts the pump feeding the same pipe:
   `BoilerFeedTest`, Baughn 2026-11-04); limiters bound nodes by their neighbours' solved pressures and cap liquid level moves; each node gives at
@@ -172,6 +194,21 @@ prefix `""`, so keys are `name + suffix` and names must be unique within one ele
   point nor pumps past the shut-off. A chord from free flow overshot every step near the shut-off against a tight feed,
   and the pipe flipped between two pressures (`CondensatePumpTest`, `CondensatePumpPropertyTest`). Iron pipe holds
   0.03 L per block (tunable, not geometry); saves record the volume and older ones are rescaled on load.
+  Device sources and sinks (todo #498): mass a device writes into a node between steps lands as one lump at the next
+  step's start (a small node sawtooths, an exchanger behind it passes the burst at too little NTU, the network never
+  sleeps, and a lump written into a pipe run is lost if the run is rebuilt before the step). A `FluidDevice.Flow`
+  (`fluidFlows()`) is a prescribed flow inside the implicit step instead: the world joins it like a vent, to its
+  network's air node, as a `FluidEdge.Kind.FLOW` edge (the core's `Network.Kind.FLOW`: a source passes exactly `rate`
+  of its mix, `shares` by species id at `kelvin`, each species as a gas; a sink takes `rate` of its node's draw by
+  `phase`, smoothly less as it runs dry; `minPa`/`maxPa` gates). The device sets it before each step and books from
+  `delivered` (kg/s over the tick, so kg = delivered x dt; from what the core moved: a sink gets only what is there, a
+  step cut short delivers less) after it. `FluidWorld.edgesOf` leaves flows out (callers ask whether a node is piped or
+  sum its pipes); `flowsOf` has them. A source's species are in the core's set whether it runs or not (no rebuild on
+  toggle). A steady source lets its network sleep. Tests: `pipe_flow_source_survives_rebuild`, `FlowSourceTest`.
+  Users: the gas turbine's exhaust (`GasTurbineElement.exhaustFlow`, air at EXHAUST_T into its 4 L casing; the rate
+  carries what earlier steps didn't deliver, and the heat is booked from what was delivered). Its casing was 40 L for a
+  while to soften the lump; saves carry `exhaustV` since then and load rescaled to the current casing at their pressure
+  (`gas_turbine_exhaust_volume_rescale`); saves without it are a 4 L casing's.
 - `src/main/java/mods/eln/solver/Equation.java`: expression parser/evaluator for the math chip (`ElectricalMathElement`)
   and `AnalogChips.kt`; not part of the MNA.
 

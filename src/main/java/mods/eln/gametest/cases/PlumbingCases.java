@@ -34,12 +34,18 @@ public final class PlumbingCases {
         cases.add(new QualitySensor());
         cases.add(new TankBox());
         cases.add(new TankBoxSplits());
+        cases.add(new TankBoxSettlesAfterBreak());
+        cases.add(new TankBoxHitbox());
+        cases.add(new TankBoxCornerPipeClick());
         cases.add(new TankFlanges());
         cases.add(new TankSightGlass());
         cases.add(new HotWaterIntoShortPipe());
         cases.add(new ValveMeters());
         cases.add(new LiquidStaysIncompressible());
         cases.add(new TankTakesOil());
+        cases.add(new TankStandsWithoutFloor());
+        cases.add(new PurgeValve(false));
+        cases.add(new PurgeValve(true));
     }
 
     static final int IRON_TANK = 40 + (82 << 6), ALLOY_TANK = 44 + (82 << 6), PUMP = 48 + (82 << 6);
@@ -108,7 +114,7 @@ public final class PlumbingCases {
             }
             ctx.check("tank: it shows the top layer, gasoline, and gives it back", took == 500, took + " mB, shown " + shownAfter);
             var info = t.getWaila();
-            ctx.check("tank: Jade lists the gasoline", info.containsKey("Gasoline") && info.get("Gasoline").contains(" mB"), "" + info.get("Gasoline"));
+            ctx.check("tank: Jade lists the gasoline", String.valueOf(info.get("Contents")).contains("B gasoline"), "" + info.get("Contents"));
         }
     }
 
@@ -128,6 +134,102 @@ public final class PlumbingCases {
 
         public int floorDepth() {
             return 10;
+        }
+    }
+
+    /**
+     * A tank needs no floor (Baughn 2026-11-10): tank A stands on a stone block, the block is taken away (it used to
+     * break the tank), and a pipe in its place runs from A's underside port down into tank B's top port. A stays, and
+     * its water runs down into B (slowly: both are sealed, so B's air has to climb the same pipe, ~2 g/s).
+     */
+    static final class TankStandsWithoutFloor extends Big {
+        TankElement a, b;
+        BlockPos pa;
+        double aWater0;
+
+        public String id() {
+            return "tank_stands_without_a_floor";
+        }
+
+        public int ticks() {
+            return 200;
+        }
+
+        public void build(TestContext ctx) {
+            pa = ctx.at(2, 3, 1);
+            BlockPos under = ctx.at(2, 2, 1);
+            ctx.level().setBlock(under, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 3);
+            a = tank(ctx, IRON_TANK, pa, Direction.XN);
+            ctx.level().removeBlock(under, false);
+            PipeCases.lay(ctx, under, 0, 8, 16, 8, 8, 0, 8);
+            b = tank(ctx, IRON_TANK, ctx.at(2, 1, 1), Direction.XN);
+            fill(a.vessel, 0.5 * a.vessel.volume * Water.RHO_L, Water.P_ATM, 300);
+            aWater0 = a.vessel.mLiquid();
+        }
+
+        public void measure(TestContext ctx) {
+            boolean stands = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(pa, ctx.level()))
+                instanceof mods.eln.node.transparent.TransparentNode n && n.element == a;
+            ctx.line("tank without a floor: A " + a.getWaila() + "; B " + b.getWaila());
+            ctx.check("tank: it stays when the block under it goes", stands, "");
+            ctx.check("tank: its water runs out of its underside port into B below", b.vessel.mLiquid() > 0.05 * aWater0,
+                String.format("%.3f of %.3f kg", b.vessel.mLiquid(), aWater0));
+        }
+    }
+
+    /**
+     * A purge valve (Baughn 2026-11-10: gas only, never liquid) on a pipe standing on a sealed tank's top port. Half full of
+     * water under 3 bar of air, it bleeds the air down to its set pressure and keeps the water (the vapour in the air goes
+     * with it). Brim full of water, it vents the pipe's air, then shuts as the water reaches it.
+     */
+    static final class PurgeValve extends Big {
+        final boolean full;
+        TankElement t;
+        BlockPos pipeAt;
+        String err;
+        double water0;
+
+        PurgeValve(boolean full) {
+            this.full = full;
+        }
+
+        public String id() {
+            return full ? "pipe_purge_valve_keeps_the_liquid" : "pipe_purge_valve_bleeds_the_gas";
+        }
+
+        public int ticks() {
+            return 300;
+        }
+
+        public void build(TestContext ctx) {
+            t = tank(ctx, IRON_TANK, ctx.at(2, 1, 1), Direction.XN);
+            pipeAt = ctx.at(2, 2, 1);
+            PipeCases.lay(ctx, pipeAt, 0, 8, 0, 8, 8, 12, 8);
+            var n = PipeCases.node(ctx, pipeAt);
+            err = n.addSafetyValveNear(0.5, 8 / 16.0, 0.5, true);
+            fill(t.vessel, (full ? 0.995 : 0.5) * t.vessel.volume * Water.RHO_L, 3e5, 300);
+            water0 = t.vessel.mWater;
+        }
+
+        public void measure(TestContext ctx) {
+            var run = mods.eln.fluid.FluidWorld.nodeFor(((mods.eln.node.voxel.PipePart) PipeCases.node(ctx, pipeAt).parts.get(0)).fluid);
+            double water = t.vessel.mWater + run.mWater;
+            ctx.line(String.format("purge valve (%s): tank %.3f bar, %.4f -> %.4f kg of water; %s", full ? "full" : "half", t.vessel.P() / 1e5, water0, water,
+                PipeCases.node(ctx, pipeAt).getWaila(false)));
+            ctx.check("purge valve: it fits on the pipe", err == null, "" + err);
+            // (a client check: Jade's header read "Pipes and Cables" with the crosshair on the valve)
+            var vn = PipeCases.node(ctx, pipeAt);
+            String onValve = null, onPipe = vn.nameAt(0.5, 1 / 16.0, 0.5);
+            for (var part : vn.parts)
+                if (part instanceof mods.eln.node.voxel.SafetyValvePart sv) {
+                    int[] b = sv.boxes().get(0);   // (its body, beside the pipe)
+                    onValve = vn.nameAt((b[0] + b[3]) / 32.0, (b[1] + b[4]) / 32.0, (b[2] + b[5]) / 32.0);
+                }
+            ctx.check("purge valve: Jade names it, and the pipe under it", "Pipe Purge Valve".equals(onValve) && "Iron Pipe".equals(onPipe), onValve + " / " + onPipe);
+            // (the vapour in the gas it lets out goes too, a few hundredths of a gram: "it'll let out steam")
+            ctx.check("purge valve: no liquid goes, only the vapour in the gas (under 0.1 g)", water > water0 - 1e-4, String.format("%.6f kg lost", water0 - water));
+            if (!full) ctx.check("purge valve: it bleeds the air down to its set pressure (under 1.3 bar)", t.vessel.P() < 1.3e5,
+                String.format("%.3f bar", t.vessel.P() / 1e5));
         }
     }
 
@@ -181,9 +283,10 @@ public final class PlumbingCases {
     }
 
     /**
-     * The inline pump on 200 V: tank A's low port -> pipe -> pump -> pipe -> tank B's low port. With cold water in A it
-     * moves it to B and draws power; with A full of water at its boiling point (1 atm, 100 C) it cavitates and moves
-     * next to nothing.
+     * The inline pump on MVU: tank A's low port -> pipe -> pump -> pipe -> tank B's low port. With cold water in A it
+     * moves it to B and draws power; with A full of water at its boiling point (1 atm, 100 C) its line flashes to steam,
+     * and it moves that as it moves water (Baughn 2026-11-15: the pump works on gas as on liquid), steam and water both
+     * reaching B. (Before, steam at its inlet was a vapour lock: it moved next to nothing and rattled.)
      */
     static final class PumpMovesWater extends Big {
         final boolean boiling;
@@ -191,7 +294,7 @@ public final class PlumbingCases {
         InlinePumpElement p;
         IProcess watch;
         double bWater0, maxW;
-        boolean sawCavitate, sawSteamBound;
+        boolean sawCavitate, sawSteamBound, sawSteamCavitating;
         String steamJade = "", airJade = "";
 
         PumpMovesWater(boolean boiling) {
@@ -220,17 +323,20 @@ public final class PlumbingCases {
             var s = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) ctx.placeSix(SOURCE, src);
             s.networkUnserialize(ctx.stream(out -> {
                 out.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                out.writeFloat(200f);
+                out.writeFloat((float) mods.eln.Eln.MVU);
             }));
             double T = boiling ? Water.TB : Water.T_AMBIENT;
             fill(a.vessel, 0.8 * a.vessel.volume * Water.RHO_L, Water.P_ATM, T);
             bWater0 = b.vessel.mLiquid();
+            // (a line in service: its iron at the water's temperature; cold, it subcooled the boiling water)
+            for (BlockPos q : new BlockPos[]{pa.south(), pp.south()}) PipeCases.warm(ctx, q, T);
             Eln.simulator.addSlowProcess(watch = dt -> {
                 sawCavitate |= boiling ? p.cavitating : p.cavitating && !p.gasBound;
                 maxW = Math.max(maxW, p.wantW);
-                // (Jade: gas at its inlet that is its own vapour reads cavitating, air reads priming: AdventurAgent)
+                // (Jade: gas at its inlet reads as what it moves, steam or air; Baughn 2026-11-15: the pump works on gas as on water)
                 if (p.gasBound && p.steamBound) {
                     sawSteamBound = true;
+                    sawSteamCavitating |= p.cavitating;
                     steamJade = p.getWaila().get("Speed");
                 }
                 if (p.gasBound && !p.steamBound) airJade = p.getWaila().get("Speed");
@@ -246,13 +352,15 @@ public final class PlumbingCases {
                 // balance them; with gas able to come back through a pipe's opening, ~0.04 kg reaches B, the rest fills
                 // the lines. One stream per edge let 0.2 kg over against 1.1 bar, more than the pump can make.)
                 ctx.check("pump: cold water goes from A to B", moved > 0.025, String.format("%.3f kg", moved));
-                ctx.check("pump: it draws power doing it", maxW > 50, String.format("%.0f W", maxW));
+                // (more than its idling: the pump puts its real hydraulic power into the water, over its efficiency, a few W
+                // against these low heads; the old law charged the full shut-off head on whatever moved)
+                ctx.check("pump: it draws power doing it", maxW > mods.eln.oil.InlinePumpDescriptor.IDLE_W + 1, String.format("%.0f W", maxW));
                 ctx.check("pump: it primed itself (passed the line's air on) and then pumped water", p.totalKg > 0.05, String.format("%.3f kg", p.totalKg));
-                ctx.check("pump: Jade calls air at its inlet priming", airJade.contains("priming"), airJade);
+                ctx.check("pump: Jade says it is moving the air at its inlet", airJade.contains("moving air"), airJade);
             } else {
-                ctx.check("pump: water at its boiling point vapour-locks it (cavitating, or its line full of steam)", sawCavitate, "");
-                ctx.check("pump: and it moves next to nothing (under 0.05 kg)", moved < 0.05, String.format("%.3f kg", moved));
-                ctx.check("pump: Jade calls steam at its inlet cavitating, not priming", !sawSteamBound || steamJade.contains("CAVITATING") && !steamJade.contains("priming"),
+                ctx.check("pump: boiling feed doesn't vapour-lock it: it keeps moving it (over 0.05 kg reach B)", moved > 0.05, String.format("%.3f kg", moved));
+                ctx.check("pump: steam at its inlet is not cavitation (no rattle)", !sawSteamCavitating, "");
+                ctx.check("pump: Jade says it is moving the steam at its inlet, not cavitating", !sawSteamBound || steamJade.contains("moving steam") && !steamJade.contains("CAVITATING"),
                     sawSteamBound + ": " + steamJade);
             }
         }
@@ -294,6 +402,8 @@ public final class PlumbingCases {
             v.flow = 1;   // (toward +x: A to B)
             double T = Water.tsat(10e5);
             fill(a.vessel, 0.3 * a.vessel.volume * Water.RHO_L, 10e5, T);
+            // (a line in service: its iron at the steam's temperature; cold, it condensed A's steam and cooled A)
+            PipeCases.warm(ctx, pv, T);
         }
 
         public void measure(TestContext ctx) {
@@ -439,7 +549,7 @@ public final class PlumbingCases {
             // every side nozzle of a box up to 3 x 3 x 3, on every outer face of its blocks: its bore's end inside the shell
             var r = rb;
             String bad = "";
-            int checked = 0;
+            int checked = 0, turned = 0;
             for (int sx = 1; sx <= 3; sx++)
                 for (int sz = 1; sz <= 3; sz++)
                     for (int ox = 0; ox < sx; ox++)
@@ -454,7 +564,22 @@ public final class PlumbingCases {
                                 r.oz = oz;
                                 int nAcross = alongX ? sz : sx, oAcross = alongX ? oz : ox;
                                 double across = oAcross * 16 + 8, half = mods.eln.oil.TankRender.SHELL_R * Math.cos(Math.PI / 14) * nAcross;
-                                if (Math.abs(across - nAcross * 8.0) + mods.eln.oil.TankRender.NOZZLE_R > 0.95 * half) continue;   // (beside the shell)
+                                if (Math.abs(across - nAcross * 8.0) + mods.eln.oil.TankRender.NOZZLE_R > 0.95 * half) {
+                                    // beside the shell (Baughn 2026-11-09, a corner flange): it turns toward the shell, and its bore's end is in it
+                                    float[] nz = r.sideNozzle(face);
+                                    double th = Math.toRadians(nz[1]), sign = face == 2 || face == 5 ? -1 : 1;
+                                    double du = high ? -Math.cos(th) : Math.cos(th), dv = sign * -Math.sin(th);
+                                    double l = nz[0] - mods.eln.oil.TankRender.DISC, pu = (high ? (o + 1) * 16 - mods.eln.oil.TankRender.DISC : o * 16 + mods.eln.oil.TankRender.DISC);
+                                    double eu = pu + du * l, ev = across + dv * l;
+                                    boolean ok = nz[1] != 0 && l < 24;
+                                    for (int k = -1; k <= 1; k += 2) {
+                                        double wu = eu - k * dv * mods.eln.oil.TankRender.NOZZLE_R, wv = ev + k * du * mods.eln.oil.TankRender.NOZZLE_R;
+                                        ok &= alongX ? inShell(wu, wv, sx, sz) : inShell(wv, wu, sx, sz);
+                                    }
+                                    if (!ok) bad += String.format(" %dx%d (%d,%d) face %d turned %.0f len %.1f;", sx, sz, ox, oz, face, nz[1], nz[0]);
+                                    turned++;
+                                    continue;
+                                }
                                 double faceAt = high ? (o + 1) * 16 : o * 16, end = high ? faceAt - r.nozzle(face) : faceAt + r.nozzle(face);
                                 for (int k = 0; k < 24; k++) {
                                     double w = across + mods.eln.oil.TankRender.NOZZLE_R * Math.cos(2 * Math.PI * k / 24);
@@ -466,7 +591,7 @@ public final class PlumbingCases {
                                 }
                                 checked++;
                             }
-            ctx.check("tank flanges: every side nozzle reaches inside the shell all round its bore", bad.isEmpty() && checked > 20, checked + " nozzles;" + bad);
+            ctx.check("tank flanges: every side nozzle reaches inside the shell all round its bore", bad.isEmpty() && checked > 20 && turned > 10, checked + " straight, " + turned + " turned;" + bad);
             r.sx = r.sz = 1;
             r.ox = r.oz = 0;
             ctx.check("tank flanges: a lone tank's top nozzle reaches below its flat top (15 px)", 16 - r.topNozzle() < 15, String.format("%.2f px", 16 - r.topNozzle()));
@@ -511,7 +636,7 @@ public final class PlumbingCases {
         }
     }
 
-    /** Breaking a block of a 2 x 2 x 3 box: what's left isn't a box, so 11 one-block tanks, each with its share. */
+    /** Breaking a block of a 2 x 2 x 3 box: what's left isn't a box, so 11 one-block tanks, each with its share by layer. */
     static final class TankBoxSplits extends Big {
         java.util.List<TankElement> ts;
         double before;
@@ -538,8 +663,151 @@ public final class PlumbingCases {
             for (TankElement t : ts) alone &= t.group == null && t.vessel == t.own;
             double after = water(ts);
             ctx.check("tank box split: 11 one-block tanks (not a box)", alone && ts.size() == 11, "");
-            ctx.check("tank box split: they keep 11/12 of the water (by volume)", Math.abs(after - before * 11 / 12) < 0.02 * before,
+            // (the liquid lies in the lower layers, so the top corner held only gas and vapour)
+            ctx.check("tank box split: they keep the water (the broken top corner held none)", Math.abs(after - before) < 0.01 * before,
                 String.format("%.3f of %.3f kg", after, before));
+        }
+    }
+
+    /**
+     * Baughn 2026-11-09: breaking a corner of a box tank set the oil in the rest oscillating. A 3 x 2 x 3 box 15 % full of
+     * crude loses a bottom corner; after it has had 5 s to settle, a bottom tank's water stays put (within 1 % over the
+     * last 5 s).
+     */
+    /**
+     * A box's outline and collision are its shell's, cut to each block (Baughn 2026-11-09: a 2 x 2 x 3 box kept its lone
+     * tanks' small cylinders): a block reaches the faces it shares with the rest of the box, the middle layer runs floor
+     * to ceiling, the top stops at the shell's top, and the box's inside corner is solid to walk on.
+     */
+    static final class TankBoxHitbox extends Big {
+        String bad = "", line = "";
+
+        public String id() {
+            return "tank_box_hitbox_from_its_shell";
+        }
+
+        public int ticks() {
+            return 4;
+        }
+
+        public void build(TestContext ctx) {
+            box(ctx);
+        }
+
+        public void measure(TestContext ctx) {
+            var level = ctx.level();
+            for (int y = 1; y <= 3; y++) {
+                var pos = ctx.at(2, y, 2);
+                var st = level.getBlockState(pos);
+                var outline = st.getShape(level, pos);
+                var coll = st.getCollisionShape(level, pos);
+                if (outline.isEmpty() || coll.isEmpty()) {
+                    bad += "layer " + y + " empty; ";
+                    continue;
+                }
+                var b = outline.bounds();
+                line += String.format("layer %d: x %.2f..%.2f y %.2f..%.2f z %.2f..%.2f (%d boxes); ", y, b.minX, b.maxX, b.minY, b.maxY, b.minZ, b.maxZ, outline.toAabbs().size());
+                if (b.maxX < 0.999 || b.maxZ < 0.999) bad += "layer " + y + " short of the box's inside faces; ";
+                if (b.minX < 0.01 || b.minZ < 0.01) bad += "layer " + y + " out to the box's outer faces; ";
+                if (y < 3 && b.maxY < 0.999) bad += "layer " + y + " short of the next layer; ";
+                if (y > 1 && b.minY > 0.001) bad += "layer " + y + " short of the layer below; ";
+                if (y == 3 && (b.maxY > 0.99 || b.maxY < 0.75)) bad += "top layer's top at " + b.maxY + "; ";
+                boolean corner = false;
+                for (var a : coll.toAabbs()) corner |= a.contains(0.95, y == 3 ? 0.5 : 0.95, 0.95);
+                if (!corner) bad += "layer " + y + " collision misses the inside corner; ";
+            }
+            ctx.line("tank box hitbox: " + line);
+            ctx.check("a tank box's hitbox is its shell, cut to each block", bad.isEmpty(), bad);
+        }
+    }
+
+    /**
+     * A click on a box's shell at a corner block (Baughn 2026-11-09; AdventurAgent's pipes didn't seat): the shell's steps
+     * face any way, so a click on one whose face has no port (the box's inside) takes the nearest side port; a click on
+     * the block's own face with no port takes none, as before.
+     */
+    static final class TankBoxCornerPipeClick extends Big {
+        java.util.List<BlockPos> at = new java.util.ArrayList<>();
+
+        public String id() {
+            return "tank_box_corner_click_finds_its_port";
+        }
+
+        public int ticks() {
+            return 4;
+        }
+
+        public void build(TestContext ctx) {
+            for (int y = 1; y <= 2; y++)
+                for (int x = 2; x <= 3; x++)
+                    for (int z = 2; z <= 3; z++) ctx.placeTransparent(IRON_TANK, ctx.at(x, y, z));
+        }
+
+        public void measure(TestContext ctx) {
+            var pos = ctx.at(2, 1, 2);   // (the box's low corner: its outer faces are west and north)
+            var level = ctx.level();
+            var hit = new net.minecraft.world.phys.Vec3(pos.getX() + 0.7, pos.getY() + 0.3, pos.getZ() + 0.75);
+            var e = mods.eln.node.voxel.PipePlacer.portAtForTests(level, pos, net.minecraft.core.Direction.EAST, hit);
+            ctx.check("a click inside a corner block on an inner-facing step takes its nearest side port (west, low)",
+                e != null && e.dir() == 0 && e.x() == pos.getX() * 16L && e.y() == pos.getY() * 16L + 4, String.valueOf(e));
+            var hit2 = new net.minecraft.world.phys.Vec3(pos.getX() + 0.3, pos.getY() + 0.8, pos.getZ() + 0.6);
+            var e2 = mods.eln.node.voxel.PipePlacer.portAtForTests(level, pos, net.minecraft.core.Direction.SOUTH, hit2);
+            ctx.check("... and high up, its west high port", e2 != null && e2.dir() == 0 && e2.y() == pos.getY() * 16L + 12, String.valueOf(e2));
+            var onFace = new net.minecraft.world.phys.Vec3(pos.getX() + 1, pos.getY() + 0.3, pos.getZ() + 0.5);
+            ctx.check("a click on a block's own face with no port takes none",
+                mods.eln.node.voxel.PipePlacer.portAtForTests(level, pos, net.minecraft.core.Direction.EAST, onFace) == null, "");
+        }
+    }
+
+    static final class TankBoxSettlesAfterBreak extends Big {
+        java.util.List<TankElement> ts;
+        IProcess watch;
+        int tick;
+        double lo = Double.MAX_VALUE, hi = -Double.MAX_VALUE;
+        final java.util.List<Double> samples = new java.util.ArrayList<>();
+        String trace = "";
+
+        public String id() {
+            return "tank_box_settles_after_break";
+        }
+
+        public int ticks() {
+            return 200;
+        }
+
+        public void build(TestContext ctx) {
+            // (Baughn's: 3 x 2 x 3 iron tanks, x 2..4, y 1..2, z 2..4)
+            ts = new java.util.ArrayList<>();
+            for (int y = 1; y <= 2; y++)
+                for (int x = 2; x <= 4; x++)
+                    for (int z = 2; z <= 4; z++) ts.add((TankElement) ctx.placeTransparent(IRON_TANK, ctx.at(x, y, z)));
+            var g = ts.get(0).group;
+            // (crude, as Baughn's: 15 % of the box)
+            int crude = mods.eln.sim.fluid.SpeciesRegistry.get().id("eln:crude_oil");
+            if (g != null) {
+                fill(g.node, 0, Water.P_ATM, 293.15);
+                mods.eln.sim.fluid.EaUnits.add(g.node, crude, 0.15 * g.node.volume * 850, 293.15, false);
+            }
+            TankElement gone = ts.remove(0);   // (a bottom corner)
+            ctx.level().removeBlock(gone.node.coordonate.pos(), false);
+            TankElement watched = ts.get(1);
+            Eln.simulator.addSlowProcess(watch = dt -> {
+                tick++;
+                double m = watched.vessel.liquidVolume();
+                if (tick % 40 == 0) trace += String.format(" %.7f", m);
+                samples.add(m);
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            Eln.simulator.removeSlowProcess(watch);
+            for (int i = samples.size() / 2; i < samples.size(); i++) {   // (the last half: 5 s)
+                lo = Math.min(lo, samples.get(i));
+                hi = Math.max(hi, samples.get(i));
+            }
+            ctx.line("tank box after a break: a bottom tank's crude (m3), 10 samples:" + trace);
+            ctx.check("tank box after a break: the crude settles (within 1 % over the last 5 s)", hi - lo <= 0.01 * Math.max(hi, 1e-9),
+                String.format("%.7f .. %.7f m3", lo, hi));
         }
     }
 
@@ -716,10 +984,10 @@ public final class PlumbingCases {
             FluidNode wet = new FluidNode(0.001, 0, 1, false), dry = new FluidNode(0.001, 0, 1, false);
             double T = Water.tsat(5e5), mv = 5e5 * 0.001 / (Water.R_V * T);   // (saturated vapour filling 1 L)
             dry.mWater = mv;
-            dry.energy = mods.eln.sim.fluid.Flash.energyAt(mv, 0, 0.001, T);
+            dry.energy = dry.energyAt(T);
             dry.update();
             wet.mWater = 1.5 * mv;   // (plus half as much again as liquid: a third of the water)
-            wet.energy = mods.eln.sim.fluid.Flash.energyAt(mv, 0, 0.001, T) + 0.5 * mv * Water.uLiquid(T);
+            wet.energy = dry.energyAt(T) + 0.5 * mv * Water.uLiquid(T);
             wet.update();
             s.read(wet);
             double w = s.reading;

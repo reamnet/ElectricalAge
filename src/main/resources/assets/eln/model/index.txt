@@ -2,6 +2,7 @@
 activethermaldissipatora/activethermaldissipatora.obj
 adjustablewarehousehighbay/adjustablewarehousehighbay.obj
 advancedenergymeter/advancedenergymeter.obj
+airblower200v/airblower200v.obj
 alarmmedium/alarmmedium.obj
 analogchips/analogchips.obj
 anemometer/anemometer.obj
@@ -27,6 +28,7 @@ cagewallsconce/cagewallsconce.obj
 candlefoyerchandelier/candlefoyerchandelier.obj
 candlewallsconce/candlewallsconce.obj
 capacitorbank/capacitorbank.obj
+carbonblackburner/carbonblackburner.obj
 ceramicdrumtablelamp/ceramicdrumtablelamp.obj
 christmasfairylights/christmasfairylights.obj
 christmasiciclelights/christmasiciclelights.obj
@@ -42,6 +44,7 @@ compactturbine50v/compactturbine50v.obj
 compactups/compactups.obj
 compressora/compressora.obj
 compressorb/compressorb.obj
+computer/computer.obj
 condenser200v/condenser200v.obj
 condenser50v/condenser50v.obj
 coveledstrip/coveledstrip.obj
@@ -54,6 +57,7 @@ deckelectricgrill/deckelectricgrill.obj
 deckpostcaplight/deckpostcaplight.obj
 decksteplight/decksteplight.obj
 deepbafflepotlight/deepbafflepotlight.obj
+desulfuriser/desulfuriser.obj
 digitalwallclock/digitalwallclock.obj
 distributionboard/distributionboard.obj
 distributionpole/distributionpole.obj
@@ -73,6 +77,7 @@ electricheater200v/electricheater200v.obj
 electricheater50v/electricheater50v.obj
 electricwasher/electricwasher.obj
 eletored/eletored.obj
+elevatorcar/elevatorcar.obj
 emergencyexitlighting/emergencyexitlighting.obj
 energymeter/energymeter.obj
 fabricator/fabricator.obj
@@ -156,6 +161,7 @@ kitchenricecooker/kitchenricecooker.obj
 kitchentoaster/kitchentoaster.obj
 lampsupply/lampsupply.obj
 lanternfoyerchandelier/lanternfoyerchandelier.obj
+largeboiler/largeboiler.obj
 largerheostat/largerheostat.obj
 led/led.obj
 ledswitch/ledswitch.obj
@@ -211,10 +217,13 @@ passivethermaldissipatora/passivethermaldissipatora.obj
 patioglobestring/patioglobestring.obj
 patiotropicalfan/patiotropicalfan.obj
 pierlanternpost/pierlanternpost.obj
+pipemixer/pipemixer.obj
 plantcondenser/plantcondenser.obj
 platemachinea/platemachinea.obj
 platemachineb/platemachineb.obj
+polegear/polegear.obj
 poletransformer/poletransformer.obj
+polymeriser/polymeriser.obj
 poolcornerlight/poolcornerlight.obj
 poollinearlight/poollinearlight.obj
 poolnichelight/poolnichelight.obj
@@ -239,6 +248,7 @@ redtoele/redtoele.obj
 relay800/relay800.obj
 relaybig/relaybig.obj
 relaysmall/relaysmall.obj
+resincollector230/resincollector230.obj
 robustlamp/robustlamp.obj
 robustlampsuspended/robustlampsuspended.obj
 roofservicemast/roofservicemast.obj
@@ -251,6 +261,7 @@ scanner/scanner.obj
 sconcelamp/sconcelamp.obj
 sculpturalbranchchandelier/sculpturalbranchchandelier.obj
 serviceweatherhead/serviceweatherhead.obj
+servodrive/servodrive.obj
 shaftflywheel/shaftflywheel.obj
 shaftgas/shaftgas.obj
 shaftgen4kw/shaftgen4kw.obj
@@ -288,6 +299,7 @@ standbygenerator_extreme/standbygenerator_extreme.obj
 standbygenerator_large/standbygenerator_large.obj
 standbygenerator_medium/standbygenerator_medium.obj
 standingdrumfloorlamp/standingdrumfloorlamp.obj
+steamcracker/steamcracker.obj
 steamoven/steamoven.obj
 steamturbine200v/steamturbine200v.obj
 steamturbine50v/steamturbine50v.obj
@@ -377,6 +389,8 @@ wideareafloodlight/wideareafloodlight.obj
 wideundergroundmetersocket/wideundergroundmetersocket.obj
 windowcandlelamp/windowcandlelamp.obj
 windturbinemini/windturbinemini.obj
+wiredrawer230/wiredrawer230.obj
+wiredrawer48/wiredrawer48.obj
 wirelesssignalrepeater/wirelesssignalrepeater.obj
 wirelesssignalrx/wirelesssignalrx.obj
 wirelesssignaltx/wirelesssignaltx.obj

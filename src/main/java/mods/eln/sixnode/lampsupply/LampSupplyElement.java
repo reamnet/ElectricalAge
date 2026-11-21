@@ -5,6 +5,7 @@ import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
+import mods.eln.network.ClientValues;
 import mods.eln.node.AutoAcceptInventoryProxy;
 import mods.eln.node.NodeBase;
 import mods.eln.node.six.SixNode;
@@ -59,11 +60,11 @@ public class LampSupplyElement extends SixNodeElement {
     public IProcess lampSupplySlowProcess = new LampSupplySlowProcess();
 
     /**
-     * Cables extend the range (descriptor range + one block per cable). Baughn 2026-10-17: no longer needed to connect;
+     * Cables extend the range (descriptor range + one block per cable, or per block of a cable kit). Baughn 2026-10-17: no longer needed to connect;
      * the supply works with an empty slot, as with an LV cable, and no cable sets a watchdog.
      */
     private AutoAcceptInventoryProxy inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
-        .acceptIfIncrement(0, 64, ElectricalCableDescriptor.class);
+        .acceptCable(0, 64, false);
 
 
     static class Entry {
@@ -292,6 +293,11 @@ public class LampSupplyElement extends SixNodeElement {
         }
     }
 
+    /** A saved aggregator index; out of range (an older handler stored the client's byte): 2, the default. */
+    static int loadAggregator(int a) {
+        return ClientValues.index(a, 3) ? a : 2;
+    }
+
     @Override
     public void readFromNBT(CompoundTag nbt) {
         int idx = 0;
@@ -315,7 +321,7 @@ public class LampSupplyElement extends SixNodeElement {
                 if (!nbt.contains("entry_p" + idx)) continue;
                 int aggregator = nbt.getIntOr("selectedAggregator" + idx, 0);
                 if (aggregator < 0 || aggregator >= aggregators[idx].length) aggregator = 2;
-                entries.set(idx, new Entry(nbt.getStringOr("entry_p" + idx, ""), nbt.getStringOr("entry_w" + idx, ""), aggregator));
+                entries.set(idx, new Entry(nbt.getStringOr("entry_p" + idx, ""), nbt.getStringOr("entry_w" + idx, ""), loadAggregator(aggregator)));
                 channelStates[idx] = nbt.getBooleanOr("channelStates" + idx, false);
             }
         }
@@ -330,7 +336,7 @@ public class LampSupplyElement extends SixNodeElement {
     void setupFromInventory() {
         ItemStack cableStack = getInventory().getItem(LampSupplyContainer.cableSlotId);
         ElectricalCableDescriptor desc = Utils.isEmpty(cableStack) ? null
-            : (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cableStack, ElectricalCableDescriptor.class);
+            : mods.eln.node.voxel.CableItems.descriptor(cableStack);
         if (desc == null) desc = mods.eln.registry.ElnDeviceRegistry.lowVoltageCableDescriptor;
         desc.applyTo(powerLoad);
         voltageWatchdog.setUNominal(10000); // 1.12's empty-slot value: off
@@ -343,9 +349,9 @@ public class LampSupplyElement extends SixNodeElement {
         try {
             switch (stream.readByte()) {
                 case setPowerName: {
-                    int id = stream.readUnsignedByte();
-                    if (id >= entries.size()) return;
-                    String newName = stream.readUTF();
+                    int id = stream.readByte();
+                    String newName = ClientValues.readString(stream);
+                    if (!ClientValues.index(id, entries.size())) break;
                     channelRemove(this, id, entries.get(id).powerChannel);
                     entries.get(id).powerChannel = newName;
                     needPublish();
@@ -353,19 +359,18 @@ public class LampSupplyElement extends SixNodeElement {
                     break;
                 }
                 case setWirelessName: {
-                    int id = stream.readUnsignedByte();
-                    if (id >= entries.size()) return;
-                    String newName = stream.readUTF();
-                    // This is a signal-control name, not another supplied power channel.
+                    int id = stream.readByte();
+                    String newName = ClientValues.readString(stream);
+                    if (!ClientValues.index(id, entries.size())) break;
                     entries.get(id).wirelessChannel = newName;
                     needPublish();
                     break;
                 }
                 case setSelectedAggregator: {
-                    int id = stream.readUnsignedByte();
-                    int aggregator = stream.readUnsignedByte();
-                    if (id >= entries.size() || aggregator >= aggregators[id].length) return;
-                    entries.get(id).aggregator = aggregator;
+                    int id = stream.readByte(), a = stream.readByte();
+                    // (an aggregator past the three threw in the slow process, every tick, and was saved)
+                    if (!ClientValues.index(id, entries.size()) || !ClientValues.index(a, aggregators[id].length)) break;
+                    entries.get(id).aggregator = a;
                     needPublish();
                     break;
                 }
@@ -411,6 +416,6 @@ public class LampSupplyElement extends SixNodeElement {
     private int getRange(LampSupplyDescriptor desc, Container inventory2) {
         ItemStack stack = getInventory().getItem(LampSupplyContainer.cableSlotId);
         if (Utils.isEmpty(stack)) return desc.range;
-        return desc.range + stack.getCount();
+        return desc.range + Math.min(64, mods.eln.node.voxel.CableItems.blocks(stack));
     }
 }

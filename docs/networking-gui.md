@@ -9,6 +9,7 @@ device menus (`eln:node`), screens and the JSON layout engine. Node internals: a
 |---|---|---|
 | `src/main/java/mods/eln/network/ElnNet.java` | both | One payload `ElnNet.Data(byte[])`, id `eln:data`, `playBidirectional`, version `"1+<build commit>"` (`BuildInfo`: the commit baked into the jar by build.gradle, so a client built from another commit is refused at login; Baughn 2026-10-25). The bytes are the 1.12 packet unchanged: first byte = EA packet id, then whatever a `DataOutputStream` wrote. |
 | `src/main/java/mods/eln/bike/BikeCrash.java` | both | `eln:bike_crash`, client -> server on the same channel: the rider's client says it crashed the bike it rides (`docs/bike.md`). |
+| `src/main/java/mods/eln/robotics/servo/SegmentPayload.java` | both | `eln:servo_segment`, server -> client (`playToClient` in `ElnNet`): an elevator car's motion, (entity id, origin of position 0, axis, rail side, segment from/v0/to/vmax/accel, ticks already elapsed). Sent with `PacketDistributor.sendToPlayersTrackingEntity` when a move starts or changes (call, sag retarget, stop, fault: a zero-velocity segment where it stopped), and in the car's pairing bundle (`ElevatorCar.sendPairingData`, after its spawn packet) so a player who starts tracking it sees the move. The client counts on from `elapsed` by its own clock (`robotics/client/CarCarry`); the car has no vanilla position sync (no update interval, its interpolation handler swallows position packets). Handler: `SegmentPayload.clientHandler`, set by `robotics/client/RoboticsClient`. |
 | `src/main/java/mods/eln/network/ServerPacketHandler.java` | server | Sets `ElnNet.serverHandler`; hops to the server thread, then `handle()`. |
 | `src/main/java/mods/eln/client/ClientPacketHandler.java` | client | `packetRx`, set as `ElnNet.clientHandler` by `client/ElnClient`; runs on the client thread. |
 
@@ -51,6 +52,18 @@ The client's `handleUpdateTag` / `onDataPacket` replay it through `applyDescript
 `serverPublishUnserialize`). If `level` is still null it is kept in `pendingDescription` and applied in `onLoad`.
 That key exists only in the network tag and is never saved to disk.
 
+## Machines at other mods' block entities: attachment sync
+
+A hosted machine (`ElnApi.machines()`) has no EA block entity to publish through (`MachineNode.publishToAllPlayer` only
+clears the flag). Its client view comes from NeoForge's attachment sync of `eln:machine` (`MachineData.SYNC`):
+initial data rides with the chunk, and `MachineNode` calls `be.syncData` after a step when the state changed, else at
+most once a second (20 ticks) while a number moved more than 1% (`Snapshot.near`). Payload: a boolean (hosted), then
+the state ordinal, volts, voltage ratio, amps, watts, buffer, buffer capacity, celsius (doubles) and the last trip
+(boolean, state, measured, limit, burns). Chosen over an EA payload for its initial sync and tracking for free; the
+cost: `syncData` goes through `blockChanged`, so each sync also sends a block update and the block entity's own update
+packet (vanilla furnaces have none), hence the throttle. Client: `of(be)` is a `ClientMachine` over the snapshot
+(UNPOWERED and zeros before the first); takes, gives, signals, bus and respec throw.
+
 ## Client -> server: GUI packets
 
 Header: `NodeBlockEntity.preparePacketForServer` writes `packetPublishForNode, x, y, z, dim, nodeUuid`, then
@@ -70,6 +83,13 @@ within 16 blocks (`MAX_DISTANCE_SQ`, 26.x hardening) -> `NodeBase.networkUnseria
 - `TransparentNode.networkUnserialize`: element id must match -> `TransparentNodeElement.networkUnserialize`, which
   handles `unserializeGroundedId` itself and returns any other id byte for the subclass to switch on.
 
+What the element does with the payload is its own check: a modified client sends what no screen would. Handlers read
+through `src/main/java/mods/eln/network/ClientValues.java`: a value that is not finite changes nothing, a slider's
+value is clamped to the slider's ends (the screen's numbers), a typed number is taken if finite, an index outside its
+list is ignored, a string is cut to 64 characters (EaField's limit). Values an older handler may have saved are
+clamped again on load (`ClientValues.load`). A handler that throws anyway is caught in `ServerPacketHandler.handle`
+(one warning naming the player). `GuiPacketFuzzCases` sends every handler bad values.
+
 ## Menus (`eln:node`)
 
 | Class | Side | Role |
@@ -81,7 +101,8 @@ within 16 blocks (`MAX_DISTANCE_SQ`, 26.x hardening) -> `NodeBase.networkUnseria
 | `*Container` classes (23, e.g. `src/main/java/mods/eln/sixnode/hub/HubContainer.java`) | both | Only slot-id constants now; the elements index their inventories with them. |
 
 Rules:
-- `stillValid`: the node is not destructing, is still the node at `pos`, and the player is within 8 blocks.
+- `stillValid`: the node is not destructing, is still the node at `pos`, still has the element the menu was opened on
+  (a six-node face broken while the block stays closes it), and the player is within 8 blocks.
 - Shift-click (`ElnNodeMenu.quickMoveStack`): device slot -> a worn slot, else player inventory (from the end); worn
   slot -> device slots, else player inventory; player slot -> device slots (first accepting), then worn slots, else
   main inventory <-> hotbar. Returns `EMPTY` unless something moved, because 26.x repeats the move while the result
@@ -106,7 +127,7 @@ Rules:
   lines computed from the slots).
 - `src/main/java/mods/eln/client/gui/ElnScreen.java`: base screen. Builders by layout id (`button`, `field`, `slider`,
   ...) throw if the layout lacks the id. `containerTick` -> refreshers -> `update()` (read live values from the render).
-  `EaField` commits on Enter or focus loss; `EaSlider` sends on release or a key press, and follows the device while idle.
+  `EaField` commits on Enter, on focus loss, or before a click elsewhere on the screen acts (so a button sees the typed value); `EaSlider` sends on release or a key press, and follows the device while idle.
 - Code editor (board #45): `client/gui/CodeEditor.java`, a widget over `gui/code/CodeBuffer` (pure Java: lines,
   cursor, selection, undo/redo; tested by `CodeBufferTest`) with a `gui/code/LanguageAdapter` (tokens to colour,
   diagnostics to mark, rules to draw). Text is drawn in fixed 6 px cells, each glyph of the game font centred in its
@@ -115,6 +136,19 @@ Rules:
   fed by `FunctionReference`.
 - Device screens live next to their devices (e.g. `sixnode/hub/HubScreen.java`, `oil/ElectricHeaterScreen.java`); the
   Kotlin devices' screens are in `KotlinDeviceScreens.kt`.
+- A screen may arrange its device slots itself: `ElnNodeMenu.moveDeviceSlot(index, x, y, comment...)` (client) shows
+  a slot elsewhere, with other tooltip lines. The Hub's does (`sixnode/hub/HubSlots`, pure, shared with the tests): its
+  layout's slot ids 3, 0, 2, 1 mark the places top, right, bottom, left, and the slot shown at a place is the one whose
+  edge the player sees there when the screen opens.
+
+  | Hub on | top | right | bottom | left |
+  |---|---|---|---|---|
+  | a floor | the way the player faces | their right | behind them | their left |
+  | a ceiling | behind the player | their right | the way they face | their left |
+  | a wall | up | their right, looking at the wall | down | their left |
+
+  The device's own table does not change: slot i is edge `LRDU` i (Left 0, Right 1, Down 2, Up 3) of the face, toward
+  `side.applyLRDU(edge)`. On a floor that is south, north, west, east for slots 0 to 3.
 
 Layout engine: `src/main/java/mods/eln/gui/layout/Layout.java` (pure Java, no client classes). Rows and columns of
 self-sizing leaves (`slot`, `text`, `button`, `slider`, `field`, `gauge`, `progress`, `inventory`, `canvas`, `space`),
@@ -146,6 +180,7 @@ needs the stack in that slot to still be a scanner. Screen: `client/gui/XRayScan
 |---|---|
 | `src/test/java/mods/eln/gui/LayoutTest.java` | layout maths; `everyShippedLayoutIsSound`: every `assets/eln/gui/*.json` lays out without problems |
 | `gametest/GuiPacketCase` (`gui_packets`) | GUI bytes through `ServerPacketHandler.handle` reach six-node and transparent elements; a too-far player is ignored (bypasses the real channel) |
+| `gametest/cases/GuiPacketFuzzCases` (`gui_packets_reject_bad_values_*`) | every six-node and transparent element with a GUI handler (by enumeration): ids -128..127 with NaN, infinities, huge and negative numbers, out-of-range indices and a 3000-character string; no throw, no NaN/infinity or over-long string in the saved tag, the review's named values in range; values the screens send are stored as sent; devices saved with bad values (exporter, transporter, turret, aggregators) load clean |
 | `gametest/MenusOpenCase` (`menus_open`) | every device with a screen opens an `eln:node` menu; the open data rebuilds the same slots |
 | `gametest/GoldenSlotsCase` (`golden_slots`) | menu slots vs `golden/1.12/slots.json` |
 | `gametest/MachineMenuCase` (`machine_menu`) | a click puts iron ore into the macerator input (single click, not shift-click) |

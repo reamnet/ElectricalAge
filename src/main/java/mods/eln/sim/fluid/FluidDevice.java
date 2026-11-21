@@ -17,6 +17,64 @@ public interface FluidDevice {
         return List.of();
     }
 
+    /** Prescribed flows into or out of its nodes inside the fluid step (Flow); the same objects on every call. */
+    default List<Flow> fluidFlows() {
+        return List.of();
+    }
+
+    /**
+     * A prescribed flow between one of its nodes and the outside, inside the fluid core's implicit step (Network.Kind.FLOW):
+     * a source (in) puts rate kg/s of its gas mix (shares by species id, at kelvin) into node; a sink takes rate kg/s of
+     * what node's port at draw gives (phase), smoothly less as it runs dry. Gates: minPa on the outside's or node's port
+     * the flow comes from, maxPa on the one it goes to (NaN: none; Network.Edge.rate). The device sets rate (and the rest)
+     * before each step and books from delivered after it: a sink takes only what is there, and a step cut short delivers
+     * less. The world joins it like a vent, to its network's air node; FluidWorld.edgesOf leaves it out (flowsOf has it).
+     */
+    final class Flow {
+        public final FluidNode node;
+        public final double draw;
+        /** true: a source into node from outside; false: a sink out of node. */
+        public final boolean in;
+        /** A source's mix: each species' share of a kg by registry id (they sum to 1), and its temperature (K). */
+        public double[] shares;
+        public double kelvin = Water.T_AMBIENT;
+        public mods.eln.fluidcore.Network.Phase phase = mods.eln.fluidcore.Network.Phase.ANY;
+        public double minPa = Double.NaN, maxPa = Double.NaN;
+        /** What the device asks for (kg/s, >= 0), set before each step. */
+        public double rate;
+        /**
+         * What the last step moved (FluidEdge.flow and its parts: what left node for a sink, what came in for a source):
+         * kg/s over the tick, so kg = delivered x dt (a step that caught up owed time delivers more than rate, one cut short
+         * less); by species id (kg/s; null until it moved something); and its enthalpy (W).
+         */
+        public double delivered, deliveredW;
+        public double[] deliveredSpecies;
+        /** This step's edge (set by the world when it builds the network). */
+        public FluidEdge edge;
+
+        public Flow(FluidNode node, double draw, boolean in) {
+            this.node = node;
+            this.draw = draw;
+            this.in = in;
+        }
+
+        /** A source of one species at kelvin (a mix: set shares). */
+        public static Flow source(FluidNode node, double draw, int species, double kelvin) {
+            Flow f = new Flow(node, draw, true);
+            f.shares = new double[species + 1];
+            f.shares[species] = 1;
+            f.kelvin = kelvin;
+            return f;
+        }
+
+        /** The energy a kg of a source's mix carries (J/kg): each species as a gas at kelvin (Species.hVapour). */
+        public double enthalpy() {
+            double h = 0;
+            if (shares != null) for (int i = 0; i < shares.length; i++) if (shares[i] != 0) h += shares[i] * SpeciesRegistry.get().byId(i).hVapour(kelvin);
+            return h;
+        }
+    }
+
     /** Edges inside the device between its own nodes (a valve between two pipes); the device sets open before each
      *  step. */
     default List<Link> fluidLinks() {
@@ -42,13 +100,70 @@ public interface FluidDevice {
             this.k = k;
         }
 
+        /**
+         * Openings (as FluidPort.span: a share of the node's height, 0 a point) at each end: when exactly one end is an
+         * opening, the world gives the link the couplings' counter-flow pair of one-way edges, so liquid can run out
+         * under it while gas comes back over it (a sealed part-full pipe arm into a junction drains: LabAgent's review,
+         * 2026-11-12). Valves leave both 0 (one edge: their opening and regulating act on it).
+         */
+        public double spanA, spanB;
+
+        public Link spans(double a, double b) {
+            spanA = a;
+            spanB = b;
+            return this;
+        }
+
         public Link kind(FluidEdge.Kind kind) {
             this.kind = kind;
             return this;
         }
 
+        /** Heat conductance between the two nodes (W/K; a heat exchanger's plates), set by the device each step. */
+        public double conductance;
+        /** Its own stream band (Pa; NaN: the core's): narrower mixes its two ends less at rest (Network.Edge.band). */
+        public double band = Double.NaN;
+
+        /** TURBINE: its nozzle coefficient (FluidEdge.nozzle); the device sets open and drop before each step. */
+        public double nozzle, drop;
+
+        /** This link as a steam turbine (Network.Kind.TURBINE): nozzle coefficient, efficiency. */
+        public Link turbine(double nozzle, double eta) {
+            this.kind = FluidEdge.Kind.TURBINE;
+            this.nozzle = nozzle;
+            this.eta = eta;
+            return this;
+        }
+
+        /** PUMP: its curve (FluidEdge.qMax, h0, eta); the device sets speed before each step. */
+        public double qMax, h0, speed = 1, eta = 0.7;
+
+        /** PUMP as a gas pump (Network.Edge.gas): qMax a volume (m^3/s), h0 the pressure it makes whatever it draws. */
+        public boolean gas;
+
+        /** PUMP that keeps its head on gas as on liquid (Network.Edge.anyPhase: the inline pump). */
+        public boolean anyPhase;
+
+        /** This link as a gas pump (an ejector): free flow qMax (m^3/s at full speed), shut-off pressure rise h0 (Pa). */
+        public Link gasPump(double qMax, double h0) {
+            pump(qMax, h0);
+            gas = true;
+            return this;
+        }
+
+        /** This link as a centrifugal pump: free flow qMax (kg/s at full speed), shut-off head h0 (Pa). */
+        public Link pump(double qMax, double h0) {
+            this.kind = FluidEdge.Kind.PUMP;
+            this.qMax = qMax;
+            this.h0 = h0;
+            return this;
+        }
+
         /** A valve's flow area fully open (m^2): it then meters by the orifice law (FluidEdge.area). */
         public double area;
+        /** REGULATOR: its set point (Pa) and mode (relief: holds a at it; else reducing: holds b), set before each step. */
+        public double setPa;
+        public boolean relief;
 
         public Link area(double area) {
             this.area = area;
@@ -96,6 +211,15 @@ public interface FluidDevice {
         public final FluidNode node;
         public final double draw, k;
         public double open;
+        /** Gas only, never liquid, and nothing back in (a purge valve: Network.Edge.gasOnly). */
+        public boolean gasOnly;
+        /** The other way: only air in from outside, nothing out (a vacuum breaker: a check valve from the air). */
+        public boolean inward;
+        /**
+         * A relief vent (a safety valve, Baughn 2026-11-12: it sirened): above 0, a self-acting relief regulator to the air
+         * that holds its node at this pressure (Pa) inside the core's solve, its conductance k wide open. Set before each step.
+         */
+        public double setPa;
         /** This step's edge (set by the world when it builds the network). */
         public FluidEdge edge;
 

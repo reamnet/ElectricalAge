@@ -33,6 +33,8 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
     static final double LOSS_W_PER_K = 1.0;
     /** The low (liquid) and high (vapour) side ports' heights (voxels, on the pipe lattice). */
     public static final int LOW = 4, HIGH = 12;
+    /** Half a side flange's bore (px): a small pipe's. */
+    static final int FLANGE_HALF = 1;
     public FluidNode vessel, own;
     /** The box it is part of, or null alone. */
     public TankGroup group;
@@ -74,13 +76,14 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
     /**
      * Which of its ports have something coupled to them (Baughn: a flange only where a pipe meets it; 2026-10-29 for a
      * merged box, 2026-11-03 for a lone tank too): bit 2 * face + (0 low, 1 high) for the side faces (Direction 3D
-     * values 2..5), bit 12 the top. Published when it changes.
+     * values 2..5), bit 12 the top, bit 13 the underside. Published when it changes.
      */
     public int coupled;
 
     public TankElement(TransparentNode node, TransparentNodeDescriptor d) {
         super(node, d);
         desc = (TankDescriptor) d;
+        water = new TankLiquid(desc.workingPa, () -> group == null ? null : group.master().water);
         slowProcessList.add(new NodePeriodicPublishProcess(node, 2, 1));
         slowProcessList.add(time -> {
             if (vessel == null) return;
@@ -118,7 +121,7 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
     }
 
     /** Its liquid as a fluid capability (buckets; another mod's pipes): a view of its vessel (TankLiquid). */
-    public final TankLiquid water = new TankLiquid();
+    public final TankLiquid water;
 
     @Override
     public Object getFluidHandler() {
@@ -191,10 +194,13 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
         if (group == null) {
             out.add(new FluidPort(vessel, at, 1, 1.0, PORT_K));   // top: vapour
             out.add(new FluidPort(vessel, at, 0, 0.0, PORT_K));   // bottom: liquid
+            // (side ports draw at their true height, Baughn 2026-11-10: the low flange's bottom edge, the high flange's top
+            // edge, as liquid leaves a flange over its bottom and gas rises to its top; below the low flange is dead space,
+            // as in a real tank: drain it from the underside port, now that a tank needs no floor)
             for (Direction d : new Direction[]{front.left(), front.right(), front.back()}) {
                 int f = d.toEnumFacing().get3DDataValue();
-                out.add(new FluidPort(vessel, at, f, 0.0, PORT_K, sideSpot(f, LOW)));    // low: liquid
-                out.add(new FluidPort(vessel, at, f, 1.0, PORT_K, sideSpot(f, HIGH)));   // high: vapour
+                out.add(new FluidPort(vessel, at, f, (LOW - FLANGE_HALF) / 16.0, PORT_K, sideSpot(f, LOW)));    // low: liquid
+                out.add(new FluidPort(vessel, at, f, (HIGH + FLANGE_HALF) / 16.0, PORT_K, sideSpot(f, HIGH)));  // high: vapour
             }
         } else {
             // in a box: the ports on its outer faces, each drawing at its height in the whole vessel
@@ -205,8 +211,10 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
             for (Direction d : new Direction[]{Direction.XN, Direction.XP, Direction.ZN, Direction.ZP}) {
                 if (TankGroup.neighbour(this, d, null) != null && group.members.contains(TankGroup.neighbour(this, d, null))) continue;
                 int f = d.toEnumFacing().get3DDataValue();
-                out.add(new FluidPort(vessel, at, f, (j * 16 + LOW) / (16.0 * h), PORT_K, sideSpot(f, LOW)));
-                out.add(new FluidPort(vessel, at, f, (j * 16 + HIGH) / (16.0 * h), PORT_K, sideSpot(f, HIGH)));
+                // (at their true height, Baughn 2026-11-10; the bottom row's low ports used to dip to the floor, since a
+                // box tank 9 % full gave nothing at its low flange and nothing could be piped under a tank: now one can)
+                out.add(new FluidPort(vessel, at, f, (j * 16 + LOW - FLANGE_HALF) / (16.0 * h), PORT_K, sideSpot(f, LOW)));
+                out.add(new FluidPort(vessel, at, f, (j * 16 + HIGH + FLANGE_HALF) / (16.0 * h), PORT_K, sideSpot(f, HIGH)));
             }
         }
         ports = out;
@@ -225,7 +233,8 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
             if (d == null) continue;
             for (FluidPort q : d.fluidPorts())
                 if (q.pos() == there.asLong() && q.face() == f.getOpposite().get3DDataValue() && q.at() == p.at()) {
-                    if (p.face() == 1) mask |= 1 << 12;
+                    if (p.face() == 0) mask |= 1 << 13;   // (its underside port: counted, not drawn)
+                    else if (p.face() == 1) mask |= 1 << 12;
                     else if (p.face() >= 2) mask |= 1 << (2 * p.face() + (p.at() == sideSpot(p.face(), HIGH) ? 1 : 0));
                 }
         }
@@ -362,6 +371,7 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
             nbt.putDouble("vesselA", (float) own.mAir);
             nbt.putDouble("vesselU", (float) own.energy);
             mods.eln.fluid.FluidSaves.putExtra(nbt, "vesselS", own);
+            nbt.putInt("vesselFv", mods.eln.fluid.FluidSaves.FORMAT);
         }
     }
 
@@ -374,19 +384,21 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
 
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> info = new HashMap<>();
+        Map<String, String> info = new java.util.LinkedHashMap<>();   // (in order: Jade's headline is the first lines)
         if (vessel == null) return info;
         info.put(I18N.tr("Pressure"), String.format("%.2f bar of %s, %.0f °C", vessel.P() / 1e5, EaUnits.contents(vessel), vessel.T() - Water.T0));
-        info.put(I18N.tr("Water"), String.format("%.0f mB, %.0f%% full", vessel.mLiquid() / EaUnits.KG_PER_MB_WATER, fill() * 100));
+        info.put(I18N.tr("Contents"), EaUnits.composition(vessel));
+        // (all its liquids: "Water" counted only water while the share counted latex too, LabAssistant)
+        info.put(I18N.tr("Liquid"), String.format("%.0f mB, %.0f%% full", vessel.liquidVolume() * Water.RHO_L / EaUnits.KG_PER_MB_WATER, fill() * 100));
         info.put(I18N.tr("Vessel"), group == null ? I18N.tr("one block") : String.format("%d x %d x %d blocks, %.0f buckets", group.sx, group.sy, group.sz,
             vessel.volume * Water.RHO_L / EaUnits.KG_PER_MB_WATER / 1000));
         // (its ports are drawn only where a pipe meets them: say where they are)
         info.put(I18N.tr("Ports"), group == null ? I18N.tr("steam: top, and 12 px up on the sides; water: bottom, and 4 px up on the sides (not the glass's)")
             : I18N.tr("on its outer faces: steam: top, and 12 px up a side; water: bottom, and 4 px up a side"));
-        info.put(I18N.tr("Piped"), String.format("%d of %d ports here", Integer.bitCount(coupled), ports.stream().filter(p -> p.face() != 0).count()));
-        if (vessel.mVapour() > 1e-7) info.put(I18N.tr("Steam"), EaUnits.steamGrams(vessel.mVapour() / EaUnits.KG_PER_MB_STEAM));
-        for (String[] o : EaUnits.others(vessel, id -> mods.eln.fluid.FluidSpecies.kgPerMb(id, false)))
-            info.put(Character.toUpperCase(o[0].charAt(0)) + o[0].substring(1), o[1]);
+        // (the whole box's: "0 of 2 ports here" on one block of a box piped elsewhere read as a fault, Baughn 2026-11-11)
+        int piped = 0;
+        for (TankElement t : group == null ? List.of(this) : group.members) piped += Integer.bitCount(t.coupled);
+        info.put(I18N.tr("Pipes"), piped == 0 ? I18N.tr("none connected") : String.format(I18N.tr("%d connected"), piped));
         if (vessel.P() > desc.workingPa) info.put(I18N.tr("Warning"), String.format("over its %.0f bar working pressure", desc.workingPa / 1e5));
         return info;
     }

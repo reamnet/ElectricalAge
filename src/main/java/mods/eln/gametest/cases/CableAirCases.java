@@ -1,0 +1,301 @@
+package mods.eln.gametest.cases;
+
+import mods.eln.gametest.TestCase;
+import mods.eln.gametest.TestContext;
+import mods.eln.misc.Direction;
+import mods.eln.node.voxel.CablePart;
+import mods.eln.node.voxel.VoxelNode;
+import mods.eln.sixnode.resistor.ResistorElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
+
+import static mods.eln.gametest.cases.Wp9aCases.GROUND;
+import static mods.eln.gametest.cases.Wp9aCases.SOURCE;
+import static mods.eln.gametest.cases.Wp9aCases.current;
+
+/** Cable air runs (Baughn 2026-11-11, D5): a cable crosses up to 1.2 blocks of air between supports. */
+public final class CableAirCases {
+    private CableAirCases() {
+    }
+
+    static final int LV = CablePart.tierOf("Low Voltage Cable");
+
+    public static void addTo(List<TestCase> cases) {
+        cases.add(new BridgeCase());
+        cases.add(new DeviceInAirCase());
+        cases.add(new AfterLayingCase());
+        cases.add(new ToPinOnPillarCase());
+    }
+
+    static VoxelNode voxel(TestContext c, BlockPos p) {
+        return mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(p, c.level())) instanceof VoxelNode v ? v : null;
+    }
+
+    /**
+     * Two islands of one block strip, two blocks over the floor, a block apart: the kit lays a cable from a source on
+     * one to a resistor on the other straight across the gap (down into it and up again is dearer than the air), and the
+     * circuit conducts. The piece over the gap can't take a device (it would hang on nothing) and a branch can't start on
+     * it (it would get a fresh air allowance).
+     */
+    static final class BridgeCase implements TestCase {
+        ResistorElement r;
+        String err, branch = "none", place = "none";
+        int gapPieces, lowPieces;
+
+        public String name() {
+            return "cable bridges a one block gap";
+        }
+
+        public int width() {
+            return 10;
+        }
+
+        public int height() {
+            return 5;
+        }
+
+        public int depth() {
+            return 3;
+        }
+
+        public int ticks() {
+            return 60;
+        }
+
+        public void build(TestContext c) {
+            for (int x = 0; x < 10; x++) if (x != 4) c.floor(c.at(x, 2, 1));
+            var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) c.placeSix(SOURCE, c.at(0, 3, 1));
+            src.networkUnserialize(c.stream(o -> {
+                o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
+                o.writeFloat(50);
+            }));
+            r = VoxelDeviceCases.resistor(c, c.at(7, 3, 1), Direction.XP, CableCases.CORE);
+            c.placeSix(GROUND, c.at(8, 3, 1));
+            var hitS = Vec3.atLowerCornerOf(c.at(0, 3, 1)).add(1.0, 0.05, 0.5);
+            var hitR = Vec3.atLowerCornerOf(c.at(7, 3, 1)).add(0.0, 0.05, 0.5);
+            long[][] j = new long[1][];
+            var a = mods.eln.node.voxel.CablePlacer.endAtForTests(c.level(), c.at(0, 3, 1), net.minecraft.core.Direction.EAST, hitS, true, j);
+            var b = mods.eln.node.voxel.CablePlacer.endAtForTests(c.level(), c.at(7, 3, 1), net.minecraft.core.Direction.WEST, hitR, false, j);
+            err = mods.eln.node.voxel.CablePlacer.routeAndLayForTests(c.level(), LV, a, b);
+            VoxelNode gap = voxel(c, c.at(4, 3, 1));
+            if (gap != null) {
+                gapPieces = gap.parts.size();
+                long[][] jb = new long[1][];
+                var e = mods.eln.node.voxel.CablePlacer.endAtForTests(c.level(), c.at(4, 3, 1), net.minecraft.core.Direction.UP,
+                    Vec3.atLowerCornerOf(c.at(4, 3, 1)).add(0.5, 0.05, 0.5), true, jb);
+                branch = e == null ? "refused" : jb[0] == null ? "not a join" : "join";
+                place = String.valueOf(gap.placeFace(net.minecraft.core.Direction.NORTH, 0.5, 0.05, 0.5));
+            }
+            for (int y = 0; y < 2; y++)
+                for (int z = 0; z < 3; z++) if (voxel(c, c.at(4, y, z)) instanceof VoxelNode v) lowPieces += v.parts.size();
+        }
+
+        public void measure(TestContext c) {
+            c.check(name() + ": laid", err == null, String.valueOf(err));
+            c.check(name() + ": straight across (pieces over the gap, none below)", gapPieces > 0 && lowPieces == 0,
+                gapPieces + " over, " + lowPieces + " below");
+            double i = current(r);
+            c.check(name() + ": the circuit conducts", Math.abs(i) > 1, String.format("%.4f A", i));
+            c.check(name() + ": no branch from the piece over the gap", !"join".equals(branch), branch);
+            c.check(name() + ": a device clicked onto it doesn't go on the cable's (air) face", !"YN".equals(place), place);
+        }
+    }
+
+    /**
+     * A machine on a pillar a block from a wall (a capacitor bank), its side face over the air: the kit routes from a source on the wall's
+     * top down the wall and straight across the air to the edge of the bank's side face, arriving as a cable on a floor
+     * there would (EA's edge rule), and the bank charges through it.
+     */
+    static final class DeviceInAirCase implements TestCase {
+        mods.eln.transparentnode.capacitorbank.CapacitorBankElement bank;
+        String err, ends = "";
+
+        public String name() {
+            return "cable reaches a machine in the air";
+        }
+
+        public int width() {
+            return 9;
+        }
+
+        public int height() {
+            return 7;
+        }
+
+        public int depth() {
+            return 7;
+        }
+
+        public int floorDepth() {
+            return 7;
+        }
+
+        public int ticks() {
+            return 100;
+        }
+
+        public void build(TestContext c) {
+            BlockPos at = c.at(4, 3, 3);
+            c.floor(at.below());   // (it needs a block to stand on; the cable's block beside it has none)
+            bank = (mods.eln.transparentnode.capacitorbank.CapacitorBankElement) c.placeTransparent(CapacitorBankCases.BANK, at);
+            Direction l = bank.front.left(), r = bank.front.right();
+            c.floor(Wp10aCases.off(at, r).below());
+            c.placeSix(GROUND, Wp10aCases.off(at, r));
+            BlockPos wall = Wp10aCases.off(Wp10aCases.off(at, l), l);
+            for (int y = 1; y <= 3; y++) c.floor(wall.atY(c.at(0, y, 0).getY()));
+            BlockPos top = wall.atY(c.at(0, 4, 0).getY());
+            var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) c.placeSix(SOURCE, top);
+            src.networkUnserialize(c.stream(o -> {
+                o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
+                o.writeFloat(20);
+            }));
+            net.minecraft.core.Direction toBank = r.toEnumFacing(), bankFace = l.toEnumFacing();
+            Vec3 hitS = Vec3.atCenterOf(top).add(toBank.getStepX() * 0.5, -0.45, toBank.getStepZ() * 0.5);
+            Vec3 hitB = Vec3.atCenterOf(at).add(bankFace.getStepX() * 0.5, -0.45, bankFace.getStepZ() * 0.5);
+            long[][] j = new long[1][];
+            int hv = CablePart.tierOf("High Voltage Cable");
+            var a = mods.eln.node.voxel.CablePlacer.endAtForTests(c.level(), top, toBank, hitS, true, j, hv);
+            var b = mods.eln.node.voxel.CablePlacer.endAtForTests(c.level(), at, bankFace, hitB, false, j, hv);
+            ends = a + " -> " + b;
+            err = a == null || b == null ? "no end" : mods.eln.node.voxel.CablePlacer.routeAndLayForTests(c.level(), hv, a, b);
+            if (voxel(c, Wp10aCases.off(at, l)) instanceof VoxelNode v)
+                for (var part : v.parts)
+                    if (part instanceof CablePart cp && !mods.eln.node.voxel.CablePlacer.supported(c.level(), v.coordonate.pos(), cp)) inAir++;
+        }
+
+        int inAir;
+
+        public void measure(TestContext c) {
+            c.check(name() + ": laid", err == null, err + " (" + ends + ")");
+            c.check(name() + ": across the air in front of the bank", inAir > 0, inAir + " unsupported pieces there");
+            double u = bank.voltage();
+            c.check(name() + ": the bank charges through it", u > 1, String.format("%.2f V", u));
+        }
+    }
+
+    /**
+     * Right after a route is laid, aiming at its end (on the cable, or just beside it in the block's outline) is a place
+     * to start the next route, not "Not a place for a cable" (AdventurAgent saw that message after a finishing click).
+     */
+    static final class AfterLayingCase implements TestCase {
+        String err, onCable = "none", beside = "none", besideMsg = "";
+
+        public String name() {
+            return "cable end is a start right after laying";
+        }
+
+        public int ticks() {
+            return 10;
+        }
+
+        public void build(TestContext c) {
+            BlockPos a = c.at(1, 1, 1), b = c.at(5, 1, 1);
+            var ea = new mods.eln.node.voxel.CableRouter.End(a.getX() * 16L + 8, a.getY() * 16L, a.getZ() * 16L + 8, 0, -1);
+            var eb = new mods.eln.node.voxel.CableRouter.End(b.getX() * 16L + 8, b.getY() * 16L, b.getZ() * 16L + 8, 0, -1);
+            err = mods.eln.node.voxel.CablePlacer.routeAndLayForTests(c.level(), LV, ea, eb);
+            var e1 = mods.eln.node.voxel.CablePlacer.endAtForTests(c.level(), b, net.minecraft.core.Direction.UP,
+                Vec3.atLowerCornerOf(b).add(0.5, 1.0 / 16, 0.5), true, new long[1][]);
+            onCable = String.valueOf(e1);
+            var e2 = mods.eln.node.voxel.CablePlacer.endAtForTests(c.level(), b, net.minecraft.core.Direction.UP,
+                Vec3.atLowerCornerOf(b).add(0.5, 1.0 / 16, 0.62), true, new long[1][]);
+            beside = String.valueOf(e2);
+            if (e2 == null) besideMsg = mods.eln.node.voxel.CablePlacer.noEndForTests(c.level(), b);
+        }
+
+        public void measure(TestContext c) {
+            c.check(name() + ": laid", err == null, String.valueOf(err));
+            c.check(name() + ": aiming at its end starts a route there", !"null".equals(onCable), onCable);
+            c.check(name() + ": aiming just beside it in the block too", !"null".equals(beside), beside + " " + besideMsg);
+        }
+    }
+
+    /**
+     * A route to a device's pin at the edge of a block that stands alone (Baughn 2026-11-18, #514): a three-channel data
+     * logger on top of a one-block pillar, its inputs on its west edge, and a Signal Source on the floor west of it. A route
+     * from the source to the logger's middle input climbs the pillar's side and comes over its edge onto the pin (routes
+     * started at the pin went that way; routes ending there found "no way"); the same route the other way round, on a
+     * second rig, still lays. Each input then sees its source's signal. A route from the floor to the edge of a Signal
+     * Source centred on a pillar's top (one connector per edge) lays too.
+     */
+    static final class ToPinOnPillarCase implements TestCase {
+        final mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerElement[] logger = new mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerElement[2];
+        final String[] err = new String[2];
+        final int[] channel = new int[2];
+        static final double U = 0.5 * mods.eln.Eln.SVU;
+        static final int SIGNAL = CablePart.tierOf("Signal Cable");
+
+        public String name() {
+            return "cable to a pin on a pillar";
+        }
+
+        public int width() {
+            return 9;
+        }
+
+        public int height() {
+            return 7;
+        }
+
+        public int depth() {
+            return 7;
+        }
+
+        public int ticks() {
+            return 40;
+        }
+
+        public void build(TestContext c) {
+            for (int x = 0; x < 5; x++) for (int z = 0; z < 5; z++) c.floor(c.at(x, 0, z));
+            for (int k = 0; k < 2; k++) {
+                int z = 1 + 2 * k;
+                BlockPos sp = c.at(0, 1, z), pillar = c.at(3, 1, z), lp = c.at(3, 2, z);
+                c.floor(pillar);
+                var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) CableCases.host(c, Wp9aCases.SIGNAL_SOURCE, sp, Direction.YN);
+                Wp9aCases.orient(src, l -> l, Direction.XP);
+                src.networkUnserialize(c.stream(o -> {
+                    o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
+                    o.writeFloat((float) U);
+                }));
+                var lg = (mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerElement) CableCases.host(c, Wp9cCases.THREE_CHANNEL_LOGGER, lp, Direction.YN);
+                Wp9aCases.orient(lg, mods.eln.misc.LRDU::inverse, Direction.XN);
+                logger[k] = lg;
+                for (int ch = 0; ch < lg.edgePins().size(); ch++) if (lg.edgePins().get(ch).offset() == 0) channel[k] = ch;
+                var vs = voxel(c, sp);
+                var vl = voxel(c, lp);
+                var a = mods.eln.node.voxel.CablePlacer.deviceEnd(vs, sp, Direction.YN.getInt(), new double[]{0.98, 0.02, 0.5}, k == 0, SIGNAL);
+                var b = mods.eln.node.voxel.CablePlacer.deviceEnd(vl, lp, Direction.YN.getInt(), new double[]{0.02, 0.02, 0.5}, k == 1, SIGNAL);
+                if (a == null || b == null) {
+                    err[k] = "no end: source " + a + ", logger " + b;
+                    continue;
+                }
+                err[k] = k == 0 ? mods.eln.node.voxel.CablePlacer.routeAndLayForTests(c.level(), SIGNAL, a, b)
+                    : mods.eln.node.voxel.CablePlacer.routeAndLayForTests(c.level(), SIGNAL, b, a);
+            }
+            // a device centred on its face (one connector per edge) on a pillar: a route from the floor to its west edge
+            BlockPos pillar = c.at(3, 1, 5), sp = c.at(3, 2, 5), start = c.at(0, 1, 5);
+            c.floor(pillar);
+            var src = CableCases.host(c, Wp9aCases.SIGNAL_SOURCE, sp, Direction.YN);
+            Wp9aCases.orient(src, l -> l, Direction.XN);
+            var b = mods.eln.node.voxel.CablePlacer.deviceEnd(voxel(c, sp), sp, Direction.YN.getInt(), new double[]{0.02, 0.02, 0.5}, false, SIGNAL);
+            var a = new mods.eln.node.voxel.CableRouter.End(start.getX() * 16L + 8, start.getY() * 16L, start.getZ() * 16L + 8, 0, -1);
+            centred = b == null ? "no end at the source" : mods.eln.node.voxel.CablePlacer.routeAndLayForTests(c.level(), SIGNAL, a, b);
+        }
+
+        String centred;
+
+        public void measure(TestContext c) {
+            String[] what = {"to the pin", "from the pin"};
+            for (int k = 0; k < 2; k++) {
+                c.check("pin on a pillar: a route " + what[k] + " lays", err[k] == null, String.valueOf(err[k]));
+                var in = (mods.eln.sim.nbt.NbtElectricalGateInput[]) mods.eln.gametest.LabCommands.field(logger[k], "inputs");
+                double u = in[channel[k]].getU();
+                c.check("pin on a pillar: the input " + what[k] + " sees the source", Math.abs(u - U) < 0.05 * U,
+                    String.format("%.3f V, wanted %.3f V (channel %d)", u, U, channel[k]));
+            }
+            c.check("pin on a pillar: a route to the edge of a device centred on its face lays", centred == null, String.valueOf(centred));
+        }
+    }
+}
+

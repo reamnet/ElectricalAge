@@ -4,6 +4,7 @@ import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
+import mods.eln.network.ClientValues;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
@@ -41,7 +42,6 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
         super(sixNode, side, descriptor);
 
         this.descriptor = (WirelessSignalSourceDescriptor) descriptor;
-        WirelessSignalTxElement.channelRegister(this);
         slowProcessList.add(lightningGlitchProcess = new LightningGlitchProcess(getCoordonate()));
         if (this.descriptor.autoReset) {
             slowProcessList.add(autoResetProcess = new AutoResetProcess());
@@ -96,8 +96,11 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
         return null;
     }
 
+    /** Joins the wireless channel here, not in the constructor: a placement probe is built and never initialised. */
     @Override
     public void initialize() {
+        WirelessSignalTxElement.channelRemove(this);
+        WirelessSignalTxElement.channelRegister(this);
     }
 
     @Override
@@ -115,6 +118,13 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
     public void destroy(ServerPlayer entityPlayer) {
         WirelessSignalTxElement.channelRemove(this);
         super.destroy(entityPlayer);
+    }
+
+    /** Leaves the channel when its node unloads (a dimension, a cable conversion) or a probe is discarded. */
+    @Override
+    public void unload() {
+        super.unload();
+        WirelessSignalTxElement.channelRemove(this);
     }
 
     @Override
@@ -162,8 +172,9 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
         try {
             switch (stream.readByte()) {
                 case setChannelId:
+                    String c = ClientValues.readString(stream);
                     WirelessSignalTxElement.channelRemove(this);
-                    channel = stream.readUTF();
+                    channel = c;
                     needPublish();
                     WirelessSignalTxElement.channelRegister(this);
                     break;

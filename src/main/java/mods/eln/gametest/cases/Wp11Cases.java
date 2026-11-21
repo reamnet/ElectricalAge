@@ -34,7 +34,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 /**
- * Selftest cases of device batch Wp11 (registry/batch/Wp11Content). Feeds use a 50 V electrical source and one LV
+ * Selftest cases of device batch Wp11 (registry/batch/Wp11Content). Feeds use an LVU electrical source and one LV
  * cable on the platform floor; model as SelfTest.measure: two loads connect through Rs(a) + Rs(b), and the source,
  * the LV cable and every load set by lowVoltageCableDescriptor/applySmallRs have Rs = rs = Rs(LV cable).
  * Not tested: steam/gas turbine power (needs a steam/gas fluid in the tank; only the idle case is checked), grid
@@ -54,15 +54,19 @@ public final class Wp11Cases {
     static final int FLYWHEEL = 14 + (4 << 6);
     static final int UTILITY_POLE = 4 + (123 << 6);
     static final int UTILITY_POLE_DCDC = 5 + (123 << 6);
-    static final double U = 50.0;
+    static final double U = Eln.LVU;
 
     public static void addTo(List<TestCase> cases) {
         cases.add(new ShaftNetworkCase());
         cases.add(new GeneratorCase());
         cases.add(new TurbineIdleCase());
         cases.add(new PoleCase());
+        cases.add(new PoleGearCase());
+        cases.add(new FrozenPoleCase());
         cases.add(new EnergyConverterCase());
         cases.add(new LegacyExporterCase());
+        cases.add(new ExporterFeCase());
+        cases.add(new ExporterOldSaveCase());
     }
 
     // ---- helpers ----
@@ -93,7 +97,7 @@ public final class Wp11Cases {
         throw new IllegalStateException("no field " + name + " in " + o.getClass());
     }
 
-    /** 50 V source at `src` feeding an LV cable at `cable` (both on the floor). */
+    /** LVU source at `src` feeding an LV cable at `cable` (both on the floor). */
     static SixNodeElement feed(TestContext ctx, BlockPos cable, BlockPos src) {
         SixNodeElement c = ctx.placeSix(LV_CABLE, cable);
         ElectricalSourceElement s = (ElectricalSourceElement) ctx.placeSix(SOURCE, src);
@@ -153,7 +157,7 @@ public final class Wp11Cases {
 
     /**
      * Generator + flywheel spun to 400 rad/s, generator electrically open: its source sets the open-circuit EMF
-     * U = RtoU(rads) = 3200 V * rads / 800 rad/s (= 4 V per rad/s), seen unchanged on the input load (no current).
+     * U = RtoU(rads) = HVU * rads / 800 rad/s (= 0.5 V per rad/s), seen unchanged on the input load (no current).
      * Its drag (1.5 % of its rating at 800 rad/s, as the speed squared) slows it only slightly.
      * WP16b thermal: sized for 4000 (1/0.95 - 1) + 0.015 * 4000 * 0.05 = 213.5 W at 65 % of the 130 K warm limit
      * (Rp = 130 / (213.5 / 0.65) = 0.3958 K/W); open circuit the only heat is the drag's share, 5 % of it.
@@ -179,8 +183,8 @@ public final class Wp11Cases {
             ctx.check("wp11 generator shaft slowed by drag only (400 > rads > 200)", rads < 400.0 && rads > 200.0, String.format("%.3f rad/s", rads));
             ctx.checkValue("wp11 generator + flywheel inertia [kg m^2] (1.5 s of 4 kW + 12.5 s of 16 kW, at 800 rad/s)", s.getInertia(),
                 mods.eln.mechanical.ShaftNetworkKt.inertiaOf(1.5, 4000.0, 800.0) + mods.eln.mechanical.ShaftNetworkKt.inertiaOf(12.5, 16000.0, 800.0));
-            ctx.checkValue("wp11 generator open-circuit voltage [V] (3200 * rads / 800)", input.getU(), d.getRtoU().getValue(rads));
-            ctx.checkValue("wp11 generator open-circuit voltage = 4 V per rad/s [V]", input.getU(), 4.0 * rads);
+            ctx.checkValue("wp11 generator open-circuit voltage [V] (HVU * rads / 800)", input.getU(), d.getRtoU().getValue(rads));
+            ctx.checkValue("wp11 generator open-circuit voltage = HVU / 800 V per rad/s [V]", input.getU(), Eln.HVU / 800 * rads);
             mods.eln.sim.ThermalLoad th = field(gen, "thermal");
             ctx.checkValue("wp11 generator thermal Rp [K/W] (130 / (213.5 W / 0.65))", th.Rp, 130 / (d.nominalHeatPower() / 0.65));
             double heat = th.Pc + (th.Tc - th.Pc * 0.05 / th.C) / th.Rp; // heat in the last slow step, before the Rp leak
@@ -203,14 +207,15 @@ public final class Wp11Cases {
         public void measure(TestContext ctx) {
             double rads = shaft(turbine).getRads();
             ctx.check("wp11 steam turbine without steam: shaft stays at 0 rad/s, no steam through",
-                rads == 0.0 && turbine.totalKg == 0, String.format("%.4f rad/s, %.6f kg", rads, turbine.totalKg));
+                // (under a milligram: the fluid core's nozzle law passes its smoothed tail at equal pressures, a trace)
+                rads == 0.0 && turbine.totalKg < 1e-6, String.format("%.4f rad/s, %.6f kg", rads, turbine.totalKg));
             ctx.check("wp11 steam turbine: no fluid capability (steam by EA pipe only)", turbine.getFluidHandler() == null, "");
         }
     }
 
     /**
-     * Utility pole w/DC-DC converter fed 50 V on its ground side (LV cable + source), grid side open: the transformer
-     * process gives grid U = ground U / ratio(0.25) = 200 V (no current: ground U = 50 V). Both poles get their 3 ghost
+     * Utility pole w/DC-DC converter fed LVU on its ground side (LV cable + source), grid side open: the transformer
+     * process gives grid U = ground U / ratio(HVU / VVU, 2/55) (no current: ground U = LVU). Both poles get their 3 ghost
      * blocks above; the TOP ghost lookup resolves a ghost to the pole's item. Plain utility pole: placement + ghosts.
      */
     static final class PoleCase implements TestCase {
@@ -245,9 +250,124 @@ public final class Wp11Cases {
         public void measure(TestContext ctx) {
             ghosts(ctx, "DC-DC pole", dcdcPos, UTILITY_POLE_DCDC);
             ghosts(ctx, "utility pole", plainPos, UTILITY_POLE);
-            ctx.checkValue("wp11 DC-DC pole ground side [V] (no current: = 50)", dcdc.secondaryLoad.getU(), U);
-            ctx.checkValue("wp11 DC-DC pole grid side [V] (ground / 0.25 = 200)", dcdc.electricalLoad.getU(), U / 0.25);
-            ctx.check("wp11 utility pole has no ground connection (no transformer)", plain.secondaryLoad == null && plain.getConnectionMask(Direction.XP, LRDU.Down) == 0, "");
+            ctx.checkValue("wp11 DC-DC pole ground side [V] (no current: = LVU)", dcdc.secondaryLoad.getU(), U);
+            ctx.checkValue("wp11 DC-DC pole grid side [V] (ground x VVU / HVU)", dcdc.electricalLoad.getU(), U / (mods.eln.Eln.HVU / mods.eln.Eln.VVU));
+            ctx.check("wp11 utility pole has no ground connection (no transformer)", !plain.hasTransformer() && plain.getConnectionMask(Direction.XP, LRDU.Down) == 0, "");
+            ctx.check("wp11 the old DC-DC pole places with a 400 V Pole Transformer fitted (Baughn 2026-11-08)", dcdc.hasTransformer()
+                && mods.eln.gridnode.electricalpole.PoleTransformerItem.tier(dcdc.transformer()) == 3, dcdc.transformer().toString());
+        }
+    }
+
+    /**
+     * The modular utility pole (Baughn 2026-11-08). Pole A's foot is fed LVU through a 48 V Pole Transformer, so its line
+     * runs at 11 kV; an 11 kV kit's span joins it to pole B, whose 230 V transformer then gives 230 V at its foot (no load).
+     * Equipment goes on by right-click: a second transformer is refused, a streetlight goes on the side the player stands
+     * (east of B: the east slot), an anchor makes the pole time-exempt for Stasis. Lit (the dark sensor forced), B's light
+     * draws LAMP_WATTS from the line.
+     */
+    static final class PoleGearCase implements TestCase {
+        ElectricalPoleElement a, b;
+        String said = "";
+
+        public String name() {
+            return "wp11 modular utility pole";
+        }
+
+        public int height() {
+            return 5;
+        }
+
+        public int ticks() {
+            return 20;
+        }
+
+        static boolean fit(TestContext ctx, ElectricalPoleElement pole, ItemStack held, double px, double pz) {
+            var p = Wp9aCases.player(ctx);
+            p.setPos(px, pole.coordonate().y, pz);
+            p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
+            try {
+                pole.onBlockActivated(p, Direction.XP, 0.5F, 0.5F, 0.5F);
+                return held.isEmpty();
+            } finally {
+                p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            }
+        }
+
+        public void build(TestContext ctx) {
+            BlockPos pa = ctx.at(1, 1, 1), pb = ctx.at(6, 1, 1);
+            a = (ElectricalPoleElement) ctx.placeTransparent(UTILITY_POLE, pa);
+            feed(ctx, ctx.at(2, 1, 1), ctx.at(3, 1, 1));
+            b = (ElectricalPoleElement) ctx.placeTransparent(UTILITY_POLE, pb);
+            boolean t1 = fit(ctx, a, mods.eln.gridnode.electricalpole.PoleTransformerItem.make(1, 8, 2), pa.getX() + 3, pa.getZ() + 0.5);
+            boolean t2 = fit(ctx, b, mods.eln.gridnode.electricalpole.PoleTransformerItem.make(2, 8, 2), pb.getX() + 3, pb.getZ() + 0.5);
+            boolean t3 = fit(ctx, b, mods.eln.gridnode.electricalpole.PoleTransformerItem.make(3, 8, 2), pb.getX() + 3, pb.getZ() + 0.5);
+            boolean lamp = fit(ctx, b, new ItemStack(mods.eln.registry.ElnRegistry.STREETLIGHT.get()), pb.getX() + 3, pb.getZ() + 0.5);
+            boolean anchor = fit(ctx, b, new ItemStack(mods.eln.registry.ElnRegistry.POLE_ANCHOR.get()), pb.getX() + 3, pb.getZ() + 0.5);
+            said = t1 + "," + t2 + "," + t3 + "," + lamp + "," + anchor;
+            var kit = mods.eln.node.voxel.CableKitItem.kit(4, new mods.eln.node.voxel.CableSpec(6, mods.eln.node.voxel.CableSpec.preset(4).colour()), 16 * 16);
+            mods.eln.gridnode.GridLink.addLink(a, b, Direction.XP, Direction.XN, kit, 5 * new mods.eln.node.voxel.CableSpec(6, 0).descriptor(4).electricalRs);
+            b.darkOverride = true;
+        }
+
+        static void near(TestContext ctx, String what, double got, double want, double tol) {
+            ctx.check(what, Math.abs(got - want) <= Math.abs(want) * tol, String.format("%.4g, expected %.4g", got, want));
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.check("poles: transformers fit by right-click, a second is refused, a light and an anchor fit", said.equals("true,true,false,true,true"), said);
+            ctx.check("poles: the light went on the side the player stood (east)", b.lampMask() == 2, "mask " + b.lampMask());
+            ctx.check("poles: an anchored pole is time-exempt, a bare one isn't", b.timeExempt() && !a.timeExempt(), "");
+            ctx.check("poles: a bare pole's line is 11 kV; the span keeps it so", a.lineTier() == 4 && b.lineTier() == 4, a.lineTier() + "," + b.lineTier());
+            near(ctx, "poles: A's line [V] (48 V foot through a 48 V transformer: 11 kV)", a.electricalLoad.getU(), mods.eln.Eln.VVU * U / mods.eln.Eln.LVU, 0.02);
+            near(ctx, "poles: B's foot [V] (its 230 V transformer)", b.secondaryLoad.getU(), mods.eln.Eln.MVU * U / mods.eln.Eln.LVU, 0.03);
+            double u = b.electricalLoad.getU();
+            near(ctx, "poles: B's lit streetlight draws its watts from the line", u * u / b.lampLoad.getR(), ElectricalPoleElement.LAMP_WATTS, 0.05);
+        }
+    }
+
+    /**
+     * A pole out of the simulation (as Stasis holds one in stopped time; Baughn 2026-11-08: an anchored pole runs beside
+     * one that doesn't): its span stays up, listed on both poles, but carries nothing, and the running pole's line isn't
+     * joined to the frozen load. Back in the simulation, the span carries again.
+     */
+    static final class FrozenPoleCase implements TestCase {
+        ElectricalPoleElement a, b;
+        mods.eln.gridnode.GridLink link;
+        String frozen = "";
+
+        public String name() {
+            return "wp11 frozen utility pole";
+        }
+
+        public int height() {
+            return 5;
+        }
+
+        public int ticks() {
+            return 10;
+        }
+
+        public void build(TestContext ctx) {
+            a = (ElectricalPoleElement) ctx.placeTransparent(UTILITY_POLE, ctx.at(1, 1, 1));
+            b = (ElectricalPoleElement) ctx.placeTransparent(UTILITY_POLE, ctx.at(6, 1, 1));
+            var spec = new mods.eln.node.voxel.CableSpec(6, mods.eln.node.voxel.CableSpec.preset(4).colour());
+            mods.eln.gridnode.GridLink.addLink(a, b, Direction.XP, Direction.XN, mods.eln.node.voxel.CableKitItem.kit(4, spec, 16 * 16), 5 * spec.descriptor(4).electricalRs);
+            link = a.gridLinkList.iterator().next();
+            var before = NodeBase.simulationVeto;
+            NodeBase.simulationVeto = n -> n == a.node;
+            try {
+                a.node.reconnect();
+                b.node.reconnect();
+                frozen = link.isConnected() + "," + a.node.isAdded() + "," + a.gridLinkList.contains(link) + "," + b.gridLinkList.contains(link);
+            } finally {
+                NodeBase.simulationVeto = before;
+            }
+            a.node.connect();
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.check("poles: with A frozen, the span is kept on both but carries nothing", frozen.equals("false,false,true,true"), frozen);
+            ctx.check("poles: A back in the simulation, the span carries again", link.isConnected() && a.node.isAdded(), link.isConnected() + "," + a.node.isAdded());
         }
     }
 
@@ -316,25 +436,24 @@ public final class Wp11Cases {
             ctx.check("wp11 converter front faces the feed cable (XP)", node.getFront() == Direction.XP, String.valueOf(node.getFront()));
             ctx.checkValue("wp11 converter input power factor (GUI packet)", node.inPowerFactor, 0.2);
             ctx.check("wp11 converter publishes the factor (GUI slider)", publishedFactor(node) == 0.2f, String.valueOf(publishedFactor(node)));
-            Resistor in = field(node, "powerInResistor");
             double buffer = node.energyBuffer, max = node.energyBufferMax;
             ctx.checkValue("wp11 converter buffer max [J] (2 * LVP)", max, 2 * lvp);
             double factor = Math.min(1, (max - buffer) / max * 2);
-            double rExp = U * U / (factor * lvp * 0.2);
-            double i = U / (4 * r + rExp);
-            double p = i * i * rExp;
-            ctx.line(String.format("wp11 converter model: LVP = %.1f W, factor %.3f, R = U^2/(factor*LVP*0.2) = %.4f ohm, I = %.5f A, P = %.3f W",
-                lvp, factor, rExp, i, p));
+            // the resistor it had, U^2 / (factor * LVP * 0.2) at nominal volts, drew factor * LVP * 0.2 * (V / U)^2
+            double v = node.machine.volts(), p = factor * lvp * 0.2 * (v / U) * (v / U);
+            ctx.line(String.format("wp11 converter model: LVP = %.1f W, factor %.3f, at %.3f V: P = %.3f W (machine %.3f W, %s)",
+                lvp, factor, v, p, node.machine.watts(), node.machine.state()));
             if (factor >= 1) {
-                ctx.checkValue("wp11 converter input resistor [ohm]", in.getR(), rExp);
-                ctx.checkValue("wp11 converter input power [W]", in.getP(), p);
+                ctx.check("wp11 converter input power [W] (+-2%)", Math.abs(node.machine.watts() - p) <= 0.02 * p,
+                    String.format("%.3f, expected %.3f", node.machine.watts(), p));
+                // (the machine waits half a second for a steady line before it takes anything)
                 long ticks = ctx.world().getGameTime() - builtAt;
-                double lo = p * 0.05 * (ticks - 2), hi = p * 0.05 * (ticks + 1);
+                double lo = p * 0.05 * (ticks - 2 - mods.eln.api.impl.MachineCore.UNDERVOLTAGE_RECOVERY_TICKS - 2), hi = p * 0.05 * (ticks + 1);
                 ctx.check("wp11 converter buffer = P * elapsed time [J]", buffer >= lo && buffer <= hi,
                     String.format("%.2f J, expected %.2f..%.2f (%d ticks of %.3f W)", buffer, lo, hi, ticks, p));
             } else {
-                ctx.check("wp11 converter input resistor [ohm] (buffer above half: factor < 1, +-5%)", Math.abs(in.getR() - rExp) <= 0.05 * rExp,
-                    String.format("%.4f, expected %.4f", in.getR(), rExp));
+                ctx.check("wp11 converter input power (buffer above half: factor < 1, +-5%)", Math.abs(node.machine.watts() - p) <= 0.05 * p,
+                    String.format("%.3f, expected %.3f", node.machine.watts(), p));
             }
             int stateFront = ctx.world().getBlockState(pos).getValue(EnergyConverterElnToOtherBlock.FRONT);
             ctx.check("wp11 converter block state FRONT = east (the node's front)", stateFront == net.minecraft.core.Direction.EAST.get3DDataValue(), "FRONT " + stateFront);
@@ -487,6 +606,142 @@ public final class Wp11Cases {
                 ctx.world().removeBlock(pos, false);
                 ctx.check("legacy exporter removed (own cleanup)",
                     NodeManager.instance.getNodeFromCoordonate(new Coordonate(pos, ctx.world())) == null, "");
+            }
+        }
+    }
+
+    /** An LVU exporter at (1,1,1) facing XP, fed LVU at (2..3,1,1), with a test sink behind it at (0,1,1). */
+    static EnergyConverterElnToOtherElement exporter(TestContext ctx, BlockPos pos) {
+        feed(ctx, ctx.at(2, 1, 1), ctx.at(3, 1, 1));
+        EnergyConverterElnToOtherDescriptor d = Wp11Content.elnToOtherLvu;
+        if (d == null) throw new IllegalStateException("energy converters disabled (ElnToOtherEnergyConverterEnable)");
+        net.neoforged.neoforge.common.util.FakePlayer player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(ctx.world());
+        float yaw = player.getYRot(), pitch = player.getXRot();
+        player.setYRot(90f);
+        player.setXRot(0f);
+        try {
+            ((mods.eln.node.transparent.TransparentNodeItem) d.parentItem).placeAt(d.newItemStack(), player, ctx.world(), pos, Direction.YN);
+        } finally {
+            player.setYRot(yaw);
+            player.setXRot(pitch);
+        }
+        return element(ctx, pos);
+    }
+
+    static EnergyConverterElnToOtherElement element(TestContext ctx, BlockPos pos) {
+        NodeBase n = NodeManager.instance.getNodeFromCoordonate(new Coordonate(pos, ctx.world()));
+        if (!(n instanceof mods.eln.node.transparent.TransparentNode t) || !(t.element instanceof EnergyConverterElnToOtherElement e))
+            throw new IllegalStateException("no exporter at " + pos + ": " + n);
+        return e;
+    }
+
+    /**
+     * The exporter on the Machine API gives the same FE per joule as before: every joule it took from the line is FE
+     * at the config ratio (pushed into the block behind, or still in its buffer), and it draws what its resistor drew,
+     * the slider's share of its maximum power times (U / Unom)^2.
+     */
+    static final class ExporterFeCase implements TestCase {
+        BlockPos pos, sinkPos;
+        EnergyConverterElnToOtherElement e;
+        net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler sink;
+
+        public String name() {
+            return "wp11 exporter FE per joule";
+        }
+
+        public int ticks() {
+            return 200;
+        }
+
+        public void build(TestContext ctx) {
+            pos = ctx.at(1, 1, 1);
+            sinkPos = ctx.at(0, 1, 1);
+            ctx.world().setBlock(sinkPos, mods.eln.gametest.TestEnergySinks.BLOCK.defaultBlockState(), 3);
+            sink = mods.eln.gametest.TestEnergySinks.put(sinkPos, 10_000_000);
+            e = exporter(ctx, pos);
+        }
+
+        public void measure(TestContext ctx) {
+            try {
+                double ratio = Eln.ElnToTeConversionRatio;
+                var core = e.machine;
+                double taken = core.joulesTaken(), line = core.joulesDelivered();
+                long fe = sink.getAmountAsLong();
+                ctx.line(String.format("exporter: line %.1f J, taken %.1f J (machine buffer %.1f J), %d FE pushed, %.1f J left; ratio %.4f FE/J",
+                    line, taken, core.bufferJoules(), fe, e.energyBuffer, ratio));
+                ctx.check("exporter: FE out + buffer = joules taken x ratio", Math.abs(fe + e.energyBuffer * ratio - taken * ratio) < 1e-6 * taken * ratio + 1e-6,
+                    fe + " FE + " + e.energyBuffer + " J vs " + taken + " J");
+                ctx.check("exporter: pushes FE behind", fe > 0.9 * taken * ratio - 2 * Eln.LVP() * ratio, fe + " FE of " + taken * ratio);
+                ctx.check("exporter: what it took is what the line gave, but for its machine's small buffer (2 ticks)",
+                    line - taken <= 2 * Eln.LVP() * 0.05 + 1e-6, (line - taken) + " J");
+                double v = e.machine.volts(), p = 0.5 * Eln.LVP() * (v / U) * (v / U);
+                ctx.check("exporter: draws its resistor's power, slider 0.5 x LVP x (U/Unom)^2 (+-2%)", Math.abs(e.machine.watts() - p) < 0.02 * p,
+                    e.machine.watts() + " W vs " + p);
+            } finally {
+                mods.eln.gametest.TestEnergySinks.remove(sinkPos);
+                ctx.world().removeBlock(sinkPos, false);
+                ctx.world().removeBlock(pos, false);
+            }
+        }
+    }
+
+    /**
+     * An exporter saved by the version before the Machine API (its element as that writeToNBT wrote it: loadUc,
+     * powerInResistorR, energyBuffer, inPowerFactor, others) loads with its buffer, slider and front, and pushes FE.
+     */
+    static final class ExporterOldSaveCase implements TestCase {
+        static final double BUFFER = 400, FACTOR = 0.3;
+        BlockPos pos, sinkPos;
+        EnergyConverterElnToOtherElement e;
+        double bufferAtLoad, factorAtLoad;
+        Direction frontAtLoad;
+        net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler sink;
+
+        public String name() {
+            return "wp11 exporter old save";
+        }
+
+        public int ticks() {
+            return 10;
+        }
+
+        public void build(TestContext ctx) {
+            pos = ctx.at(1, 1, 1);
+            sinkPos = ctx.at(0, 1, 1);
+            exporter(ctx, pos);
+            net.minecraft.nbt.CompoundTag old = new net.minecraft.nbt.CompoundTag();
+            old.putFloat("loadUc", 49.9f);
+            old.putDouble("powerInResistorR", 12.5);
+            old.putDouble("energyBuffer", BUFFER);
+            old.putDouble("inPowerFactor", FACTOR);
+            old.putByte("others", (byte) (Direction.XP.getInt() + 8));
+            try {
+                mods.eln.gametest.Reload.node(ctx.world(), pos, t -> {
+                    t.put("element", old);
+                    return t;
+                });
+            } catch (ReflectiveOperationException ex) {
+                throw new RuntimeException(ex);
+            }
+            e = element(ctx, pos);
+            bufferAtLoad = e.energyBuffer;
+            factorAtLoad = e.inPowerFactor;
+            frontAtLoad = e.getFront();
+            ctx.world().setBlock(sinkPos, mods.eln.gametest.TestEnergySinks.BLOCK.defaultBlockState(), 3);
+            sink = mods.eln.gametest.TestEnergySinks.put(sinkPos, 1_000_000);
+        }
+
+        public void measure(TestContext ctx) {
+            try {
+                ctx.checkValue("exporter old save: buffer kept [J]", bufferAtLoad, BUFFER);
+                ctx.checkValue("exporter old save: slider kept", factorAtLoad, FACTOR);
+                ctx.check("exporter old save: front kept", frontAtLoad == Direction.XP, "" + frontAtLoad);
+                ctx.check("exporter old save: its buffer goes out as FE", sink.getAmountAsLong() >= (long) (BUFFER * Eln.ElnToTeConversionRatio) - 1,
+                    sink.getAmountAsLong() + " FE");
+            } finally {
+                mods.eln.gametest.TestEnergySinks.remove(sinkPos);
+                ctx.world().removeBlock(sinkPos, false);
+                ctx.world().removeBlock(pos, false);
             }
         }
     }

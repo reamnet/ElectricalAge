@@ -81,7 +81,7 @@ object ForkPatchFinalLightingCases {
         override fun id()="forkpatch_final_lighting_work_${if(generator)"gasoline"else "external"}_paid_fuel_aim"
         override fun ticks()=120
         override fun build(c:TestContext){e=place(c,7936)as WorkLightElement;e.inventory.setItem(0,Eln.findItemStack("120V LED Light Bulb",2));e.inventory.setChanged()
-            if(generator){e.tankLevel=.5;e.tankFluid=e.fuels.first();before=e.tankLevel;e.networkUnserialize(c.stream{it.writeByte(80)})}
+            if(generator){e.inlet.put(mods.eln.oil.Oil.Cut.GASOLINE.source.get(), 1000, 293.15);before=e.tankLevel;e.networkUnserialize(c.stream{it.writeByte(80)})}
             else {external=VoltageSource("paid work light",e.positiveLoad,null).setU(120.0);Eln.simulator.addElectricalComponent(external)}
             e.networkUnserialize(c.stream{it.writeByte(83);it.writeDouble(35.0)});e.networkUnserialize(c.stream{it.writeByte(86);it.writeDouble(-40.0)})
         }
@@ -91,8 +91,8 @@ object ForkPatchFinalLightingCases {
             else c.check("work light external supply pays load with engine off",!e.on&&e.tankLevel==0.0&&abs(abs(external!!.current*external!!.u)-30)<.01,"")
             val saved=CompoundTag();e.writeToNBT(saved);val restored=WorkLightElement(TransparentNode(),e.descriptor);restored.readFromNBT(saved)
             c.check("work light save restores separate head aims and inventory",restored.aim.pan(0)==35.0&&restored.aim.tilt(1)==-40.0&&restored.inventory.getItem(0).count==2,"")
-            val carried=WorkLightElement(TransparentNode(),e.descriptor);carried.readItemStackNBT(e.itemStackNBT)
-            c.check("work light dropped assembly preserves paid fuel but never auto-starts",carried.tankLevel==e.tankLevel&&!carried.on,"")
+            val carried=WorkLightElement(TransparentNode(),e.descriptor);carried.readItemStackNBT(e.itemStackNBT);carried.inlet.make(0.0, 1.0, 293.15)
+            c.check("work light dropped assembly preserves paid fuel but never auto-starts",abs(carried.tankLevel-e.tankLevel)<1e-9&&!carried.on,"")
             if(generator){e.networkUnserialize(c.stream{it.writeByte(81)});c.check("work wireless selection disables engine immediately",!e.on&&e.powerSource.p==0.0,"")}
             val spec=mods.eln.gui.MenuSpecs.of(e.descriptor);c.check("work source menu dimensions and two-bulb limit",spec.height()==290&&spec.slots()[0].x()==17&&spec.slots()[0].y()==60&&spec.slots()[0].limit()==2,"")
             graphics(c,e)

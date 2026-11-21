@@ -50,6 +50,46 @@ public final class EaUnits {
         return b.length() == 0 ? "gas" : b.toString();
     }
 
+    /**
+     * Everything that makes up more than 1% of a node's volume, by name and compact, liquids in mB and gases in
+     * grams: "2.1 g steam, 2.0 B water" (Baughn 2026-11-04, mB his call: Jade named only the gas that made the pressure; one
+     * line for every fluid container; buckets from 1000 mB and no "of", Baughn 2026-11-11). A gas's share is its partial pressure's share of the space above the liquid; "empty" if none counts.
+     */
+    public static String composition(FluidNode n) {
+        SpeciesRegistry reg = SpeciesRegistry.get();
+        Flash s = n.state;
+        double pSum = 0, vGas = Math.max(0, n.volume - n.liquidVolume());   // (not the flash's floor: a full pipe holds no gas)
+        for (int id = 0; id < n.speciesBound(); id++) if (s.vapour(id) > 0) pSum += s.vapour(id) * reg.byId(id).r;
+        var parts = new java.util.TreeMap<String, String>();
+        for (int id = 0; id < n.speciesBound(); id++) {
+            Species sp = reg.byId(id);
+            double liq = s.liquid(id), vap = s.vapour(id);
+            if (liq > 0 && liq / sp.rhoL > 0.01 * n.volume) parts.put(sp.displayName(), volume(liq / sp.rhoL * Water.RHO_L / KG_PER_MB_WATER) + " " + sp.displayName());
+            if (vap > 0 && pSum > 0 && vap * sp.r / pSum * vGas > 0.01 * n.volume) {
+                String name = id == SpeciesRegistry.WATER ? "steam" : sp.gas() || liq <= 0 ? sp.displayName() : sp.displayName() + " vapour";
+                parts.put(name, grams(vap * 1000) + " " + name);
+            }
+        }
+        return parts.isEmpty() ? "empty" : String.join(", ", parts.values());
+    }
+
+    /** Two significant figures or so: 0.012, 0.12, 1.2, 12, 120. */
+    private static String compact(double v) {
+        return String.format(v >= 10 ? "%.0f" : v >= 1 ? "%.1f" : v >= 0.1 ? "%.2f" : "%.3f", v);
+    }
+
+    /** A liquid volume compactly (Baughn 2026-11-11: "18 g air, 14.6 B gasoline, 700 mB diesel"): buckets from 1000 mB. */
+    public static String volume(double mB) {
+        if (mB < 1000) return compact(mB) + " mB";
+        double b = mB / 1000;
+        return String.format(b >= 100 ? "%.0f B" : "%.1f B", b);
+    }
+
+
+    private static String grams(double g) {
+        return g >= 1000 ? compact(g / 1000) + " kg" : compact(g) + " g";
+    }
+
     /** A node's other species for players, one per entry: name, then liquid mB and gas grams (empty if it holds none). */
     public static java.util.List<String[]> others(FluidNode n, java.util.function.ToDoubleFunction<Integer> kgPerMbLiquid) {
         java.util.List<String[]> out = new java.util.ArrayList<>();
@@ -78,7 +118,7 @@ public final class EaUnits {
         double v = m * mv / mg, a = m * ma / mg, T = n.T();
         n.mWater -= v;
         n.mAir -= a;
-        n.energy -= v * Water.hVapour(T) + a * Water.hAir(T);
+        n.energy -= v * n.hVapour(T) + a * Water.hAir(T);
         n.update();
         return v;
     }
@@ -88,7 +128,7 @@ public final class EaUnits {
         m = Math.min(m, n.mVapour());
         if (m <= 0) return;
         n.mWater -= m;
-        n.energy -= m * Water.hVapour(n.T());
+        n.energy -= m * n.hVapour(n.T());
         n.update();
     }
 
@@ -106,7 +146,7 @@ public final class EaUnits {
     public static void addWater(FluidNode n, double m, double T, boolean vapour) {
         if (m <= 0) return;
         n.mWater += m;
-        n.energy += m * (vapour ? Water.hVapour(T) : Water.hLiquid(T));
+        n.energy += m * (vapour ? n.hVapour(T) : Water.hLiquid(T));
         n.update();
     }
 
@@ -119,6 +159,22 @@ public final class EaUnits {
 
     /** Put m kg of species id in at temperature T, as liquid or vapour (water: addWater). */
     public static void add(FluidNode n, int id, double m, double T, boolean vapour) {
+        add(n, id, m, T, vapour, false);
+    }
+
+    /**
+     * ... a mixture alias as what it is made of: crude as its cuts. Live (the oil pump's sealed line from the well) with its
+     * natural gas; otherwise dead, its gas long gone (Baughn 2026-11-10: "the buckets don't have lids").
+     */
+    public static void add(FluidNode n, int id, double m, double T, boolean vapour, boolean live) {
+        double[][] mix = SpeciesRegistry.get().mixture(id, !live);
+        if (mix != null) {
+            for (int i = 0; i < mix[0].length; i++) {
+                int c = (int) mix[0][i];
+                add(n, c, m * mix[1][i], T, SpeciesRegistry.get().byId(c).gas());
+            }
+            return;
+        }
         if (id == SpeciesRegistry.WATER) {
             addWater(n, m, T, vapour);
             return;
@@ -139,6 +195,82 @@ public final class EaUnits {
         n.energy -= m * SpeciesRegistry.get().byId(id).hLiquid(n.T());
         n.update();
         return m;
+    }
+
+    /**
+     * The share a mixed liquid's main species must have to count as that species at a bucket or another mod's pipe
+     * (Baughn 2026-11-10: 90 %). Under it the view refuses the layer: refine it first.
+     */
+    public static final double PURE_SHARE = 0.9;
+
+    /** The species with the most liquid in id's layer (id itself for water). */
+    public static int mainOfLayer(FluidNode n, int id) {
+        if (id == SpeciesRegistry.WATER) return id;
+        int layer = n.layerOf(id), best = id;
+        for (int j = 2; j < n.speciesBound(); j++) if (n.layerOf(j) == layer && n.liquid(j) > n.liquid(best)) best = j;
+        return best;
+    }
+
+    /** The liquid (kg) of the layer species id is in: every species mixed in it. */
+    public static double layerLiquid(FluidNode n, int id) {
+        if (id == SpeciesRegistry.WATER) return n.liquid(id);
+        int layer = n.layerOf(id);
+        double kg = 0;
+        for (int j = 2; j < n.speciesBound(); j++) if (n.liquid(j) > 0 && n.layerOf(j) == layer) kg += n.liquid(j);
+        return kg;
+    }
+
+    /**
+     * Take up to m kg of the layer species id is in out of n, every species in it by its share, each with its enthalpy
+     * (Baughn 2026-11-10: a mixed liquid is named by its main species; taken whole, so a bucket can't pull one species out
+     * of a mix and distil it for free). Returns what it took.
+     */
+    public static double drainLayer(FluidNode n, int id, double m) {
+        if (id == SpeciesRegistry.WATER) return drainLiquid(n, m);
+        double total = layerLiquid(n, id);
+        m = Math.min(m, total);
+        if (m <= 0) return 0;
+        int layer = n.layerOf(id);
+        double T = n.T(), f = m / total;
+        double[] take = new double[n.speciesBound()];
+        for (int j = 2; j < take.length; j++) if (n.liquid(j) > 0 && n.layerOf(j) == layer) take[j] = n.liquid(j) * f;
+        for (int j = 2; j < take.length; j++) {
+            if (take[j] <= 0) continue;
+            n.addMass(j, -take[j]);
+            n.energy -= take[j] * SpeciesRegistry.get().byId(j).hLiquid(T);
+        }
+        n.update();
+        return m;
+    }
+
+    /** The heating value (J/kg) of the layer species id is in: its species' by their shares. */
+    public static double layerHeatingValue(FluidNode n, int id) {
+        double total = layerLiquid(n, id);
+        if (total <= 0) return 0;
+        int layer = n.layerOf(id);
+        SpeciesRegistry reg = SpeciesRegistry.get();
+        double hv = 0;
+        for (int j = 2; j < n.speciesBound(); j++) if (n.layerOf(j) == layer) hv += n.liquid(j) / total * reg.byId(j).heatingValue;
+        return hv;
+    }
+
+    /**
+     * How much of the layer species ids[0] is in matches the shares given for ids (1 - total variation distance, 0..1):
+     * 1 for a layer in exactly those proportions, the matching share for a layer of one of them, less for anything else
+     * in it.
+     */
+    public static double layerOverlap(FluidNode n, double[] ids, double[] shares) {
+        int first = (int) ids[0];
+        double total = layerLiquid(n, first);
+        if (total <= 0) return 0;
+        int layer = n.layerOf(first);
+        double overlap = 0;
+        for (int i = 0; i < ids.length; i++) {
+            int id = (int) ids[i];
+            double own = n.layerOf(id) == layer ? n.liquid(id) / total : 0;
+            overlap += Math.min(own, shares[i]);
+        }
+        return overlap;
     }
 
     /** Take up to m kg of species id's vapour out of n, with its enthalpy. */

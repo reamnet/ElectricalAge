@@ -7,6 +7,7 @@ import org.erisia.cad.Frustum;
 import org.erisia.cad.Model;
 import org.erisia.cad.Ring;
 import org.erisia.cad.Solid;
+import org.erisia.cad.Mesh;
 import org.erisia.cad.Sweep;
 import org.erisia.cad.UvMap;
 
@@ -38,6 +39,10 @@ public final class VoxelGeometry {
     public static final Identifier[] PIPE = {Identifier.fromNamespaceAndPath("eln", "block/pipe_iron"),
         Identifier.fromNamespaceAndPath("eln", "block/pipe_alloy"), Identifier.fromNamespaceAndPath("eln", "block/pipe_alloy")};
     static final int SIDES = 12;
+
+    /** A burnt cable's texture: charred insulation with ember cracks, untinted (Baughn 2026-11-11: a failed cable must
+     *  look obviously failed; the old scorched-brown tint matched the 48 V cable's brown). */
+    public static final Identifier BURNT = Identifier.fromNamespaceAndPath("eln", "block/cable/burnt");
 
     /** The cable texture of a tier (the six-node cable's, copied onto the block atlas: textures/block/cable/). */
     public static Identifier cableSprite(int tier) {
@@ -71,7 +76,98 @@ public final class VoxelGeometry {
             // each part is a body of its own: its solids hang together (Checker.connectivity)
             for (int i = first; i < m.solids.size(); i++) if (m.solids.get(i).body == null) m.solids.get(i).body = part;
         }
+        fittings(m, parts);
         return m;
+    }
+
+    /**
+     * The fittings that show where runs are joined (Baughn: visible = connected): a sleeve where a cable's end meets
+     * another cable of its kind mid-way (a branch; CableNet joins them there), and a junction body where three or more
+     * pipe ends meet with no junction part (old saves' branches, joined until the converter turns them into junctions).
+     */
+    static void fittings(Model m, List<VoxelPart> parts) {
+        java.util.Set<String> sleeved = new java.util.HashSet<>();
+        for (VoxelPart pa : parts) {
+            if (!(pa instanceof CablePart a) || a.isKnuckle()) continue;
+            for (VoxelPart pb : parts) {
+                if (pb == pa || !(pb instanceof CablePart b) || b.isKnuckle() || !CablePlacer.joins(a.tier, b.tier) || a.face != b.face) continue;
+                for (int[] e : a.ends()) {
+                    if (!b.passes(e[0], e[1], e[2])) continue;
+                    boolean bEnd = false;
+                    for (int[] f : b.ends()) bEnd |= f[0] == e[0] && f[1] == e[1] && f[2] == e[2];
+                    if (!bEnd && sleeved.add(b.face + ":" + e[0] + "," + e[1] + "," + e[2])) sleeve(m, b, e);
+                }
+            }
+        }
+        // three or more ends of one cable at a point (a branch at a corner of the run): a sleeve too
+        java.util.Map<String, List<CablePart>> cableEnds = new java.util.HashMap<>();
+        for (VoxelPart pa : parts)
+            if (pa instanceof CablePart a && !a.isKnuckle())
+                for (int[] e : a.ends()) cableEnds.computeIfAbsent(a.face + ":" + e[0] + "," + e[1] + "," + e[2], k -> new ArrayList<>()).add(a);
+        for (var en : cableEnds.entrySet()) {
+            List<CablePart> at = en.getValue();
+            if (at.size() < 3 || !at.stream().allMatch(x -> CablePlacer.joins(x.tier, at.get(0).tier))) continue;
+            String[] xyz = en.getKey().substring(en.getKey().indexOf(':') + 1).split(",");
+            int[] e = {Integer.parseInt(xyz[0]), Integer.parseInt(xyz[1]), Integer.parseInt(xyz[2])};
+            if (sleeved.add(at.get(0).face + ":" + e[0] + "," + e[1] + "," + e[2])) sleeve(m, at.get(0), e);
+        }
+        java.util.Map<Integer, Integer> ends = new java.util.HashMap<>();
+        java.util.Map<Integer, Integer> tierAt = new java.util.HashMap<>();
+        java.util.Set<Integer> junctions = new java.util.HashSet<>();
+        for (VoxelPart p : parts) if (p instanceof JunctionPart j) junctions.add(j.x << 10 | j.y << 5 | j.z);
+        for (VoxelPart p : parts)
+            if (p instanceof PipePart pipe)
+                for (int[] e : pipe.innerEnds()) {
+                    int k = e[0] << 10 | e[1] << 5 | e[2];
+                    ends.merge(k, 1, Integer::sum);
+                    tierAt.merge(k, pipe.tier, Math::min);
+                }
+        for (var en : ends.entrySet()) {
+            if (en.getValue() < 3 || junctions.contains(en.getKey())) continue;
+            int k = en.getKey();
+            JunctionPart shown = new JunctionPart(k >> 10, k >> 5 & 31, k & 31, tierAt.get(k));
+            box(m, shown.boxes().get(0), PIPE[shown.tier]).named("pipe junction (old)").rgb(0.82f, 0.82f, 0.86f);
+        }
+    }
+
+    /**
+     * A splice round cable b at point e of its centre line: a slim band half a voxel proud of the cable, 3 voxels long,
+     * in the cable's own colour (Baughn 2026-11-12: the brass sleeves, a voxel over the cable and overlapping where
+     * branches met, looked ugly). One per point.
+     */
+    static void sleeve(Model m, CablePart b, int[] e) {
+        int n = CablePart.normalAxis(b.face);
+        int along = -1, seg = -1;
+        int[] p = b.points;
+        for (int i = 3; i < p.length && along < 0; i += 3) {
+            boolean in = true;
+            for (int a = 0; a < 3; a++) if (e[a] < Math.min(p[i - 3 + a], p[i + a]) || e[a] > Math.max(p[i - 3 + a], p[i + a])) in = false;
+            if (in) for (int a = 0; a < 3; a++) if (p[i - 3 + a] != p[i + a]) {
+                along = a;
+                seg = i / 3 - 1;
+            }
+        }
+        if (along < 0 || seg >= b.boxes().size()) return;
+        int w = 3 - n - along;
+        // (the cable's own box there, grown by a little under half a voxel across and on top: no face of it lies in one
+        // of the cable's, whatever its width)
+        int[] bx = b.boxes().get(seg);
+        double g = 0.45;
+        double[] lo = new double[3], hi = new double[3];
+        lo[along] = Math.max(0, e[along] - 1.5);   // (half voxels: its ends never lie in a branch's sides)
+        hi[along] = Math.min(16, e[along] + 1.5);
+        lo[w] = Math.max(0, bx[w] - g);
+        hi[w] = Math.min(16, bx[w + 3] + g);
+        // (its face on the support a hair off the plane: it lay in the cable's own bottom face and z-fought with it)
+        if (b.face % 2 == 0) {
+            lo[n] = bx[n] + 0.05;
+            hi[n] = Math.min(16, bx[n + 3] + g);
+        } else {
+            lo[n] = Math.max(0, bx[n] - g);
+            hi[n] = bx[n + 3] - 0.05;
+        }
+        int argb = b.burnt != null ? 0xFFFFFFFF : b.tierInfo().bus() ? rgb(0.62f, 0.38f, 0.80f) : insulation(b);
+        boxD(m, lo, hi, b.burnt != null ? BURNT : cableSprite(b.tier)).named("cable splice").argb(argb);
     }
 
     static void draw(Model m, VoxelPart part, List<VoxelPart> parts, float[] lugs, boolean[] adapters, List<int[]> cableBoxes) {
@@ -79,6 +175,9 @@ public final class VoxelGeometry {
             if (part instanceof ValvePart v) valve(m, v);
             else if (part instanceof SafetyValvePart sv) safetyValve(m, sv, parts);
             else if (part instanceof PipeSensorPart ps) sensor(m, ps, parts);
+            else if (part instanceof JunctionPart j)
+                // (a tee or cross: a body a voxel wider than the bore, where the arms meet; Baughn: visible = connected)
+                box(m, j.boxes().get(0), PIPE[j.tier]).named("pipe junction").rgb(0.82f, 0.82f, 0.86f);
             else if (part instanceof AdapterPart a)
                 box(m, a.boxes().get(0), PIPE[0]).named("adapter flange").rgb(0.75f, 0.55f, 0.3f);   // (brass)
             else if (part instanceof PipePart pipe) {
@@ -86,9 +185,9 @@ public final class VoxelGeometry {
                 int argb = pipe.burst ? rgb(0.55f, 0.35f, 0.25f) : 0xFFFFFFFF;
                 pipe(m, pipe, PIPE[pipe.tier], argb, adapters);
             } else if (part instanceof CablePart c) {
-                // (black insulation, Baughn; burnt: scorched brown)
+                // (insulation: a power cable's spec colour (Baughn 2026-11-06), else black; burnt: the char sprite)
                 // (the field bus: violet, as real Profibus cable is)
-                int argb = c.burnt != null ? rgb(0.35f, 0.22f, 0.14f) : c.tierInfo().bus() ? rgb(0.62f, 0.38f, 0.80f) : rgb(0.22f, 0.22f, 0.24f);
+                int argb = c.burnt != null ? 0xFFFFFFFF : c.tierInfo().bus() ? rgb(0.62f, 0.38f, 0.80f) : insulation(c);
                 cable(m, c, argb, cableBoxes);
                 if (lugs != null && c.face == 0 && !c.isKnuckle())
                     for (CablePart.Port port : c.cablePorts())
@@ -98,6 +197,26 @@ public final class VoxelGeometry {
     }
 
     // --- the parts ---
+
+    /**
+     * A flat arrow lying on a face at height top on the stem axis: a shaft along axis from behind c to its middle, then a
+     * head of three steps narrowing toward flow's side (px; 0.5 px proud of the face).
+     */
+    static void arrow(Model m, int axis, int side, int stem, double[] c, int flow, double top) {
+        double[][] seg = {{-1.8, 0, 0.35}, {0, 0.6, 1.8}, {0.6, 1.2, 1.2}, {1.2, 1.8, 0.6}};   // (from, to along the flow; half width)
+        String[] name = {"flow arrow shaft", "flow arrow head", "flow arrow head 2", "flow arrow tip"};
+        for (int i = 0; i < seg.length; i++) {
+            double[] lo = new double[3], hi = new double[3];
+            double a0 = c[axis] + flow * seg[i][0], a1 = c[axis] + flow * seg[i][1];
+            lo[axis] = Math.min(a0, a1);
+            hi[axis] = Math.max(a0, a1);
+            lo[side] = c[side] - seg[i][2];
+            hi[side] = c[side] + seg[i][2];
+            lo[stem] = top;
+            hi[stem] = top + 0.5;
+            boxD(m, lo, hi, PIPE[0]).named(name[i]).rgb(0.85f, 0.85f, 0.2f);
+        }
+    }
 
     /**
      * A gate valve: a body round the pipe, a stem, and a round handwheel wider than the pipe (Baughn: they looked like
@@ -137,6 +256,9 @@ public final class VoxelGeometry {
             nlo[stem] = c[stem] + h - 1.5;
             nhi[stem] = c[stem] + h;
             boxD(m, nlo, nhi, PIPE[0]).named("flow nub").rgb(0.85f, 0.85f, 0.2f);
+            // and an arrow on the dome's top along the pipe (Baughn 2026-11-15: the nub, a 1.5 px tab under the dome,
+            // showed no direction to a player; the tooltip says "one way along its arrow")
+            arrow(m, v.axis, side, stem, c, v.flow, plane + 1.5);
             return;
         }
         if (v.mode == ValvePart.CONTROL) {
@@ -218,7 +340,9 @@ public final class VoxelGeometry {
         int[] o = others(ax);
         double base = c[ax], top = base + dir * (rp + 3 * s), end = top + dir * s;
         Solid body = tube(m, ax, c[o[0]], c[o[1]], 1.4 * s, Math.min(base, top), Math.max(base, top), PIPE[0]).named("safety valve body").rgb(0.8f, 0.6f, 0.3f);
-        Solid cap = tube(m, ax, c[o[0]], c[o[1]], 2 * s, Math.min(top, end), Math.max(top, end), PIPE[0]).named("safety valve cap").rgb(0.75f, 0.15f, 0.12f);
+        // (a purge valve's cap is blue: Baughn 2026-11-10)
+        Solid cap = tube(m, ax, c[o[0]], c[o[1]], 2 * s, Math.min(top, end), Math.max(top, end), PIPE[0]).named("safety valve cap")
+            .rgb(sv.purge ? 0.2f : 0.75f, sv.purge ? 0.4f : 0.15f, sv.purge ? 0.8f : 0.12f);
         Solid pipe = pipeUnder(m, pipeAxis(parts, sv.x, sv.y, sv.z, ax), c, rp);
         Solid hit = box(m, sv.boxes().get(0), null).named("safety valve hitbox").ghost();
         m.attach(body, pipe, rp).abut(body, cap).within(cap, hit).disjoint(cap, pipe)
@@ -309,6 +433,8 @@ public final class VoxelGeometry {
     static void cable(Model m, CablePart c, int argb, List<int[]> drawn) {
         List<int[]> boxes = c.boxes();
         int[] p = c.points;
+        List<CablePart.Drawn> hung = c.isKnuckle() ? List.of() : c.drawn();
+        double arc = 0;   // (the polyline's arc length at segment i's start: the hung spans are given in it)
         for (int i = 0; i < boxes.size(); i++) {
             int along, n;
             if (c.isKnuckle()) {
@@ -326,8 +452,10 @@ public final class VoxelGeometry {
             double cw = (bx[w] + bx[w + 3]) / 2.0, half = (bx[w + 3] - bx[w]) / 2.0;
             boolean knuckle = c.isKnuckle();
             double top = c.isKnuckle() || CablePart.plane(c.face) == 0 ? bx[n + 3] : bx[n];
+            final int alongF = along;
             UvMap uv = f -> {
-                int fa = f.index / 2;
+                // (the face's axis from its normal: a sagging cable's faces are a mesh's, a little tilted)
+                int fa = Math.abs(f.nx) >= Math.abs(f.ny) && Math.abs(f.nx) >= Math.abs(f.nz) ? 0 : Math.abs(f.ny) >= Math.abs(f.nz) ? 1 : 2;
                 float[] out = new float[8];
                 for (int j = 0; j < 4; j++) {
                     double[] v = {f.xyz[3 * j], f.xyz[3 * j + 1], f.xyz[3 * j + 2]};
@@ -342,8 +470,161 @@ public final class VoxelGeometry {
                 }
                 return out;
             };
-            box(m, bx, cableSprite(c.tier)).named("cable box " + i).argb(argb).uv(uv);
+            Identifier sprite = c.burnt != null ? BURNT : cableSprite(c.tier);
+            int segLen = knuckle ? 0 : Math.abs(p[3 * (i + 1)] - p[3 * i]) + Math.abs(p[3 * (i + 1) + 1] - p[3 * i + 1]) + Math.abs(p[3 * (i + 1) + 2] - p[3 * i + 2]);
+            if (hung.isEmpty() || knuckle) box(m, bx, sprite).named("cable box " + i).argb(argb).uv(uv);
+            else {
+                // the box where the cable lies as routed; over a hung span the sweep below draws it instead
+                double from = p[3 * i + along], dirSign = Math.signum(p[3 * (i + 1) + along] - from);
+                List<double[]> keep = new ArrayList<>();
+                keep.add(new double[]{arc, arc + segLen});
+                for (CablePart.Drawn d : hung) keep = cut(keep, d.s0(), d.s1());
+                for (double[] k : keep) {
+                    double u0 = from + dirSign * (k[0] - arc), u1 = from + dirSign * (k[1] - arc);
+                    double lo = Math.max(bx[along], Math.min(u0, u1)), hi = Math.min(bx[along + 3], Math.max(u0, u1));
+                    // (the box's own reach past the line's ends, at the polyline's two ends, stays)
+                    if (k[0] <= arc + 1e-6) {
+                        if (dirSign > 0) lo = bx[along];
+                        else hi = bx[along + 3];
+                    }
+                    if (k[1] >= arc + segLen - 1e-6) {
+                        if (dirSign > 0) hi = bx[along + 3];
+                        else lo = bx[along];
+                    }
+                    if (hi - lo < 1e-3) continue;
+                    double[] blo = {bx[0], bx[1], bx[2]}, bhi = {bx[3], bx[4], bx[5]};
+                    blo[along] = lo;
+                    bhi[along] = hi;
+                    boxD(m, blo, bhi, sprite).named("cable box " + i).argb(argb).uv(uv);
+                }
+            }
+            arc += segLen;
         }
+        if (!hung.isEmpty()) {
+            Identifier sprite = c.burnt != null ? BURNT : cableSprite(c.tier);
+            for (CablePart.Drawn d : hung) sweep(m, d, c.tierInfo().width(), c.tierInfo().height(), sprite, argb);
+        }
+    }
+
+    /** The intervals minus [a, b]. */
+    static List<double[]> cut(List<double[]> in, double a, double b) {
+        List<double[]> out = new ArrayList<>();
+        for (double[] k : in) {
+            if (b <= k[0] || a >= k[1]) {
+                out.add(k);
+                continue;
+            }
+            if (a > k[0]) out.add(new double[]{k[0], a});
+            if (b < k[1]) out.add(new double[]{b, k[1]});
+        }
+        return out;
+    }
+
+    /**
+     * A hung span drawn (Baughn 2026-11-12): the cable's cross-section (width across, height off the line toward its
+     * body) carried along the stored centre line with a frame that turns with it (tangent, the stored normal made square
+     * to it, and their cross), link by link; a closed mesh, textured as the straight cable is (the strip across the
+     * top and down the sides, v along the length).
+     */
+    static void sweep(Model m, CablePart.Drawn d, double width, double height, Identifier sprite, int argb) {
+        double[][] p = d.pts();
+        int n = p.length;
+        if (n < 2) return;
+        double[][] t = new double[n][], nn = new double[n][], bb = new double[n][];
+        double[] s = new double[n];
+        for (int i = 0; i < n; i++) {
+            double[] a = p[Math.max(0, i - 1)], b = p[Math.min(n - 1, i + 1)];
+            t[i] = d.tan() != null ? unit(d.tan()[i]) : unit(new double[]{b[0] - a[0], b[1] - a[1], b[2] - a[2]});
+            double[] nr = d.nrm()[i];
+            double dot = nr[0] * t[i][0] + nr[1] * t[i][1] + nr[2] * t[i][2];
+            nn[i] = unit(new double[]{nr[0] - dot * t[i][0], nr[1] - dot * t[i][1], nr[2] - dot * t[i][2]});
+            bb[i] = cross(t[i], nn[i]);
+            if (i > 0) s[i] = s[i - 1] + Math.sqrt(sq3(p[i], p[i - 1]));
+        }
+        double half = width / 2;
+        Mesh mesh = new Mesh(null);
+        List<float[]> uvs = new ArrayList<>();
+        // corners: (across c, height h) at node i
+        java.util.function.BiFunction<Integer, double[], double[]> at = (i, ch) -> new double[]{
+            p[i][0] + bb[i][0] * ch[0] + nn[i][0] * ch[1], p[i][1] + bb[i][1] * ch[0] + nn[i][1] * ch[1], p[i][2] + bb[i][2] * ch[0] + nn[i][2] * ch[1]};
+        double[][] ring = {{-half, 0}, {half, 0}, {half, height}, {-half, height}};
+        for (int i = 0; i + 1 < n; i++) {
+            double[] mid = {(p[i][0] + p[i + 1][0]) / 2 + (nn[i][0] + nn[i + 1][0]) * height / 4, (p[i][1] + p[i + 1][1]) / 2 + (nn[i][1] + nn[i + 1][1]) * height / 4,
+                (p[i][2] + p[i + 1][2]) / 2 + (nn[i][2] + nn[i + 1][2]) * height / 4};
+            for (int e = 0; e < 4; e++) {
+                double[] c0 = ring[e], c1 = ring[(e + 1) % 4];
+                double[][] q = {at.apply(i, c0), at.apply(i + 1, c0), at.apply(i + 1, c1), at.apply(i, c1)};
+                double[] u = new double[4];
+                double[] cc = {c0[0], c0[0], c1[0], c1[0]}, hh = {c0[1], c0[1], c1[1], c1[1]}, ss = {s[i], s[i + 1], s[i + 1], s[i]};
+                for (int k = 0; k < 4; k++) {
+                    boolean side = e == 1 || e == 3;   // (the two sides: the strip runs down them)
+                    u[k] = side ? 0.25 + Math.signum(cc[k]) * (half / 32 + (height - hh[k]) / 16) : 0.25 + cc[k] / 32;
+                }
+                float[] uv = new float[8];
+                for (int k = 0; k < 4; k++) {
+                    uv[2 * k] = (float) clamp01(u[k]);
+                    uv[2 * k + 1] = (float) clamp01(ss[k] / 16 % 1);
+                }
+                addQuad(mesh, uvs, q, uv, mid);
+            }
+        }
+        for (int end = 0; end < 2; end++) {
+            int i = end == 0 ? 0 : n - 1;
+            double[][] q = {at.apply(i, ring[0]), at.apply(i, ring[1]), at.apply(i, ring[2]), at.apply(i, ring[3])};
+            float[] uv = new float[8];
+            for (int k = 0; k < 4; k++) {
+                uv[2 * k] = (float) clamp01(0.25 + ring[k][0] / 32);
+                uv[2 * k + 1] = (float) clamp01(0.5 - (height - ring[k][1]) / 16);
+            }
+            double[] inside = end == 0 ? p[Math.min(n - 1, 1)] : p[Math.max(0, n - 2)];
+            double[] c = {inside[0] + nn[i][0] * height / 2, inside[1] + nn[i][1] * height / 2, inside[2] + nn[i][2] * height / 2};
+            addQuad(mesh, uvs, q, uv, c);
+        }
+        mesh.closed(true);
+        m.add(mesh).material(sprite);
+        mesh.named("cable (hanging)").argb(argb).uv(f -> uvs.get(Math.min(f.index, uvs.size() - 1)));
+    }
+
+    /** Add quad q to mesh, wound to face away from point inside, with its corners' uv (reordered with it). */
+    static void addQuad(Mesh mesh, List<float[]> uvs, double[][] q, float[] uv, double[] inside) {
+        double[] e1 = {q[1][0] - q[0][0], q[1][1] - q[0][1], q[1][2] - q[0][2]}, e2 = {q[2][0] - q[0][0], q[2][1] - q[0][1], q[2][2] - q[0][2]};
+        double[] nr = cross(e1, e2);
+        double[] mid = {(q[0][0] + q[2][0]) / 2 - inside[0], (q[0][1] + q[2][1]) / 2 - inside[1], (q[0][2] + q[2][2]) / 2 - inside[2]};
+        if (nr[0] * mid[0] + nr[1] * mid[1] + nr[2] * mid[2] >= 0) {
+            mesh.poly(q[0], q[1], q[2], q[3]);
+            uvs.add(uv);
+        } else {
+            mesh.poly(q[3], q[2], q[1], q[0]);
+            uvs.add(new float[]{uv[6], uv[7], uv[4], uv[5], uv[2], uv[3], uv[0], uv[1]});
+        }
+    }
+
+    static double[] cross(double[] a, double[] b) {
+        return new double[]{a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]};
+    }
+
+    static double[] unit(double[] v) {
+        double l = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+        return l < 1e-12 ? new double[]{0, 1, 0} : new double[]{v[0] / l, v[1] / l, v[2] / l};
+    }
+
+    static double sq3(double[] a, double[] b) {
+        return (a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]) + (a[2] - b[2]) * (a[2] - b[2]);
+    }
+
+    /** Add quad a b c d to mesh wound to face away from the box's centre line (along axis through centre). */
+    static void quadOut(Mesh mesh, double[] centre, int along, double[] a, double[] b, double[] c, double[] d) {
+        double[] e1 = {b[0] - a[0], b[1] - a[1], b[2] - a[2]}, e2 = {c[0] - a[0], c[1] - a[1], c[2] - a[2]};
+        double[] nrm = {e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0]};
+        double[] mid = {(a[0] + c[0]) / 2, (a[1] + c[1]) / 2, (a[2] + c[2]) / 2};
+        double[] out = {mid[0] - centre[0], mid[1] - centre[1], mid[2] - centre[2]};
+        // (sides: away from the centre line, so not along it; the end caps: along it, away from the middle)
+        boolean cap = a[along] == b[along] && b[along] == c[along];
+        if (!cap) out[along] = 0;
+        else for (int i = 0; i < 3; i++) if (i != along) out[i] = 0;
+        double dot = nrm[0] * out[0] + nrm[1] * out[1] + nrm[2] * out[2];
+        if (dot >= 0) mesh.poly(a, b, c, d);
+        else mesh.poly(d, c, b, a);
     }
 
     /**
@@ -377,7 +658,7 @@ public final class VoxelGeometry {
         double w2 = c.tierInfo().width() / 2.0, h = c.tierInfo().height();
         // (its foot 0.1 px off the floor: on it, its underside lay in the cable box's and z-fought)
         lugBox(m, along, across, 0.1, H - 0.1, mid, w2 + 0.05, edge + in * 0.25, edge + in * (0.25 + h), cableSprite(c.tier)).named("lug riser")
-            .rgb(0.22f, 0.22f, 0.24f);
+            .argb(insulation(c));
         int copper = rgb(0.77f, 0.43f, 0.27f);   // (dull copper: a lug you can touch isn't bare metal, Baughn)
         lugBox(m, along, across, H - 0.1, H + 0.6, mid, w2 + 0.15, edge + in * 0.15, edge + in * (0.35 + h), PIPE[0]).named("lug barrel").argb(copper);
         lugBox(m, along, across, H - 0.85, H + 0.85, mid, Math.max(0.75, w2 - 0.25), edge, edge + in * 0.25, PIPE[0]).named("lug palm").argb(copper);
@@ -402,6 +683,12 @@ public final class VoxelGeometry {
 
     static int[] others(int axis) {
         return axis == 0 ? new int[]{1, 2} : axis == 1 ? new int[]{0, 2} : new int[]{0, 1};
+    }
+
+    /** A cable's insulation colour: its spec's dye (black stays the 1.12 dark grey), else that dark grey. */
+    static int insulation(CablePart c) {
+        if (c.spec == null || c.spec.colour() == CableSpec.BLACK) return rgb(0.22f, 0.22f, 0.24f);
+        return 0xFF000000 | net.minecraft.world.item.DyeColor.byId(c.spec.colour()).getTextureDiffuseColor();
     }
 
     static int rgb(float r, float g, float b) {

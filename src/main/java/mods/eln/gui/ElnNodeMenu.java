@@ -38,13 +38,15 @@ public class ElnNodeMenu extends AbstractContainerMenu implements INodeContainer
     public final Container deviceInventory;
     /** Server only (null on the client). */
     private final @Nullable NodeBase node;
+    /** Server only: the device the menu was opened on (NodeMenus.element); the menu is valid while it is still there. */
+    private final @Nullable Object element;
     public final int deviceSlots;
 
     /** Server: the worn slots shown are the player's own (keys from {@link #wearables}). */
     public ElnNodeMenu(int containerId, Inventory playerInventory, Container deviceInventory, MenuSpec spec, @Nullable NodeBase node,
                        BlockPos pos, int slot, byte kind, int descriptorId) {
         this(containerId, playerInventory, deviceInventory, spec, node, pos, slot, kind, descriptorId,
-            spec.wear().isEmpty() ? List.of() : wearables.keys(playerInventory.player, spec.wear().size()));
+            wearKeys(playerInventory.player, spec));
     }
 
     public ElnNodeMenu(int containerId, Inventory playerInventory, Container deviceInventory, MenuSpec spec, @Nullable NodeBase node,
@@ -58,6 +60,7 @@ public class ElnNodeMenu extends AbstractContainerMenu implements INodeContainer
         this.deviceInventory = deviceInventory;
         if (kind == TRANSPARENT && (descriptorId == 7940 || descriptorId == 7996)) deviceInventory.startOpen(playerInventory.player);
         this.node = node;
+        this.element = node == null ? null : NodeMenus.element(node, slot);
         for (SlotSpec s : spec.slots()) addSlot(new ElnSlot(deviceInventory, s, playerInventory.player.level()));
         deviceSlots = spec.slots().size();
         if (spec.playerInventory()) {
@@ -70,7 +73,8 @@ public class ElnNodeMenu extends AbstractContainerMenu implements INodeContainer
         this.wearKeys = List.copyOf(wearKeys.subList(0, Math.min(wearKeys.size(), spec.wear().size())));
         for (int i = 0; i < this.wearKeys.size(); i++) {
             SlotSpec at = spec.wear().get(i);
-            addSlot(wearables.slot(playerInventory.player, this.wearKeys.get(i), at.x(), at.y()));
+            String key = this.wearKeys.get(i);
+            addSlot(key.startsWith(ARMOR) ? armorSlot(playerInventory, key, at.x(), at.y()) : wearables.slot(playerInventory.player, key, at.x(), at.y()));
         }
     }
 
@@ -78,6 +82,69 @@ public class ElnNodeMenu extends AbstractContainerMenu implements INodeContainer
     public void removed(Player player) {
         super.removed(player);
         if (kind == TRANSPARENT && (descriptorId == 7940 || descriptorId == 7996)) deviceInventory.stopOpen(player);
+    }
+
+    /**
+     * Client: show the device slot of inventory index `index` at (x, y), with these tooltip lines (a screen that
+     * arranges its slots itself: the hub's follow the player's view). The slot keeps its place in the menu's list, so
+     * clicks and sync are as before; vanilla slots can't be moved, so it is replaced by one built there.
+     */
+    public void moveDeviceSlot(int index, int x, int y, String... comment) {
+        for (int i = 0; i < deviceSlots; i++) {
+            if (!(slots.get(i) instanceof ElnSlot old) || old.getContainerSlot() != index) continue;
+            SlotSpec s = old.spec;
+            ElnSlot moved = new ElnSlot(old.container, new SlotSpec(s.kind(), s.index(), x, y, s.limit(), s.filter(), s.skin(), comment), old.level);
+            moved.index = i;
+            slots.set(i, moved);
+            return;
+        }
+    }
+
+    /** Client: device slot `index` moved to (x, y), keeping its tooltip lines (a screen whose layout changes size). */
+    public void moveDeviceSlotTo(int index, int x, int y) {
+        for (int i = 0; i < deviceSlots; i++)
+            if (slots.get(i) instanceof ElnSlot old && old.getContainerSlot() == index) {
+                if (old.x != x || old.y != y) moveDeviceSlot(index, x, y, old.spec.comment());
+                return;
+            }
+    }
+
+    /** Client: the player's inventory (27 + 9 slots) moved to (x0, y0), as the constructor lays it out. */
+    public void movePlayerInventory(int x0, int y0) {
+        if (!spec.playerInventory()) return;
+        for (int k = 0; k < 36; k++) {
+            int i = deviceSlots + k;
+            Slot old = slots.get(i);
+            int x = k < 27 ? x0 + (k % 9) * 18 : x0 + (k - 27) * 18, y = k < 27 ? y0 + (k / 9) * 18 : y0 + 58;
+            if (old.x == x && old.y == y) continue;
+            Slot moved = new Slot(old.container, old.getContainerSlot(), x, y);
+            moved.index = i;
+            slots.set(i, moved);
+        }
+    }
+
+    /** Worn-slot keys of the player's armour ("armor#head"...): MenuSpec.withArmor. */
+    static final String ARMOR = "armor#";
+    static final net.minecraft.world.entity.EquipmentSlot[] ARMOR_SLOTS = {net.minecraft.world.entity.EquipmentSlot.HEAD,
+        net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET};
+    static final String[] ARMOR_ICONS = {"container/slot/helmet", "container/slot/chestplate", "container/slot/leggings", "container/slot/boots"};
+
+    /** Server: the worn slots to show: the armour first if the spec asks for it, then the Curios slots (wearables). */
+    static List<String> wearKeys(Player player, MenuSpec spec) {
+        if (spec.wear().isEmpty()) return List.of();
+        List<String> keys = new java.util.ArrayList<>();
+        if (spec.armor()) for (var e : ARMOR_SLOTS) if (keys.size() < spec.wear().size()) keys.add(ARMOR + e.getName());
+        keys.addAll(wearables.keys(player, spec.wear().size() - keys.size()));
+        return keys;
+    }
+
+    /** A worn armour slot, as the player's inventory screen has it (vanilla ArmorSlot: what may go in, the equip sound). */
+    static Slot armorSlot(Inventory inv, String key, int x, int y) {
+        for (int i = 0; i < ARMOR_SLOTS.length; i++)
+            if (key.equals(ARMOR + ARMOR_SLOTS[i].getName()))
+                return new net.minecraft.world.inventory.ArmorSlot(inv, inv.player, ARMOR_SLOTS[i], 39 - i, x, y,
+                    net.minecraft.resources.Identifier.withDefaultNamespace(ARMOR_ICONS[i]));
+        return new NoSlot(x, y);
     }
 
     /** The end of the player inventory's slots: the worn slots follow, up to slots.size(). */
@@ -160,10 +227,22 @@ public class ElnNodeMenu extends AbstractContainerMenu implements INodeContainer
     public boolean stillValid(Player player) {
         if (node != null) {
             if (node.isDestructing() || mods.eln.node.NodeMenus.burnt(node, slot)) return false;
+            // (the device on that face went and the block stayed: its inventory is no one's, its items have dropped)
+            if (NodeMenus.element(node, slot) != element) return false;
             NodeBase now = NodeManager.instance.getNodeFromCoordonate(new Coordonate(pos, player.level()));
             if (now != node) return false;
         }
         return player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0;
+    }
+
+    /** Shift-click of a cable kit: a block of it into the first empty cable-piece slot that takes it. */
+    boolean cablePiece(ItemStack stack) {
+        for (int i = 0; i < deviceSlots; i++)
+            if (slots.get(i) instanceof ElnSlot s && s.takesPiece(stack) && !s.hasItem() && s.mayPlace(stack)) {
+                s.setByPlayer(mods.eln.node.voxel.CableItems.take(stack, 16));
+                return true;
+            }
+        return false;
     }
 
     /**
@@ -177,6 +256,12 @@ public class ElnNodeMenu extends AbstractContainerMenu implements INodeContainer
         Slot slot = slots.get(index);
         if (!slot.hasItem() || !slot.mayPickup(player)) return ItemStack.EMPTY;
         ItemStack stack = slot.getItem();
+        if (index >= deviceSlots && stack.getItem() instanceof mods.eln.node.voxel.CableKitItem && cablePiece(stack)) {
+            // a block of the kit went into a cable slot, the rest stays; EMPTY ends the shift-click loop (Baughn 2026-11-07)
+            if (stack.isEmpty()) slot.setByPlayer(ItemStack.EMPTY);
+            else slot.set(stack);
+            return ItemStack.EMPTY;
+        }
         ItemStack before = stack.copy();
         int total = slots.size();
         boolean moved;

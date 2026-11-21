@@ -47,6 +47,59 @@ public class Wp10aContent implements ElnContent {
         registerSmelter(82);
         registerColumn(83);
         registerAnvil(85);
+        registerWireDrawing(88);
+        registerResinCollector(92);
+        registerCarbonBlackBurner(93);
+        registerDesulfuriser(94);
+        registerSteamCracker(95);
+        registerPolymeriser(96);
+    }
+
+    /** The Polymeriser (the rubber chain's oil route, 2026-11-07): butadiene and Soul Dust to Raw Rubber, 230 V, 1 kW. Model
+     *  mods.eln.cad.models.Polymeriser. */
+    public static void registerPolymeriser(int id) {
+        transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.transparentnode.polymeriser.PolymeriserDescriptor(
+            TR_NAME(Type.NONE, "Polymeriser"), "polymeriser", MVU, 1000, meduimVoltageCableDescriptor));
+    }
+
+    /** The Steam Cracker (the rubber chain's oil route, 2026-11-07): gasoline and steam to butadiene and natural gas, 400 V,
+     *  4 kW. Model mods.eln.cad.models.SteamCracker. */
+    public static void registerSteamCracker(int id) {
+        transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.transparentnode.steamcracker.SteamCrackerDescriptor(
+            TR_NAME(Type.NONE, "Steam Cracker"), "steamcracker", HVU, 4000, highVoltageCableDescriptor));
+    }
+
+    /** The Desulfuriser (the rubber chain's oil route, 2026-11-07): in line on a cut's pipe, 230 V, 1 kW. Model
+     *  mods.eln.cad.models.Desulfuriser. */
+    public static void registerDesulfuriser(int id) {
+        transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.transparentnode.desulfuriser.DesulfuriserDescriptor(
+            TR_NAME(Type.NONE, "Desulfuriser"), "desulfuriser", MVU, 1000, meduimVoltageCableDescriptor));
+    }
+
+    /** The Carbon Black Burner (the rubber chain's oil route, 2026-11-07). Model mods.eln.cad.models.CarbonBlackBurner. */
+    public static void registerCarbonBlackBurner(int id) {
+        transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.transparentnode.carbonblack.CarbonBlackBurnerDescriptor(
+            TR_NAME(Type.NONE, "Carbon Black Burner"), "carbonblackburner"));
+    }
+
+    /** The Industrial Resin Collector (Baughn 2026-11-07, the rubber chain): taps a trunk for latex on 230 V. Model
+     *  mods.eln.cad.models.ResinCollector. */
+    public static void registerResinCollector(int id) {
+        transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.transparentnode.resincollector.IndustrialResinCollectorDescriptor(
+            TR_NAME(Type.NONE, "Industrial Resin Collector"), "resincollector230", MVU, 200, meduimVoltageCableDescriptor));
+    }
+
+    /**
+     * The wire-drawing machines (Baughn 2026-11-06, Wires stage 4): cable kits and windings to any spec; the 48 V one up
+     * to 6 mm² and 230 V insulation, the 230 V one everything. Model mods.eln.cad.models.WireDrawer.
+     */
+    public static void registerWireDrawing(int id) {
+        transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.transparentnode.wiredrawing.WireDrawingDescriptor(
+            TR_NAME(Type.NONE, "48V Wire Drawing Machine"), "wiredrawer48", LVU, 400, lowVoltageCableDescriptor, 6, 2,
+            mods.eln.node.voxel.CableSpec.BROWN));
+        transparentNodeItem.addDescriptor(4 + (id << 6), new mods.eln.transparentnode.wiredrawing.WireDrawingDescriptor(
+            TR_NAME(Type.NONE, "230V Wire Drawing Machine"), "wiredrawer230", MVU, 1600, meduimVoltageCableDescriptor,
+            mods.eln.node.voxel.CableSpec.MM2.length - 1, 4, mods.eln.node.voxel.CableSpec.BLACK));
     }
 
     /** The electrical anvil (Baughn 2026-10-28): a workshop desk on 800 V; model mods.eln.cad.models.ElectricalAnvil. */
@@ -61,24 +114,27 @@ public class Wp10aContent implements ElnContent {
         transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.oil.ColumnDescriptor(TR_NAME(Type.NONE, "Fractionating Column Base"), true, "columnbase"));
         transparentNodeItem.addDescriptor(4 + (id << 6), new mods.eln.oil.ColumnDescriptor(TR_NAME(Type.NONE, "Fractionating Column Segment"), false, "columnsegment"));
         transparentNodeItem.addDescriptor(8 + (id << 6), new mods.eln.oil.FlareStackDescriptor(TR_NAME(Type.NONE, "Flare Stack"), "flarestack"));
+        // Baughn 2026-11-15: a Large Boiler of alloy plate, about four Boilers, 2x2x2 blocks (here: the steam group 82 is
+        // full). Sub-id 12 was its one-block prototype, never shipped: left unused. Its own model (largeboiler, todo #522).
+        transparentNodeItem.addDescriptor(16 + (id << 6), mods.eln.oil.BoilerDescriptor.twoByTwo(TR_NAME(Type.NONE, "Large Boiler"), "largeboiler"));
     }
 
     /** 26.x oil & steam: electric heaters and the boiler (placeholder models). */
     public static void registerSteam(int id) {
         // (a burnt heater gets a new heating corp, overvoltage or overheat)
-        var heater50 = new mods.eln.oil.ElectricHeaterDescriptor(TR_NAME(Type.NONE, "50V Electric Heater"),
+        var heater50 = new mods.eln.oil.ElectricHeaterDescriptor(TR_NAME(Type.NONE, "48V Electric Heater"),
             LVU, 1000, lowVoltageCableDescriptor, "electricheater50v");
-        heater50.repairPart = "50V Copper Heating Corp";
+        heater50.repairPart = "48V Copper Heating Corp";
         transparentNodeItem.addDescriptor(0 + (id << 6), heater50);
-        var heater200 = new mods.eln.oil.ElectricHeaterDescriptor(TR_NAME(Type.NONE, "200V Electric Heater"),
+        var heater200 = new mods.eln.oil.ElectricHeaterDescriptor(TR_NAME(Type.NONE, "230V Electric Heater"),
             MVU, 4000, meduimVoltageCableDescriptor, "electricheater200v");
-        heater200.repairPart = "200V Copper Heating Corp";
+        heater200.repairPart = "230V Copper Heating Corp";
         transparentNodeItem.addDescriptor(4 + (id << 6), heater200);
         transparentNodeItem.addDescriptor(8 + (id << 6), new mods.eln.oil.BoilerDescriptor(TR_NAME(Type.NONE, "Boiler"), "boiler"));
         // Baughn: small steam turbines with the generator built in; they replace the heat turbines (now uncraftable)
-        transparentNodeItem.addDescriptor(12 + (id << 6), new mods.eln.oil.SteamGeneratorDescriptor(TR_NAME(Type.NONE, "50V Steam Turbine"),
+        transparentNodeItem.addDescriptor(12 + (id << 6), new mods.eln.oil.SteamGeneratorDescriptor(TR_NAME(Type.NONE, "48V Steam Turbine"),
             LVU, 1000, lowVoltageCableDescriptor, "steamturbine50v"));
-        transparentNodeItem.addDescriptor(16 + (id << 6), new mods.eln.oil.SteamGeneratorDescriptor(TR_NAME(Type.NONE, "200V Steam Turbine"),
+        transparentNodeItem.addDescriptor(16 + (id << 6), new mods.eln.oil.SteamGeneratorDescriptor(TR_NAME(Type.NONE, "230V Steam Turbine"),
             MVU, 4000, meduimVoltageCableDescriptor, "steamturbine200v"));
         // the steam oven (Baughn 2026-10-23): food cooked with a pipe's steam; model mods.eln.cad.models.SteamOven
         transparentNodeItem.addDescriptor(20 + (id << 6), new mods.eln.oil.SteamOvenDescriptor(TR_NAME(Type.NONE, "Steam Oven"), "steamoven"));
@@ -88,50 +144,56 @@ public class Wp10aContent implements ElnContent {
         transparentNodeItem.addDescriptor(32 + (id << 6), new mods.eln.oil.CondenserDescriptor(TR_NAME(Type.NONE, "Steam Condenser"),
             4000, 0.02, "condenser200v"));
         // the bootstrap turbine (Baughn 2026-10-27): heat and water in, 50 V out, its control and condenser built in
-        transparentNodeItem.addDescriptor(36 + (id << 6), new mods.eln.oil.CompactTurbineDescriptor(TR_NAME(Type.NONE, "50V Compact Steam Turbine"),
+        transparentNodeItem.addDescriptor(36 + (id << 6), new mods.eln.oil.CompactTurbineDescriptor(TR_NAME(Type.NONE, "48V Compact Steam Turbine"),
             LVU, 300, lowVoltageCableDescriptor, "compactturbine50v"));
         // the shaft redo (Baughn 2026-10-29): tanks (steam drum, separator, hotwell) and an inline feed pump
         transparentNodeItem.addDescriptor(40 + (id << 6), new mods.eln.oil.TankDescriptor(TR_NAME(Type.NONE, "Iron Tank"),
             mods.eln.oil.TankDescriptor.bucketsVolume(12), 10e5, 40e5, "tankiron"));   // (12 buckets a block: Baughn 2026-10-29)
         transparentNodeItem.addDescriptor(44 + (id << 6), new mods.eln.oil.TankDescriptor(TR_NAME(Type.NONE, "Alloy Tank"),
             mods.eln.oil.TankDescriptor.bucketsVolume(12), 100e5, 300e5, "tankalloy"));
-        transparentNodeItem.addDescriptor(48 + (id << 6), new mods.eln.oil.InlinePumpDescriptor(TR_NAME(Type.NONE, "200V Inline Pump"),
+        transparentNodeItem.addDescriptor(48 + (id << 6), new mods.eln.oil.InlinePumpDescriptor(TR_NAME(Type.NONE, "230V Inline Pump"),
             MVU, meduimVoltageCableDescriptor, "inlinepump200v"));
+        // the air blower (todo #471): air into a pipe for forced-draught burners; its own model, an intake grille on its left
+        // flank and the outlet flange on its right (todo #519)
+        transparentNodeItem.addDescriptor(20 + (84 << 6), new mods.eln.oil.AirBlowerDescriptor(TR_NAME(Type.NONE, "230V Air Blower"),
+            MVU, meduimVoltageCableDescriptor, "airblower200v"));
+        // the pipe mixer: a T of two check valves steered by a signal (Baughn 2026-11-11)
+        transparentNodeItem.addDescriptor(60 + (id << 6), new mods.eln.oil.PipeMixerDescriptor(TR_NAME(Type.NONE, "Pipe Mixer"), "pipemixer"));
         // ... and the plant condenser for the shaft turbines (the add-on condensers above stay as they are)
         transparentNodeItem.addDescriptor(52 + (id << 6), new mods.eln.oil.PlantCondenserDescriptor(TR_NAME(Type.NONE, "Plant Steam Condenser"),
             0.06, 40000, mods.eln.mechanical.SteamTurbineSpec.HP, "plantcondenser"));
-        // the counterflow heat exchanger (economizer, reheater, steam raiser: Baughn 2026-10-29): 12.5 W/K a block, 50 a 2 x 2 slice; 8 L a side a block
+        // the counterflow heat exchanger (economizer, reheater, steam raiser: Baughn 2026-10-29): 12.5 W/K a block, 50 a 2 x 2 slice; 1 B a side a block (Baughn 2026-11-15)
         transparentNodeItem.addDescriptor(56 + (id << 6), new mods.eln.oil.HeatExchangerDescriptor(TR_NAME(Type.NONE, "Counterflow Heat Exchanger"),
-            mods.eln.oil.HeatExchangerDescriptor.SLICE_UA / 4, 0.008, "heatexchanger"));
+            mods.eln.oil.HeatExchangerDescriptor.SLICE_UA / 4, mods.eln.oil.HeatExchangerDescriptor.SIDE_VOLUME, "heatexchanger"));
     }
 
     /** 26.x oil: the pump (on well casing; oil lakes and water). Model: mods.eln.cad.models.OilPump. */
     public static void registerOilPump(int id) {
-        transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.oil.OilPumpDescriptor(TR_NAME(Type.NONE, "50V Oil Pump"),
+        transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.oil.OilPumpDescriptor(TR_NAME(Type.NONE, "48V Oil Pump"),
             LVU, 1000, lowVoltageCableDescriptor, "oilpump50v"));
-        transparentNodeItem.addDescriptor(4 + (id << 6), new mods.eln.oil.OilPumpDescriptor(TR_NAME(Type.NONE, "200V Oil Pump"),
+        transparentNodeItem.addDescriptor(4 + (id << 6), new mods.eln.oil.OilPumpDescriptor(TR_NAME(Type.NONE, "230V Oil Pump"),
             MVU, 4000, meduimVoltageCableDescriptor, "oilpump200v"));
         // the steam injection wellhead (todo #138; Baughn 2026-10-30: enhanced recovery by steam, not water)
         transparentNodeItem.addDescriptor(16 + (id << 6), new mods.eln.oil.SteamInjectionDescriptor(TR_NAME(Type.NONE, "Steam Injection Wellhead"),
             "oilpump50v"));
         // Baughn 2026-10-25: small waterlogged pumps for a boiler's feed, a few turbines' worth of water each
-        transparentNodeItem.addDescriptor(8 + (id << 6), new mods.eln.oil.SubmersiblePumpDescriptor(TR_NAME(Type.NONE, "50V Submersible Pump"),
+        transparentNodeItem.addDescriptor(8 + (id << 6), new mods.eln.oil.SubmersiblePumpDescriptor(TR_NAME(Type.NONE, "48V Submersible Pump"),
             LVU, 100, 1000, 6e5, lowVoltageCableDescriptor, "submersiblepump50v"));
-        transparentNodeItem.addDescriptor(12 + (id << 6), new mods.eln.oil.SubmersiblePumpDescriptor(TR_NAME(Type.NONE, "200V Submersible Pump"),
+        transparentNodeItem.addDescriptor(12 + (id << 6), new mods.eln.oil.SubmersiblePumpDescriptor(TR_NAME(Type.NONE, "230V Submersible Pump"),
             MVU, 400, 4000, 15e5, meduimVoltageCableDescriptor, "submersiblepump200v"));
     }
 
     /** 26.x oil: the tar sand separator (notes/oil; model mods.eln.cad.models.TarSandSeparator, drawn as a macerator). */
     public static void registerOilSeparator(int id) {
         {
-            String name = TR_NAME(Type.NONE, "50V Tar Sand Separator");
+            String name = TR_NAME(Type.NONE, "48V Tar Sand Separator");
             var desc = new mods.eln.transparentnode.electricalmachine.OilSeparatorDescriptor(name, "tarsandseparator50v", LVU, 200, LVU * 1.25,
                 new ThermalLoadInitializer(80, -100, 10, 100000.0), lowVoltageCableDescriptor, mods.eln.Eln.separatorRecipes);
             transparentNodeItem.addDescriptor(0 + (id << 6), desc);
             desc.setRunningSound("eln:separator");   // (Baughn's recording, 2026-11-03: squishier than the macerator)
         }
         {
-            String name = TR_NAME(Type.NONE, "200V Tar Sand Separator");
+            String name = TR_NAME(Type.NONE, "230V Tar Sand Separator");
             var desc = new mods.eln.transparentnode.electricalmachine.OilSeparatorDescriptor(name, "tarsandseparator200v", MVU, 2000, MVU * 1.25,
                 new ThermalLoadInitializer(80, -100, 10, 100000.0), meduimVoltageCableDescriptor, mods.eln.Eln.separatorRecipes);
             transparentNodeItem.addDescriptor(4 + (id << 6), desc);
@@ -202,6 +264,13 @@ public class Wp10aContent implements ElnContent {
                 obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), 0.5f);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+        {
+            // Baughn 2026-11-06: a signal on its front taps the secondary
+            name = TR_NAME(Type.NONE, "Signal-Tapped DC-DC Converter");
+            TransformerDescriptor desc = new mods.eln.transparentnode.transformer.VariableTransformerDescriptor(name,
+                obj.getObj("transformator"), obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), 0.5f);
+            transparentNodeItem.addDescriptor(mods.eln.transparentnode.transformer.VariableTransformerDescriptor.ID, desc);
+        }
 
     }
 
@@ -254,7 +323,7 @@ public class Wp10aContent implements ElnContent {
         String name;
         {
             subId = 0;
-            name = TR_NAME(Type.NONE, "50V Macerator");
+            name = TR_NAME(Type.NONE, "48V Macerator");
 
             MaceratorDescriptor desc = new MaceratorDescriptor(name,
                 "maceratora", LVU, 200,// double nominalU,double nominalP,
@@ -269,7 +338,7 @@ public class Wp10aContent implements ElnContent {
 
         {
             subId = 4;
-            name = TR_NAME(Type.NONE, "200V Macerator");
+            name = TR_NAME(Type.NONE, "230V Macerator");
 
             MaceratorDescriptor desc = new MaceratorDescriptor(name,
                 "maceratorb", MVU, 2000,// double nominalU,double nominalP,
@@ -290,7 +359,7 @@ public class Wp10aContent implements ElnContent {
         String name;
         {
             subId = 0;
-            name = TR_NAME(Type.NONE, "50V Plate Machine");
+            name = TR_NAME(Type.NONE, "48V Plate Machine");
 
             PlateMachineDescriptor desc = new PlateMachineDescriptor(
                 name,// String name,
@@ -308,7 +377,7 @@ public class Wp10aContent implements ElnContent {
 
         {
             subId = 4;
-            name = TR_NAME(Type.NONE, "200V Plate Machine");
+            name = TR_NAME(Type.NONE, "230V Plate Machine");
 
             PlateMachineDescriptor desc = new PlateMachineDescriptor(
                 name,// String name,
@@ -332,7 +401,7 @@ public class Wp10aContent implements ElnContent {
         String name;
         {
             subId = 0;
-            name = TR_NAME(Type.NONE, "50V Egg Incubator");
+            name = TR_NAME(Type.NONE, "48V Egg Incubator");
 
             EggIncubatorDescriptor desc = new EggIncubatorDescriptor(
                 name, obj.getObj("eggincubator"),
@@ -349,7 +418,7 @@ public class Wp10aContent implements ElnContent {
         String name;
         {
             subId = 0;
-            name = TR_NAME(Type.NONE, "50V Compressor");
+            name = TR_NAME(Type.NONE, "48V Compressor");
 
             CompressorDescriptor desc = new CompressorDescriptor(
                 name,// String name,
@@ -368,9 +437,10 @@ public class Wp10aContent implements ElnContent {
 
         {
             subId = 4;
-            name = TR_NAME(Type.NONE, "200V Compressor");
+            name = TR_NAME(Type.NONE, "230V Compressor");
 
-            CompressorDescriptor desc = new CompressorDescriptor(
+            // (the rubber chain, 2026-11-07: latex ports on its back and the dandelion recipe)
+            CompressorDescriptor desc = new mods.eln.transparentnode.electricalmachine.CompressorPortsDescriptor(
                 name,// String name,
                 obj.getObj("compressorb"),
                 MVU, 2000,// double nominalU,double nominalP,
@@ -392,7 +462,7 @@ public class Wp10aContent implements ElnContent {
         String name;
         {
             subId = 0;
-            name = TR_NAME(Type.NONE, "50V Magnetizer");
+            name = TR_NAME(Type.NONE, "48V Magnetizer");
 
             MagnetizerDescriptor desc = new MagnetizerDescriptor(
                 name,// String name,
@@ -410,7 +480,7 @@ public class Wp10aContent implements ElnContent {
 
         {
             subId = 4;
-            name = TR_NAME(Type.NONE, "200V Magnetizer");
+            name = TR_NAME(Type.NONE, "230V Magnetizer");
 
             MagnetizerDescriptor desc = new MagnetizerDescriptor(
                 name,// String name,

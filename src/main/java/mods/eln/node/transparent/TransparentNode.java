@@ -21,7 +21,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-public class TransparentNode extends Node {
+public class TransparentNode extends Node implements mods.eln.bus.BusPeer, mods.eln.node.FacePins {
 
     public TransparentNodeElement element;
 
@@ -49,6 +49,9 @@ public class TransparentNode extends Node {
         super.readFromNBT(nbt.getCompoundOrEmpty("node"));
 
         elementId = nbt.getShortOr("eid", (short) 0);
+        CompoundTag savedElement = nbt.getCompoundOrEmpty("element");
+        if (elementId == mods.eln.transparentnode.converter.VariableDcDcDescriptor.ID && savedElement.contains("tapTurns"))
+            elementId = mods.eln.transparentnode.transformer.VariableTransformerDescriptor.ID;
         // No device of this id in this version (removed or renamed), or it can't be built: throw, so that
         // NodeManager keeps the saved tag as an orphan instead of holding a node with no element.
         TransparentNodeDescriptor descriptor = Eln.transparentNodeItem.getDescriptor(elementId);
@@ -58,7 +61,7 @@ public class TransparentNode extends Node {
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException("cannot build transparent node device " + elementId, e);
         }
-        element.readFromNBT(nbt.getCompoundOrEmpty("element"));
+        element.readFromNBT(savedElement);
 
     }
 
@@ -216,6 +219,11 @@ public class TransparentNode extends Node {
     }
 
     @Override
+    public boolean timeExempt() {
+        return element != null && element.timeExempt();
+    }
+
+    @Override
     public boolean hasGui(Direction side) {
         if (element == null || element.isBurnt()) return false;
         return element.hasGui();
@@ -254,7 +262,16 @@ public class TransparentNode extends Node {
         super.connectJob();
         // A burnt element keeps only its thermal loads in the simulation (see TransparentNodeElement.connectBurntJob).
         if (element.isBurnt()) element.connectBurntJob();
-        else element.connectJob();
+        else {
+            element.connectJob();
+            // its bus ports: linked to a voxel bus cable on their face (the cable links back from its side)
+            for (Direction side : Direction.values())
+                if (getNeighbor(side) instanceof mods.eln.node.voxel.VoxelNode v && v.isAdded()) {
+                    if (element.busPortOn(side) instanceof mods.eln.bus.BusPort bp)
+                        for (mods.eln.misc.LRDU l : mods.eln.misc.LRDU.values()) mods.eln.bus.BusNet.link(bp, v.busPortAt(side.getInverse(), l));
+                    v.connectPeerPins(side.getInverse(), this);   // (its pins: the voxel cables ending at them)
+                }
+        }
     }
 
     @Override
@@ -262,6 +279,22 @@ public class TransparentNode extends Node {
         super.disconnectJob();
         if (element.isBurnt()) element.disconnectBurntJob();
         else element.disconnectJob();
+        java.util.Set<mods.eln.bus.BusPort> ports = new java.util.HashSet<>();
+        for (Direction side : Direction.values()) {
+            if (element.busPortOn(side) instanceof mods.eln.bus.BusPort bp) ports.add(bp);
+            for (var pin : element.facePins(side)) if (pin.bus() != null) ports.add(pin.bus());
+        }
+        if (!ports.isEmpty()) mods.eln.bus.BusNet.detach(ports);
+    }
+
+    @Override
+    public mods.eln.bus.BusPort busPortOn(Direction side) {
+        return element == null || element.isBurnt() ? null : element.busPortOn(side);
+    }
+
+    @Override
+    public java.util.List<FacePin> facePins(Direction side) {
+        return element == null || element.isBurnt() ? java.util.List.of() : element.facePins(side);
     }
 
     @Override

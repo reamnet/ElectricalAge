@@ -70,7 +70,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 0;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 50V Copper Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 48V Copper Heating Corp"),// iconId,
                 // name,
                 LVU, 150,// electricalNominalU, electricalNominalP,
                 190,// electricalMaximalP)
@@ -81,7 +81,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 1;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "50V Copper Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "48V Copper Heating Corp"),// iconId,
                 // name,
                 LVU, 250,// electricalNominalU, electricalNominalP,
                 320,// electricalMaximalP)
@@ -91,7 +91,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 2;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 200V Copper Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 230V Copper Heating Corp"),// iconId,
                 // name,
                 MVU, 400,// electricalNominalU, electricalNominalP,
                 500,// electricalMaximalP)
@@ -101,7 +101,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 3;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "200V Copper Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "230V Copper Heating Corp"),// iconId,
                 // name,
                 MVU, 600,// electricalNominalU, electricalNominalP,
                 750,// electricalMaximalP)
@@ -111,7 +111,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 4;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 50V Iron Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 48V Iron Heating Corp"),// iconId,
                 // name,
                 LVU, 180,// electricalNominalU, electricalNominalP,
                 225,// electricalMaximalP)
@@ -122,7 +122,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 5;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "50V Iron Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "48V Iron Heating Corp"),// iconId,
                 // name,
                 LVU, 375,// electricalNominalU, electricalNominalP,
                 480,// electricalMaximalP)
@@ -132,7 +132,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 6;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 200V Iron Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 230V Iron Heating Corp"),// iconId,
                 // name,
                 MVU, 600,// electricalNominalU, electricalNominalP,
                 750,// electricalMaximalP)
@@ -142,7 +142,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 7;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "200V Iron Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "230V Iron Heating Corp"),// iconId,
                 // name,
                 MVU, 900,// electricalNominalU, electricalNominalP,
                 1050,// electricalMaximalP)
@@ -152,7 +152,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 8;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 50V Tungsten Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 48V Tungsten Heating Corp"),// iconId,
                 // name,
                 LVU, 240,// electricalNominalU, electricalNominalP,
                 300,// electricalMaximalP)
@@ -163,7 +163,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 9;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "50V Tungsten Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "48V Tungsten Heating Corp"),// iconId,
                 // name,
                 LVU, 500,// electricalNominalU, electricalNominalP,
                 640,// electricalMaximalP)
@@ -174,7 +174,7 @@ public class Wp12aContent implements ElnContent {
             subId = 10;
             completId = subId + (id << 6);
             element = new HeatingCorpElement(
-                TR_NAME(Type.NONE, "Small 200V Tungsten Heating Corp"),// iconId, name,
+                TR_NAME(Type.NONE, "Small 230V Tungsten Heating Corp"),// iconId, name,
                 MVU, 800,// electricalNominalU, electricalNominalP,
                 1000,// electricalMaximalP)
                 meduimVoltageCableDescriptor);
@@ -183,7 +183,7 @@ public class Wp12aContent implements ElnContent {
         {
             subId = 11;
             completId = subId + (id << 6);
-            element = new HeatingCorpElement(TR_NAME(Type.NONE, "200V Tungsten Heating Corp"),// iconId,
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "230V Tungsten Heating Corp"),// iconId,
                 // name,
                 MVU, 1200,// electricalNominalU, electricalNominalP,
                 1500,// electricalMaximalP)
@@ -278,6 +278,8 @@ public class Wp12aContent implements ElnContent {
                 TR_NAME(Type.NONE, "Cheap Ferromagnetic Core"), obj.getObj("feromagneticcorea"),// iconId,
                 // name,
                 10);
+            element.voltsPerTurn = 4;   // (Baughn 2026-11-06: saturation)
+            element.window = 150;   // (turns x mm² of both windings, Wires stage 4)
             sharedItem.addElement(completId, element);
         }
         {
@@ -287,6 +289,8 @@ public class Wp12aContent implements ElnContent {
                 TR_NAME(Type.NONE, "Average Ferromagnetic Core"), obj.getObj("feromagneticcorea"),// iconId,
                 // name,
                 4);
+            element.voltsPerTurn = 8;   // (Baughn 2026-11-06: saturation)
+            element.window = 300;   // (turns x mm² of both windings, Wires stage 4)
             sharedItem.addElement(completId, element);
         }
         {
@@ -296,7 +300,37 @@ public class Wp12aContent implements ElnContent {
                 TR_NAME(Type.NONE, "Optimal Ferromagnetic Core"), obj.getObj("feromagneticcorea"),// iconId,
                 // name,
                 1);
+            element.voltsPerTurn = 16;   // (Baughn 2026-11-06: saturation)
+            element.window = 800;   // (turns x mm² of both windings, Wires stage 4)
             sharedItem.addElement(completId, element);
+        }
+        // the better cores' intermediates (Baughn 2026-11-06: three separate recipes, the better cores costly)
+        {
+            subId = 3;
+            completId = subId + (id << 6);
+            sharedItem.addElement(completId, new mods.eln.generic.GenericItemUsingDamageDescriptor(
+                TR_NAME(Type.NONE, "Silicon Steel Laminations")) {
+                @Override
+                public void addInformation(net.minecraft.world.item.ItemStack s, net.minecraft.world.entity.player.Player p, java.util.List list, boolean b) {
+                    super.addInformation(s, p, list, b);
+                    java.util.Collections.addAll(list, mods.eln.i18n.I18N.tr("Anneal in an Electrical Furnace between\n%1$ and %2$ °C to make an Average\nFerromagnetic Core. Above %3$ °C they spoil.",
+                        (int) mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess.ANNEAL_MIN_C,
+                        (int) mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess.ANNEAL_MAX_C,
+                        (int) mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess.ANNEAL_SPOIL_C).split("\n"));
+                }
+            });
+        }
+        {
+            subId = 4;
+            completId = subId + (id << 6);
+            sharedItem.addElement(completId, new mods.eln.generic.GenericItemUsingDamageDescriptor(
+                TR_NAME(Type.NONE, "Nanocrystalline Core Blank")) {
+                @Override
+                public void addInformation(net.minecraft.world.item.ItemStack s, net.minecraft.world.entity.player.Player p, java.util.List list, boolean b) {
+                    super.addInformation(s, p, list, b);
+                    java.util.Collections.addAll(list, mods.eln.i18n.I18N.tr("Anneal it in a magnetic field: a long\npass through a Magnetizer makes an\nOptimal Ferromagnetic Core.").split("\n"));
+                }
+            });
         }
     }
 
@@ -339,6 +373,9 @@ public class Wp12aContent implements ElnContent {
             tungstenIngot = element;
             // wiki (P4): Data.addResource(element.newItemStack());
             mods.eln.misc.OreDictTags.addToOre(dictTungstenIngot, element);
+            // also in the common tag (c:ingots/tungsten), so other mods' recipes find it (Occultism's crushers made no tungsten
+            // dust: Nero 2026-11-08); EA's own recipes keep the private eln: tag
+            mods.eln.misc.OreDictTags.addToOre("ingotTungsten", element);
         }
 
         {
@@ -472,6 +509,9 @@ public class Wp12aContent implements ElnContent {
             sharedItem.addElement(id, element);
             // wiki (P4): Data.addResource(element.newItemStack());
             mods.eln.misc.OreDictTags.addToOre(dictTungstenDust, element);
+            // also in the common tag (c:dusts/tungsten), so other mods' recipes find it (Occultism's crushers made no tungsten
+            // dust: Nero 2026-11-08); EA's own recipes keep the private eln: tag
+            mods.eln.misc.OreDictTags.addToOre("dustTungsten", element);
         }
 
         {
@@ -1082,13 +1122,14 @@ public class Wp12aContent implements ElnContent {
         }
     }
 
+    /** Fuel burners: 2, 5 and 10 kW at natural draft (Baughn 2026-11-11; were 5, 10 and 25), so forced air means something. */
     public static void registerFuelBurnerItem(int id) {
         sharedItemStackOne.addElement(0 + (id << 6),
-            new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Small Fuel Burner"), 5000 * fuelHeatFurnacePowerFactor, 2, 1.6f));
+            new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Small Fuel Burner"), 2000 * fuelHeatFurnacePowerFactor, 2, 1.6f));
         sharedItemStackOne.addElement(1 + (id << 6),
-            new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Medium Fuel Burner"), 10000 * fuelHeatFurnacePowerFactor, 1, 1.4f));
+            new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Medium Fuel Burner"), 5000 * fuelHeatFurnacePowerFactor, 1, 1.4f));
         sharedItemStackOne.addElement(2 + (id << 6),
-            new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Big Fuel Burner"), 25000 * fuelHeatFurnacePowerFactor, 0, 1f));
+            new FuelBurnerDescriptor(TR_NAME(Type.NONE, "Big Fuel Burner"), 10000 * fuelHeatFurnacePowerFactor, 0, 1f));
     }
     /** ForkPatch 1.21.1 registerArc sub-items in scope (source ItemRegistration.kt, id 69): Graphite Rod (subId 0),
      * 2x Graphite Rods (subId 1), 3x Graphite Rods (subId 2), 4x Graphite Rods (subId 3), Synthetic Diamond (subId 4),

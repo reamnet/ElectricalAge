@@ -14,14 +14,16 @@ public final class ElnConfig {
     static final ModConfigSpec.IntValue AUTOMINER_RANGE;
     static final ModConfigSpec.BooleanValue PROBE_DETAILS;
     static final ModConfigSpec.BooleanValue CONVERT_CABLES;
-    static final ModConfigSpec.DoubleValue COAL_LAG, OIL_LAG, MIN_FIRE, COAL_KINDLE, OIL_LIGHT;
+    static final ModConfigSpec.BooleanValue LINKS_BUILD;
+    static final ModConfigSpec.BooleanValue INTROSPECT_REMOTE;
+    static final ModConfigSpec.DoubleValue COAL_LAG, MIN_FIRE, COAL_KINDLE, OIL_LIGHT;
     static final ModConfigSpec.DoubleValue DEPTH_C, DEPTH_PER_BLOCK, NETHER_C, HEAT_FURNACE_FUEL;
     static final ModConfigSpec.DoubleValue BIKE_POWERED, BIKE_PEDALLING, BIKE_WINDOW, BIKE_MOTOR, BIKE_TIP_DELAY, BIKE_TIP_CHANCE,
         BIKE_CRASH, BIKE_JUMP, BIKE_STEP, BIKE_TURN, BIKE_TURN_TOP, BIKE_LAMP, TERRAIN_STEP, TERRAIN_JUMP, TERRAIN_MOTOR;
     static final ModConfigSpec.DoubleValue ANVIL_POWER, ANVIL_UNIT, ANVIL_NAME, ANVIL_RESUME, ANVIL_SAG, ANVIL_GAP, ANVIL_PLATEAU;
     static final ModConfigSpec.IntValue ANVIL_BURSTS;
     static final ModConfigSpec.DoubleValue BANK_FARADS, BANK_VOLTS, BANK_LEAK, POWER_CAP_LEAK;
-    static final ModConfigSpec.DoubleValue LAKE_SIZE, TAIL_SHARE, SEEP_SHARE, STEAM_PER_BUCKET;
+    static final ModConfigSpec.DoubleValue LAKE_SIZE, FULL_AT, SEEP_SHARE, STEAM_SHARE, STEAM_PER_BUCKET;
 
     public static double sourceLampHours(int technology) {return SPEC.isLoaded()?SOURCE_LAMP_HOURS[technology].get():new double[]{24,12,168,48,672,96}[technology];}
     public static boolean sourceLampInfinite(int technology) {return SPEC.isLoaded()&&SOURCE_LAMP_INFINITE[technology].get();}
@@ -49,7 +51,7 @@ public final class ElnConfig {
         b.push("fire");
         COAL_LAG = b.comment("Seconds a coal fire (the stone heat furnace) takes to follow its setting: a first-order lag (Baughn: coal",
                 "plants change burn rate slowly).").defineInRange("coalLagSeconds", 180.0, 0.0, 3600.0);
-        OIL_LAG = b.comment("The same for an oil burner (the fuel heat furnace).").defineInRange("oilLagSeconds", 20.0, 0.0, 3600.0);
+        // (no oil lag: the fuel heat furnace's inertia is its burner's mass, Baughn 2026-11-11)
         MIN_FIRE = b.comment("Below this share of full power a fire asked to burn lower goes out.").defineInRange("minFire", 0.15, 0.0, 1.0);
         COAL_KINDLE = b.comment("Seconds to relight a coal fire that went out.").defineInRange("coalKindleSeconds", 30.0, 0.0, 3600.0);
         OIL_LIGHT = b.comment("Seconds to light an oil burner.").defineInRange("oilLightSeconds", 3.0, 0.0, 3600.0);
@@ -66,6 +68,9 @@ public final class ElnConfig {
         CONVERT_CABLES = b.comment("Convert six-node cables to voxel cables as their chunks load (blocks holding only cables; the",
                 "six-node block is kept inside for /elnlab voxelcables revert). Off until the conversion is approved.")
             .define("convertOnLoad", false);
+        LINKS_BUILD = b.comment("Build voxel cables' connections from their stored joints (routing phase 3b); false: from the",
+                "connection rules directly, as before (the joints are still recorded). A quick revert without a jar swap.")
+            .define("linksBuild", true);
         b.pop();
         // the electric bike (Baughn 2026-10-28: "might adjust values in playtesting"): synced, as the rider's client moves it
         b.push("bike");
@@ -81,20 +86,20 @@ public final class ElnConfig {
             .defineInRange("tipOverDelaySeconds", 5.0, 0.0, 3600.0);
         BIKE_TIP_CHANCE = b.comment("Chance per second, after that, that it falls over with its rider (0 never).")
             .defineInRange("tipOverChancePerSecond", 0.1, 0.0, 1.0);
-        BIKE_CRASH = b.comment("Running into a full block or a wall faster than this (blocks per second) throws the rider off.")
+        BIKE_CRASH = b.comment("Losing more than this much speed (blocks per second) against a block or wall while on the ground throws the rider off; brushing past or bumping in the air doesn't.")
             .defineInRange("crashSpeed", 3.0, 0.0, 100.0);
         BIKE_JUMP = b.comment("Height of a full-charge jump, blocks (1.31: one block with room, never 1.5).")
             .defineInRange("jumpHeight", 1.31, 0.0, 5.0);
-        BIKE_STEP = b.comment("Height it rides up without jumping, blocks (0.6: slabs and stairs; 1 or more climbs full blocks).")
-            .defineInRange("stepHeight", 0.6, 0.0, 2.0);
+        BIKE_STEP = b.comment("Height it rides up without jumping, blocks (0.63: slabs and stairs, also from a dirt path or mud, which sit up to 1/8 low; 1 or more climbs full blocks).")
+            .defineInRange("stepHeight", 0.63, 0.0, 2.0);
         BIKE_TURN = b.comment("How fast it swings round to where the rider looks when slow, degrees per tick.")
             .defineInRange("turnRate", 12.0, 0.5, 180.0);
         BIKE_TURN_TOP = b.comment("...and at its powered top speed and above (Baughn: steering slows with speed); linear between.")
             .defineInRange("turnRateAtTopSpeed", 5.0, 0.5, 180.0);
         BIKE_LAMP = b.comment("The front lamp's draw from the trunk battery, W (both bikes; a flashlight's is 20-50).")
             .defineInRange("lampWatts", 20.0, 0.0, 1000.0);
-        TERRAIN_STEP = b.comment("The terrain bike: height it rides up without jumping, blocks (1: a whole block; 2-block walls stop it).")
-            .defineInRange("terrainStepHeight", 1.0, 0.0, 2.0);
+        TERRAIN_STEP = b.comment("The terrain bike: height it rides up without jumping, blocks (1.13: a whole block, also from a dirt path or mud, which sit up to 1/8 low; 1.5 stops it).")
+            .defineInRange("terrainStepHeight", 1.13, 0.0, 2.0);
         TERRAIN_JUMP = b.comment("The terrain bike: height of a full-charge jump, blocks.")
             .defineInRange("terrainJumpHeight", 2.5, 0.0, 6.0);
         TERRAIN_MOTOR = b.comment("The terrain bike: its motor's draw at full speed, W (same top speed as the electric bike).")
@@ -102,12 +107,12 @@ public final class ElnConfig {
         b.pop();
         // the electrical anvil (Baughn 2026-10-28: an 800 V pulse, maxed out, so players build capacitor banks)
         b.push("anvil");
-        ANVIL_POWER = b.comment("The electrical anvil's draw while it welds, W, at 800 V (the high-voltage cable's rating: 5000).")
+        ANVIL_POWER = b.comment("The electrical anvil's draw while it welds, W, at 400 V (the high-voltage cable's rating: 5000).")
             .defineInRange("power", 5000.0, 10.0, 1e6);
         ANVIL_UNIT = b.comment("Energy for a unit of repair material's worth of repair (a quarter of the tool), J (40000: 8 s at 5 kW).")
             .defineInRange("joulesPerUnit", 40000.0, 0.0, 1e9);
         ANVIL_NAME = b.comment("Energy to engrave a new name, J.").defineInRange("joulesPerName", 2000.0, 0.0, 1e9);
-        ANVIL_RESUME = b.comment("It starts a pulse when the line is at this share of 800 V...").defineInRange("resumeFraction", 0.95, 0.0, 2.0);
+        ANVIL_RESUME = b.comment("It starts a pulse when the line is at this share of 400 V...").defineInRange("resumeFraction", 0.95, 0.0, 2.0);
         ANVIL_PLATEAU = b.comment("...or, when the line has stopped rising for 2 s, at this share or more (a bank on a weak plant levels off",
                 "below resumeFraction: its leak).").defineInRange("plateauFraction", 0.93, 0.0, 2.0);
         ANVIL_SAG = b.comment("...and pauses (keeping its progress) when it sags below this share.").defineInRange("sagFraction", 0.9, 0.0, 2.0);
@@ -116,12 +121,12 @@ public final class ElnConfig {
         ANVIL_GAP = b.comment("Seconds of rest between bursts, at least; it also waits for the line to be back at resumeFraction.")
             .defineInRange("burstGapSeconds", 3.0, 0.0, 600.0);
         b.pop();
-        // the capacitor bank (Baughn 2026-10-28): one carries one anvil burst (20 kJ from 800 V down to 720 V)
+        // the capacitor bank (Baughn 2026-10-28): one carries one anvil burst (20 kJ from 400 V down to 360 V)
         b.push("capacitorBank");
-        BANK_FARADS = b.comment("The capacitor bank's capacitance, F (0.36: one anvil burst from 800 V to 720 V needs 0.33).")
-            .defineInRange("farads", 0.36, 0.001, 100.0);
-        BANK_VOLTS = b.comment("Its rating, V: it pops above 1.3 times it, as the Power Capacitor does.").defineInRange("ratedVolts", 1000.0, 1.0, 100000.0);
-        BANK_LEAK = b.comment("Its leakage time constant R C, s (1800: at 800 V it leaks ~130 W, and keeps 2% of its charge after an hour).",
+        BANK_FARADS = b.comment("The capacitor bank's capacitance, F (1.44: one anvil burst from 400 V to 360 V needs 1.32).")
+            .defineInRange("capacitanceFarads", 1.44, 0.001, 100.0);   // (renamed from 1.12-era "farads" = 0.36 at 800 V, so old configs don't keep it)
+        BANK_VOLTS = b.comment("Its rating, V: it pops above 1.3 times it, as the Power Capacitor does.").defineInRange("ratingVolts", 500.0, 1.0, 100000.0);   // (renamed from "ratedVolts" = 1000)
+        BANK_LEAK = b.comment("Its leakage time constant R C, s (1800: at 400 V it leaks ~130 W, and keeps 2% of its charge after an hour).",
                 "Batteries are for keeping energy (Baughn); this is for bursts.").defineInRange("leakTauSeconds", 1800.0, 1.0, 1e9);
         POWER_CAP_LEAK = b.comment("The six-node Power Capacitor's leakage time constant R C, s (1800, as the bank; 1.12 had 120000). With four",
                 "Dielectrics a sand a row of them was a cheap bulk store (Baughn 2026-10-28: batteries stay the only sensible one).")
@@ -131,8 +136,10 @@ public final class ElnConfig {
         b.push("oilLakes");
         LAKE_SIZE = b.comment("Generated oil lakes hold this many times the old volume, by going deeper (their footprint is the same).",
                 "New lakes only: a lake keeps the multiplier it was generated with.").defineInRange("sizeMultiplier", 2.0, 0.25, 5.0);
-        TAIL_SHARE = b.comment("Below this share of its capacity an oil lake seeps instead of running dry.").defineInRange("tailShare", 0.2, 0.0, 1.0);
-        SEEP_SHARE = b.comment("A seeping lake yields this share of one 200 V pump's nominal rate, for ever, shared by all the pumps on it.").defineInRange("seepShare", 0.18, 0.0, 1.0);
+        // (new keys 2026-11-11: seepage lerped by fill, Baughn; the old tailShare/seepShare defaults would stay in configs)
+        FULL_AT = b.comment("An oil lake seeps most at and below this share of its capacity; above it the seepage falls linearly to none when full.").defineInRange("seepFullAt", 0.25, 0.0, 1.0);
+        SEEP_SHARE = b.comment("A lake's most seepage, as a share of one 230 V pump's nominal rate, for ever, shared by all the pumps on it.").defineInRange("seepMaxShare", 0.25, 0.0, 1.0);
+        STEAM_SHARE = b.comment("With steam injected, a lake's most seepage rises to this share of one 230 V pump's nominal rate.").defineInRange("seepSteamShare", 1.0, 0.0, 10.0);
         STEAM_PER_BUCKET = b.comment("Steam (kg) injected down a well that brings up a bucket of crude from a seeping lake at the pumps' full rate.")
             .defineInRange("steamKgPerBucket", 0.2, 0.001, 100.0);
         b.pop();
@@ -164,6 +171,12 @@ public final class ElnConfig {
             b.pop();
         }
         b.pop();b.pop();
+
+        b.push("introspect");
+        INTROSPECT_REMOTE = b.comment("Answer an op's client asking for device reports (eln:describe), for test tools on lab servers.",
+                "/eln describe works for ops either way.")
+            .define("remote", false);
+        b.pop();
         SPEC = b.build();
     }
 
@@ -177,10 +190,11 @@ public final class ElnConfig {
         batteryLifeFactor = BATTERY_LIFE_FACTOR.get();
         heatFurnaceFuelFactor = HEAT_FURNACE_FUEL.get();
         Eln.wailaEasyMode = PROBE_DETAILS.get();
+        mods.eln.introspect.Introspect.remote = INTROSPECT_REMOTE.get();
         mods.eln.node.voxel.CableConverter.convertOnLoad = CONVERT_CABLES.get();
+        mods.eln.node.voxel.VoxelNode.linksBuild = LINKS_BUILD.get();
         mods.eln.sim.Fire.COAL.lag = COAL_LAG.get();
         mods.eln.sim.Fire.COAL.kindle = COAL_KINDLE.get();
-        mods.eln.sim.Fire.OIL.lag = OIL_LAG.get();
         mods.eln.sim.Fire.OIL.kindle = OIL_LIGHT.get();
         mods.eln.sim.Fire.minFire = MIN_FIRE.get();
         mods.eln.sim.Ambient.depthC = DEPTH_C.get();
@@ -215,7 +229,8 @@ public final class ElnConfig {
         mods.eln.transparentnode.capacitorbank.CapacitorBankDescriptor.leakTauS = BANK_LEAK.get();
         powerCapacitorLeakTauS = POWER_CAP_LEAK.get();
         mods.eln.oil.OilLakeStructure.sizeMultiplier = LAKE_SIZE.get();
-        mods.eln.oil.OilRecovery.tailShare = TAIL_SHARE.get();
+        mods.eln.oil.OilRecovery.fullAt = FULL_AT.get();
+        mods.eln.oil.OilRecovery.steamShare = STEAM_SHARE.get();
         mods.eln.oil.OilRecovery.seepShare = SEEP_SHARE.get();
         mods.eln.oil.OilRecovery.steamKgPerBucket = STEAM_PER_BUCKET.get();
         if (mods.eln.Eln.sixNodeItem != null)   // (config can load before the devices register; they take it from the field)

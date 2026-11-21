@@ -1,11 +1,11 @@
 package mods.eln.transparentnode
 
+import mods.eln.network.ClientValues
 import mods.eln.sound.LoopedSound
 
 import mods.eln.gl.GL11
 
 import mods.eln.Eln
-import mods.eln.fluid.FuelRegistry
 import mods.eln.fluid.PreciseElementFluidHandler
 import mods.eln.i18n.I18N
 import mods.eln.item.FuelBurnerDescriptor
@@ -65,36 +65,13 @@ class FuelHeatFurnaceDescriptor(name: String, model: Obj3D, val thermal: Thermal
             burners.getOrNull(installedBurner)?.draw()
         }
 
-        if (on) {
-            GL11.glColor3f(0f, 1f, 0f)
-            UtilsClient.drawLight(powerLED)
-        } else {
-            GL11.glColor3f(0.05f, 0.18f, 0.05f)   // (off: dark glass; it looked lit at half green, AdventurAgent)
-            powerLED?.draw()
-        }
-
-        if (heating) {
-            GL11.glColor3f(1f, 0f, 0f)
-            UtilsClient.drawLight(heatLED)
-        } else {
-            GL11.glColor3f(0.2f, 0.04f, 0.04f)
-            heatLED?.draw()
-        }
-        GL11.glColor3f(1f, 1f, 1f)
+        // (off: dark glass; it looked lit at half green, AdventurAgent)
+        mods.eln.anim.Led.draw(powerLED, on, 0f, 1f, 0f, 0.05f, 0.18f, 0.05f)
+        mods.eln.anim.Led.draw(heatLED, heating, 1f, 0f, 0f, 0.2f, 0.04f, 0.04f)
 
         if (glow != null && heating && fire > 0.01f) {   // (only a burning flame: not while it kindles, nor when burnt out)
-            val k = power.coerceIn(0f, 1f)
-            UtilsClient.disableLight()
-            GL11.glColor4f(0.85f + 0.15f * k, 0.38f + 0.54f * k, 0.08f + 0.67f * k * k, 1f)
-            val at = WINDOW_Y0 / 16f - 0.5f
-            GL11.glPushMatrix()
-            GL11.glTranslatef(0f, at, 0f)
-            GL11.glScalef(1f, Math.min(1f, fire), 1f)
-            GL11.glTranslatef(0f, -at, 0f)
-            glow.draw()
-            GL11.glPopMatrix()
-            GL11.glColor4f(1f, 1f, 1f, 1f)
-            UtilsClient.enableLight()
+            mods.eln.anim.Glow.draw({ mods.eln.anim.Fill.drawAbout(glow, WINDOW_Y0 / 16f - 0.5f, Math.min(1f, fire)) },
+                power.coerceIn(0f, 1f), FLAME)
         }
         if (glass != null) {
             UtilsClient.enableBlend()
@@ -105,13 +82,6 @@ class FuelHeatFurnaceDescriptor(name: String, model: Obj3D, val thermal: Thermal
         }
     }
 
-    private var hitbox: ModelHitbox? = null
-
-    /** Its model's hitbox (mods.eln.cad.models.FuelHeater), turned with its front. */
-    override fun modelHitbox(): ModelHitbox? {
-        if (hitbox == null) hitbox = ModelHitbox.of(obj)
-        return hitbox
-    }
 
     override fun hasItemDraw() = true
 
@@ -121,13 +91,17 @@ class FuelHeatFurnaceDescriptor(name: String, model: Obj3D, val thermal: Thermal
     companion object {
         /** The foot of the sight port (px; mods.eln.cad.models.FuelHeater WIN_Y0): the flame is scaled about it. */
         const val WINDOW_Y0 = 6.5f
+        /** The flame's colour by power (0..1), always self-lit. */
+        val FLAME: mods.eln.anim.Glow.Ramp = mods.eln.anim.Glow.ramp({ k -> floatArrayOf(0.85f + 0.15f * k, 0.38f + 0.54f * k, 0.08f + 0.67f * k * k) }, -1f)
     }
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: Player?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
         list.add(I18N.tr("Generates heat when supplied with fuel."))
-        list.add(I18N.tr("Burns gasoline, diesel, heavy oil, residue and crude oil."))
-        list.add(I18N.tr("Crude oil and residue coke its burner: clean it with wool."))
+        list.add(I18N.tr("Burns gasoline, diesel, heavy oil, residue, crude oil and piped fuel gas."))
+        list.add(I18N.tr("Crude, residue and heavy oil coke its burner; clean fuel clears it. Wool cleans it."))
+        list.add(I18N.tr("Fuel flange on top; air port on its back: forced air fires it up to 2.5x."))
+        list.add(I18N.tr("Natural draught can't push its smoke far: a backed-up flue starves its fire."))
         list.add(Utils.plotCelsius(I18N.tr("  Max. temperature: "), thermal.warmLimit))
     }
 }
@@ -140,44 +114,446 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         val SetManualControlValueEvent: Byte = 2
         val SetTemperatureEvent: Byte = 3
         /** The most a burner cokes: it still fires a tenth. */
-        const val COKE_MAX = 0.9
+        const val COKE_MAX = mods.eln.sim.fluid.FuelQuality.FOUL_MAX
+        /**
+         * The coking index (each species' `coking` by its share of what burns: residue 1, heavy oil 0.15, diesel 0.01,
+         * light cuts 0) at which a burner neither cokes nor clears: a plausible refinery's fuel (Baughn 2026-11-11: on
+         * better fuel "the ash gets pulled out with the smoke eventually"). Over it the burner cokes, under it it clears.
+         */
+        const val COKE_BALANCE = mods.eln.sim.fluid.FuelQuality.FURNACE_BALANCE
+        /** Coking per unit of index over the balance: dead crude (index 0.216) cokes at rate 1, as before. */
+        const val COKE_PER_INDEX = mods.eln.sim.fluid.FuelQuality.FOUL_PER_INDEX
+        /**
+         * Its fuel tank (mB, two buckets: Baughn 2026-11-03, it fills by bucket) and its volume (m^3): two buckets under
+         * the view's 95 % fill, with head space over them (AdventurAgent 2026-11-11: a second bucket didn't fit).
+         */
+        const val TANK_MB = 2000.0
+        const val TANK_FILL = 0.95
+        val TANK_M3 = TANK_MB / TANK_FILL * 1.01 * mods.eln.sim.fluid.EaUnits.KG_PER_MB_WATER / mods.eln.sim.fluid.Water.RHO_L
+        /** The tank's height in the block (m). */
+        const val TANK_H = 0.5
+        /**
+         * Its fuel flange on top beside the flue, toward the back, and its air port on the back above the thermal pad,
+         * centred across (px, the model's frame: mods.eln.cad.models.FuelHeater FUEL_X, FUEL_Z, AIR_Y, AIR_Z; Baughn
+         * 2026-11-17: "on top is fine ... back is also fine, e.g. for air"; nothing on the front or flanks). The air port at
+         * y 8, on the pipes' lattice (Baughn 2026-11-18, #520: "move the flange up a bit"): at y 6 the router's pipe to it
+         * stepped down onto the thermal cable on the back pad and couldn't be laid.
+         */
+        const val FUEL_X = 13
+        const val FUEL_Z = 8
+        const val AIR_Y = 8
+        const val AIR_Z = 8
+        /** Its flange's conductance (as the oil devices' ports) and its breather's on top (small: a vent, not an opening). */
+        const val PORT_K = 6e-11
+        /** The breather's vacuum breaker (air in as the fuel goes down). */
+        const val BREATHER_K = 1e-11
+        /**
+         * The breather's float vent (gas out): a breathing vent of a few mm, 200 times narrower than the vacuum breaker
+         * (todo #471: at BREATHER_K it was a ~2 cm hole and passed 146 g/s of air at 1.5 bar gauge, 20 times what a
+         * pressure-fed Big burner burns; now under 1 g/s). It still lets live crude's gas and a gas main's excess out.
+         */
+        const val GAS_VENT_K = 5e-14
+        /**
+         * Combustion air per joule of the burner's heat (kg/J): any hydrocarbon fuel burns ~3 MJ per kg of air at
+         * stoichiometry, with 20 % excess air 0.4 kg/MJ. By the heat, not the fuel's kg, as heatFurnaceFuelFactor makes
+         * EA's fuels give ~2.5 x their real heat (a Big burner at its 10 kW: 0.1 g/s of heavy oil, 4 g/s of air).
+         */
+        const val AIR_KG_PER_J = 0.4e-6
+        /**
+         * The most its burner fires over its setting on forced air (todo #504): with FORCED_MAX times the air its setting
+         * needs coming into its firebox. Natural draught brings 1 x.
+         */
+        const val FORCED_MAX = 2.5
+        /** The pressure across its air damper (Pa) at which it passes FORCED_MAX x the air of the burner's full setting. */
+        const val DAMPER_DP = 1.4e5
+        /**
+         * Natural draught (the stack's pull, todo #504): a gas pump from the air into its firebox, 1 x the air of the
+         * burner's setting into a firebox at the air's pressure, none against DRAUGHT_PA over it: a flue backed up that
+         * far starves a natural-draught fire.
+         */
+        const val DRAUGHT_PA = 150.0
+        /** The lowest setting its draught and damper go by (lit or lighting): the fire's air is measured against it. */
+        const val AIR_REF_MIN = 0.05
+        /** The time constant (s) over which the fire follows the air that comes in. */
+        const val AIR_TAU = 0.5
+        /** Its windbox behind the air port (m^3). */
+        const val WINDBOX_M3 = 0.0005
+        /** The pressure difference (Pa) over which each breather vent starts to open, fully open at twice it. */
+        const val BREATHER_DEADBAND_PA = 300.0
+        /** Its relief valve on top (the breather's gas side): opens at RELIEF_PA gauge, fully at 1.1 x; lets anything out. */
+        const val RELIEF_PA = 3e5
+        // (as its flange: a gas line on the flange holds it near 3 bar up to ~7 bar in the line; past ~13 bar it bursts)
+        const val RELIEF_K = 6e-11
+        /** The liquid share of the tank at which the gas vent's float has shut (it closes over the 2 % under it). */
+        const val FLOAT_SHUT = 0.97
+        /** It isn't built for pressure: past BURST_PA gauge the tank bursts. */
+        const val BURST_PA = 6e5
+        /**
+         * Fuel gas escaping its vents past what the flame took, over this (kg/s, averaged over GAS_FIRE_S) with the fire
+         * lit, sets fire around it: a puff doesn't, a stream does.
+         */
+        const val GAS_FIRE_KG_S = 5e-5
+        const val GAS_FIRE_S = 2.0
+        /** Heat to boil off a kg of water that reached the burner (J/kg: warming and evaporating). */
+        const val WATER_BOIL_J_PER_KG = 2.6e6
+        /** The burner's thermal mass per W of its rating (J/K/W) and how far it runs over the furnace at its rating (K). */
+        const val BURNER_C_PER_W = 0.3
+        const val BURNER_DT = 100.0
+        /** A burner still giving this share of its rating is hot: its fire catches at once (Fire.hot). */
+        const val HOT_SHARE = 0.01
+        /** The fuel's heat capacity (J/(kg K)), for its share of the burner's inertia. */
+        const val FUEL_CP = 2000.0
+        /** Drowned, the hot burner flashes this many seconds of its fire's heat of the water to steam out of its stack. */
+        const val DROWN_FLASH_S = 5.0
     }
 
     private val thermalLoad = NbtThermalLoad("thermalLoad")
     private val controlLoad = NbtElectricalGateInput("commandLoad")
 
-    /** Its fuel tank: two buckets (Baughn 2026-11-03: it fills by bucket; the 1.12 tank held 25 mB, under a bucket). */
-    private val tank = PreciseElementFluidHandler(2000)
+    /**
+     * Its fuel tank, a fluid node (two buckets: Baughn 2026-11-03, it fills by bucket): its flange on top (EA pipes,
+     * beside the flue, toward the back) and buckets put any liquid in; a breather on top lets air in as it burns and live crude's gas
+     * out. What it holds burns species by species (heating_value): a mix burns as the mix it is (Baughn 2026-11-10:
+     * "mixed on the machines").
+     */
+    var vessel: mods.eln.sim.fluid.FluidNode? = null
+        private set
+    /**
+     * Its breather: a small float vent letting gas out (never liquid: a full tank shuts it) and a vacuum breaker letting
+     * air in, each opening only past a small pressure difference, so a standing tank doesn't breathe its fuel away. Gas
+     * fed in faster than the small vent passes raises the tank's pressure (it no longer feeds the burner more: todo
+     * #504). Over RELIEF_PA gauge its relief valve lets anything out (Baughn 2026-11-11: it isn't built for pressure).
+     */
+    private var breather: mods.eln.sim.fluid.FluidDevice.Vent? = null
+    private var airIn: mods.eln.sim.fluid.FluidDevice.Vent? = null
+    private var relief: mods.eln.sim.fluid.FluidDevice.Vent? = null
+    private var loaded: DoubleArray? = null
+    /**
+     * Its combustion air (todo #504): the windbox behind its air port, its damper into the firebox (the flue's node; a
+     * check valve, its opening the fire's setting, sized by the burner so DAMPER_DP across it passes FORCED_MAX x the
+     * air), and the natural draught from the air around it (a fixed node at 1 atm) into the firebox.
+     */
+    var windbox: mods.eln.sim.fluid.FluidNode? = null
+        private set
+    private var loadedWindbox: DoubleArray? = null
+    private var intake: mods.eln.sim.fluid.FluidNode? = null
+    var damper: mods.eln.sim.fluid.FluidDevice.Link? = null
+        private set
+    var draught: mods.eln.sim.fluid.FluidDevice.Link? = null
+        private set
+    /** An old save's tank (a 2-bucket fluid tank) and its flange's stub, put into the vessel when it is made. */
+    private var legacyTank: net.neoforged.neoforge.fluids.FluidStack? = null
+    private var legacyStub: DoubleArray? = null
 
-    /** On EA pipes (Baughn 2026-11-03): fuel in on the flange low on its front (mods.eln.cad.models.FuelHeater). */
-    private val fuelIn = mods.eln.fluid.PortBridge("fuelIn", mods.eln.fluid.PortBridge.Mode.IN, 50.0, 0.0)
+    /** Its fluid capability: a view of the vessel (buckets; other mods' pipes). */
+    private val view = mods.eln.fluid.NodeFluidView(mods.eln.fluid.NodeFluidView.Spec().intake().liquidShare(TANK_FILL))
+
+    /**
+     * Heat drawn from the fuel and not yet given (J, after heatFurnaceFuelFactor): the burner takes fuel out of the vessel
+     * between fluid steps (beforeFluidStep), the control process spends it.
+     */
+    private var bank = 0.0
+    /** The heat the control process wanted over the last fluid step (J): what the next draw refills. */
+    private var wanted = 0.0
+    /** The coking index of what it burnt last (residue 1 ... light cuts 0). */
+    private var cokingIndex = 0.0
+    /** What is at the burner, as of the last fluid step: a fuel's species, water (it boils off), or -1 for nothing. */
+    var atBurner = -1
+        private set
+    /** Meters (not saved): fuel the burner drew (kg) and heat it gave (J), since it was loaded. */
+    var fuelBurntKg = 0.0
+        private set
+    /** Fuel gas from its head space the flame burnt (kg, since loaded). */
+    var gasBurntKg = 0.0
+        private set
+    var heatGivenJ = 0.0
+        private set
+    /** Heat its flame made (J, since loaded): what it drew x heating value; the burner gives it on with a lag. */
+    var flameJ = 0.0
+        private set
     /** Its flue: smoke out of the flange on top of its stack, or up the stack (as the coal oven's). */
-    private val flue = mods.eln.fluid.Flue("flue")
+    val flue = mods.eln.fluid.Flue("flue", true)
     private var smoking = false
 
     override fun fluidLevel(): Any = node!!.coordonate.dimention
 
     override fun fluidPorts(): List<mods.eln.sim.fluid.FluidDevice.FluidPort> {
-        if (fuelIn.stub == null || flue.node == null) return listOf()
+        val v = vessel ?: return listOf()
+        val w = windbox ?: return listOf()
+        if (flue.node == null) return listOf()
         val pos = node!!.coordonate.pos().asLong()
-        val f = front.toEnumFacing().get3DDataValue()
-        return listOf(fuelIn.port(pos, f, mods.eln.fluid.PortBridge.endSpot(front, front, 4, 8)), flue.port(pos))
+        val back = front.back()
+        // (the fuel comes in at the tank's top)
+        return listOf(mods.eln.sim.fluid.FluidDevice.FluidPort(v, pos, 1, 1.0, PORT_K, mods.eln.fluid.PortBridge.topSpot(front, FUEL_X, FUEL_Z)),
+            mods.eln.sim.fluid.FluidDevice.FluidPort(w, pos, back.toEnumFacing().get3DDataValue(), 0.5, PORT_K,
+                mods.eln.fluid.PortBridge.endSpot(front, back, AIR_Y, AIR_Z)),
+            flue.port(pos))
+    }
+
+    override fun fluidFlows(): List<mods.eln.sim.fluid.FluidDevice.Flow> = if (vessel == null) listOf() else flue.flows()
+
+    override fun fluidLinks(): List<mods.eln.sim.fluid.FluidDevice.Link> {
+        val d = damper ?: return listOf()
+        val n = draught ?: return listOf()
+        return listOf(d, n)
+    }
+
+    override fun fluidVents(): List<mods.eln.sim.fluid.FluidDevice.Vent> {
+        val out = breather ?: return listOf()
+        val inn = airIn ?: return listOf()
+        val rel = relief ?: return listOf(out, inn)
+        return listOf(out, inn, rel) + flue.vents()
+    }
+
+    /**
+     * Set the breather's vents by the tank's pressure against the air's: the gas vent and the vacuum breaker each open
+     * over BREATHER_DEADBAND_PA (the gas vent's float shuts it once the liquid nears the top), the relief over RELIEF_PA.
+     */
+    private fun setBreather(v: mods.eln.sim.fluid.FluidNode) {
+        val dp = v.P() - mods.eln.sim.fluid.Water.P_ATM
+        val float = Math.max(0.0, Math.min(1.0, (FLOAT_SHUT - v.liquidVolume() / v.volume) / 0.02))
+        breather?.open = float * Math.max(0.0, Math.min(1.0, (dp - BREATHER_DEADBAND_PA) / BREATHER_DEADBAND_PA))
+        relief?.open = Math.max(0.0, Math.min(1.0, (dp - RELIEF_PA) / (0.1 * RELIEF_PA)))
+        airIn?.open = Math.max(0.0, Math.min(1.0, (-dp - BREATHER_DEADBAND_PA) / BREATHER_DEADBAND_PA))
     }
 
     override fun beforeFluidStep(dt: Double) {
         val amb = mods.eln.sim.Ambient.kelvin(node!!.coordonate)
-        fuelIn.step(tank, dt, amb)
-        if (flue.step(if (isBurnt()) 0.0 else actualHeatPower, dt, amb)) needPublish()   // (burnt: its fire is out)
+        val v = vessel
+        var heatJ = 0.0
+        var fuelKg = 0.0
+        if (v != null) {
+            view.sync(v, amb)
+            val bank0 = bank
+            val kg0 = fuelBurntKg + gasBurntKg
+            burnFuel(v)
+            heatJ = Math.max(0.0, bank - bank0)
+            fuelKg = Math.max(0.0, fuelBurntKg + gasBurntKg - kg0)
+            setBreather(v)
+        }
+        setAir(amb)
+        // (the flame now, as the burner draws it: the air it burns, and its smoke; burnt: its fire is out)
+        val flameW = if (isBurnt() || dt <= 0) 0.0 else heatJ / dt
+        // (the air comes in at the room's temperature by draught, its windbox's through the damper)
+        val wT = windbox?.let { mods.eln.fluid.FluidWorld.nodeFor(it).T() } ?: amb
+        val inletK = if (forcedKgS + draughtKgS > 1e-9) (forcedKgS * wT + draughtKgS * amb) / (forcedKgS + draughtKgS) else amb
+        if (flue.burn(flameW, AIR_KG_PER_J * flameW, if (dt > 0 && flameW > 0) fuelKg / dt else 0.0, inletK, dt)) needPublish()
         smoking = flue.smoking
     }
 
     override fun afterFluidStep(dt: Double) {
-        flue.afterStep(mods.eln.sim.Ambient.kelvin(node!!.coordonate))
+        flue.afterBurn(dt)
+        measureAir(dt)
+        val v = vessel ?: return
+        checkPressure(v, dt)
+        view.show(v)
+        atBurner = burnerLayer(v)
+    }
+
+    /** Its burner's rating (W; 0 with none, or switched off). */
+    private fun nominalW(): Double = if (!mainSwitch) 0.0 else
+        FuelBurnerDescriptor.getDescriptor(inventory_.getItem(FuelHeatFurnaceContainer.FuelBurnerSlot))?.producedHeatPower ?: 0.0
+
+    /** The air the setting its draught and damper went by over the last step needed (kg/s). */
+    private var airAskKgS = 0.0
+    /** Air into its firebox over the last fluid step (kg/s): through its damper (forced) and by natural draught. */
+    var forcedKgS = 0.0
+        private set
+    var draughtKgS = 0.0
+        private set
+    /** Air into the firebox (kg, since loaded). */
+    var airInKg = 0.0
+        private set
+    /**
+     * What came in over what its setting needed, as of the last fluid step: the fire is its setting times this, at most
+     * FORCED_MAX (1 when it was asked for nothing: on load, or off).
+     */
+    var airRatio = 1.0
+        private set
+
+    /**
+     * Set its damper and its draught for the coming step by the fire's level (at least AIR_REF_MIN while it is on): the
+     * damper opens with it (and with the burner's rating against the big one's, which its area is sized for), the
+     * draught's speed goes with it, and both are measured against the air that setting needs.
+     */
+    private fun setAir(amb: Double) {
+        val d = damper ?: return
+        val n = draught ?: return
+        val nominal = nominalW()
+        // (none asked for, none burning: its draught and damper rest, so an idle furnace's network can sleep)
+        val ref = if (nominal > 0 && (fire.level > 0 || heaterControlValue > 0)) Math.max(fire.level, AIR_REF_MIN) else 0.0
+        airAskKgS = AIR_KG_PER_J * ref * nominal
+        d.open = Math.min(1.0, ref * nominal / damperRefW())
+        val rho = mods.eln.sim.fluid.Water.P_ATM / (mods.eln.sim.fluid.Water.R_AIR * amb)
+        // (Baughn 2026-11-17: a blower needs the draught shut entirely; a pipe on its air port shuts the room inlet)
+        n.speed = if (airPiped()) 0.0 else ref
+        n.qMax = if (nominal > 0) AIR_KG_PER_J * nominal / rho else 0.0
+        n.h0 = draughtPa
+    }
+
+    /** Its natural draught's head (Pa): DRAUGHT_PA, settable for measuring (not saved). */
+    var draughtPa = DRAUGHT_PA
+
+    /** Is something on its air port (an edge at its windbox other than its damper)? */
+    fun airPiped(): Boolean {
+        val w = windbox ?: return false
+        return mods.eln.fluid.FluidWorld.edgesOf(w).any { it !== damper?.edge }
+    }
+
+    /** After a step: the air that came in by its damper (air alone: a gas or liquid in its windbox doesn't burn) and draught. */
+    private fun measureAir(dt: Double) {
+        val air = mods.eln.sim.fluid.SpeciesRegistry.AIR
+        val fs = damper?.edge?.fSpecies
+        forcedKgS = if (fs != null && fs.size > air) Math.max(0.0, fs[air]) else 0.0
+        draughtKgS = Math.max(0.0, draught?.edge?.flow ?: 0.0)
+        val got = forcedKgS + draughtKgS
+        if (dt > 0) airInKg += got * dt
+        // (smoothed over AIR_TAU: measured a step and fired by the next, a piped flue's back-pressure and a natural draught
+        // fire hunted between a third and three quarters of its air)
+        if (airAskKgS > 1e-9 && dt > 0) airRatio += (got / airAskKgS - airRatio) * Math.min(1.0, dt / AIR_TAU)
+    }
+
+    /** How many times its setting the air lets it fire (0..FORCED_MAX). */
+    fun airFactor() = Math.max(0.0, Math.min(FORCED_MAX, airRatio))
+
+    /** The burner rating its damper's area is sized for (W): the big burner's. */
+    private fun damperRefW() = Math.max(1.0, FuelBurnerDescriptor.powerForType(0))
+
+    /**
+     * What the burner draws: the bottom liquid layer's main species (water, a fuel, or -1 for nothing there). A layer of
+     * less than a milligram (the last of the water boiled off) doesn't count.
+     */
+    private fun burnerLayer(v: mods.eln.sim.fluid.FluidNode): Int {
+        for (l in 0 until v.layers()) {
+            var best = -1
+            var most = 0.0
+            var total = 0.0
+            for (id in 0 until v.speciesBound()) if (v.layerOf(id) == l) {
+                total += v.liquid(id)
+                if (v.liquid(id) > most) { best = id; most = v.liquid(id) }
+            }
+            if (total > 1e-6) return best
+        }
+        return -1
+    }
+
+    /**
+     * The burner takes what the control process wanted over the last step out of the vessel's bottom layer, as heat into
+     * the bank: kg = heat / (heatFurnaceFuelFactor x the layer's heating value), by drainLayer (every species in it by its
+     * share). Water there boils off at the flame's cost and gives nothing.
+     */
+    private fun burnFuel(v: mods.eln.sim.fluid.FluidNode) {
+        if (burnerLayer(v) == mods.eln.sim.fluid.SpeciesRegistry.WATER) {
+            drown(v)
+            wanted = 0.0
+            return
+        }
+        val need = wanted - bank
+        wanted = 0.0
+        if (need <= 0) return
+        val f0 = mods.eln.ElnConfig.heatFurnaceFuelFactor
+        // fuel gas in its head space burns first, as far as the flame takes it (Baughn 2026-11-11: "in small amounts
+        // it'd burn up inside it"): live crude's gas, or gas piped in
+        var rest = need
+        val reg = mods.eln.sim.fluid.SpeciesRegistry.get()
+        for (g in 2 until v.speciesBound()) {
+            val hvg = reg.byId(g).heatingValue
+            if (rest <= 0 || hvg <= 0 || !reg.byId(g).gas()) continue   // (gases, not a liquid fuel's vapour)
+            val kg = Math.min(v.vapour(g), rest / f0 / hvg)
+            if (kg <= 1e-12) continue
+            mods.eln.sim.fluid.EaUnits.drainVapour(v, g, kg)
+            bank += kg * hvg * f0
+            gasBurntKg += kg
+            rest -= kg * hvg * f0
+        }
+        if (rest <= 0) return
+        val id = burnerLayer(v)
+        if (id < 0) return
+        val hv = mods.eln.sim.fluid.EaUnits.layerHeatingValue(v, id)
+        if (hv <= 0) return
+        val f = mods.eln.ElnConfig.heatFurnaceFuelFactor
+        val index = layerCoking(v, id)
+        val got = mods.eln.sim.fluid.EaUnits.drainLayer(v, id, rest / f / hv)
+        if (got <= 0) return
+        bank += got * hv * f
+        fuelBurntKg += got
+        cokingIndex = index
+    }
+
+    /**
+     * Water reached a burning burner (Baughn 2026-11-11: "a lot of steam out the exhaust, and likely a collapsed fire with
+     * no way to restart it"): the fire goes out and its switch drops; the hot burner flashes a little of the water to steam
+     * up its stack. It lights again only once the water is out of the tank (buckets take the top layer, or its flange) and
+     * the player switches it on.
+     */
+    private fun drown(v: mods.eln.sim.fluid.FluidNode) {
+        if (!mainSwitch) return
+        val nominal = FuelBurnerDescriptor.getDescriptor(inventory_.getItem(FuelHeatFurnaceContainer.FuelBurnerSlot))?.producedHeatPower ?: 0.0
+        // (the hot burner flashes it: by its fire, or by its heat if the fire just went out for want of fuel)
+        val hot = Math.max(fire.level, Math.max(0.0, Math.min(1.0, thermalLoad.Tc / 400)))
+        val kg = mods.eln.sim.fluid.EaUnits.drainLiquid(v, (bank + hot * nominal * DROWN_FLASH_S) / WATER_BOIL_J_PER_KG)
+        if (kg > 0) flue.addSteam(kg)   // (up its stack, or its flue's pipe)
+        steamedKg += kg
+        fire.level = 0.0
+        bank = 0.0
+        delivered = 0.0   // (the water quenches the burner)
+        mainSwitch = false
+        steamPuff = 2
+        needPublish()
+    }
+
+    /** Is its main switch on? */
+    fun switchedOn() = mainSwitch
+
+    /** Water flashed to steam by drowning its fire (kg, since loaded); client ticks of steam puff left. */
+    var steamedKg = 0.0
+    private var steamPuff = 0
+
+    /** The coking index of the layer species id is in: its species' `coking` by their shares. */
+    private fun layerCoking(v: mods.eln.sim.fluid.FluidNode, id: Int): Double {
+        val total = mods.eln.sim.fluid.EaUnits.layerLiquid(v, id)
+        if (total <= 0) return 0.0
+        val layer = v.layerOf(id)
+        val reg = mods.eln.sim.fluid.SpeciesRegistry.get()
+        var c = 0.0
+        for (j in 2 until v.speciesBound()) if (v.layerOf(j) == layer) c += v.liquid(j) / total * reg.byId(j).coking
+        return c
+    }
+
+    /** The share of species j in the layer species id is in (0 if j is absent or elsewhere). */
+    private fun layerShare(v: mods.eln.sim.fluid.FluidNode, id: Int, j: Int): Double {
+        if (j < 0 || v.layerOf(j) != v.layerOf(id)) return 0.0
+        val total = mods.eln.sim.fluid.EaUnits.layerLiquid(v, id)
+        return if (total > 0) v.liquid(j) / total else 0.0
+    }
+
+    /** Heat a kg of what is at its burner now gives (J/kg, after heatFurnaceFuelFactor; 0: water or nothing). */
+    fun heatPerKgAtBurner(): Double {
+        val v = vessel ?: return 0.0
+        val id = burnerLayer(v)
+        if (id < 0 || id == mods.eln.sim.fluid.SpeciesRegistry.WATER) return 0.0
+        return mods.eln.sim.fluid.EaUnits.layerHeatingValue(v, id) * mods.eln.ElnConfig.heatFurnaceFuelFactor
+    }
+
+    /** Put mB of fluid into its tank at the ambient, as a bucket would (a mixture alias dead: crude as its cuts). */
+    fun putFuel(fluid: net.minecraft.world.level.material.Fluid, mB: Int) {
+        val v = vessel ?: return
+        val ph = mods.eln.fluid.FluidSpecies.of(fluid) ?: return
+        mods.eln.sim.fluid.EaUnits.add(v, ph.id(), mB * mods.eln.fluid.FluidSpecies.kgPerMb(ph.id(), ph.vapour()),
+            mods.eln.sim.Ambient.kelvin(node!!.coordonate), ph.vapour())
+        view.show(v)
+        atBurner = burnerLayer(v)
+    }
+
+    /** Its tank's liquid (mB of water's volume: every liquid's mB is the same volume). */
+    fun fuelMb(): Double {
+        val v = vessel ?: return 0.0
+        return v.liquidVolume() * mods.eln.sim.fluid.Water.RHO_L / mods.eln.sim.fluid.EaUnits.KG_PER_MB_WATER
     }
 
     override fun connectJob() {
         super.connectJob()
-        if (flue.node != null) mods.eln.fluid.FluidWorld.add(this)
+        if (flue.node != null && vessel != null) mods.eln.fluid.FluidWorld.add(this)
     }
 
     override fun disconnectJob() {
@@ -195,18 +571,40 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
     private var heaterControlValue = 0.0
     /** The burner's real level, lagging the control value (Fire.OIL). */
-    val fire = mods.eln.sim.Fire(mods.eln.sim.Fire.OIL)
+    val fire = mods.eln.sim.Fire(mods.eln.sim.Fire.OIL).also { it.instant = true }
+
+    /**
+     * Its burner's thermal inertia (Baughn 2026-11-11: from the burner's mass and the fuel's, 30 s): the flame heats the
+     * burner, a lumped mass of BURNER_C_PER_W J/K per W of rating (about 6 kg of alloy for the big one) plus the fuel in
+     * the tank (FUEL_CP), which passes heat on through G = rating / BURNER_DT. The heat it gives lags the flame by
+     * tau = C / G: 30 s empty, a little more with a full tank.
+     */
+    private var delivered = 0.0
+    /** The flame's own power now (W): what it burns, before the burner's lag. */
+    var flamePower = 0.0
+        private set
+
+    /** Its burner's time constant now (s). */
+    fun burnerTau(nominal: Double): Double {
+        if (nominal <= 0) return 0.0
+        val fuelKg = (vessel?.liquidVolume() ?: 0.0) * 850   // (a fuel's density, near enough)
+        return BURNER_DT * (BURNER_C_PER_W * nominal + FUEL_CP * fuelKg) / nominal
+    }
     private var actualHeatPower by published(0.0)
 
     /**
-     * How coked its burner is (0..COKE_MAX; Baughn 2026-11-03: crude burns, but at a cost): burning crude (residue at
-     * half the rate) cokes it, and a coked burner fires that much less (half after an hour at its full power on crude).
+     * How coked its burner is (0..COKE_MAX; Baughn 2026-11-03: crude burns, but at a cost): fuel over the coking
+     * balance cokes it (crude: half after an hour at its full power; residue ~6x faster, heavy oil ~0.6x), fuel under it
+     * clears it again, and a coked burner fires that much less.
      * A right click with wool cleans it.
      */
     var coke = 0.0
 
-    /** Its burner's heat power now (W), before the flue takes its share. */
-    fun heatPower() = actualHeatPower
+    /** Its burner's heat power now (W), before the flue takes its share; 0 when burnt out (as Jade shows). */
+    fun heatPower() = if (isBurnt()) 0.0 else actualHeatPower
+
+    /** The burner's lag at the last step (s), 0 with no burner: what the thermostat looks ahead by. */
+    private var lead = 0.0
 
     private val controlProcess = object : RegulatorProcess("controller") {
         override fun process(time: Double) {
@@ -219,25 +617,48 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
                 externalControlled -> {
                     setCmd(controlLoad.u / Eln.SVU)
                 }
-                else -> {
+                // (by hand; a thermostat's command is its own: an on/off one keeps its last between its two thresholds,
+                // where the hand setting used to take over)
+                isManual -> {
                     setCmd(manualControl)
                 }
             }
             super.process(time)
 
-            fire.step(heaterControlValue, nominalPower > 0 && tank.fluidAmount > 0, time)
-            // (each mB gives heatFurnaceFuelFactor times its heat value: Baughn 2026-10-26, with turbines by the expansion)
-            val f = mods.eln.ElnConfig.heatFurnaceFuelFactor
-            val fuel = tank.getFluid()
-            val availableEnergy = tank.drainEnergy(fire.level * nominalPower * (1 - coke) * time / f) * f
-            actualHeatPower = availableEnergy / time
-            // (the coking: per second at its full power on crude, 1 / (2 h); residue at half that)
-            val rate = cokeRate(fuel)
-            if (rate > 0 && nominalPower > 0) coke = Math.min(COKE_MAX, coke + rate * actualHeatPower / nominalPower * time / (2 * 3600))
+            // (a burner still giving heat is hot enough to catch at once: a thermostat's flame cycles without the
+            // lighting time, which held it under its set point)
+            fire.hot = delivered > HOT_SHARE * nominalPower
+            // (water at the burner: no fuel, it won't light, Baughn 2026-11-11)
+            fire.step(heaterControlValue, nominalPower > 0 && (atBurner >= 0 && atBurner != mods.eln.sim.fluid.SpeciesRegistry.WATER || bank > 0), time)
+            // (each kg gives heatFurnaceFuelFactor times its heating value: Baughn 2026-10-26, with turbines by the
+            // expansion; the burner draws it into the bank between fluid steps)
+            val want = fire.level * nominalPower * (1 - coke) * airFactor() * time
+            wanted += want
+            val burnt = Math.min(want, bank)
+            bank -= burnt
+            flamePower = burnt / time
+            flameJ += burnt
+            // (the burner's mass between the flame and the furnace: the heat it gives follows the flame with tau)
+            val tau = burnerTau(nominalPower)
+            lead = if (tau.isFinite() && tau > 0) tau else 0.0
+            delivered += (flamePower - delivered) * (if (tau <= 0) 1.0 else Math.min(1.0, time / tau))
+            if (delivered < 1e-3) delivered = 0.0
+            heatGivenJ += delivered * time
+            actualHeatPower = delivered
+            // (the coking: per second at its full power on dead crude, 1 / (2 h); by the coking index of what burns, over
+            // or under the balance: fuel better than a plausible refinery's clears the burner as it burns)
+            val rate = cokeRate()
+            if (rate != 0.0 && nominalPower > 0) coke = mods.eln.sim.fluid.FuelQuality.foul(coke, cokingIndex, COKE_BALANCE, flamePower / nominalPower, time)
             thermalLoad.PcTemp += mods.eln.fluid.Flue.HEAT_SHARE * actualHeatPower   // (the rest leaves in the smoke: Flue)
         }
 
-        override fun getHit() = thermalLoad.Tc
+        /**
+         * What the thermostat goes by: the furnace's temperature plus what the heat still in the burner will add (its
+         * rate of change times the burner's lag, which is the temperature it would have were the flame's heat given at
+         * once). It cuts the flame that early, so the furnace settles on its set point instead of overshooting it by the
+         * burner's stored heat (set to 700 it peaked over 900 and burnt out); the furnace reacts as before. Baughn 2026-11-14.
+         */
+        override fun getHit() = thermalLoad.Tc + lead * thermalLoad.Pc / thermalLoad.C
         override fun setCmd(cmd: Double) {
             heaterControlValue = Math.max(0.0, cmd)
         }
@@ -251,8 +672,6 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         electricalLoadList.add(controlLoad)
         slowProcessList.add(NodePeriodicPublishProcess(transparentNode, 2.0, 1.0))
         slowProcessList.add(thermalWatchdog)
-
-        tank.setFilter(FuelRegistry.fluidListToFluids(FuelRegistry.gasolineList + FuelRegistry.dieselList + FuelRegistry.heavyList))
 
         thermalWatchdog.set(thermalLoad).setLimit((descriptor as FuelHeatFurnaceDescriptor).thermal)
             .set(Failure(this).machine())
@@ -278,7 +697,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         else -> 0
     }
 
-    override fun getFluidHandler() = tank
+    override fun getFluidHandler() = view
 
     override fun multiMeterString(side: Direction?) = Utils.plotPower("P:", thermalLoad.power)
 
@@ -288,8 +707,9 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         (descriptor as FuelHeatFurnaceDescriptor).thermal.applyTo(thermalLoad)
         inventoryChange(inventory_)
         val amb = mods.eln.sim.Ambient.kelvin(node!!.coordonate)
-        fuelIn.make(node!!.coordonate.y + 4 / 16.0, amb)
+        makeVessel(amb)
         flue.make(node!!.coordonate.y + 0.75, amb)
+        makeAir(amb)
         connect()
     }
 
@@ -303,18 +723,112 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         return true
     }
 
-    /** Coking per second at full power, as a share of COKE per (2 h): crude 1, residue 0.5, refined fuels 0. */
-    private fun cokeRate(fuel: net.neoforged.neoforge.fluids.FluidStack): Double {
-        if (fuel.isEmpty) return 0.0
-        return when {
-            fuel.fluid.isSame(mods.eln.oil.Oil.CRUDE.get()) -> 1.0
-            fuel.fluid.isSame(mods.eln.oil.Oil.Cut.RESIDUE.source.get()) -> 0.5
-            else -> 0.0
+    /** The vessel, from its save, or an old save's tank and stub, or empty at the ambient. */
+    private fun makeVessel(amb: Double) {
+        val v = mods.eln.sim.fluid.FluidNode(TANK_M3, node!!.coordonate.y.toDouble(), TANK_H, false)
+        val saved = loaded
+        if (saved != null) {
+            mods.eln.fluid.FluidSaves.restore(v, saved)
+            v.update()
+        } else {
+            v.fill(0.0, mods.eln.sim.fluid.Water.P_ATM, amb)
+            legacyTank?.let { st ->
+                val ph = mods.eln.fluid.FluidSpecies.of(st.fluid)
+                if (ph != null && st.amount > 0)
+                    mods.eln.sim.fluid.EaUnits.add(v, ph.id(), st.amount * mods.eln.fluid.FluidSpecies.kgPerMb(ph.id(), false), amb, false)
+            }
+            legacyStub?.let { a ->
+                val stub = mods.eln.sim.fluid.FluidNode(mods.eln.fluid.PortBridge.STUB_VOLUME, 0.0, 0.1, false)
+                mods.eln.fluid.FluidSaves.restore(stub, a)
+                stub.update()
+                if (stub.mWater > 0) mods.eln.sim.fluid.EaUnits.add(v, mods.eln.sim.fluid.SpeciesRegistry.WATER, stub.mWater, amb, false)
+                val reg = mods.eln.sim.fluid.SpeciesRegistry.get()
+                for (j in 2 until stub.speciesBound()) {
+                    val m = stub.liquid(j) + stub.vapour(j)
+                    if (m > 0) mods.eln.sim.fluid.EaUnits.add(v, j, m, amb, reg.byId(j).gas())
+                }
+            }
         }
+        legacyTank = null
+        legacyStub = null
+        loaded = null
+        vessel = v
+        breather = mods.eln.sim.fluid.FluidDevice.Vent(v, 1.0, GAS_VENT_K).also { it.gasOnly = true }
+        relief = mods.eln.sim.fluid.FluidDevice.Vent(v, 1.0, RELIEF_K)
+        airIn = mods.eln.sim.fluid.FluidDevice.Vent(v, 1.0, BREATHER_K).also { it.inward = true }
+        setBreather(v)
+        view.show(v)
+        atBurner = burnerLayer(v)
     }
 
-    /** Thick black smoke while it burns crude or residue. */
-    private fun sooty() = cokeRate(tank.getFluid()) > 0
+    /**
+     * Its windbox (from its save, or empty at 1 atm), the air around it, its damper and its draught, into the firebox
+     * (the flue's node, made first).
+     */
+    private fun makeAir(amb: Double) {
+        val fn = flue.node ?: return
+        val y = node!!.coordonate.y.toDouble()
+        val w = mods.eln.sim.fluid.FluidNode(WINDBOX_M3, y + 0.35, 0.3, false)
+        val saved = loadedWindbox
+        if (saved != null) {
+            mods.eln.fluid.FluidSaves.restore(w, saved)
+            w.update()
+        } else w.fill(0.0, mods.eln.sim.fluid.Water.P_ATM, amb)
+        loadedWindbox = null
+        windbox = w
+        val air = mods.eln.sim.fluid.FluidNode(1.0, fn.z, fn.height, true)
+        air.fill(0.0, mods.eln.sim.fluid.Water.P_ATM, amb)
+        intake = air
+        // (the damper: an orifice, sqrt of the pressure across it, sized for the big burner's FORCED_MAX x air at
+        // DAMPER_DP from a windbox at 1 atm + DAMPER_DP; drawn from the windbox's top)
+        val rhoW = (mods.eln.sim.fluid.Water.P_ATM + DAMPER_DP) / (mods.eln.sim.fluid.Water.R_AIR * 293.15)
+        val area = FORCED_MAX * AIR_KG_PER_J * damperRefW() / (mods.eln.sim.fluid.FluidEdge.CD * Math.sqrt(2 * rhoW * DAMPER_DP))
+        damper = mods.eln.sim.fluid.FluidDevice.Link(w, 1.0, fn, 0.5, PORT_K).kind(mods.eln.sim.fluid.FluidEdge.Kind.CHECK).area(area).also { it.open = 0.0 }
+        draught = mods.eln.sim.fluid.FluidDevice.Link(air, 0.5, fn, 0.5, PORT_K).gasPump(0.0, DRAUGHT_PA).also {
+            it.speed = 0.0
+            it.eta = 1.0
+        }
+        flue.own = java.util.function.Predicate { e -> e === damper?.edge || e === draught?.edge }
+    }
+
+    /** Fuel gas escaping through its relief (kg/s, last fluid step), and the ticks to its next ignition check. */
+    var gasEscapingKgS = 0.0
+        private set
+    /** What left by its relief valve (kg, since loaded). */
+    var reliefKg = 0.0
+        private set
+    private var fireCheck = 0
+
+    /**
+     * After a fluid step: fuel gas that left through the relief valve with the fire lit catches around it, over
+     * GAS_FIRE_KG_S (Baughn 2026-11-11: an ad-hoc rule, as rooms and spills aren't tracked). Past BURST_PA it bursts.
+     */
+    private fun checkPressure(v: mods.eln.sim.fluid.FluidNode, dt: Double) {
+        var kg = 0.0
+        val reg = mods.eln.sim.fluid.SpeciesRegistry.get()
+        for (vent in listOf(breather, relief)) {
+            val fs = vent?.edge?.fSpecies ?: continue
+            for (id in 2 until Math.min(fs.size, reg.size())) if (reg.byId(id).heatingValue > 0 && reg.byId(id).gas()) kg += Math.abs(fs[id])
+        }
+        gasEscapingKgS += (kg - gasEscapingKgS) * Math.min(1.0, dt / GAS_FIRE_S)
+        val rf = relief?.edge?.flow ?: 0.0
+        if (rf > 0) reliefKg += rf * dt
+        val level = node!!.coordonate.world()
+        if (gasEscapingKgS > GAS_FIRE_KG_S && fire.level > 0 && --fireCheck <= 0) {
+            fireCheck = 10
+            mods.eln.sim.process.destruct.Failure.ignite(level, node!!.coordonate.pos().above(), true)
+        }
+        val gauge = v.P() - mods.eln.sim.fluid.Water.P_ATM
+        if (gauge > BURST_PA)
+            mods.eln.sim.process.destruct.Failure(this).pressureVessel { v.P() * v.volume * Math.log(v.P() / mods.eln.sim.fluid.Water.P_ATM) }
+                .fail(mods.eln.sim.process.destruct.FailureCause.OVERPRESSURE, v.P())
+    }
+
+    /** Coking per second at full power, as a share of COKE per (2 h): by the coking index over the balance (< 0 clears). */
+    private fun cokeRate() = if (atBurner >= 0 && atBurner != mods.eln.sim.fluid.SpeciesRegistry.WATER) COKE_PER_INDEX * (cokingIndex - COKE_BALANCE) else 0.0
+
+    /** Thick black smoke while what it burns cokes the burner. */
+    private fun sooty() = flamePower > 0 && cokingIndex > COKE_BALANCE
 
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
@@ -329,6 +843,8 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         stream.writeBoolean(fire.lighting())
         stream.writeBoolean(smoking && !isBurnt())
         stream.writeBoolean(sooty())
+        stream.writeBoolean(steamPuff > 0)
+        if (steamPuff > 0) steamPuff--
     }
 
     override fun networkUnserialize(stream: DataInputStream): Byte {
@@ -337,12 +853,13 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
                 externalControlled = !externalControlled
                 inventoryChange(inventory_)
             }
-            MainSwitchToggleEvent -> mainSwitch = !mainSwitch
+            // (on only with a burner in its slot, as inventoryChange keeps it: a switch on without one was off after a reload)
+            MainSwitchToggleEvent -> mainSwitch = !mainSwitch && !inventory_.getItem(FuelHeatFurnaceContainer.FuelBurnerSlot).isEmpty
             SetManualControlValueEvent -> {
-                manualControl = stream.readFloat().toDouble()
+                manualControl = ClientValues.clamp(stream.readFloat().toDouble(), 0.0, 1.0, manualControl)   // (the screen's slider)
             }
             SetTemperatureEvent -> {
-                setTemperature = stream.readFloat().toDouble()
+                setTemperature = ClientValues.clamp(stream.readFloat().toDouble(), 0.0, 900.0, setTemperature)
                 controlProcess.target = setTemperature
             }
         }
@@ -352,47 +869,99 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
     override fun writeToNBT(nbt: CompoundTag) {
         super.writeToNBT(nbt)
-        tank.writeToNBT(nbt, "tank")
+        vessel?.let {
+            mods.eln.fluid.FluidWorld.writeBackOf(it)
+            mods.eln.fluid.FluidSaves.put(nbt, "vessel", it)
+        }
+        windbox?.let {
+            mods.eln.fluid.FluidWorld.writeBackOf(it)
+            mods.eln.fluid.FluidSaves.put(nbt, "windbox", it)
+        }
+        nbt.putDouble("bank", bank)
+        nbt.putDouble("cokingIndex", cokingIndex)
         nbt.putBoolean("externalControlled", externalControlled)
         nbt.putBoolean("mainSwitch", mainSwitch)
         nbt.putDouble("heaterControlValue", heaterControlValue)
         nbt.putDouble("manualControl", manualControl)
         nbt.putDouble("setTemperature", setTemperature)
         nbt.putDouble("actualHeatPower", actualHeatPower)
+        nbt.putDouble("burnerW", delivered)
         fire.write(nbt, "")
-        fuelIn.write(nbt)
         flue.write(nbt)
         nbt.putDouble("coke", coke)
     }
 
     override fun readFromNBT(nbt: CompoundTag) {
         super.readFromNBT(nbt)
-        tank.readFromNBT(nbt, "tank")
+        loaded = mods.eln.fluid.FluidSaves.array(nbt, "vessel")
+        loadedWindbox = mods.eln.fluid.FluidSaves.array(nbt, "windbox")
+        if (loaded == null) {
+            // (an old save: its 2-bucket fluid tank and its flange's PortBridge stub go into the vessel when it is made)
+            val old = PreciseElementFluidHandler(TANK_MB.toInt())
+            old.readFromNBT(nbt, "tank")
+            legacyTank = old.getFluid().copy()
+            legacyStub = mods.eln.fluid.FluidSaves.array(nbt, "fuelIn")
+        }
+        bank = nbt.getDoubleOr("bank", 0.0)
+        cokingIndex = nbt.getDoubleOr("cokingIndex", nbt.getDoubleOr("residueShare", 0.0))
         externalControlled = nbt.getBooleanOr("externalControlled", false)
         mainSwitch = nbt.getBooleanOr("mainSwitch", false)
         heaterControlValue = nbt.getDoubleOr("heaterControlValue", 0.0)
-        manualControl = nbt.getDoubleOr("manualControl", 0.0)
-        setTemperature = nbt.getDoubleOr("setTemperature", 0.0)
+        manualControl = ClientValues.finite(nbt.getDoubleOr("manualControl", 0.0), 0.0)
+        setTemperature = ClientValues.finite(nbt.getDoubleOr("setTemperature", 0.0), 0.0)
         actualHeatPower = nbt.getDoubleOr("actualHeatPower", 0.0)
+        delivered = nbt.getDoubleOr("burnerW", actualHeatPower)
         if (nbt.contains("fire")) fire.read(nbt, "") else fire.level = heaterControlValue
-        fuelIn.read(nbt)
         flue.read(nbt)
         coke = nbt.getDoubleOr("coke", 0.0)
     }
 
     override fun hasGui() = true
 
+    /**
+     * Repaired, its burner stays off until the player switches it on (Baughn 2026-11-04, todo #218: a repair relit it
+     * at the old setting and, with nothing taking its heat, it burnt out again; a burnt device opens no GUI).
+     */
+    /** Is its burner switched on (its main switch)? */
+    fun burnerOn() = mainSwitch
+
+    override fun repair() {
+        val was = isBurnt()
+        super.repair()
+        if (was) mainSwitch = false
+    }
+
     override fun getWaila(): MutableMap<String, String> {
         val info = HashMap<String, String>()
         info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc))
         info.put(I18N.tr("Power"), Utils.plotPower("", if (isBurnt()) 0.0 else actualHeatPower))
         // (what's in its tank: Baughn 2026-11-03, Jade said nothing of it)
-        val f = tank.getFluid()
-        info.put(I18N.tr("Fuel tank"), if (f.isEmpty) I18N.tr("empty") else "${tank.fluidAmount} / ${tank.capacity} mB ${f.hoverName.string}")
-        if (coke > 0.01) info.put(I18N.tr("Burner"), String.format(I18N.tr("%.0f%% coked: fires %.0f%% (right-click with wool to clean)"), coke * 100, (1 - coke) * 100))
+        val v = vessel
+        if (v != null) {
+            val mb = fuelMb()
+            info.put(I18N.tr("Fuel tank"), if (mb < 0.5) I18N.tr("empty") else String.format("%.0f / %.0f mB: %s", mb, TANK_MB, mods.eln.sim.fluid.EaUnits.composition(v)))
+            if (atBurner == mods.eln.sim.fluid.SpeciesRegistry.WATER) info.put(I18N.tr("Burner"), I18N.tr("water at the burner: the fire is out; drain it to relight"))
+        }
+        if (coke > 0.01 && atBurner != mods.eln.sim.fluid.SpeciesRegistry.WATER) info.put(I18N.tr("Burner"), String.format(I18N.tr("%.0f%% coked: fires %.0f%% (right-click with wool to clean)"), coke * 100, (1 - coke) * 100))
+        airJade()?.let { info.put(I18N.tr("Air"), it) }
+        if (gasEscapingKgS > GAS_FIRE_KG_S) info.put(I18N.tr("Relief"), I18N.tr("venting fuel gas!"))
         if (flue.node != null) info.put(I18N.tr("Flue"), flue.jade())
-        if (fuelIn.piped()) info.put(I18N.tr("Fuel"), I18N.tr("from the pipe on its front flange"))
+        if (v != null && mods.eln.fluid.FluidWorld.edgesOf(v).any { it !== breather?.edge && it !== airIn?.edge && it !== relief?.edge }) info.put(I18N.tr("Fuel"), I18N.tr("from the pipe on its top flange"))
         return info
+    }
+
+    /** Jade's air line (null while it asks for none): forced, natural draught, or starved (by its flue's back-pressure). */
+    fun airJade(): String? {
+        if (airAskKgS <= 0) return null
+        val fn = flue.node
+        val back = if (fn == null) 0.0 else mods.eln.fluid.FluidWorld.nodeFor(fn).P() - mods.eln.sim.fluid.Water.P_ATM
+        return when {
+            airRatio < 0.9 && back > 0.5 * draughtPa -> String.format(I18N.tr("starved (%.0f%%): flue backed up %s"), airRatio * 100,
+                if (back < 1e4) String.format("%.0f Pa", back) else String.format("%.2f bar", back / 1e5))
+            airRatio < 0.9 -> String.format(I18N.tr("starved (%.0f%%)"), airRatio * 100)
+            forcedKgS > 0.05 * airAskKgS -> String.format(I18N.tr("forced %.1f g/s + draught %.1f g/s, fires %.1fx its setting"), forcedKgS * 1000, draughtKgS * 1000, airFactor())
+            else -> String.format(I18N.tr("natural draught %.1f g/s"), draughtKgS * 1000)
+        }
     }
 
     override fun getInventory() = inventory_
@@ -403,7 +972,9 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         val regulatorStack = inventory_.getItem(FuelHeatFurnaceContainer.RegulatorSlot)
         if (!regulatorStack.isEmpty && !externalControlled) {
             val regulator = Utils.getItemObject(regulatorStack) as IRegulatorDescriptor
+            val held = heaterControlValue   // (an on/off regulator starts off: a loaded furnace keeps what it was at)
             regulator.applyTo(controlProcess, 500.0, 20.0, 0.2, 0.1)
+            heaterControlValue = held
         } else {
             controlProcess.setManual()
         }
@@ -430,7 +1001,10 @@ class FuelHeatFurnaceRender(tileEntity: TransparentNodeEntity, descriptor: Trans
     var smoking = false
     /** Burning crude or residue: thick black smoke. */
     var sooty = false
-    private var smokeDue = 0f
+    /** Its fire just drowned: a burst of steam up its stack. */
+    var steaming = false
+    private val smoke = mods.eln.anim.Emitter()
+    private val steam = mods.eln.anim.Emitter()
 
     val sound = object : LoopedSound("eln:fuelheatfurnace", coordonate()) {
         override fun getPitch() = FuelBurnerDescriptor.pitchForType(type)
@@ -454,18 +1028,15 @@ class FuelHeatFurnaceRender(tileEntity: TransparentNodeEntity, descriptor: Trans
 
     override fun refresh(deltaT: Float) {
         flicker = (flicker + deltaT * 11) % (20 * Math.PI).toFloat()
-        val level = tileEntity.level ?: return
-        if (!smoking) return
         // (smoke out of the stack's open flange, more of it the harder it burns)
-        smokeDue += deltaT * (2 + 10 * fire)
+        val n = smoke.step(deltaT.toDouble(), if (smoking) (2 + 10 * fire).toDouble() else 0.0)
+        // (its drowned fire's steam: so many a second, where it was a chance a frame)
+        val wisps = steam.step(deltaT.toDouble(), if (steaming) 25.0 else 0.0)
+        val level = tileEntity.level ?: return
         val p = tileEntity.blockPos
-        while (smokeDue >= 1) {
-            smokeDue -= 1
-            val jx = (Math.random() - 0.5) * 0.12
-            val jz = (Math.random() - 0.5) * 0.12
-            level.addParticle(if (sooty) net.minecraft.core.particles.ParticleTypes.LARGE_SMOKE else net.minecraft.core.particles.ParticleTypes.SMOKE,
-                p.x + 0.5 + jx, p.y + 1.02, p.z + 0.5 + jz, 0.0, 0.06, 0.0)
-        }
+        val plume = if (sooty) mods.eln.anim.Plume.SOOT else mods.eln.anim.Plume.SMOKE
+        repeat(n) { plume.puff(level, p.x + 0.5, p.y + 1.02, p.z + 0.5, 0.06) }
+        repeat(wisps) { mods.eln.anim.Plume.STEAM.puff(level, p.x + 0.5, p.y + 1.02, p.z + 0.5, 0.06) }
     }
 
     override fun networkUnserialize(stream: DataInputStream) {
@@ -486,6 +1057,7 @@ class FuelHeatFurnaceRender(tileEntity: TransparentNodeEntity, descriptor: Trans
         lighting = stream.readBoolean()
         smoking = stream.readBoolean()
         sooty = stream.readBoolean()
+        steaming = stream.readBoolean()
     }
 
 }

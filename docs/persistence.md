@@ -16,6 +16,7 @@ ids that old worlds depend on. All of it is server side; clients get state only 
 | Oil ponds done | vanilla SavedData `eln:oil_ponds` (codec key `lakes`: the oil lakes whose pond was placed or skipped) | `oil/OilPonds` |
 | Tutorial sign texts | `<world>/EA/tutorialSign.txt`, read only (the `.xml` reader is commented out) | `sixnode/tutorialsign/TutorialSignElement` via `Utils.readMapFile` |
 | Block entities | nothing persistent | `node/NodeBlockEntity` |
+| Machines at other mods' block entities (Machine API) | that block entity's NeoForge data attachment `eln:machine`, in the chunk | `api/impl/MachineData` |
 
 - `<dim>` = `misc/Dimensions.id(level)`: overworld 0, nether -1, end 1, others the hash of the dimension id.
 - Block entities (`NodeBlockEntity`, `SixNodeEntity`, `TransparentNodeEntity`, `VoxelNodeEntity`) have no
@@ -94,7 +95,7 @@ ids that old worlds depend on. All of it is server side; clients get state only 
 | Node | + `lastLight` | `node/Node` |
 | TransparentNode | `node` {NodeBase}, `eid` (short, 1.12 device id), `element` {element} | `node/transparent/TransparentNode` |
 | SixNode | `node` {NodeBase}, `cacheBlockId` (always 0), `cacheBlockMeta`, `EID0..5` (short, 0 = empty face), `ED0..5` {element}; slots past the faces (voxel blocks: devices off centre, `SixNode.SLOTS`): `EID<s>`, `ED<s>`, `EP<s>` = int[]{face, ox, oy, oz} (world voxels off the face's centre), only for taken slots. An older version ignores them (those devices are lost on a rollback). | `node/six/SixNode` |
-| VoxelNode | SixNode keys + NodeBase keys copied to the root (older versions read them there), `legacy` {six-node tag}, `host` {block state}, `carved` (long[]), `parts`, `p0..` {`kind` + part data} | `node/voxel/VoxelNode`, `VoxelPart.read` |
+| VoxelNode | SixNode keys + NodeBase keys copied to the root (older versions read them there), `legacy` {six-node tag}, `host` {block state}, `carved` (long[]), `parts`, `nextPartId`, `p0..` {`kind`, `id` + part data; a cable's joints `j`} | `node/voxel/VoxelNode`, `VoxelPart.read` |
 | Transparent element | `others` (front + 8 if grounded), `burnt`, `burntKind`, `inv`, sim parts | `node/transparent/TransparentNodeElement` |
 | Six element | `sixFront`, `burnt`, `burntKind`, `inv`, sim parts | `node/six/SixNodeElement` |
 | GhostElement | flat `elemCoordx/y/z/d`, `obserCoordx/y/z/d`, `UUID` | `ghost/GhostElement` |
@@ -120,6 +121,60 @@ ids that old worlds depend on. All of it is server side; clients get state only 
   always, plus `<prefix>S`, a compound of the other species by key (`{"eln:crude_oil": kg}`), only when the node holds
   any. Saves without it load as water and air. A key that names no defined species loads as a placeholder liquid under
   that key (`SpeciesRegistry.forSave`, logged once) and is written back unchanged, so a removed datapack loses nothing.
+  A species key that is a mixture alias (`eln:crude_oil`) loads as its parts, dead (without its gases, the rest
+  renormalised), so nothing saved bursts on load.
+  `<prefix>Fv` (int, `FluidSaves.FORMAT` = 2; a pipe part's `fv`) marks a save by the fluid core. Without it the energy
+  is the legacy solver's: on load it is taken at the temperature the legacy Flash finds for it and recomputed by the
+  core there (its vapour energies differ by up to ~40 kJ/kg), so nothing jumps. One-way: an older build reads the core's
+  energies as its own.
+- Oil pump and tar sand separator (2026-11-11): each one's tank is a fluid node saved as `vessel*` (with `vesselFv`),
+  and its outlet node behind the flange keeps the old PortBridge stub's key (`discharge*`, `outlet*`), so a stub's
+  contents load as the outlet's. An older save's `tank*` (an 8- or 4-bucket fluid tank) is read only when `vesselW` is
+  absent and goes into the vessel at the ambient (crude dead, as its cuts). Written back as `vessel*` only.
+  `oil_pump_legacy_tank`, `oil_separator_legacy_tank`.
+- Industrial resin collector (2026-11-14): the same (`DeviceOutlet`): its basin is saved as `vessel*`, its outlet
+  node under the old stub's key `latexOut*`. An older save's `tank*` (a 4-bucket tank of latex) is read only when
+  `vesselW` is absent and goes into the basin at the ambient, with its `carry` (latex made and not yet a whole mB;
+  no longer written). The basin is the old tank's size at its rated 95 % fill, so a full tank loads with air over
+  it. `resin_collector_legacy_tank`.
+- Carbon black burner (2026-11-14, `DeviceInlet`): its fuel vessel is saved as `fuelInVessel*`, and the stub behind
+  its flange keeps the old PortBridge stub's key `fuelIn*`. An older save's `tank*` (a 4-bucket fluid tank) is read
+  only when `fuelInVesselW` is absent and goes into the vessel at the ambient; `drainCarry` is no longer read or
+  written (under 1 mB). The vessel is the old tank's size at its 90 % filling level. `carbon_burner_legacy_tank`.
+- Gas turbine (2026-11-14, `DeviceInlet`): its fuel vessel is saved as `fuelInVessel*`, and the stub behind its top
+  flange keeps the old PortBridge stub's key `fuelIn*`. An older save's `fuel*` (a 16-bucket fluid tank) is read
+  only when `fuelInVesselW` is absent and goes into the sealed vessel at the ambient, with the air that fits over it
+  at 1 atm; its `fuelfixup` is dropped (under 1 mB). `fuelBank` is fuel heat (J) taken out of the vessel and not
+  yet burnt. `gas_turbine_legacy_tank`.
+- 230V compressor with latex ports (2026-11-14, `DeviceInlet` + `DeviceOutlet`): its IN vessel is saved as
+  `latexInVessel*`, its OUT vessel as `latexOutVessel*` (`DeviceOutlet.keys`), and the nodes behind its flanges keep
+  the old PortBridge stubs' keys `latexIn*` and `latexOut*`; `latexOwed` is latex a pressing used that the next fluid
+  step takes out. An older save's `latexInTank*` and `latexOutTank*` (4-bucket tanks of latex) are read only when
+  that vessel's `W` key is absent and go into the vessels at the ambient. `compressor_legacy_tanks`.
+- Desulfuriser (2026-11-14, `DeviceInlet` + `DeviceOutlet`): its IN vessel is saved as `cutInVessel*`, its OUT
+  vessel as `cutOutVessel*`, and the nodes behind its flanges keep the old PortBridge stubs' keys `cutIn*` and
+  `cutOut*`. An older save's `cutInTank*` and `cutOutTank*` (1-bucket tanks) are read only when that vessel's `W`
+  key is absent and go into the vessels at the ambient. `desulfuriser_legacy_tanks`.
+- Polymeriser (2026-11-14, a sealed `DeviceInlet`): its feed vessel is saved as `butadieneInVessel*`, the node behind
+  its flange keeps the old PortBridge stub's key `butadieneIn*`, and `butadieneCharge` is the butadiene drawn toward
+  the next Raw Rubber (mB as liquid). An older save's `butadieneLiquid` and `butadieneGas` (the feed tank's two
+  counts, mB) are read only when `butadieneInVesselW` is absent and go into the vessel at the ambient, with the air
+  that fits over the liquid at 1 atm. `polymeriser_legacy_feed`.
+- Steam cracker (2026-11-14, two `DeviceInlet`s and two `DeviceOutlet`s): its vessels are saved as
+  `gasolineInVessel*`, `steamInVessel*`, `butadieneOutVessel*` and `gasOutVessel*`, the nodes behind its flanges keep
+  the old PortBridge stubs' keys `gasolineIn*`, `steamIn*`, `butadieneOut*` and `gasOut*`, and `steamCharge` is the
+  steam drawn toward the cracking (mB). An older save's `gasolineTank*`, `steamTank*`, `butadieneTank*` and
+  `gasTank*` are read only when that vessel's `W` key is absent and go into the vessels (the steam at 450 K, the rest
+  at the ambient; in the sealed ones the air scaled to what fits); `steamCarry`, `butadieneCarry` and `gasCarry`
+  (each under 1 mB) are no longer read or written. `steam_cracker_legacy_tanks`.
+- Flare stack (2026-11-11): its tank is a fluid node saved as `vessel*` (with `vesselFv`), plus `carry`. An older save's
+  `tank*` (a 4-bucket fluid tank) and its flange stub `inlet*` (PortBridge) are read only when `vesselW` is absent and
+  go into the vessel at the ambient (crude dead, as its cuts); a fluid no species names is dropped. Written back as
+  `vessel*` only. `oil_flare_legacy_tank`.
+- Fuel heat furnace (2026-11-11): its tank is a fluid node saved as `vessel*` (`FluidSaves.put`, with `vesselFv`), plus
+  `bank` (heat drawn and not yet given, J) and `residueShare`. An older save's `tank*` (a 2-bucket fluid tank) and its
+  flange stub `fuelIn*` (PortBridge) are read only when `vesselW` is absent and go into the vessel at the ambient (crude
+  dead, as its cuts); a fluid no species names is dropped. Written back as `vessel*` only. `fuel_furnace_legacy_tank`.
 - Pipe sensor devices (`PipeTransmitterElement`, ids `eln:six_node@6402`-`6404`: pressure, temperature, steam
   quality, hidden items `pipe_*_transmitter`; placed by the pipe sensor items): `scale` (full scale, double), plus the
   gate output's keys. Pipe sensors fitted on pipes before 2026-11-02 stay `PipeSensorPart`s (voxel part kind
@@ -128,6 +183,63 @@ ids that old worlds depend on. All of it is server side; clients get state only 
   `bus.<dye name> = ...` line's stateful functions are saved under `equation.bus.<dye name>.`, as other components'.
 - Data logger: per channel n `busc<n>`, a byte, the bus channel 0-15 it records (absent, or any other value: its
   wire), claimed again on load. The unreleased named `bus<n>` is ignored.
+- Auto Miner: `AMSPitemsToDrop` (2026-11-10), a list of item stacks mined and waiting for room in its chest; absent
+  when the queue is empty (and in older saves). Its pipe segments are ghosts with id 1 (`PIPE_GHOST_UUID`; 1.12 gave
+  each its height); a segment an older version made at y = -1 (id -1, the machine's own) is renumbered at the first
+  tick after load.
+
+- Machine API (`api/impl/ElementHost`, any element with `Machines.forElement`): `api.machine.bufferJ` (energy
+  delivered and not yet used, J), `api.machine.celsius` (with a heat model), `api.machine.trip` and
+  `api.machine.tripTicks` (a trip in its cooldown), `api.machine.running` (true when saved running: it runs on at
+  once if the line is in range at the first step, no power-up hold), `api.machine.lastTrip`, `...lastTripMeasured`, `...lastTripLimit`,
+  `...lastTripBurns`, `api.machine.burnt` (true when it burnt and wasn't repaired: loaded, it is burnt again, if its
+  spec still burns; absent: not burnt); its parts: `api.machine.powerUc`, signal gates `api.machine.in<i>Uc`, `api.machine.out<i>Uc`,
+  `api.machine.drive<i>highImpedance` / `U`, a producer's `api.machine.emfUc` / `U` / `Istate`. Taken back at the
+  first tick (after the element's own ratings); absent keys: a fresh machine.
+- Machines at other mods' block entities (`ElnApi.machines()`): no node is saved (`MachineNode` is unsaved). The
+  block entity's attachment `eln:machine` (under NeoForge's `neoforge:attachments`) holds a compound `state` with the
+  machine keys above (`api.machine.bufferJ`, `celsius`, `trip`, `tripTicks`, `running`, `lastTrip*`, `burnt`; not the parts'
+  `...Uc`, which live in the node). It is written from the live machine whenever the chunk saves
+  (`MachineData.SERIALIZER`; the node marks the chunk unsaved when the state moved, without `setChanged`, which would
+  update comparators), or from the state kept when the node went; nothing is written for a block entity never hosted.
+  Loaded with the block entity and taken back at the node's first step, as an element's.
+- Electrical machines (macerator, compressor, magnetizer, plate machine, tar sand separator) since the Machine API:
+  `powerOn`, `progressJ` (the item in hand, J; absent before: it starts from 0), and the machine keys above;
+  `electricalLoadUc` is no longer written or read (a node voltage, solved again on the first step).
+- FE exporter since the Machine API: `energyBuffer`, `inPowerFactor`, and the machine keys; `loadUc` and
+  `powerInResistorR` (its resistor, now the machine) are no longer read. Both its older saves load
+  (`wp11_legacy_exporter_save`, `wp11_exporter_old_save`).
+- Linear Servo Drive (`robotics/servo/LinearServoDriveElement`): `clock` (long, the drive's own tick count; segments
+  start on it, and it stops while its chunks are unloaded), the current segment `segStart` (long), `segFrom`, `segV0`,
+  `segTo`, `segVmax`, `segAccel` (blocks and ticks), `target`, `fault` (byte: 0 none, 1 obstructed, 2 overheat, 3 no
+  rail, 4 overvoltage), `proportional`, `carMost`/`carLeast` (the car's UUID); its power, heat and signals are a
+  Machine API machine (the `api.machine.*` keys above: buffer, temperature, a trip, running; parts `powerUc`,
+  `in0Uc` setpoint, `in1Uc` enable, `out0Uc`/`drive0*` in-position, `out1Uc`/`drive1*` fault). Before the API (never
+  shipped, no upgrade path) it wrote `powerUc`, `setpointUc`, `enableUc`, `inPositionUc`, `faultOutUc`, `thermalTc`
+  and `inPositionProcess*`/`faultProcess*`; a save with those loads with a fresh machine. The elevator car
+  entity is not saved (`noSave`, `shouldBeSaved` false): the drive finds it by UUID within a session, else spawns it
+  again where its segment says. A stopped car's floor ghost (GhostBlock tFloor, UUID 0x5E7A, observer the drive) is an
+  ordinary saved ghost, so a player logging in on a car mid-shaft stands on it before the car is back.
+
+## Real-world voltages (2026-11-06)
+
+The tiers moved from 50/200/800/3200 V to 48/230/400 V and 11 kV, signals from 0-50 V to 0-5 V (Baughn). Nothing in
+the save format changed: cable and device numbers follow from the constants on load. A DC-DC converter writes
+`tierGen` = 1; one read without it (saved by an older EA) is rewound once by its windings' tiers
+(`TransformerElement.rewindForRealVoltages`: 50 -> 200 V wound 1:4 becomes 5:24, 800 -> 200 V 26:15, 800 -> 3200 V 2:55;
+coils are only added) and marked `legacyCore` (the inventory as loaded): it doesn't saturate until a player changes its
+windings or core. The Signal-Tapped DC-DC Converter saves `tapTurns`. An isolated converter reads `isIsolated` before the
+base reads its components, so its two sources' states load (they were dropped before).
+Player settings saved in volts (breaker trips,
+source targets, signal levels) are left as they were (Baughn).
+
+## Cable specs (2026-11-06, Wires stage 3)
+
+A voxel power cable (tiers 1-4: 48 V, 230 V, 400 V, 11 kV insulation) carries a `CableSpec`: `mm2` (an index into
+CableSpec.MM2) and `col` (a DyeColor id) beside `tier`. A piece saved without them is its tier's preset (2.5 mm² brown,
+1.5 mm² black, 1.5 mm² grey, 0.5 mm² red): every cable laid before specs. On the network the two bytes follow the tier
+byte of a power cable. A cable kit keeps a non-preset spec in its custom data (`mm2`, `col`); a kit without them is
+the preset. The breaker saves `tripAmps` and the fuse holder `rating` (0: the cable's or the fuse's own, as before).
 
 ## Ids that must never change
 
@@ -138,6 +250,9 @@ ids that old worlds depend on. All of it is server side; clients get state only 
 - The 1.12 damage id is the device id: `eid` / `EID<n>` in node NBT and in client packets
   (`node/DescriptorRegistry.getDescriptor(int legacyDamage)`). Renumbering a device orphans every saved copy.
 - Descriptor keys of 1.12 (`EnergyConverterElnToOther*`) are only read by `ExporterSaveUpgrade`; keep them.
+- 26.x additions follow the same rule: e.g. `eln:transparent_node@5504` (`linear_servo_drive`, group 86), the blocks
+  `eln:servo_rail`, `eln:station_marker` and the entity `eln:elevator_car` (`robotics/Robotics`; not yet in a release,
+  so they may still change before shipping).
 - Block-entity alias: `eln:energy_converter_eln_to_other_entity` -> `eln:transparent_node` (`ElnRegistry`), for
   chunks saved while the exporter had its own BE type.
 

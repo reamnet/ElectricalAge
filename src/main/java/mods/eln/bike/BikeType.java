@@ -14,8 +14,12 @@ public enum BikeType {
     ELECTRIC("electric_bike", new int[]{0x3466BC, 0x3466BC, 0x4F5F6D, 0x3B2D26}),
     TERRAIN("terrain_bike", new int[]{0xC8642A, 0x3A3E44, 0x4F5F6D, 0x2A2A2C});
 
-    /** The terrain bike's tunables (ElnConfig): a whole-block step, a 2.5-block jump, a 150 W motor. */
-    public static volatile float terrainStep = 1.0f;
+    /**
+     * The terrain bike's tunables (ElnConfig): a whole-block step, a 2.5-block jump, a 150 W motor. The step is 1.13 so
+     * it rides up a whole block from a dirt path (15/16 high) or mud (7/8) too: at 1.0 that was a collision at speed
+     * that threw the rider (Baughn 2026-11-06: falls on grass and paths). A block and a half still stops it.
+     */
+    public static volatile float terrainStep = 1.13f;
     public static volatile double terrainJumpVy = BikePhysics.velocityForPeak(2.5), terrainWatts = 150;
 
     public final String id;

@@ -27,7 +27,17 @@ public class NodeFluidView extends FluidStacksResourceHandler {
     public static final class Spec {
         boolean liquidIn = true, liquidOut = true, gasIn, gasOut, intake, gasWhenBoiling;
         java.util.function.IntPredicate liquids = id -> true;
-        double liquidShare = 1, gasCeilingPa = 9e5;
+        double liquidShare = 1, gasCeilingPa = 9e5, cushionPa;
+        boolean aliases;
+
+        /**
+         * A layer still close to a mixture alias's proportions (PortBridge.ALIAS_OVERLAP) shows as that alias: the oil
+         * pump's live crude is crude to a bucket or another mod's pipe, though no one species of it is 90 %.
+         */
+        public Spec aliases() {
+            aliases = true;
+            return this;
+        }
 
         /** Liquid can be put in and taken out (default both). */
         public Spec liquid(boolean in, boolean out) {
@@ -61,6 +71,16 @@ public class NodeFluidView extends FluidStacksResourceHandler {
         /** The share of the node's volume liquid may fill through the view (a boiler: its rated fill). */
         public Spec liquidShare(double share) {
             liquidShare = share;
+            return this;
+        }
+
+        /**
+         * A sealed vessel: liquid put in squeezes the gas over it, so the view takes no more than would raise that gas
+         * to pa (isothermal: the air's partial pressure times the gas volume is kept, the vapour stays at its own).
+         * Without it a tank filled from another mod's pipe went on to 100 % and burst (LabAssistant, review 2026-11-09).
+         */
+        public Spec cushion(double pa) {
+            cushionPa = pa;
             return this;
         }
     }
@@ -169,7 +189,11 @@ public class NodeFluidView extends FluidStacksResourceHandler {
             } else if (ph.id() == SpeciesRegistry.WATER) {
                 double got = EaUnits.drainLiquid(n, kg);
                 if (got < kg && n.T() < Water.TB) EaUnits.drainVapour(n, kg - got);   // (cold: the rest is vapour that would condense)
-            } else EaUnits.drainLiquid(n, ph.id(), kg);
+            } else {
+                // (a mixture alias taken out: the layer of its parts, whole)
+                double[][] mix = SpeciesRegistry.get().mixture(ph.id(), true);
+                EaUnits.drainLayer(n, mix != null ? (int) mix[0][0] : ph.id(), kg);   // (its whole layer by share: a mixed liquid goes as it is)
+            }
         }
         set(INTAKE, FluidResource.EMPTY, 0);
     }
@@ -191,13 +215,18 @@ public class NodeFluidView extends FluidStacksResourceHandler {
         } else {
             int top = FluidSpecies.topLiquid(n);
             int id = top < 0 ? SpeciesRegistry.WATER : top;
-            double kg = id == SpeciesRegistry.WATER ? waterShown(n) : n.liquid(id);
+            double kg = id == SpeciesRegistry.WATER ? waterShown(n) : EaUnits.layerLiquid(n, id);
+            int alias = spec.aliases && id != SpeciesRegistry.WATER && kg > 0 ? aliasOf(n, id) : -1;
+            if (alias >= 0) id = alias;
+            // (a mixed layer counts as its main species only at PURE_SHARE of it; under that a bucket gets nothing)
+            else if (id != SpeciesRegistry.WATER && kg > 0 && n.liquid(id) < EaUnits.PURE_SHARE * kg) kg = 0;
             put(LIQUID, FluidSpecies.fluid(id, false), (int) Math.round(kg / FluidSpecies.kgPerMb(id, false)));
             int gas = FluidSpecies.mainVapour(n);
             int gid = gas < 0 ? SpeciesRegistry.WATER : gas;
             boolean give = spec.gasOut && (!spec.gasWhenBoiling || n.T() >= Water.TB);
             put(GAS, FluidSpecies.fluid(gid, true), give && gas >= 0 ? (int) Math.floor(EaUnits.vapourAvailable(n, gid) / FluidSpecies.kgPerMb(gid, true)) : 0);
             double free = Math.max(0, spec.liquidShare * n.volume - n.liquidVolume());
+            if (spec.cushionPa > 0) free = Math.min(free, cushionRoom(n.volume - n.liquidVolume(), n.P(), n.pVapour(), spec.cushionPa));
             roomLiquidM3 = free;
             roomGasKg = spec.gasIn ? Math.max(0, spec.gasCeilingPa - n.P()) * Math.max(1e-6, n.volume - n.liquidVolume())
                 / (Water.R_V * Math.max(300, n.T())) : 0;
@@ -208,6 +237,31 @@ public class NodeFluidView extends FluidStacksResourceHandler {
             shownFluid[i] = fluid(i) != null ? fluid(i) : shownFluid[i];
         }
         shown[INTAKE] = 0;
+    }
+
+    /** The mixture alias (a fluid) that the layer species id is in still looks like, or -1. */
+    static int aliasOf(FluidNode n, int id) {
+        var reg = SpeciesRegistry.get();
+        int layer = n.layerOf(id);
+        for (int a = 2; a < reg.size(); a++) {
+            double[][] mix = reg.mixture(a, true);
+            if (mix == null || FluidSpecies.fluid(a, false) == null || n.layerOf((int) mix[0][0]) != layer) continue;
+            if (EaUnits.layerOverlap(n, mix[0], mix[1]) >= PortBridge.ALIAS_OVERLAP) return a;
+        }
+        return -1;
+    }
+
+    /**
+     * The liquid volume (m^3) that can go into a sealed gas space of vGas at pressure p (pVapour of it vapour) before the
+     * gas reaches pa: the non-condensing part is squeezed isothermally (p - pVapour) * vGas = (pa - pVapour) * vGas'.
+     * None once the gas is at pa or over; all of it if there is no gas that doesn't condense.
+     */
+    public static double cushionRoom(double vGas, double p, double pVapour, double pa) {
+        if (vGas <= 0) return 0;
+        double pNc = p - pVapour, head = pa - pVapour;
+        if (head <= 0 || p >= pa) return 0;
+        if (pNc <= 0) return vGas;
+        return Math.max(0, vGas - pNc * vGas / head);
     }
 
     /** Water a bucket can take (kg): the liquid, and while it's under boiling its vapour (it would condense: a bucket

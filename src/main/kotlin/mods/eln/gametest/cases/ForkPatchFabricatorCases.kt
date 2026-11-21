@@ -375,11 +375,11 @@ object ForkPatchFabricatorCases {
         override fun build(c: TestContext) {
             machine = c.placeTransparent(lookup, c.at(4, 1, 1)) as mods.eln.transparentnode.electricalmachine.ElectricalMachineElement
             val descriptor = machine.descriptor as mods.eln.transparentnode.electricalmachine.ElectricalMachineDescriptor
-            recipe = descriptor.recipe.recipes.first()
+            recipe = (if (lookup == 2244) Eln.compressorRecipes else descriptor.recipe).recipes.first()
             machine.inventory.setItem(machine.inSlotId, recipe.input.copy()); machine.inventory.setChanged()
             process = Batch1Cases.field(machine, "slowRefreshProcess")
             val resistor = machine.electricalComponentList.filterIsInstance<Resistor>().first()
-            val nominal = if (lookup % 64 == 0) 50.0 else 200.0
+            val nominal = machine.machine.spec().nominalVolts()
             val source = VoltageSource("inherited machine supply", machine.electricalLoadList.first(), null).setU(sign * nominal * .1)
             parts.add(source); Eln.simulator.addElectricalComponent(source)
             meter = IProcess { dt -> if (dt > 0 && resistor.p.isFinite() && resistor.p > 0) paid += resistor.p * dt }

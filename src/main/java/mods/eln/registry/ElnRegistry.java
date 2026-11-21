@@ -49,6 +49,8 @@ public final class ElnRegistry {
         MENUS.register("wire_snips", () -> new net.minecraft.world.inventory.MenuType<>(mods.eln.item.wiresnips.WireSnipsMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.item.belt.BeltMenu>> BELT_MENU =
         MENUS.register("battery_belt", () -> new net.minecraft.world.inventory.MenuType<>(mods.eln.item.belt.BeltMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
+    public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.node.voxel.ToolbagMenu>> TOOLBAG_MENU =
+        MENUS.register("toolbag", () -> new net.minecraft.world.inventory.MenuType<>(mods.eln.node.voxel.ToolbagMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final net.neoforged.neoforge.registries.DeferredHolder<net.minecraft.world.inventory.MenuType<?>, net.minecraft.world.inventory.MenuType<mods.eln.item.xray.XRayScannerMenu>> XRAY_MENU =
         MENUS.register("xray_scanner", () -> net.neoforged.neoforge.common.extensions.IMenuTypeExtension.create(mods.eln.item.xray.XRayScannerMenu::fromNetwork));
     /** The electric bike's trunk (Baughn 2026-10-28). */
@@ -63,6 +65,10 @@ public final class ElnRegistry {
 
     /** Every EA item, in 1.12 id order (creative tab, tests). */
     public static final List<DeferredItem<? extends Item>> ALL_ITEMS = new ArrayList<>();
+    /** Items kept registered (and in the data) but out of the tab: no longer made. */
+    public static final java.util.Set<DeferredItem<? extends Item>> RETIRED_ITEMS = new java.util.HashSet<>();
+    /** Listed in the tab after ALL_ITEMS, without its datagen (lang, models): the fuel buckets, made by Oil. */
+    public static final java.util.List<java.util.function.Supplier<? extends Item>> TAB_EXTRAS = new java.util.ArrayList<>();
 
     public static final DeferredBlock<SixNodeBlock> SIX_NODE_BLOCK = BLOCKS.registerBlock("six_node", SixNodeBlock::new,
         p -> p.mapColor(MapColor.METAL).strength(1.0f, 1.0f).sound(SoundType.METAL).noOcclusion().dynamicShape());
@@ -120,6 +126,9 @@ public final class ElnRegistry {
         RECIPE_SERIALIZERS.register("cable_kit_to_coil", () -> mods.eln.node.voxel.CableKitRecipes.ToCoil.SERIALIZER);
     public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<mods.eln.item.electricalitem.BatteryPackRecipe>> BATTERY_PACK =
         RECIPE_SERIALIZERS.register("portable_battery_pack", () -> mods.eln.item.electricalitem.BatteryPackRecipe.SERIALIZER);
+    /** Windings wound by hand (Baughn 2026-11-08): Copper Cable and rubber or leather; windings combined. */
+    public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<mods.eln.node.voxel.HandWindingRecipe>> HAND_WINDING =
+        RECIPE_SERIALIZERS.register("hand_winding", () -> mods.eln.node.voxel.HandWindingRecipe.SERIALIZER);
     /** Field Bus Cable (mods.eln.bus): the coil its kits are made from; no six-node cable of its own. */
     public static final DeferredItem<Item> FIELD_BUS_CABLE = ITEMS.registerSimpleItem("field_bus_cable");
     /** Cable kits, one per CablePart tier: signal, low, medium, high, very high voltage, thermal, field bus. */
@@ -131,10 +140,33 @@ public final class ElnRegistry {
         ITEMS.registerItem("cable_kit_vhv", p -> new mods.eln.node.voxel.CableKitItem(4, p)),
         ITEMS.registerItem("cable_kit_thermal", p -> new mods.eln.node.voxel.CableKitItem(5, p)),
         ITEMS.registerItem("cable_kit_bus", p -> new mods.eln.node.voxel.CableKitItem(6, p)));
+    /** A transformer winding (Wires stage 4, Baughn 2026-11-06): N turns of a wire, made by a wire-drawing machine. */
+    public static final DeferredItem<mods.eln.node.voxel.WindingItem> WINDING = ITEMS.registerItem("winding", mods.eln.node.voxel.WindingItem::new);
+    /** Overhead cable (Baughn 2026-11-09): bare copper for utility pole spans, no rubber, from a wire-drawing machine. */
+    public static final DeferredItem<mods.eln.gridnode.OverheadCableItem> OVERHEAD_CABLE = ITEMS.registerItem("overhead_cable", mods.eln.gridnode.OverheadCableItem::new);
+    /** Utility pole equipment (Baughn 2026-11-08): a transformer from the wire machine, a streetlight, a stasis anchor. */
+    public static final DeferredItem<mods.eln.gridnode.electricalpole.PoleTransformerItem> POLE_TRANSFORMER =
+        ITEMS.registerItem("pole_transformer", mods.eln.gridnode.electricalpole.PoleTransformerItem::new);
+    public static final DeferredItem<mods.eln.gridnode.electricalpole.PoleGearItem> STREETLIGHT = ITEMS.registerItem("pole_streetlight",
+        p -> new mods.eln.gridnode.electricalpole.PoleGearItem(mods.eln.gridnode.electricalpole.PoleGearItem.Kind.STREETLIGHT, p));
+    public static final DeferredItem<mods.eln.gridnode.electricalpole.PoleGearItem> POLE_ANCHOR = ITEMS.registerItem("pole_stasis_anchor",
+        p -> new mods.eln.gridnode.electricalpole.PoleGearItem(mods.eln.gridnode.electricalpole.PoleGearItem.Kind.ANCHOR, p));
     /** Raw lead and tungsten: what their ores drop, like raw iron (Baughn 2026-10-19: they dropped the ore block, as in
      *  1.7); smelted or blasted to ingots, macerated to dust. */
     public static final DeferredItem<Item> RAW_LEAD = ITEMS.registerSimpleItem("raw_lead");
     public static final DeferredItem<Item> RAW_TUNGSTEN = ITEMS.registerSimpleItem("raw_tungsten");
+    /** The rubber chain (Baughn 2026-11-07): sulfur dust from vanilla's sulfur blocks, soul dust from soul sand (the
+     *  vulcanising activator), raw rubber smelted from resin, and the compound (raw rubber, sulfur, activator) that
+     *  vulcanises in a furnace. */
+    public static final DeferredItem<Item> SULFUR_DUST = ITEMS.registerSimpleItem("sulfur_dust");
+    public static final DeferredItem<Item> SOUL_DUST = ITEMS.registerSimpleItem("soul_dust");
+    public static final DeferredItem<Item> RAW_RUBBER = ITEMS.registerSimpleItem("raw_rubber");
+    public static final DeferredItem<Item> RUBBER_COMPOUND = ITEMS.registerSimpleItem("rubber_compound");
+    /** Carbon black (the rubber chain's oil route, 2026-11-07): soot from burning heavy oil or residue starved of air
+     *  (the Carbon Black Burner); a black dye (tag c:dyes/black), and a filler: a compound with it vulcanises to more
+     *  Rubber (Baughn: filler, option A). */
+    public static final DeferredItem<Item> CARBON_BLACK = ITEMS.registerSimpleItem("carbon_black");
+    public static final DeferredItem<Item> CARBON_BLACK_COMPOUND = ITEMS.registerSimpleItem("carbon_black_rubber_compound");
     /** A Capacitor Bank's can (Baughn 2026-10-28): six Dielectrics round a block of redstone; six make a bank. */
     public static final DeferredItem<Item> CAPACITOR_CELL = ITEMS.registerSimpleItem("capacitor_cell");
     /** What food turns into in an electrical oven above 280 °C (Baughn); four make a charcoal, and it burns a quarter as long. */
@@ -165,7 +197,10 @@ public final class ElnRegistry {
         ITEMS.registerItem("pipe_throttle_valve", p -> new mods.eln.node.voxel.ValveItem(p, mods.eln.node.voxel.ValvePart.THROTTLE));
     public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.node.voxel.SafetyValveItem> PIPE_SAFETY_VALVE =
         ITEMS.registerItem("pipe_safety_valve", mods.eln.node.voxel.SafetyValveItem::new);
-    /** Baughn 2026-10-27: pipe sensors, a 0-50 V signal of a run's pressure or temperature. */
+    /** Baughn 2026-11-10: a purge valve, gas only (beside a crude tank: its natural gas). */
+    public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.node.voxel.SafetyValveItem> PIPE_PURGE_VALVE =
+        ITEMS.registerItem("pipe_purge_valve", p -> new mods.eln.node.voxel.SafetyValveItem(p, true));
+    /** Baughn 2026-10-27: pipe sensors, a 0-5 V signal of a run's pressure or temperature. */
     public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.node.voxel.PipeSensorItem> PIPE_PRESSURE_SENSOR =
         ITEMS.registerItem("pipe_pressure_sensor", p -> new mods.eln.node.voxel.PipeSensorItem(p, mods.eln.node.voxel.PipeSensorPart.PRESSURE));
     public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.node.voxel.PipeSensorItem> PIPE_TEMPERATURE_SENSOR =
@@ -176,6 +211,9 @@ public final class ElnRegistry {
     public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.node.voxel.ValveItem> PIPE_PRESSURE_VALVE =
         ITEMS.registerItem("pipe_pressure_valve", p -> new mods.eln.node.voxel.ValveItem(p, mods.eln.node.voxel.ValvePart.PRESSURE));
     /** Baughn 2026-10-27: the battery belt (moved from Stasis Delvers, which keeps an alias for its old id). */
+    /** Baughn 2026-11-18 (todos #510, #517): a bag of cable and pipe kits used in place of a kit. */
+    public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.node.voxel.ToolbagItem> TOOLBAG =
+        ITEMS.registerItem("toolbag", mods.eln.node.voxel.ToolbagItem::new);
     public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.item.belt.BatteryBeltItem> BATTERY_BELT =
         ITEMS.registerItem("battery_belt", mods.eln.item.belt.BatteryBeltItem::new, p -> p.stacksTo(1));
     /** Baughn 2026-10-30: the headlamp, a flashlight on a band: the helmet slot (a leather cap's protection) or Curios' head slot. */
@@ -379,6 +417,7 @@ public final class ElnRegistry {
         ALL_ITEMS.add(PIPE_THROTTLE_VALVE);
         ALL_ITEMS.add(PIPE_ADAPTER);
         ALL_ITEMS.add(PIPE_SAFETY_VALVE);
+        ALL_ITEMS.add(PIPE_PURGE_VALVE);
         ALL_ITEMS.add(PIPE_PRESSURE_SENSOR);
         ALL_ITEMS.add(PIPE_TEMPERATURE_SENSOR);
         ALL_ITEMS.add(PIPE_QUALITY_SENSOR);
@@ -386,22 +425,38 @@ public final class ElnRegistry {
         ALL_ITEMS.add(BATTERY_BELT);
         ALL_ITEMS.add(HEADLAMP);
         ALL_ITEMS.addAll(CABLE_KITS);   // (voxel cables, 26.x)
+        ALL_ITEMS.add(TOOLBAG);
         ALL_ITEMS.add(CHISEL);
         ALL_ITEMS.add(HANDBOOK);
         ALL_ITEMS.add(FIELD_BUS_CABLE);
+        ALL_ITEMS.add(WINDING);
+        ALL_ITEMS.add(OVERHEAD_CABLE);
+        ALL_ITEMS.add(POLE_TRANSFORMER);
+        ALL_ITEMS.add(STREETLIGHT);
+        ALL_ITEMS.add(POLE_ANCHOR);
         ALL_ITEMS.add(RAW_LEAD);
         ALL_ITEMS.add(RAW_TUNGSTEN);
         ALL_ITEMS.add(CHARCOAL_NUGGET);
         ALL_ITEMS.add(CAPACITOR_CELL);
+        ALL_ITEMS.add(SULFUR_DUST);
+        ALL_ITEMS.add(SOUL_DUST);
+        ALL_ITEMS.add(RAW_RUBBER);
+        ALL_ITEMS.add(RUBBER_COMPOUND);
+        ALL_ITEMS.add(CARBON_BLACK);
+        ALL_ITEMS.add(CARBON_BLACK_COMPOUND);
         TABS.register("eln", () -> CreativeModeTab.builder()
             .title(Component.literal("Electrical Age"))
             .icon(() -> new ItemStack(tabIcon.get()))
-            .displayItems((params, out) -> ALL_ITEMS.forEach(i -> {
-                if (i != tabIcon && !mods.eln.node.DescriptorRegistry.isHiddenItem(i.get())) {
+            .displayItems((params, out) -> {
+                ALL_ITEMS.forEach(i -> {
+                    if (i != tabIcon && !RETIRED_ITEMS.contains(i) && !mods.eln.node.DescriptorRegistry.isHiddenItem(i.get())) {
                     if(i.get() instanceof SixNodeItem six && six.descriptor instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor cable) out.accept(cable.creativeStack());
                     else out.accept(i.get());
-                } // 1.12 addWithoutRegistry
-            }))
+                    }
+                });
+                // JEI lists what the tabs list: the buckets too, so their information pages can be found (JeiPages)
+                TAB_EXTRAS.forEach(i -> out.accept(i.get()));
+            })
             .build());
         BLOCKS.register(modBus);
         ITEMS.register(modBus);

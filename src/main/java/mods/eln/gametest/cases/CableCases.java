@@ -40,6 +40,7 @@ public final class CableCases {
         cases.add(new JoinedRouteCase());
         cases.add(new DeviceEndCase());
         cases.add(new WaypointEndCase());
+        cases.add(new BurntRepairCase());
         cases.add(new PreviewSnapshotCase());
         cases.add(new HostedCase());
         cases.add(new FootprintCase());
@@ -169,6 +170,7 @@ public final class CableCases {
             c.line(String.format("voxel cable straight: cable at x 3 warmed by %.3f C (six-node), %.3f C (voxel)", ts, tv));
             c.check("voxel cable straight: warms like a six-node cable (1%)", ts > 0.1 && Math.abs(ts - tv) <= 0.01 * ts, String.format("six-node %.3f, voxel %.3f", ts, tv));
         }));
+        cases.add(new ShaftJoin());
         cases.add(new Case("voxel cable inner corners", (c, six, z) -> {
             // floor, up onto a wall to the south, along it, back down to the floor
             for (int x = 2; x <= 5; x++) c.floor(c.at(x, 1, z + 1));
@@ -627,11 +629,104 @@ public final class CableCases {
     }
 
     /**
+     * A burnt cable is mended by right-clicking it with a matching kit (Baughn 2026-11-11, like a machine's repair part):
+     * the whole burnt run joined to the clicked piece, for the kit length it holds; a kit of another kind refuses.
+     */
+    static final class BurntRepairCase implements TestCase {
+        String err;
+        int burntBefore, burntAfterWrong, burntAfter, kitBefore, kitAfter, laidLen;
+        boolean handledWrong, handled;
+
+        public String name() {
+            return "a burnt cable is mended with a matching kit";
+        }
+
+        public int width() {
+            return 10;
+        }
+
+        public int height() {
+            return 4;
+        }
+
+        public int depth() {
+            return 3;
+        }
+
+        public int ticks() {
+            return 10;
+        }
+
+        java.util.List<mods.eln.node.voxel.VoxelNode> nodes(TestContext c) {
+            var out = new java.util.ArrayList<mods.eln.node.voxel.VoxelNode>();
+            for (int x = 0; x < 8; x++)
+                if (mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(c.at(x, 1, 1), c.level())) instanceof mods.eln.node.voxel.VoxelNode v)
+                    out.add(v);
+            return out;
+        }
+
+        int burnt(TestContext c) {
+            int n = 0;
+            for (var v : nodes(c)) for (var p : v.parts) if (p instanceof CablePart cp && cp.burnt != null) n++;
+            return n;
+        }
+
+        public void build(TestContext c) {
+            var hitA = net.minecraft.world.phys.Vec3.atLowerCornerOf(c.at(1, 0, 1)).add(0.5, 1.0, 0.5);
+            var hitB = net.minecraft.world.phys.Vec3.atLowerCornerOf(c.at(6, 0, 1)).add(0.5, 1.0, 0.5);
+            long[][] j = new long[1][];
+            var a = mods.eln.node.voxel.CablePlacer.endAtForTests(c.level(), c.at(1, 0, 1), net.minecraft.core.Direction.UP, hitA, true, j);
+            var b = mods.eln.node.voxel.CablePlacer.endAtForTests(c.level(), c.at(6, 0, 1), net.minecraft.core.Direction.UP, hitB, false, j);
+            err = mods.eln.node.voxel.CablePlacer.routeAndLayForTests(c.level(), LV, a, b);
+            // burn it in blocks 2..4 (each block's conductor burns on its own, as overheating does)
+            for (var v : nodes(c)) {
+                int x = v.coordonate.x - c.at(0, 0, 0).getX();
+                if (x < 2 || x > 4) continue;
+                for (var p : v.parts)
+                    if (p instanceof CablePart cp) {
+                        var bu = v.burnableOf(cp);
+                        if (bu != null) bu.burn(mods.eln.sim.process.destruct.FailureCause.OVERHEAT, mods.eln.sim.process.destruct.Failure.Kind.CABLE);
+                        laidLen += cp.length();
+                    }
+            }
+            burntBefore = burnt(c);
+            var player = Wp10bCases.player(c);
+            player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+            net.minecraft.core.BlockPos at = c.at(3, 1, 1);
+            var v = (mods.eln.node.voxel.VoxelNode) mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(at, c.level()));
+            int[] bx = null;
+            for (var p : v.parts) if (p instanceof CablePart cp) bx = cp.boxes().get(0);
+            var hit = net.minecraft.world.phys.Vec3.atLowerCornerOf(at).add((bx[0] + bx[3]) / 32.0, bx[4] / 16.0, (bx[2] + bx[5]) / 32.0);
+            var wrong = mods.eln.node.voxel.CableKitItem.kit(CablePart.tierOf("Signal Cable"), 16 * 20);
+            double px = player.getX(), py = player.getY(), pz = player.getZ();
+            player.snapTo(hit.x, hit.y + 0.5, hit.z, 0, 90);   // (over the cable: a click must be within reach)
+            handledWrong = mods.eln.node.voxel.CablePlacer.use(player, c.level(), at, net.minecraft.core.Direction.UP, wrong, CablePart.tierOf("Signal Cable"), hit);
+            burntAfterWrong = burnt(c);
+            var kit = mods.eln.node.voxel.CableKitItem.kit(LV, 16 * 20);
+            kitBefore = mods.eln.node.voxel.KitItem.lengthForTests(kit);
+            handled = mods.eln.node.voxel.CablePlacer.use(player, c.level(), at, net.minecraft.core.Direction.UP, kit, LV, hit);
+            kitAfter = mods.eln.node.voxel.KitItem.lengthForTests(kit);
+            player.snapTo(px, py, pz, 0, 0);
+            burntAfter = burnt(c);
+        }
+
+        public void measure(TestContext c) {
+            c.check("burnt repair: laid", err == null, String.valueOf(err));
+            c.check("burnt repair: three blocks burnt", burntBefore >= 3, burntBefore + " burnt pieces");
+            c.check("burnt repair: a kit of another kind refuses", handledWrong && burntAfterWrong == burntBefore, handledWrong + ", " + burntAfterWrong);
+            c.check("burnt repair: the matching kit mends the whole burnt run", handled && burntAfter == 0, burntAfter + " still burnt");
+            c.check("burnt repair: it costs the burnt length", kitBefore - kitAfter == laidLen, (kitBefore - kitAfter) + " voxels taken, " + laidLen + " burnt");
+        }
+    }
+
+    /**
      * A route started on an old cable joins it (Baughn: cable laid with two clicks wasn't connected): a cable from the
      * source to a free point on the floor, then a second one from a point on that cable to the resistor; the circuit
      * conducts.
      */
     static final class JoinedRouteCase implements TestCase {
+        long sleeves;
+        String partsAt = "";
         ResistorElement r;
         String err1, err2, joinAt;
 
@@ -673,12 +768,21 @@ public final class CableCases {
             long[][] j3 = new long[1][];
             var b = mods.eln.node.voxel.CablePlacer.endAtForTests(level, c.at(7, 1, 1), net.minecraft.core.Direction.WEST, hitR, false, j3);
             err2 = s2 == null ? "no start on the cable" : mods.eln.node.voxel.CablePlacer.routeAndLayJoinedForTests(level, LV, s2, j2[0], b, j3[0]);
+            // (routing phase 2: a sleeve is drawn where the branch meets the first cable; Baughn: visible = connected)
+            if (j2[0] != null) {
+                BlockPos jb = new BlockPos((int) Math.floorDiv(j2[0][0], 16), (int) Math.floorDiv(j2[0][1], 16), (int) Math.floorDiv(j2[0][2], 16));
+                if (mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(jb, level)) instanceof mods.eln.node.voxel.VoxelNode v) {
+                    sleeves = mods.eln.node.voxel.VoxelGeometry.model(v.parts, null).solids.stream().filter(sd -> "cable splice".equals(sd.name)).count();
+                    for (var part : v.parts) if (part instanceof CablePart cp) partsAt += java.util.Arrays.toString(cp.points) + " f" + cp.face + " ";
+                }
+            }
         }
 
         public void measure(TestContext c) {
             c.check("joined route: the first cable laid", err1 == null, String.valueOf(err1));
             c.check("joined route: the second starts on it (a join)", !"no join".equals(joinAt), joinAt);
             c.check("joined route: the second laid", err2 == null, String.valueOf(err2));
+            c.check("joined route: a sleeve shows where it joins", sleeves == 1, sleeves + " sleeves; pieces there: " + partsAt);
             double i = current(r);
             c.check("joined route: the circuit conducts through the join", Math.abs(i) > 1, String.format("%.4f A", i));
         }
@@ -776,15 +880,16 @@ public final class CableCases {
                 net.minecraft.resources.Identifier.fromNamespaceAndPath("eln", "cable_kit_from_coils_mv"));
             var mv = rm.byKey(mvKey).map(h -> h.value()).orElse(null);
             var adv = c.level().getServer().getAdvancements().get(net.minecraft.resources.Identifier.fromNamespaceAndPath("eln", "recipes/misc/cable_kit_from_coils"));
-            c.check("cable kit: in the recipe book, one recipe per tier each way, unlocked by cable",
-                learnable == 2 * CablePart.TIERS.length && adv != null, learnable + " learnable, advancement " + (adv != null));
+            // (the power tiers' cable items are retired, Baughn 2026-11-07: old ones still become kits, kits no longer become them)
+            c.check("cable kit: in the recipe book, one recipe per tier each way (the power tiers into kits only), unlocked by cable",
+                learnable == 2 * CablePart.TIERS.length - 4 && adv != null, learnable + " learnable, advancement " + (adv != null));
             var mvIngs = mv == null ? List.<net.minecraft.world.item.crafting.Ingredient>of() : mv.placementInfo().ingredients();
             var mvIn = net.minecraft.world.item.crafting.CraftingInput.of(1, 1, List.of(mods.eln.node.voxel.CableKitRecipes.coil(LV + 1)));
             c.check("cable kit: the MV recipe places MV cable only and takes no LV", mv instanceof mods.eln.node.voxel.CableKitRecipes.FromCoils
                 && mvIngs.size() == 1 && mvIngs.get(0).test(mods.eln.node.voxel.CableKitRecipes.coil(LV + 1)) && !mvIngs.get(0).test(coil)
                 && !((mods.eln.node.voxel.CableKitRecipes.FromCoils) mv).matches(net.minecraft.world.item.crafting.CraftingInput.of(1, 1, List.of(coil.copy())), c.level())
                 && ((mods.eln.node.voxel.CableKitRecipes.FromCoils) mv).matches(mvIn, c.level()) && mv.display().size() == 1, String.valueOf(mv));
-            c.check("cable kit: JEI examples per tier", mods.eln.node.voxel.CableKitRecipes.examples().size() >= 10,
+            c.check("cable kit: JEI examples per tier still made", mods.eln.node.voxel.CableKitRecipes.examples().size() == 2 * (CablePart.TIERS.length - 4),
                 mods.eln.node.voxel.CableKitRecipes.examples().size() + " examples");
             // whole stacks (Baughn: a grid of cable stacks gave one cable's worth per slot, and shift-click a heap of kits)
             var four = new java.util.ArrayList<net.minecraft.world.item.ItemStack>();
@@ -891,7 +996,8 @@ public final class CableCases {
      * Chips anywhere on a face (Baughn: 6 voxels across; pins that touch connect; a voxel of air otherwise):
      * two NOT chips on one floor, pin to pin: the first's output (high, its input open) drives the second (low). A NOT
      * placed at a click, its input pin touched by a floor cable from a Signal Source at 50 V next door: low. A chip with
-     * no pin toward another is refused beside it; a chip over another is refused.
+     * no pin toward another is refused beside it; a chip over another is refused. The clicked NOT, in the middle of the
+     * face, goes off centre there (Baughn 2026-11-18, #515), its input pin on the cable's end.
      */
     static final class ChipsPackedCase implements TestCase {
         mods.eln.node.six.SixNodeElement a, b, e;
@@ -936,19 +1042,19 @@ public final class CableCases {
             Wp9aCases.orient(b, l -> l, xp);
             // over chip a: no room
             String over = v.placeAnywhere(mods.eln.Eln.sixNodeItem.getDescriptor(Wp9cCases.NOT).newItemStack(), yn, 0.3, 0, 0.5, player);
-            // a NOT placed at a click; a Signal Source (50 V) in the next block west, a floor cable to the chip's input
+            // a NOT placed at a click; a Signal Source (SVU) in the next block west, a floor cable to the chip's input
             var w = block(c, c.at(4, 1, 1));
             String err = w.placeAnywhere(mods.eln.Eln.sixNodeItem.getDescriptor(Wp9cCases.NOT).newItemStack(), yn, 0.52, 0, 0.47, player);
-            e = w.getElement(yn);
+            e = VoxelDeviceCases.TapCase.placed(w);   // (off centre, even in the middle: #515)
             if (e != null) Wp9aCases.orient(e, l -> l, xp);
             voxel(c, c.at(4, 1, 1), List.of(new CablePart(0, DOWN, new int[]{0, 0, 8, 4, 0, 8})));
             var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(c, Wp9aCases.SIGNAL_SOURCE, c.at(3, 1, 1), yn);
             src.networkUnserialize(c.stream(o -> {
                 o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                o.writeFloat(50f);
+                o.writeFloat((float) mods.eln.Eln.SVU);
             }));
             placed = "click: " + err + ", slot " + (e == null ? -1 : e.slot) + " at " + (e == null ? "-" : e.ox + "," + e.oy + "," + e.oz);
-            placedOk = err == null && e != null && e.slot == yn.getInt();   // (the middle of a free face: its own slot)
+            placedOk = err == null && e != null && e.slot >= 6 && w.getElement(yn) == null && e.ox == 0 && e.oy == 0 && e.oz == 0;
             // beside a chip whose side toward it has no pin: too close
             var u = block(c, c.at(6, 1, 1));
             u.createSubBlockAt(mods.eln.Eln.sixNodeItem.getDescriptor(Wp9cCases.NOT).newItemStack(), 6, yn, -4, 0, 0, player);
@@ -975,18 +1081,18 @@ public final class CableCases {
         }
 
         public void measure(TestContext c) {
-            c.check("chips: placed at a click in the middle of a free face: the face's slot", placedOk, placed);
+            c.check("chips: placed at a click in the middle of a free face: off centre there, not in the face's slot", placedOk, placed);
             c.check("chips: refused over a chip, and beside one with no pin toward it", refusedOk, refused);
             c.check("chips: four fit a face (pins met along x, two voxels of air along z)", fourOk, four);
             c.checkValue("chips: the first NOT (input open) [V]", Wp9cCases.out(a), mods.eln.Eln.SVU);
             Wp9cCases.within(c, "chips: the second NOT, its input on the first's output pin [V]", Wp9cCases.out(b), 0, 0.5);
-            Wp9cCases.within(c, "chips: a NOT whose input pin touches a cable from 50 V [V]", e == null ? -1 : Wp9cCases.out(e), 0, 0.5);
+            Wp9cCases.within(c, "chips: a NOT whose input pin touches a cable from SVU [V]", e == null ? -1 : Wp9cCases.out(e), 0, 0.1 * mods.eln.Eln.SVU);
         }
     }
 
     /**
      * Other small devices go anywhere on a face too (Baughn), the redstone converters stay centred: a Signal Trimmer off
-     * centre at 50 V, its output pin on a NOT chip's input pin: low.
+     * centre at SVU, its output pin on a NOT chip's input pin: low.
      */
     static final class SmallDevicesAnywhereCase implements TestCase {
         mods.eln.node.six.SixNodeElement not;
@@ -1074,7 +1180,7 @@ public final class CableCases {
         }
     }
 
-    /** The cable kit from a Signal Source (50 V) to a NOT chip placed at a click: a click on the chip ends the route at its
+    /** The cable kit from a Signal Source (SVU) to a NOT chip placed at a click: a click on the chip ends the route at its
      *  nearest pin (its input), and the laid cable drives it: low. */
     static final class CableToChipCase implements TestCase {
         mods.eln.node.six.SixNodeElement chip;
@@ -1096,7 +1202,7 @@ public final class CableCases {
             var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(c, Wp9aCases.SIGNAL_SOURCE, c.at(1, 1, 1), yn);
             src.networkUnserialize(c.stream(o -> {
                 o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                o.writeFloat(50f);
+                o.writeFloat((float) mods.eln.Eln.SVU);
             }));
             var v = ChipsPackedCase.block(c, c.at(5, 1, 1));
             err = String.valueOf(v.placeAnywhere(mods.eln.Eln.sixNodeItem.getDescriptor(Wp9cCases.NOT).newItemStack(), yn, 0.4, 0, 0.5, player));   // (two voxels off centre)
@@ -1113,7 +1219,7 @@ public final class CableCases {
 
         public void measure(TestContext c) {
             c.line(err);
-            Wp9cCases.within(c, "cable to chip: the NOT's input on the laid cable from 50 V [V]", chip == null ? -1 : Wp9cCases.out(chip), 0, 0.5);
+            Wp9cCases.within(c, "cable to chip: the NOT's input on the laid cable from SVU [V]", chip == null ? -1 : Wp9cCases.out(chip), 0, 0.1 * mods.eln.Eln.SVU);
         }
     }
 
@@ -1925,7 +2031,7 @@ public final class CableCases {
             net.minecraft.world.item.ItemStack bulb = null;
             for (int i = 0; i < 64 * 128 && bulb == null; i++) {
                 var d = mods.eln.Eln.sharedItem.getDescriptor(i);
-                if (d != null && "Small 50V Economic Light Bulb".equals(d.name)) bulb = d.newItemStack();
+                if (d != null && "Small 48V Economic Light Bulb".equals(d.name)) bulb = d.newItemStack();
             }
             lamp.getInventory().setItem(0, bulb);
             lamp.getInventory().setChanged();
@@ -2030,6 +2136,86 @@ public final class CableCases {
                     String.format("six-node %.5f A, voxel %.5f A", a, b));
             }
             if (extra != null) extra.check(c, 1, 6);
+        }
+    }
+
+    /**
+     * Baughn 2026-11-08 (Incognito 397 73..75 582): a cable along a ceiling turns up a shaft chiselled through the block
+     * above and out over its top. At each mouth the pieces either side of the blocks' boundary end a voxel apart (one's
+     * centre line, the other's wall plane), so no ends meet; their bodies touch across the boundary, and that joins them
+     * now. Then, the shaft's cable broken, the carved block stays carved (it turned back into a whole block).
+     */
+    static final class ShaftJoin implements TestCase {
+        String links = "", after = "";
+        boolean carvedKept;
+
+        public String name() {
+            return "voxel cable up a chiselled shaft joins at its mouths";
+        }
+
+        public int height() {
+            return 5;
+        }
+
+        public int ticks() {
+            return 5;
+        }
+
+        static mods.eln.node.voxel.VoxelNode node(TestContext c, BlockPos p) {
+            return mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(p, c.level())) instanceof mods.eln.node.voxel.VoxelNode v ? v : null;
+        }
+
+        static boolean linked(mods.eln.node.voxel.VoxelNode a, mods.eln.node.voxel.VoxelNode b) {
+            if (a == null || b == null) return false;
+            for (var nc : a.nodeConnectionList) {
+                try {
+                    var f1 = nc.getClass().getDeclaredField("N1");
+                    var f2 = nc.getClass().getDeclaredField("N2");
+                    var fe = nc.getClass().getDeclaredField("EC");
+                    f1.setAccessible(true);
+                    f2.setAccessible(true);
+                    fe.setAccessible(true);
+                    if ((f1.get(nc) == b || f2.get(nc) == b) && fe.get(nc) != null) return true;
+                } catch (ReflectiveOperationException e) {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        public void build(TestContext c) {
+            var level = c.level();
+            BlockPos low = c.at(2, 1, 1), up = low.above(), top = up.above();
+            c.floor(low.west());
+            c.floor(up);
+            c.floor(up.east());
+            var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.item.ItemStack(mods.eln.registry.ElnRegistry.CHISEL.get()));
+            // the shaft: x 0..4, z 8..12 through the whole block, four 4-cubes
+            for (int yy = 0; yy < 16; yy += 4) {
+                var hit = new net.minecraft.world.phys.Vec3(up.getX() + 0.01, up.getY() + (yy + 2) / 16.0, up.getZ() + 10 / 16.0);
+                mods.eln.node.voxel.ChiselItem.carve(player, level, up, hit, net.minecraft.core.Direction.WEST, 4, true);
+            }
+            int mv = 2;
+            voxel(c, low, List.of(new CablePart(mv, 1, new int[]{8, 16, 10, 3, 16, 10})));
+            voxel(c, up, List.of(new CablePart(mv, 5, new int[]{4, 0, 10, 4, 16, 10})));
+            voxel(c, top, List.of(new CablePart(mv, 0, new int[]{3, 0, 10, 12, 0, 10})));
+        }
+
+        public void measure(TestContext c) {
+            BlockPos low = c.at(2, 1, 1), up = low.above(), top = up.above();
+            var nu = node(c, up);
+            links = linked(nu, node(c, low)) + "," + linked(nu, node(c, top)) + "," + (nu == null ? "no node" : nu.carved == null ? 0 : nu.carved.cardinality());
+            c.check("shaft: the ceiling piece and the shaft's piece are joined across the blocks' boundary, and the shaft's and the top's",
+                links.startsWith("true,true,"), links);
+            if (nu == null) return;
+            nu.removePart(0, false);
+            nu.lastPartGone();
+            boolean still = c.level().getBlockState(up).getBlock() instanceof mods.eln.node.voxel.VoxelNodeBlock;
+            var again = node(c, up);
+            after = still + "," + (again == null ? "no node" : again.carved == null ? "0" : String.valueOf(again.carved.cardinality()));
+            c.check("shaft: its cable gone, the carved block stays carved (Baughn: the cut-out went with the cable)", still && again != null
+                && again.carved != null && again.carved.cardinality() == 256, after);
         }
     }
 }

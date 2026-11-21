@@ -21,11 +21,19 @@ import net.neoforged.neoforge.common.NeoForge;
 /** EA's client entry point (1.12 ClientProxy): renderers, the client side of the EA protocol, frame refresh (P3). */
 @Mod(value = Eln.MODID, dist = Dist.CLIENT)
 public final class ElnClient {
-    public ElnClient(IEventBus modBus) {
+    public ElnClient(IEventBus modBus, net.neoforged.fml.ModContainer container) {
+        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, ElnClientConfig.SPEC);
+        modBus.addListener(net.neoforged.fml.event.config.ModConfigEvent.Loading.class, e -> {
+            if (e.getConfig().getSpec() == ElnClientConfig.SPEC) ElnClientConfig.refresh();
+        });
+        modBus.addListener(net.neoforged.fml.event.config.ModConfigEvent.Reloading.class, e -> {
+            if (e.getConfig().getSpec() == ElnClientConfig.SPEC) ElnClientConfig.refresh();
+        });
         ElnNet.clientHandler = ClientPacketHandler::packetRx;
         mods.eln.sound.SoundCommand.clientPlayer = mods.eln.sound.SoundClient::play;
         UtilsClient.hooks = new ClientHooks();
         ClientRenders.registerAll();
+        mods.eln.robotics.client.RoboticsClient.register(modBus);
         // oil: crude (still/flowing) and lake oil, opaque (AdventurAgent: tinted water textures let the lake bed show through)
         modBus.addListener(net.neoforged.neoforge.client.event.RegisterFluidModelsEvent.class, e -> {
             var tint = net.neoforged.neoforge.client.fluid.FluidTintSources.constant(0xFFFFFFFF);
@@ -49,6 +57,11 @@ public final class ElnClient {
             }
             e.register(new net.minecraft.client.renderer.block.FluidModel.Unbaked(wStill, wFlow, null,
                 net.neoforged.neoforge.client.fluid.FluidTintSources.constant(0xFFE8ECF0)), mods.eln.oil.Oil.STEAM, mods.eln.oil.Oil.STEAM_FLOWING);
+            e.register(new net.minecraft.client.renderer.block.FluidModel.Unbaked(wStill, wFlow, null,
+                net.neoforged.neoforge.client.fluid.FluidTintSources.constant(mods.eln.oil.Latex.COLOR)), mods.eln.oil.Latex.SOURCE, mods.eln.oil.Latex.FLOWING);
+            var butadiene = net.neoforged.neoforge.client.fluid.FluidTintSources.constant(mods.eln.oil.Butadiene.COLOR);
+            e.register(new net.minecraft.client.renderer.block.FluidModel.Unbaked(wStill, wFlow, null, butadiene), mods.eln.oil.Butadiene.SOURCE, mods.eln.oil.Butadiene.FLOWING);
+            e.register(new net.minecraft.client.renderer.block.FluidModel.Unbaked(wStill, wFlow, null, butadiene), mods.eln.oil.Butadiene.GAS, mods.eln.oil.Butadiene.GAS_FLOWING);
         });
         modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, e -> {
             e.registerBlockEntityRenderer(ElnRegistry.SIX_NODE_ENTITY.get(), ctx -> new SixNodeRender<>());
@@ -77,6 +90,10 @@ public final class ElnClient {
             net.neoforged.neoforge.client.gui.VanillaGuiLayers.HOTBAR, net.minecraft.resources.Identifier.fromNamespaceAndPath("eln", "battery_belt"), BeltHud::render));
         modBus.addListener(net.neoforged.neoforge.client.event.RegisterGuiLayersEvent.class, e -> e.registerAbove(
             net.neoforged.neoforge.client.gui.VanillaGuiLayers.HOTBAR, net.minecraft.resources.Identifier.fromNamespaceAndPath("eln", "bike_speedometer"), BikeHud::render));
+        modBus.addListener(net.neoforged.neoforge.client.event.RegisterGuiLayersEvent.class, e -> e.registerAbove(
+            net.neoforged.neoforge.client.gui.VanillaGuiLayers.OVERLAY_MESSAGE, net.minecraft.resources.Identifier.fromNamespaceAndPath("eln", "route_note"), RouteNoteHud::render));
+        modBus.addListener(net.neoforged.neoforge.client.event.RegisterGuiLayersEvent.class, e -> e.registerAbove(
+            net.neoforged.neoforge.client.gui.VanillaGuiLayers.OVERLAY_MESSAGE, net.minecraft.resources.Identifier.fromNamespaceAndPath("eln", "toolbag_hint"), ToolbagHud::render));
         modBus.addListener(net.neoforged.neoforge.client.event.RegisterGuiLayersEvent.class,
             e -> e.registerAboveAll(net.minecraft.resources.Identifier.fromNamespaceAndPath("eln", "tutorial_sign"),
                 mods.eln.sixnode.tutorialsign.TutorialSignHud::render));
@@ -107,9 +124,28 @@ public final class ElnClient {
         });
         mods.eln.bike.ElectricBike.clientSound = mods.eln.client.entity.BikeSound::tick;
         mods.eln.bike.ElectricBike.clientCrash = b -> net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new mods.eln.bike.BikeCrash(b.getId()));
+        mods.eln.introspect.client.ClientIntrospect.register(); // the client half of device reports (agent tools)
         if (mods.eln.handbook.Handbook.guideAvailable())
             modBus.addListener(net.neoforged.neoforge.client.event.AddClientReloadListenersEvent.class, HandbookGuide::onAddReloadListeners);
         NeoForge.EVENT_BUS.addListener(RenderFrameEvent.Pre.class, FrameTime::onFrame);
+        // the render benchmark at any time (it also starts by itself with -Deln.renderBench=FILE.json)
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.RegisterClientCommandsEvent.class, e -> e.getDispatcher().register(
+            net.minecraft.commands.Commands.literal("elnbench").executes(c -> {
+                RenderBenchClient.start();
+                return 1;
+            })));
+        mods.eln.gl.Bake.host = mods.eln.client.render.bake.ChunkBake.INSTANCE;
+        modBus.addListener(net.neoforged.neoforge.client.event.RegisterSpriteSourcesEvent.class,
+            e -> e.register(mods.eln.client.render.bake.ModelSprites.ID, mods.eln.client.render.bake.ModelSprites.CODEC));
+        modBus.addListener(net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent.class,
+            e -> mods.eln.client.render.bake.ModelSprites.stitched(e.getAtlas()));
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.AddSectionGeometryEvent.class,
+            mods.eln.client.render.bake.ChunkBake.INSTANCE::onGeometry);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class,
+            e -> mods.eln.client.render.bake.ChunkBake.INSTANCE.tick());
+        // lamp beams (flashlights, the headlamp, the bike lamp), drawn per pixel (LampBeam)
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.FrameGraphSetupEvent.class, LampBeam::frame);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class, LampBeam::tick);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent.class, mods.eln.client.render.ChiselOutline::onExtract);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent.class, mods.eln.client.render.KitOutline::onExtract);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent.class, mods.eln.client.render.VoxelOutline::onExtract);
@@ -130,6 +166,8 @@ public final class ElnClient {
                 e.register(ElnRegistry.BELT_MENU.get(), mods.eln.client.gui.BeltScreen::new);
                 e.register(ElnRegistry.WIRE_SNIPS_MENU.get(), mods.eln.client.gui.WireSnipsScreen::new);
                 e.register(ElnRegistry.ROAD_VEHICLE_MENU.get(),mods.eln.vehicle.VehicleScreen::new);
+
+                e.register(ElnRegistry.TOOLBAG_MENU.get(), mods.eln.client.gui.ToolbagScreen::new);
                 e.register(ElnRegistry.BIKE_TRUNK_MENU.get(), mods.eln.client.gui.BikeTrunkScreen::new);
             });
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class,RoadVehicleKeys::tick);

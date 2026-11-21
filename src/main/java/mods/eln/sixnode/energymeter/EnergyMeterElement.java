@@ -1,6 +1,7 @@
 package mods.eln.sixnode.energymeter;
 
 
+import mods.eln.network.ClientValues;
 import mods.eln.registry.ElnDeviceRegistry;
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
@@ -52,7 +53,7 @@ public class EnergyMeterElement extends SixNodeElement {
      */
     SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
 
-    public float voltageMax = (float) Eln.SVU, voltageMin = 0;
+    public float voltageMax = (float) Eln.LVU, voltageMin = 0;   // (1.12: SVU, which was also its 50 V tier; the 48 V tier now)
 
     int energyUnit = 1, timeUnit = 0;
 
@@ -198,7 +199,7 @@ public class EnergyMeterElement extends SixNodeElement {
         try {
             switch (stream.readByte()) {
                 case clientEnergyStackId:
-                    energyStack = stream.readDouble();
+                    energyStack = ClientValues.finite(stream.readDouble(), energyStack);   // (typed: any finite joules)
                     slowProcess.publishTimeout = -1;
                     // needPublish();
                     break;
@@ -207,11 +208,12 @@ public class EnergyMeterElement extends SixNodeElement {
                     needPublish();
                     break;
                 case clientModId:
-                    mod = Mod.valueOf(stream.readUTF());
+                    String m = stream.readUTF();
+                    for (Mod k : Mod.values()) if (k.name().equals(m)) mod = k;   // (another name: no change)
                     needPublish();
                     break;
                 case clientPasswordId:
-                    password = stream.readUTF();
+                    password = ClientValues.readString(stream);
                     needPublish();
                     break;
                 case clientToggleStateId:
@@ -247,7 +249,7 @@ public class EnergyMeterElement extends SixNodeElement {
         } catch (Exception e) {
             mod = Mod.ModCounter;
         }
-        energyStack = nbt.getDoubleOr("energyStack", 0.0);
+        energyStack = ClientValues.finite(nbt.getDoubleOr("energyStack", 0.0), 0.0);
         timeCounter = nbt.getDoubleOr("timeCounter", 0.0);
         password = nbt.getStringOr("password", "");
         slowProcess.oldEnergyPublish = energyStack;

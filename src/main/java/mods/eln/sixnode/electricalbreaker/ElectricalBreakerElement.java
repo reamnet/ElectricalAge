@@ -5,6 +5,7 @@ import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
+import mods.eln.network.ClientValues;
 import mods.eln.node.NodeBase;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
@@ -37,17 +38,42 @@ public class ElectricalBreakerElement extends SixNodeElement {
 
     SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
 
-    public float voltageMax = (float) Eln.SVU, voltageMin = 0;
+    public float voltageMax = (float) Eln.LVU, voltageMin = 0;   // (1.12: SVU, which was also its 50 V tier; the 48 V tier now)
 
     boolean switchState = false;
-    double currantMax = 0;
+    /**
+     * The current it trips at, A (Baughn 2026-11-06: a UI, for cables of any cross-section); 0: its contacts', 1.05 x
+     * their cable's nominal current.
+     */
+    public float tripAmps = 0;
     boolean nbtBoot = false;
+
+    /**
+     * Its contacts: as a Medium Voltage Cable (resistance, and the heat model it trips by, scaled to tripAmps). Baughn
+     * 2026-11-17: it used to need a piece of cable in its slot before it did anything, which players can't give it;
+     * the slot is gone, and a piece left in one from before only sets tripAmps once (readFromNBT) and drops with it.
+     */
+    public static ElectricalCableDescriptor contacts() {
+        return mods.eln.registry.ElnDeviceRegistry.meduimVoltageCableDescriptor;
+    }
 
     public ElectricalCableDescriptor cableDescriptor = null;
 
     public static final byte setVoltageMaxId = 1;
     public static final byte setVoltageMinId = 2;
     public static final byte toogleSwitchId = 3;
+    public static final byte setTripAmpsId = 4;
+
+    /** Its contacts' own trip current, A (1.05 x their cable's nominal). */
+    public double cableTripAmps() {
+        return cableDescriptor == null ? 0 : 1.05 * cableDescriptor.electricalNominalPower / cableDescriptor.electricalNominalVoltage;
+    }
+
+    /** The current it trips at now, A. */
+    public double tripAmpsNow() {
+        double defaultTrip = Double.isFinite(descriptor.currentLimit) ? descriptor.currentLimit : cableTripAmps();
+        return tripAmps > 0 ? Math.min(tripAmps, descriptor.currentLimit) : defaultTrip;
+    }
 
     public ElectricalBreakerElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
@@ -77,8 +103,12 @@ public class ElectricalBreakerElement extends SixNodeElement {
         byte value = nbt.getByteOr("front", (byte) 0);
         front = LRDU.fromInt((value >> 0) & 0x3);
         switchState = nbt.getBooleanOr("switchState", false);
-        voltageMax = nbt.getFloatOr("voltageMax", 0f);
-        voltageMin = nbt.getFloatOr("voltageMin", 0f);
+        voltageMax = ClientValues.finite(nbt.getFloatOr("voltageMax", 0f), (float) Eln.LVU);
+        voltageMin = ClientValues.finite(nbt.getFloatOr("voltageMin", 0f), 0f);
+        tripAmps = nbt.getFloatOr("tripAmps", 0f);
+        // (from before 2026-11-17: the cable piece in its slot set the trip current; keep that current)
+        ElectricalCableDescriptor old = mods.eln.node.voxel.CableItems.descriptor(inventory.getItem(ElectricalBreakerContainer.cableSlotId));
+        if (tripAmps <= 0 && old != null) tripAmps = (float) (1.05 * old.electricalNominalPower / old.electricalNominalVoltage);
         nbtBoot = true;
     }
 
@@ -89,6 +119,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
         nbt.putBoolean("switchState", switchState);
         nbt.putFloat("voltageMax", voltageMax);
         nbt.putFloat("voltageMin", voltageMin);
+        nbt.putFloat("tripAmps", tripAmps);
     }
 
     @Override
@@ -105,7 +136,6 @@ public class ElectricalBreakerElement extends SixNodeElement {
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
-        if (Utils.isEmpty(inventory.getItem(ElectricalBreakerContainer.cableSlotId))) return 0;
         if (front == lrdu) return NodeBase.maskElectricalAll;
         if (front.inverse() == lrdu) return NodeBase.maskElectricalAll;
 
@@ -122,6 +152,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Contact"), switchState ? I18N.tr("Closed") : I18N.tr("Open"));
         info.put(I18N.tr("Current"), Utils.plotAmpere("", aLoad.getCurrent()));
+        info.put(I18N.tr("Trips at"), Utils.plotAmpere("", tripAmpsNow()));
         if (Eln.wailaEasyMode) {
             info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getU()) + Utils.plotVolt(" ", bLoad.getU()));
         }
@@ -140,8 +171,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
             stream.writeBoolean(switchState);
             stream.writeFloat(voltageMax);
             stream.writeFloat(voltageMin);
-
-            Utils.serialiseItemStack(stream, inventory.getItem(ElectricalBreakerContainer.cableSlotId));
+            stream.writeFloat((float) tripAmpsNow());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -156,13 +186,8 @@ public class ElectricalBreakerElement extends SixNodeElement {
     }
 
     public void refreshSwitchResistor() {
-        ItemStack cable = inventory.getItem(ElectricalBreakerContainer.cableSlotId);
-        ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
-        if (cableDescriptor == null || !switchState) {
-            switchResistor.ultraImpedance();
-        } else {
-            cableDescriptor.applyTo(switchResistor);
-        }
+        if (!switchState) switchResistor.ultraImpedance();
+        else contacts().applyTo(switchResistor);
     }
 
     public boolean getSwitchState() {
@@ -182,20 +207,12 @@ public class ElectricalBreakerElement extends SixNodeElement {
     }
 
     public void computeElectricalLoad() {
-        ItemStack cable = inventory.getItem(ElectricalBreakerContainer.cableSlotId);
-
         if (!nbtBoot) setSwitchState(false);
         nbtBoot = false;
 
-        cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
-        if (cableDescriptor == null) {
-            aLoad.highImpedance();
-            bLoad.highImpedance();
-        } else {
-            cableDescriptor.applyTo(aLoad);
-            cableDescriptor.applyTo(bLoad);
-            currantMax = Math.min(cableDescriptor.electricalMaximalCurrent, descriptor.currentLimit);
-        }
+        cableDescriptor = contacts();
+        cableDescriptor.applyTo(aLoad);
+        cableDescriptor.applyTo(bLoad);
         refreshSwitchResistor();
     }
 
@@ -205,15 +222,20 @@ public class ElectricalBreakerElement extends SixNodeElement {
         try {
             switch (stream.readByte()) {
                 case setVoltageMaxId:
-                    voltageMax = stream.readFloat();
+                    voltageMax = ClientValues.finite(stream.readFloat(), voltageMax);   // (typed: any finite volts)
                     needPublish();
                     break;
                 case setVoltageMinId:
-                    voltageMin = stream.readFloat();
+                    voltageMin = ClientValues.finite(stream.readFloat(), voltageMin);
                     needPublish();
                     break;
                 case toogleSwitchId:
                     setSwitchState(!getSwitchState());
+                    needPublish();
+                    break;
+                case setTripAmpsId:
+                    float a = stream.readFloat();
+                    tripAmps = Float.isFinite(a) && a > 0 ? Math.min(a, 100000f) : 0;   // (0 or less: its contacts')
                     needPublish();
                     break;
             }

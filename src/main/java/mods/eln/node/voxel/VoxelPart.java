@@ -14,6 +14,13 @@ import java.util.List;
  * devices are to become parts too (Baughn's endgame), so nothing here assumes pipes.
  */
 public abstract class VoxelPart {
+    /**
+     * Its id in its block (routing phase 3: stored links name the part they lead to), unique there and never reused
+     * (VoxelNode.nextPartId); -1 until the node gives it one (VoxelNode.ensureIds). Saved by the node beside the part's
+     * own data (key "id").
+     */
+    public int id = -1;
+
     public abstract String kind();
 
     /** The voxels it occupies, as boxes (x0 y0 z0 x1 y1 z1, 0..16). */
@@ -38,6 +45,7 @@ public abstract class VoxelPart {
     static VoxelPart read(CompoundTag t, int blockY) {
         return switch (t.getStringOr("kind", "")) {
             case PipePart.KIND -> PipePart.read(t, blockY);
+            case JunctionPart.KIND -> JunctionPart.read(t, blockY);
             case ValvePart.KIND -> ValvePart.read(t);
             case AdapterPart.KIND -> AdapterPart.read(t);
             case SafetyValvePart.KIND -> SafetyValvePart.read(t);
@@ -51,6 +59,7 @@ public abstract class VoxelPart {
     static VoxelPart deserialize(String kind, DataInputStream in) throws IOException {
         return switch (kind) {
             case PipePart.KIND -> PipePart.deserialize(in);
+            case JunctionPart.KIND -> JunctionPart.deserialize(in);
             case ValvePart.KIND -> ValvePart.deserialize(in);
             case AdapterPart.KIND -> AdapterPart.deserialize(in);
             case SafetyValvePart.KIND -> SafetyValvePart.deserialize(in);

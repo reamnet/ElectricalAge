@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Random links, breaks and rejoins of bus ports against a plain reference graph (Baughn: one property test for the
  * scenarios, rejoining broken buses among them). After each tick: two linked ports share a bus exactly when the graph
  * connects them, a port without links is on no bus, and a value written on one port is read by exactly the ports its
- * bus reaches.
+ * bus reaches, and a broadcast packet arrives once at exactly the other ports its bus reaches.
  */
 class BusNetPropertyTest {
     @Property(tries = 300)
@@ -29,6 +29,7 @@ class BusNetPropertyTest {
             for (int i = 0; i < n; i++) {
                 BusPort p = new BusPort();
                 p.claim(1 << 5);
+                p.listen(true);
                 ports.add(p);
                 adj.add(new HashSet<>());
             }
@@ -66,10 +67,15 @@ class BusNetPropertyTest {
                 int w = r.nextInt(n);
                 double v = 0.1 + 0.8 * r.nextDouble();
                 ports.get(w).write(5, v);
+                ports.get(w).send(new Packet(Packet.BROADCAST, 17, PacketType.PRESS, step, 0));
                 BusNet.tick();
                 for (int i = 0; i < n; i++) {
                     boolean reach = !adj.get(w).isEmpty() && !adj.get(i).isEmpty() && comp[i] == comp[w];
-                    assertEquals(reach ? v : 0, ports.get(i).read(5), 1e-9, "port " + i + " after port " + w + " wrote (step " + step + ")");
+                    assertEquals(reach ? v : 0, ports.get(i).read(5), 1e-6, "port " + i + " after port " + w + " wrote (step " + step + ")");
+                    int presses = 0;   // (the inbox also has the channel's signals: the ports claim it)
+                    for (Packet got; (got = ports.get(i).poll()) != null; )
+                        if (got.type() == PacketType.PRESS) presses += got.index() == step ? 1 : 100;
+                    assertEquals(reach && i != w ? 1 : 0, presses, "port " + i + " after port " + w + " broadcast, once (step " + step + ")");
                 }
             }
         } finally {

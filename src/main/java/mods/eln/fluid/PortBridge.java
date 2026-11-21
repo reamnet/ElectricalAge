@@ -31,6 +31,9 @@ public final class PortBridge {
     private double[] loaded;
     private double carry;
 
+    /** OUT: what it pushes is live (crude with its natural gas: the oil pump's sealed line from the well). */
+    public boolean live;
+
     public PortBridge(String key, Mode mode, double ratePerS, double headPa) {
         this.key = key;
         this.mode = mode;
@@ -66,9 +69,40 @@ public final class PortBridge {
         return f <= 3 ? w * 17 + y : y * 17 + w;   // (north/south: x then y; west/east: y then z)
     }
 
-    /** Whether a pipe meets it. */
+    /**
+     * The spot (FluidPort.at) on a device's top face of a point drawn at (x, z) px in its model's frame (front XN, x the
+     * depth from the front, right z+: docs/cad.md), for the device facing front.
+     */
+    public static int topSpot(mods.eln.misc.Direction front, int x, int z) {
+        int[] d = unit(front.back()), r = unit(front.right());
+        int wx = 8 + (x - 8) * d[0] + (z - 8) * r[0], wz = 8 + (x - 8) * d[2] + (z - 8) * r[2];
+        return wx * 17 + wz;   // (up/down: x then z)
+    }
+
+    private static int[] unit(mods.eln.misc.Direction d) {
+        var n = d.toEnumFacing().getUnitVec3i();
+        return new int[]{n.getX(), n.getY(), n.getZ()};
+    }
+
+    /**
+     * The spot (FluidPort.at) on a device's left or right flank of a point drawn at (x, y) px in its model's frame (front
+     * XN, x the depth from the front, right z+: docs/cad.md), for the device facing front.
+     */
+    public static int flankSpot(mods.eln.misc.Direction front, mods.eln.misc.Direction face, int x, int y) {
+        mods.eln.misc.Direction b = front.back();
+        boolean plus = b == mods.eln.misc.Direction.XP || b == mods.eln.misc.Direction.ZP;
+        int w = plus ? x : 16 - x;
+        int f = face.toEnumFacing().get3DDataValue();
+        return f <= 3 ? w * 17 + y : y * 17 + w;   // (north/south: x then y; west/east: y then z)
+    }
+
+    /**
+     * Whether a pipe meets it: its run reaches another node, or holds more than its stub. (A pipe from one device's
+     * flange straight to another's is one run of both stubs and the pipe, with no edge out of it: the Steam Cracker's
+     * butadiene into a Polymeriser never left, LabAssistant.)
+     */
     public boolean piped() {
-        return stub != null && !FluidWorld.edgesOf(stub).isEmpty();
+        return stub != null && (FluidWorld.runSize(stub) > 1 || !FluidWorld.edgesOf(stub).isEmpty());
     }
 
     /** Before a fluid step: move between the tank and the pipe (mB moved). T: what goes into the pipe is at T (K). */
@@ -84,8 +118,16 @@ public final class PortBridge {
 
     private int push(ResourceHandler<FluidResource> tank, FluidNode run, int budget, double T) {
         if (run.P() > headPa) return 0;
-        // (liquids up to 90 % of the run, in mB of any liquid: they go by volume)
-        int liquidRoom = (int) Math.floor(Math.max(0, 0.9 * run.volume - run.liquidVolume()) * Water.RHO_L / EaUnits.KG_PER_MB_WATER);
+        // Liquids until the run is full, and then a little more, as far as the liquid's give takes the run to the head
+        // pressure (Water.K_LIQUID): a pump fills its pipe right up and pushes, so a pipe that climbs to a port high up
+        // reaches it (Baughn 2026-11-09: 3 blocks up into a tank, nothing arrived; liquids stopped at 90 % of the run,
+        // short of its top). In mB of any liquid: they go by volume.
+        double roomM3 = Math.max(0, 0.98 * run.volume - run.liquidVolume()) + Math.max(0, headPa - run.P()) * run.volume / Water.K_LIQUID;
+        // (the fluid core's liquid fills a run by squeezing its gas, not to a fixed 98 %: there the room is the gas the head
+        // pressure would squeeze, else a run 98 % full stood at 1.2 bar, its top port above the liquid, and nothing climbed)
+        if (FluidNode.coreOn())
+            roomM3 = NodeFluidView.cushionRoom(run.volume - run.liquidVolume(), run.P(), run.pVapour(), headPa) + Math.max(0, headPa - run.P()) * run.volume / Water.K_LIQUID;
+        int liquidRoom = (int) Math.floor(roomM3 * Water.RHO_L / EaUnits.KG_PER_MB_WATER);
         int moved = 0;
         for (int i = 0; i < tank.size() && moved < budget; i++) {
             FluidResource r = tank.getResource(i);
@@ -100,19 +142,49 @@ public final class PortBridge {
                 tx.commit();
             }
             if (got <= 0) continue;
-            EaUnits.add(run, ph.id(), got * FluidSpecies.kgPerMb(ph.id(), ph.vapour()), T, ph.vapour());
+            EaUnits.add(run, ph.id(), got * FluidSpecies.kgPerMb(ph.id(), ph.vapour()), T, ph.vapour(), live);
             moved += got;
             if (!ph.vapour()) liquidRoom -= got;
         }
         return moved;
     }
 
+    /** How close (EaUnits.layerOverlap) a run's layer must be to a mixture alias's proportions to be taken as it. */
+    static final double ALIAS_OVERLAP = 0.8;
+
     private int pull(ResourceHandler<FluidResource> tank, FluidNode run, int budget) {
         int moved = 0;
+        // (a device that takes a mixture alias, the column's crude: the run's layer of its parts, whole, as that alias, until
+        // the column is a still; crude in a pipe is its five cuts now, Baughn 2026-11-10)
+        var reg = mods.eln.sim.fluid.SpeciesRegistry.get();
+        for (int id = 2; id < reg.size() && moved < budget; id++) {
+            double[][] mix = reg.mixture(id, true);
+            var f = mix == null ? null : FluidSpecies.fluid(id, false);
+            if (f == null) continue;
+            int part = (int) mix[0][0];
+            // only a layer still close to the alias's own proportions counts as it, so residue or a refined cut piped
+            // into the column isn't distilled into crude's cuts
+            if (EaUnits.layerOverlap(run, mix[0], mix[1]) < ALIAS_OVERLAP) continue;
+            double kg = EaUnits.layerLiquid(run, part);
+            double per = FluidSpecies.kgPerMb(id, false);
+            int want = Math.min(budget - moved, (int) Math.floor(kg / per));
+            if (want <= 0) continue;
+            int put;
+            try (var tx = Transaction.openRoot()) {
+                put = tank.insert(FluidResource.of(f), want, tx);
+                tx.commit();
+            }
+            if (put <= 0) continue;
+            EaUnits.drainLayer(run, part, put * per);
+            moved += put;
+        }
         for (int id = 0; id < run.speciesBound() && moved < budget; id++) {
             for (boolean vapour : new boolean[]{false, true}) {
                 if (moved >= budget) break;
-                double kg = vapour ? EaUnits.vapourAvailable(run, id) : run.liquid(id);
+                // (a liquid layer goes whole, as its main species, Baughn 2026-11-10: a machine takes a mix and makes what
+                // it will of it; it doesn't pick one species out of it)
+                if (!vapour && id != mods.eln.sim.fluid.SpeciesRegistry.WATER && EaUnits.mainOfLayer(run, id) != id) continue;
+                double kg = vapour ? EaUnits.vapourAvailable(run, id) : id == mods.eln.sim.fluid.SpeciesRegistry.WATER ? run.liquid(id) : EaUnits.layerLiquid(run, id);
                 var f = FluidSpecies.fluid(id, vapour);
                 if (f == null || kg <= 0) continue;
                 double per = FluidSpecies.kgPerMb(id, vapour);
@@ -126,7 +198,7 @@ public final class PortBridge {
                 }
                 if (put <= 0) continue;
                 if (vapour) EaUnits.drainVapour(run, id, put * per);
-                else EaUnits.drainLiquid(run, id, put * per);
+                else EaUnits.drainLayer(run, id, put * per);
                 moved += put;
             }
         }

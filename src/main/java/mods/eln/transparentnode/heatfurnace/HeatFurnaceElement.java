@@ -5,6 +5,7 @@ import mods.eln.item.regulator.IRegulatorDescriptor;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
+import mods.eln.network.ClientValues;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodePeriodicPublishProcess;
 import mods.eln.node.transparent.TransparentNode;
@@ -54,6 +55,13 @@ public class HeatFurnaceElement extends TransparentNodeElement implements mods.e
     public static final byte unserializeToogleTakeFuelId = 4;
 
     public boolean controlExternal = false, takeFuel = false;
+    /**
+     * The player's settings under internal control, kept while the signal drives it (external control sets the gauge
+     * and the fuel intake itself): toggling back gives them back (AdventurAgent: the gauge came back at 10 %, the fuel
+     * declined, the set point at 0).
+     */
+    double internalGain = 0.1, internalTarget;
+    boolean internalTakeFuel;
 
     public HeatFurnaceElement(TransparentNode transparentNode, TransparentNodeDescriptor descriptor) {
         super(transparentNode, descriptor);
@@ -122,6 +130,11 @@ public class HeatFurnaceElement extends TransparentNodeElement implements mods.e
     @Override
     public java.util.List<FluidPort> fluidPorts() {
         return fluePorts;
+    }
+
+    @Override
+    public java.util.List<Flow> fluidFlows() {
+        return flue.flows();
     }
 
     @Override
@@ -203,20 +216,30 @@ public class HeatFurnaceElement extends TransparentNodeElement implements mods.e
             switch (packetType) {
                 case unserializeGain:
                     if (Utils.isEmpty(inventory.getItem(HeatFurnaceContainer.regulatorId))) {
-                        furnaceProcess.setGain(stream.readFloat());
+                        furnaceProcess.setGain(ClientValues.clamp(stream.readFloat(), 0.1f, 1f, (float) furnaceProcess.getGain()));   // (the screen's slider)
                     }
                     needPublish();
                     break;
                 case unserializeTemperatureTarget:
                     //if(Utils.isEmpty(inventory.getItem(HeatFurnaceContainer.regulatorId)))
                 {
-                    regulator.setTarget(stream.readFloat());
+                    regulator.setTarget(ClientValues.clamp(stream.readFloat(), 0, 980, regulator.getTarget()));   // (the screen's slider)
                 }
                 needPublish();
                 break;
                 case unserializeToogleControlExternalId:
-                    regulator.setTarget(0);
-                    setControlExternal(!getControlExternal());
+                    if (!getControlExternal()) {
+                        internalGain = furnaceProcess.getGain();
+                        internalTarget = regulator.getTarget();
+                        internalTakeFuel = getTakeFuel();
+                        regulator.setTarget(0);
+                        setControlExternal(true);
+                    } else {
+                        setControlExternal(false);
+                        furnaceProcess.setGain(internalGain);
+                        regulator.setTarget(internalTarget);
+                        setTakeFuel(internalTakeFuel);
+                    }
                     break;
                 case unserializeToogleTakeFuelId:
                     setTakeFuel(!getTakeFuel());
@@ -238,6 +261,20 @@ public class HeatFurnaceElement extends TransparentNodeElement implements mods.e
         if (value != controlExternal) needPublish();
         controlExternal = value;
         computeInventory();
+    }
+
+    /**
+     * Repaired, it declines fuel until the player takes it again (Baughn 2026-11-04, todo #218: a repair relit it at
+     * the old setting, and with nothing taking its heat it burnt out again; a burnt device opens no GUI to turn it down).
+     */
+    @Override
+    public void repair() {
+        boolean was = isBurnt();
+        super.repair();
+        if (was) {
+            setTakeFuel(false);
+            internalTakeFuel = false;
+        }
     }
 
     public boolean getTakeFuel() {
@@ -276,6 +313,11 @@ public class HeatFurnaceElement extends TransparentNodeElement implements mods.e
 
         nbt.putBoolean("takeFuel", takeFuel);
         nbt.putBoolean("controlExternal", controlExternal);
+        if (controlExternal) {   // (the settings to give back: only meaningful while the signal drives it)
+            nbt.putDouble("internalGain", internalGain);
+            nbt.putDouble("internalTarget", internalTarget);
+            nbt.putBoolean("internalTakeFuel", internalTakeFuel);
+        }
         flue.write(nbt);
     }
 
@@ -284,14 +326,31 @@ public class HeatFurnaceElement extends TransparentNodeElement implements mods.e
         super.readFromNBT(nbt);
         takeFuel = nbt.getBooleanOr("takeFuel", false);
         controlExternal = nbt.getBooleanOr("controlExternal", false);
+        internalGain = nbt.getDoubleOr("internalGain", 0.1);
+        internalTarget = nbt.getDoubleOr("internalTarget", 0);
+        internalTakeFuel = nbt.getBooleanOr("internalTakeFuel", false);
         flue.read(nbt);
     }
 
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> info = new HashMap<String, String>();
+        // (in order: Jade's headline is the first lines. Erisi's chat review: what its temperature, the regulator and
+        // combustion chambers have to do with each other)
+        Map<String, String> info = new java.util.LinkedHashMap<>();
         info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc));
-        info.put(I18N.tr("Set temperature"), Utils.plotCelsius("", regulator.getTarget()));
+        ItemStack chambers = inventory.getItem(HeatFurnaceContainer.combustrionChamberId);
+        int n = Utils.isEmpty(chambers) ? 0 : chambers.getCount();
+        info.put(I18N.tr("Power"), I18N.tr("%1$W now, %2$W at full fire (%3$ of %4$ combustion chambers)",
+            Utils.plotValue(isBurnt() ? 0 : furnaceProcess.getP()), Utils.plotValue(furnaceProcess.nominalPower), n, descriptor.combustionChamberMax));
+        boolean regulated = !Utils.isEmpty(inventory.getItem(HeatFurnaceContainer.regulatorId)) && !controlExternal;
+        info.put(I18N.tr("Control"), controlExternal ? I18N.tr("by the signal on its sides")
+            : regulated ? I18N.tr("its regulator holds %1$", Utils.plotCelsius("", regulator.getTarget()))
+            : I18N.tr("its gauge, at %1$%", Math.round(furnaceProcess.getGain() * 100)));
+        // (Erisi: "the set point is never reached")
+        if (regulated && thermalLoad.Tc < regulator.getTarget() - 5 && furnaceProcess.fire.level > 0.95)
+            info.put(I18N.tr("Short of heat"), n < descriptor.combustionChamberMax
+                ? I18N.tr("at full fire and still under its set point: add combustion chambers or take less heat")
+                : I18N.tr("at full fire and still under its set point: take less heat from it"));
         if (flue.node != null) info.put(I18N.tr("Flue"), flue.jade());
         return info;
     }

@@ -3,11 +3,8 @@ package mods.eln.transparentnode.electricalmachine;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.*;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ElectricalStackMachineProcess;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.ThermalLoadInitializer;
-import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sound.SoundCommand;
 import mods.eln.wiki.Data;
@@ -89,18 +86,6 @@ public class ElectricalMachineDescriptor extends TransparentNodeDescriptor {
         list.add(tr("Nominal power: %1$W", Utils.plotValue(nominalP)));
     }
 
-    public void applyTo(ElectricalLoad load) {
-        cable.applyTo(load);
-    }
-
-    public void applyTo(Resistor resistor) {
-        resistor.setR(resistorR);
-    }
-
-    public void applyTo(ElectricalStackMachineProcess machine) {
-        machine.setResistorValue(resistorR);
-    }
-
     public void applyTo(ThermalLoad load) {
         thermal.applyTo(load);
     }
@@ -118,6 +103,25 @@ public class ElectricalMachineDescriptor extends TransparentNodeDescriptor {
     }
     public boolean powerLrdu(Direction side, Direction front) {
         return true;
+    }
+
+    /** Status LEDs (Baughn 2026-11-07, the restyled machines): parts ledpower (lit with voltage on) and ledrun (lit while
+     *  it works), drawn full-bright when lit and dimmed when not; a model without them draws none. */
+    mods.eln.misc.Obj3D.Obj3DPart ledPower, ledRun;
+    /** The on/off lever (MachineSwitch), or null. */
+    public mods.eln.misc.Obj3D.Obj3DPart toggle;
+
+    protected void initLeds(mods.eln.misc.Obj3D obj) {
+        if (obj == null) return;
+        ledPower = obj.getPart("ledpower");
+        ledRun = obj.getPart("ledrun");
+        toggle = obj.getPart("toggle");
+    }
+
+    void drawLeds(float uFactor, float powerFactor, float lever) {
+        mods.eln.anim.Led.draw(ledPower, uFactor > 0.5f);
+        mods.eln.anim.Led.draw(ledRun, powerFactor > 0.05f);
+        mods.eln.node.transparent.MachineSwitch.drawToggle(toggle, lever);
     }
 
     public boolean drawCable() {
@@ -139,6 +143,7 @@ public class ElectricalMachineDescriptor extends TransparentNodeDescriptor {
 
     @Override
     public void drawItem(boolean entity) {
+        drawLeds(0f, 0f, 1f);   // (the LEDs dark, the lever up; first, as in the render)
         draw(null, getDefaultHandle(), null, null, 0f, 0f);
 
     }

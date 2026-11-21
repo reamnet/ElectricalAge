@@ -10,7 +10,9 @@ only where measurements demand it. No raw GL anywhere, so OpenGL and Vulkan back
 
 ```
 BER.extractRenderState  copy element render refs (SixNodeRender: renders[6]; TransparentNodeRender: render)
-BER.submit -> GlSubmit.open(poseStack)            GlFrame.open(pose, normal): frame becomes "current"
+BER.submit -> GlSubmit.openBlock(poseStack)       GlFrame.openBlock(pose, normal): frame becomes "current"; the pose's
+                                                    translation is added to every vertex, not put in the matrix stack
+   ChunkBake.attach(frame, blockEntity)             the chunk may draw this device's unchanging parts (below)
    1.12 draw code: render.draw() -> descriptor.draw() -> Obj3DPart.draw() / CableRender / GL11.glXxx
    mods.eln.gl.GL11 (static facade) -> GlFrame state machine: matrix stack, colour, texture, flags
    vertices transformed into pose space, grouped into Batch by Key(texture, blend, cull, fullBright, lit)
@@ -52,6 +54,13 @@ GlSubmit.submit(frame, pose, collector, light)      per batch: collector.submitC
 - Display poses: `src/main/resources/assets/eln/models/item/device_six.json`, `device_transparent.json`, `device_obj.json` (X-ray scanner via `itemDrawParent()`), as the base of per-item `<name>_3d` models.
 - `client/render/ElnItemRenderer.java` (`SpecialModelRenderer`, registered as `eln:device`): opens a GlFrame and calls `GenericItemBlockUsingDamageDescriptor.drawItem(entity)` or `GenericItemUsingDamageDescriptor.drawItem(stack, entity)` when `hasItemDraw()`.
 - `client/render/LitProperty.java`: condition `eln:lit` (flashlight on/off icon).
+- `client/LampBeam.java`: lamp beams (lit flashlights in either hand, the worn headlamp, the bike's front lamp:
+  `LampItem.beamLight`) drawn per pixel by a post effect (`post_effect/lamp_beam.json`, `shaders/post/lamp_beam.fsh`),
+  for up to 5 players within 64 blocks, off under an Iris shaderpack. It goes first among the active post effects. The
+  beam data is a 128x1 float texture (`eln:textures/effect/beamdata.png`); the level's projection with the view bob
+  comes from `mixin/client/GameRendererMixin`. The server lights only the holder's own block (`LampItem.light`);
+  1.12's trail of light blocks along the beam is gone (Baughn 2026-11-06). Moved from Stasis Delvers, which drew it
+  first.
 - `client/render/WornCurios.java` (Curios loaded only): `ICurioRenderer`s draw the worn accessories on players (Baughn,
   todo #166). Battery belt: a band 3 px tall round the waist, 1.2 px off the body (over a chestplate), its faces cut from
   the item icon. Headlamp: its item model on the forehead at 1.15x, following the head. In the helmet slot the headlamp
@@ -68,7 +77,7 @@ GlSubmit.submit(frame, pose, collector, light)      per batch: collector.submitC
 
 ## Cables
 
-- Six-node cables: `cable/CableRender.java` (`connectionType`, `drawCable`, `drawKnuckles`), `cable/CableRenderDescriptor.java` (sprite, width, height), drawn per frame through the shim by e.g. `sixnode/electricalcable/ElectricalCableRender.java`. Neighbour BE spawn -> `tileEntityNeighborSpawn()` refreshes the connection look.
+- Six-node cables: `cable/CableRender.java` (`connectionType`, `drawCable`, `drawKnuckles`), `cable/CableRenderDescriptor.java` (sprite, width, height), drawn per frame through the shim by e.g. `sixnode/electricalcable/ElectricalCableRender.java`. `tileEntityNeighborSpawn()` -> `notifyNeighborSpawn()` would refresh the connection look when a neighbour block entity appears, but nothing calls it in the port.
 - `cable/CableTerminals.java` (26.x): devices opt in to floor terminal plates; a floor cable connecting there draws a lug.
 - Grid lines: `gridnode/GridRender.java` builds `Catenary` lists from the published links.
 - Voxel cables: baked, see voxel-cables.md.
@@ -93,12 +102,126 @@ GlSubmit.submit(frame, pose, collector, light)      per batch: collector.submitC
 
 - Per device per frame: LV cable ~1.2 us, macerator ~29 us; cost is per-vertex submission (~11 ns/vertex), recording a macerator ~8 us. Heaviest: Gas Turbine ~18.9k vertices, Steam Turbine ~15k.
 - Typical base: ~1-3 ms/frame. Bad case: hundreds of machines or many big turbines in view.
-- Deferred: bake static device geometry into chunk meshes (block model fed from the recorded draw, rebuilt on state change; animated parts stay per-frame). Caching recordings alone would save only the recording part. Done so far: voxel cables/pipes baked (`VoxelModel`), FE exporter baked.
+- Voxel cables/pipes (`VoxelModel`) and the FE exporter are block models. The devices' unchanging parts are drawn by the chunk (next section); what moves, blends or glows stays per frame.
+
+## Static parts in the chunk (Baughn 2026-11-12)
+
+A base of machines cost the client most of its frame in device geometry sent again every frame (about 133,000
+vertices a frame at the Stasis Delvers workshop). Now the chunk's own mesh draws whatever part of a device does not
+change, and the block entity renderer draws the rest. The draw code is untouched: nothing declares a part static.
+
+- How: the renderer still runs the device's draw every frame. `GlSubmit.openBlock` keeps the camera-relative
+  translation out of the matrix stack (`GlFrame.openBlock`), so a part's matrix is the same from frame to frame.
+  Each display-list replay is a `Bake.Call` (primitive, matrix, colour, texture, cull/fullBright/lit). A call that
+  stayed the same for 0.4 s settles: `ChunkBake` adds it to its section and has the section meshed again
+  (`AddSectionGeometryEvent`, `BakeMesh.write`). Once the mesh on screen holds it (`Call.shown`), `Device.skip`
+  answers true and the renderer leaves that replay out. A call that changes or is not drawn again leaves the section
+  in the same frame and the renderer draws it. A part that changes soon after it settled (within 16 times its wait)
+  waits twice as long next time, up to 60 s: blinking parts end up with the renderer.
+- Never in the chunk: blended draws, soot and ghost (preview) draws, a burnt device, immediate-mode geometry (not a
+  display list), lines, texture coordinates outside 0..1 (a sprite cannot repeat), textures made at run time
+  (`eln:dynamic/...`, the data logger's graph), a frame whose pose is more than a translation, and text and item extras.
+- Transformer coils are in the chunk (branch `coil-bake`, todo #423): a pattern that depends on the configuration is
+  made of geometry and vertex colour over a few greyscale sprites, not painted into a texture at run time. A coil's
+  sides are one quad a turn of a layer (64 at most), each the whole "one turn" sprite; its ends use one of ten "N
+  rings" sprites; the wire's colour is the call's colour (`WindingTexture.tint`). Three sets of sprites: normal,
+  bright wire (a channel over 212) and dark wire (black). The files are `assets/eln/sprites/winding/*.png`, written by
+  `tools/winding_sprites.py`; `CoilBakeTest` checks them against `WindingTexture` and that a settled coil leaves the
+  renderer no vertices.
+- Exactly once: a quad is on screen from the renderer or from the chunk, never both or neither. The mesh a section
+  shows is found by its compile task's start time: each compile of a section with calls takes a snapshot on the
+  render thread, and the mesh on screen holds the last snapshot taken before its task started. A mesh that maps to no
+  snapshot counts as holding nothing. `ELN_BAKE_STATS` counts quads a mesh holds and the renderer also drew
+  ("stale in meshes": the frames between a part's change and the section's next mesh) and any miscount.
+- Section: all of a device's calls go into the section of its block (`Device.home`), however far the model reaches.
+  The game draws a block entity only while its own section is drawn, so chunk and renderer show the device under the
+  same condition; and a section of nothing but air is never compiled, so a part could not be put where it lies.
+- Hanging lamps (Baughn 2026-11-15, todo #473; `sixnode/lampsocket/LampSwing.java`): **indoors a hanging lamp
+  hangs still** and so its chain and head settle into the chunk like any static part; **outdoors** the wind swings it
+  every frame in all weather (as 1.12) and the renderer draws chain and head every frame (only the base, which never
+  moved, is in the chunk). There is no "bake in clear weather" path, on purpose: it would only help the best case.
+  Outdoors = sky light at the lamp's block >= 14 (`LampSwing.OUTDOOR_SKY_LIGHT`: open sky, or beside it, as under
+  the arm of a lamp post; a hanging lamp always has its ceiling block above it, so "sees the sky straight up" would
+  not do). `LampSocketRender.refresh` reads it every 1 to 1.25 s, not per frame, so a roof built or removed is
+  noticed within that. Something moving past (a living thing or an arrow within 2 blocks, looked for every 0.1 s as
+  before) still pushes a lamp indoors: it goes back to the renderer in that frame, swings, the swing dies out (about
+  50 s from 9 degrees; the damping is 1.12's), and when its amplitude is under 0.1 degrees (`REST_ANGLE`) it is set
+  to exactly 0 and settles again. Tests: `LampSwingTest`, GameTest `lamp_rest`.
+- Far away: a block entity is drawn within 64 blocks. Past that the settled parts stay in the chunk (Baughn: keep
+  them visible), and what moves or glows is not drawn, as before (Baughn 2026-11-13: left out rather than drawn
+  standing still; most of it shows only up close). To keep the chunk's copy current without the
+  player having been near, the two node renderers' `shouldRender` also answers true beyond 64 blocks when
+  `ChunkBake.farDue` says the device is due a **far frame**: the same draw code into a frame flagged far, whose
+  display-list replays go through `Device.skip` and which is never submitted. Near or far is decided by the
+  default range test with the camera position the game passes to both `shouldRender` and `extractRenderState`, so
+  both agree; it is carried in the render state. Far frames come in runs of samples 0.4 s apart: a run starts on
+  the device's first far frame, after a near frame, after a packet (`ClientPacketHandler.forNode` tells
+  `ChunkBake.published`) and on a retry 10 to 160 s after the last run. A settled call a sample does not find
+  again is held in its section until the run ends, so a part that changes far away is swapped in one re-mesh,
+  not removed and added. A part that keeps moving is left out. At most 64 far frames a rendered frame; burnt
+  devices get none. The rules and their reasons are in `Bake.Device`'s javadoc; `BakeTest` tests them.
+- Draw code at a distance (audited for far frames, 2026-11): no `draw()` sends packets beyond its own range (the
+  data logger and the signal processor `watch()` only within 32 and 6 blocks), plays sounds or spawns particles;
+  those happen in `refresh`, which runs for every loaded device whatever the distance. What draw code writes (random
+  LEDs, the breaker's clock) is harmless when drawn far.
+- Light: not part of a call. The snapshot reads each device's packed light as `BlockEntityRenderState` does, and the
+  game meshes a section again when light in it changes. The colour carries the entity shader's shading (two lights
+  of 0.6 over 0.4 ambient, the normal a signed byte per axis), since the chunk shader has none.
+- Textures: `ModelSprites` (a `SpriteSource` named in `atlases/blocks.json`) stitches `assets/eln/model` and
+  `assets/eln/sprites` (not `sprites/gui`) into the block atlas, padded to multiples of 16 pixels, alpha made 0 or
+  255 at the renderers' cutoff. Always, whether or not the chunk draws parts: 211 textures made no difference to
+  the atlas' size on the Stasis Delvers pack (4096x2048).
+- Switches: client config `rendering.staticPartsInChunks` (`config/eln-client.toml`, default true; `ElnClientConfig`),
+  applied at once. `-Deln.bake` or `ELN_BAKE` = `off`, `on` or `force` (leave settled parts out without asking
+  whether the mesh shows them) wins over it. If writing a section's parts throws, it is logged once and the baking
+  switches itself off; reloading the config turns it on again.
+- Measuring: `-Deln.bakeStats=true` or `ELN_BAKE_STATS=1` logs every 600 frames where the vertices went (in-chunk,
+  const, moving, blended...), per render class, and why constant ones are still with the renderer (changed, waiting,
+  waiting longer, no sprite, mesh not shown yet). At the workshop: 80-86% in the chunk.
+
+### Render benchmark (todo #424)
+
+Two tiers. Only the client tier says anything about fps: on 2026-11-12 a BufferBuilder microbenchmark showed 30 % and
+the client's JFR showed nothing. Compare either with `tools/bench/render-bench-compare.py A.json[,A2,A3] B.json[,...]`.
+
+- CPU tier (`gametest/bench/RenderBench.java`, no GPU):
+  `./gradlew runGameTestServer -PelnRenderBench=/abs/FILE.json [-PelnBenchLabel=NAME]`. Every device of
+  `publish_render`, as placed (empty, unpowered). Per device: `vertices` of one draw, `recordNs` (ns per draw into a
+  `GlFrame`, bake off), `packNs` (copying the batches into a buffer in the entity vertex layout: a scale for the
+  write loop, not BufferBuilder), then with a host that bakes: `settledCalls`, `settleFrame`, `rendererVertices` and
+  `chunkVertices` (who draws what once the mesh is shown), `bakedRecordNs` (ns per draw that is left), `meshNs` and
+  `meshVertices` (`BakeMesh.write` of the settled calls: EA's part of a section compile). Times are the median and
+  the minimum of 7 batches of 200 draws after 300 warm-up draws. The vertex and call counts are exact and the same
+  from run to run; totals of times repeat within about 3 %, single devices within about 2x.
+  With `-PelnRenderBenchBase=/abs/EARLIER.json` the run fails when a device's exact fields (`gametest/bench/RenderBenchGate.java`)
+  differ from that result, and names the devices: the gate for "this change must not alter what is drawn".
+- Client tier (`client/RenderBenchClient.java`, counters in `gl/RenderProbe.java`, sums in `gl/BenchRun.java`):
+  launch with `-Deln.renderBench=FILE.json` (or `ELN_RENDER_BENCH`; relative to the game directory), or type
+  `/elnbench` in a world. Options `-Deln.renderBench.views="name=x,y,z,yaw,pitch[,spinDegPerSecond];name=here"`
+  (default: where the player stands; a view with coordinates is reached with `/tp`, which needs the permission),
+  `.settle=40`, `.measure=30` (seconds), `.label=NAME`, `.quit=true`. Per view: frames, fps, frame ms and EA ms
+  (mean, p50, p95, p99, max), EA's share, per-frame means of the probe counters (`recordNs` device draw code and
+  GlFrame, `farNs` far frames, `submitNs`, `writeNs` and `writeVertices` the vertex write loop, `refreshNs`,
+  `snapshotNs`, `devices`, `batches`), per second `meshNs`/`meshVertices`/`meshSections` (chunk compile, worker
+  threads), `settles`/`drops`, and the bake's state. The file also says GPU, window, render distance, fps limit,
+  vsync and `capped`: run uncapped with vsync off, or frame times only show the cap.
+- The probe is off unless a benchmark runs (one static boolean per hook).
+
+| Class | Role |
+|---|---|
+| `gl/Bake.java` | calls, devices, settling; no client classes |
+| `gl/BakeMesh.java` | a call's quads as chunk vertices, shaded |
+| `gl/BakeStats.java` | the measurement |
+| `client/render/bake/ChunkBake.java` | sections, snapshots, which mesh is on screen, the switch |
+| `client/render/bake/ModelSprites.java` | the textures in the block atlas |
 
 ## Tests
 
 - GameTest `gametest/PublishRenderCase.java`: every device with a render: server publish packet read by a fresh client BE, consumed exactly, draw does not throw and emits vertices.
+- `gametest/BakeOnceCheck.java` (run by `publish_render` for every device, and by `autominer_spin` with a part that starts to move): the device drawn with its parts in the chunk shows every quad exactly once, in the same place and colour, also after only far frames; see testing.md. `src/test/java/mods/eln/gl/BakeTest.java`: settling, waits, the section, the override, far frames.
+- `src/test/java/mods/eln/sixnode/lampsocket/LampSwingTest.java` and GameTest `lamp_rest` (`gametest/LampRestCase.java`): a hanging lamp indoors leaves 0 vertices with the renderer, outdoors it moves every frame and stays there; see "Hanging lamps" above.
 - `gametest/ItemDrawCase.java`: every 3D item draw records vertices without exceptions. `gametest/XRayCase.java`: X-ray filter, state machine, menu, item draw. `src/test/java/mods/eln/item/xray/XRayRayMarchTest.java`.
+- `src/test/java/mods/eln/gl/FrameStatsTest.java`, `BenchRunTest.java`: the render benchmark's percentiles, view parsing and per-frame sums. The benchmark itself: "Render benchmark" above.
 - `/elnlab gallery|burn|cables` (`gametest/LabCommands.java`): visual comparison scenes and stress scenes for frame times.
 
 ## Gotchas
@@ -106,6 +229,11 @@ GlSubmit.submit(frame, pose, collector, light)      per batch: collector.submitC
 - Every GL11 call outside an open frame is silently discarded; draw code must run inside a BER/item `submit`.
 - `GlFrame` is single-threaded and shared; drawing an EA item inside a device draw reopens it (hence GlSubmit's extras copy).
 - A render's `networkUnserialize` must read exactly what the element wrote; a short read garbles the following six-node faces (guarded by `PublishRenderCase`).
+- Opaque draws in different states (`Key`s) have no order among themselves: each key is a render type, and the game
+  draws a phase's render types in the order of a hash map over them, which differs from launch to launch. Draw code
+  that puts two opaque things in the same place and counts on the second covering the first (1.12's lit suspended
+  lamp: its head shaded, then again at full light) shows either one. Draw the one that should be seen
+  (`SuspendedLampDrawTest`). Blended draws come after the opaque ones, so glow and halo overlays are safe.
 - Stale comments: `GL11` javadoc says lines are dropped (they are recorded as LINES batches now); element render javadocs still say looped sounds are "not here yet".
 
 ## Battery charger (Baughn 2026-10-28)
@@ -155,3 +283,5 @@ the insulated thermal cables, but ... for charm"). The rheostat's drum is its ow
   `hot_things_light_their_block` and `electric_heater_heats_a_thermal_cable` (the heater's back face feeds a floor
   thermal cable, six-node and voxel). In a lab, `/elnlab heat <pos> <celsius>` holds a node's thermal loads at a
   temperature (above a device's limit it burns, as it would).
+
+Animations (turning parts, levers, blinking, particles, glow, levels, items in machines): see [animation.md](animation.md).

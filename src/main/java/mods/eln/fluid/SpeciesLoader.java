@@ -38,6 +38,8 @@ import java.util.TreeMap;
  * fluids               {"liquid": [fluid ids], "vapour": [fluid ids]}: the NeoForge fluids that are this species
  * flammable            optional {"flash_point": K, "autoignition": K}: a leak catches from a flame over its flash
  *                      point, by itself over its autoignition temperature
+ * heating_value        optional J/kg (lower heating value): what a burner gets from a kg of it (0: not a fuel)
+ * coking               optional, 0..1: how much a burner fouls on a kg of it, against residue's 1 (0: burns clean)
  * </pre>
  * A file that fails to parse or check is skipped with a log line; the species keeps its previous data, if any.
  */
@@ -84,6 +86,7 @@ public final class SpeciesLoader extends SimplePreparableReloadListener<Map<Stri
             try {
                 Species s = parse(e.getKey(), e.getValue());
                 SpeciesRegistry.get().define(s);
+                SpeciesRegistry.get().setMixture(s.key, mixture(e.getValue()));
                 JsonObject f = e.getValue().has("fluids") ? e.getValue().getAsJsonObject("fluids") : new JsonObject();
                 liq.put(s.key, strings(f.get("liquid")));
                 vap.put(s.key, strings(f.get("vapour")));
@@ -139,7 +142,34 @@ public final class SpeciesLoader extends SimplePreparableReloadListener<Map<Stri
             s.flashPoint = f.has("flash_point") ? f.get("flash_point").getAsDouble() : 0;
             if (!(s.autoignition > s.flashPoint)) throw new IllegalArgumentException("autoignition must be over the flash point");
         }
+        if (j.has("heating_value")) {
+            s.heatingValue = j.get("heating_value").getAsDouble();
+            if (!(s.heatingValue >= 0)) throw new IllegalArgumentException("heating_value must be >= 0");
+        }
+        if (j.has("coking")) {
+            s.coking = j.get("coking").getAsDouble();
+            if (!(s.coking >= 0 && s.coking <= 1)) throw new IllegalArgumentException("coking must be in 0..1");
+        }
         return s;
+    }
+
+    /**
+     * A species that is a mixture of others wherever it goes into a node (Baughn 2026-11-10: crude as heavy oil, diesel,
+     * gasoline, residue and natural gas): "mixture": {"eln:heavy_oil": 0.35, ...}, mass shares (normalised), or null.
+     */
+    static Map<String, Double> mixture(JsonObject j) {
+        if (!j.has("mixture")) return null;
+        Map<String, Double> m = new java.util.LinkedHashMap<>();
+        double sum = 0;
+        for (var e : j.getAsJsonObject("mixture").entrySet()) {
+            double f = e.getValue().getAsDouble();
+            if (!(f > 0)) throw new IllegalArgumentException("mixture: " + e.getKey() + " must be over 0");
+            m.put(e.getKey(), f);
+            sum += f;
+        }
+        if (m.isEmpty()) return null;
+        for (var e : m.entrySet()) e.setValue(e.getValue() / sum);
+        return m;
     }
 
     private static JsonElement req(JsonObject j, String field) {

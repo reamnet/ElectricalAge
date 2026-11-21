@@ -34,6 +34,9 @@ public final class Oil {
     static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, Eln.MODID);
     static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Eln.MODID);
     static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Eln.MODID);
+    /** Loot functions: eln:oil_survey_map (todo #470). */
+    static final DeferredRegister<com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.storage.loot.functions.LootItemFunction>> LOOT_FUNCTIONS =
+        DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, Eln.MODID);
 
     public static final DeferredHolder<FluidType, FluidType> CRUDE_TYPE = TYPES.register("crude_oil", () -> new CrudeType(
         FluidType.Properties.create().descriptionId("block.eln.crude_oil").density(850).viscosity(6000).temperature(290)
@@ -117,7 +120,10 @@ public final class Oil {
                 .density(density).viscosity(viscosity)));
             source = FLUIDS.register(id, () -> new BaseFlowingFluid.Source(props()));
             flowing = FLUIDS.register("flowing_" + id, () -> new BaseFlowingFluid.Flowing(props()));
-            if (bucket) bucketItem = ITEMS.registerItem(id + "_bucket", p -> new BucketItem(source.get(), p.craftRemainder(Items.BUCKET).stacksTo(1)));
+            if (bucket) {
+                bucketItem = ITEMS.registerItem(id + "_bucket", p -> new BucketItem(source.get(), p.craftRemainder(Items.BUCKET).stacksTo(1)));
+                mods.eln.registry.ElnRegistry.TAB_EXTRAS.add(bucketItem);
+            }
         }
     }
 
@@ -136,16 +142,21 @@ public final class Oil {
         CRUDE_FLOWING = FLUIDS.register("flowing_crude_oil", () -> new BaseFlowingFluid.Flowing(crudeProps()));
         CRUDE_BLOCK = BLOCKS.registerBlock("crude_oil", p -> new LiquidBlock(CRUDE.get(), p), p -> liquidProps(p));
         CRUDE_BUCKET = ITEMS.registerItem("crude_oil_bucket", p -> new BucketItem(CRUDE.get(), p.craftRemainder(Items.BUCKET).stacksTo(1)));
+        mods.eln.registry.ElnRegistry.TAB_EXTRAS.add(CRUDE_BUCKET);
         RESERVOIR_OIL = FLUIDS.register("reservoir_oil", ReservoirOilFluid::new);
         STEAM = FLUIDS.register("steam", () -> new BaseFlowingFluid.Source(new BaseFlowingFluid.Properties(STEAM_TYPE, STEAM, STEAM_FLOWING)));
         STEAM_FLOWING = FLUIDS.register("flowing_steam", () -> new BaseFlowingFluid.Flowing(new BaseFlowingFluid.Properties(STEAM_TYPE, STEAM, STEAM_FLOWING)));
         for (Cut c : Cut.values()) c.register();
+        Latex.register();   // (the rubber chain, 2026-11-07: not a cut)
+        Butadiene.register();
         RESERVOIR_BLOCK = BLOCKS.registerBlock("reservoir_oil", ReservoirOilBlock::new, p -> liquidProps(p));
         OilWorldgen.register(modBus);
         TYPES.register(modBus);
         FLUIDS.register(modBus);
         BLOCKS.register(modBus);
         ITEMS.register(modBus);
+        LOOT_FUNCTIONS.register("oil_survey_map", () -> OilSurveyMapFunction.MAP_CODEC);
+        LOOT_FUNCTIONS.register(modBus);
         mods.eln.reservoir.Reservoirs.register(modBus);
         OilReservoirs.register();
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.class, OilReservoirs::tick);

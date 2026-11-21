@@ -3,27 +3,55 @@ package mods.eln.sim;
 import mods.eln.misc.Recipe;
 import mods.eln.misc.RecipesList;
 import mods.eln.misc.Utils;
-import mods.eln.sim.mna.component.Resistor;
+import mods.eln.api.Machine;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * A machine's recipe work: each tick it runs it takes a tick's rated energy from its Machine (Machine API) and counts
+ * it, times its efficiency, towards the recipe's energy; then the item is done. A machine that can't run takes
+ * nothing, so it draws nothing. Run in the element's slow processes, after the machine's own.
+ */
 public class ElectricalStackMachineProcess implements IProcess {
 
     ElectricalStackMachineProcessObserver observer;
 
     public Container inventory;
     int inputSlotId, OutputSlotId, outputSlotNbr;
-    Resistor electricalResistor;
-    double resistorValue;
+    final Machine machine;
     RecipesList recipesList;
     int[] outSlotIdList;
-    double efficiency = 1.0, speedUp = 1.0;
+    double efficiency = 1.0;
+    /** The power taken in the last tick, W. */
+    double power;
+    /** Progress loaded from a save, given back to the item in the input slot at the first tick (0: none). */
+    double resumeJoules;
 
     ItemStack itemStackInOld = null;
 
     boolean smeltInProcess = false;
     double energyNeeded = 0;
     double energyCounter = 0;
+
+    /** A recipe fed from a tank, worked while the input slot is empty (the rubber chain, 2026-11-07: the 230V
+     *  compressor presses latex from its IN flange to Raw Rubber). */
+    public interface FluidRecipe {
+        /** Is there enough in the tank for one? */
+        boolean ready();
+
+        ItemStack[] output();
+
+        double energy();
+
+        /** Take one's worth from the tank. */
+        void consume();
+    }
+
+    /** The item recipe that finished last (for observers whose recipes also make fluid); null after a fluid recipe. */
+    public Recipe lastRecipe;
+
+    /** The machine's fluid recipe, or null (most machines). */
+    public FluidRecipe fluidRecipe;
 
     public interface ElectricalStackMachineProcessObserver {
         void done(ElectricalStackMachineProcess who);
@@ -34,13 +62,12 @@ public class ElectricalStackMachineProcess implements IProcess {
     }
 
     public ElectricalStackMachineProcess(Container inventory, int inputSlotId, int OutputSlotId, int outputSlotNbr,
-                                         Resistor electricalResistor, double resistorValue, RecipesList recipesList) {
+                                         Machine machine, RecipesList recipesList) {
         this.inventory = inventory;
         this.inputSlotId = inputSlotId;
         this.OutputSlotId = OutputSlotId;
         this.outputSlotNbr = outputSlotNbr;
-        this.electricalResistor = electricalResistor;
-        this.resistorValue = resistorValue;
+        this.machine = machine;
         this.recipesList = recipesList;
 
         outSlotIdList = new int[outputSlotNbr];
@@ -52,18 +79,6 @@ public class ElectricalStackMachineProcess implements IProcess {
 
     public void setEfficiency(double efficiency) {
         this.efficiency = efficiency;
-    }
-
-    public void setSpeedUp(double speedUp) {
-        this.speedUp = speedUp;
-        setResistorValue(resistorValue);
-    }
-
-    /** Only a solved electrical step can pay work; changing readiness/resistance cannot sample old voltages. */
-    public void acceptedElectricalStep(double time) {
-        if (!smeltInProcess || !Double.isFinite(time) || time <= 0) return;
-        double power = getPower();
-        if (Double.isFinite(power) && power > 0) energyCounter += power * time;
     }
 
     @Override
@@ -79,7 +94,20 @@ public class ElectricalStackMachineProcess implements IProcess {
             itemStackInOld = itemStackIn;
         }
 
+        if (resumeJoules > 0) { // given back once the item can be worked on; dropped with the item
+            if (smeltInProcess) {
+                energyCounter = Math.min(resumeJoules, energyNeeded);
+                resumeJoules = 0;
+            } else if (Utils.isEmpty(itemStackIn)) {
+                resumeJoules = 0;
+            }
+        }
+
+        power = 0;
         if (smeltInProcess) {
+            double got = machine.takeJoules(machine.ratedJoulesPerTick());
+            power = got / time;
+            energyCounter += got * efficiency;
             if (energyCounter > energyNeeded) {
                 energyCounter -= energyNeeded;
                 smeltItem();
@@ -88,8 +116,20 @@ public class ElectricalStackMachineProcess implements IProcess {
         }
     }
 
+    /** The power that went into the work in the last tick (taken x efficiency), W. */
     public double getPower() {
-        return electricalResistor.getP() * efficiency;
+        return power * efficiency;
+    }
+
+    /** The current item's progress, J (what a save keeps); a loaded one not yet given back counts. */
+    public double progressJoules() {
+        if (resumeJoules > 0) return resumeJoules;
+        return smeltInProcess ? energyCounter : 0;
+    }
+
+    /** Gives a saved item's progress back when the item in the input slot can next be worked on (dropped if it goes). */
+    public void resume(double joules) {
+        resumeJoules = Double.isFinite(joules) && joules > 0 ? joules : 0;
     }
 
     public void smeltInit() {
@@ -98,18 +138,11 @@ public class ElectricalStackMachineProcess implements IProcess {
             smeltInProcess = false;
             energyNeeded = 1.0;
             energyCounter = 0.0;
-            electricalResistor.highImpedance();
         } else {
             smeltInProcess = true;
-            energyNeeded = recipesList.getRecipe(inventory.getItem(inputSlotId)).energy;
+            energyNeeded = fromTank() ? fluidRecipe.energy() : recipesList.getRecipe(inventory.getItem(inputSlotId)).energy;
             energyCounter = 0.0;
-            electricalResistor.setR(resistorValue / speedUp);
         }
-    }
-
-    public void setResistorValue(double value) {
-        resistorValue = value;
-        if (smeltInProcess) electricalResistor.setR(resistorValue / speedUp);
     }
 
     /**
@@ -118,11 +151,17 @@ public class ElectricalStackMachineProcess implements IProcess {
     /** 26.x: an extra condition to run at all (e.g. the oil separator's tank has room). */
     public java.util.function.BooleanSupplier extraCondition = () -> true;
 
+    /** The machine's on/off switch (MachineSwitch; Nero 2026-11-08): off, nothing runs. */
+    public java.util.function.BooleanSupplier switchedOn = () -> true;
+
     public boolean smeltCan() {
-        if (!extraCondition.getAsBoolean()) return false;
+        if (!switchedOn.getAsBoolean()) return false;
         if (Utils.isEmpty(inventory.getItem(inputSlotId))) {
-            return false;
-        } else {
+            // (no item: the fluid recipe, if any; extraCondition is about the item recipes' outputs)
+            return fluidRecipe != null && fluidRecipe.ready() && Utils.canPutStackInInventory(fluidRecipe.output(), inventory, outSlotIdList);
+        }
+        if (!extraCondition.getAsBoolean()) return false;
+        {
             ItemStack[] output = getSmeltResult();
             if (output == null) return false;
             return Utils.canPutStackInInventory(getSmeltResult(), inventory, outSlotIdList);
@@ -131,7 +170,13 @@ public class ElectricalStackMachineProcess implements IProcess {
 
     static final java.util.Random RANDOM = new java.util.Random();
 
+    /** Working from the tank (no item in the input slot, a fluid recipe)? */
+    boolean fromTank() {
+        return Utils.isEmpty(inventory.getItem(inputSlotId)) && fluidRecipe != null;
+    }
+
     public ItemStack[] getSmeltResult() {
+        if (fromTank()) return fluidRecipe.output();
         Recipe recipe = recipesList.getRecipe(inventory.getItem(inputSlotId));
         if (recipe == null) return null;
         return recipe.maxOutput();
@@ -141,8 +186,16 @@ public class ElectricalStackMachineProcess implements IProcess {
      * Turn one item from the furnace source stack into the appropriate smelted item in the furnace result stack
      */
     public void smeltItem() {
+        if (this.smeltCan() && fromTank()) {
+            lastRecipe = null;
+            Utils.tryPutStackInInventory(fluidRecipe.output(), inventory, outSlotIdList);
+            fluidRecipe.consume();
+            if (observer != null) observer.done(this);
+            return;
+        }
         if (this.smeltCan()) {
             Recipe recipe = recipesList.getRecipe(inventory.getItem(inputSlotId));
+            lastRecipe = recipe;
             Utils.tryPutStackInInventory(recipe.getOutputCopy(RANDOM), inventory, outSlotIdList);
             inventory.removeItem(inputSlotId, recipe.input.getCount());
             if (observer != null) observer.done(this);

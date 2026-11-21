@@ -6,7 +6,8 @@ registered, the side/burn/client rules, cache invalidation, and the tests that g
 ## Registration
 
 All registrations are lambdas on `RegisterCapabilitiesEvent` in `src/main/java/mods/eln/Eln.java` (mod bus, in the
-constructor next to `NodeServer`); the item-energy one calls `ItemEnergyCapability::register`. There is no separate
+constructor next to `NodeServer`); the item-energy one calls `ItemEnergyCapability::register`, and the Machine API's
+`eln:machine` is `HostedMachines.capabilities` (which also closes `ElnApi.machines().register`). There is no separate
 capabilities class (the javadoc of `fluid/ElementFluidHandler.java` still names an `ElnCapabilities`: it does not exist).
 
 | Capability | Target | Provider returns | Null-side | Client | Burnt |
@@ -15,6 +16,8 @@ capabilities class (the javadoc of `fluid/ElementFluidHandler.java` still names 
 | `Capabilities.Item.BLOCK` | `TRANSPARENT_NODE_ENTITY` | `TransparentNode.getItemHandler(side)` -> element | null | null | null (node and element) |
 | `Capabilities.Fluid.BLOCK` | `TRANSPARENT_NODE_ENTITY` | `TransparentNode.getFluidHandler()` if an `ElementFluidHandler` or a `ResourceHandler<FluidResource>` | allowed (side ignored) | null | NOT hidden |
 | `Capabilities.Fluid.BLOCK` | `VOXEL_NODE_ENTITY` | `VoxelNode.adapterOn(face).tanks` (`node/voxel/AdapterPart.Tanks`) | null | null | n/a |
+| `ElnApi.MACHINE` (`eln:machine`, `MachineView`) | every type registered with `ElnApi.machines()` | `of(be).view()` (`api/impl/HostedMachines`) | allowed (side ignored) | the synced read-only view | n/a |
+| `ElnApi.MACHINE` | `TRANSPARENT_NODE_ENTITY` | the element's Machine API machine, `ElementHost.find(slowProcessList).view()`; null for other elements | allowed | null | the machine's state |
 | `Capabilities.Energy.ITEM` | every item whose item or descriptor is an `IItemEnergyBattery` | `ItemEnergyCapability.Handler` | n/a | both | n/a |
 
 Not exposed: six-node blocks (only voxel adapters), ghost blocks (`ghost/GhostBlock.java` has no block entity: other
@@ -41,7 +44,11 @@ mods must address a multiblock's master block), simple nodes (gone; the exporter
 - Transparent devices override `TransparentNodeElement.getFluidHandler()` (returns `Object`): one tank via
   `fluid/ElementFluidHandler.java` (whitelist via `setFilter`, applies while empty) or a multi-tank
   `ResourceHandler<FluidResource>` (e.g. the boiler: water in, steam out). Overrides: `mechanical/Turbines.kt`,
-  `transparentnode/FuelHeatFurnace.kt`, `transparentnode/electricalmachine/OilSeparatorElement.java`, and in `oil/`:
+  `transparentnode/FuelHeatFurnace.kt`, `transparentnode/electricalmachine/OilSeparatorElement.java`,
+  `transparentnode/electricalmachine/CompressorPortsElement.java` (its OUT vessel),
+  `transparentnode/desulfuriser/DesulfuriserElement.java` (its OUT vessel),
+  `transparentnode/resincollector/IndustrialResinCollectorElement.java`,
+  `transparentnode/carbonblack/CarbonBlackBurnerElement.java` (its fuel vessel), and in `oil/`:
   `BoilerElement`, `SteamGeneratorElement`, `OilPumpElement`, `FlareStackElement`, `ColumnBaseElement`,
   `ColumnSegmentElement`.
 - Buckets: `TransparentNode.onBlockActivated` -> `fluid/FluidBuckets.use` on the same handler.
@@ -53,7 +60,11 @@ mods must address a multiblock's master block), simple nodes (gone; the exporter
   volume). What other mods put in or take out goes into the node at the next fluid step (`sync`), then `show`.
   - Pipe adapter: `AdapterPart.Tanks`, the run behind the face; liquid to 90 % of the run, gas to about 9 bar
     (`VoxelNode.syncAdapters`, `showAdapters`).
-  - Tank: `oil/TankLiquid`, liquid and intake, to the vessel's full volume (`TankElement.syncWater`). Buckets use it.
+  - Tank: `oil/TankLiquid`, liquid and intake, to 98 % of the vessel (`TankGroup.FULL`) and no further than keeps the
+    air over the liquid at the tank's working pressure (`Spec.cushion`: a tank has no vent, and filled to 100 % its air
+    went past the burst pressure; an empty iron tank takes about 10.8 buckets this way, an alloy tank 11.7)
+    (`TankElement.syncWater`). In a box every block's capability hands its calls to the box master's view, so the vessel
+    is offered once, not once per block. Buckets use it.
   - Boiler: `oil/BoilerTanks`, water in to its rated fill (`BoilerElement.RATED_KG`, the mark its feed float closes
     at), steam out once it boils.
   - Steam oven: steam in to 5 bar.
@@ -112,4 +123,6 @@ burn state, so it needs no invalidation on burn.
   a held `BlockCapabilityCache` clears when the adapter is removed and comes back when it is added again.
 - `port26 fluid handler` (`gametest/cases/PortHelperCases.java`): tank semantics; fuel heat furnace exposes its tank.
 - `oil_separator`, `oil_boiler`, `oil_column` (`gametest/cases/OilCases.java`): fluid capability lookups (null side).
+- `api_hosted_machine_works` (`gametest/cases/HostedMachineCases.java`): `eln:machine` at a hosted machine (null and
+  UP side) is its view, at an EA macerator its machine, at a furnace null.
 - Unit: `src/test/java/mods/eln/transparentnode/energyconverter/ExporterSaveUpgradeTest.java` (tag upgrade).

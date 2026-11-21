@@ -21,6 +21,7 @@ public final class OilLakeCases {
         cases.add(new Recovery(Recovery.Mode.STEAM));
         cases.add(new Recovery(Recovery.Mode.WEAK_STEAM));
         cases.add(new Recovery(Recovery.Mode.TWO_PUMPS));
+        cases.add(new Refill());
     }
 
     /**
@@ -39,19 +40,28 @@ public final class OilLakeCases {
         }
 
         public void build(TestContext ctx) {
-            var furnace = ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, ctx.at(1, 1, 1));
             var gt = (mods.eln.mechanical.GasTurbineElement) ctx.placeTransparent(GasPlantCases.GAS_TURBINE, ctx.at(3, 1, 1));
+            int x = 0;
             for (Oil.Cut c : new Oil.Cut[]{Oil.Cut.HEAVYOIL, Oil.Cut.RESIDUE}) {
-                var tank = (mods.eln.fluid.PreciseElementFluidHandler) furnace.getFluidHandler();
-                tank.drain(tank.getFluidAmount(), true);
-                int in = tank.fill(new FluidStack(c.source.get(), 10), true);
-                double heat = in > 0 ? tank.drainEnergy(1e9) : 0;
-                double perMb = mods.eln.fluid.FuelRegistry.INSTANCE.heatEnergyPerMilliBucket(c.source.get());
+                // (each into its own furnace, through its fluid capability as a bucket; it burns by the species' heating value)
+                var p = ctx.at(x, 1, 0);
+                x += 2;
+                var furnace = (mods.eln.transparentnode.FuelHeatFurnaceElement) ctx.placeTransparent(Wp10bCases.FUEL_HEAT_FURNACE, p);
+                var cap = ctx.level().getCapability(net.neoforged.neoforge.capabilities.Capabilities.Fluid.BLOCK, p, net.minecraft.core.Direction.UP);
+                int in;
+                try (var tx = net.neoforged.neoforge.transfer.transaction.Transaction.openRoot()) {
+                    in = cap.insert(net.neoforged.neoforge.transfer.fluid.FluidResource.of(c.source.get()), 10, tx);
+                    tx.commit();
+                }
+                furnace.putFuel(c.source.get(), 10);
+                var reg = mods.eln.sim.fluid.SpeciesRegistry.get();
+                int id = mods.eln.fluid.FluidSpecies.of(c.source.get()).id();
+                double perKg = furnace.heatPerKgAtBurner(), want = reg.byId(id).heatingValue * mods.eln.ElnConfig.heatFurnaceFuelFactor;
                 if (in != 10) bad += "the furnace refuses " + c + "; ";
-                else if (Math.abs(heat - 10 * perMb) > 1e-6 * heat || perMb <= 0) bad += String.format("%s gives %.0f J for 10 mB (%.0f J/mB); ", c, heat, perMb);
-                int toGt = gt.tank.fill(new FluidStack(c.source.get(), 10), false);
-                if (c == Oil.Cut.HEAVYOIL && toGt != 10) bad += "the gas turbine refuses heavy oil; ";
-                if (c == Oil.Cut.RESIDUE && toGt != 0) bad += "the gas turbine takes residue; ";
+                else if (Math.abs(perKg - want) > 1e-6 * want || want <= 0) bad += String.format("%s gives %.0f J/kg at its burner (want %.0f); ", c, perKg, want);
+                boolean toGt = gt.fuelIn.takes(id);
+                if (c == Oil.Cut.HEAVYOIL && !toGt) bad += "the gas turbine refuses heavy oil; ";
+                if (c == Oil.Cut.RESIDUE && toGt) bad += "the gas turbine takes residue; ";
             }
         }
 
@@ -61,14 +71,13 @@ public final class OilLakeCases {
     }
 
     /**
-     * A depleted lake (15 % of its capacity, under the 20 % tail) under the test floor, a 50V oil pump on well casing
-     * down to it:
+     * A pumped-out lake (empty: at most seepage, under 25 % full) under the test floor, a 50V oil pump on well casing down to it:
      * <ul>
-     * <li>SEEPAGE: it never runs dry: it seeps 18 % of a 200V pump's nominal rate (OilRecovery.seepRate), the lake stays
- * where it is, Jade says so;</li>
- * <li>TWO_PUMPS: two pumps on it share that one budget (Baughn 2026-10-30);</li>
-     * <li>STEAM: steam at 3 bar down a second casing through a wellhead (more than the well's head) pays for crude: the
-     * pump runs at its full rate again, Jade says boosted, the steam taken matches the crude at steamKgPerBucket;</li>
+     * <li>SEEPAGE: it never runs dry: it seeps 25 % of a 230V pump's nominal rate (OilRecovery.seepRate) into the lake,
+     * which its pump drains, so the lake stays near empty; Jade says so;</li>
+     * <li>TWO_PUMPS: two pumps on it share that one seepage (Baughn 2026-11-08: more pumps mustn't mean more oil);</li>
+     * <li>STEAM: steam at 3 bar down a second casing through a wellhead (more than the well's head) raises the seepage to
+     * a pump's full rate (Baughn 2026-11-11): the pump runs at its full rate again, Jade says boosted;</li>
      * <li>WEAK_STEAM: steam under the well's head doesn't go down: nothing injected, seepage as before.</li>
      * </ul>
      */
@@ -113,7 +122,7 @@ public final class OilLakeCases {
                     mask[x * 3 + z] = 0b1111;
                 }
             r = mods.eln.oil.OilReservoirs.create(level, null, under.getX(), under.getZ(), 6, 3, floor, mask, Long.MAX_VALUE);
-            mods.eln.reservoir.Reservoirs.setAmount(level, r, (long) (0.15 * r.capacity()));
+            mods.eln.reservoir.Reservoirs.setAmount(level, r, 0);
             mods.eln.reservoir.Reservoirs.sweep(level, r, under.getX() >> 4, under.getZ() >> 4);
             amount0 = r.amount();
             for (int x : new int[]{1, 4}) level.setBlock(ctx.at(x, 0, 1), mods.eln.oil.OilWorldgen.WELL_CASING.get().defaultBlockState(), 3);
@@ -130,8 +139,8 @@ public final class OilLakeCases {
             }
             mods.eln.Eln.simulator.addSlowProcess(watch = dt -> {
                 if (++tick == 200) {
-                    tank0 = ((mods.eln.fluid.ElementFluidHandler) pump.getFluidHandler()).getFluidAmount();
-                    tank20 = pump2 == null ? 0 : ((mods.eln.fluid.ElementFluidHandler) pump2.getFluidHandler()).getFluidAmount();
+                    tank0 = (int) pump.producedMb;
+                    tank20 = pump2 == null ? 0 : (int) pump2.producedMb;
                     steam0 = well == null ? 0 : field(well, "totalKg");
                 }
                 if (tick > 200) window += dt;
@@ -151,14 +160,17 @@ public final class OilLakeCases {
         public void measure(TestContext ctx) {
             mods.eln.Eln.simulator.removeSlowProcess(watch);
             if (fx != null) mods.eln.fluid.FluidWorld.remove(fx);
-            int got = ((mods.eln.fluid.ElementFluidHandler) pump.getFluidHandler()).getFluidAmount() - tank0;
-            int got2 = pump2 == null ? 0 : ((mods.eln.fluid.ElementFluidHandler) pump2.getFluidHandler()).getFluidAmount() - tank20;
+            int got = (int) pump.producedMb - tank0;
+            int got2 = pump2 == null ? 0 : (int) pump2.producedMb - tank20;
             double rate = got / window, nominal = 1000 / mods.eln.oil.OilPumpDescriptor.energyPerMb(false, 1);
             double steam = well == null ? 0 : field(well, "totalKg") - steam0;
             var info = pump.getWaila();
             ctx.line(String.format("%s: pump %.2f mB/s (nominal %.2f, %.0f%%); lake %d -> %d mB of %d; steam %.4f kg; pump %s%s", mode, rate, nominal,
                 100 * rate / nominal, amount0, r.amount(), r.capacity(), steam, info, well == null ? "" : "; wellhead " + well.getWaila()));
-            ctx.check(mode + ": the lake stays at its tail level", r.amount() == amount0, r.amount() + " vs " + amount0);
+            if (mode == Mode.STEAM)   // (steam raises the seepage to a 230V pump's rate, 4x what this 50V pump takes)
+                ctx.check("steam: the lake fills with what its pump doesn't take", r.amount() > 200, r.amount() + " mB");
+            else ctx.check(mode + ": the lake stays near empty (its pumps drain what seeps in)", r.amount() < 2 * mods.eln.oil.OilRecovery.seepRate() + 50,
+                r.amount() + " mB");
             String lake = String.valueOf(info.get("Lake"));
             if (mode == Mode.STEAM) {
                 ctx.check("steam: the pump runs at its full rate again (over 80 % of nominal)", rate > 0.8 * nominal, String.format("%.2f of %.2f mB/s", rate, nominal));
@@ -174,6 +186,51 @@ public final class OilLakeCases {
                 if (mode == Mode.WEAK_STEAM) ctx.check("weak steam: under the well's head nothing goes down", steam == 0, String.format("%.4f kg", steam));
             }
             mods.eln.reservoir.ReservoirData.get(ctx.level()).remove(r);
+        }
+    }
+
+    /**
+     * Seepage refills the lake (Baughn 2026-11-08), lerped by fill (2026-11-11): an empty lake left alone for 100 s gains
+     * its seepage, caught up when next looked at (seepRate x 100 s while under 25 % full); left for weeks it is nearly
+     * full; at 62.5 % full it seeps half its most; a surface pond (key "oil-pond:") doesn't refill at all.
+     */
+    static final class Refill implements TestCase {
+        public String id() {
+            return "oil_lake_refills_by_fill";
+        }
+
+        public void build(TestContext ctx) {
+        }
+
+        public void measure(TestContext ctx) {
+            var level = ctx.level();
+            var at = ctx.at(0, 0, 0).below(20);
+            int[] floor = {at.getY(), at.getY(), at.getY(), at.getY()}, mask = {0b11, 0b11, 0b11, 0b11};
+            var lake = mods.eln.oil.OilReservoirs.create(level, null, at.getX(), at.getZ(), 2, 2, floor, mask, 0);
+            var pond = mods.eln.reservoir.ReservoirData.get(level).create(level, "oil-pond:test" + at.asLong(), mods.eln.oil.OilReservoirs.KIND,
+                mods.eln.reservoir.ArrayBasin.TYPE, mods.eln.reservoir.ArrayBasin.spec(at.getX() + 4, at.getZ(), 2, 2, floor, new int[]{2, 2, 2, 2}),
+                mods.eln.reservoir.ArrayBasin.area(floor, new int[]{2, 2, 2, 2})[0][0], mods.eln.reservoir.ArrayBasin.area(floor, new int[]{2, 2, 2, 2})[1], 0);
+            var rec = mods.eln.oil.OilRecovery.get(level);
+            try {
+                long now = level.getGameTime();
+                rec.seepTimeForTests(lake, now - 100 * 20);
+                rec.seepTimeForTests(pond, now - 100 * 20);
+                long got = rec.seep(level, lake);
+                double want = mods.eln.oil.OilRecovery.gain(0, lake.capacity(), mods.eln.oil.OilRecovery.seepRate(), 100);
+                ctx.check("oil: an empty lake left 100 s gains its seepage", Math.abs(lake.amount() - want) <= 1 && want > 0, lake.amount() + " vs " + want);
+                rec.seepTimeForTests(lake, now - 100000000L);
+                rec.seep(level, lake);
+                ctx.check("oil: left for weeks, it is nearly full", lake.amount() >= 0.99 * lake.capacity() && lake.amount() <= lake.capacity(),
+                    lake.amount() + " of " + lake.capacity());
+                mods.eln.reservoir.Reservoirs.setAmount(level, lake, (long) (0.625 * lake.capacity()));
+                double half = mods.eln.oil.OilRecovery.seepRate(lake) / mods.eln.oil.OilRecovery.seepRate();
+                ctx.check("oil: at 62.5 % full it seeps half its most", Math.abs(half - 0.5) < 0.02, String.format("%.3f", half));
+                ctx.check("oil: a surface pond doesn't refill", rec.seep(level, pond) == 0 && pond.amount() == 0
+                    && !mods.eln.oil.OilRecovery.recovers(level, pond) && mods.eln.oil.OilRecovery.recovers(level, lake), pond.amount() + " mB");
+            } finally {
+                mods.eln.reservoir.ReservoirData.get(level).remove(lake);
+                mods.eln.reservoir.ReservoirData.get(level).remove(pond);
+            }
         }
     }
 }

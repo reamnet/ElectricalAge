@@ -111,9 +111,13 @@ public class SteamGeneratorElement extends TransparentNodeElement implements Flu
         return SteamGeneratorDescriptor.ETA * Water.isentropicDrop(inlet.T(), inlet.pVapour(), exhaustPa());
     }
 
-    /** Where the exhaust goes: the condenser's vessel, or the air. */
+    /**
+     * Where the exhaust goes: the condenser's vessel, or the air. Never under water's vapour pressure at the air's
+     * temperature: the ejector can empty the vessel (whose temperature then means little), but the steam condenses
+     * no colder than what cools it.
+     */
     double exhaustPa() {
-        return condenser != null ? condenser.vessel.P() : Water.P_ATM;
+        return condenser != null ? Math.max(condenser.vessel.P(), Water.psat(mods.eln.sim.Ambient.kelvin(node.coordonate))) : Water.P_ATM;
     }
 
     /** The condenser against its exhaust side (right, seen from its front), if any (Baughn: optional, beside it). */
@@ -146,7 +150,14 @@ public class SteamGeneratorElement extends TransparentNodeElement implements Flu
      */
     static final double DRAIN_SHARE_PER_S = 0.005;
 
-    /** The casing drain over time (s): liquid water leaves the inlet, with its heat. */
+    /**
+     * The casing drain over time (s): liquid water leaves the inlet, with its heat; with a condenser that has room (its
+     * hotwell under the pump's LEVEL_FULL, Baughn 2026-11-15: "when the condenser has space") it drains into the
+     * condenser's vessel (a steam trap to the hotwell), else to the ground. Thrown away, the condensate of a bare steam
+     * line was a steady loss the makeup had to replace (2026-11-15, a player's plant: ~0.1 g/s of 0.8 g/s of steam).
+     * A full hotwell gets none: the trap mustn't push it on toward FLOOD, and keeping the water in the inlet instead
+     * would let a high hotwell burn the turbine on a trickle the drain is there to clear (a slug still outruns it).
+     */
     void drain(double time) {
         double mL = Math.min(inlet.mLiquid(), DRAIN_SHARE_PER_S * inlet.volume * Water.RHO_L * time);
         if (mL <= 0) return;
@@ -154,7 +165,14 @@ public class SteamGeneratorElement extends TransparentNodeElement implements Flu
         inlet.mWater -= mL;
         inlet.energy -= mL * Water.hLiquid(T);
         inlet.update();
+        if (condenser != null && condenser.vessel != null && condenser.floodShare() < CondenserVessel.LEVEL_FULL) {
+            EaUnits.addWater(condenser.vessel, mL, T, false);
+            drainedToCondenserKg += mL;
+        } else drainedAwayKg += mL;
     }
+
+    /** Totals since loaded (GameTests): what the casing drain sent into the condenser, and to the ground (kg). */
+    public double drainedToCondenserKg, drainedAwayKg;
 
     /** The share of the inlet's volume that is liquid water. */
     public double waterShare() {
@@ -229,21 +247,11 @@ public class SteamGeneratorElement extends TransparentNodeElement implements Flu
             if (raw > 0 && raw < 1 || raw <= 0 && err > 0 || raw >= 1 && err < 0) gateI = Math.max(0, Math.min(1, gateI + KI * err * time));
             double target = Math.max(0, Math.min(1, gateI + KP * err));
             gate += (target - gate) * Math.min(1, time / GOV_TAU);
-            // steam through the nozzle (choked: by the inlet pressure), and only what the inlet has above 1 atm
-            double mNom = desc.nominalSteam() * EaUnits.KG_PER_MB_STEAM;   // kg/s at nominal power
+            // the steam went through its nozzle in the fluid core's step (beforeFluidStep sets it): its work here
             limit = controls.limit();
-            double open = Math.min(gate, limit);   // (the governor within its controls' limit)
-            double want = (LEAK + (1 - LEAK) * open) * FLOW_MAX * mNom * inlet.P() / P_REF * time;
-            want = Math.min(want, EaUnits.steamAvailable(inlet));
-            CondenserElement was = condenser;
-            condenser = findCondenser();
-            if ((condenser == null) != (was == null)) needPublish();   // (the models join)
-            double mv = inlet.mVapour(), mg = mv + inlet.mAir, air0 = inlet.mAir, tIn = inlet.T();
-            double jpk = jPerKg(), hIn = Water.hVapour(tIn);
-            double got = want > 0 && mv > 0 ? EaUnits.drainGas(inlet, want * mg / mv) : 0;
-            if (condenser != null) condenser.exhaust(got, Math.max(0, air0 - inlet.mAir), hIn - jpk, tIn);   // (into it, after the work)
+            double got = stepGot, pMech = stepWorkJ / time;
+            stepGot = stepWorkJ = 0;
             drain(time);
-            double pMech = got * jpk / time;
             // the shaft
             double pNom = desc.nominalP;
             double ek = H * pNom * omega * omega + (pMech - pe - LOSS * pNom * omega * omega) * time;
@@ -256,8 +264,11 @@ public class SteamGeneratorElement extends TransparentNodeElement implements Flu
             else if (omega > TRIP)
                 new mods.eln.sim.process.destruct.Failure(SteamGeneratorElement.this).rotating(() -> H * pNom * omega * omega)
                     .fail(mods.eln.sim.process.destruct.FailureCause.OVERSPEED, omega);
-            else if (omega > WATER_SPEED && (waterShare() > WATER_MAX || condenser != null && condenser.floodShare() > CondenserDescriptor.FLOOD))
+            else if (omega > WATER_SPEED && waterShare() > WATER_MAX)
                 new mods.eln.sim.process.destruct.Failure(SteamGeneratorElement.this).fail(mods.eln.sim.process.destruct.FailureCause.WATER, waterShare());
+            else if (omega > WATER_SPEED && condenser != null && condenser.floodShare() > CondenserDescriptor.FLOOD)
+                new mods.eln.sim.process.destruct.Failure(SteamGeneratorElement.this)
+                    .fail(mods.eln.sim.process.destruct.FailureCause.FLOODED, condenser.floodShare());
             else if (omega > 1.1 && node.coordonate.world() instanceof net.minecraft.server.level.ServerLevel sl && sl.getGameTime() % 10 == 0)
                 sl.playSound(null, node.coordonate.pos(), net.minecraft.sounds.SoundEvents.MINECART_RIDING, net.minecraft.sounds.SoundSource.BLOCKS,
                     0.8f, (float) Math.min(2, omega * 1.4));   // (the whine of a shaft over speed)
@@ -308,14 +319,61 @@ public class SteamGeneratorElement extends TransparentNodeElement implements Flu
         shown = tank.getFluidAmount();
     }
 
+    /**
+     * Its nozzle in the fluid core's step (Network.Kind.TURBINE; Baughn 2026-11-10: devices are components of the implicit
+     * step), from the inlet into the condenser's vessel beside it, or into a small exhaust venting to the air: steam by the
+     * inlet and exhaust pressures, ETA of the isentropic drop a kg as work. Sized to pass FLOW_MAX of its nominal steam
+     * fully open on saturated steam at its rated pressure.
+     */
+    FluidDevice.Link nozzle;
+    FluidNode exhaust;
+    FluidDevice.Vent exhaustVent;
+    /** What the last fluid step passed (kg of water) and the work it gave (J), for Run. */
+    double stepGot, stepWorkJ;
+
+    @Override
+    public List<FluidDevice.Link> fluidLinks() {
+        return nozzle == null ? List.of() : List.of(nozzle);
+    }
+
+    @Override
+    public List<FluidDevice.Vent> fluidVents() {
+        return exhaustVent == null ? List.of() : List.of(exhaustVent);
+    }
+
+    /** The nozzle to wherever its exhaust goes now (made again, and the network rebuilt, when a condenser comes or goes). */
+    void aimNozzle() {
+        FluidNode to = condenser != null && condenser.vessel != null ? condenser.vessel : exhaust;
+        if (nozzle != null && nozzle.b == to) return;
+        double mNom = desc.nominalSteam() * EaUnits.KG_PER_MB_STEAM;
+        double rho = P_REF / (Water.R_V * Water.tsat(P_REF));
+        nozzle = new FluidDevice.Link(inlet, 1.0, to, 1.0, PORT_K).turbine(FLOW_MAX * mNom / Math.sqrt(rho * P_REF), SteamGeneratorDescriptor.ETA);
+        mods.eln.fluid.FluidWorld.changed(this);
+    }
+
     @Override
     public void beforeFluidStep(double dt) {
         syncTank();
+        if (inlet == null) return;
+        CondenserElement was = condenser;
+        condenser = findCondenser();
+        if ((condenser == null) != (was == null)) needPublish();   // (the models join)
+        aimNozzle();
+        double open = Math.min(gate, controls.limit());   // (the governor within its controls' limit)
+        // (a throttle at 0 % is its stop valve, shut tight: no leak; Baughn 2026-11-10)
+        nozzle.open = controls.limit() <= 0 ? 0 : LEAK * Math.min(1, P_REF / Math.max(1, inlet.P())) + (1 - LEAK) * open;
+        nozzle.drop = Water.isentropicDrop(inlet.T(), inlet.pVapour(), exhaustPa());
+        if (exhaustVent != null) exhaustVent.open = condenser == null ? 1 : 0;
     }
 
     @Override
     public void afterFluidStep(double dt) {
         show();
+        if (nozzle == null || nozzle.edge == null) return;
+        double got = Math.max(0, nozzle.edge.fVapour + nozzle.edge.fLiquid) * dt;
+        stepGot += got;
+        stepWorkJ += Math.max(0, nozzle.edge.workJ);
+        if (condenser != null && condenser.v != null) condenser.v.totalSteamKg += got;   // (its meter)
     }
 
     /** The tank shows the inlet's steam above 1 atm (WAILA; the GameTests feed through it). */
@@ -383,6 +441,12 @@ public class SteamGeneratorElement extends TransparentNodeElement implements Flu
             EaUnits.addWater(inlet, tank.getFluidAmount() * EaUnits.KG_PER_MB_STEAM, Water.TB, true);
         }
         show();
+        exhaust = new FluidNode(volume / 4, c.y, 1.0, false);
+        exhaust.fill(0, Water.P_ATM, mods.eln.sim.Ambient.kelvin(node.coordonate));
+        exhaustVent = new FluidDevice.Vent(exhaust, 0.5, PORT_K);
+        condenser = findCondenser();
+        nozzle = null;
+        aimNozzle();
         ports = List.of(new FluidPort(inlet, c.pos().asLong(), 1, 0.5, PORT_K));   // the inlet on top
         connect();
     }

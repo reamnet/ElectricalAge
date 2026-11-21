@@ -5,6 +5,7 @@ import mods.eln.gui.SlotSpec;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -117,6 +118,72 @@ public class ElnScreen extends net.minecraft.client.gui.screens.inventory.Abstra
         }, () -> set.accept(mods.eln.bus.BusChannel.cycle(get.getAsInt(), net.minecraft.client.Minecraft.getInstance().hasShiftDown())), tips);
     }
 
+    /**
+     * A drop-down at a button's layout place (Baughn 2026-11-08: the wire machine's what-to-make): the button shows the
+     * chosen option; a click opens the list under it, drawn over everything, and a click on an option chooses it (a click
+     * anywhere else closes it). Returns the button, so a screen may grey it.
+     */
+    protected net.minecraft.client.gui.components.Button dropdown(String id, String[] options, java.util.function.IntSupplier current,
+                                                                  java.util.function.IntConsumer choose, String... tooltip) {
+        var r = rect("button", id);
+        int w = r.w();
+        for (String o : options) w = Math.max(w, font.width(o) + 8);   // (the list is as wide as its longest option)
+        Dropdown d = new Dropdown(leftPos + r.x(), topPos + r.y() + 20, w, options, choose);
+        var b = button(r.x(), r.y(), r.w(), () -> {
+            int c = current.getAsInt();
+            return (c >= 0 && c < options.length ? options[c] : "?") + " \u25BE";
+        }, () -> openDropdown = openDropdown == d ? null : d, tooltip);
+        // the tooltip would cover the open list (AdventurAgent): only while it's shut
+        var tip = tooltip.length > 0 ? net.minecraft.client.gui.components.Tooltip.create(Component.literal(String.join("\n", tooltip))) : null;
+        refreshers.add(() -> b.setTooltip(openDropdown == d ? null : tip));
+        return b;
+    }
+
+    /** An open drop-down's list (screen coordinates). */
+    record Dropdown(int x, int y, int w, String[] options, java.util.function.IntConsumer choose) {
+        static final int ROW = 12;
+
+        int at(double mx, double my) {
+            if (mx < x || mx >= x + w || my < y || my >= y + ROW * options.length) return -1;
+            return (int) ((my - y) / ROW);
+        }
+    }
+
+    private Dropdown openDropdown;
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent e, boolean doubleClick) {
+        // a text box being edited commits before a click elsewhere acts: the clicked button ran first and the box lost
+        // focus after it, so the wire drawing machine started on its old turns and then refused the new ones
+        if (getFocused() instanceof EaField f && !f.isMouseOver(e.x(), e.y())) f.fire();
+        if (openDropdown != null) {
+            Dropdown d = openDropdown;
+            openDropdown = null;
+            int k = d.at(e.x(), e.y());
+            if (k >= 0) {
+                d.choose().accept(k);
+                return true;
+            }
+            // a click elsewhere only closes it (unless it is on the drop-down's own button, which would reopen it)
+            return true;
+        }
+        return super.mouseClicked(e, doubleClick);
+    }
+
+    private void extractDropdown(GuiGraphicsExtractor g, int mouseX, int mouseY) {
+        Dropdown d = openDropdown;
+        if (d == null) return;
+        int h = Dropdown.ROW * d.options().length;
+        g.fill(d.x() - 1, d.y() - 1, d.x() + d.w() + 1, d.y() + h + 1, 0xFF000000);
+        g.fill(d.x(), d.y(), d.x() + d.w(), d.y() + h, 0xFFC6C6C6);
+        int hover = d.at(mouseX, mouseY);
+        for (int k = 0; k < d.options().length; k++) {
+            int y = d.y() + k * Dropdown.ROW;
+            if (k == hover) g.fill(d.x(), y, d.x() + d.w(), y + Dropdown.ROW, 0xFF8B8BFF);
+            g.text(font, d.options()[k], d.x() + 4, y + 2, k == hover ? 0xFFFFFFFF : LABEL, false);
+        }
+    }
+
     /** A live text line at its layout place. */
     protected void text(String id, java.util.function.Supplier<String> s) {
         text(id, s, () -> LABEL);
@@ -152,7 +219,7 @@ public class ElnScreen extends net.minecraft.client.gui.screens.inventory.Abstra
     protected void update() {
     }
 
-    private final java.util.List<Runnable> refreshers = new java.util.ArrayList<>();
+    protected final java.util.List<Runnable> refreshers = new java.util.ArrayList<>();
 
     @Override
     protected void containerTick() {
@@ -165,7 +232,50 @@ public class ElnScreen extends net.minecraft.client.gui.screens.inventory.Abstra
     protected void init() {
         refreshers.clear();
         drawers.clear();
+        if (fitsGuiScale()) fitGuiScale();
         super.init();
+    }
+
+    /**
+     * Does this screen take a smaller GUI scale when its panel doesn't fit the window at the player's own? Big screens
+     * (the computer's 80 x 25 terminal) say yes (Baughn 2026-11-18: "the largest GUI scale (&lt;= the set one) which
+     * makes it fit").
+     */
+    protected boolean fitsGuiScale() {
+        return false;
+    }
+
+    /** The window's GUI scale was lowered for this screen, and is put back when it closes. */
+    private boolean scaled;
+
+    /**
+     * Sets the window's GUI scale to the largest one at most the player's setting at which the panel fits (at least 1),
+     * and takes the screen's size from it. Called from init(), so it runs again on a window resize (Minecraft.resizeGui
+     * puts the player's scale back, then resizes the screen).
+     */
+    private void fitGuiScale() {
+        var mc = net.minecraft.client.Minecraft.getInstance();
+        var window = mc.getWindow();
+        int set = window.calculateScale(mc.options.guiScale().get(), mc.isEnforceUnicode()), k = set;
+        while (k > 1 && (window.getWidth() / k < imageWidth || window.getHeight() / k < imageHeight)) k--;
+        if (k == window.getGuiScale()) return;
+        window.setGuiScale(k);
+        scaled = k != set;
+        width = window.getGuiScaledWidth();
+        height = window.getGuiScaledHeight();
+        mc.mouseHandler.resyncMousePosition();
+    }
+
+    @Override
+    public void removed() {
+        if (scaled) {
+            // the player's own scale again, before the next screen (or the HUD alone) is laid out
+            var mc = net.minecraft.client.Minecraft.getInstance();
+            mc.getWindow().setGuiScale(mc.getWindow().calculateScale(mc.options.guiScale().get(), mc.isEnforceUnicode()));
+            mc.mouseHandler.resyncMousePosition();
+            scaled = false;
+        }
+        super.removed();
     }
 
     // ---- small builders for the common screens (positions relative to the panel)
@@ -253,6 +363,11 @@ public class ElnScreen extends net.minecraft.client.gui.screens.inventory.Abstra
     @Override
     public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
         super.extractRenderState(g, mouseX, mouseY, a);
+        if (openDropdown != null) {
+            g.nextStratum();
+            extractDropdown(g, mouseX, mouseY);
+            return;
+        }
         if (hoveredSlot instanceof mods.eln.gui.ElnSlot es && !es.hasItem() && menu.getCarried().isEmpty()
             && es.spec.comment() != null && es.spec.comment().length > 0) {
             java.util.List<Component> lines = new java.util.ArrayList<>();

@@ -6,7 +6,8 @@ package mods.eln.sim.fluid;
  * the port is below that node's liquid level, else its gas (vapour and air in proportion).
  */
 public final class FluidEdge {
-    public enum Kind { PIPE, CHECK, TURBINE }
+    /** FLOW: a prescribed flow (FluidDevice.Flow; Network.Kind.FLOW), no conductance. */
+    public enum Kind { PIPE, CHECK, TURBINE, PUMP, REGULATOR, FLOW }
 
     public final FluidNode a, b;
     /** Port heights on a and b (fractions of each node's height). */
@@ -33,6 +34,39 @@ public final class FluidEdge {
     /** A pump's head (Pa), pushing a -> b: added to the drive (a pump: its shutoff pressure above its sump). */
     public double boost;
     public Kind kind = Kind.PIPE;
+    /**
+     * PUMP: a centrifugal pump a -> b in the fluid core's solve (its flow speed qMax sqrt(1 - dp / h0) against the
+     * back-pressure dp; Network.Kind.PUMP): free flow qMax (kg/s), shut-off head h0 (Pa), speed (0..), efficiency; and the
+     * power it put into the fluid last step (W).
+     */
+    public double qMax, h0, speed = 1, eta = 0.7, work;
+    /** PUMP: a gas pump (qMax a volume, m^3/s; Network.Edge.gas). */
+    public boolean gas;
+    /** PUMP: keeps its shut-off head whatever it draws (Network.Edge.anyPhase). */
+    public boolean anyPhase;
+    /** REGULATOR: its set point (Pa) and mode (relief: holds a; else reducing: holds b; Network.Edge.setPa). */
+    public double setPa;
+    public boolean relief;
+    /** Gas only (a purge valve; Network.Edge.gasOnly). */
+    public boolean gasOnly;
+    /**
+     * TURBINE (in the fluid core's solve, Network.Kind.TURBINE): its nozzle coefficient and the isentropic drop (J/kg)
+     * from its inlet to its exhaust's pressure, set each step; it takes eta x drop a kg of water out as shaft work (work,
+     * W over the last step; workJ, J).
+     */
+    public double nozzle, drop, workJ;
+    /** Heat conductance between its two nodes (W/K), in the fluid core's step (Network.Edge.conductance): an exchanger. */
+    public double conductance;
+    /** Its own stream band (Pa; NaN: the core's): Network.Edge.band. */
+    public double band = Double.NaN;
+    /**
+     * FLOW (Network.Edge.rate): rate (kg/s), a source's mix (shares by species id; null: a's own draw) at kelvin, what a
+     * sink draws (phase), and its gates (Pa; NaN: none). Copied from its FluidDevice.Flow before each step.
+     */
+    public double rate, kelvin;
+    public double[] shares;
+    public mods.eln.fluidcore.Network.Phase phase = mods.eln.fluidcore.Network.Phase.ANY;
+    public double minPa = Double.NaN, maxPa = Double.NaN;
     /** TURBINE: electric power made this step (W), at EFFICIENCY of the steam's heat above liquid at 100 C. */
     public double power;
     public static final double TURBINE_EFFICIENCY = 0.40;
@@ -45,7 +79,28 @@ public final class FluidEdge {
     public double[] fSpecies;
     // the solve's coefficient and upstream properties (per step)
     double g, rho, head, sA, sB, xl;
+    /** How each end's port pressure answers a kg more liquid in its node (Pa/kg: the weight over the port; FluidNetwork.headResponse). */
+    double hA, hB;
     boolean fromA;
+    /**
+     * A filling valve's opening (0..1) that passes at most roomM3 of what a's port draws in a step of dt s, at the two
+     * ends' present pressures (taken as at least FILL_DRIVE apart); 1 if it would pass less fully open. An edge's
+     * conductance is fixed at the start of a step, so a valve opened by the room that is left cannot fill a small
+     * vessel past it within the step, whatever the line's pressure and the fluid's viscosity.
+     */
+    public double openingFor(double roomM3, double dt) {
+        if (roomM3 <= 0) return 0;
+        FluidNetwork.Packet pa = FluidNetwork.packet(a, portA, spanA);
+        double dz = (a.z + portA * a.height) - (b.z + portB * b.height);
+        double drive = a.pressureOver(portA, spanA) - b.pressureOver(portB, spanB) + boost + pa.rhoHead * mods.eln.fluidcore.Network.G * dz;
+        drive = Math.max(drive, FILL_DRIVE);
+        double full = CoreStep.conductance(this, pa, drive, 1) * drive;
+        return full <= 0 ? 1 : Math.min(1, roomM3 * pa.rho / (dt * full));
+    }
+
+    /** The least drive (Pa) openingFor reckons with: a line may gain this much within a step. */
+    public static final double FILL_DRIVE = 1000;
+
     /** The solve's per-step coefficients, for /elnlab fluidtrace. */
     public String debug() {
         return String.format("g=%.4g head=%.4g sA=%.4g sB=%.4g xl=%.3f fromA=%s", g, head, sA, sB, xl, fromA);
@@ -69,7 +124,7 @@ public final class FluidEdge {
 
     /** Check valves and turbines pass flow only from a to b. */
     public boolean oneWay() {
-        return kind == Kind.CHECK || kind == Kind.TURBINE;
+        return kind == Kind.CHECK || kind == Kind.TURBINE || kind == Kind.REGULATOR;
     }
 
     double zA() {

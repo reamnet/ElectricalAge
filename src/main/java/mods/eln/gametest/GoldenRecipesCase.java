@@ -55,22 +55,48 @@ final class GoldenRecipesCase implements TestCase {
     public void build(TestContext ctx) {
     }
 
+    /** Insulated cables that recipes take as bare Copper Cable now (Baughn 2026-11-07); the cable items are retired. */
+    static final Set<String> BARE = Set.of("eln:low_voltage_cable", "eln:medium_voltage_cable", "eln:high_voltage_cable");
+
     /** Golden recipes whose output is deferred to a later phase (notes/port26/deferred.md). */
     static final Set<String> DEFERRED = Set.of("eln:x_ray_scanner");
+    /** Smelting inputs changed on purpose (1.12 name): resin smelts to Raw Rubber, which smelts to the 1 Rubber resin gave
+     *  (the rubber chain, Baughn 2026-11-07). */
+    static final Set<String> SMELT_CHANGED = Set.of("Tree Resin");
     /** Machine recipes changed on purpose (list:input): sand makes four Dielectrics, not one (Baughn 2026-10-28). */
-    static final Set<String> MACHINE_CHANGED = Set.of("compressor:Sand");
+    static final Set<String> MACHINE_CHANGED = Set.of("compressor:Sand",
+        "compressor:Oak Wood");   // (two logs a resin; Baughn 2026-11-07, rubber trees give more)
     /** Recipes changed on purpose (Baughn 2026-10-13): copper cable 1 per ingot, windings take the new Copper Coil;
      *  thermal insulation takes any wool (Baughn 2026-10-26). Their output must still have a 26.x recipe. */
-    static final Set<String> CHANGED = Set.of("eln:thermal_insulation", "eln:copper_cable", "eln:power_resistor", "eln:dc_dc_converter", "eln:rheostat",
-        "eln:thermistor", "eln:power_inductor", "eln:small_50_v_copper_heating_corp", "eln:50_v_copper_heating_corp");
+    static final Set<String> CHANGED = Set.of(
+        // tier pairs told apart by rubber, a layer a step, once their cables became Copper Cable; the very high
+        // voltage ones by alloy; the inline pump by a bucket (it had the shaft motor's recipe) (Baughn 2026-11-07)
+        "eln:50_v_incandescent_light_bulb", "eln:200_v_incandescent_light_bulb", "eln:50_v_economic_light_bulb", "eln:200_v_economic_light_bulb",
+        "eln:50_v_carbon_incandescent_light_bulb", "eln:50_v_carbon_incandescent_light_bulb_2", "eln:200_v_farming_lamp", "eln:50_v_led_bulb",
+        "eln:200_v_led_bulb", "eln:200_v_power_socket", "eln:low_voltage_relay", "eln:medium_voltage_relay", "eln:high_voltage_relay",
+        "eln:very_high_voltage_relay", "eln:very_high_voltage_switch",
+        "eln:thermal_insulation", "eln:copper_cable", "eln:power_resistor", "eln:dc_dc_converter", "eln:rheostat",
+        "eln:thermistor", "eln:power_inductor", "eln:small_50_v_copper_heating_corp", "eln:50_v_copper_heating_corp",
+        // the fuel burners from alloy plates, not stone combustion chambers (Baughn 2026-11-11)
+        "eln:small_fuel_burner", "eln:medium_fuel_burner", "eln:big_fuel_burner");
 
     /**
      * 1.12 outputs dropped on purpose: copper tools and armour, vanilla since 1.21.9 (Baughn, 2026-10-11); the heat
      * turbines, replaced by the 50V/200V steam turbines (Baughn, 2026-10-14).
      */
-    static final Set<String> REMOVED = Set.of("eln:copper_sword", "eln:copper_hoe", "eln:copper_shovel", "eln:copper_pickaxe",
+    static final Set<String> REMOVED = Set.of(
+        // the insulated cable items are retired: hand recipes make cable kits instead (Baughn 2026-11-07)
+        "eln:low_voltage_cable", "eln:low_voltage_cable_2", "eln:medium_voltage_cable", "eln:high_voltage_cable", "eln:very_high_voltage_cable",
+        // made by machines now (Baughn 2026-11-06): the Average core annealed in the Electrical Furnace, the Optimal one
+        // field-annealed in the Magnetizer, from their own crafted intermediates
+        "eln:average_ferromagnetic_core", "eln:optimal_ferromagnetic_core",
+        // one fuse for every cable, rated in the holder (Baughn 2026-11-06): the other tiers' fuses aren't made
+        "eln:lead_fuse_for_medium_voltage_cables", "eln:lead_fuse_for_high_voltage_cables", "eln:lead_fuse_for_very_high_voltage_cables",
+        "eln:copper_sword", "eln:copper_hoe", "eln:copper_shovel", "eln:copper_pickaxe",
         "eln:copper_axe", "eln:copper_helmet", "eln:copper_chestplate", "eln:copper_leggings", "eln:copper_boots",
-        "eln:50_v_turbine", "eln:200_v_turbine");
+        "eln:50_v_turbine", "eln:200_v_turbine",
+        // a Pole Transformer from the wire machine fits any Utility Pole (Baughn 2026-11-08)
+        "eln:utility_pole_w_dc_dc_converter");
 
     /** Macerator inputs 26.x changes on purpose: vanilla ores give raw chunks (Baughn, 2026-10-10; golden/README.md). */
     static final Set<String> ORES_TO_CHUNKS = Set.of("Iron Ore", "Gold Ore", "Copper Ore", "Lead Ore", "Tungsten Ore",   // (lead, tungsten: Baughn 2026-10-19)
@@ -132,7 +158,7 @@ final class GoldenRecipesCase implements TestCase {
         List<Item> items = new ArrayList<>();
         for (JsonElement a : alts) {
             Item i = map(a.getAsJsonObject(), unknown);
-            if (i != null) items.add(i);
+            if (i != null) items.add(BARE.contains(BuiltInRegistries.ITEM.getKey(i).toString()) ? BuiltInRegistries.ITEM.getValue(Identifier.parse("eln:copper_cable")) : i);
         }
         return new Slot(false, items.isEmpty(), items);
     }
@@ -295,6 +321,7 @@ final class GoldenRecipesCase implements TestCase {
             JsonObject g = e.getAsJsonObject();
             Item in = map(g.getAsJsonObject("input"), unknown), out = map(g.getAsJsonObject("output"), unknown);
             if (in == null || !seenInputs.add(in)) continue;
+            if (g.getAsJsonObject("input").has("name") && SMELT_CHANGED.contains(g.getAsJsonObject("input").get("name").getAsString())) continue;
             int count = g.getAsJsonObject("output").has("count") ? g.getAsJsonObject("output").get("count").getAsInt() : 1;
             boolean ok = false;
             for (RecipeHolder<?> h : mine) {

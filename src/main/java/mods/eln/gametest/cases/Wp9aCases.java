@@ -81,6 +81,7 @@ public final class Wp9aCases {
         cases.add(new RelayCase());
         cases.add(new BreakerCase());
         cases.add(new FuseCase());
+        cases.add(new TripCase());
         cases.add(new ReactiveCase());
         cases.add(new SocketChargerCase());
     }
@@ -206,7 +207,7 @@ public final class Wp9aCases {
         }
     }
 
-    /** Rheostat 100 ohm nominal, control gate at 25 V (Signal Source): R = Rnom * (0.5 + 0.01) / 1.01. */
+    /** Rheostat 100 ohm nominal, control gate at half of SVU (Signal Source): R = Rnom * (0.5 + 0.01) / 1.01. */
     static final class RheostatCase implements TestCase {
         ElectricalSourceElement src;
         ResistorElement r;
@@ -222,7 +223,7 @@ public final class Wp9aCases {
 
         public void build(TestContext ctx) {
             src = source(ctx, SOURCE, 0, 1, U);
-            source(ctx, SIGNAL_SOURCE, 1, 0, 25.0);
+            source(ctx, SIGNAL_SOURCE, 1, 0, 0.5 * Eln.SVU);
             r = resistor(ctx, RHEOSTAT, 1, 1, 48);
             orient(r, f -> f, Direction.ZN); // control gate (front) toward the signal source; terminals stay on X
             gnd = ctx.placeSix(GROUND, ctx.at(2, 1, 1));
@@ -233,7 +234,7 @@ public final class Wp9aCases {
             double rt = link(src, r) + rEff + link(r, gnd);
             double i = U / rt;
             double drop = load(r, Direction.XN).getU() - load(r, Direction.XP).getU();
-            ctx.line(f("wp9a rheostat model: control 25 V -> 0.5, R = 100 * 0.51 / 1.01 = %.4f ohm, I = %.5f A", rEff, i));
+            ctx.line(f("wp9a rheostat model: control SVU / 2 -> 0.5, R = 100 * 0.51 / 1.01 = %.4f ohm, I = %.5f A", rEff, i));
             ctx.checkValue("wp9a rheostat control [normalized]", r.control.getNormalized(), 0.5);
             ctx.checkValue("wp9a rheostat voltage drop [V]", drop, i * rEff);
             ctx.checkValue("wp9a rheostat resistance U/I [ohm]", drop / (U - drop) * (rt - rEff), rEff);
@@ -360,7 +361,7 @@ public final class Wp9aCases {
         }
     }
 
-    /** Breaker with an LV cable: z=0 vmax 100 V + switched on (GUI packets) conducts; z=2 vmax 40 V trips at 50 V. */
+    /** Breaker (no cable piece: Baughn 2026-11-17): z=0 vmax 100 V + switched on (GUI packets) conducts; z=2 vmax 40 V trips at 50 V. */
     static final class BreakerCase implements TestCase {
         ElectricalSourceElement srcA;
         ElectricalBreakerElement bA, bB;
@@ -378,8 +379,6 @@ public final class Wp9aCases {
         ElectricalBreakerElement breaker(TestContext ctx, int z, float vMax) {
             ElectricalBreakerElement b = (ElectricalBreakerElement) ctx.placeSix(BREAKER, ctx.at(1, 1, z));
             orient(b, f -> f, Direction.XN);
-            b.getInventory().setItem(0, lvCable()); // ElectricalBreakerContainer.cableSlotId
-            b.getInventory().setChanged();
             b.networkUnserialize(ctx.stream(out -> {
                 out.writeByte(ElectricalBreakerElement.setVoltageMaxId);
                 out.writeFloat(vMax);
@@ -403,7 +402,7 @@ public final class Wp9aCases {
         public void measure(TestContext ctx) {
             ctx.check("wp9a breaker (vmax 100 V) closed", bA.getSwitchState(), "");
             double rSw = bA.switchResistor.getR();
-            ctx.checkValue("wp9a breaker contact resistance [ohm] (LV cable Rs)", rSw, ElnDeviceRegistry.lowVoltageCableDescriptor.electricalRs);
+            ctx.checkValue("wp9a breaker contact resistance [ohm] (MV cable Rs: its contacts)", rSw, ElnDeviceRegistry.meduimVoltageCableDescriptor.electricalRs);
             double rt = link(srcA, bA) + rSw + link(bA, rA) + rA.nominalRs + link(rA, gA);
             ctx.checkValue("wp9a breaker current [A] (50 V / R_total)", current(rA), U / rt);
             double iB = current(rB);
@@ -412,8 +411,89 @@ public final class Wp9aCases {
         }
     }
 
+    /**
+     * Set trip currents (Baughn 2026-11-06: a UI, for cables of any cross-section): 4.8 A through 10 ohm at 48 V. z=0 a
+     * breaker set to trip at 2 A opens; z=2 a fuse rated 2 A blows.
+     */
+    static final class TripCase implements TestCase {
+        ElectricalBreakerElement low;
+        ElectricalFuseHolderElement fuse;
+        boolean blew;
+        mods.eln.sim.IProcess watch;
+        int tick;
+
+        public String name() {
+            return "wp9a breaker and fuse trip at their set current";
+        }
+
+        public int width() {
+            return 4;
+        }
+
+        public int ticks() {
+            return 400;
+        }
+
+        ElectricalBreakerElement breaker(TestContext ctx, int z, float amps) {
+            source(ctx, SOURCE, 0, z, U);
+            ElectricalBreakerElement b = (ElectricalBreakerElement) ctx.placeSix(BREAKER, ctx.at(1, 1, z));
+            orient(b, f -> f, Direction.XN);
+            b.networkUnserialize(ctx.stream(out -> {
+                out.writeByte(ElectricalBreakerElement.setVoltageMaxId);
+                out.writeFloat(100F);
+            }));
+            b.networkUnserialize(ctx.stream(out -> {
+                out.writeByte(ElectricalBreakerElement.setTripAmpsId);
+                out.writeFloat(amps);
+            }));
+            b.networkUnserialize(ctx.stream(out -> out.writeByte(ElectricalBreakerElement.toogleSwitchId)));
+            resistor(ctx, POWER_RESISTOR, 2, z, 36);   // 10 ohm
+            ctx.placeSix(GROUND, ctx.at(3, 1, z));
+            return b;
+        }
+
+        public void build(TestContext ctx) {
+            low = breaker(ctx, 0, 2F);
+            source(ctx, SOURCE, 0, 2, U);
+            fuse = (ElectricalFuseHolderElement) ctx.placeSix(FUSE_HOLDER, ctx.at(1, 1, 2));
+            orient(fuse, f -> f, Direction.XN);
+            use(ctx, fuse, Eln.sharedItem.getDescriptor(FUSE_LV).newItemStack());
+            fuse.networkUnserialize(ctx.stream(out -> {
+                out.writeByte(ElectricalFuseHolderElement.SET_RATING);
+                out.writeFloat(2F);
+            }));
+            resistor(ctx, POWER_RESISTOR, 2, 2, 36);
+            ctx.placeSix(GROUND, ctx.at(3, 1, 2));
+            // once blown: out, a new fuse in, rated 20 A: it holds (a blown fuse's heat stayed and blew the next, AdventurAgent)
+            Eln.simulator.addSlowProcess(watch = dt -> {
+                tick++;
+                if (!blew && fuse.getInstalledFuse() == ElectricalFuseDescriptor.Companion.getBlownFuse()) {
+                    blew = true;
+                    fuse.networkUnserialize(ctx.stream(out -> out.writeByte(ElectricalFuseHolderElement.TAKE_OUT)));
+                    fuse.setInstalledFuse((ElectricalFuseDescriptor) Eln.sharedItem.getDescriptor(FUSE_LV));
+                    fuse.networkUnserialize(ctx.stream(out -> {
+                        out.writeByte(ElectricalFuseHolderElement.SET_RATING);
+                        out.writeFloat(20F);
+                    }));
+                }
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.check("trip: a breaker set to 2 A opens at 4.8 A", !low.getSwitchState(), "");
+            Eln.simulator.removeSlowProcess(watch);
+            ctx.check("trip: a fuse rated 2 A blows at 4.8 A", blew, "");
+            ctx.check("trip: a new fuse rated 20 A then holds", fuse.getInstalledFuse() != null && fuse.getInstalledFuse().getCableDescriptor() != null,
+                fuse.getInstalledFuse() == null ? "none" : fuse.getInstalledFuse().name);
+            var mv = ElnDeviceRegistry.meduimVoltageCableDescriptor;
+            ctx.check("trip: unset, a breaker trips at its contacts' (MV cable) 1.05 x nominal",
+                Math.abs(low.cableTripAmps() - 1.05 * mv.electricalNominalPower / mv.electricalNominalVoltage) < 0.01,
+                "" + low.cableTripAmps());
+        }
+    }
+
     /** Fuse holder: z=0 an LV lead fuse put in by right click (stack consumed) conducts; z=2 fuse put in and taken
-     *  out again with an empty hand (the 1.12 empty-hand path) is open. */
+     *  out again (from its screen, Baughn 2026-11-06: an empty hand opens it) is open. */
     static final class FuseCase implements TestCase {
         ElectricalSourceElement srcA;
         ElectricalFuseHolderElement hA, hB;
@@ -445,7 +525,7 @@ public final class Wp9aCases {
             rB = resistor(ctx, POWER_RESISTOR, 2, 2, 48);
             ctx.placeSix(GROUND, ctx.at(3, 1, 2));
             use(ctx, hB, Eln.sharedItem.getDescriptor(FUSE_LV).newItemStack());
-            use(ctx, hB, ItemStack.EMPTY);
+            hB.networkUnserialize(ctx.stream(o -> o.writeByte(ElectricalFuseHolderElement.TAKE_OUT)));
         }
 
         public void measure(TestContext ctx) {
@@ -458,7 +538,7 @@ public final class Wp9aCases {
                 ctx.checkValue("wp9a fuse current [A] (50 V / R_total, fuse R = LV cable Rs)", current(rA), U / rt);
             }
             double iB = current(rB);
-            ctx.check("wp9a fuse taken out with empty hand", hB.getInstalledFuse() == null && Math.abs(iB) < OPEN_I,
+            ctx.check("wp9a fuse taken out from its screen", hB.getInstalledFuse() == null && Math.abs(iB) < OPEN_I,
                 "installed " + (hB.getInstalledFuse() == null ? "none" : hB.getInstalledFuse().name) + f(", I = %.3g A (expected open)", iB));
         }
     }

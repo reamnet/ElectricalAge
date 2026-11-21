@@ -27,21 +27,32 @@ public final class KitOutline {
         for (int i = 0; i < n; i++) l.add(new int[]{in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt()});
         state = k;
         boxes = l;
+        // (the route debug kit: say when this outline is first drawn; RouteDebug)
+        if (in.available() > 0 && in.readByte() == 1) debugArrived = System.nanoTime();
     }
+
+    private static volatile long debugArrived;
 
     public static void onExtract(ExtractBlockOutlineRenderStateEvent e) {
         var player = Minecraft.getInstance().player;
         List<int[]> bs = boxes;
-        if (player == null || bs.isEmpty() || !(player.getMainHandItem().getItem() instanceof KitItem)) return;   // (cable and pipe kits)
+        if (player == null || bs.isEmpty() || !(player.getMainHandItem().getItem() instanceof KitItem
+            || player.getMainHandItem().getItem() instanceof mods.eln.node.voxel.ToolbagItem)) return;   // (cable and pipe kits, the Toolbag)
         int st = state;
         int color = st == 2 ? 0xE040D8FF : st == 1 ? 0xC040FF60 : 0xC0FF4040;   // (cyan: into a machine's port)
+        long arrived = debugArrived;
+        if (arrived != 0) {
+            debugArrived = 0;
+            long ms = (System.nanoTime() - arrived) / 1_000_000;
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("[route debug] outline drawn " + ms + " ms after its packet came"));
+        }
         e.addCustomRenderer((state, collector, pose, lrs) -> {
             Vec3 cam = lrs.cameraRenderState.pos;
             for (int[] b : bs) {
                 pose.pushPose();
                 pose.translate(b[0] / 16.0 - cam.x, b[1] / 16.0 - cam.y, b[2] / 16.0 - cam.z);
                 collector.submitShapeOutline(pose, Shapes.box(0, 0, 0, (b[3] - b[0]) / 16.0, (b[4] - b[1]) / 16.0, (b[5] - b[2]) / 16.0),
-                    RenderTypes.linesTranslucent(), color, 2.5f, false);
+                    VoxelOutline.lines(), color, 2.5f, false);
                 pose.popPose();
             }
             return false;   // (and the block's own outline)

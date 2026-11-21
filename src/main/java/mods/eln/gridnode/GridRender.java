@@ -22,8 +22,19 @@ public abstract class GridRender extends TransparentNodeElementRender {
     private final GridDescriptor descriptor;
     private final Identifier cableTexture;
     private ArrayList<Catenary> catenaries = new ArrayList<Catenary>();
+    /**
+     * Shells round the spans that carry a stasis halo (either pole anchored: Baughn 2026-11-08), HALO_LAYERS of them a
+     * conductor, each wider and fainter, so the glow fades out to nothing at its edge (Baughn: not a sheath).
+     */
+    private ArrayList<Catenary> haloCatenaries = new ArrayList<Catenary>();
+    /**
+     * The halo's slow, aperiodic shimmer (Baughn: not periodic): three phases on frame time (mods.eln.anim) turning at
+     * incommensurate rates (4 s, x golden ratio, x silver ratio), each from a random start, summed.
+     */
+    private final mods.eln.anim.Spin[] haloPhase = {new mods.eln.anim.Spin(90, 0.01).speed(1).randomPhase(),
+        new mods.eln.anim.Spin(90 / 1.6180339887, 0.01).speed(1).randomPhase(), new mods.eln.anim.Spin(90 / 2.4142135624, 0.01).speed(1).randomPhase()};
     private float idealRenderingAngle;
-    private record Wire(Vec3 start, Vec3 end) { }
+    private record Wire(Vec3 start, Vec3 end, boolean halo) { }
     private java.util.List<Wire> geometry = java.util.List.of();
     private int spanGeometryRevision;
 
@@ -49,7 +60,62 @@ public abstract class GridRender extends TransparentNodeElementRender {
             UtilsClient.bindTexture(cableTexture);
             glDisable(GL_CULL_FACE);
             for (Catenary catenary : catenaries) catenary.draw();
+            drawHalo();
         } finally { glPopAttrib(); }
+    }
+
+    /** The angle the server turned this node to (degrees about y). */
+    protected float idealRenderingAngle() {
+        return idealRenderingAngle;
+    }
+
+    static final double CABLE_WIDTH = 0.05;
+    /** The halo's shells: from just over the cable out to its edge. */
+    static final int HALO_LAYERS = 6;
+    static final double HALO_INNER = 0.06, HALO_OUTER = 0.2;
+
+    static double haloWidth(int k) {
+        return HALO_INNER + (HALO_OUTER - HALO_INNER) * k / (HALO_LAYERS - 1);
+    }
+
+    @Override
+    public void refresh(float deltaT) {
+        super.refresh(deltaT);
+        if (!haloCatenaries.isEmpty()) for (var p : haloPhase) p.step(deltaT);
+    }
+
+    /**
+     * The stasis halo: a faint blue glow round the conductors of spans with an anchored pole at either end, shimmering
+     * slowly (Baughn 2026-11-08: subtle, aperiodic). Drawn after the cables, blended, writing no depth.
+     */
+    protected void drawHalo() {
+        if (haloCatenaries.isEmpty()) return;
+        // the shells overlap, so what one sees through the middle is the sum of all of them, at the edge only the
+        // outermost: each shell is as faint as the falloff's step there
+        float a = (float) (0.16 + 0.045 * Math.sin(Math.toRadians(haloPhase[0].deg())) + 0.035 * Math.sin(Math.toRadians(haloPhase[1].deg()))
+            + 0.025 * Math.sin(Math.toRadians(haloPhase[2].deg())));
+        UtilsClient.disableLight();
+        UtilsClient.enableBlend();
+        glDisable(GL_TEXTURE_2D);
+        glDepthMask(false);
+        glDisable(GL_CULL_FACE);
+        for (int i = 0; i < haloCatenaries.size(); i++) {
+            int k = i % HALO_LAYERS;
+            // (dimmed, Baughn: the shells summed to ~1.6x v1's sheath at the core; now ~0.9x)
+            float layer = a * 0.25f * (1f - (float) k / HALO_LAYERS);
+            glColor4f(0.47f, 0.71f, 1f, layer);
+            haloCatenaries.get(i).draw();
+        }
+        glColor4f(1f, 1f, 1f, 1f);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_CULL_FACE);
+        glDepthMask(true);
+        UtilsClient.disableBlend();
+        UtilsClient.enableLight();
+    }
+
+    protected void drawCatenaries() {
+        drawCables();
     }
 
     private Vec3 readVec(DataInputStream stream) throws IOException {
@@ -69,21 +135,34 @@ public abstract class GridRender extends TransparentNodeElementRender {
             for (int i=0;i<linkCount;i++) {
                 int wires=stream.readInt();
                 if (wires<1 || wires>3) throw new IOException("Invalid grid wire count");
-                if (wires!=2) {
-                    for(int wire=0;wire<wires;wire++) incoming.add(new Wire(readVec(stream),readVec(stream)));
-                    continue;
+                Vec3[] starts = new Vec3[wires];
+                Vec3[] ends = new Vec3[wires];
+                for (int wire = 0; wire < wires; wire++) {
+                    starts[wire] = readVec(stream);
+                    ends[wire] = readVec(stream);
                 }
-                // Preserve the legacy pair's crossing minimisation.
-                Vec3 splus=readVec(stream), tplus=readVec(stream), sgnd=readVec(stream), tgnd=readVec(stream);
-                double straight=splus.vectorTo(tplus).normalize().dot(sgnd.vectorTo(tgnd).normalize());
-                double cross=splus.vectorTo(tgnd).normalize().dot(sgnd.vectorTo(tplus).normalize());
-                incoming.add(new Wire(splus,cross<straight?tplus:tgnd));
-                incoming.add(new Wire(sgnd,cross<straight?tgnd:tplus));
+                boolean halo = stream.readBoolean();
+                if (wires == 2) {
+                    double straight = starts[0].vectorTo(ends[0]).normalize().dot(starts[1].vectorTo(ends[1]).normalize());
+                    double cross = starts[0].vectorTo(ends[1]).normalize().dot(starts[1].vectorTo(ends[0]).normalize());
+                    if (cross >= straight) {
+                        Vec3 end = ends[0];
+                        ends[0] = ends[1];
+                        ends[1] = end;
+                    }
+                }
+                for (int wire = 0; wire < wires; wire++) incoming.add(new Wire(starts[wire], ends[wire], halo));
             }
             // Live voltage/status updates reuse the native display lists when spans have not changed.
             if (!incoming.equals(geometry)) {
                 ArrayList<Catenary> replacement=new ArrayList<>();
-                for (Wire wire:incoming) replacement.add(new Catenary(wire.start(),wire.end()));
+                for (Catenary old : haloCatenaries) old.destroy();
+                haloCatenaries.clear();
+                for (Wire wire : incoming) {
+                    replacement.add(new Catenary(wire.start(), wire.end(), CABLE_WIDTH));
+                    if (wire.halo()) for (int k = 0; k < HALO_LAYERS; k++)
+                        haloCatenaries.add(new Catenary(wire.start(), wire.end(), haloWidth(k)));
+                }
                 for (Catenary old:catenaries) old.destroy();
                 catenaries=replacement;geometry=java.util.List.copyOf(incoming);spanGeometryRevision++;
             }
@@ -93,6 +172,8 @@ public abstract class GridRender extends TransparentNodeElementRender {
     @Override
     public void destructor() {
         for (Catenary catenary:catenaries) catenary.destroy();
+        for (Catenary old : haloCatenaries) old.destroy();
+        haloCatenaries.clear();
         catenaries.clear();geometry=java.util.List.of();
         super.destructor();
     }
@@ -123,13 +204,14 @@ public abstract class GridRender extends TransparentNodeElementRender {
             1, 1, // 7
             1, 0, // 8
         };
-        private final double cableWidth = 0.05;
+        private final double cableWidth;
 
         // TODO: Lighting and such should not be the same across the entire cable.
         // Probably need make physical "cable" blocks, to make minecraft cooperate.
         // The individual blocks should do the rendering.
         // ...later. Much later.
-        Catenary(Vec3 start, Vec3 end) {
+        Catenary(Vec3 start, Vec3 end, double width) {
+            this.cableWidth = width;
             // These are the central vertices of the catenary.
             Vec3[] catenary = getConnectionCatenary(start, end);
 

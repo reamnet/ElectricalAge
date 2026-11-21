@@ -147,7 +147,7 @@ public final class ForkPatchSolarRoofCases {
         public void measure(TestContext c) {
             var p=origin(c);var node=Objects.requireNonNull(place(c,descriptor(2)));var panel=(SolarPanelElement)node.element;
             c.check("roof: ordinary floor placement retains flat orientation and footprint",!panel.roofMount.getPitched() && descriptor(2).getGhostGroupAt(node.coordonate,panel.front).elementList.stream().allMatch(g->g.y==0),"");
-            c.check("roof: flat nonrotating panel retains half-height shape",Math.abs(c.level().getBlockState(p).getCollisionShape(c.level(),p).bounds().maxY-.5)<1e-12,"");
+            c.check("roof: flat nonrotating panel collision matches its three-pixel frame",Math.abs(c.level().getBlockState(p).getCollisionShape(c.level(),p).bounds().maxY-3.0/16)<1e-12,"");
             var unloaded=new BlockPos(30000000-1024,80,30000000-1024);int cx=unloaded.getX()>>4,cz=unloaded.getZ()>>4;
             c.check("roof: probe location starts unloaded",c.level().getChunkSource().getChunkNow(cx,cz)==null,"");
             c.check("roof: passive support and entity reads return no unloaded data",mods.eln.node.LoadedBlockStates.get(c.level(),unloaded)==null && mods.eln.node.LoadedBlockEntities.INSTANCE.get(c.level(),unloaded)==null && !SolarRoofMount.at(c.level(),unloaded).getPitched(),"");

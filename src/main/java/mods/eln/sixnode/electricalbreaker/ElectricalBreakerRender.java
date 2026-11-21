@@ -6,7 +6,6 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
-import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.ByteArrayOutputStream;
@@ -19,34 +18,35 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
     ElectricalBreakerDescriptor descriptor;
     long time;
 
-    RcInterpolator interpol;
+    mods.eln.anim.Travel interpol;
 
-    float uMin, uMax;
+    float uMin, uMax, tripAmps;
 
     boolean boot = true;
     float switchAlpha = 0;
     public boolean switchState;
 
+    /** Its contacts' stubs (ElectricalBreakerElement.contacts). */
     CableRenderDescriptor cableRender;
 
     public ElectricalBreakerRender(SixNodeEntity tileEntity, Direction side, SixNodeDescriptor descriptor) {
         super(tileEntity, side, descriptor);
         this.descriptor = (ElectricalBreakerDescriptor) descriptor;
         time = System.currentTimeMillis();
-        interpol = new RcInterpolator(this.descriptor.speed);
+        interpol = mods.eln.anim.Travel.smooth(this.descriptor.speed);
     }
 
     @Override
     public void draw() {
-        super.draw();
+        super.draw();   // (stubs in the face slot, pins off centre)
 
         front.glRotateOnX();
-        descriptor.draw(interpol.get(), UtilsClient.distanceFromClientPlayer(tileEntity));
+        descriptor.draw(interpol.get(), UtilsClient.distanceFromClientPlayer(tileEntity), slot >= 6);
     }
 
     @Override
     public void refresh(float deltaT) {
-        interpol.setTarget(switchState ? 1f : 0f);
+        interpol.to(switchState);
         interpol.step(deltaT);
     }
 
@@ -58,24 +58,18 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
     @Override
     public void publishUnserialize(DataInputStream stream) {
         super.publishUnserialize(stream);
-        Utils.println("Front : " + front);
         try {
             switchState = stream.readBoolean();
             uMax = stream.readFloat();
             uMin = stream.readFloat();
-
-            ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(Utils.unserialiseItemStack(stream), ElectricalCableDescriptor.class);
-
-            if (desc == null)
-                cableRender = null;
-            else
-                cableRender = desc.render;
+            tripAmps = stream.readFloat();
+            cableRender = ElectricalBreakerElement.contacts().render;
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         if (boot) {
-            interpol.setValue(switchState ? 1f : 0f);
+            interpol.to(switchState).snap();
         }
         boot = false;
     }
@@ -90,6 +84,19 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
             stream.writeByte(ElectricalBreakerElement.setVoltageMinId);
             stream.writeFloat(value);
 
+            sendPacketToServer(bos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clientSetTripAmps(float value) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream stream = new DataOutputStream(bos);
+            preparePacketForServer(stream);
+            stream.writeByte(ElectricalBreakerElement.setTripAmpsId);
+            stream.writeFloat(value);
             sendPacketToServer(bos);
         } catch (IOException e) {
             e.printStackTrace();

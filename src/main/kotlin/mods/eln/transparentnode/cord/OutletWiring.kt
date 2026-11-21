@@ -54,14 +54,33 @@ object OutletWiring {
     @JvmStatic fun connect(n: NodeBase) {
         owner(n)?.let { connect(it,n);return }
         if(n !is SixNode)return
-        val voxelFaces=if(n is VoxelNode)n.outletWallMounts() else 0
-        for(mount in Direction.values()) {
-            if(n is VoxelNode) { if(voxelFaces and (1 shl mount.int)==0)continue }
-            else if(n.getElement(mount) !is ElectricalCableElement)continue
-            for(edge in LRDU.values()) {
-            val p=n.coordonate.pos().relative(mount.toEnumFacing()).relative(mount.applyLRDU(edge).toEnumFacing())
-            val o=owner(NodeManager.instance.getNodeFromCoordonate(Coordonate(p.x,p.y,p.z,n.coordonate.dimention))) ?: continue
-            if(o.front==mount.inverse)connect(o,n)
+        visitWallOutlets(n) { connect(it, n) }
+    }
+
+    /** Diagonal wall ports have no standard cable joint. Verify their expected links by the wall-port rule. */
+    @JvmStatic fun forEachVoxelLink(voxel: VoxelNode, accept: java.util.function.BiConsumer<ElectricalLoad, ElectricalLoad>) {
+        visitWallOutlets(voxel) { outlet ->
+            val node = outlet.node
+            if (node.isAdded && !node.isDestructing && !outlet.wireless && !outlet.cord.plugged && !outlet.isBurnt) {
+                for (edge in LRDU.values()) {
+                    val port = endpoint(outlet, edge) ?: continue
+                    if (port.node === voxel && NodeBase.compareConnectionMask(NodeBase.maskElectricalPower, port.mask))
+                        accept.accept(outlet.input, port.load)
+                }
+            }
+        }
+    }
+
+    private fun visitWallOutlets(n: SixNode, visit: (OutletElement) -> Unit) {
+        val voxelFaces = if (n is VoxelNode) n.outletWallMounts() else 0
+        for (mount in Direction.values()) {
+            if (n is VoxelNode) {
+                if (voxelFaces and (1 shl mount.int) == 0) continue
+            } else if (n.getElement(mount) !is ElectricalCableElement) continue
+            for (edge in LRDU.values()) {
+                val p = n.coordonate.pos().relative(mount.toEnumFacing()).relative(mount.applyLRDU(edge).toEnumFacing())
+                val outlet = owner(NodeManager.instance.getNodeFromCoordonate(Coordonate(p.x, p.y, p.z, n.coordonate.dimention)))
+                if (outlet?.front == mount.inverse) visit(outlet)
             }
         }
     }

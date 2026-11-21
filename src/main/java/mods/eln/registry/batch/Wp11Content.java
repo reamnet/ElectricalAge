@@ -57,11 +57,11 @@ public class Wp11Content implements ElnContent {
      */
     public static void registerEnergyConverter() {
         if (ElnToOtherEnergyConverterEnable) {
-            elnToOtherLvu = energyConverter(ExporterSaveUpgrade.LVU_ID, "50V Electrical Age to other energy exporter", "EnergyConverterElnToOtherLVU",
+            elnToOtherLvu = energyConverter(ExporterSaveUpgrade.LVU_ID, "48V Electrical Age to other energy exporter", "EnergyConverterElnToOtherLVU",
                 new ElnDescriptor(LVU, LVP()), new Ic2Descriptor(32, 1));
-            elnToOtherMvu = energyConverter(ExporterSaveUpgrade.MVU_ID, "200V Electrical Age to other energy exporter", "EnergyConverterElnToOtherMVU",
+            elnToOtherMvu = energyConverter(ExporterSaveUpgrade.MVU_ID, "230V Electrical Age to other energy exporter", "EnergyConverterElnToOtherMVU",
                 new ElnDescriptor(MVU, MVP()), new Ic2Descriptor(128, 2));
-            elnToOtherHvu = energyConverter(ExporterSaveUpgrade.HVU_ID, "800V Electrical Age to other energy exporter", "EnergyConverterElnToOtherHVU",
+            elnToOtherHvu = energyConverter(ExporterSaveUpgrade.HVU_ID, "400V Electrical Age to other energy exporter", "EnergyConverterElnToOtherHVU",
                 new ElnDescriptor(HVU, HVP()), new Ic2Descriptor(512, 3));
         }
     }
@@ -88,7 +88,7 @@ public class Wp11Content implements ElnContent {
         }
         {
             subId = 10;
-            float nominalRads = 800, nominalU = 3200;
+            float nominalRads = 800, nominalU = (float) mods.eln.Eln.HVU;   // (Baughn 2026-11-06: a realistic voltage for its size: 4-8 kW is a 400 V machine; 1.12 had 3200 V)
             float nominalP = 4000;
             GeneratorDescriptor desc = new GeneratorDescriptor(
                 TR_NAME(Type.NONE, "Generator"),
@@ -104,7 +104,7 @@ public class Wp11Content implements ElnContent {
         {
             // Baughn 2026-10-29: an 8 kW generator beside the 4 kW one (four 4 kW per 16 kW turbine is intended)
             subId = 16;
-            float nominalRads = 800, nominalU = 3200;
+            float nominalRads = 800, nominalU = (float) mods.eln.Eln.HVU;   // (Baughn 2026-11-06: a realistic voltage for its size: 4-8 kW is a 400 V machine; 1.12 had 3200 V)
             float nominalP = 8000;
             GeneratorDescriptor desc = new GeneratorDescriptor(
                 TR_NAME(Type.NONE, "8kW Generator"),
@@ -121,7 +121,7 @@ public class Wp11Content implements ElnContent {
             // Baughn 2026-10-29: a small electric motor to spin shafts up and drive a condenser's pumps
             subId = 17;
             ShaftMotorDescriptor desc = new ShaftMotorDescriptor(
-                TR_NAME(Type.NONE, "200V Shaft Motor"),
+                TR_NAME(Type.NONE, "230V Shaft Motor"),
                 obj.getObj("shaftmotor"),
                 meduimVoltageCableDescriptor,
                 MVU, 2000);
@@ -201,7 +201,7 @@ public class Wp11Content implements ElnContent {
         {
             subId = 4;
             ElectricalPoleDescriptor descriptor =
-                new ElectricalPoleDescriptor("Utility Pole", obj.getObj("UtilityPole"), "textures/wire.png", highVoltageCableDescriptor, false);
+                new ElectricalPoleDescriptor("Utility Pole", obj.getObj("UtilityPole"), obj.getObj("polegear"), "textures/wire.png", highVoltageCableDescriptor, false);
             GhostGroup g = new GhostGroup();
             g.addElement(0, 1, 0);
             g.addElement(0, 2, 0);
@@ -213,14 +213,15 @@ public class Wp11Content implements ElnContent {
         {
             subId = 5;
             ElectricalPoleDescriptor descriptor =
-                new ElectricalPoleDescriptor("Utility Pole w/DC-DC Converter", obj.getObj("UtilityPole"), "textures/wire.png", highVoltageCableDescriptor, true);
+                new ElectricalPoleDescriptor("Utility Pole w/DC-DC Converter", obj.getObj("UtilityPole"), obj.getObj("polegear"), "textures/wire.png", highVoltageCableDescriptor, true);
             GhostGroup g = new GhostGroup();
             g.addElement(0, 1, 0);
             g.addElement(0, 2, 0);
             g.addElement(0, 3, 0);
             //g.addRectangle(-1, 1, 3, 4, -1, 1);
             descriptor.setGhostGroup(g);
-            transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
+            // retired from the tab: a Utility Pole takes a fitted Pole Transformer (Baughn 2026-11-08)
+            transparentNodeItem.addWithoutRegistry(subId + (id << 6), descriptor);
         }
     }
 }

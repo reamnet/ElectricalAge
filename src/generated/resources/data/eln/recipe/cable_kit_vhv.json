@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "#c:ingots/alloy",
+    "R": "#c:rubbers"
+  },
+  "pattern": [
+    "RRR",
+    "CCC",
+    "RRR"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "kitLen": 96
+      }
+    },
+    "id": "eln:cable_kit_vhv"
+  }
+}

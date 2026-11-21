@@ -33,7 +33,7 @@ object ForkPatchDecorativeLampCases {
             c.floor(pos.relative(side.toEnumFacing()))
             return c.placeSix(style.lookup,pos,side) as DecorativeLampElement
         }
-        fun bulb(n: Int=1)=Eln.findItemStack("200V LED Bulb",n)
+        fun bulb(n: Int=1)=Eln.findItemStack("230V LED Bulb",n)
     }
     private class Fixture(val style: DecorativeLampStyle): Base() {
         lateinit var e: DecorativeLampElement
@@ -45,7 +45,7 @@ object ForkPatchDecorativeLampCases {
             e.inventory.setItem(0,bulb(style.bulbs));e.inventoryChange(e.inventory)
             if(!style.wirelessOnly) {
                 e.networkUnserialize(c.stream { it.writeByte(3) })
-                source=VoltageSource("fixture test",e.positiveLoad,null).setU(200.0)
+                source=VoltageSource("fixture test",e.positiveLoad,null).setU(Eln.MVU)
                 Eln.simulator.addElectricalComponent(source)
             }
         }
@@ -142,7 +142,7 @@ object ForkPatchDecorativeLampCases {
             val input=CraftingInput.of(3,2,listOf(ItemStack.EMPTY,ItemStack(Items.COPPER_INGOT),ItemStack.EMPTY,ItemStack.EMPTY,Eln.findItemStack("Iron Plate",1),ItemStack.EMPTY))
             val result=c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,input,c.level()).map { it.value().assemble(input) }.orElse(ItemStack.EMPTY)
             c.check("decorative: paid source holder recipe retains its two-item yield",result.item===Eln.findItemStack("Basic Lamp Holder",1).item && result.count==2,result.toString())
-            c.check("decorative bulbs: occupied source IDs keep both existing native bulb identities",(Eln.sharedItem.getDescriptor(293) as LampDescriptor).nominalU==50.0 && (Eln.sharedItem.getDescriptor(294) as LampDescriptor).nominalU==200.0 && RatedLampBulbs.destinationIdForSource(293)==302 && RatedLampBulbs.destinationIdForSource(294)==303,"")
+            c.check("decorative bulbs: occupied source IDs keep both existing native bulb identities",(Eln.sharedItem.getDescriptor(293) as LampDescriptor).nominalU==Eln.LVU && (Eln.sharedItem.getDescriptor(294) as LampDescriptor).nominalU==Eln.MVU && RatedLampBulbs.destinationIdForSource(293)==302 && RatedLampBulbs.destinationIdForSource(294)==303,"")
             for(volts in listOf(120,240)) {
                 val rated=Eln.findItemStack("${volts}V LED Light Bulb",1)
                 val bd=Utils.getItemObject(rated) as LampDescriptor
@@ -154,9 +154,11 @@ object ForkPatchDecorativeLampCases {
                     val grid=CraftingInput.of(3,3,items)
                     return c.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING,grid,c.level()).map { it.value().assemble(grid) }.orElse(ItemStack.EMPTY)
                 }
-                val legacy=craft(listOf(glass,glass,glass,silicon,silicon,silicon,ItemStack.EMPTY,cable,ItemStack.EMPTY))
+                val rubber = Eln.findItemStack("Rubber", 1)
+                val copper = Eln.findItemStack("Copper Cable", 1)
+                val legacy=craft(listOf(glass,glass,glass,silicon,silicon,silicon,rubber,copper,if(volts==120)ItemStack.EMPTY else rubber))
                 val modern=craft(listOf(glass,glass,glass,silicon,silicon,silicon,plate,cable,plate))
-                c.check("decorative bulbs: the old recipe still makes its established voltage",legacy.item===Eln.findItemStack(if(volts==120)"50V LED Bulb" else "200V LED Bulb",1).item && legacy.count==2,"$volts V: $legacy")
+                c.check("decorative bulbs: the stock recipe makes the updated common voltage",legacy.item===Eln.findItemStack(if(volts==120)"48V LED Bulb" else "230V LED Bulb",1).item && legacy.count==2,"$volts V: $legacy")
                 c.check("decorative bulbs: the distinct paid recipe makes two rated bulbs",modern.item===rated.item && modern.count==2,"$volts V: $modern")
             }
         }
