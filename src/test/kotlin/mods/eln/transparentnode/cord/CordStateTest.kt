@@ -55,7 +55,11 @@ class CordStateTest {
         }
     }
     @Test fun ratingsRejectNonfiniteAndWrongNominalVoltage() {
-        assertEquals(9,CordRating.entries.size)
+        assertEquals(listOf("V120", "V240", "V24", "V48", "V200", "V480", "V800", "V3200", "V240_30", "V400"),
+            CordRating.entries.map { it.name })
+        assertEquals(CordRating.V400, CordRating.read("V400"))
+        assertTrue(CordRating.V400.accepts(400.0))
+        assertFalse(CordRating.V400.accepts(800.0))
         for(r in CordRating.entries) { assertTrue(r.accepts(r.volts));assertFalse(r.accepts(Double.NaN));assertFalse(r.accepts(Double.POSITIVE_INFINITY));assertFalse(r.accepts(r.volts+1)) }
         assertNotEquals(CordRating.V240,CordRating.V240_30);assertNull(CordRating.read("invalid"))
     }
