@@ -130,6 +130,19 @@ public final class JeiAuditCases {
         // the cable- and pipe-kit examples the plugin adds to crafting
         for (var h : mods.eln.node.voxel.CableKitRecipes.examples()) addCrafting(ways, "cable kit example", h.value(), c);
         for (var h : mods.eln.node.voxel.PipeKitRecipes.examples()) addCrafting(ways, "pipe kit example", h.value(), c);
+        for (var step : mods.eln.transparentnode.wiremachine.WireProductionRecipes.steps()) {
+            List<Set<Item>> slots = new ArrayList<>();
+            slots.add(one(step.getMachine()));
+            for (ItemStack input : step.getInputs()) slots.add(one(input));
+            for (ItemStack catalyst : step.getCatalysts()) slots.add(one(catalyst));
+            ways.add(new Way("ForkPatch wire " + step.getKind(), slots, one(step.getOutput())));
+        }
+        for (var example : mods.eln.transparentnode.fabricator.FabricationRecipes.examples()) {
+            List<Set<Item>> slots = new ArrayList<>();
+            slots.add(one(mods.eln.Eln.findItemStack("Fabricator", 1)));
+            for (ItemStack input : example.getInputs()) slots.add(one(input));
+            ways.add(new Way("chip fabrication", slots, one(example.getOutput())));
+        }
         // the machines' lists, needing a machine that makes them
         for (var e : mods.eln.compat.JeiPages.MACHINES.entrySet()) {
             RecipesList list = e.getValue().get();
