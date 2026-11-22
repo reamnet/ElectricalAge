@@ -4,8 +4,12 @@
     "cases": [
       {
         "model": {
-          "type": "minecraft:model",
-          "model": "eln:item/electric_mini_fridge"
+          "type": "minecraft:special",
+          "base": "eln:item/electric_mini_fridge_3d",
+          "model": {
+            "type": "eln:device",
+            "context": "entity"
+          }
         },
         "when": "gui"
       },

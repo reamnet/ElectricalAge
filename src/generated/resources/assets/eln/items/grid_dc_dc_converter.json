@@ -4,8 +4,12 @@
     "cases": [
       {
         "model": {
-          "type": "minecraft:model",
-          "model": "eln:item/grid_dc_dc_converter"
+          "type": "minecraft:special",
+          "base": "eln:item/grid_dc_dc_converter_3d",
+          "model": {
+            "type": "eln:device",
+            "context": "entity"
+          }
         },
         "when": "gui"
       },

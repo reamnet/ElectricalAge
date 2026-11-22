@@ -4,8 +4,12 @@
     "cases": [
       {
         "model": {
-          "type": "minecraft:model",
-          "model": "eln:item/electric_dryer"
+          "type": "minecraft:special",
+          "base": "eln:item/electric_dryer_3d",
+          "model": {
+            "type": "eln:device",
+            "context": "entity"
+          }
         },
         "when": "gui"
       },

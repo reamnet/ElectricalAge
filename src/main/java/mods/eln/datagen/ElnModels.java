@@ -83,6 +83,12 @@ public class ElnModels implements DataProvider {
         return t;
     }
 
+    private static String itemMaterial(String name, String texture) {
+        if (texture == null || !textureExists(texture))
+            throw new IllegalStateException("Missing item texture for eln:" + name);
+        return "eln:" + texture;
+    }
+
     static JsonObject obj(Object... kv) {
         JsonObject o = new JsonObject();
         for (int i = 0; i < kv.length; i += 2) {
@@ -185,6 +191,12 @@ public class ElnModels implements DataProvider {
             Item item = h.get();
             String name = BuiltInRegistries.ITEM.getKey(item).getPath();
             String model = "eln:item/" + name;
+            Object d = item instanceof IDescriptorItem di ? di.getEaDescriptor() : null;
+            boolean equipmentGui = d instanceof mods.eln.transparentnode.kitchen.KitchenDescriptor
+                || d instanceof mods.eln.transparentnode.laundry.MatterMachineDescriptor
+                || d instanceof mods.eln.transparentnode.fan.FanDescriptor;
+            boolean gridGui = d instanceof mods.eln.utility.GridSourceTransformerDescriptor;
+            String texture = itemTexture(name, item);
             if (item instanceof mods.eln.node.transparent.TransparentNodeItem ti && ti.descriptor instanceof mods.eln.transparentnode.energyconverter.EnergyConverterElnToOtherDescriptor) {
                 model = converterModel(name);
             } else if (name.equals("headlamp")) {
@@ -194,30 +206,24 @@ public class ElnModels implements DataProvider {
                     obj("layer0", "minecraft:item/egg")), assets.resolve("models/item/" + name + ".json")));
             } else if (item instanceof net.minecraft.world.item.BlockItem bi && bi.getBlock() instanceof mods.eln.ore.OreBlock) {
                 model = "eln:block/" + name;
-            } else {
-                String tex = itemTexture(name, item);
-                if (tex == null && java.util.Set.of("hot_water","fruit_smoothie","steamed_grains").contains(name)) tex = "source_food";
-                if (tex == null) {
-                    missing.add("item " + name);
-                    tex = "items/missing";
-                }
+            } else if (!equipmentGui && !gridGui) {
                 // the data-log print had an empty icon (1.12 drew the graph over it): vanilla paper in the GUI
-                String layer = switch(name) { case "data_logger_print" -> "minecraft:item/paper"; case "hot_water" -> "minecraft:item/potion"; case "fruit_smoothie" -> "minecraft:item/honey_bottle"; case "steamed_grains" -> "minecraft:item/mushroom_stew"; default -> "eln:" + tex; };
+                String layer = switch(name) { case "data_logger_print" -> "minecraft:item/paper"; case "hot_water" -> "minecraft:item/potion"; case "fruit_smoothie" -> "minecraft:item/honey_bottle"; case "steamed_grains" -> "minecraft:item/mushroom_stew"; default -> itemMaterial(name, texture); };
                 out.add(DataProvider.saveStable(cache, obj("parent", HANDHELD.contains(name) ? "minecraft:item/handheld" : "minecraft:item/generated",
                     "textures", obj("layer0", layer)), assets.resolve("models/item/" + name + ".json")));
             }
             JsonObject flat = obj("type", "minecraft:model", "model", model);
-            Object d = item instanceof mods.eln.generic.IDescriptorItem di ? di.getEaDescriptor() : null;
             if (d instanceof mods.eln.generic.GenericItemBlockUsingDamageDescriptor gd && gd.hasItemDraw()) {
                 // R5: the flat icon in the GUI, the device's 3D draw everywhere else (eln:device, ElnItemRenderer);
                 // the pose per context is the base model's display block (device_six / device_transparent)
                 String base = "eln:item/" + name + "_3d";
                 String parent = d instanceof mods.eln.node.six.SixNodeDescriptor ? "eln:item/device_six" : "eln:item/device_transparent";
-                String particle = "eln:" + (itemTexture(name, item) == null ? "items/missing" : itemTexture(name, item));
+                String particle = equipmentGui ? itemMaterial(name, "block/equipment_finishes")
+                    : gridGui ? itemMaterial(name, "block/grid_converter_material") : itemMaterial(name, texture);
                 out.add(DataProvider.saveStable(cache, obj("parent", parent, "textures", obj("particle", particle)),
                     assets.resolve("models/item/" + name + "_3d.json")));
                 JsonArray cases = new JsonArray();
-                boolean sourceModelGui = d instanceof mods.eln.transparentnode.worklight.WorkLightDescriptor
+                boolean sourceModelGui = equipmentGui || gridGui || d instanceof mods.eln.transparentnode.worklight.WorkLightDescriptor
                     || d instanceof mods.eln.transparentnode.festive.FairyLightsDescriptor;
                 cases.add(obj("when", "gui", "model", sourceModelGui
                     ? obj("type", "minecraft:special", "base", base, "model", obj("type", "eln:device", "context", "entity")) : flat));
@@ -237,7 +243,7 @@ public class ElnModels implements DataProvider {
                 if (gi.itemDrawParent() != null) {
                     base = "eln:item/" + name + "_3d";
                     out.add(DataProvider.saveStable(cache, obj("parent", gi.itemDrawParent(), "textures",
-                        obj("particle", "eln:" + (itemTexture(name, item) == null ? "items/missing" : itemTexture(name, item)))),
+                        obj("particle", itemMaterial(name, texture))),
                         assets.resolve("models/item/" + name + "_3d.json")));
                 }
                 JsonArray cases = new JsonArray();

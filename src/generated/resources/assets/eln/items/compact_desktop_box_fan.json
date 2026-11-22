@@ -4,8 +4,12 @@
     "cases": [
       {
         "model": {
-          "type": "minecraft:model",
-          "model": "eln:item/compact_desktop_box_fan"
+          "type": "minecraft:special",
+          "base": "eln:item/compact_desktop_box_fan_3d",
+          "model": {
+            "type": "eln:device",
+            "context": "entity"
+          }
         },
         "when": "gui"
       },
