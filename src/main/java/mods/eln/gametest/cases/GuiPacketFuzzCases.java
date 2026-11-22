@@ -278,6 +278,8 @@ public final class GuiPacketFuzzCases {
     static Object place(TestContext ctx, int damage, boolean six) {
         BlockPos p = ctx.at(5, 1, 1);
         if (six) {
+            if (Eln.sixNodeItem.getDescriptor(damage) instanceof mods.eln.sixnode.lampsocket.DecorativeLampDescriptor)
+                return ctx.placeSix(damage, ctx.at(8, 1, 7), Direction.YN);
             try {
                 return ctx.placeSix(damage, p, Direction.YN);
             } catch (RuntimeException floorRefused) {
@@ -286,12 +288,32 @@ public final class GuiPacketFuzzCases {
                 return ctx.placeSix(damage, p, Direction.ZN);
             }
         }
+        var descriptor = Eln.transparentNodeItem.getDescriptor(damage);
+        if (descriptor.mustHaveWall() || descriptor.mustHaveWallFrontInverse()) {
+            ctx.floor(p.south());
+            ctx.floor(p.south().above());
+            var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(ctx.level());
+            var node = ((mods.eln.node.transparent.TransparentNodeItem) descriptor.parentItem)
+                .placeAt(descriptor.newItemStack(), player, ctx.level(), p, Direction.ZP);
+            if (node == null) throw new IllegalStateException("Wall fixture could not place " + descriptor.name);
+            return node.element;
+        }
+        if (wideFixture(descriptor.ElementClass))
+            return ctx.placeTransparent(damage, ctx.at(8, 1, 7));
         try {
             // (front -X: a multiblock such as the transporter grows toward +X)
             return Wp10bCases.placeFacing(ctx, damage, ctx.at(2, 1, 1), Direction.XN);
         } catch (IllegalStateException noSuchFront) {
             return ctx.placeTransparent(damage, p);
         }
+    }
+
+    private static boolean wideFixture(Class<?> type) {
+        return type == mods.eln.sixnode.lampsocket.DecorativeLampElement.class
+            || type == mods.eln.utility.DistributionPoleElement.class
+            || type == mods.eln.utility.TransmissionElement.class
+            || type == mods.eln.utility.SubstationElement.class
+            || type == mods.eln.transparentnode.fan.FanElement.class;
     }
 
     static NodeBase nodeOf(Object element) {
@@ -349,12 +371,25 @@ public final class GuiPacketFuzzCases {
             return "gui_packets_reject_bad_values_" + kind;
         }
 
+        private boolean wide() {
+            return wideFixture(six ? Eln.sixNodeItem.getDescriptor(damage).ElementClass
+                : Eln.transparentNodeItem.getDescriptor(damage).ElementClass);
+        }
+
         public int width() {
-            return 10;
+            return wide() ? 32 : 10;
         }
 
         public int height() {
-            return 5;
+            return wide() ? 28 : 5;
+        }
+
+        public int depth() {
+            return wide() ? 16 : TestCase.super.depth();
+        }
+
+        public int floorDepth() {
+            return wide() ? depth() : TestCase.super.floorDepth();
         }
 
         public int ticks() {
