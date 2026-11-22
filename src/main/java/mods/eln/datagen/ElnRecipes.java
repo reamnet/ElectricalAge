@@ -541,7 +541,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("240 V 30 A Dryer Cord"),findItemStack("240 V Appliance Cord"),findItemStack("Copper Cable"),findItemStack("Rubber"));
         addShapelessRecipe(findItemStack("240 V 30 A Dryer Outlet"),findItemStack("240 V Wall Outlet"),findItemStack("Copper Cable"),findItemStack("Iron Plate"));
         addShapelessRecipe(findItemStack("Six Socket Power Strip"),findItemStack("Experimental Wall Outlet"),findItemStack("Experimental Wall Outlet"),findItemStack("Experimental Wall Outlet"),findItemStack("Iron Plate"));
-        var cordDyes = new Object[]{vanilla("purple_dye"),vanilla("light_gray_dye"),vanilla("green_dye"),vanilla("red_dye"),vanilla("black_dye"),vanilla("yellow_dye")};
+        var cordDyes = new Object[]{vanilla("purple_dye"),vanilla("light_gray_dye"),vanilla("green_dye"),vanilla("red_dye"),vanilla("black_dye"),vanilla("yellow_dye"),vanilla("cyan_dye")};
         int cordDye=0;
         for(var rating: mods.eln.transparentnode.cord.CordRating.values()) if(rating.getIndustrial()) {
             var dye=cordDyes[cordDye++];
@@ -1365,7 +1365,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values()) {
             String previous=switch(kind) { case CONTACTOR_THREE -> "Single Pole Contactor";case RELAY_FOUR -> "Two Pole Changeover Relay";case SSR_THREE -> "Solid State Relay";default -> null; };
             if(previous!=null)addRecipe(findItemStack(kind.getTitle()),kind.getPoles()==4?"R R":"RRR","PWP",'R',findItemStack(previous),'P',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
-            else addRecipe(findItemStack(kind.getTitle())," C ","PRP","IWI",'C',findItemStack(kind.getSolidState()?"Silicon Plate":"Cheap Ferromagnetic Core"),'P',Items.IRON_NUGGET,'R',findItemStack(kind.getSolidState()?"Signal Relay":"Low Voltage Relay"),'I',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
+            else addRecipe(findItemStack(kind.getTitle()),kind.getChangeover() ? " W " : " C ","PRP",kind.getChangeover() ? "ICI" : "IWI",'C',findItemStack(kind.getSolidState()?"Silicon Plate":"Cheap Ferromagnetic Core"),'P',Items.IRON_NUGGET,'R',findItemStack(kind.getSolidState()?"Signal Relay":"Low Voltage Relay"),'I',findItemStack("Iron Plate"),'W',findItemStack("Copper Cable"));
         }
         addRecipe(findItemStack("69 kV Steel Transmission Pole"),"I I","IPI","I I",'I',Blocks.IRON_BARS,'P',findItemStack("Three Phase Utility Pole"));
         addRecipe(findItemStack("230 kV Steel Transmission Tower"),"IPI","PBP","I I",'I',Blocks.IRON_BLOCK,'P',findItemStack("69 kV Steel Transmission Pole"),'B',Blocks.IRON_BARS);
@@ -1430,7 +1430,7 @@ public final class ElnRecipes extends ElnRecipesBase {
                 addRecipe(findItemStack(t.getTitle()),pattern[0],pattern[1],pattern[2],'I',t.getWall()?Items.IRON_CHAIN:findItemStack("Iron Plate"),'S',findItemStack("16 kWh LiFePO4 Cell Stack"),'C',findItemStack("Copper Cable"),'M',findItemStack("Machine Block"));
             } else {
                 Object core=switch(t) { case MPPT -> findItemStack("MPPT Solar Controller"); case INVERTER -> findItemStack("Hybrid Solar Inverter"); case COMBINER -> findItemStack("30 A Pole Fuse"); default -> Items.REPEATER; };
-                addRecipe(findItemStack(t.getTitle()),"IPI","WCW","IMI",'I',findItemStack("Iron Plate"),'P',Items.COMPARATOR,'W',findItemStack("Copper Cable"),'C',core,'M',findItemStack("Machine Block"));
+                addRecipe(findItemStack(t.getTitle()),t == mods.eln.transparentnode.offgrid.OffGridType.AC_CHARGER ? "IMI" : "IPI","WCW",t == mods.eln.transparentnode.offgrid.OffGridType.AC_CHARGER ? "IPI" : "IMI",'I',findItemStack("Iron Plate"),'P',Items.COMPARATOR,'W',findItemStack("Copper Cable"),'C',core,'M',findItemStack("Machine Block"));
             }
         }
         addRecipe(findItemStack("Pole Fuse Link",3)," C "," P "," C ",'C',findItemStack("Copper Cable"),'P',findItemStack("Iron Plate"));

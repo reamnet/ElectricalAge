@@ -30,13 +30,13 @@ import kotlin.math.abs
 
 /** Real native contacts, transactions, server item consumption, conservative work and voxel isolation. */
 object ForkPatchCordCases {
-    private val ids=listOf(7968,7969,8000,8001,8002,8003,8004,8005,8012)
-    @JvmStatic fun cases(): List<TestCase> = ids.flatMap { listOf(Passive(it,1),Passive(it,-1)) } +
+    private val ids=listOf(7968,7969,8000,8001,8002,8003,8004,8005,8012,CordRating.V400_DESCRIPTOR_ID)
+    @JvmStatic fun cases(): List<TestCase> = ids.flatMap { listOf(Passive(it,1),Passive(it,-1)) } + listOf(Domestic(false), Domestic(true)) +
         listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP).map { Front(it) } +
         listOf(Capacity(false),Capacity(true),Production(),Sag(),StripChain(),LoopGuard(),PaidUse(false),PaidUse(true),ReloadOwner(),PendingSource(),Replacement(),CopiedSettings(),Guards(),Duplicate(),Battery(false),Battery(true),Wireless(false),Wireless(true),Recipes(),DuplicateBreak(),Frozen()) +
         listOf(Direction.XN,Direction.XP,Direction.ZN,Direction.ZP).map { WiredOutlet(it) } +
         listOf(4608,4609,4610,2372,2048).map { FixedMachine(it) } +
-        listOf(4130 to 8002,450 to 8002,452 to 8004,4224 to 8004).flatMap {
+        listOf(4130 to 8002,450 to 8002,452 to CordRating.V400_DESCRIPTOR_ID,4224 to CordRating.V400_DESCRIPTOR_ID).flatMap {
             listOf(ConsumerInlet(it.first,it.second),ConsumerReload(it.first,it.second),ConsumerPaidUse(it.first,it.second))
         } +
         listOf(2624,4128,448).map { UnmatchedInlet(it) } +
@@ -91,6 +91,41 @@ object ForkPatchCordCases {
             panel(c,o)
         }finally { clean() } }
     }
+    private class Domestic(val high: Boolean) : Base() {
+        private lateinit var socket: OutletElement
+        private lateinit var appliance: TransparentNodeElement
+        private lateinit var receiver: Resistor
+
+        override fun id() = "forkpatch_cord_domestic_${if (high) 240 else 120}_matched_power"
+        override fun build(c: TestContext) {
+            socket = outlet(c, if (high) 7969 else 7968)
+            appliance = c.placeTransparent(if (high) 7939 else 7938, c.at(4, 1, 1))
+            val lead = cord(appliance)
+            val wrong = if (high) CordRating.V120 else CordRating.V240
+            c.check("domestic appliance rejects the other connector", !lead.attach(socket.anchor(0).copy(rating = wrong), true), wrong.name)
+            check(lead.attach(socket.anchor(0), true))
+            val voltage = socket.rating.volts
+            receiver = load(lead.input, voltage * voltage / 100)
+            feed(socket.input, voltage)
+        }
+
+        override fun measure(c: TestContext) {
+            try {
+                val lead = cord(appliance)
+                c.check("domestic appliance receives power through its matched paid cord", lead.connected && lead.paid
+                    && socket.occupied(0) && receiver.p in 99.0..100.0, "${socket.rating}: ${receiver.p} W")
+                val token = lead.token
+                clean()
+                val reloaded = (Reload.node(c.level(), appliance.coordonate().pos()).fresh as TransparentNode).element
+                val fresh = cord(reloaded)
+                fresh.poll()
+                c.check("domestic outlet reclaims the matching lead after reload", fresh.connected && fresh.token == token && socket.occupied(0), "$token")
+            } finally {
+                clean()
+            }
+        }
+    }
+
     private class Front(val facing: Direction): Base() {
         lateinit var o: OutletElement
         override fun id()="forkpatch_cord_outlet_native_orientation_${facing.name.lowercase()}"
@@ -436,14 +471,15 @@ object ForkPatchCordCases {
         lateinit var e: TransparentNodeElement;lateinit var o: OutletElement;lateinit var cable: mods.eln.sixnode.electricalcable.ElectricalCableElement
         override fun id()="forkpatch_cord_ghost_${lookup}_${if(unplugged)"unplugged" else if(sign>0)"positive" else "negative"}_competing_supply"
         override fun build(c: TestContext) {
-            e=machine(c);o=outlet(c,8004,1,6)
+            e=machine(c);o=outlet(c,CordRating.V400_DESCRIPTOR_ID,1,6)
             val ghost=ghosts(e).first()
             val side=Direction.values().first { ghost.getSideConnectionMask(it,LRDU.Down) and NodeBase.maskElectricalPower!=0 }
             val pos=ghost.coordonate.pos().relative(side.toEnumFacing());c.floor(pos.below())
             cable=c.placeSix(mods.eln.registry.ElnDeviceRegistry.highVoltageCableDescriptor.parentItemDamage,pos) as mods.eln.sixnode.electricalcable.ElectricalCableElement
             c.check("cord ghost: fixture has a real native cable connection before attachment",ghost.nodeConnectionList.any { it.other(ghost)===cable.sixNode },"$lookup")
-            feed(cable.electricalLoad,sign*600.0)
-            check(cord(e).attach(o.anchor(0),true));feed(o.input,sign*800.0)
+            feed(cable.electricalLoad,sign*300.0)
+            c.check("400 V ghost device rejects the saved 800 V connector rating", !CordSupport.device(e)!!.acceptsCord(CordRating.V800), "$lookup")
+            check(cord(e).attach(o.anchor(0),true));feed(o.input,sign*400.0)
             c.check("cord ghost: attaching removes every pre-existing auxiliary cable connection",isolated(e) && ghosts(e).all { it.nodeConnectionList.isEmpty() },"$lookup")
             if(unplugged)cord(e).detach()
         }
@@ -456,9 +492,9 @@ object ForkPatchCordCases {
                 val before=dropped(c,o.rating.cordName);link.detach();link.detach()
                 c.check("cord ghost: burnt owner returns its paid cord once without reopening terminals",dropped(c,o.rating.cordName)==before+1 && isolated(e),"$lookup")
             } else if(unplugged) {
-                c.check("cord ghost: unplug rebuilds actual auxiliary cable power",voltage in 599.0..600.1 && !link.connected && ghosts(e).any { it.nodeConnectionList.isNotEmpty() },"$lookup: $voltage")
+                c.check("cord ghost: unplug rebuilds actual auxiliary cable power",voltage in 299.0..300.1 && !link.connected && ghosts(e).any { it.nodeConnectionList.isNotEmpty() },"$lookup: $voltage")
             } else {
-                c.check("cord ghost: competing native supply cannot energize the cord-isolated load",voltage in 799.0..800.1 && link.connected && isolated(e),"$lookup: $voltage")
+                c.check("cord ghost: competing native supply cannot energize the cord-isolated load",voltage in 399.0..400.1 && link.connected && isolated(e),"$lookup: $voltage")
                 val system=link.input.subSystem!!;val version=system.matrixVersion
                 repeat(2000) { link.poll() }
                 c.check("cord ghost: stable polls never rebuild auxiliary connections or LU factors",system.matrixVersion==version && isolated(e),"$lookup")
@@ -470,7 +506,7 @@ object ForkPatchCordCases {
     private class GhostLifecycle(lookup: Int): GhostBase(lookup) {
         override fun id()="forkpatch_cord_ghost_${lookup}_suspend_reload_refund"
         override fun measure(c: TestContext) {
-            val o=outlet(c,8004,1,6);var e=machine(c);var link=cord(e)
+            val o=outlet(c,CordRating.V400_DESCRIPTOR_ID,1,6);var e=machine(c);var link=cord(e)
             check(link.attach(o.anchor(0),true));val token=link.token
             e.node.unload();link.poll();ghosts(e).forEach { it.reconnect() }
             c.check("cord ghost: auxiliary reconnect and physical poll cannot bypass owner suspension",!e.node.isAdded && !link.connected && link.paid && isolated(e) && ghosts(e).all { it.nodeConnectionList.isEmpty() },"$lookup")
@@ -505,6 +541,13 @@ object ForkPatchCordCases {
     private class Recipes: Base() {
         override fun id()="forkpatch_cord_all_source_survival_recipes_native_manager"
         override fun measure(c: TestContext) {
+            val tabs = net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB
+            val tab = requireNotNull(tabs.getValue(net.minecraft.resources.Identifier.parse("eln:eln")))
+            tab.buildContents(net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(c.level().enabledFeatures(), false, c.level().registryAccess()))
+            for (id in ids + 7991) {
+                val stack = requireNotNull(Eln.transparentNodeItem.getDescriptor(id)).newItemStack()
+                c.check("cord outlet is listed in the Electrical Age creative tab", tab.contains(stack), "$id: $stack")
+            }
             fun craft(inputs: List<ItemStack>,width: Int=inputs.size,height: Int=1): ItemStack {
                 val input=net.minecraft.world.item.crafting.CraftingInput.of(width,height,inputs)
                 return c.level().recipeAccess().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,c.level()).map { it.value().assemble(input) }.orElse(ItemStack.EMPTY)
@@ -512,7 +555,7 @@ object ForkPatchCordCases {
             fun checkRecipe(name: String,inputs: List<ItemStack>,width: Int=inputs.size,height: Int=1) { val out=craft(inputs,width,height);c.check("cord crafting: actual native manager preserves source recipe",out.item===item(name).item && out.count==1,"$name -> $out") }
             checkRecipe("Experimental Wall Outlet",listOf(ItemStack.EMPTY,item("Iron Plate"),ItemStack.EMPTY,item("Copper Cable"),ItemStack(Items.REDSTONE),item("Copper Cable"),ItemStack.EMPTY,item("Iron Plate"),ItemStack.EMPTY),3,3)
             checkRecipe("Flexible Appliance Cord",listOf(item("Copper Cable"),item("Copper Cable"),item("Rubber")))
-            val dyeNames=listOf("purple","light_gray","green","red","black","yellow");var i=0
+            val dyeNames=listOf("purple","light_gray","green","red","black","yellow","cyan");var i=0
             fun dye(name: String)=ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.withDefaultNamespace(name+"_dye")))
             for(r in CordRating.entries.filter { it.industrial }) { val d=dye(dyeNames[i++]);checkRecipe(r.cordName,listOf(item("Flexible Appliance Cord"),item("Rubber"),d));checkRecipe(r.outletName,listOf(item("Experimental Wall Outlet"),item("Iron Plate"),d.copy())) }
             checkRecipe("240 V Wall Outlet",listOf(item("Experimental Wall Outlet"),dye("orange")));checkRecipe("240 V Appliance Cord",listOf(item("Flexible Appliance Cord"),dye("orange")))

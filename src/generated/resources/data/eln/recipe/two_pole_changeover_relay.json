@@ -8,9 +8,9 @@
     "W": "eln:copper_cable"
   },
   "pattern": [
-    " C ",
+    " W ",
     "PRP",
-    "IWI"
+    "ICI"
   ],
   "result": {
     "id": "eln:two_pole_changeover_relay"

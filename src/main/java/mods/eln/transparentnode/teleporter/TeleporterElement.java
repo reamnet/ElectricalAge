@@ -635,8 +635,11 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Destination"), targetName);
-        info.put(I18N.tr("Distance"),
-            Utils.plotValue(getTeleportCoordonate().trueDistanceTo(getTarget(targetName).getTeleportCoordonate()), "m"));
+        ITeleporter target = getTarget(targetName);
+        if (target != null) {
+            info.put(I18N.tr("Distance"),
+                Utils.plotValue(getTeleportCoordonate().trueDistanceTo(target.getTeleportCoordonate()), "m"));
+        }
         info.put(I18N.tr("Required energy"), Utils.plotEnergy("", energyTarget));
         info.put(I18N.tr("Charge power"), Utils.plotPower("", powerCharge));
         return info;

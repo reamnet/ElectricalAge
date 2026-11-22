@@ -8,9 +8,9 @@
     "W": "eln:copper_cable"
   },
   "pattern": [
-    "IPI",
+    "IMI",
     "WCW",
-    "IMI"
+    "IPI"
   ],
   "result": {
     "id": "eln:ac_lifepo4_battery_charger"

@@ -23,7 +23,13 @@ object DistributionPoles {
             if(kind.singlePrimaryRiser) { shapeless(find(kind.title),arrayOf(find(DistributionKind.CUTOUT_SINGLE.title),find("Copper Cable"),find("Iron Plate")));continue }
             val base=if(kind.lvOnly)"Utility Pole" else if(kind.phases==3 && kind!=DistributionKind.THREE)"Three Phase Utility Pole" else "Utility Pole"
             val detail: Any=when { kind.transformer->find("Pole Fuse Link");kind.cutout || kind.singlePhaseTap->find("Pole Fuse Link");kind.recloser->Items.COMPARATOR;kind.regulator->find("DC-DC Converter");kind.capacitor->find("Copper Cable");kind==DistributionKind.AIR_BREAK_THREE->Items.LEVER;kind==DistributionKind.FEEDER_THREE->Items.IRON_INGOT;kind.light->find("Simple Lamp Socket");else->if(kind.phases==1)Items.IRON_NUGGET else Items.COPPER_INGOT }
-            val marker=if(kind in listOf(DistributionKind.STREET_SINGLE,DistributionKind.STREET_THREE,DistributionKind.SECONDARY_LIGHT))Items.GLOWSTONE_DUST else if(kind==DistributionKind.TRANSFORMER_THREE || kind==DistributionKind.CUTOUT_THREE || kind==DistributionKind.REGULATOR_THREE)Items.REDSTONE else Items.IRON_NUGGET
+            val marker = when (kind) {
+                DistributionKind.STREET_SINGLE, DistributionKind.STREET_THREE, DistributionKind.SECONDARY_LIGHT -> Items.GLOWSTONE_DUST
+                DistributionKind.TRANSFORMER_SINGLE, DistributionKind.TRANSFORMER_THREE, DistributionKind.CUTOUT_THREE,
+                DistributionKind.REGULATOR_THREE -> Items.REDSTONE
+                DistributionKind.SECONDARY -> Items.GOLD_NUGGET
+                else -> Items.IRON_NUGGET
+            }
             val extra=if(kind.cutout)kind.phases-1 else if(kind.regulator)kind.phases else 0
             shapeless(find(kind.title),arrayOf(find(base),detail,marker,*Array(extra) { find("Pole Fuse Link") }))
         }

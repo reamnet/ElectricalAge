@@ -414,7 +414,8 @@ public class ElectricalPoleElement extends GridElement {
     @Override
     public void readItemStackNBT(CompoundTag nbt) {
         super.readItemStackNBT(nbt);
-        if (desc.includeTransformer && inventory.getItem(TRANSFORMER).isEmpty()) fitLegacyTransformer();
+        if (desc.includeTransformer && inventory.getItem(TRANSFORMER).isEmpty())
+            inventory.setItem(TRANSFORMER, PoleTransformerItem.make(3, 8, 2));
     }
 
     private void fitLegacyTransformer() {

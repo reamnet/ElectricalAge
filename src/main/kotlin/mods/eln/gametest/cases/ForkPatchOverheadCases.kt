@@ -117,6 +117,16 @@ object ForkPatchOverheadCases {
         override fun build(c: TestContext) {
             a=c.placeTransparent(7876,c.at(2,1,2)) as mods.eln.gridnode.electricalpole.ElectricalPoleElement
             b=c.placeTransparent(if(transformer)7877 else 7876,c.at(6,1,2)) as mods.eln.gridnode.electricalpole.ElectricalPoleElement
+            if (transformer) {
+                val old = mods.eln.gametest.Reload.node(c.level(), b.coordonate().pos()) { tag ->
+                    val element = tag.getCompoundOrEmpty("element")
+                    element.remove("inv")
+                    element.remove("modular")
+                    tag.put("element", element)
+                    tag
+                }
+                b = (old.fresh as mods.eln.node.transparent.TransparentNode).element as mods.eln.gridnode.electricalpole.ElectricalPoleElement
+            }
             check(GridLink.addLink(a,b,Direction.XP,Direction.XN,ElnDeviceRegistry.highVoltageCableDescriptor,4))
             source=VoltageSource("legacy native feeder",a.electricalLoad,null).setU(200.0)
             load=Resistor(if(transformer)b.secondaryLoad else b.electricalLoad,null).setR(1000.0)

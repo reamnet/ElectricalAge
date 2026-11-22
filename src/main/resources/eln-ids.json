@@ -5530,5 +5530,17 @@
   "display": "Multicolor Deck Globe String Lights",
   "kind": "transparent_node",
   "name": "multicolor_deck_globe_string_lights"
+ },
+ "eln:transparent_node@16000": {
+  "descriptor": "OutletDescriptor",
+  "display": "400 V Industrial Outlet",
+  "kind": "transparent_node",
+  "name": "400_v_industrial_outlet"
+ },
+ "eln:shared_item@16000": {
+  "descriptor": "CordDescriptor",
+  "display": "400 V Industrial Cord",
+  "kind": "shared_item",
+  "name": "400_v_industrial_cord"
  }
 }

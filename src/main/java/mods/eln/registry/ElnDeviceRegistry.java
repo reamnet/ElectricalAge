@@ -109,6 +109,10 @@ public final class ElnDeviceRegistry {
         sharedItem.addElement(8004, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"800 V Industrial Cord"), mods.eln.transparentnode.cord.CordRating.V800));
         transparentNodeItem.addDescriptor(8005, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V3200, false));
         sharedItem.addElement(8005, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"3.2 kV Industrial Cord"), mods.eln.transparentnode.cord.CordRating.V3200));
+        var industrial400 = mods.eln.transparentnode.cord.CordRating.V400;
+        int industrial400Id = mods.eln.transparentnode.cord.CordRating.V400_DESCRIPTOR_ID;
+        transparentNodeItem.addDescriptor(industrial400Id, new mods.eln.transparentnode.cord.OutletDescriptor(industrial400, false));
+        sharedItem.addElement(industrial400Id, new mods.eln.transparentnode.cord.CordDescriptor(industrial400.getCordName(), industrial400));
         transparentNodeItem.addDescriptor(8012, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V240_30, false));
         sharedItem.addElement(8006, new mods.eln.transparentnode.cord.CordDescriptor(TR_NAME(Type.NONE,"240 V 30 A Dryer Cord"), mods.eln.transparentnode.cord.CordRating.V240_30));
         transparentNodeItem.addDescriptor(7991, new mods.eln.transparentnode.cord.OutletDescriptor(mods.eln.transparentnode.cord.CordRating.V120, true));
