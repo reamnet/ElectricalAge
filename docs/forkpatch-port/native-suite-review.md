@@ -57,3 +57,29 @@ Their actual source registrations, native item/block names, socket ownership,
 passive physics and executable recipes are reviewed in [the adapter](cord-outlets.md).
 Those checks do not waive the old reference assertions. Slot-acceptance differences
 remain the preceding battery categories; the four solar value differences remain.
+
+## Reviewed contracts after the upstream integration
+
+The 1.12 snapshots and comparators continue to report the raw historical
+differences. The full run at `8d158d2fa` logged 559 descriptor differences
+(555 descriptors absent from the snapshot and four ForkPatch solar power
+ratings) and 341 slot differences (271 added menus, 36 added descriptor menu
+specifications, 33 existing-slot acceptance differences, and one aggregate).
+Compared with the previous full run, only the Arc Furnace descriptor and menu
+were newly reported.
+
+All 33 existing-slot comparisons retained their historical indices and stack
+limits. Thirty-one added accepted items. Two compressor inputs also excluded
+old probes because upstream restricted insertion to actual recipes. The
+compressor still accepts sand and the ForkPatch graphite bundle, and rejects
+unusable inputs such as mining pipe. These classifications leave the raw
+diagnostics available for review.
+
+The separate `historical_compatibility_reviewed_contracts` GameTest pins the
+original converter, ForkPatch winding devices and upstream signal-tapped
+converter identities, the independent six-node and transparent registrations
+at 2176, the keyed 400 V pair, both compressor identities, and all four solar
+panel identities and source ratings. It also checks the inherited converter
+and compressor slot contracts and the new Arc Furnace inventory. An additional
+descriptor or menu outside that reviewed scope still appears in the raw
+historical comparisons.
