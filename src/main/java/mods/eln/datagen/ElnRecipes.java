@@ -3,7 +3,10 @@ package mods.eln.datagen;
 import mods.eln.Eln;
 import mods.eln.item.BrushDescriptor;
 import mods.eln.registry.ElnDeviceRegistry;
+import mods.eln.node.voxel.LightingCableIngredient;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.minecraft.world.level.block.Blocks;
 import mods.eln.misc.OreDictTags;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -116,12 +119,12 @@ public final class ElnRecipes extends ElnRecipesBase {
         addShapelessRecipe(findItemStack("Multicolor Fairy Lights on Green Wire"),findItemStack("String Lights"),findItemStack("Flexible Appliance Cord"),Items.DYE.red(),Items.DYE.green());
         addShapelessRecipe(findItemStack("Warm White Deck Globe String Lights"),findItemStack("White Fairy Lights on Green Wire"),Items.GLASS_BOTTLE,Items.DYE.black());
         addShapelessRecipe(findItemStack("Multicolor Deck Globe String Lights"),findItemStack("Multicolor Fairy Lights on Green Wire"),Items.GLASS_BOTTLE,Items.DYE.black());
-        addRecipe(findItemStack("120V Basic Floodlight")," PG","MBP","ICI",'P',findItemStack("Iron Plate"),'G',Items.GLASS_PANE,'M',findItemStack("Electrical Motor"),'B',findItemStack("Machine Block"),'I',Items.IRON_INGOT,'C',findItemStack("Low Voltage Cable"));
-        addRecipe(findItemStack("240V Motorized Floodlight")," PG","MBP","ICI",'P',findItemStack("Iron Plate"),'G',Items.GLASS_PANE,'M',findItemStack("Advanced Electrical Motor"),'B',findItemStack("Advanced Machine Block"),'I',Items.IRON_INGOT,'C',findItemStack("Medium Voltage Cable"));
+        addRecipe(findItemStack("120V Basic Floodlight")," PG","MBP","ICI",'P',findItemStack("Iron Plate"),'G',Items.GLASS_PANE,'M',findItemStack("Electrical Motor"),'B',findItemStack("Machine Block"),'I',Items.IRON_INGOT,'C',lightingWire(1));
+        addRecipe(findItemStack("240V Motorized Floodlight")," PG","MBP","ICI",'P',findItemStack("Iron Plate"),'G',Items.GLASS_PANE,'M',findItemStack("Advanced Electrical Motor"),'B',findItemStack("Advanced Machine Block"),'I',Items.IRON_INGOT,'C',lightingWire(2));
         // Native200V generator is the existing engine assembly; the fixture regulates to its bulbs' source voltage.
         addRecipe(findItemStack("Gasoline Construction Work Light"),"L L"," G ","IPI",'L',findItemStack("Warehouse Wall Floodlight"),'G',findItemStack("230V Fuel Generator"),'I',Items.IRON_INGOT,'P',findItemStack("Iron Plate"));
-        addRecipe(findItemStack("120V Emergency Lamp"),"cbc"," l "," g ",'c',findItemStack("Low Voltage Cable"),'b',findItemStack("Portable Battery Pack"),'l',findItemStack("120V LED Light Bulb"),'g',Items.GLASS_PANE);
-        addRecipe(findItemStack("240V Emergency Lamp"),"cbc"," l "," g ",'c',findItemStack("Medium Voltage Cable"),'b',findItemStack("Portable Battery Pack"),'l',findItemStack("240V LED Light Bulb"),'g',Items.GLASS_PANE);
+        addRecipe(findItemStack("120V Emergency Lamp"),"cbc"," l "," g ",'c',lightingWire(1),'b',findItemStack("Portable Battery Pack"),'l',findItemStack("120V LED Light Bulb"),'g',Items.GLASS_PANE);
+        addRecipe(findItemStack("240V Emergency Lamp"),"cbc"," l "," g ",'c',lightingWire(2),'b',findItemStack("Portable Battery Pack"),'l',findItemStack("240V LED Light Bulb"),'g',Items.GLASS_PANE);
     }
 
 
@@ -227,6 +230,14 @@ public final class ElnRecipes extends ElnRecipesBase {
         return new RStack(mods.eln.registry.ElnRegistry.CABLE_KITS.get(tier).get(), 1, t);
     }
 
+    /** One former cable item or its current one-block preset kit. Longer and custom kits keep their material. */
+    private static RecipeIngredient lightingWire(int tier) {
+        var kit = mods.eln.registry.ElnRegistry.CABLE_KITS.get(tier).get();
+        var legacy = findItemStack(tier == 1 ? "Low Voltage Cable" : "Medium Voltage Cable");
+        var preset = new LightingCableIngredient(tier).toVanilla();
+        return new RecipeIngredient(CompoundIngredient.of(preset, Ingredient.of(legacy.item())), kit);
+    }
+
     public static void recipeThermalCable() {
         addRecipe(findItemStack("Copper Thermal Cable", 6),
             "SSS",
@@ -247,7 +258,7 @@ public final class ElnRecipes extends ElnRecipesBase {
             addRecipe(findItemStack("Grid DC-DC Converter"),"i i","mtm","imi",'i',"ingot"+metal,'t',findItemStack("Winding DC-DC Converter"),'m',findItemStack("Advanced Machine Block"));
         for(var r:mods.eln.sixnode.lampsocket.RatedLampBulbs.INSTANCE.getRatings()) {
             if(r.getId()==302||r.getId()==303)continue;
-            var wire=findItemStack(r.getVolts()==12?"Copper Cable":r.getVolts()==120?"Low Voltage Cable":"Medium Voltage Cable");
+            var wire = r.getVolts() == 12 ? findItemStack("Copper Cable") : lightingWire(r.getVolts() == 120 ? 1 : 2);
             String title=r.getTitle();
             if(title.contains("Halogen"))addRecipe(findItemStack(title,2),"GGG","CTC","GGG",'G',Blocks.GLASS_PANE,'C',wire,'T',dictTungstenIngot);
             else if(title.contains("LED"))addRecipe(findItemStack(title,2),"GGG","SSS","PCP",'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',wire);
@@ -298,9 +309,9 @@ public final class ElnRecipes extends ElnRecipesBase {
 
         // Original LED patterns still produce legacy bulbs. Distinct paid patterns add both source ratings.
         addRecipe(findItemStack("120V LED Light Bulb",2),"GGG","SSS","PCP",
-            'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',findItemStack("Low Voltage Cable"));
+            'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',lightingWire(1));
         addRecipe(findItemStack("240V LED Light Bulb",2),"GGG","SSS","PCP",
-            'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',findItemStack("Medium Voltage Cable"));
+            'G',Blocks.GLASS_PANE,'S',findItemStack("Silicon Ingot"),'P',findItemStack("Iron Plate"),'C',lightingWire(2));
         // Source materialString is vanilla string; retain the two-fixture bootstrap yield.
         addShapelessRecipe(findItemStack("String Lights",2),findItemStack("120V LED Light Bulb"),Items.STRING);
         // Exact pinned ForkPatch b7444a7 source fixture recipes; native socket names are stable aliases.

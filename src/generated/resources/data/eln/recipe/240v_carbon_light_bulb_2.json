@@ -4,7 +4,16 @@
     "F": "minecraft:charcoal",
     "G": "minecraft:glass_pane",
     "P": "eln:iron_plate",
-    "S": "eln:medium_voltage_cable"
+    "S": {
+      "neoforge:ingredient_type": "neoforge:compound",
+      "children": [
+        {
+          "neoforge:ingredient_type": "eln:lighting_cable_kit",
+          "tier": 2
+        },
+        "eln:medium_voltage_cable"
+      ]
+    }
   },
   "pattern": [
     " G ",

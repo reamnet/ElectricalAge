@@ -201,7 +201,10 @@ public abstract class ElnRecipesBase {
         return ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(Eln.MODID, name));
     }
 
+    record RecipeIngredient(Ingredient ingredient, ItemLike unlockItem) {}
+
     static Ingredient ingredient(Object o) {
+        if (o instanceof RecipeIngredient custom) return custom.ingredient();
         if (o instanceof String ore) return Ingredient.of(items.getOrThrow(OreDictTags.recipeTag(ore)));
         if (o instanceof TagKey<?> t) return Ingredient.of(items.getOrThrow(itemTag(t)));
         if (o instanceof RStack s) return Ingredient.of(s.item());
@@ -216,6 +219,7 @@ public abstract class ElnRecipesBase {
     }
 
     static Criterion<?> criterion(Object o) {
+        if (o instanceof RecipeIngredient custom) return hasItem.apply(custom.unlockItem());
         if (o instanceof String ore) return hasTag.apply(OreDictTags.recipeTag(ore));
         if (o instanceof TagKey<?> t) return hasTag.apply(itemTag(t));
         if (o instanceof RStack s) return hasItem.apply(s.item());

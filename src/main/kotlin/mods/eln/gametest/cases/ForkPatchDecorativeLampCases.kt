@@ -160,6 +160,16 @@ object ForkPatchDecorativeLampCases {
                 val modern=craft(listOf(glass,glass,glass,silicon,silicon,silicon,plate,cable,plate))
                 c.check("decorative bulbs: the stock recipe makes the updated common voltage",legacy.item===Eln.findItemStack(if(volts==120)"48V LED Bulb" else "230V LED Bulb",1).item && legacy.count==2,"$volts V: $legacy")
                 c.check("decorative bulbs: the distinct paid recipe makes two rated bulbs",modern.item===rated.item && modern.count==2,"$volts V: $modern")
+                val tier = if (volts == 120) 1 else 2
+                fun withKit(kit: ItemStack) = craft(listOf(glass, glass, glass, silicon, silicon, silicon, plate, kit, plate))
+                val fromKit = withKit(mods.eln.node.voxel.CableKitItem.kit(tier, 16))
+                c.check("decorative bulbs: one current kit makes the same two rated bulbs",fromKit.item===rated.item && fromKit.count==2,"$volts V: $fromKit")
+                for (length in listOf(8, 32)) {
+                    c.check("decorative bulbs: other lengths do not fit",withKit(mods.eln.node.voxel.CableKitItem.kit(tier, length)).isEmpty,"$volts V: length $length")
+                }
+                val otherRated = Eln.findItemStack("${360 - volts}V LED Light Bulb", 1)
+                val otherTier = withKit(mods.eln.node.voxel.CableKitItem.kit(3 - tier, 16))
+                c.check("decorative bulbs: the other tier makes its own rated bulb",otherTier.item===otherRated.item && otherTier.count==2,"$volts V: $otherTier")
             }
         }
     }

@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "eln:low_voltage_cable"
+            "items": "eln:cable_kit_lv"
           }
         ]
       },

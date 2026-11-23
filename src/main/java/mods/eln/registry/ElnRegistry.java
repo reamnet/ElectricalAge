@@ -17,6 +17,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.crafting.IngredientType;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import mods.eln.node.voxel.LightingCableIngredient;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -112,6 +115,11 @@ public final class ElnRegistry {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<mods.eln.node.voxel.VoxelNodeEntity>> VOXEL_NODE_ENTITY =
         BLOCK_ENTITIES.register("voxel_node", () -> new BlockEntityType<>(mods.eln.node.voxel.VoxelNodeEntity::new, VOXEL_NODE_BLOCK.get(),
             VOXEL_NODE_WOODEN_FENCE.get(), VOXEL_NODE_FENCE.get(), VOXEL_NODE_WALL.get()));
+    private static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES =
+        DeferredRegister.create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, Eln.MODID);
+    public static final DeferredHolder<IngredientType<?>, IngredientType<LightingCableIngredient>> LIGHTING_CABLE_INGREDIENT =
+        INGREDIENT_TYPES.register("lighting_cable_kit", () -> new IngredientType<>(LightingCableIngredient.CODEC));
+
     public static final DeferredRegister<net.minecraft.world.item.crafting.RecipeSerializer<?>> RECIPE_SERIALIZERS =
         DeferredRegister.create(Registries.RECIPE_SERIALIZER, Eln.MODID);
     public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<mods.eln.node.voxel.PipeKitRecipes.FromPlates>> PIPE_KIT_FROM_PLATES =
@@ -462,6 +470,7 @@ public final class ElnRegistry {
         ITEMS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
         RECIPE_SERIALIZERS.register(modBus);
+        INGREDIENT_TYPES.register(modBus);
         ENTITY_TYPES.register(modBus);
         MENUS.register(modBus);
         TABS.register(modBus);
