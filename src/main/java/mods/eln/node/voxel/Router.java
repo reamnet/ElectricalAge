@@ -95,15 +95,34 @@ public final class Router {
     /** A route along faces from start through the waypoints to end. */
     static CableRouter.Result surface(CableRouter.Space space, RouteKind kind, CableRouter.End start, List<CableRouter.End> waypoints,
                                       CableRouter.End end, long budgetMs) {
-        long deadline = System.nanoTime() + budgetMs * 1_000_000;
+        long now = System.nanoTime();
+        long budget = budgetMs * 1_000_000;
+        long deadline = now + budget;
         if (kind.airLimit() == 0) return surfaceUntil(space, kind, start, waypoints, end, deadline);
+        RouteKind supported = kind.withAir(RouteKind.NO_AIR);
+        // An exposed port needs an air approach or a detour around a corner. Try the air search first there
+        // so the support-only detour cannot consume the entire budget. Leave time for the supported fallback.
+        if (exposedPort(space, kind, start, true) || exposedPort(space, kind, end, false)) {
+            CableRouter.Result withAir = surfaceUntil(space, kind, start, waypoints, end, now + budget / 2);
+            if (withAir.error == null) return withAir;
+            CableRouter.Result onSupport = surfaceUntil(space, supported, start, waypoints, end, deadline);
+            return onSupport.error == null ? onSupport : withAir;
+        }
         // with an air allowance: first on supports only (as before air runs: fast), then with the air in what time is left.
         // The air search finds the cheaper route when it finishes; when it can't in the time left, the supported route
         // stands (on real terrain the air states made long ordinary routes give up at the click's budget: elnlab routetime)
-        CableRouter.Result onSupport = surfaceUntil(space, kind.withAir(RouteKind.NO_AIR), start, waypoints, end, deadline);
+        CableRouter.Result onSupport = surfaceUntil(space, supported, start, waypoints, end, deadline);
         CableRouter.Result withAir = surfaceUntil(space, kind, start, waypoints, end, deadline);
         if (withAir.error == null || onSupport.error != null) return withAir;
         return onSupport;
+    }
+
+    private static boolean exposedPort(CableRouter.Space space, RouteKind kind, CableRouter.End end, boolean start) {
+        int attach = end.attach(), dir = end.dir();
+        if (attach < 0 || dir < 0 || CableRouter.axis(attach) == CableRouter.axis(dir)) return false;
+        long[] p = {end.x(), end.y(), end.z()};
+        if (!start) for (int axis = 0; axis < 3; axis++) p[axis] -= CableRouter.DV[dir][axis] * kind.lattice();
+        return !surfaceSupported(space, kind, p, attach, dir);
     }
 
     /** One search over all legs, until deadline (nanoTime). */
