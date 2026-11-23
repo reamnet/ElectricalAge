@@ -32,6 +32,7 @@ public class ElectricalStackMachineProcess implements IProcess {
     boolean smeltInProcess = false;
     double energyNeeded = 0;
     double energyCounter = 0;
+    private boolean exactEnergy;
 
     /** A recipe fed from a tank, worked while the input slot is empty (the rubber chain, 2026-11-07: the 230V
      *  compressor presses latex from its IN flange to Raw Rubber). */
@@ -105,10 +106,14 @@ public class ElectricalStackMachineProcess implements IProcess {
 
         power = 0;
         if (smeltInProcess) {
-            double got = machine.takeJoules(machine.ratedJoulesPerTick());
+            double request = machine.ratedJoulesPerTick();
+            double remaining = (energyNeeded - energyCounter) / efficiency;
+            if (exactEnergy) request = Math.min(request, Math.max(0, remaining));
+            double got = machine.takeJoules(request);
             power = got / time;
+            boolean paidRemainder = exactEnergy && got >= remaining;
             energyCounter += got * efficiency;
-            if (energyCounter > energyNeeded) {
+            if (energyCounter > energyNeeded || paidRemainder) {
                 energyCounter -= energyNeeded;
                 smeltItem();
                 smeltInit();
@@ -140,7 +145,9 @@ public class ElectricalStackMachineProcess implements IProcess {
             energyCounter = 0.0;
         } else {
             smeltInProcess = true;
-            energyNeeded = fromTank() ? fluidRecipe.energy() : recipesList.getRecipe(inventory.getItem(inputSlotId)).energy;
+            Recipe recipe = fromTank() ? null : recipesList.getRecipe(inventory.getItem(inputSlotId));
+            energyNeeded = recipe == null ? fluidRecipe.energy() : recipe.energy;
+            exactEnergy = recipe != null && recipe.exactEnergy();
             energyCounter = 0.0;
         }
     }

@@ -44,12 +44,13 @@ public final class ElnMachineRecipes {
     /** Other mods' additions (Stasis Delvers: riftstone to dust), run at the end of every refill. */
     public static final List<Runnable> EXTRA = new java.util.concurrent.CopyOnWriteArrayList<>();
 
-    /** Server start: refill the four lists. */
+    /** Server start: refill the machine recipe lists. */
     public static void registerAll() {
         for (RecipesList l : new RecipesList[]{maceratorRecipes, plateMachineRecipes, compressorRecipes, magnetiserRecipes, arcFurnaceRecipes})
             l.getRecipes().clear();
         add(arcFurnaceRecipes, new Recipe(new ItemStack(Items.CLAY_BALL, 2), findItemStack("Arc Clay Ingot", 1), 400_000));
         add(arcFurnaceRecipes, new Recipe(new ItemStack(Items.IRON_INGOT), findItemStack("Arc Metal Ingot", 1), 200_000));
+        recipeArcFurnaceOre();
         recipeMacerator();
         recipePlateMachine();
         recipeCompressor();
@@ -100,6 +101,31 @@ public final class ElnMachineRecipes {
         if (inItems.isEmpty() || outItems.isEmpty()) return;
         ItemStack output = new ItemStack(outItems.get(0), outputCount);
         maceratorRecipes.addRecipe(new Recipe(new ItemStack(inItems.get(0)), output, f).withTags(List.of(in)));
+    }
+
+    private static void recipeArcFurnaceOre() {
+        // ForkPatch CraftingRecipes.kt:2246–2333. Explicit modern counterparts, not ore tags.
+        arcSmelt(new ItemStack(Items.IRON_INGOT, 2), Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE);
+        arcSmelt(new ItemStack(Items.GOLD_INGOT, 2), Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE);
+        arcSmelt(new ItemStack(Items.COAL, 2), Blocks.COAL_ORE, Blocks.DEEPSLATE_COAL_ORE);
+        arcSmelt(new ItemStack(Items.REDSTONE, 6), Blocks.REDSTONE_ORE, Blocks.DEEPSLATE_REDSTONE_ORE);
+        arcSmelt(new ItemStack(Blocks.LAPIS_BLOCK), Blocks.LAPIS_ORE, Blocks.DEEPSLATE_LAPIS_ORE);
+        arcSmelt(new ItemStack(Items.DIAMOND, 2), Blocks.DIAMOND_ORE, Blocks.DEEPSLATE_DIAMOND_ORE);
+        arcSmelt(new ItemStack(Items.EMERALD, 2), Blocks.EMERALD_ORE, Blocks.DEEPSLATE_EMERALD_ORE);
+        arcSmelt(new ItemStack(Items.QUARTZ, 2), Blocks.NETHER_QUARTZ_ORE);
+        arcSmelt(new ItemStack(Items.COPPER_INGOT, 2), Blocks.COPPER_ORE, Blocks.DEEPSLATE_COPPER_ORE);
+        arcSmelt(findItemStack("Lead Ingot", 2), findItemStack("Lead Ore"), findItemStack("Deepslate Lead Ore"));
+        arcSmelt(findItemStack("Tungsten Ingot", 2), findItemStack("Tungsten Ore"));
+        arcSmelt(findItemStack("Alloy Ingot", 1), findItemStack("Alloy Dust"));
+    }
+
+    private static void arcSmelt(ItemStack output, net.minecraft.world.level.ItemLike... ores) {
+        for (var ore : ores) arcSmelt(output, new ItemStack(ore));
+    }
+
+    private static void arcSmelt(ItemStack output, ItemStack... inputs) {
+        for (ItemStack input : inputs)
+            arcFurnaceRecipes.addRecipe(new Recipe(input, output.copy(), 5_000).withExactEnergy());
     }
 
     public static void recipeMacerator() {

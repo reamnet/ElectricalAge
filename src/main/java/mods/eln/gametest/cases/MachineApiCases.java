@@ -23,6 +23,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
 
@@ -50,6 +52,112 @@ public final class MachineApiCases {
         cases.add(new ArcFurnaceCase(true));
         cases.add(new ArcFurnaceCase(false));
         cases.add(new ArcFurnaceProtectionCase());
+        addOreCases(cases, Items.IRON_INGOT, 2, Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE);
+        addOreCases(cases, Items.GOLD_INGOT, 2, Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE);
+        addOreCases(cases, Items.COAL, 2, Blocks.COAL_ORE, Blocks.DEEPSLATE_COAL_ORE);
+        addOreCases(cases, Items.REDSTONE, 6, Blocks.REDSTONE_ORE, Blocks.DEEPSLATE_REDSTONE_ORE);
+        addOreCases(cases, Blocks.LAPIS_BLOCK, 1, Blocks.LAPIS_ORE, Blocks.DEEPSLATE_LAPIS_ORE);
+        addOreCases(cases, Items.DIAMOND, 2, Blocks.DIAMOND_ORE, Blocks.DEEPSLATE_DIAMOND_ORE);
+        addOreCases(cases, Items.EMERALD, 2, Blocks.EMERALD_ORE, Blocks.DEEPSLATE_EMERALD_ORE);
+        addOreCases(cases, Items.QUARTZ, 2, Blocks.NETHER_QUARTZ_ORE);
+        addOreCases(cases, Items.COPPER_INGOT, 2, Blocks.COPPER_ORE, Blocks.DEEPSLATE_COPPER_ORE);
+        cases.add(new ArcOreCase("lead_ore", "lead_ingot", 2));
+        cases.add(new ArcOreCase("deepslate_lead_ore", "lead_ingot", 2));
+        cases.add(new ArcOreCase("tungsten_ore", "tungsten_ingot", 2));
+        cases.add(new ArcOreCase("alloy_dust", "alloy_ingot", 1));
+    }
+
+    private static void addOreCases(List<TestCase> cases, ItemLike output, int count, ItemLike... inputs) {
+        var items = net.minecraft.core.registries.BuiltInRegistries.ITEM;
+        for (var input : inputs)
+            cases.add(new ArcOreCase(items.getKey(input.asItem()).toString(), items.getKey(output.asItem()).toString(), count));
+    }
+
+    private static final class ArcOreCase implements TestCase {
+        private final String inputId, outputId;
+        private final int yield;
+        private ElectricalMachineElement machine;
+        private VoltageSource source;
+        private double paidBeforeReload;
+
+        ArcOreCase(String inputId, String outputId, int yield) {
+            this.inputId = inputId;
+            this.outputId = outputId;
+            this.yield = yield;
+        }
+
+        public String id() { return "old_arc_furnace_process_" + inputId.substring(inputId.indexOf(':') + 1); }
+        public int width() { return 6; }
+        public int ticks() { return 100; }
+
+        private ItemStack stack(String id) {
+            var key = net.minecraft.resources.Identifier.parse(id.contains(":") ? id : "eln:" + id);
+            return new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(key));
+        }
+
+        public void build(TestContext ctx) {
+            machine = placeArcFurnace(ctx, new Wp10aCases.Layout(ctx, width()));
+            var inventory = machine.getInventory();
+            var input = stack(inputId);
+            var output = stack(outputId);
+            var list = mods.eln.compat.JeiPages.MACHINES.get("old_480v_arc_furnace").get();
+            var recipe = list.getRecipe(input);
+            ctx.check("JEI's furnace list exposes the actual machine and paid recipe",
+                list == Eln.arcFurnaceRecipes && list.getMachines().stream().anyMatch(
+                    item -> item.is(machine.getDescriptor().newItemStack().getItem()))
+                    && !input.isEmpty() && !output.isEmpty() && recipe != null && list.getRecipes().contains(recipe)
+                    && recipe.input.getCount() == 1 && recipe.energy == 5_000 && recipe.inputTags.isEmpty()
+                    && recipe.output.length == 1 && recipe.output[0].is(output.getItem()) && recipe.output[0].getCount() == yield,
+                inputId + " -> " + yield + " " + outputId);
+            ctx.check("empty input and raw iron are not ore recipes",
+                list.getRecipe(ItemStack.EMPTY) == null && list.getRecipe(new ItemStack(Items.RAW_IRON)) == null, "");
+            inventory.setItem(machine.inSlotId, input);
+            inventory.setChanged();
+            source = feedArcFurnace(machine, 0);
+            ctx.after(16, () -> {
+                ctx.check("unpowered furnace leaves the ore untouched",
+                    machine.machine.joulesTaken() == 0 && inventory.getItem(machine.outSlotId).isEmpty()
+                        && inventory.getItem(machine.inSlotId).getCount() == 1, inputId);
+                for (int i = 0; i < ((ElectricalMachineDescriptor) machine.getDescriptor()).outStackCount; i++)
+                    inventory.setItem(machine.outSlotId + i, new ItemStack(Items.COBBLESTONE, 64));
+                inventory.setChanged();
+                source.setU(480);
+            });
+            ctx.after(40, () -> {
+                ctx.check("powered but blocked furnace leaves the ore and output intact",
+                    machine.machine.volts() > 479 && machine.machine.joulesTaken() == 0
+                        && inventory.getItem(machine.inSlotId).getCount() == 1
+                        && inventory.getItem(machine.outSlotId).getCount() == 64, inputId);
+                inventory.setItem(machine.outSlotId, ItemStack.EMPTY);
+                inventory.setChanged();
+            });
+            if (inputId.equals("minecraft:iron_ore")) ctx.after(45, () -> {
+                paidBeforeReload = machine.machine.joulesTaken();
+                disconnectArcFurnace(source);
+                try {
+                    Reload.node(ctx.level(), ctx.at(2, 1, 1));
+                } catch (ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+                machine = element(ctx, ctx.at(2, 1, 1));
+                source = feedArcFurnace(machine, 480);
+                ctx.check("ore cycle restores its partially paid work and original input",
+                    paidBeforeReload > 0 && paidBeforeReload < 5_000
+                        && process(machine).progressJoules() == paidBeforeReload
+                        && machine.getInventory().getItem(machine.inSlotId).is(input.getItem()),
+                    "" + paidBeforeReload);
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            disconnectArcFurnace(source);
+            var inventory = machine.getInventory();
+            var output = inventory.getItem(machine.outSlotId);
+            ctx.check("one ore consumed for the source yield", inventory.getItem(machine.inSlotId).isEmpty()
+                && output.is(stack(outputId).getItem()) && output.getCount() == yield, output.toString());
+            double paid = paidBeforeReload + machine.machine.joulesTaken();
+            ctx.check("paid exactly 5 kJ with empty input after completion", Math.abs(paid - 5_000) < 1e-8, paid + " J");
+        }
     }
 
     private static ElectricalMachineElement placeArcFurnace(TestContext ctx, Wp10aCases.Layout layout) {

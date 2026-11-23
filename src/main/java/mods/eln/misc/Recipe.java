@@ -22,6 +22,18 @@ public class Recipe {
         this.energy = energy;
     }
 
+    private boolean exactEnergy;
+
+    /** This recipe requests only the remaining work on the last simulator tick. */
+    public Recipe withExactEnergy() {
+        exactEnergy = true;
+        return this;
+    }
+
+    public boolean exactEnergy() {
+        return exactEnergy;
+    }
+
     /**
      * Extra inputs (26.x): the tags of the input's 1.12 ore dictionary names (ElnMachineRecipes), so other items under
      * the same name work, as 1.12's Utils.areSame did through the ore dictionary.
