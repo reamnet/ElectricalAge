@@ -50,6 +50,8 @@ public final class ElnMachineRecipes {
             l.getRecipes().clear();
         add(arcFurnaceRecipes, new Recipe(new ItemStack(Items.CLAY_BALL, 2), findItemStack("Arc Clay Ingot", 1), 400_000));
         add(arcFurnaceRecipes, new Recipe(new ItemStack(Items.IRON_INGOT), findItemStack("Arc Metal Ingot", 1), 200_000));
+        arcFurnaceRecipes.addRecipe(new Recipe(findItemStack("Canister of Water"),
+            findItemStack("Canister of Arc Water"), 7_000_000).withExactEnergy());
         recipeArcFurnaceOre();
         recipeMacerator();
         recipePlateMachine();
@@ -251,6 +253,7 @@ public final class ElnMachineRecipes {
             new ItemStack[]{findItemStack("Basic Magnet")}, 5000.0));
         add(magnetiserRecipes, new Recipe(findItemStack("Alloy Ingot", 2),
             new ItemStack[]{findItemStack("Advanced Magnet")}, 15000.0));
+        add(magnetiserRecipes, new Recipe(findItemStack("Inert Canister"), new ItemStack(Items.ENDER_PEARL), 150_000));
         // field annealing (Baughn 2026-11-06, after Argon): the big energy draw of the Optimal core, on the grid
         add(magnetiserRecipes, new Recipe(findItemStack("Nanocrystalline Core Blank"),
             new ItemStack[]{findItemStack("Optimal Ferromagnetic Core")}, 200000.0));

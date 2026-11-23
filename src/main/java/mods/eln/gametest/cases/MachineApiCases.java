@@ -19,10 +19,13 @@ import mods.eln.transparentnode.electricalmachine.MagnetizerDescriptor;
 import mods.eln.transparentnode.electricalmachine.OldArcFurnaceDescriptor;
 import mods.eln.transparentnode.electricalmachine.PlateMachineDescriptor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 
@@ -52,6 +55,7 @@ public final class MachineApiCases {
         cases.add(new ArcFurnaceCase(true));
         cases.add(new ArcFurnaceCase(false));
         cases.add(new ArcFurnaceProtectionCase());
+        cases.add(new ArcWaterCase());
         addOreCases(cases, Items.IRON_INGOT, 2, Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE);
         addOreCases(cases, Items.GOLD_INGOT, 2, Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE);
         addOreCases(cases, Items.COAL, 2, Blocks.COAL_ORE, Blocks.DEEPSLATE_COAL_ORE);
@@ -174,6 +178,108 @@ public final class MachineApiCases {
     private static void disconnectArcFurnace(VoltageSource source) {
         Eln.simulator.removeElectricalComponent(source);
         source.breakConnection();
+    }
+
+    private static final class ArcWaterCase implements TestCase {
+        private ElectricalMachineElement machine;
+        private VoltageSource source;
+        private ItemStack arcWater;
+        private double paidBeforeReload;
+        private double progressBeforeOutage;
+
+        public String id() { return "old_arc_furnace_arc_water"; }
+        public int width() { return 6; }
+        public int ticks() { return 14_400; }
+
+        private static ItemStack checkCanister(TestContext ctx, int damage, String name) {
+            var descriptor = Eln.sharedItem.getDescriptor(damage);
+            var stack = descriptor.newItemStack();
+            ctx.check("original canister identity and stack limit",
+                descriptor.parentItemDamage == damage && stack.getMaxStackSize() == 64
+                    && BuiltInRegistries.ITEM.getKey(stack.getItem()).toString().equals("eln:" + name), name);
+            return stack;
+        }
+
+        public void build(TestContext ctx) {
+            var inert = checkCanister(ctx, 4424, "inert_canister");
+            var water = checkCanister(ctx, 4427, "canister_of_water");
+            arcWater = checkCanister(ctx, 4428, "canister_of_arc_water");
+            var recipes = ctx.level().recipeAccess();
+            var lapis = Eln.findItemStack("Lapis Dust");
+            var diamond = Eln.findItemStack("Diamond Dust");
+            var dust = CraftingInput.of(3, 3, List.of(lapis, lapis, lapis, lapis, diamond, lapis, lapis, lapis, lapis));
+            var craftedInert = recipes.getRecipeFor(RecipeType.CRAFTING, dust, ctx.level()).orElseThrow().value().assemble(dust);
+            ctx.check("eight lapis dust and one diamond dust craft one inert canister",
+                ItemStack.matches(craftedInert, inert), craftedInert.toString());
+            var fill = CraftingInput.of(2, 1, List.of(craftedInert, new ItemStack(Items.WATER_BUCKET)));
+            var filling = recipes.getRecipeFor(RecipeType.CRAFTING, fill, ctx.level()).orElseThrow().value();
+            var craftedWater = filling.assemble(fill);
+            var remainder = filling.getRemainingItems(fill);
+            ctx.check("water bucket fills the canister and leaves its empty bucket",
+                ItemStack.matches(craftedWater, water) && remainder.get(0).isEmpty() && remainder.get(1).is(Items.BUCKET),
+                craftedWater.toString());
+            var pearl = Eln.magnetiserRecipes.getRecipe(inert);
+            ctx.check("inert canister retains its original magnetizer use",
+                pearl != null && pearl.energy == 150_000 && pearl.input.getCount() == 1 && pearl.output.length == 1
+                    && ItemStack.matches(pearl.output[0], new ItemStack(Items.ENDER_PEARL)), "");
+
+            machine = placeArcFurnace(ctx, new Wp10aCases.Layout(ctx, width()));
+            var page = mods.eln.compat.JeiPages.MACHINES.get("old_480v_arc_furnace").get();
+            var recipe = page.getRecipe(craftedWater);
+            ctx.check("JEI shares the furnace's one-canister 7 MJ recipe",
+                page == Eln.arcFurnaceRecipes && recipe != null && recipe.energy == 7_000_000
+                    && recipe.input.getCount() == 1 && recipe.output.length == 1 && ItemStack.matches(recipe.output[0], arcWater)
+                    && page.getRecipe(inert) == null && page.getRecipe(new ItemStack(Items.WATER_BUCKET)) == null, "");
+            source = feedArcFurnace(machine, 480);
+            var inventory = machine.getInventory();
+            ctx.after(20, () -> {
+                ctx.check("powered furnace with no input takes no energy",
+                    machine.machine.joulesTaken() == 0 && inventory.getItem(machine.outSlotId).isEmpty(), "");
+                inventory.setItem(machine.inSlotId, craftedWater);
+                for (int slot = 0; slot < ((ElectricalMachineDescriptor) machine.getDescriptor()).outStackCount; slot++)
+                    inventory.setItem(machine.outSlotId + slot, new ItemStack(Items.COBBLESTONE, 64));
+                inventory.setChanged();
+            });
+            ctx.after(40, () -> {
+                ctx.check("full outputs block work and retain the water canister",
+                    machine.machine.joulesTaken() == 0 && ItemStack.matches(inventory.getItem(machine.inSlotId), water), "");
+                inventory.setItem(machine.outSlotId, ItemStack.EMPTY);
+                inventory.setChanged();
+            });
+            ctx.after(100, () -> {
+                progressBeforeOutage = process(machine).progressJoules();
+                ctx.check("480 V supply delivers 10 kW and partially pays the cycle",
+                    progressBeforeOutage > 0 && progressBeforeOutage < 7_000_000
+                        && Math.abs(machine.machine.watts() - 10_000) < 100, "" + progressBeforeOutage);
+                source.setU(0);
+            });
+            ctx.after(150, () -> {
+                ctx.check("power interruption preserves progress without producing arc water",
+                    process(machine).progressJoules() == progressBeforeOutage && inventory.getItem(machine.outSlotId).isEmpty(), "");
+                paidBeforeReload = machine.machine.joulesTaken();
+                disconnectArcFurnace(source);
+                try {
+                    Reload.node(ctx.level(), ctx.at(2, 1, 1));
+                } catch (ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+                machine = element(ctx, ctx.at(2, 1, 1));
+                ctx.check("reload preserves the water canister and its paid progress",
+                    process(machine).progressJoules() == progressBeforeOutage
+                        && ItemStack.matches(machine.getInventory().getItem(machine.inSlotId), water), "");
+                source = feedArcFurnace(machine, 480);
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            disconnectArcFurnace(source);
+            var inventory = machine.getInventory();
+            ctx.check("one water canister becomes one arc-water canister",
+                inventory.getItem(machine.inSlotId).isEmpty()
+                    && ItemStack.matches(inventory.getItem(machine.outSlotId), arcWater), "");
+            double paid = paidBeforeReload + machine.machine.joulesTaken();
+            ctx.check("arc water accepted exactly 7 MJ", Math.abs(paid - 7_000_000) < 1e-6, paid + " J");
+        }
     }
 
     private static final class ArcFurnaceCase implements TestCase {

@@ -23,7 +23,7 @@ The source uses `OldArcFurnaceDescriptor.java` in `transparentnode/electricalmac
 ## Implementation sequence
 
 1. Add `OldArcFurnaceDescriptor.java` in the current electrical-machine package and register it through `ElnDeviceRegistry.java` at transparent 2176. Add an explicit `eln-ids.json` mapping for its own registry path, such as `old_480v_arc_furnace`. Reuse `ElectricalMachineElement`, `ElectricalStackMachineProcess`, `ElectricalMachineInventory`, `ElectricalMachineScreen` and `ElectricalMachineRender` for accepted electrical work, input counts, output capacity, GUI, and NBT. Keep drawing and side-port overrides local to the descriptor. Check machine boost, thermal protection, and the native `Brownout.SLOW` behavior against the source.
-2. Add a dedicated furnace `RecipesList` in `Eln.java` and populate it in the `ElnMachineRecipes.registerAll()` refill path. Wire the list to the descriptor and `JeiPages.MACHINES` so the real machine gates JEI acquisition. Add its JEI title in `ElnLang.java`. Add the furnace construction recipe in `ElnRecipes.java` with the exact source costs. Resolve the original copper ore input against vanilla copper ore. Check the source water and arc-water canisters individually. No matching current canister route was found, so that 7 MJ recipe needs both identities and their source behavior before it can be enabled.
+2. Add a dedicated furnace `RecipesList` in `Eln.java` and populate it in the `ElnMachineRecipes.registerAll()` refill path. Wire the list to the descriptor and `JeiPages.MACHINES` so the real machine gates JEI acquisition. Add its JEI title in `ElnLang.java`. Add the furnace construction recipe in `ElnRecipes.java` with the exact source costs. Resolve the original copper ore input against vanilla copper ore. The arc-water identities and routes are recorded below.
 3. Import the original `assets/eln/model/arcfurnaceold/` OBJ, MTL, TXT and `tex.png`. Preserve the `main` and `move` parts with `tyoff 0.0` and `tyon -0.125`. The Blender file is authoring data. Import `textures/blocks/old800varcfurnace.png` as the native item icon. Wire the original `eln:arcfurnace_loop` sound event to the OGG already present in the port and check start/stop behavior. Run `runClientData` twice and check the generated item model, blockstate, recipe, advancement, language and JEI title. The second run should write zero files.
 
 ## Acceptance tests
@@ -32,3 +32,15 @@ The source uses `OldArcFurnaceDescriptor.java` in `transparentnode/electricalmac
 - Run powered GameTests for both metal recipes at 480 V. Check 10 kW unboosted demand and accepted work of 400/200 kJ, exact consumption and yield, insufficient clay, full outputs, removal or replacement of input mid-cycle, and pause on loss of supply. Exercise sided transfer, side ports, brownout and overvoltage protection. Check placed and item geometry and the moving part.
 - Reload a partially paid operation. Verify inventory, recipe identity and progress survive, with no duplicate output or credited work. Check the ordinary native machine cases for regressions.
 - Run `jei_every_item_reachable` with actual machine and crafting records. The baseline is 44 unreachable of 876. The current graph predicts 35 existing items become reachable if both routes and the furnace bootstrap are available. Check the measured count against the changed item catalog and keep the historical snapshots intact.
+
+## Arc-water source mapping
+
+ForkPatch `registration/ItemRegistration.kt` calls `registerArc(69)` and registers three plain shared-item descriptors. The source generated models give the registry paths below. The contents are represented by distinct stackable items.
+
+| Shared-item ID | Registry key | Original texture |
+| ---: | --- | --- |
+| 4424 | `eln:inert_canister` | `inertcanister.png` |
+| 4427 | `eln:canister_of_water` | `canisterofwater.png` |
+| 4428 | `eln:canister_of_arc_water` | `canisterofarcwater.png` |
+
+In `craft/CraftingRecipes.kt`, `recipeDust` combines eight lapis dust and one diamond dust into one inert canister. `recipeElectricalFurnace` registers the shapeless inert canister and water bucket recipe, with the vanilla empty-bucket remainder. The magnetizer also turns one inert canister into one ender pearl at 150 kJ. The Old 480 V Arc Furnace turns one water canister into one arc-water canister at 7 MJ, which takes 700 seconds of accepted work at 10 kW. The inspected source has no further consumer or fluid interaction for the finished arc-water canister.

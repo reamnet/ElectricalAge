@@ -1,4 +1,4 @@
-// 26.3	2026-11-23T14:15:57.483001493	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-23T18:58:20.47608336	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -245,6 +245,7 @@ de31a6e035c77509cf4b3518e791722dd591a9b1 data/eln/advancement/recipes/misc/cable
 a5275b5ccd3d616e94cb41d832d72089b7162d45 data/eln/advancement/recipes/misc/cable_kit_mv.json
 42f2e5bde58f7c7d6f0e38ce225837dc97c547c1 data/eln/advancement/recipes/misc/cable_kit_vhv.json
 9a8576ad6e7e0403a0d47f17b7cd0b61fbe4fc33 data/eln/advancement/recipes/misc/candle_arm_foyer_chandelier.json
+a923f2106db5370b3584e9f9ab6f593de074f3d4 data/eln/advancement/recipes/misc/canister_of_water.json
 1ed758878c96ccb177e26898cf87b3eb6ba6799d data/eln/advancement/recipes/misc/capacitor_bank.json
 721b24687736891e1289922bce10b7a2f728030f data/eln/advancement/recipes/misc/capacitor_cell.json
 727ff8c6105794cf50890d21503562ad91ba5af3 data/eln/advancement/recipes/misc/capacity_oriented_battery.json
@@ -410,6 +411,7 @@ e56522c0a4cf8f74cc1f81dd8fc4fc347816cd4d data/eln/advancement/recipes/misc/indus
 9b8601e87485588a1d3f04b45278c4988b733e06 data/eln/advancement/recipes/misc/industrial_resin_collector.json
 40dc0062de491cfe55e13089ac9491ade847ad1b data/eln/advancement/recipes/misc/industrial_wall_pack_light.json
 9e19984f219b7b937adc1236acd5308dbf094877 data/eln/advancement/recipes/misc/industrial_yard_area_light.json
+84588c0c40876fd86d89050792e6bf2036a73371 data/eln/advancement/recipes/misc/inert_canister.json
 23e7e1a3c03fa30b6de61225a6f5a79bb8c48b5e data/eln/advancement/recipes/misc/iron_cable.json
 9189bb3d24157f8df62700156499c111cff7a6a8 data/eln/advancement/recipes/misc/iron_clutch_plate.json
 36911902b55011201994746f5173dbebfd92709b data/eln/advancement/recipes/misc/iron_roller_wheel.json
@@ -1009,6 +1011,7 @@ bd83f8e28296e360fafeb22cf8cab8536161a42c data/eln/recipe/blasting_raw_tungsten_2
 3c166935c8255e2ffd6ff35814af5337ef1319d8 data/eln/recipe/cable_kit_mv.json
 042c6fe82ea9fa21cea9bdd38626fafae2834a6c data/eln/recipe/cable_kit_vhv.json
 4e169526da718ddfa02e133644f372f5851a389e data/eln/recipe/candle_arm_foyer_chandelier.json
+9a4a5d0ec2278da41e450c69e02bb4765189397f data/eln/recipe/canister_of_water.json
 af3158d57d5adb8ba826254613d5e0c27f6055d6 data/eln/recipe/capacitor_bank.json
 50b17ae4822cc8fe7f74e6b92a4e7bbc84ab9af8 data/eln/recipe/capacitor_cell.json
 2654bb694e4ec304ddc307586afb15f0bfdbe5d4 data/eln/recipe/capacity_oriented_battery.json
@@ -1174,6 +1177,7 @@ b5f61d810c68631193bf099a67a5b6d0c2834d4b data/eln/recipe/halloween_ghost_string_
 7477e2b0fcc3a058e82c51f76fcf597019a42361 data/eln/recipe/industrial_resin_collector.json
 203c0207cebfd39025e7abb518675baeec996377 data/eln/recipe/industrial_wall_pack_light.json
 b9c14ea4923bf1b6a5c7a0634144213bad0ba188 data/eln/recipe/industrial_yard_area_light.json
+33b69d46a4d2bb405d888336f1df7f571da5f4f4 data/eln/recipe/inert_canister.json
 441236a83e9903671ee085ecd8705c19a822f2ac data/eln/recipe/iron_cable.json
 bbf51e77c7c9b4b39d8064b9befedd998f5a77b8 data/eln/recipe/iron_clutch_plate.json
 ff4c3c82db840e1dfc23de8ff0fe6bcd767ee0a0 data/eln/recipe/iron_roller_wheel.json

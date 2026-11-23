@@ -1205,6 +1205,12 @@ public class Wp12aContent implements ElnContent {
             // source ItemRegistration.kt subId 7: registerOre("ingotSteel")
             mods.eln.misc.OreDictTags.addToOre("ingotSteel", arcMetal);
         }
+        sharedItem.addElement(8 + (id << 6),
+            new GenericItemUsingDamageDescriptor(TR_NAME(Type.NONE, "Inert Canister")));
+        sharedItem.addElement(11 + (id << 6),
+            new GenericItemUsingDamageDescriptor(TR_NAME(Type.NONE, "Canister of Water")));
+        sharedItem.addElement(12 + (id << 6),
+            new GenericItemUsingDamageDescriptor(TR_NAME(Type.NONE, "Canister of Arc Water")));
     }
 
     /** ForkPatch 1.21.1 turbine blades (source ItemRegistration.kt registerTurbineBladeItems(18)): the consumables a

@@ -1278,6 +1278,7 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', findItemStack("Copper Cable"),
             'F', stack(Blocks.FURNACE),
             'I', stack(Items.IRON_INGOT));
+        addShapelessRecipe(findItemStack("Canister of Water"), findItemStack("Inert Canister"), stack(Items.WATER_BUCKET));
     }
 
     public static void recipeSixNodeMisc() {
@@ -1922,6 +1923,9 @@ public final class ElnRecipes extends ElnRecipesBase {
             "dustCoal",
             dictTungstenDust);
 
+        var lapis = findItemStack("Lapis Dust");
+        addShapelessRecipe(findItemStack("Inert Canister"),
+            lapis, lapis, lapis, lapis, findItemStack("Diamond Dust"), lapis, lapis, lapis, lapis);
     }
 
     public static void recipeElectricalMotor() {

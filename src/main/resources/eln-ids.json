@@ -2267,6 +2267,24 @@
   "kind": "shared_item",
   "name": "arc_metal_ingot"
  },
+ "eln:shared_item@4424": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Inert Canister",
+  "kind": "shared_item",
+  "name": "inert_canister"
+ },
+ "eln:shared_item@4427": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Canister of Water",
+  "kind": "shared_item",
+  "name": "canister_of_water"
+ },
+ "eln:shared_item@4428": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Canister of Arc Water",
+  "kind": "shared_item",
+  "name": "canister_of_arc_water"
+ },
  "eln:shared_item@579": {
   "descriptor": "GenericItemUsingDamageDescriptorWithComment",
   "display": "Lapis Dust",

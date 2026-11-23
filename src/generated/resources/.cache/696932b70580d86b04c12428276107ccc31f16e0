@@ -1,4 +1,4 @@
-// 26.3	2026-11-23T14:15:57.447153193	eln-global/EA models
+// 26.3	2026-11-23T18:58:20.457549858	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_utility_pole.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_service_weatherhead.json
@@ -515,6 +515,8 @@ ee011fe699481f3e2f4f72b8ef1dce937f3dff6d assets/eln/items/black_brush.json
 79b870e1f7fbe75896ae51704698975ea8bca766 assets/eln/items/cable_kit_thermal.json
 8a4e1e22bad335e63ea8671fc091833082a69edf assets/eln/items/cable_kit_vhv.json
 826422f3d19131aa232909fc36fbebf6d81f1bea assets/eln/items/candle_arm_foyer_chandelier.json
+4ab9980703b870474dfc1934a2d6cd99c7d4ce27 assets/eln/items/canister_of_arc_water.json
+24716907e249c3f9caf5a2c32cdc201e248b157e assets/eln/items/canister_of_water.json
 26f935fcd5d24d65bcd332e8a9e8eecbecc9f049 assets/eln/items/capacitor_bank.json
 1b0fda30d7df88dad46da130272273a8d88d9be8 assets/eln/items/capacitor_cell.json
 416d58aaae7250af7c091abfb63554244ca09aa6 assets/eln/items/capacity_oriented_battery.json
@@ -845,6 +847,7 @@ fd0aa72d3eb5d1bf7b04f632242dd9119a2253ff assets/eln/items/industrial_data_logger
 d491dc4e5a279feb5baedfd1b5fa810f990db605 assets/eln/items/industrial_resin_collector.json
 80de89cfacc95afb830cecddd2e6cd263d51e27b assets/eln/items/industrial_wall_pack_light.json
 1a1cfd6cdd2d4024f68f8ef6da305d7308f2a3d1 assets/eln/items/industrial_yard_area_light.json
+6d9a19fbd7fd4469e3e5c22f30994abbb8acffaf assets/eln/items/inert_canister.json
 3524eb28ec02f59cfb5d5a686a6ded00e7572c6f assets/eln/items/iron_cable.json
 0853f912aebf5ec66ffce51706a5cad36cb3231c assets/eln/items/iron_clutch_plate.json
 8a896c86af04321b4a515bb68f6d530e12b03df5 assets/eln/items/iron_dust.json
@@ -1589,6 +1592,8 @@ fd4526b81d5d19c6111fb9ee420bc4e7c645ddbf assets/eln/models/item/cable_kit_signal
 56d88a337caf4d4b80b1b429e38e515ea613ee3c assets/eln/models/item/cable_kit_vhv.json
 f179eca91857219e5281920169c6cdc2f26cf001 assets/eln/models/item/candle_arm_foyer_chandelier.json
 e23040acb89c9976f1782a239d96608e2516162d assets/eln/models/item/candle_arm_foyer_chandelier_3d.json
+a8bbf3223a2cad699f47ae33ff03155df8f718fc assets/eln/models/item/canister_of_arc_water.json
+ea1b049902dd6509d36b767422451b9b97c9169f assets/eln/models/item/canister_of_water.json
 dc755ad6fcb99f65397dddcfa3331bfd1517ee2c assets/eln/models/item/capacitor_bank.json
 433d1762b9fdcfbfa4f67dec5f133557e1929b13 assets/eln/models/item/capacitor_bank_3d.json
 decdbe8d8a1c921126077d1ab6667f7c765adea2 assets/eln/models/item/capacitor_cell.json
@@ -2025,6 +2030,7 @@ ff3501024bd4ca83e3170ae701ec0a6bd0f4bb87 assets/eln/models/item/industrial_wall_
 c48cd74bec85ff4cf1e1f52ffdfb458730052a1e assets/eln/models/item/industrial_wall_pack_light_3d.json
 795afd358f218b419aca46a3369be64bbad80277 assets/eln/models/item/industrial_yard_area_light.json
 d9e6d4dedd4112d8463a14df4b3e80b8c683a752 assets/eln/models/item/industrial_yard_area_light_3d.json
+28453f632d36fe2c6e970ac2fbd0e72aff87a04c assets/eln/models/item/inert_canister.json
 4a6030e469c1ee94608d5a180e4d50067fca17b6 assets/eln/models/item/iron_cable.json
 a56a345552e20a4a8464f8640ebaf4507e6209d6 assets/eln/models/item/iron_clutch_plate.json
 b5949fe001bb7915d5c219a56ec8a8aa59abd64a assets/eln/models/item/iron_dust.json
