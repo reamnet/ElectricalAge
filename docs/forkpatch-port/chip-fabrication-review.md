@@ -64,3 +64,30 @@ menus, complete publication and all three moving mesh parts. Statistical yield
 checks should use a reproducible physical attempt sequence rather than a flaky
 single random-success expectation. Interactive GPU/JEI and multiplayer remain
 separate validation.
+
+## Nibble Memory Chip acquisition
+
+Source `b7444a7b` registers the chip in `ItemRegistration.kt` as shared
+descriptor 8067 (group 126, sub-ID 3). `BasicComponents.kt` defines a plain
+resource descriptor. Registration adds a named stack and an ore-dictionary
+entry. The item is eligible for the normal creative listing. The source has no
+explicit creative-only designation for it.
+
+The pinned crafting registration, generated recipe and loot data, processing
+tables, and item uses contain no survival producer for the chip. The source
+`FabricatorOperation` list has 15 explicit outputs, including Transistor and
+8 Bit ALU, with no nibble-memory operation. The chip is also absent from the
+port's Fabricator operations. No existing operation was found that would become
+available by registering an omitted recipe or display page.
+
+The accessible history traces the chip to `31fb112f`, which added its descriptor,
+shared-item registration, and ore-dictionary entry. Later registration moves
+retain those declarations. The data-generation history at `e3657966` adds its
+item model without a matching recipe or loot entry. The ore registration and
+catalog listing are evidence of item identity, with no evidence of intended
+manufacturing inputs, energy, output yield, or drops.
+
+Treat this as unfinished ForkPatch survival functionality pending an original
+design or producer. Preserve `eln:shared_item@8067` and
+`eln:nibble_memory_chip`. Keep the reachability diagnostic visible until a
+survival route can be backed by evidence and tested.
