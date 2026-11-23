@@ -66,8 +66,17 @@ object ForkPatchWireCases {
             c.check("wire: actual native placement consumes one metre, not the spool",e!=null && stack.count==1 && d.getRemainingLengthMeters(stack)==16.75,"remaining=${d.getRemainingLengthMeters(stack)}")
             if(e!=null) {
                 c.check("wire: native HUD formatter receives fixed-reference Tc",e.waila[mods.eln.i18n.I18N.tr("Temperature")]==Utils.plotCelsius("",e.thermalLoad.Tc),"")
-                val scrap=e.dropItemStack;val t=ItemNbt.get(scrap)!!
-                c.check("wire: mining yields one metre of metal rather than a new full spool",scrap.item===UtilityCables.scraps.parentItem && t.getDoubleOr("wireScrapMeters",0.0)==1.0 && kotlin.math.abs(t.getDoubleOr("wireScrapMassKg",0.0)-WirePhysics.massKg(d.material,d.conductorAreaMm2,1.0))<1e-12,"")
+                val area = net.minecraft.world.phys.AABB(at).inflate(1.0)
+                val oldDrops = c.level().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity::class.java, area).toSet()
+                val removed = node.deleteSubBlock(p, Direction.YN)
+                val drops = c.level().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity::class.java, area).filterNot { it in oldDrops }
+                val scrap = drops.singleOrNull()?.item ?: ItemStack.EMPTY
+                val tag = ItemNbt.get(scrap)
+                c.check("wire: survival removal drops paid metal rather than a new spool",
+                    removed && scrap.item===UtilityCables.scraps.parentItem && scrap.count==1 &&
+                        tag?.getDoubleOr("wireScrapMeters",0.0)==1.0 &&
+                        kotlin.math.abs(tag.getDoubleOr("wireScrapMassKg",0.0)-WirePhysics.massKg(d.material,d.conductorAreaMm2,1.0))<1e-12,
+                    "removed=$removed, drops=${drops.map { it.item }}")
             }
         }
     }

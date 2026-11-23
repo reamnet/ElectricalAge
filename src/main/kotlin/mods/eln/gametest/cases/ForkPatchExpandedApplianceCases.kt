@@ -54,6 +54,23 @@ object ForkPatchExpandedApplianceCases {
         override fun measure(c:TestContext){try{
             if(!type.refrigerator)c.check("kitchen paid production: real electrical work yields food",!e.inventory.getItem(2).isEmpty&&e.inventory.getItem(0).isEmpty,"$type ${e.status},${e.work.joules},${e.load.u}")
             else c.check("refrigerator: powered storage cools physically and preserves inventory",e.temperature<20.0&&e.inventory.containerSize==type.slotCount&&e.inventory.getItem(0).`is`(Items.WATER_BUCKET),"${e.temperature}")
+            val expected = when (type) {
+                KitchenType.TOASTER -> KitchenFoods.toast.get()
+                KitchenType.COFFEE -> KitchenFoods.coffee.get()
+                KitchenType.KETTLE -> KitchenFoods.hotWater.get()
+                KitchenType.BLENDER -> KitchenFoods.smoothie.get()
+                KitchenType.RICE -> KitchenFoods.grains.get()
+                else -> null
+            }
+            if (expected != null) {
+                val output = e.inventory.getItem(2)
+                c.check("paid kitchen cycle makes the exact native food",output.`is`(expected) && output.count==1,"$type: $output")
+                if (type in listOf(KitchenType.COFFEE, KitchenType.BLENDER, KitchenType.RICE)) {
+                    val remainder = e.inventory.getItem(1)
+                    val paidWater = if (type==KitchenType.RICE) remainder.`is`(Items.GLASS_BOTTLE) && remainder.count==1 else remainder.isEmpty
+                    c.check("paid kitchen cycle consumes one water bottle and preserves the native remainder",paidWater,"$type: $remainder")
+                }
+            }
             c.check("kitchen electrical: real source supplies the passive load",power.current.isFinite()&&e.load.u>type.volts*.99,"")
             graphics(c,e)
         }finally{Eln.simulator.removeElectricalComponent(power)}}
@@ -120,8 +137,13 @@ object ForkPatchExpandedApplianceCases {
             val tool=ItemStack(Items.IRON_PICKAXE).apply{damageValue=120;set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,net.minecraft.network.chat.Component.literal("My saved tool"))}
             e.inventory.setItem(0,when(kind){MatterMachineKind.WASHER->tool;MatterMachineKind.DRYER->WetEquipment.wash(tool);MatterMachineKind.FUSION->ItemStack(Items.COBBLESTONE)})
             e.inventoryChange(e.inventory)
-            if(kind==MatterMachineKind.WASHER)e.water.tank.fill(net.neoforged.neoforge.fluids.FluidStack(net.minecraft.world.level.material.Fluids.WATER,1000),true)
-            e.work.load(e.requiredJoules-1000.0,e.requiredJoules)
+            val paidProgress = e.requiredJoules-1000.0
+            e.work.load(paidProgress,e.requiredJoules)
+            if (kind==MatterMachineKind.WASHER) c.after(20) {
+                c.check("powered washer without water produces no wet equipment or additional work",
+                    e.inventory.getItem(1).isEmpty && e.work.joules==paidProgress,"${e.status}: ${e.work.joules}")
+                e.water.tank.fill(net.neoforged.neoforge.fluids.FluidStack(net.minecraft.world.level.material.Fluids.WATER,1000),true)
+            }
             c.check("matter saved progress: credit alone cannot complete an unpaid cycle",e.inventory.getItem(1).isEmpty,"")
             source=VoltageSource("finish saved paid cycle",e.supply,null).setU(kind.volts);Eln.simulator.addElectricalComponent(source)
         }
@@ -133,7 +155,10 @@ object ForkPatchExpandedApplianceCases {
                 c.check("laundry cycle: input consumed once",e.inventory.getItem(0).isEmpty,"")
                 val tool=if(kind==MatterMachineKind.WASHER)WetEquipment.unpack(output)else output
                 c.check("laundry cycle: repaired tool retains its actual name",tool.`is`(Items.IRON_PICKAXE)&&tool.damageValue==0&&tool.hoverName.string=="My saved tool","")
-                if(kind==MatterMachineKind.WASHER)c.check("washer cycle: exactly one litre spent",e.water.tank.fluidAmount==0&&!e.waterReserved,"")
+                if(kind==MatterMachineKind.WASHER) {
+                    c.check("paid washer cycle yields one registered wet-equipment carrier",output.`is`(WetEquipment.item.get()) && output.count==1,"$output")
+                    c.check("washer cycle: exactly one litre spent",e.water.tank.fluidAmount==0&&!e.waterReserved,"")
+                }
             }
         }finally{Eln.simulator.removeElectricalComponent(source)}}
     }

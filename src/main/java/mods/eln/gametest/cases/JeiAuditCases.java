@@ -5,11 +5,25 @@ import mods.eln.gametest.TestCase;
 import mods.eln.transparentnode.industrial.IndustrialKind;
 import mods.eln.transparentnode.industrial.WelderInventory;
 import mods.eln.gametest.TestContext;
+import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
+import mods.eln.sixnode.electricalcable.UtilityCableDescriptor;
+import mods.eln.sixnode.electricalcable.UtilityCables;
+import mods.eln.transparentnode.kitchen.KitchenRecipe;
+import mods.eln.transparentnode.kitchen.KitchenType;
+import mods.eln.transparentnode.laundry.MatterMachineKind;
+import mods.eln.transparentnode.laundry.WetEquipment;
+import mods.eln.utility.CutoutFuse;
+import mods.eln.utility.DistributionKind;
+import mods.eln.utility.PoleHardware;
 import mods.eln.misc.RecipesList;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -27,11 +41,8 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * JEI coverage (Baughn 2026-11-06): every EA item can be made by clicking its recipe in JEI, then its ingredients'
- * recipes, down to vanilla. The test collects what JEI shows (crafting and furnace recipes from their display(),
- * the machines' recipe lists with the machine as a requirement, and the plugin's own pages from JeiPages), then grows
- * the set of obtainable items from vanilla until it stops: an EA item JEI lists that is left out has no page, or only
- * pages needing itself. Each one is named in the log.
+ * Survival acquisition for JEI-listed items. The audit grows the set obtainable from vanilla through recipe displays,
+ * machine recipe lists, plugin pages and native processing or recovery. Each missing item is named in the log.
  */
 public final class JeiAuditCases {
     private JeiAuditCases() {
@@ -177,6 +188,7 @@ public final class JeiAuditCases {
         Set<Item> frameMaterial = one(new ItemStack(WelderInventory.frameMaterial()));
         ways.add(new Way("electric welding station", List.of(one(Eln.findItemStack(IndustrialKind.WELDER.getTitle(), 1)),
             frameMaterial, frameMaterial), one(WelderInventory.frameOutput())));
+        addNativeAcquisition(ways, ctx.level());
         // the machines' lists, needing a machine that makes them
         for (var e : mods.eln.compat.JeiPages.MACHINES.entrySet()) {
             RecipesList list = e.getValue().get();
@@ -219,6 +231,49 @@ public final class JeiAuditCases {
             ways.add(new Way(i.key(), List.of(), out));
         }
         return ways;
+    }
+
+    private static void addNativeAcquisition(List<Way> ways, ServerLevel level) {
+        ItemStack water = PotionContents.createItemStack(Items.POTION, Potions.WATER);
+        addKitchen(ways, level, KitchenType.TOASTER, new ItemStack(Items.BREAD), ItemStack.EMPTY);
+        addKitchen(ways, level, KitchenType.COFFEE, new ItemStack(Items.COCOA_BEANS), water);
+        addKitchen(ways, level, KitchenType.KETTLE, water, ItemStack.EMPTY);
+        for (Item fruit : List.of(Items.APPLE, Items.MELON_SLICE, Items.SWEET_BERRIES))
+            addKitchen(ways, level, KitchenType.BLENDER, new ItemStack(fruit), water);
+        addKitchen(ways, level, KitchenType.RICE, new ItemStack(Items.WHEAT), water);
+
+        // One bucket represents the litre delivered to the washer's fluid input. The tool must first be damaged in use.
+        var tool = new ItemStack(Items.IRON_PICKAXE);
+        tool.setDamageValue(1);
+        if (WetEquipment.INSTANCE.washable(tool))
+            ways.add(new Way("powered wash (damaged tool and 1 L of piped water)",
+                List.of(one(Eln.findItemStack(MatterMachineKind.WASHER.getTitle(), 1)), one(tool), Set.of(Items.WATER_BUCKET)),
+                one(WetEquipment.INSTANCE.wash(tool))));
+
+        var cartridge = Eln.findItemStack(PoleHardware.INSTANCE.getFuseNames().get(0), 1);
+        var cutout = new CutoutFuse();
+        cutout.removeCartridge();
+        if (cutout.insertCartridge(cartridge) && cutout.step(0.25, 2.0, 1.0, false))
+            ways.add(new Way("recover overloaded cutout cartridge",
+                List.of(one(Eln.findItemStack(DistributionKind.CUTOUT_SINGLE.getTitle(), 1)), one(cartridge)),
+                one(cutout.removeCartridge())));
+
+        // A survival spool places a metre. Removing that actual cable part returns scrap of the same metal and mass.
+        var spool = Eln.findItemStack("Copper 12 AWG Cable 600V", 1);
+        if (GenericItemBlockUsingDamageDescriptor.getDescriptor(spool) instanceof UtilityCableDescriptor cable)
+            ways.add(new Way("remove a placed metre of utility cable", List.of(one(spool)),
+                one(UtilityCables.INSTANCE.scrap(cable, 1.0))));
+    }
+
+    private static void addKitchen(List<Way> ways, ServerLevel level, KitchenType type, ItemStack input, ItemStack water) {
+        var inventory = new SimpleContainer(3);
+        inventory.setItem(0, input);
+        inventory.setItem(1, water);
+        var recipe = KitchenRecipe.Companion.find(level, type, inventory);
+        if (recipe == null || !recipe.canFit(inventory)) return;
+        List<Set<Item>> requirements = new ArrayList<>(List.of(one(Eln.findItemStack(type.getTitle(), 1)), one(input)));
+        if (recipe.getWater()) requirements.add(one(water));
+        ways.add(new Way("powered " + type.getTitle(), requirements, one(recipe.getOutput())));
     }
 
     static void addCrafting(List<Way> ways, String src, net.minecraft.world.item.crafting.Recipe<?> r, net.minecraft.util.context.ContextMap c) {

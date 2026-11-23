@@ -109,7 +109,12 @@ object ForkPatchDistributionCases {
         override fun measure(c: TestContext) {
             clean();c.check("distribution: measured primary current blows the installed cartridge",e.unit.fuses[0].blown && !e.unit.contacts[0].closed,"")
             val p=e.node.coordonate.pos();Reload.node(c.level(),p);e=GridLink.getElementFromCoordinate(Coordonate(p,c.level())) as DistributionPoleElement
-            c.check("distribution: native reload keeps blown protection and cartridge",e.unit.fuses[0].blown && PoleHardware.fuse(e.unit.fuses[0].removeCartridge())?.spent==true,"")
+            val fuse = e.unit.fuses[0]
+            c.check("distribution: native reload keeps blown protection and cartridge",fuse.blown && fuse.hasCartridge,"")
+            val recovery = fuse.removeCartridge()
+            c.check("recovery yields exactly one registered blown pole fuse and spends the slot",
+                recovery.`is`(Eln.findItemStack(PoleHardware.spentName,1).item) && recovery.count==1 &&
+                    PoleHardware.fuse(recovery)?.spent==true && fuse.removeCartridge().isEmpty,"$recovery")
         }
     }
     private class SavedControls: Base() {
