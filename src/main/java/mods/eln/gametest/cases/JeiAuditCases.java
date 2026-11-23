@@ -1,11 +1,17 @@
 package mods.eln.gametest.cases;
 
+import mods.eln.Eln;
 import mods.eln.gametest.TestCase;
+import mods.eln.transparentnode.industrial.IndustrialKind;
+import mods.eln.transparentnode.industrial.WelderInventory;
 import mods.eln.gametest.TestContext;
 import mods.eln.misc.RecipesList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.display.FurnaceRecipeDisplay;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
@@ -36,6 +42,23 @@ public final class JeiAuditCases {
     }
 
     public static void addTo(List<TestCase> cases) {
+        cases.add(new TestCase() {
+            public String id() { return "forkpatch_dust_and_ntc_acquisition"; }
+            public void build(TestContext ctx) {}
+
+            public void measure(TestContext ctx) {
+                checkDust(ctx, Items.DYE.blue(), "Lapis Dust");
+                checkDust(ctx, Items.DIAMOND, "Diamond Dust");
+
+                ItemStack copper = Eln.findItemStack("Copper Cable", 1);
+                var grid = CraftingInput.of(3, 1, List.of(copper, Eln.findItemStack("Silicon Dust", 1), copper.copy()));
+                ItemStack output = ctx.level().recipeAccess().getRecipeFor(RecipeType.CRAFTING, grid, ctx.level())
+                    .map(holder -> holder.value().assemble(grid)).orElse(ItemStack.EMPTY);
+                ctx.check("source copper-silicon-copper recipe makes one NTC thermistor",
+                    output.is(Eln.findItemStack("NTC Thermistor", 1).getItem()) && output.getCount() == 1, output.toString());
+            }
+        });
+
         cases.add(new TestCase() {
             public String id() {
                 return "jei_every_item_reachable";
@@ -93,6 +116,14 @@ public final class JeiAuditCases {
         });
     }
 
+    private static void checkDust(TestContext ctx, Item input, String output) {
+        var recipe = Eln.maceratorRecipes.getRecipe(new ItemStack(input));
+        ctx.check("source macerator recipe produces one " + output + " for 8 kJ",
+            recipe != null && recipe.energy == 8000 && recipe.output.length == 1
+                && recipe.output[0].is(Eln.findItemStack(output, 1).getItem()) && recipe.output[0].getCount() == 1,
+            input.toString());
+    }
+
     static boolean isEln(Item i) {
         return BuiltInRegistries.ITEM.getKey(i).getNamespace().equals("eln");
     }
@@ -143,6 +174,9 @@ public final class JeiAuditCases {
             for (ItemStack input : example.getInputs()) slots.add(one(input));
             ways.add(new Way("chip fabrication", slots, one(example.getOutput())));
         }
+        Set<Item> frameMaterial = one(new ItemStack(WelderInventory.frameMaterial()));
+        ways.add(new Way("electric welding station", List.of(one(Eln.findItemStack(IndustrialKind.WELDER.getTitle(), 1)),
+            frameMaterial, frameMaterial), one(WelderInventory.frameOutput())));
         // the machines' lists, needing a machine that makes them
         for (var e : mods.eln.compat.JeiPages.MACHINES.entrySet()) {
             RecipesList list = e.getValue().get();

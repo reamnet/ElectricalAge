@@ -642,6 +642,9 @@ public final class ElnRecipes extends ElnRecipesBase {
             'c', findItemStack("Copper Coil"),
             'P', "plateCopper");
 
+        addRecipe(findItemStack("NTC Thermistor"), "CSC",
+            'C', findItemStack("Copper Cable"), 'S', "dustSilicon");
+
         addRecipe(findItemStack("Large Rheostat"),
             "   ",
             " D ",

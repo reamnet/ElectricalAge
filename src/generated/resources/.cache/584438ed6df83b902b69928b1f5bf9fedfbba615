@@ -1,4 +1,4 @@
-// 26.3	2026-11-23T12:44:55.076212177	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-23T12:57:34.926565429	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -492,6 +492,7 @@ a6ef80c26ea8732834a5244d79489b7a32f4b32b data/eln/advancement/recipes/misc/mushr
 524e2572a2e04111a2fe6e7a0a00597ea57df809 data/eln/advancement/recipes/misc/nor_chip.json
 60f7653e990ddf5ef318af08bffede7dbd037c18 data/eln/advancement/recipes/misc/north_american_meter_base.json
 703ffb6ea8945986ce700e548603b5ef5b1ef339 data/eln/advancement/recipes/misc/not_chip.json
+5ea25d5ac01de0e5e696dfe133708e02884222c6 data/eln/advancement/recipes/misc/ntc_thermistor.json
 b4326dd5965cc5affa39c7894205a3d6ff268395 data/eln/advancement/recipes/misc/nuclear_alarm.json
 d79ed2482bcbdabc3cfefe1b8b0c629cdff13f53 data/eln/advancement/recipes/misc/off_grid_inverter_charger.json
 3fe1d4d8fc2a960e34590d4a0a95994fd795ebbc data/eln/advancement/recipes/misc/offset_twin_arm_parking_lot_light.json
@@ -1254,6 +1255,7 @@ e06587985edd1380efd484f8218cfeaeadf787e3 data/eln/recipe/nautical_pier_bollard_l
 2d6aaedb23ad30856db9e2788c70b180151f0b34 data/eln/recipe/nor_chip.json
 815b2cd0e94f0742f3b0a7594681f765611cd19f data/eln/recipe/north_american_meter_base.json
 11cc97c623a3b67aaf6e7d785ffedf176c92c6f7 data/eln/recipe/not_chip.json
+a26a2336dce1befd3203b72e3e3928554a641123 data/eln/recipe/ntc_thermistor.json
 6a8443ff46feb21355c0ec89ee3589657f29157b data/eln/recipe/nuclear_alarm.json
 5dc6735ee65d54a1cb8b7c49c655fbb73928986a data/eln/recipe/off_grid_inverter_charger.json
 2560b277b8bbf8af49cc47dada06a446bf45c0c8 data/eln/recipe/offset_twin_arm_parking_lot_light.json

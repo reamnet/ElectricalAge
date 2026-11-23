@@ -126,6 +126,9 @@ public final class ElnMachineRecipes {
             new ItemStack[]{findItemStack("Coal Dust", 2)}, 1.0 * f));
         add(maceratorRecipes, new Recipe(new ItemStack(Items.CHARCOAL),
             new ItemStack[]{findItemStack("Coal Dust", 2)}, 1.0 * f));
+        // ForkPatch's macerator uses legacy blue dye (dye metadata 4) and diamond at 8 kJ each.
+        add(maceratorRecipes, new Recipe(new ItemStack(Items.DYE.blue()), findItemStack("Lapis Dust", 1), 2.0 * f));
+        add(maceratorRecipes, new Recipe(new ItemStack(Items.DIAMOND), findItemStack("Diamond Dust", 1), 2.0 * f));
         add(maceratorRecipes, new Recipe(new ItemStack(Blocks.SAND, 1),
             new ItemStack[]{findItemStack("Silicon Dust", 1)}, 3.0 * f));
         add(maceratorRecipes, new Recipe(findItemStack("Cinnabar Ore"),

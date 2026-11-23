@@ -10,7 +10,10 @@ import kotlin.math.max
 class WelderInventory(owner:TransparentNodeElement?):TransparentNodeElementInventory(3,64,owner),WeldJob {
     private var template=ItemStack.EMPTY
     companion object {
-        fun workpiece(s:ItemStack)=!s.isEmpty && (s.`is`(Items.IRON_INGOT) || s.isDamageableItem)
+        @JvmStatic fun frameMaterial(): Item = Items.IRON_INGOT
+        @JvmStatic fun frameOutput(): ItemStack = Eln.findItemStack(WorkshopParts.FRAME, 1)
+
+        fun workpiece(s:ItemStack)=!s.isEmpty && (s.`is`(frameMaterial()) || s.isDamageableItem)
     }
     override val identity:Any? get() {
         val current=getItem(0)
@@ -19,13 +22,13 @@ class WelderInventory(owner:TransparentNodeElement?):TransparentNodeElementInven
     }
     override fun ready():Boolean {
         val input=getItem(0)
-        return getItem(2).isEmpty && getItem(1).`is`(Items.IRON_INGOT) && !input.isEmpty &&
-            (input.`is`(Items.IRON_INGOT) || input.isDamageableItem && input.isDamaged)
+        return getItem(2).isEmpty && getItem(1).`is`(frameMaterial()) && !input.isEmpty &&
+            (input.`is`(frameMaterial()) || input.isDamageableItem && input.isDamaged)
     }
     override fun complete():Boolean {
         if(!ready() || !ItemStack.isSameItemSameComponents(getItem(0),template))return false
         val input=getItem(0)
-        val result=if(input.`is`(Items.IRON_INGOT))Eln.findItemStack(WorkshopParts.FRAME,1)
+        val result=if(input.`is`(frameMaterial()))frameOutput()
             else input.copyWithCount(1).also { it.damageValue=max(0,it.damageValue-max(1,it.maxDamage/4)) }
         if(result.isEmpty)return false
         input.shrink(1);getItem(1).shrink(1);setItem(2,result);template=ItemStack.EMPTY;markDirty();return true
@@ -38,7 +41,7 @@ class WelderInventory(owner:TransparentNodeElement?):TransparentNodeElementInven
     }
     override fun getAccessibleSlotsFromSide(side:Int)=intArrayOf(0,1,2)
     override fun canInsertItem(slot:Int,stack:ItemStack?,side:Int)=stack!=null && when(slot) {
-        0->workpiece(stack);1->stack.`is`(Items.IRON_INGOT);else->false
+        0->workpiece(stack);1->stack.`is`(frameMaterial());else->false
     }
     override fun canExtractItem(slot:Int,stack:ItemStack?,side:Int)=slot==2
 }
