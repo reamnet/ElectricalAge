@@ -2567,6 +2567,12 @@
   "kind": "shared_item_stack_one",
   "name": "ups_industrial_battery_module"
  },
+ "eln:transparent_node@2176": {
+  "descriptor": "OldArcFurnaceDescriptor",
+  "display": "Old 480V Arc Furnace",
+  "kind": "transparent_node",
+  "name": "old_480v_arc_furnace"
+ },
  "eln:six_node@2176": {
   "descriptor": "MoltenMetalPileDescriptor",
   "display": "Copper Molten Metal Pile",

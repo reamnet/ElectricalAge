@@ -10,11 +10,13 @@ import mods.eln.misc.Recipe;
 import mods.eln.node.transparent.TransparentNode;
 import mods.eln.sim.ElectricalStackMachineProcess;
 import mods.eln.sim.IProcess;
+import mods.eln.sim.mna.component.VoltageSource;
 import mods.eln.sixnode.electricalsource.ElectricalSourceElement;
 import mods.eln.transparentnode.electricalmachine.CompressorDescriptor;
 import mods.eln.transparentnode.electricalmachine.ElectricalMachineDescriptor;
 import mods.eln.transparentnode.electricalmachine.ElectricalMachineElement;
 import mods.eln.transparentnode.electricalmachine.MagnetizerDescriptor;
+import mods.eln.transparentnode.electricalmachine.OldArcFurnaceDescriptor;
 import mods.eln.transparentnode.electricalmachine.PlateMachineDescriptor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +47,133 @@ public final class MachineApiCases {
         cases.add(new OldSaveCase());
         cases.add(new BurnCase());
         cases.add(new SpecsVerifyCase());
+        cases.add(new ArcFurnaceCase(true));
+        cases.add(new ArcFurnaceCase(false));
+        cases.add(new ArcFurnaceProtectionCase());
+    }
+
+    private static ElectricalMachineElement placeArcFurnace(TestContext ctx, Wp10aCases.Layout layout) {
+        return (ElectricalMachineElement) layout.device(OldArcFurnaceDescriptor.ID, 2, 1);
+    }
+
+    // A stiff 480 V fixture isolates furnace work and protection from the test lead's thermal limits.
+    private static VoltageSource feedArcFurnace(ElectricalMachineElement machine, double volts) {
+        var source = new VoltageSource("arc furnace test supply", machine.machine.powerLoad(), null).setU(volts);
+        Eln.simulator.addElectricalComponent(source);
+        return source;
+    }
+
+    private static void disconnectArcFurnace(VoltageSource source) {
+        Eln.simulator.removeElectricalComponent(source);
+        source.breakConnection();
+    }
+
+    private static final class ArcFurnaceCase implements TestCase {
+        private final boolean clay;
+        private ElectricalMachineElement machine;
+        private VoltageSource source;
+        private double beforeReload;
+        private double afterReload;
+        private double runningWatts;
+
+        ArcFurnaceCase(boolean clay) {
+            this.clay = clay;
+        }
+
+        public String id() {
+            return clay ? "old_arc_furnace_clay_paid_reload" : "old_arc_furnace_metal_blocked_output";
+        }
+
+        public int width() { return 6; }
+        public int ticks() { return clay ? 925 : 580; }
+
+        public void build(TestContext ctx) {
+            var layout = new Wp10aCases.Layout(ctx, width());
+            machine = placeArcFurnace(ctx, layout);
+            source = feedArcFurnace(machine, 480);
+            var inventory = machine.getInventory();
+            inventory.setItem(machine.inSlotId, clay ? new ItemStack(Items.CLAY_BALL, 3) : new ItemStack(Items.IRON_INGOT));
+            if (!clay) {
+                for (int i = 0; i < ((ElectricalMachineDescriptor) machine.getDescriptor()).outStackCount; i++)
+                    inventory.setItem(machine.outSlotId + i, new ItemStack(Items.COBBLESTONE, 64));
+            }
+            inventory.setChanged();
+            ctx.after(160, () -> {
+                if (clay) {
+                    double progress = process(machine).progressJoules();
+                    runningWatts = machine.machine.watts();
+                    beforeReload = machine.machine.joulesTaken();
+                    ctx.check("clay cycle has charged only partial work before saving",
+                        progress > 0 && progress < 400_000 && Math.abs(progress - beforeReload) < 1, "" + progress);
+                    disconnectArcFurnace(source);
+                    try {
+                        Reload.node(ctx.level(), ctx.at(2, 1, 1));
+                    } catch (ReflectiveOperationException e) {
+                        throw new RuntimeException(e);
+                    }
+                    machine = element(ctx, ctx.at(2, 1, 1));
+                    afterReload = machine.machine.joulesTaken();
+                    source = feedArcFurnace(machine, 480);
+                    ctx.check("furnace save restores paid work and its input",
+                        process(machine).progressJoules() == progress
+                            && machine.getInventory().getItem(machine.inSlotId).getCount() == 3,
+                        "" + process(machine).progressJoules());
+                } else {
+                    ctx.check("full outputs block work and leave the iron untouched",
+                        process(machine).progressJoules() == 0 && machine.machine.joulesTaken() == 0
+                            && inventory.getItem(machine.inSlotId).getCount() == 1,
+                        "" + machine.machine.joulesTaken());
+                    inventory.setItem(machine.outSlotId, ItemStack.EMPTY);
+                    inventory.setChanged();
+                }
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            disconnectArcFurnace(source);
+            var inventory = machine.getInventory();
+            var expected = Eln.findItemStack(clay ? "Arc Clay Ingot" : "Arc Metal Ingot", 1);
+            var output = inventory.getItem(machine.outSlotId);
+            ctx.check("one finished ingot consumes exactly its original input",
+                output.is(expected.getItem()) && output.getCount() == 1
+                    && inventory.getItem(machine.inSlotId).getCount() == (clay ? 1 : 0), output.toString());
+            double paid = beforeReload + machine.machine.joulesTaken() - afterReload;
+            double cost = clay ? 400_000 : 200_000;
+            ctx.check("one operation pays its complete energy cost within one simulator tick",
+                paid >= cost - 0.01 && paid <= cost + machine.machine.ratedJoulesPerTick() + 0.01, paid + " J");
+            if (clay) ctx.check("480 V furnace operates at 10 kW", Math.abs(runningWatts - 10_000) < 100, runningWatts + " W");
+        }
+    }
+
+    private static final class ArcFurnaceProtectionCase implements TestCase {
+        private ElectricalMachineElement machine;
+        private VoltageSource source;
+
+        public String id() { return "old_arc_furnace_voltage_protection"; }
+        public int width() { return 6; }
+        public int ticks() { return 120; }
+
+        public void build(TestContext ctx) {
+            var layout = new Wp10aCases.Layout(ctx, width());
+            machine = placeArcFurnace(ctx, layout);
+            source = feedArcFurnace(machine, 610);
+            machine.getInventory().setItem(machine.inSlotId, new ItemStack(Items.IRON_INGOT));
+            machine.getInventory().setChanged();
+            ctx.after(60, () -> {
+                ctx.check("above the unused 600 V constructor argument, below the 624 V watchdog",
+                    !machine.isBurnt() && machine.machine.volts() > 600 && process(machine).progressJoules() > 0,
+                    machine.machine.volts() + " V");
+                source.setU(650);
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            disconnectArcFurnace(source);
+            ctx.check("voltage above the source watchdog range burns the furnace",
+                machine.isBurnt() && machine.machine.lastTrip()
+                    .map(trip -> trip.state() == MachineState.OVERVOLTAGE_TRIPPED).orElse(false),
+                machine.machine.lastTrip().toString());
+        }
     }
 
     /**

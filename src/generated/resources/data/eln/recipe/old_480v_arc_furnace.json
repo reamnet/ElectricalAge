@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:3x_graphite_rods",
+    "D": "#eln:high_quality_plates/gold",
+    "I": "#c:ingots/alloy",
+    "M": "eln:advanced_machine_block",
+    "c": "eln:synthetic_diamond"
+  },
+  "pattern": [
+    "ICI",
+    "DMD",
+    "IcI"
+  ],
+  "result": {
+    "id": "eln:old_480v_arc_furnace"
+  }
+}

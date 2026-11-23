@@ -46,8 +46,10 @@ public final class ElnMachineRecipes {
 
     /** Server start: refill the four lists. */
     public static void registerAll() {
-        for (RecipesList l : new RecipesList[]{maceratorRecipes, plateMachineRecipes, compressorRecipes, magnetiserRecipes})
+        for (RecipesList l : new RecipesList[]{maceratorRecipes, plateMachineRecipes, compressorRecipes, magnetiserRecipes, arcFurnaceRecipes})
             l.getRecipes().clear();
+        add(arcFurnaceRecipes, new Recipe(new ItemStack(Items.CLAY_BALL, 2), findItemStack("Arc Clay Ingot", 1), 400_000));
+        add(arcFurnaceRecipes, new Recipe(new ItemStack(Items.IRON_INGOT), findItemStack("Arc Metal Ingot", 1), 200_000));
         recipeMacerator();
         recipePlateMachine();
         recipeCompressor();

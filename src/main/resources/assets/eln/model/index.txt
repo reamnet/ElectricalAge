@@ -8,6 +8,7 @@ analogchips/analogchips.obj
 anemometer/anemometer.obj
 appliancewalloutlet/appliancewalloutlet.obj
 arc_runner_coupe/arc_runner_coupe.obj
+arcfurnaceold/arcfurnaceold.obj
 archedwalkwaylight/archedwalkwaylight.obj
 armoredbulkheadlight/armoredbulkheadlight.obj
 articulatedtablelamp/articulatedtablelamp.obj

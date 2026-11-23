@@ -74,6 +74,8 @@ public final class ElnDeviceRegistry {
         registerGround(2);
         registerElectricalSource(3);
         registerElectricalCable(32);
+        transparentNodeItem.addDescriptor(mods.eln.transparentnode.electricalmachine.OldArcFurnaceDescriptor.ID,
+            new mods.eln.transparentnode.electricalmachine.OldArcFurnaceDescriptor());
         mods.eln.sixnode.electricalcable.UtilityCables.register();
         transparentNodeItem.addDescriptor(7875,new mods.eln.utility.GridSourceTransformerDescriptor());
         for(var k:mods.eln.utility.SubstationKind.values())transparentNodeItem.addDescriptor(k.getId(),new mods.eln.utility.SubstationDescriptor(k));

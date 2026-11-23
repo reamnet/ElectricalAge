@@ -33,6 +33,7 @@ public final class JeiPages {
     public static final Map<String, Supplier<RecipesList>> MACHINES = new LinkedHashMap<>();
 
     static {
+        MACHINES.put("old_480v_arc_furnace", () -> Eln.arcFurnaceRecipes);
         MACHINES.put("macerator", () -> Eln.maceratorRecipes);
         MACHINES.put("compressor", () -> Eln.compressorRecipes);
         MACHINES.put("plate_machine", () -> Eln.plateMachineRecipes);

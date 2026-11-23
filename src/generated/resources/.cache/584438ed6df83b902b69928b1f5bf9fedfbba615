@@ -1,4 +1,4 @@
-// 26.3	2026-11-23T12:57:34.926565429	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-23T14:15:57.483001493	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -499,6 +499,7 @@ d79ed2482bcbdabc3cfefe1b8b0c629cdff13f53 data/eln/advancement/recipes/misc/off_g
 a56508702c6143f49053a7abe5f28e5400784aa6 data/eln/advancement/recipes/misc/offshore_caged_wellglass_light.json
 85985aa15cb62d992cd78b1f67563d9e61e4d304 data/eln/advancement/recipes/misc/offshore_platform_floodlight.json
 dae6ce500642766b073284024e363f2741f3320f data/eln/advancement/recipes/misc/offshore_sealed_linear_light.json
+0819ce615e8dc821d80f309fccc58f097e21f301 data/eln/advancement/recipes/misc/old_480v_arc_furnace.json
 64f0418eef262ed30539a691f6af7c5d33ac6d82 data/eln/advancement/recipes/misc/on_off_regulator_10_percent.json
 6361e58a3e43bbc1eb59863240b72c7380b2bf6e data/eln/advancement/recipes/misc/on_off_regulator_1_percent.json
 f5f697a4c2d85094e0eb6a100965165a590bbafa data/eln/advancement/recipes/misc/one_way_boost_buck_vdc_dc_converter.json
@@ -1262,6 +1263,7 @@ a26a2336dce1befd3203b72e3e3928554a641123 data/eln/recipe/ntc_thermistor.json
 67a6eed6cef040aabda1625dbaf9170b8f923b90 data/eln/recipe/offshore_caged_wellglass_light.json
 af5aa18ab60cda4e8430f323e07044a1f257a92b data/eln/recipe/offshore_platform_floodlight.json
 781998505ac52e2e656cc2b42409fccbf8da7b41 data/eln/recipe/offshore_sealed_linear_light.json
+73e2bab7b896fc28a14ed7aaf658039d5fbc3735 data/eln/recipe/old_480v_arc_furnace.json
 5d09df78c6b1742f9347b3725cd4b2b9fa5fb9ee data/eln/recipe/on_off_regulator_10_percent.json
 e1002b490861ef609fd891be5541cbe66a1dee3b data/eln/recipe/on_off_regulator_1_percent.json
 3eeb52fc4a07d49960a2b1251f57b9a38a06c8c1 data/eln/recipe/one_way_boost_buck_vdc_dc_converter.json

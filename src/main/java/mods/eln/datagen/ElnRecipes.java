@@ -37,6 +37,9 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeGround", ElnRecipes::recipeGround);
         run("recipeElectricalSource", ElnRecipes::recipeElectricalSource);
         run("recipeElectricalCable", ElnRecipes::recipeElectricalCable);
+        run("recipeOldArcFurnace", () -> addRecipe(findItemStack("Old 480V Arc Furnace"), "ICI", "DMD", "IcI",
+            'I', "ingotAlloy", 'C', findItemStack("3x Graphite Rods"), 'D', "plateGold",
+            'M', findItemStack("Advanced Machine Block"), 'c', findItemStack("Synthetic Diamond")));
         run("recipeThermalCable", ElnRecipes::recipeThermalCable);
         run("recipeDecorativeLamps", ElnRecipes::recipeDecorativeLamps);
         run("recipeLampSocket", ElnRecipes::recipeLampSocket);

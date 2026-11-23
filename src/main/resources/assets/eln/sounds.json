@@ -1,4 +1,9 @@
 {
+    "arcfurnace_loop": {
+        "sounds": [
+            { "name": "eln:arcfurnace_loop", "stream": false }
+        ]
+    },
     "appliance_industrial_fan": {
         "sounds": [
             {
