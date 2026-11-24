@@ -35,6 +35,7 @@ public final class CableCases {
     static final int CORE = 24;
 
     public static void addTo(List<TestCase> cases) {
+        cases.add(new AwgWorldCase());
         cases.add(new BurnCase());
         cases.add(new RoutedCase());
         cases.add(new JoinedRouteCase());

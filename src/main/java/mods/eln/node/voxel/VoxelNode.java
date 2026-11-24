@@ -58,6 +58,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
 
     /** The cables' conductors and their loads (server). */
     final CableNet cables = new CableNet(this);
+    private final List<AwgCablePart> activeAwg = new ArrayList<>();
 
     @Override
     public String getNodeUuid() {
@@ -75,9 +76,13 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         stamp++;
         used.clear();
         for (VoxelPart p : parts) for (int[] b : p.boxes()) fill(used, b);
-        for (int f = 0; f < 6; f++) if (sideElementList[f] != null || isSideKept(f)) fill(used, plate(f));
-        for (int i = 6; i < SLOTS; i++) if (sideElementList[i] != null) for (int[] b : elementBoxes(i)) fill(used, b);
-        for (int[] b : hostBoxes()) fill(used, b);
+        markFixedVoxels(used);
+    }
+
+    private void markFixedVoxels(BitSet occupied) {
+        for (int f = 0; f < 6; f++) if (sideElementList[f] != null || isSideKept(f)) fill(occupied, plate(f));
+        for (int i = 6; i < SLOTS; i++) if (sideElementList[i] != null) for (int[] b : elementBoxes(i)) fill(occupied, b);
+        for (int[] b : hostBoxes()) fill(occupied, b);
     }
 
     /** The imitated block was mined: it drops, the parts stay (or the block goes if nothing is left). */
@@ -246,6 +251,17 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             for (VoxelPart q : parts) if (!(q instanceof CablePart o && o.touches(c))) for (int[] b : q.boxes()) fill(others, b);
             for (int[] b : c.boxes()) fill(want, b);
             if (want.intersects(others)) return "something is in the way";
+        } else if (p instanceof AwgCablePart awg) {
+            BitSet occupied = new BitSet(4096);
+            markFixedVoxels(occupied);
+            for (VoxelPart other : parts)
+                if (!(other instanceof AwgCablePart arm && awg.joins(arm)))
+                    for (int[] b : other.boxes()) fill(occupied, b);
+            for (int[] b : p.boxes()) {
+                var want = new BitSet(4096);
+                fill(want, b);
+                if (want.intersects(occupied)) return "something is in the way";
+            }
         } else if (!fits(p)) return "something is in the way";
         return null;
     }
@@ -269,9 +285,15 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         if (p instanceof CablePart) CableLinks.forgetPiece(this, p.id);
         if (p instanceof PipePart) pruneJunctions();
         markUsed();
-        if (drop && !partItem(p).isEmpty()) dropItem(partItem(p));
+        if (drop && !(p instanceof AwgCablePart)) dropPart(p);
         changed();
+        if (drop && p instanceof AwgCablePart) dropPart(p);
         return isEmptyNode();
+    }
+
+    private void dropPart(VoxelPart part) {
+        ItemStack stack = part instanceof AwgCablePart awg ? awg.recover() : partItem(part);
+        if (!stack.isEmpty()) dropItem(stack);
     }
 
     /** The item a part was made from (what it drops), or empty: a burst pipe, a burnt cable. */
@@ -501,8 +523,8 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             FluidWorld.changed(this);
             // cables: rebuild the conductors and their links (reconnect keeps their state through the pieces)
             boolean cable = false;
-            for (VoxelPart p : parts) if (p instanceof CablePart) cable = true;
-            if (cable || cablesBuilt) reconnect();
+            for (VoxelPart p : parts) if (p instanceof CablePart || p instanceof AwgCablePart) cable = true;
+            if (cable || cablesBuilt || !activeAwg.isEmpty()) reconnect();
         }
         setNeedPublish(true);
         invalidateCapabilities();   // (an adapter added, removed or its pipe changed: pipes holding a cache look again)
@@ -1542,6 +1564,10 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     public void connectJob() {
         markUsed();   // (an off-centre device's pins follow its front, which a wrench turns)
         connectElements();   // (six-node elements hosted here: their loads and links inside the block)
+        for (VoxelPart part : parts) if (part instanceof AwgCablePart awg) {
+            awg.attach(this);
+            activeAwg.add(awg);
+        }
         ensureIds();
         CableLinks.clearImplied(this);   // (the connections below record them afresh)
         var outer = CableLinks.beginPass();
@@ -1840,7 +1866,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     }
 
     private boolean hasFluid() {
-        for (VoxelPart p : parts) if (!(p instanceof CablePart)) return true;
+        for (VoxelPart p : parts) if (!(p instanceof CablePart || p instanceof AwgCablePart)) return true;
         return false;
     }
 
@@ -2304,6 +2330,8 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         elementLinksE.clear();
         elementLinksT.clear();
         cables.removeFromSimulation();
+        for (AwgCablePart awg : activeAwg) awg.detach(this);
+        activeAwg.clear();
         mods.eln.bus.BusNet.detach(busPorts());
         FluidWorld.remove(this);
     }
@@ -2444,11 +2472,13 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             if (k.thermal != null) m.put(k.thermal, n + ".T");
             if (k.port != null) m.put(k.port, n + ".B");
         }
+        for (AwgCablePart part : activeAwg) part.nameTerminals(coordonate.pos(), m);
         return m;
     }
 
     /** As liveLinks, each with the list it came from: {layer, one end, the other, source} (LinksDiff). */
     public void liveLinksForDiff(java.util.function.Consumer<Object[]> out) {
+        for (AwgCablePart part : activeAwg) part.liveLink((a, b) -> out.accept(new Object[]{'E', a, b, "AWG run"}));
         for (var e : cables.internalE) out.accept(new Object[]{'E', e.a(), e.b(), "internal"});
         for (var t : cables.internalT) out.accept(new Object[]{'T', t.L1, t.L2, "internal"});
         for (var b : cables.internalB) out.accept(new Object[]{'B', b[0], b[1], "internal"});
@@ -2608,7 +2638,8 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     @Override
     public void onBreakBlock() {
         CableLinks.forget(this);
-        for (VoxelPart p : parts) if (!partItem(p).isEmpty()) dropItem(partItem(p));
+        if (!activeAwg.isEmpty()) disconnect();
+        for (VoxelPart p : parts) dropPart(p);
         parts.clear();
         super.onBreakBlock();
         invalidateCapabilities();
@@ -2625,7 +2656,22 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         int m = super.getSideConnectionMask(side, lrdu);   // (an element on that face)
         if (m != 0) return m;
         CableNet.Conductor k = legacy(side, lrdu);
-        return k == null ? 0 : k.mask();
+        if (k != null) return k.mask();
+        return awgLegacy(side, lrdu) == null ? 0 : AwgCablePart.wire().getNodeMask();
+    }
+
+    private ElectricalLoad awgLegacy(Direction side, LRDU lrdu) {
+        if (activeAwg.isEmpty() || side.applyLRDU(lrdu) != Direction.YN) return null;
+        var other = getNeighbor(side);
+        if (other == null || other instanceof VoxelNode) return null;
+        if (other instanceof mods.eln.node.FacePins pins)
+            for (var pin : pins.facePins(side.getInverse()))
+                if (side.getInverse().applyLRDU(pin.lrdu()) == Direction.YN) return null;
+        for (AwgCablePart part : activeAwg) {
+            var terminal = part.terminal(side.toEnumFacing(), 8);
+            if (terminal != null) return terminal;
+        }
+        return null;
     }
 
     @Override
@@ -2639,7 +2685,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
         if (sideElementList[side.applyLRDU(lrdu).getInt()] != null) return super.getElectricalLoad(side, lrdu);
         CableNet.Conductor k = legacy(side, lrdu);
-        return k == null ? null : k.load;
+        return k == null ? awgLegacy(side, lrdu) : k.load;
     }
 
     @Override

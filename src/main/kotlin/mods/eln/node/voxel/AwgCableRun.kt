@@ -53,6 +53,7 @@ class AwgCableRun private constructor(
     val jacketDamaged get() = jacketLost
     val conductorMelted get() = fused
     val currentAmps get() = edge?.current ?: 0.0
+    val voltageDrop get() = edge?.u ?: 0.0
     val faultCurrentAmps get() = fault?.current ?: 0.0
 
     init {

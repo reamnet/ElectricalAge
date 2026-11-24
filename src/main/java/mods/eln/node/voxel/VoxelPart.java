@@ -51,6 +51,7 @@ public abstract class VoxelPart {
             case SafetyValvePart.KIND -> SafetyValvePart.read(t);
             case PipeSensorPart.KIND -> PipeSensorPart.read(t);
             case CablePart.KIND -> CablePart.read(t);
+            case AwgCablePart.KIND -> AwgCablePart.read(t);
             default -> null;
         };
     }
@@ -65,6 +66,7 @@ public abstract class VoxelPart {
             case SafetyValvePart.KIND -> SafetyValvePart.deserialize(in);
             case PipeSensorPart.KIND -> PipeSensorPart.deserialize(in);
             case CablePart.KIND -> CablePart.deserialize(in);
+            case AwgCablePart.KIND -> AwgCablePart.deserialize(in);
             default -> null;
         };
     }
