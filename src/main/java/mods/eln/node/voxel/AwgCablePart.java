@@ -94,6 +94,12 @@ public final class AwgCablePart extends VoxelPart {
         return selected;
     }
 
+    public static void checkRoutingSelection(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post event) {
+        if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player && SELECTIONS.containsKey(player)) {
+            selection(player.level(), player, player.getMainHandItem());
+        }
+    }
+
     private static void tell(Player player, String message) {
         player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(message));
     }
@@ -151,12 +157,13 @@ public final class AwgCablePart extends VoxelPart {
             return "AWG run needs a loaded block and a solid floor";
         }
         var part = new AwgCablePart(x0, z0, x1, z1);
-        return lay(level, List.of(pos), List.of(part), part.geometry.length(), spool, player);
+        return lay(level, List.of(pos), List.of(part), part.geometry.length(), spool, player, -1);
     }
 
     private static boolean canRouteIn(ServerLevel level, BlockPos pos, Player player) {
         if (level.isOutsideBuildHeight(pos) || !level.getWorldBorder().isWithinBounds(pos)
-            || !level.hasChunkAt(pos) || !level.mayInteract(player, pos) || !level.mayInteract(player, pos.below())
+            || !level.hasChunkAt(pos)
+            || (player != null && (!level.mayInteract(player, pos) || !level.mayInteract(player, pos.below())))
             || !level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP)) return false;
         var state = level.getBlockState(pos);
         // Only air and existing voxel nodes can be restored by the normal laying rollback.
@@ -164,6 +171,16 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     private static String route(ServerLevel level, BlockPos start, BlockPos end, ItemStack spool, Player player) {
+        return route(level, start, end, spool, player, -1);
+    }
+
+    /** Force an intermediate write failure through the same accounting and rollback path as player placement. */
+    public static String routeFailingAtForTests(ServerLevel level, BlockPos start, BlockPos end, ItemStack spool, int failAt) {
+        return route(level, start, end, spool, null, failAt);
+    }
+
+    private static String route(ServerLevel level, BlockPos start, BlockPos end, ItemStack spool, Player player, int failAt) {
+        if (start.equals(end)) return "AWG route needs two distinct endpoints";
         long dx = (long) end.getX() - start.getX(), dz = (long) end.getZ() - start.getZ();
         if (start.getY() != end.getY()) return "AWG routing needs endpoints on the same floor level";
         long blocks = Math.abs(dx) + Math.abs(dz) + 1;
@@ -171,28 +188,40 @@ public final class AwgCablePart extends VoxelPart {
         long sx = 16L * start.getX() + 8, ex = 16L * end.getX() + 8;
         long sz = 16L * start.getZ() + 8, ez = 16L * end.getZ() + 8;
         long y = 16L * start.getY(), ox = Long.signum(dx) * 8L, oz = Long.signum(dz) * 8L;
+        int routeVoxels = (int) blocks * 16;
+        RouteLayout layout;
         if (dx == 0 || dz == 0) {
-            return laySteps(level, List.of(floorStep(sx - ox, y, sz - oz),
-                floorStep(ex + ox, y, ez + oz)), (int) blocks * 16, spool, player);
+            layout = plan(level, List.of(floorStep(sx - ox, y, sz - oz),
+                floorStep(ex + ox, y, ez + oz)), routeVoxels, player);
+        } else {
+            layout = plan(level, List.of(floorStep(sx - ox, y, sz), floorStep(ex, y, sz),
+                floorStep(ex, y, ez + oz)), routeVoxels, player);
+            if (layout.error() != null) {
+                layout = plan(level, List.of(floorStep(sx, y, sz - oz), floorStep(sx, y, ez),
+                    floorStep(ex + ox, y, ez)), routeVoxels, player);
+            }
         }
-        var xFirst = List.of(floorStep(sx - ox, y, sz), floorStep(ex, y, sz), floorStep(ex, y, ez + oz));
-        String result = laySteps(level, xFirst, (int) blocks * 16, spool, player);
-        if (result == null) return null;
-        var zFirst = List.of(floorStep(sx, y, sz - oz), floorStep(sx, y, ez), floorStep(ex + ox, y, ez));
-        return laySteps(level, zFirst, (int) blocks * 16, spool, player);
+        if (layout.error() != null) return layout.error();
+        return lay(level, layout.positions(), layout.parts(), routeVoxels, spool, player, failAt);
     }
 
     private static CableRouter.Step floorStep(long x, long y, long z) {
         return new CableRouter.Step(x, y, z, 0, false);
     }
 
-    private static String laySteps(ServerLevel level, List<CableRouter.Step> steps, int routeVoxels, ItemStack spool, Player player) {
+    private record RouteLayout(List<BlockPos> positions, List<AwgCablePart> parts, String error) {
+        static RouteLayout rejected(String error) {
+            return new RouteLayout(List.of(), List.of(), error);
+        }
+    }
+
+    private static RouteLayout plan(ServerLevel level, List<CableRouter.Step> steps, int routeVoxels, Player player) {
         var positions = new java.util.ArrayList<BlockPos>();
         var parts = new java.util.ArrayList<AwgCablePart>();
         int measured = 0;
         for (var piece : CableRouter.pieces(steps, 2, 1)) {
             var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
-            if (!canRouteIn(level, pos, player)) return "AWG route blocked or unsupported at " + pos.toShortString();
+            if (!canRouteIn(level, pos, player)) return RouteLayout.rejected("AWG route blocked or unsupported at " + pos.toShortString());
             var points = piece.points();
             for (int i = 3; i < points.length; i += 3) {
                 var part = new AwgCablePart(points[i - 3], points[i - 1], points[i], points[i + 2]);
@@ -201,12 +230,12 @@ public final class AwgCablePart extends VoxelPart {
                 measured += part.geometry.length();
             }
         }
-        if (measured != routeVoxels) return "AWG route length mismatch";
-        return lay(level, positions, parts, measured, spool, player);
+        if (measured != routeVoxels) return RouteLayout.rejected("AWG route length mismatch");
+        return new RouteLayout(positions, parts, Laying.check(level, positions, parts));
     }
 
     private static String lay(ServerLevel level, List<BlockPos> positions, List<AwgCablePart> parts,
-                              int voxels, ItemStack spool, Player player) {
+                              int voxels, ItemStack spool, Player player, int failAt) {
         boolean creative = player != null && player.isCreative();
         if (spool.getCount() != 1 || !spool.is(wire().parentItem)) return "invalid AWG spool";
         var copy = creative ? ItemStack.EMPTY : spool.copy();
@@ -218,7 +247,7 @@ public final class AwgCablePart extends VoxelPart {
             part.saved = AwgCableRun.Companion.create(wire(), length.take(part.geometry.length()),
                 new VoltageState(), new VoltageState(), Ambient.relative(coord) + 20).save();
         }
-        var error = Laying.lay(level, positions, new java.util.ArrayList<VoxelPart>(parts), player);
+        var error = Laying.lay(level, positions, parts, player, failAt);
         if (error == null && !creative) {
             ItemNbt.set(spool, ItemNbt.get(copy));
             spool.setCount(copy.getCount());

@@ -5,7 +5,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +18,7 @@ final class Laying {
     }
 
     /** Why the parts (one per position, same order) can't all be laid, or null. */
-    static String check(Level level, List<BlockPos> at, List<VoxelPart> parts) {
+    static String check(Level level, List<BlockPos> at, List<? extends VoxelPart> parts) {
         for (int i = 0; i < parts.size(); i++) {
             VoxelPart part = parts.get(i);
             BlockPos bp = at.get(i);
@@ -52,28 +51,39 @@ final class Laying {
     }
 
     /** Check, then place every part; null if all are laid, else why not (and none is left laid). */
-    static String lay(Level level, List<BlockPos> at, List<VoxelPart> parts, Player player) {
-        String err = check(level, at, parts);
-        if (err != null) return err;
-        List<Integer> placed = new ArrayList<>();
-        for (int i = 0; i < parts.size(); i++) {
-            err = PipeKitItem.place(level, at.get(i), parts.get(i), player);
-            if (err != null) {
-                for (int k = placed.size() - 1; k >= 0; k--) takeBack(level, at.get(placed.get(k)), parts.get(placed.get(k)));
-                return err + " at " + at.get(i).toShortString();
-            }
-            placed.add(i);
-        }
-        CableLinks.laid(at, parts);
-        return null;
+    static String lay(Level level, List<BlockPos> at, List<? extends VoxelPart> parts, Player player) {
+        return lay(level, at, parts, player, -1);
     }
 
-    /** Remove a part just laid (by identity), and its block if nothing else is left in it. */
-    static void takeBack(Level level, BlockPos pos, VoxelPart part) {
+    static String lay(Level level, List<BlockPos> at, List<? extends VoxelPart> parts, Player player, int failAt) {
+        String err = check(level, at, parts);
+        if (err != null) return err;
+        boolean[] newNodes = new boolean[parts.size()];
+        int attempted = -1;
+        boolean committed = false;
+        try {
+            for (int i = 0; i < parts.size(); i++) {
+                var pos = at.get(i);
+                newNodes[i] = !(level.getBlockState(pos).getBlock() instanceof VoxelNodeBlock);
+                attempted = i;
+                if (i == failAt) return "forced";
+                err = PipeKitItem.place(level, pos, parts.get(i), player);
+                if (err != null) return err + " at " + pos.toShortString();
+            }
+            CableLinks.laid(at, parts);
+            committed = true;
+            return null;
+        } finally {
+            if (!committed)
+                for (int k = attempted; k >= 0; k--) takeBack(level, at.get(k), parts.get(k), newNodes[k]);
+        }
+    }
+
+    /** Drop only parts owned by this transaction. An existing voxel block stays even if empty. */
+    private static void takeBack(Level level, BlockPos pos, VoxelPart part, boolean newNode) {
         if (!(level.getBlockEntity(pos) instanceof VoxelNodeEntity e) || !(e.getNode() instanceof VoxelNode n)) return;
-        int idx = -1;
-        for (int i = 0; i < n.parts.size(); i++) if (n.parts.get(i) == part) idx = i;
-        if (idx >= 0 && n.removePart(idx, false)) n.removeEmptyBlock();
+        int idx = n.parts.indexOf(part);
+        if (idx >= 0 && n.removePart(idx, false) && newNode) n.removeEmptyBlock();
     }
 
     static boolean overlap(int[] a, int[] b) {
@@ -81,18 +91,7 @@ final class Laying {
     }
 
     /** For tests: lay these parts with a failure forced at index failAt (as if placing it failed). */
-    static String layFailingAtForTests(Level level, List<BlockPos> at, List<VoxelPart> parts, int failAt) {
-        String err = check(level, at, parts);
-        if (err != null) return err;
-        List<Integer> placed = new ArrayList<>();
-        for (int i = 0; i < parts.size(); i++) {
-            err = i == failAt ? "forced" : PipeKitItem.place(level, at.get(i), parts.get(i), null);
-            if (err != null) {
-                for (int k = placed.size() - 1; k >= 0; k--) takeBack(level, at.get(placed.get(k)), parts.get(placed.get(k)));
-                return err;
-            }
-            placed.add(i);
-        }
-        return null;
+    static String layFailingAtForTests(Level level, List<BlockPos> at, List<? extends VoxelPart> parts, int failAt) {
+        return lay(level, at, parts, null, failAt);
     }
 }

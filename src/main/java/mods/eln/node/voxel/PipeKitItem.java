@@ -123,7 +123,11 @@ public class PipeKitItem extends Item implements PipeTool, KitItem {
             node.onBreakBlock();
             return err;
         }
-        level.setBlock(pos, mimic ? VoxelNodeBlock.forHost(old) : block.stateFor(level, pos), 3);
+        if (!level.setBlock(pos, mimic ? VoxelNodeBlock.forHost(old) : block.stateFor(level, pos), 3)) {
+            node.removePart(0, false);
+            node.onBreakBlock();
+            return "the voxel block could not be installed";
+        }
         return null;
     }
 }

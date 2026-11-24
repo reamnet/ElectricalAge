@@ -38,6 +38,7 @@ public final class CableCases {
         cases.add(new AwgWorldCase(false));
         cases.add(new AwgWorldCase(true));
         cases.add(new AwgBendCase());
+        for (var scenario : AwgRoutingReliabilityCase.Scenario.values()) cases.add(new AwgRoutingReliabilityCase(scenario));
         cases.add(new BurnCase());
         cases.add(new RoutedCase());
         cases.add(new JoinedRouteCase());
