@@ -62,6 +62,17 @@ there and replayed first), `eln.guiDir` (LayoutTest, HubSlotsTest), `-PfluidCase
 | `robotics/servo/RidersTest` | Who stands on a car (players a round trip late on the server); the client's carry of its own player (the pure core of `CarCarry`). |
 | `robotics/servo/SegmentPayloadTest` | The segment payload's codec round trip; the client's segment matches the server's. |
 
+AWG assets have an explicit root-test audit: `AwgAssetsTest` compares all 100 AWG entries in
+`eln-ids.json` with the item-definition and model file sets, pins their icon families, and decodes
+all referenced PNGs (including the voxel cable sprites). It fails on missing, extra, misrouted,
+unreadable or entirely transparent assets. `AwgGeometryTest` checks cross-section rounding, boxes
+on all six mounting faces, and bare copper/aluminum tints without a GPU. These run with `./gradlew :test`;
+for just the AWG suite use `./gradlew :test --tests '*Awg*Test'`.
+
+The model datagen path is generic: `UtilityCables` assigns descriptor icons, and `ElnModels.itemTexture`
+resolves them through `IDescriptorItem` and `GenericItemBlockUsingDamageDescriptor`. The explicit audit
+also checks the committed output, so asset drift is detected without launching datagen or a client.
+
 ## GameTest harness (`src/main/java/mods/eln/gametest`, server)
 
 - `TestCase`: `id()`/`name()`, `width()=8`, `height()=4`, `depth()=3`, `floorDepth()=min(3, depth)`, `ticks()=40`,
