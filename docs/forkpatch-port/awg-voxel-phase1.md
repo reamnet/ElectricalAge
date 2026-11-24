@@ -104,3 +104,5 @@ Enter route mode as for walls, then sneak-right-click the undersides of two soli
 In route mode, select the top of the floor support and the face of the wall support, in either order. The floor leg must approach the wall squarely in the same row and the wall leg must rise from that inner corner. Both legs include their clicked blocks. The corner block holds one arm on each support face. Their saved pair of endpoint markers shares a voltage state only with the matching arm. An ordinary cable endpoint on either face cannot join that state.
 
 The transaction charges both centerlines and treats voxel mesh overlap as free. Both support faces must be solid at the corner. An unsupported face, obstruction or failed placement rejects the whole route. Removing either corner arm opens the joint and recovers only that arm's paid length.
+
+The same explicit joint also supports a wall and ceiling in either selection order. Select a ceiling underside and a wall face in route mode. The ceiling leg must approach the wall squarely, and the wall leg must descend from the shared corner. Outer wraps and wall-to-wall transitions still require separate routing rules.

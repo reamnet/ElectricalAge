@@ -306,37 +306,40 @@ public final class AwgCablePart extends VoxelPart {
 
     private static String transition(ServerLevel level, BlockPos start, Direction startMount, BlockPos end,
                                      Direction endMount, ItemStack spool, Player player, int failAt) {
-        if ((startMount == Direction.DOWN) == (endMount == Direction.DOWN)
-            || startMount == Direction.UP || endMount == Direction.UP) return "AWG transition needs a floor and a wall";
-        boolean floorFirst = startMount == Direction.DOWN;
-        BlockPos floor = floorFirst ? start : end;
-        BlockPos wall = floorFirst ? end : start;
-        Direction wallMount = floorFirst ? endMount : startMount;
-        int face = wallMount.get3DDataValue(), axis = CablePart.normalAxis(face), across = 2 - axis;
-        long[] a = {16L * floor.getX() + 8, 16L * floor.getY(), 16L * floor.getZ() + 8};
-        long[] b = {16L * wall.getX() + 8, 16L * wall.getY() + 16, 16L * wall.getZ() + 8};
+        boolean flatFirst = startMount.getAxis().isVertical();
+        if (flatFirst == endMount.getAxis().isVertical()) return "AWG transition needs a flat support and a wall";
+        BlockPos flatEnd = flatFirst ? start : end;
+        BlockPos wall = flatFirst ? end : start;
+        Direction flatMount = flatFirst ? startMount : endMount;
+        Direction wallMount = flatFirst ? endMount : startMount;
+        int flatFace = flatMount.get3DDataValue(), face = wallMount.get3DDataValue();
+        int axis = CablePart.normalAxis(face), across = 2 - axis;
+        int riseSign = flatMount == Direction.DOWN ? 1 : -1;
+        long[] a = {16L * flatEnd.getX() + 8, 16L * flatEnd.getY() + CablePart.plane(flatFace), 16L * flatEnd.getZ() + 8};
+        long[] b = {16L * wall.getX() + 8, 16L * wall.getY() + (riseSign > 0 ? 16 : 0), 16L * wall.getZ() + 8};
         int sign = wallMount.getAxisDirection().getStep();
         long horizontal = (b[axis] - a[axis]) * sign;
-        if (a[across] != b[across] || horizontal < 0 || b[1] <= a[1])
-            return "AWG floor run must approach the wall squarely below the wall endpoint";
-        if (horizontal + b[1] - a[1] + 16 > MAX_ROUTE_BLOCKS * 16L) return "AWG transition exceeds 64 meters";
+        long vertical = (b[1] - a[1]) * riseSign;
+        if (a[across] != b[across] || horizontal < 0 || vertical <= 0)
+            return "AWG run must approach the wall squarely and turn into the open space";
+        if (horizontal + vertical + 16 > MAX_ROUTE_BLOCKS * 16L) return "AWG transition exceeds 64 meters";
         a[axis] -= sign * 8L;
         b[axis] += sign * 8L;
         var corner = b.clone();
         corner[1] = a[1];
-        int floorVoxels = (int) Math.abs(corner[axis] - a[axis]);
-        int wallVoxels = (int) (b[1] - corner[1]);
-        var flat = surfacePlan(level, Direction.DOWN, List.of(surfaceStep(a, 0), surfaceStep(corner, 0)), floorVoxels, player);
+        int flatVoxels = (int) Math.abs(corner[axis] - a[axis]);
+        int wallVoxels = (int) vertical;
+        var flat = surfacePlan(level, flatMount, List.of(surfaceStep(a, flatFace), surfaceStep(corner, flatFace)), flatVoxels, player);
         if (flat.error() != null) return flat.error();
         var rise = surfacePlan(level, wallMount, List.of(surfaceStep(corner, face), surfaceStep(b, face)), wallVoxels, player);
         if (rise.error() != null) return rise.error();
         flat.parts().getLast().markCorner(1, face);
-        rise.parts().getFirst().markCorner(0, 0);
+        rise.parts().getFirst().markCorner(0, flatFace);
         var positions = new java.util.ArrayList<>(flat.positions());
         positions.addAll(rise.positions());
         var parts = new java.util.ArrayList<>(flat.parts());
         parts.addAll(rise.parts());
-        return lay(level, positions, parts, floorVoxels + wallVoxels, spool, player, failAt, List.of());
+        return lay(level, positions, parts, flatVoxels + wallVoxels, spool, player, failAt, List.of());
     }
 
     private static List<CableRouter.Step> surfaceSteps(long[] a, long[] b, int face, int first, int second) {
