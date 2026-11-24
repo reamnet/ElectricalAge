@@ -165,14 +165,28 @@ public final class AwgCablePart extends VoxelPart {
 
     private static String route(ServerLevel level, BlockPos start, BlockPos end, ItemStack spool, Player player) {
         long dx = (long) end.getX() - start.getX(), dz = (long) end.getZ() - start.getZ();
-        if (start.getY() != end.getY() || (dx != 0 && dz != 0)) return "AWG routing needs endpoints in the same floor row";
+        if (start.getY() != end.getY()) return "AWG routing needs endpoints on the same floor level";
         long blocks = Math.abs(dx) + Math.abs(dz) + 1;
         if (blocks > MAX_ROUTE_BLOCKS) return "AWG route exceeds 64 blocks";
         long sx = 16L * start.getX() + 8, ex = 16L * end.getX() + 8;
         long sz = 16L * start.getZ() + 8, ez = 16L * end.getZ() + 8;
         long y = 16L * start.getY(), ox = Long.signum(dx) * 8L, oz = Long.signum(dz) * 8L;
-        var steps = List.of(new CableRouter.Step(sx - ox, y, sz - oz, 0, false),
-            new CableRouter.Step(ex + ox, y, ez + oz, 0, false));
+        if (dx == 0 || dz == 0) {
+            return laySteps(level, List.of(floorStep(sx - ox, y, sz - oz),
+                floorStep(ex + ox, y, ez + oz)), (int) blocks * 16, spool, player);
+        }
+        var xFirst = List.of(floorStep(sx - ox, y, sz), floorStep(ex, y, sz), floorStep(ex, y, ez + oz));
+        String result = laySteps(level, xFirst, (int) blocks * 16, spool, player);
+        if (result == null) return null;
+        var zFirst = List.of(floorStep(sx, y, sz - oz), floorStep(sx, y, ez), floorStep(ex + ox, y, ez));
+        return laySteps(level, zFirst, (int) blocks * 16, spool, player);
+    }
+
+    private static CableRouter.Step floorStep(long x, long y, long z) {
+        return new CableRouter.Step(x, y, z, 0, false);
+    }
+
+    private static String laySteps(ServerLevel level, List<CableRouter.Step> steps, int routeVoxels, ItemStack spool, Player player) {
         var positions = new java.util.ArrayList<BlockPos>();
         var parts = new java.util.ArrayList<AwgCablePart>();
         int measured = 0;
@@ -180,12 +194,14 @@ public final class AwgCablePart extends VoxelPart {
             var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
             if (!canRouteIn(level, pos, player)) return "AWG route blocked or unsupported at " + pos.toShortString();
             var points = piece.points();
-            var part = new AwgCablePart(points[0], points[2], points[3], points[5]);
-            positions.add(pos);
-            parts.add(part);
-            measured += part.geometry.length();
+            for (int i = 3; i < points.length; i += 3) {
+                var part = new AwgCablePart(points[i - 3], points[i - 1], points[i], points[i + 2]);
+                positions.add(pos);
+                parts.add(part);
+                measured += part.geometry.length();
+            }
         }
-        if (measured != blocks * 16) return "AWG route length mismatch";
+        if (measured != routeVoxels) return "AWG route length mismatch";
         return lay(level, positions, parts, measured, spool, player);
     }
 

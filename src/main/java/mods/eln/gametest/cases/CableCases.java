@@ -37,6 +37,7 @@ public final class CableCases {
     public static void addTo(List<TestCase> cases) {
         cases.add(new AwgWorldCase(false));
         cases.add(new AwgWorldCase(true));
+        cases.add(new AwgBendCase());
         cases.add(new BurnCase());
         cases.add(new RoutedCase());
         cases.add(new JoinedRouteCase());

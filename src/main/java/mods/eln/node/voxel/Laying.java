@@ -42,6 +42,7 @@ final class Laying {
                 if (!at.get(j).equals(bp)) continue;
                 VoxelPart other = parts.get(j);
                 if (part instanceof CablePart a && other instanceof CablePart b && (a.touches(b) || b.touches(a))) continue;
+                if (part instanceof AwgCablePart a && other instanceof AwgCablePart b && a.joins(b)) continue;
                 for (int[] x : part.boxes())
                     for (int[] y : other.boxes())
                         if (overlap(x, y)) return "the route crosses itself at " + bp.toShortString();
