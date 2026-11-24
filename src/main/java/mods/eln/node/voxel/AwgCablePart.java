@@ -98,7 +98,9 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     public static boolean supportsSpool(mods.eln.node.six.SixNodeDescriptor descriptor) {
-        return descriptor instanceof UtilityCableDescriptor && descriptor.parentItemDamage == LEGACY_WIRE_ID;
+        return descriptor instanceof UtilityCableDescriptor wire && wire.getActsAsSingleConductor() && !wire.getMelted()
+            && wire.getMaterial() == mods.eln.sixnode.electricalcable.UtilityCableMaterial.COPPER
+            && descriptor.parentItemDamage < 2432;
     }
 
     /** Sneak-use in air switches the current spool between one-block and route placement. */
@@ -665,4 +667,9 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     CablePart visual() { return geometry; }
+
+    int bareTint() {
+        if (wire.getInsulated()) return 0;
+        return 0xffb87345;
+    }
 }
