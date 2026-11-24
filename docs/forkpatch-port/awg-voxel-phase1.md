@@ -30,3 +30,9 @@ After this passes for descriptor 2200, generalize by reading material, area, amp
 ## Baseline checks
 
 The focused run passed 26 existing wire physics, wire thermal and grid cable planning unit tests. All nine selected GameTests passed, covering the existing spool and six-node placement, junction heating, insulation failure, jacket and fusion transitions, hot grid span reload and refund, routing to an elevated machine, and harness smoke coverage. Both data-generation runs wrote zero files. These checks establish the existing behavior. AWG voxel placement and rendering require the extensions above before they can be tested.
+
+## Phase 1A electrical foundation
+
+`AwgCableEdge` stamps one resistor per physical run between explicit MNA voltage states. A verified joint shares one state among all incident edges, including when the runs lie in different blocks. Separate terminals stay isolated. The future voxel topology owner will resolve joints, register shared states once, and detach edges before releasing their endpoints. The edge accepts a positive conductor length in meters and a temperature in Celsius. It uses the existing material and cross-sectional resistance model, and it exposes voltage drop, signed current and dissipated power through the standard resistor API.
+
+Phase 1A exercises this contract at the circuit level. World joint discovery, endpoint lifetime across chunk boundaries, thermal and failure processes, and all player-facing behavior remain later integration steps.
