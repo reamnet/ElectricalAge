@@ -8,6 +8,7 @@ import mods.eln.misc.*
 import mods.eln.node.*
 import mods.eln.node.six.*
 import mods.eln.node.transparent.*
+import mods.eln.node.voxel.AwgWireLength
 import mods.eln.sim.IProcess
 import mods.eln.sim.mna.component.*
 import mods.eln.sixnode.electricalcable.*
@@ -17,7 +18,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Blocks
 
 object ForkPatchWireCases {
-    @JvmStatic fun cases(): List<TestCase> = listOf(Catalog(),Placement(),Junction(),Transition(false),Transition(true),SpoolSpan(),SpanBurn(),SpanHeat(),Fault())
+    @JvmStatic fun cases(): List<TestCase> = listOf(Catalog(),VoxelAccounting(),Placement(),Junction(),Transition(false),Transition(true),SpoolSpan(),SpanBurn(),SpanHeat(),Fault())
     private fun wire(label: String="12 AWG",insulated: Boolean=true)=UtilityCables.all.first { it.material==UtilityCableMaterial.COPPER && it.sizeLabel==label && it.insulated==insulated && !it.melted && (!insulated || it.insulationVoltageRating in listOf(300.0,600.0,1000.0)) }
     private fun player(c: TestContext,key: String): net.neoforged.neoforge.common.util.FakePlayer {
         val p=net.neoforged.neoforge.common.util.FakePlayerFactory.get(c.level(),com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes(key.toByteArray()),key.take(16)))
@@ -49,6 +50,57 @@ object ForkPatchWireCases {
             ItemNbt.edit(s) { it.putDouble("utilityLengthMeters",Double.NaN) }
             c.check("wire: nonfinite stored length cannot create paid cable",d.getRemainingLengthMeters(s)==0.0 && !d.consume(s,1.0),"")
             c.check("wire: creative spool length is the source 128 m",d.getRemainingLengthMeters(d.creativeStack())==128.0,"")
+        }
+    }
+    private class VoxelAccounting : Base() {
+        override fun id() = "forkpatch_wire_voxel_material_accounting"
+
+        override fun measure(c: TestContext) {
+            val wire = Eln.sixNodeItem.getDescriptor(2200) as UtilityCableDescriptor
+            val spool = wire.newItemStack()
+            val start = 3.123456789
+            wire.setRemainingLengthMeters(spool, start)
+            val uid = ItemNbt.get(spool)!!.getStringOr("utilityLengthUid", "")
+            val run = requireNotNull(AwgWireLength.purchase(wire, spool, 23))
+            val restored = AwgWireLength.load(run.save(), 2200)
+            val cut = restored.take(5)
+            val refund = cut.recover(wire)
+            val rest = restored.recover(wire)
+            val recovered = wire.getRemainingLengthMeters(refund) + wire.getRemainingLengthMeters(rest)
+            c.check("meter spool identity and exact paid length survive debit, reload and removal",
+                spool.item === wire.parentItem && refund.item === wire.parentItem && rest.item === wire.parentItem
+                    && ItemNbt.get(spool)!!.getStringOr("utilityLengthUid", "") == uid
+                    && wire.getRemainingLengthMeters(refund) == 0.3125 && recovered == 23.0 / 16
+                    && wire.getRemainingLengthMeters(spool) + recovered == start
+                    && cut.recover(wire).isEmpty && restored.recover(wire).isEmpty, "")
+
+            var circulating = rest
+            var conserved = true
+            repeat(64) {
+                val placed = requireNotNull(AwgWireLength.purchase(wire, circulating, 18))
+                conserved = conserved && circulating.isEmpty && placed.physicalMeters() == 18.0 / 16
+                circulating = placed.recover(wire)
+                conserved = conserved && wire.getRemainingLengthMeters(circulating) == 18.0 / 16
+                    && placed.recover(wire).isEmpty
+            }
+            c.check("repeated placement and removal transfer the exact amount once", conserved, "")
+
+            var rejected = true
+            for (remaining in doubleArrayOf(0.0624999, -1.0, Double.NaN, Double.POSITIVE_INFINITY, 1e20)) {
+                ItemNbt.edit(spool) { it.putDouble("utilityLengthMeters", remaining) }
+                val before = ItemNbt.get(spool)
+                rejected = rejected && AwgWireLength.purchase(wire, spool, 1) == null && ItemNbt.get(spool) == before
+            }
+            ItemNbt.edit(spool) { it.putString("utilityLengthMeters", "invalid") }
+            rejected = rejected && AwgWireLength.purchase(wire, spool, 1) == null
+            wire.setRemainingLengthMeters(spool, 0.0625001)
+            val tinyCut = requireNotNull(AwgWireLength.purchase(wire, spool, 1))
+            c.check("insufficient or malformed balances cannot buy wire and tiny positive remainders survive",
+                rejected && spool.count == 1 && wire.getRemainingLengthMeters(spool) + tinyCut.physicalMeters() == 0.0625001,
+                "")
+            val creative = AwgWireLength.creative(wire, 16)
+            c.check("creative wire retains physical length with no refundable material",
+                creative.physicalMeters() == 1.0 && creative.recover(wire).isEmpty, "")
         }
     }
     private class Placement: Base() {
