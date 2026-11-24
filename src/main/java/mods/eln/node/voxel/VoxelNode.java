@@ -2668,7 +2668,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         if (m != 0) return m;
         CableNet.Conductor k = legacy(side, lrdu);
         if (k != null) return k.mask();
-        return awgLegacy(side, lrdu) == null ? 0 : AwgCablePart.wire().getNodeMask();
+        return awgLegacy(side, lrdu) == null ? 0 : maskElectricalPower;
     }
 
     private ElectricalLoad awgLegacy(Direction side, LRDU lrdu) {

@@ -228,6 +228,13 @@ public final class CablePart extends VoxelPart {
         this.points = points;
     }
 
+    /** Geometry proxy for a utility wire. It never enters the generic conductor network. */
+    static CablePart utilityGeometry(String name, int face, int[] points, int width, int height) {
+        var geometry = new CablePart(1, new CableSpec(3, CableSpec.BLACK), face, points);
+        geometry.info = new Tier(name, width, height);
+        return geometry;
+    }
+
     /** The same cable (tier and spec): pieces of one conductor, one kit. */
     public boolean sameCable(CablePart o) {
         return tier == o.tier && java.util.Objects.equals(spec, o.spec);
