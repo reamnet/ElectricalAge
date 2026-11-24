@@ -34,6 +34,8 @@ import java.util.UUID;
 final class AwgTransitionCase implements TestCase {
     private final boolean reverse;
     private final Direction flatMount;
+    private final int wireId;
+    private final String variant;
     private static final Direction WALL = Direction.NORTH;
     private UtilityCableDescriptor wire;
     private FakePlayer player;
@@ -46,13 +48,19 @@ final class AwgTransitionCase implements TestCase {
     }
 
     AwgTransitionCase(boolean reverse, Direction flatMount) {
+        this(reverse, flatMount, 2200, "");
+    }
+
+    AwgTransitionCase(boolean reverse, Direction flatMount, int wireId, String variant) {
+        this.wireId = wireId;
+        this.variant = variant;
         this.reverse = reverse;
         this.flatMount = flatMount;
     }
 
     @Override public String id() {
         String flat = flatMount == Direction.DOWN ? "floor" : "ceiling";
-        return "awg_voxel_" + (reverse ? "wall_to_" + flat : flat + "_to_wall");
+        return "awg_voxel_" + (reverse ? "wall_to_" + flat : flat + "_to_wall") + (variant.isEmpty() ? "" : "_" + variant);
     }
 
     @Override public int width() { return 10; }
@@ -79,7 +87,7 @@ final class AwgTransitionCase implements TestCase {
             UUID.nameUUIDFromBytes(id().getBytes(StandardCharsets.UTF_8)), "eln_awg_transition"));
         player.setGameMode(GameType.SURVIVAL);
         player.setShiftKeyDown(true);
-        wire = (UtilityCableDescriptor) Eln.sixNodeItem.getDescriptor(2200);
+        wire = (UtilityCableDescriptor) Eln.sixNodeItem.getDescriptor(wireId);
         spool = wire.newItemStack();
         wire.setRemainingLengthMeters(spool, 7.125);
         player.setItemInHand(InteractionHand.MAIN_HAND, spool);

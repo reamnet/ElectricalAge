@@ -4,6 +4,7 @@ import mods.eln.gametest.TestCase;
 import mods.eln.gametest.TestContext;
 import mods.eln.node.voxel.CablePart;
 import mods.eln.node.voxel.PipeKitItem;
+import mods.eln.sixnode.electricalcable.UtilityCableMaterial;
 import mods.eln.sixnode.resistor.ResistorElement;
 import net.minecraft.core.BlockPos;
 
@@ -49,8 +50,11 @@ public final class CableCases {
         cases.add(new AwgTransitionCase(true));
         cases.add(new AwgTransitionCase(false, net.minecraft.core.Direction.UP));
         cases.add(new AwgTransitionCase(true, net.minecraft.core.Direction.UP));
-        cases.add(new AwgCatalogCase(mods.eln.sixnode.electricalcable.UtilityCableMaterial.COPPER, false, 42));
-        cases.add(new AwgCatalogCase(mods.eln.sixnode.electricalcable.UtilityCableMaterial.ALUMINUM, false, 18));
+        cases.add(new AwgCatalogCase(UtilityCableMaterial.COPPER, false, 42));
+        cases.add(new AwgCatalogCase(UtilityCableMaterial.ALUMINUM, false, 18));
+        cases.add(new AwgCatalogCase(UtilityCableMaterial.COPPER, true, 10));
+        cases.add(new AwgTransitionCase(false, net.minecraft.core.Direction.DOWN, 2434, "hv_copper"));
+        cases.add(new AwgTransitionCase(false, net.minecraft.core.Direction.UP, 2266, "large_aluminum"));
         for (var scenario : AwgRoutingReliabilityCase.Scenario.values()) cases.add(new AwgRoutingReliabilityCase(scenario));
         cases.add(new BurnCase());
         cases.add(new RoutedCase());

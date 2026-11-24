@@ -98,8 +98,7 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     public static boolean supportsSpool(mods.eln.node.six.SixNodeDescriptor descriptor) {
-        return descriptor instanceof UtilityCableDescriptor wire && wire.getActsAsSingleConductor() && !wire.getMelted()
-            && descriptor.parentItemDamage < 2432;
+        return descriptor instanceof UtilityCableDescriptor wire && wire.getActsAsSingleConductor() && !wire.getMelted();
     }
 
     /** Sneak-use in air switches the current spool between one-block and route placement. */

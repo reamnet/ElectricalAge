@@ -151,6 +151,28 @@ class AwgCableRunTest {
     }
 
     @Test
+    fun originalHighVoltageClassesFaultOnlyWhenTheirOwnRatingIsExceeded() {
+        val from = node()
+        source(from, 1250.0)
+        air = Double.NaN
+        fun highVoltageRun(id: Int, rating: Double): AwgCableRun {
+            val descriptor = UtilityCableDescriptor("12 AWG", COPPER, 3.309, 20.0, true, rating, false, 105.0,
+                "12 AWG high voltage test", wire.render).apply { parentItemDamage = id }
+            return AwgCableRun.create(descriptor, AwgWireLength(id, 16, false), from, node(), 20.0).connect()
+        }
+        val oneKv = highVoltageRun(2432, 1000.0)
+        val fiveKv = highVoltageRun(2434, 5000.0)
+        repeat(20) { sim.tick() }
+        assertTrue(oneKv.insulationFailed)
+        assertEquals(0.0, fiveKv.insulationExposure)
+        assertFalse(fiveKv.insulationFailed)
+        sim.tick()
+        assertEquals(12.5, oneKv.faultCurrentAmps, 1e-8)
+        assertEquals(0.0, fiveKv.faultCurrentAmps, 1e-8)
+        assertTrue(oneKv.temperatureCelsius > fiveKv.temperatureCelsius)
+    }
+
+    @Test
     fun jacketAndFusionFollowSourceThresholdsAndFusionOpensCircuit() {
         val a = node()
         val b = node()

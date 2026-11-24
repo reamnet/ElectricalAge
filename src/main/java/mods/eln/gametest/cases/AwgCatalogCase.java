@@ -19,7 +19,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.AABB;
@@ -31,6 +30,8 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.UUID;
 
 final class AwgCatalogCase implements TestCase {
@@ -59,6 +60,14 @@ final class AwgCatalogCase implements TestCase {
         ctx.check("every catalog item is recognized, with intact historical identity", catalog.size() == expected
             && catalog.stream().allMatch(w -> AwgCablePart.supportsSpool(w)
                 && Eln.sixNodeItem.getDescriptor(w.parentItemDamage) == w && !w.newItemStack().isEmpty()), "" + catalog.size());
+        if (highVoltage) {
+            var classes = catalog.stream().collect(Collectors.groupingBy(UtilityCableDescriptor::getConductorAreaMm2,
+                Collectors.mapping(UtilityCableDescriptor::getInsulationVoltageRating, Collectors.toSet())));
+            var ratings = Set.of(1000.0, 5000.0, 20000.0, 40000.0, 150000.0);
+            ctx.check("both high-voltage gauges retain all five original insulation ratings",
+                classes.keySet().equals(Set.of(3.309, 33.631)) && classes.values().stream().allMatch(ratings::equals)
+                    && catalog.stream().allMatch(UtilityCableDescriptor::getInsulated), classes.toString());
+        }
         ctx.check("melted and multicore entries stay out of voxel placement",
             UtilityCables.INSTANCE.getAll().stream().filter(w -> w.getMelted() || !w.getActsAsSingleConductor())
                 .noneMatch(AwgCablePart::supportsSpool), "");
