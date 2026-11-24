@@ -34,6 +34,7 @@ import java.util.UUID;
 
 final class AwgWallCase implements TestCase {
     private final Direction mount;
+    private final Direction ceilingAxis;
     private FakePlayer player;
     private UtilityCableDescriptor wire;
     private ItemStack spool;
@@ -42,10 +43,18 @@ final class AwgWallCase implements TestCase {
     private ResistorElement resistor;
 
     AwgWallCase(Direction mount) {
-        this.mount = mount;
+        this(mount, null);
     }
 
-    @Override public String id() { return "awg_voxel_wall_" + mount.getSerializedName(); }
+    AwgWallCase(Direction mount, Direction ceilingAxis) {
+        this.mount = mount;
+        this.ceilingAxis = ceilingAxis;
+    }
+
+    @Override public String id() {
+        return ceilingAxis == null ? "awg_voxel_wall_" + mount.getSerializedName()
+            : "awg_voxel_ceiling_" + ceilingAxis.getAxis().getSerializedName();
+    }
     @Override public int width() { return 10; }
     @Override public int height() { return 6; }
     @Override public int depth() { return 10; }
@@ -56,6 +65,7 @@ final class AwgWallCase implements TestCase {
         along = switch (mount) {
             case EAST -> Direction.UP;
             case WEST -> Direction.DOWN;
+            case UP -> ceilingAxis;
             default -> Direction.EAST;
         };
         start = ctx.at(3, along == Direction.DOWN ? 4 : along == Direction.UP ? 1 : 2, 4);
@@ -70,10 +80,10 @@ final class AwgWallCase implements TestCase {
         spool = wire.newItemStack();
         wire.setRemainingLengthMeters(spool, 4.125);
         player.setItemInHand(InteractionHand.MAIN_HAND, spool);
-        if (mount == Direction.NORTH || mount == Direction.EAST) buildCircuit(ctx);
+        if (mount == Direction.NORTH || mount == Direction.EAST || mount == Direction.UP) buildCircuit(ctx);
 
         var counts = Eln.simulator.counts();
-        var forced = AwgCablePart.wallRouteFailingAtForTests(ctx.level(), start, end, mount, spool, 1);
+        var forced = AwgCablePart.surfaceRouteFailingAtForTests(ctx.level(), start, end, mount, spool, 1);
         ctx.check("an intermediate failure rolls back wall placement and simulation processes",
             "forced".equals(forced) && untouched(ctx, 4.125) && Arrays.equals(counts, Eln.simulator.counts()), "");
         spool.use(ctx.level(), player, InteractionHand.MAIN_HAND);
@@ -146,7 +156,7 @@ final class AwgWallCase implements TestCase {
     private InteractionResult click(BlockPos pos) {
         var clicked = pos.relative(mount);
         var face = mount.getOpposite();
-        var hit = Vec3.atCenterOf(clicked).add(face.getStepX() * 0.5, 0, face.getStepZ() * 0.5);
+        var hit = Vec3.atCenterOf(clicked).add(face.getStepX() * 0.5, face.getStepY() * 0.5, face.getStepZ() * 0.5);
         player.snapTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0, 0);
         return spool.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(hit, face, clicked, false)));
     }

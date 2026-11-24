@@ -39,7 +39,7 @@ final class AwgWallBendCase implements TestCase {
         this.mount = mount;
     }
 
-    @Override public String id() { return "awg_voxel_wall_bend_" + mount.getSerializedName(); }
+    @Override public String id() { return mount == Direction.UP ? "awg_voxel_ceiling_bend" : "awg_voxel_wall_bend_" + mount.getSerializedName(); }
     @Override public int width() { return 10; }
     @Override public int height() { return 6; }
     @Override public int depth() { return 10; }
@@ -49,14 +49,15 @@ final class AwgWallBendCase implements TestCase {
     @Override public void build(TestContext ctx) {
         var horizontal = mount.getAxis() == Direction.Axis.Z ? Direction.EAST : Direction.SOUTH;
         var start = ctx.at(3, 1, 3);
-        var end = start.relative(horizontal, 2).above(2);
+        var other = mount == Direction.UP ? Direction.EAST : Direction.UP;
+        var end = start.relative(horizontal, 2).relative(other, 2);
         boolean alternate = mount == Direction.SOUTH || mount == Direction.WEST;
         boolean horizontalFirst = (mount.getAxis() == Direction.Axis.Z) != alternate;
-        elbow = horizontalFirst ? start.relative(horizontal, 2) : start.above(2);
-        var blocked = horizontalFirst ? start.above() : start.relative(horizontal);
+        elbow = horizontalFirst ? start.relative(horizontal, 2) : start.relative(other, 2);
+        var blocked = horizontalFirst ? start.relative(other) : start.relative(horizontal);
         for (int along = 0; along <= 2; along++)
             for (int up = 0; up <= 2; up++)
-                ctx.floor(start.relative(horizontal, along).above(up).relative(mount));
+                ctx.floor(start.relative(horizontal, along).relative(other, up).relative(mount));
         if (alternate) ctx.level().setBlockAndUpdate(blocked, Blocks.STONE.defaultBlockState());
         if (mount == Direction.NORTH) buildCircuit(ctx, start.west(), end.above());
 
@@ -69,7 +70,7 @@ final class AwgWallBendCase implements TestCase {
         wire.setRemainingLengthMeters(spool, 6.125);
         player.setItemInHand(InteractionHand.MAIN_HAND, spool);
 
-        var refusal = AwgCablePart.wallRouteFailingAtForTests(ctx.level(), start, end, mount, spool, 3);
+        var refusal = AwgCablePart.surfaceRouteFailingAtForTests(ctx.level(), start, end, mount, spool, 3);
         ctx.check("failure after the elbow rolls back all wall pieces and the spool", "forced".equals(refusal)
             && wire.getRemainingLengthMeters(spool) == 6.125 && ctx.level().isEmptyBlock(start)
             && ctx.level().isEmptyBlock(elbow) && ctx.level().isEmptyBlock(end), "");
@@ -113,7 +114,7 @@ final class AwgWallBendCase implements TestCase {
     private InteractionResult click(BlockPos pos) {
         var face = mount.getOpposite();
         var support = pos.relative(mount);
-        var hit = Vec3.atCenterOf(support).add(face.getStepX() * 0.5, 0, face.getStepZ() * 0.5);
+        var hit = Vec3.atCenterOf(support).add(face.getStepX() * 0.5, face.getStepY() * 0.5, face.getStepZ() * 0.5);
         player.snapTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0, 0);
         return spool.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(hit, face, support, false)));
     }

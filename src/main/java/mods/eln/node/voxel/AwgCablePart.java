@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-/** Controlled floor- and wall-mounted straight runs of the existing 12 AWG spool. */
+/** Controlled surface-mounted straight runs of the existing 12 AWG spool. */
 public final class AwgCablePart extends VoxelPart {
     static final String KIND = "awg_cable";
     private static final int WIRE_ID = 2200;
@@ -61,7 +61,7 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     private static boolean valid(int face, int[] points) {
-        if (face < 0 || face > 5 || face == Direction.UP.get3DDataValue() || points.length != 6) return false;
+        if (face < 0 || face > 5 || points.length != 6) return false;
         int normal = CablePart.normalAxis(face);
         if (points[normal] != CablePart.plane(face) || points[normal + 3] != points[normal]) return false;
         int varying = 0;
@@ -122,7 +122,7 @@ public final class AwgCablePart extends VoxelPart {
     public static InteractionResult useSpool(UseOnContext ctx) {
         Player player = ctx.getPlayer();
         Direction mount = ctx.getClickedFace().getOpposite();
-        if (player == null || ctx.getHand() != InteractionHand.MAIN_HAND || mount == Direction.UP)
+        if (player == null || ctx.getHand() != InteractionHand.MAIN_HAND)
             return InteractionResult.FAIL;
         // Only the server lays the run or changes the spool.
         if (!(ctx.getLevel() instanceof ServerLevel level)) return InteractionResult.SUCCESS;
@@ -147,7 +147,7 @@ public final class AwgCablePart extends VoxelPart {
                 return InteractionResult.FAIL;
             } else if (!selected.start().equals(pos)) {
                 String error = mount == Direction.DOWN ? route(level, selected.start(), pos, spool, player)
-                    : wallRoute(level, selected.start(), pos, mount, spool, player, -1);
+                    : surfaceRoute(level, selected.start(), pos, mount, spool, player, -1);
                 if (error != null) {
                     tell(player, error);
                     return InteractionResult.FAIL;
@@ -265,16 +265,16 @@ public final class AwgCablePart extends VoxelPart {
         return null;
     }
 
-    public static String wallRouteFailingAtForTests(ServerLevel level, BlockPos start, BlockPos end,
+    public static String surfaceRouteFailingAtForTests(ServerLevel level, BlockPos start, BlockPos end,
                                                     Direction mount, ItemStack spool, int failAt) {
-        return wallRoute(level, start, end, mount, spool, null, failAt);
+        return surfaceRoute(level, start, end, mount, spool, null, failAt);
     }
 
-    private static String wallRoute(ServerLevel level, BlockPos start, BlockPos end, Direction mount,
+    private static String surfaceRoute(ServerLevel level, BlockPos start, BlockPos end, Direction mount,
                                     ItemStack spool, Player player, int failAt) {
         int face = mount.get3DDataValue(), normal = CablePart.normalAxis(face);
         long[] delta = {(long) end.getX() - start.getX(), (long) end.getY() - start.getY(), (long) end.getZ() - start.getZ()};
-        if (mount.getAxis().isVertical() || delta[normal] != 0) return "AWG wall endpoints must share one wall";
+        if (mount == Direction.DOWN || delta[normal] != 0) return "AWG endpoints must share one support plane";
         int first = -1, second = -1;
         long blocks = 1;
         for (int axis = 0; axis < 3; axis++) if (delta[axis] != 0) {
@@ -282,20 +282,20 @@ public final class AwgCablePart extends VoxelPart {
             if (first < 0) first = axis;
             else second = axis;
         }
-        if (first < 0 || blocks > MAX_ROUTE_BLOCKS) return "AWG route needs 2–64 wall blocks";
+        if (first < 0 || blocks > MAX_ROUTE_BLOCKS) return "AWG route needs 2–64 surface blocks";
         int voxels = (int) blocks * 16;
         long[] a = {16L * start.getX() + 8, 16L * start.getY() + 8, 16L * start.getZ() + 8};
         long[] b = {16L * end.getX() + 8, 16L * end.getY() + 8, 16L * end.getZ() + 8};
         a[normal] += CablePart.plane(face) - 8;
         b[normal] = a[normal];
-        var layout = wallPlan(level, mount, wallSteps(a, b, face, first, second), voxels, player);
+        var layout = surfacePlan(level, mount, surfaceSteps(a, b, face, first, second), voxels, player);
         if (layout.error() != null && second >= 0)
-            layout = wallPlan(level, mount, wallSteps(a, b, face, second, first), voxels, player);
+            layout = surfacePlan(level, mount, surfaceSteps(a, b, face, second, first), voxels, player);
         if (layout.error() != null) return layout.error();
         return lay(level, layout.positions(), layout.parts(), voxels, spool, player, failAt, List.of());
     }
 
-    private static List<CableRouter.Step> wallSteps(long[] a, long[] b, int face, int first, int second) {
+    private static List<CableRouter.Step> surfaceSteps(long[] a, long[] b, int face, int first, int second) {
         var head = a.clone();
         var tail = b.clone();
         int last = second < 0 ? first : second;
@@ -313,7 +313,7 @@ public final class AwgCablePart extends VoxelPart {
         return new CableRouter.Step(p[0], p[1], p[2], face, false);
     }
 
-    private static RouteLayout wallPlan(ServerLevel level, Direction mount, List<CableRouter.Step> steps,
+    private static RouteLayout surfacePlan(ServerLevel level, Direction mount, List<CableRouter.Step> steps,
                                         int routeVoxels, Player player) {
         var positions = new java.util.ArrayList<BlockPos>();
         var parts = new java.util.ArrayList<AwgCablePart>();
@@ -321,18 +321,18 @@ public final class AwgCablePart extends VoxelPart {
         for (var piece : CableRouter.pieces(steps, 2, 1)) {
             var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
             if (!canRouteIn(level, pos, mount, player))
-                return RouteLayout.rejected("AWG wall route blocked or unsupported at " + pos.toShortString());
+                return RouteLayout.rejected("AWG surface route blocked or unsupported at " + pos.toShortString());
             var points = piece.points();
             for (int i = 3; i < points.length; i += 3) {
                 var part = new AwgCablePart(piece.face(), java.util.Arrays.copyOfRange(points, i - 3, i + 3));
                 if (at(level, pos).stream().anyMatch(part::joins))
-                    return RouteLayout.rejected("AWG wall route would tap existing wire");
+                    return RouteLayout.rejected("AWG surface route would tap existing wire");
                 positions.add(pos);
                 parts.add(part);
                 voxels += part.geometry.length();
             }
         }
-        if (voxels != routeVoxels) return RouteLayout.rejected("AWG wall route length mismatch");
+        if (voxels != routeVoxels) return RouteLayout.rejected("AWG surface route length mismatch");
         return new RouteLayout(positions, parts, List.of(), Laying.check(level, positions, parts));
     }
 

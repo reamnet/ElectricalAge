@@ -94,3 +94,7 @@ With the 12 AWG spool in the main hand, sneak-right-click in air to enter route 
 Wall runs use the same paid ledger, cable edge, thermal state, and voxel mesh as floor runs. Their saved geometry adds the mounting face and both three-axis endpoints. Original floor saves retain their previous format. Terminals share voltage only with coincident ends on the same mounting face. The existing midpoint edge connection works with compatible six-node devices mounted against the same wall. Shears remove the selected segment, with intact wire or scrap returned according to its state and paid length.
 
 Wall routes can also make one right-angle bend on the same plane. If the first L-shaped path fails support or collision checks, the planner checks the opposite order of the two legs. The elbow has two independently simulated arms, and its overlapping mesh adds no paid length. Wall routes do not provide a preview.
+
+### Ceiling routes
+
+Enter route mode as for walls, then sneak-right-click the undersides of two solid blocks on the same ceiling plane. The cable occupies the blocks beneath those supports. Both horizontal axes and one right-angle ceiling bend are supported. The planner checks the alternate bend when needed. Ceiling runs use the same save format as wall runs and can connect to compatible midpoint devices mounted against the ceiling.
