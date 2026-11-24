@@ -1105,3 +1105,11 @@ outlet to be added, disconnecting otherwise; ordinary native resume reconnects
 the original real supply. The strengthened wireless production case retains
 both unload/refusal and resume checks, alongside its independently metered power
 and 2000 stable-LU refresh checks.
+
+### AWG malformed-save preservation
+
+A malformed AWG part used to be skipped while loading a voxel node, permanently losing its paid cable
+on the next save. Such a node now follows NodeManager's existing logged orphan policy: preserve the
+whole raw node for repair or a later version, without simulating it or refunding an untrusted ledger.
+`AwgPersistenceTest` covers malformed geometry, missing run version, NaN heat, unknown wire, and
+length mismatch, alongside a valid paid part, through repeated load/save cycles.

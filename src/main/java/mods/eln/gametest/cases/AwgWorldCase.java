@@ -77,6 +77,23 @@ final class AwgWorldCase implements TestCase {
             } catch (ReflectiveOperationException e) {
                 throw new IllegalStateException(e);
             }
+            var node = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(second, ctx.level()));
+            var corrupt = new net.minecraft.nbt.CompoundTag();
+            node.writeToNBT(corrupt);
+            boolean rejected = false;
+            for (int i = 0; i < corrupt.getIntOr("parts", 0); i++) {
+                var part = corrupt.getCompoundOrEmpty("p" + i);
+                if (part.getStringOr("kind", "").equals("awg_cable")) {
+                    part.getCompoundOrEmpty("run").putDouble("joules", Double.NaN);
+                    try {
+                        new mods.eln.node.voxel.VoxelNode().readFromNBT(corrupt);
+                    } catch (IllegalArgumentException expected) {
+                        rejected = true;
+                    }
+                    break;
+                }
+            }
+            ctx.check("corrupt AWG heat rejects node load for raw orphan preservation", rejected, "");
             var restored = run(ctx, second);
             ctx.check("node reload restores AWG heat and replaces the active run",
                 restored != original && Math.abs(restored.getStoredJoules() - heat) < 1e-9

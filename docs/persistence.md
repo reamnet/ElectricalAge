@@ -84,6 +84,11 @@ ids that old worlds depend on. All of it is server side; clients get state only 
   would naturally reuse the "empty" face and so delete the device. Breaking the whole block discards them (logged).
   A block left with only kept faces (and, for a voxel block, no parts or imitated block) breaks at the player's
   first hit, since nothing in it can be aimed at.
+- An AWG voxel cable part that cannot load (invalid geometry, unknown wire, incompatible run version,
+  or corrupt thermal/paid-length state) makes its whole voxel node an orphan. The warning identifies the
+  part index and position; the raw node, including all companion parts, is saved unchanged. It does not
+  simulate until repaired or supported by a later version. No refund is minted from an untrusted ledger.
+  The normal orphan replacement/removal rules above still apply.
 - Two meanings of "orphan": `NodeManager` orphans = saved tags this version cannot load; `NodeOrphans` = live
   nodes whose block is gone.
 

@@ -2744,7 +2744,13 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         for (int i = 0; i < n; i++) {
             CompoundTag pt = nbt.getCompoundOrEmpty("p" + i);
             VoxelPart p = VoxelPart.read(pt, coordonate.y);
-            if (p == null) continue;
+            if (p == null) {
+                // Keep the entire node through NodeManager's logged orphan path. A corrupt ledger
+                // cannot safely authorize a refund, and skipping it would erase the paid wire.
+                if (AwgCablePart.KIND.equals(pt.getStringOr("kind", "")))
+                    throw new IllegalArgumentException("Cannot load AWG part p" + i + " at " + coordonate);
+                continue;
+            }
             p.id = pt.getIntOr("id", -1);
             parts.add(p);
         }
