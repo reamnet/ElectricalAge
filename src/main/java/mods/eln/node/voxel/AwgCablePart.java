@@ -99,7 +99,6 @@ public final class AwgCablePart extends VoxelPart {
 
     public static boolean supportsSpool(mods.eln.node.six.SixNodeDescriptor descriptor) {
         return descriptor instanceof UtilityCableDescriptor wire && wire.getActsAsSingleConductor() && !wire.getMelted()
-            && wire.getMaterial() == mods.eln.sixnode.electricalcable.UtilityCableMaterial.COPPER
             && descriptor.parentItemDamage < 2432;
     }
 
@@ -670,6 +669,9 @@ public final class AwgCablePart extends VoxelPart {
 
     int bareTint() {
         if (wire.getInsulated()) return 0;
-        return 0xffb87345;
+        return switch (wire.getMaterial()) {
+            case COPPER -> 0xffb87345;
+            case ALUMINUM -> 0xffaeb7bd;
+        };
     }
 }

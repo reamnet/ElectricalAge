@@ -3,6 +3,11 @@ package mods.eln.gametest.cases;
 import com.mojang.authlib.GameProfile;
 import mods.eln.Eln;
 import mods.eln.gametest.Reload;
+import mods.eln.generic.ItemNbt;
+import mods.eln.sixnode.electricalcable.UtilityCableMaterial;
+import mods.eln.sixnode.electricalcable.UtilityCables;
+import mods.eln.sixnode.electricalcable.WirePhysics;
+import mods.eln.sixnode.electricalcable.WireThermalPhysics;
 import mods.eln.gametest.TestCase;
 import mods.eln.gametest.TestContext;
 import mods.eln.node.voxel.AwgCablePart;
@@ -31,12 +36,17 @@ import java.util.UUID;
 
 final class AwgJunctionCase implements TestCase {
     private UtilityCableDescriptor wire;
+    private final boolean mixed;
+    private UtilityCableDescriptor branchWire;
     private ItemStack spool;
+
+    AwgJunctionCase() { this(false); }
+    AwgJunctionCase(boolean mixed) { this.mixed = mixed; }
     private BlockPos center, branchFirst, branchEnd;
     private ResistorElement straight, branch;
     private FakePlayer player;
 
-    @Override public String id() { return "awg_voxel_world_three_way_junction"; }
+    @Override public String id() { return mixed ? "awg_voxel_mixed_metal_junction" : "awg_voxel_world_three_way_junction"; }
     @Override public int width() { return 10; }
     @Override public int height() { return 5; }
     @Override public int depth() { return 10; }
@@ -45,10 +55,14 @@ final class AwgJunctionCase implements TestCase {
 
     @Override public void build(TestContext ctx) {
         player = FakePlayerFactory.get(ctx.level(), new GameProfile(
-            UUID.fromString("50726059-2904-4fca-89da-705880ccf153"), "eln_awg_junction"));
+            UUID.nameUUIDFromBytes(id().getBytes(java.nio.charset.StandardCharsets.UTF_8)), "eln_awg_junction"));
         player.setGameMode(GameType.SURVIVAL);
         player.setShiftKeyDown(true);
         wire = (UtilityCableDescriptor) Eln.sixNodeItem.getDescriptor(2200);
+        branchWire = mixed ? UtilityCables.INSTANCE.getAll().stream()
+            .filter(w -> w.getMaterial() == UtilityCableMaterial.ALUMINUM && w.getInsulated()
+                && w.getActsAsSingleConductor() && w.getConductorAreaMm2() == 33.631)
+            .findFirst().orElseThrow() : wire;
         spool = wire.newItemStack();
         wire.setRemainingLengthMeters(spool, 9.125);
         player.setItemInHand(InteractionHand.MAIN_HAND, spool);
@@ -63,7 +77,15 @@ final class AwgJunctionCase implements TestCase {
         ctx.placeSix(Wp9aCases.GROUND, ctx.at(2, 1, 7));
         begin(ctx, ctx.at(1, 1, 3));
         check(ctx, click(ctx.at(5, 1, 3), false) == InteractionResult.SUCCESS, "five-meter trunk placed");
-        ctx.after(25, () -> branch(ctx));
+        ctx.after(25, () -> {
+            if (mixed) {
+                check(ctx, wire.getRemainingLengthMeters(spool) == 4.125, "copper trunk charges exactly five meters");
+                spool = branchWire.newItemStack();
+                branchWire.setRemainingLengthMeters(spool, 4.125);
+                player.setItemInHand(InteractionHand.MAIN_HAND, spool);
+            }
+            branch(ctx);
+        });
         ctx.after(50, () -> {
             checkCircuit(ctx);
             var before = AwgCablePart.at(ctx.level(), center).stream().mapToDouble(p -> p.activeRun().getStoredJoules()).sum();
@@ -75,18 +97,18 @@ final class AwgJunctionCase implements TestCase {
                 throw new IllegalStateException(e);
             }
             var after = AwgCablePart.at(ctx.level(), center).stream().mapToDouble(p -> p.activeRun().getStoredJoules()).sum();
-            check(ctx, Math.abs(after - before) < 1e-8 && wire.getRemainingLengthMeters(spool) == 1.625,
+            check(ctx, Math.abs(after - before) < 1e-8 && branchWire.getRemainingLengthMeters(spool) == 1.625,
                 "reloading every wire block preserves junction heat and spool balance");
         });
         ctx.after(75, () -> {
             checkCircuit(ctx);
             // Bring one real, powered world run close to fusion without heating the entire circuit.
-            var physics = new mods.eln.sixnode.electricalcable.WireThermalPhysics(wire.getMaterial(), 3.309, 1.0);
+            var physics = new WireThermalPhysics(branchWire.getMaterial(), branchWire.getConductorAreaMm2(), 1.0);
             try {
                 Reload.node(ctx.level(), branchFirst, tag -> {
                     var part = tag.getCompoundOrEmpty("p0");
                     var state = part.getCompoundOrEmpty("run");
-                    state.putDouble("joules", physics.getFailureEnthalpy() - 0.01);
+                    state.putDouble("joules", physics.getFailureEnthalpy() - (mixed ? 0.000001 : 0.01));
                     return tag;
                 });
             } catch (ReflectiveOperationException e) {
@@ -100,6 +122,16 @@ final class AwgJunctionCase implements TestCase {
             remove(ctx, branchFirst);
             check(ctx, ctx.level().getEntitiesOfClass(ItemEntity.class, new AABB(branchFirst)).isEmpty(),
                 "fused branch material cannot be refunded");
+            if (mixed) {
+                try {
+                    Reload.node(ctx.level(), branchEnd, tag -> {
+                        tag.getCompoundOrEmpty("p0").getCompoundOrEmpty("run").putInt("jacketLost", 1);
+                        return tag;
+                    });
+                } catch (ReflectiveOperationException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
             remove(ctx, branchEnd);
         });
     }
@@ -113,7 +145,7 @@ final class AwgJunctionCase implements TestCase {
         var crossingStart = ctx.at(2, 1, 1);
         begin(ctx, crossingStart);
         check(ctx, click(branchEnd, false) == InteractionResult.FAIL && ctx.level().isEmptyBlock(crossingStart)
-            && AwgCablePart.at(ctx.level(), center).size() == 1 && wire.getRemainingLengthMeters(spool) == 4.125,
+            && AwgCablePart.at(ctx.level(), center).size() == 1 && branchWire.getRemainingLengthMeters(spool) == 4.125,
             "a through-route cannot silently short to an unselected crossing");
         spool.use(ctx.level(), player, InteractionHand.MAIN_HAND);
         var original = AwgCablePart.at(ctx.level(), center).getFirst();
@@ -125,22 +157,22 @@ final class AwgJunctionCase implements TestCase {
         original.write(actual);
         check(ctx, "forced".equals(error) && expected.equals(actual) && Arrays.equals(counts, Eln.simulator.counts())
             && AwgCablePart.at(ctx.level(), center).getFirst() == original && ctx.level().isEmptyBlock(branchFirst)
-            && wire.getRemainingLengthMeters(spool) == 4.125, "mid-placement rollback restores the intact hot trunk");
+            && branchWire.getRemainingLengthMeters(spool) == 4.125, "mid-placement rollback restores the intact hot trunk");
 
         begin(ctx, branchEnd);
         ctx.level().setBlockAndUpdate(branchFirst, Blocks.STONE.defaultBlockState());
-        check(ctx, click(center, true) == InteractionResult.FAIL && wire.getRemainingLengthMeters(spool) == 4.125
+        check(ctx, click(center, true) == InteractionResult.FAIL && branchWire.getRemainingLengthMeters(spool) == 4.125
             && AwgCablePart.at(ctx.level(), center).getFirst() == original, "blocked tap leaves trunk and spool intact");
         ctx.level().removeBlock(branchFirst, false);
-        wire.setRemainingLengthMeters(spool, 2.4375);
-        check(ctx, click(center, true) == InteractionResult.FAIL && wire.getRemainingLengthMeters(spool) == 2.4375
+        branchWire.setRemainingLengthMeters(spool, 2.4375);
+        check(ctx, click(center, true) == InteractionResult.FAIL && branchWire.getRemainingLengthMeters(spool) == 2.4375
             && AwgCablePart.at(ctx.level(), center).getFirst() == original, "underfunded tap leaves trunk unsplit");
-        wire.setRemainingLengthMeters(spool, 4.125);
-        check(ctx, click(center, true) == InteractionResult.SUCCESS && wire.getRemainingLengthMeters(spool) == 1.625
+        branchWire.setRemainingLengthMeters(spool, 4.125);
+        check(ctx, click(center, true) == InteractionResult.SUCCESS && branchWire.getRemainingLengthMeters(spool) == 1.625
             && AwgCablePart.at(ctx.level(), center).size() == 3, "straight trunk splits into a tee with only 2.5 m charged");
         var north = ctx.at(2, 1, 1);
         begin(ctx, north);
-        check(ctx, click(center, true) == InteractionResult.FAIL && wire.getRemainingLengthMeters(spool) == 1.625
+        check(ctx, click(center, true) == InteractionResult.FAIL && branchWire.getRemainingLengthMeters(spool) == 1.625
             && ctx.level().isEmptyBlock(north), "a fourth arm is refused");
         spool.use(ctx.level(), player, InteractionHand.MAIN_HAND);
     }
@@ -156,7 +188,9 @@ final class AwgJunctionCase implements TestCase {
                 && Math.abs(currents[2] - lateral - direct) < 0.05, direct + " A and " + lateral + " A");
         for (var part : arms) {
             var run = part.activeRun();
-            double expected = wire.resistanceOhms(0.5, run.getTemperatureCelsius());
+            double amps = Math.abs(run.getCurrentAmps());
+            var descriptor = Math.abs(amps - lateral) < 0.05 ? branchWire : wire;
+            double expected = descriptor.resistanceOhms(0.5, run.getTemperatureCelsius());
             ctx.check("each arm retains independent half-meter resistance",
                 Math.abs(run.getVoltageDrop() / run.getCurrentAmps() - expected) < 2e-6, "" + run.getVoltageDrop());
         }
@@ -188,9 +222,20 @@ final class AwgJunctionCase implements TestCase {
     @Override public void measure(TestContext ctx) {
         check(ctx, Math.abs(Wp9aCases.current(straight)) > 0.5 && branchCurrent() < 1e-6,
             "removing the branch leaves the straight load powered");
+        if (mixed) {
+            var drops = ctx.level().getEntitiesOfClass(ItemEntity.class, new AABB(branchEnd).inflate(0.5));
+            var tag = ItemNbt.get(drops.getFirst().getItem());
+            check(ctx, drops.size() == 1 && tag.getStringOr("wireScrapMaterial", "").equals("Aluminum")
+                && tag.getDoubleOr("wireScrapMeters", -1) == 1
+                && tag.getDoubleOr("wireScrapMassKg", -1) == WirePhysics.INSTANCE.massKg(
+                    branchWire.getMaterial(), branchWire.getConductorAreaMm2(), 1)
+                && branchWire.getRemainingLengthMeters(spool) + 1 + 1 + 0.5 == 4.125,
+                "damaged aluminum refunds exactly its recoverable mass as scrap");
+            return;
+        }
         double refunded = ctx.level().getEntitiesOfClass(ItemEntity.class, new AABB(branchEnd).inflate(0.5)).stream()
             .map(ItemEntity::getItem).filter(s -> s.is(wire.parentItem)).mapToDouble(wire::getRemainingLengthMeters).sum();
-        check(ctx, refunded == 1.0 && wire.getRemainingLengthMeters(spool) + refunded + 5.5 + 1.0 == 9.125,
+        check(ctx, refunded == 1.0 && branchWire.getRemainingLengthMeters(spool) + refunded + 5.5 + 1.0 == 9.125,
             "refund, inventory, fused loss and remaining wire account for all 9.125 m");
     }
 }

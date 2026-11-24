@@ -6,6 +6,8 @@ import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.state.VoltageState
 import mods.eln.sixnode.electricalcable.UtilityCableDescriptor
+import mods.eln.sixnode.electricalcable.UtilityCableMaterial
+import mods.eln.sixnode.electricalcable.UtilityCableMaterial.ALUMINUM
 import mods.eln.sixnode.electricalcable.UtilityCableMaterial.COPPER
 import mods.eln.sixnode.electricalcable.WireThermalPhysics
 import org.junit.jupiter.api.Assertions.*
@@ -51,6 +53,46 @@ class AwgCableRunTest {
         assertEquals(input + cool, run.storedJoules, 1e-9)
         assertEquals(physics.temperature(input + cool), run.temperatureCelsius, 1e-10)
         assertFalse(run.jacketDamaged)
+    }
+
+    private fun twoAwg(material: UtilityCableMaterial) =
+        UtilityCableDescriptor("2 AWG", material, 33.631, 100.0, true, 600.0, false, 105.0,
+            "2 AWG test", wire.render).apply { parentItemDamage = if (material == COPPER) 2215 else 2242 }
+
+    @Test
+    fun equalGaugeCopperAndAluminumUseTheirOwnResistanceHeatCapacityAndFusionPoint() {
+        air = Double.NaN // Observe conductor heating without ambient cooling.
+        val runs = listOf(COPPER, ALUMINUM).map { material ->
+            val descriptor = twoAwg(material)
+            val a = node()
+            val b = node()
+            val resistance20 = (if (material == COPPER) 0.017241 else 0.028264) / 33.631
+            val power = source(a, 100 * (1 + resistance20))
+            load(b, 1.0)
+            val length = AwgWireLength(descriptor.parentItemDamage, 16, false)
+            val run = AwgCableRun.create(descriptor, length, a, b, 20.0).connect()
+            sim.tick()
+            assertEquals(100.0, run.currentAmps, 1e-8)
+            assertEquals(100 * resistance20, run.voltageDrop, 1e-9)
+            val physics = WireThermalPhysics(material, 33.631, 1.0)
+            val heat = 100 * 100 * resistance20 * 0.05
+            assertEquals(heat, run.storedJoules, 1e-9)
+            val temperature = run.temperatureCelsius
+            assertEquals(physics.temperature(heat), temperature, 1e-10)
+
+            run.detach()
+            val hot = run.save().apply { putDouble("joules", physics.failureEnthalpy - 0.001) }
+            val nearFusion = AwgCableRun.load(descriptor, hot, a, b).connect()
+            val fusionCelsius = nearFusion.temperatureCelsius
+            sim.tick()
+            assertTrue(nearFusion.conductorMelted)
+            sim.tick()
+            assertEquals(0.0, power.i, 1e-8)
+            temperature to fusionCelsius
+        }
+        assertTrue(runs[1].first > runs[0].first)
+        assertEquals(1085.0, runs[0].second, 1e-9)
+        assertEquals(660.0, runs[1].second, 1e-9)
     }
 
     @Test

@@ -39,6 +39,7 @@ public final class CableCases {
         cases.add(new AwgWorldCase(true));
         cases.add(new AwgBendCase());
         cases.add(new AwgJunctionCase());
+        cases.add(new AwgJunctionCase(true));
         for (var mount : net.minecraft.core.Direction.Plane.HORIZONTAL) cases.add(new AwgWallCase(mount));
         for (var mount : net.minecraft.core.Direction.Plane.HORIZONTAL) cases.add(new AwgWallBendCase(mount));
         cases.add(new AwgWallCase(net.minecraft.core.Direction.UP, net.minecraft.core.Direction.EAST));
@@ -49,6 +50,7 @@ public final class CableCases {
         cases.add(new AwgTransitionCase(false, net.minecraft.core.Direction.UP));
         cases.add(new AwgTransitionCase(true, net.minecraft.core.Direction.UP));
         cases.add(new AwgCatalogCase(mods.eln.sixnode.electricalcable.UtilityCableMaterial.COPPER, false, 42));
+        cases.add(new AwgCatalogCase(mods.eln.sixnode.electricalcable.UtilityCableMaterial.ALUMINUM, false, 18));
         for (var scenario : AwgRoutingReliabilityCase.Scenario.values()) cases.add(new AwgRoutingReliabilityCase(scenario));
         cases.add(new BurnCase());
         cases.add(new RoutedCase());
