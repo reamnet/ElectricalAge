@@ -24,6 +24,7 @@ final class AwgBendCase implements TestCase {
     private ItemStack spool;
     private BlockPos bend;
     private ResistorElement resistor;
+    private FakePlayer player;
 
     @Override public String id() { return "awg_voxel_world_floor_bend"; }
     @Override public int width() { return 10; }
@@ -33,13 +34,13 @@ final class AwgBendCase implements TestCase {
     @Override public int ticks() { return 60; }
 
     @Override public void build(TestContext ctx) {
-        var player = FakePlayerFactory.get(ctx.level(), new com.mojang.authlib.GameProfile(
+        player = FakePlayerFactory.get(ctx.level(), new com.mojang.authlib.GameProfile(
             java.util.UUID.fromString("50726059-2904-4fca-89da-705880ccf152"), "eln_awg_bend"));
         player.setGameMode(GameType.SURVIVAL);
         player.setShiftKeyDown(true);
         wire = (UtilityCableDescriptor) Eln.sixNodeItem.getDescriptor(2200);
         spool = wire.newItemStack();
-        wire.setRemainingLengthMeters(spool, 6.25);
+        wire.setRemainingLengthMeters(spool, 7.25);
         player.setItemInHand(InteractionHand.MAIN_HAND, spool);
         Wp9aCases.source(ctx, Wp9aCases.SOURCE, 0, 1, 12);
         resistor = Wp9aCases.resistor(ctx, Wp9aCases.POWER_RESISTOR, 3, 4, CableCases.CORE);
@@ -53,7 +54,7 @@ final class AwgBendCase implements TestCase {
             && click(player, end) == InteractionResult.SUCCESS, "");
         var elbow = AwgCablePart.at(ctx.level(), bend);
         ctx.check("the elbow has two independent half-meter arms with its rendered overlap free",
-            elbow.size() == 2 && wire.getRemainingLengthMeters(spool) == 1.25
+            elbow.size() == 2 && wire.getRemainingLengthMeters(spool) == 2.25
                 && !VoxelGeometry.of(new java.util.ArrayList<>(elbow)).isEmpty(), "");
     }
 
@@ -76,5 +77,11 @@ final class AwgBendCase implements TestCase {
             ctx.check("the elbow arm drops the voltage of half a meter of wire",
                 Math.abs(run.getVoltageDrop() / run.getCurrentAmps() - expected) < 2e-6, "" + run.getVoltageDrop());
         }
+        spool.use(ctx.level(), player, InteractionHand.MAIN_HAND);
+        ctx.check("an existing elbow accepts one additional arm without charging for the old bend",
+            click(player, ctx.at(4, 1, 1)) == InteractionResult.SUCCESS
+                && click(player, bend) == InteractionResult.SUCCESS
+                && AwgCablePart.at(ctx.level(), bend).size() == 3
+                && wire.getRemainingLengthMeters(spool) == 0.75, "");
     }
 }

@@ -80,3 +80,9 @@ Moving between mounting faces needs a separate extension. Generalize the saved A
 ### Route reliability
 
 The server preflights the whole X-first candidate, then preflights the Z-first candidate if needed. Only one valid candidate proceeds to the placement transaction. A failure during placement rolls back that transaction without trying another path, and the start stays available for a retry. Reverse-order cleanup removes only parts staged by the transaction, retains pre-existing voxel blocks, and leaves the original spool untouched. The server drops a pending selection once the player switches away from its spool, changes dimension, or reaches the idle limit. Sneak-use in air still cancels immediately.
+
+### Three-way floor junctions
+
+In route mode, select a cable's block as either endpoint by sneak-right-clicking the top of the centered AWG cable or its floor. A new arm ends at the block center. It taps a straight run from the side or uses a free direction at an existing elbow. The route rejects unselected crossings, fused wire and a fourth arm. Branching is limited to centered floor junctions.
+
+Tapping a straight run divides its existing paid length and heat between two independent edges. All three arms share the one center voltage state. The spool pays only for the new arm and the intervening run. The preflight ignores only the old straight part scheduled for replacement. The transaction restores that original part and its saved state if laying fails. Compatible existing saves use the same individual AWG part format, with no new registry ID.

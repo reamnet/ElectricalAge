@@ -237,6 +237,10 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
 
     /** Could the part go in (null), else why not. */
     public String canAdd(VoxelPart p) {
+        return canAdd(p, null);
+    }
+
+    String canAdd(VoxelPart p, VoxelPart replaced) {
         if (p instanceof PipePart pipe && !pipe.valid()) return "not a straight-pieced pipe inside the block";
         if (p instanceof CablePart c && !c.valid()) return "not a cable lying on a face of the block";
         if (p instanceof AdapterPart a) {   // (its flange sits on its own stub's end)
@@ -255,7 +259,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             BitSet occupied = new BitSet(4096);
             markFixedVoxels(occupied);
             for (VoxelPart other : parts)
-                if (!(other instanceof AwgCablePart arm && awg.joins(arm)))
+                if (other != replaced && !(other instanceof AwgCablePart arm && awg.joins(arm)))
                     for (int[] b : other.boxes()) fill(occupied, b);
             for (int[] b : p.boxes()) {
                 var want = new BitSet(4096);
@@ -264,6 +268,13 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             }
         } else if (!fits(p)) return "something is in the way";
         return null;
+    }
+
+    void replaceAwgParts(int index, int count, List<AwgCablePart> replacement) {
+        parts.subList(index, index + count).clear();
+        parts.addAll(index, replacement);
+        markUsed();
+        changed();
     }
 
     /** Add a part (a pipe laid here): null if done, else why not. */

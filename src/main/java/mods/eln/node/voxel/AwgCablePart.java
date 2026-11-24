@@ -112,15 +112,16 @@ public final class AwgCablePart extends VoxelPart {
         // Only the server lays the run or changes the spool.
         if (!(ctx.getLevel() instanceof ServerLevel level)) return InteractionResult.SUCCESS;
         BlockPos floor = ctx.getClickedPos();
-        BlockPos pos = floor.above();
         ItemStack spool = ctx.getItemInHand();
+        var selected = selection(level, player, spool);
+        BlockPos pos = selected != null && level.getBlockState(floor).getBlock() instanceof VoxelNodeBlock
+            && hasCenterWire(level, floor) ? floor : floor.above();
         var hit = ctx.getClickLocation();
         if (player.isSpectator() || !player.getAbilities().mayBuild || player.getMainHandItem() != spool
             || !level.hasChunkAt(floor) || !level.mayInteract(player, floor) || !level.mayInteract(player, pos)
             || !new net.minecraft.world.phys.AABB(floor).inflate(0.01).contains(hit)
             || !(player.getEyePosition().distanceTo(hit) <= player.blockInteractionRange())) return InteractionResult.FAIL;
 
-        var selected = selection(level, player, spool);
         if (selected != null) {
             if (!canRouteIn(level, pos, player)) return InteractionResult.FAIL;
             if (selected.start() == null) {
@@ -157,7 +158,7 @@ public final class AwgCablePart extends VoxelPart {
             return "AWG run needs a loaded block and a solid floor";
         }
         var part = new AwgCablePart(x0, z0, x1, z1);
-        return lay(level, List.of(pos), List.of(part), part.geometry.length(), spool, player, -1);
+        return lay(level, List.of(pos), List.of(part), part.geometry.length(), spool, player, -1, List.of());
     }
 
     private static boolean canRouteIn(ServerLevel level, BlockPos pos, Player player) {
@@ -188,40 +189,81 @@ public final class AwgCablePart extends VoxelPart {
         long sx = 16L * start.getX() + 8, ex = 16L * end.getX() + 8;
         long sz = 16L * start.getZ() + 8, ez = 16L * end.getZ() + 8;
         long y = 16L * start.getY(), ox = Long.signum(dx) * 8L, oz = Long.signum(dz) * 8L;
-        int routeVoxels = (int) blocks * 16;
+        boolean tapStart = hasCenterWire(level, start), tapEnd = hasCenterWire(level, end);
+        long head = tapStart ? 0 : 1, tail = tapEnd ? 0 : 1;
+        int routeVoxels = (int) blocks * 16 - (tapStart ? 8 : 0) - (tapEnd ? 8 : 0);
         RouteLayout layout;
         if (dx == 0 || dz == 0) {
-            layout = plan(level, List.of(floorStep(sx - ox, y, sz - oz),
-                floorStep(ex + ox, y, ez + oz)), routeVoxels, player);
+            layout = plan(level, List.of(floorStep(sx - head * ox, y, sz - head * oz),
+                floorStep(ex + tail * ox, y, ez + tail * oz)), routeVoxels, player, start, end, tapStart, tapEnd);
         } else {
-            layout = plan(level, List.of(floorStep(sx - ox, y, sz), floorStep(ex, y, sz),
-                floorStep(ex, y, ez + oz)), routeVoxels, player);
+            layout = plan(level, List.of(floorStep(sx - head * ox, y, sz), floorStep(ex, y, sz),
+                floorStep(ex, y, ez + tail * oz)), routeVoxels, player, start, end, tapStart, tapEnd);
             if (layout.error() != null) {
-                layout = plan(level, List.of(floorStep(sx, y, sz - oz), floorStep(sx, y, ez),
-                    floorStep(ex + ox, y, ez)), routeVoxels, player);
+                layout = plan(level, List.of(floorStep(sx, y, sz - head * oz), floorStep(sx, y, ez),
+                    floorStep(ex + tail * ox, y, ez)), routeVoxels, player, start, end, tapStart, tapEnd);
             }
         }
         if (layout.error() != null) return layout.error();
-        return lay(level, layout.positions(), layout.parts(), routeVoxels, spool, player, failAt);
+        return lay(level, layout.positions(), layout.parts(), routeVoxels, spool, player, failAt, layout.splits());
+    }
+
+    private static boolean hasCenterWire(ServerLevel level, BlockPos pos) {
+        return level.hasChunkAt(pos) && at(level, pos).stream().anyMatch(AwgCablePart::passesCenter);
+    }
+
+    private boolean passesCenter() {
+        return x0 == x1 ? x0 == 8 && Math.min(z0, z1) <= 8 && Math.max(z0, z1) >= 8
+            : z0 == 8 && Math.min(x0, x1) <= 8 && Math.max(x0, x1) >= 8;
+    }
+
+    private record Split(VoxelNode node, AwgCablePart original, List<AwgCablePart> halves) {
+        void apply() { node.replaceAwgParts(node.parts.indexOf(original), 1, halves); }
+        void undo() { node.replaceAwgParts(node.parts.indexOf(halves.getFirst()), 2, List.of(original)); }
+    }
+
+    /** Validate one explicit center tap, with at most three non-overlapping incident arms. */
+    private static String planTap(ServerLevel level, BlockPos pos, AwgCablePart arm, List<Split> splits) {
+        var wires = at(level, pos).stream().filter(AwgCablePart::passesCenter).toList();
+        if (wires.isEmpty() || wires.size() > 2 || !arm.hasEnd(8, 8)) return "AWG junction is occupied";
+        for (var existing : wires) {
+            var state = existing.run;
+            if (state == null || state.getConductorMelted()) return "AWG junction needs live conductor";
+            if (existing.hasEnd(8, 8)) continue;
+            if (wires.size() != 1 || (existing.x0 == existing.x1) == (arm.x0 == arm.x1))
+                return "AWG tap must approach the side of a straight run";
+            var first = new AwgCablePart(existing.x0, existing.z0, 8, 8);
+            var second = new AwgCablePart(8, 8, existing.x1, existing.z1);
+            var detached = AwgCableRun.Companion.load(wire(), state.save(), new VoltageState(), new VoltageState());
+            var split = detached.split(first.geometry.length(), new VoltageState());
+            first.saved = split.getFirst().save();
+            second.saved = split.getSecond().save();
+            var node = (VoxelNode) ((VoxelNodeEntity) level.getBlockEntity(pos)).getNode();
+            splits.add(new Split(node, existing, List.of(first, second)));
+        }
+        return null;
     }
 
     private static CableRouter.Step floorStep(long x, long y, long z) {
         return new CableRouter.Step(x, y, z, 0, false);
     }
 
-    private record RouteLayout(List<BlockPos> positions, List<AwgCablePart> parts, String error) {
+    private record RouteLayout(List<BlockPos> positions, List<AwgCablePart> parts, List<Split> splits, String error) {
         static RouteLayout rejected(String error) {
-            return new RouteLayout(List.of(), List.of(), error);
+            return new RouteLayout(List.of(), List.of(), List.of(), error);
         }
     }
 
-    private static RouteLayout plan(ServerLevel level, List<CableRouter.Step> steps, int routeVoxels, Player player) {
+    private static RouteLayout plan(ServerLevel level, List<CableRouter.Step> steps, int routeVoxels, Player player,
+                                    BlockPos start, BlockPos end, boolean tapStart, boolean tapEnd) {
         var positions = new java.util.ArrayList<BlockPos>();
         var parts = new java.util.ArrayList<AwgCablePart>();
         int measured = 0;
         for (var piece : CableRouter.pieces(steps, 2, 1)) {
             var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
             if (!canRouteIn(level, pos, player)) return RouteLayout.rejected("AWG route blocked or unsupported at " + pos.toShortString());
+            if (!pos.equals(start) && !pos.equals(end) && hasCenterWire(level, pos))
+                return RouteLayout.rejected("AWG route would cross existing wire at " + pos.toShortString());
             var points = piece.points();
             for (int i = 3; i < points.length; i += 3) {
                 var part = new AwgCablePart(points[i - 3], points[i - 1], points[i], points[i + 2]);
@@ -231,11 +273,17 @@ public final class AwgCablePart extends VoxelPart {
             }
         }
         if (measured != routeVoxels) return RouteLayout.rejected("AWG route length mismatch");
-        return new RouteLayout(positions, parts, Laying.check(level, positions, parts));
+        var splits = new java.util.ArrayList<Split>();
+        String error = tapStart ? planTap(level, start, parts.getFirst(), splits) : null;
+        if (error == null && tapEnd) error = planTap(level, end, parts.getLast(), splits);
+        if (error != null) return RouteLayout.rejected(error);
+        var replaced = new HashMap<BlockPos, AwgCablePart>();
+        for (var split : splits) replaced.put(split.node().coordonate.pos(), split.original());
+        return new RouteLayout(positions, parts, splits, Laying.check(level, positions, parts, replaced));
     }
 
     private static String lay(ServerLevel level, List<BlockPos> positions, List<AwgCablePart> parts,
-                              int voxels, ItemStack spool, Player player, int failAt) {
+                              int voxels, ItemStack spool, Player player, int failAt, List<Split> splits) {
         boolean creative = player != null && player.isCreative();
         if (spool.getCount() != 1 || !spool.is(wire().parentItem)) return "invalid AWG spool";
         var copy = creative ? ItemStack.EMPTY : spool.copy();
@@ -247,12 +295,24 @@ public final class AwgCablePart extends VoxelPart {
             part.saved = AwgCableRun.Companion.create(wire(), length.take(part.geometry.length()),
                 new VoltageState(), new VoltageState(), Ambient.relative(coord) + 20).save();
         }
-        var error = Laying.lay(level, positions, parts, player, failAt);
-        if (error == null && !creative) {
-            ItemNbt.set(spool, ItemNbt.get(copy));
-            spool.setCount(copy.getCount());
+        int applied = 0;
+        boolean committed = false;
+        try {
+            for (var split : splits) {
+                split.apply();
+                applied++;
+            }
+            var error = Laying.lay(level, positions, parts, player, failAt);
+            if (error != null) return error;
+            if (!creative) {
+                ItemNbt.set(spool, ItemNbt.get(copy));
+                spool.setCount(copy.getCount());
+            }
+            committed = true;
+            return null;
+        } finally {
+            if (!committed) for (int i = applied - 1; i >= 0; i--) splits.get(i).undo();
         }
-        return error;
     }
 
     @Override public String kind() { return KIND; }
