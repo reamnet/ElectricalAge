@@ -92,6 +92,38 @@ ids that old worlds depend on. All of it is server side; clients get state only 
 - Two meanings of "orphan": `NodeManager` orphans = saved tags this version cannot load; `NodeOrphans` = live
   nodes whose block is gone.
 
+## Recovering an inactive AWG node
+
+Players should leave the affected block in place and ask the server administrator to inspect the
+warning (`Cannot load AWG part pN at ...`). Do not break or replace the block or place a new node
+there: the normal orphan-removal rules deliberately discard its preserved tag, with a warning.
+There is no automatic refund or in-game orphan-repair command. All parts and hosted devices in
+that one block remain inactive together; their saved tags are retained, not their live simulation.
+Other blocks continue loading normally.
+
+For an administrator:
+
+1. Stop the server and back up the entire world, including `data/electricalAgeWorld<dim>.dat`
+   and its `.bak` (overworld: `electricalAgeWorld0.dat`). Work on a copy first.
+2. With a gzip-NBT editor, open that dimension's EA save file, then `nodes`. Find the node by
+   `node/cx`, `cy`, `cz`, `cd` and the warning's part index (`pN`). Node entry names such as `n0`
+   can change across saves; use the coordinates. These tags are outside Minecraft chunk NBT.
+3. Export the **whole node tag** before editing. Preserve its hosted-device `EID*`/`ED*`, all
+   `pN` parts, `parts`, `nextPartId`, host, carved shape and any unknown keys. Prefer restoring
+   the damaged fields from a known-good backup, or running a version that supports the saved
+   descriptor/version. Do not invent a version, wire ID, paid length or thermal/damage values
+   just to make validation pass. Unknown IDs and newer formats need a compatible build.
+4. Replace the one saved node entry in place; do not append a second copy or spawn a replacement
+   spool. Keep its original coordinates and paid-wire ledger. Restart the copied world and check
+   that the warning is gone, every companion part/device is present, and the circuit works.
+   If it remains an orphan, stop and restore the untouched export before further diagnosis.
+5. Apply the verified repair to the stopped real server. Check another save/restart before
+   retiring the backup. A restored tag loads through the ordinary node path; there is no extra
+   recovery payout. Never restore the same installed paid wire as both a node and inventory items.
+
+If trustworthy values cannot be recovered, retain the raw export and backups. The protection
+preserves evidence and paid state; it cannot reconstruct information that was already corrupt.
+
 ## NBT layout of a node
 
 | Level | Keys | Source |
