@@ -98,3 +98,9 @@ Wall routes can also make one right-angle bend on the same plane. If the first L
 ### Ceiling routes
 
 Enter route mode as for walls, then sneak-right-click the undersides of two solid blocks on the same ceiling plane. The cable occupies the blocks beneath those supports. Both horizontal axes and one right-angle ceiling bend are supported. The planner checks the alternate bend when needed. Ceiling runs use the same save format as wall runs and can connect to compatible midpoint devices mounted against the ceiling.
+
+### Floor and wall transitions
+
+In route mode, select the top of the floor support and the face of the wall support, in either order. The floor leg must approach the wall squarely in the same row and the wall leg must rise from that inner corner. Both legs include their clicked blocks. The corner block holds one arm on each support face. Their saved pair of endpoint markers shares a voltage state only with the matching arm. An ordinary cable endpoint on either face cannot join that state.
+
+The transaction charges both centerlines and treats voxel mesh overlap as free. Both support faces must be solid at the corner. An unsupported face, obstruction or failed placement rejects the whole route. Removing either corner arm opens the joint and recovers only that arm's paid length.

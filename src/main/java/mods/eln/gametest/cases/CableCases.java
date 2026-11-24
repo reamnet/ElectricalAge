@@ -44,6 +44,8 @@ public final class CableCases {
         cases.add(new AwgWallCase(net.minecraft.core.Direction.UP, net.minecraft.core.Direction.EAST));
         cases.add(new AwgWallCase(net.minecraft.core.Direction.UP, net.minecraft.core.Direction.SOUTH));
         cases.add(new AwgWallBendCase(net.minecraft.core.Direction.UP));
+        cases.add(new AwgTransitionCase(false));
+        cases.add(new AwgTransitionCase(true));
         for (var scenario : AwgRoutingReliabilityCase.Scenario.values()) cases.add(new AwgRoutingReliabilityCase(scenario));
         cases.add(new BurnCase());
         cases.add(new RoutedCase());

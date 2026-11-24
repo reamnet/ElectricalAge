@@ -46,6 +46,8 @@ public final class AwgCablePart extends VoxelPart {
     private CompoundTag saved;
     private AwgCableRun run;
     private Terminal from, to;
+    private int cornerEnd = -1;
+    private int cornerFace = -1;
 
     private AwgCablePart(int x0, int z0, int x1, int z1) {
         this(0, new int[]{x0, 0, z0, x1, 0, z1});
@@ -143,11 +145,12 @@ public final class AwgCablePart extends VoxelPart {
             if (selected.start() == null) {
                 SELECTIONS.put(player, new Selection(spool, level, pos, mount, level.getGameTime() + CablePlacer.IDLE_TICKS));
                 tell(player, "AWG route start set. Sneak-right-click the destination support face");
-            } else if (selected.mount() != mount) {
-                return InteractionResult.FAIL;
-            } else if (!selected.start().equals(pos)) {
-                String error = mount == Direction.DOWN ? route(level, selected.start(), pos, spool, player)
-                    : surfaceRoute(level, selected.start(), pos, mount, spool, player, -1);
+            } else if (!selected.start().equals(pos) || selected.mount() != mount) {
+                String error;
+                if (selected.mount() != mount)
+                    error = transition(level, selected.start(), selected.mount(), pos, mount, spool, player, -1);
+                else if (mount == Direction.DOWN) error = route(level, selected.start(), pos, spool, player);
+                else error = surfaceRoute(level, selected.start(), pos, mount, spool, player, -1);
                 if (error != null) {
                     tell(player, error);
                     return InteractionResult.FAIL;
@@ -248,6 +251,7 @@ public final class AwgCablePart extends VoxelPart {
         var wires = at(level, pos).stream().filter(AwgCablePart::passesCenter).toList();
         if (wires.isEmpty() || wires.size() > 2 || !arm.hasEnd(8, 8)) return "AWG junction is occupied";
         for (var existing : wires) {
+            if (existing.cornerEnd >= 0) return "AWG face transitions cannot be tapped";
             var state = existing.run;
             if (state == null || state.getConductorMelted()) return "AWG junction needs live conductor";
             if (existing.hasEnd(8, 8)) continue;
@@ -293,6 +297,46 @@ public final class AwgCablePart extends VoxelPart {
             layout = surfacePlan(level, mount, surfaceSteps(a, b, face, second, first), voxels, player);
         if (layout.error() != null) return layout.error();
         return lay(level, layout.positions(), layout.parts(), voxels, spool, player, failAt, List.of());
+    }
+
+    public static String transitionFailingAtForTests(ServerLevel level, BlockPos start, Direction startMount, BlockPos end,
+                                                     Direction endMount, ItemStack spool, int failAt) {
+        return transition(level, start, startMount, end, endMount, spool, null, failAt);
+    }
+
+    private static String transition(ServerLevel level, BlockPos start, Direction startMount, BlockPos end,
+                                     Direction endMount, ItemStack spool, Player player, int failAt) {
+        if ((startMount == Direction.DOWN) == (endMount == Direction.DOWN)
+            || startMount == Direction.UP || endMount == Direction.UP) return "AWG transition needs a floor and a wall";
+        boolean floorFirst = startMount == Direction.DOWN;
+        BlockPos floor = floorFirst ? start : end;
+        BlockPos wall = floorFirst ? end : start;
+        Direction wallMount = floorFirst ? endMount : startMount;
+        int face = wallMount.get3DDataValue(), axis = CablePart.normalAxis(face), across = 2 - axis;
+        long[] a = {16L * floor.getX() + 8, 16L * floor.getY(), 16L * floor.getZ() + 8};
+        long[] b = {16L * wall.getX() + 8, 16L * wall.getY() + 16, 16L * wall.getZ() + 8};
+        int sign = wallMount.getAxisDirection().getStep();
+        long horizontal = (b[axis] - a[axis]) * sign;
+        if (a[across] != b[across] || horizontal < 0 || b[1] <= a[1])
+            return "AWG floor run must approach the wall squarely below the wall endpoint";
+        if (horizontal + b[1] - a[1] + 16 > MAX_ROUTE_BLOCKS * 16L) return "AWG transition exceeds 64 meters";
+        a[axis] -= sign * 8L;
+        b[axis] += sign * 8L;
+        var corner = b.clone();
+        corner[1] = a[1];
+        int floorVoxels = (int) Math.abs(corner[axis] - a[axis]);
+        int wallVoxels = (int) (b[1] - corner[1]);
+        var flat = surfacePlan(level, Direction.DOWN, List.of(surfaceStep(a, 0), surfaceStep(corner, 0)), floorVoxels, player);
+        if (flat.error() != null) return flat.error();
+        var rise = surfacePlan(level, wallMount, List.of(surfaceStep(corner, face), surfaceStep(b, face)), wallVoxels, player);
+        if (rise.error() != null) return rise.error();
+        flat.parts().getLast().markCorner(1, face);
+        rise.parts().getFirst().markCorner(0, 0);
+        var positions = new java.util.ArrayList<>(flat.positions());
+        positions.addAll(rise.positions());
+        var parts = new java.util.ArrayList<>(flat.parts());
+        parts.addAll(rise.parts());
+        return lay(level, positions, parts, floorVoxels + wallVoxels, spool, player, failAt, List.of());
     }
 
     private static List<CableRouter.Step> surfaceSteps(long[] a, long[] b, int face, int first, int second) {
@@ -411,13 +455,29 @@ public final class AwgCablePart extends VoxelPart {
     @Override public List<int[]> boxes() { return geometry.boxes(); }
 
     boolean joins(AwgCablePart other) {
-        if (geometry.face != other.geometry.face) return false;
+        if (geometry.face != other.geometry.face) {
+            return cornerFace == other.geometry.face && other.cornerFace == geometry.face
+                && sameEndpoint(geometry.points, cornerEnd * 3, other.geometry.points, other.cornerEnd * 3);
+        }
         if (CableRouter.axis(direction()) == CableRouter.axis(other.direction())) return false;
         int[] a = geometry.points, b = other.geometry.points;
         for (int i = 0; i < 6; i += 3)
             for (int j = 0; j < 6; j += 3)
-                if (a[i] == b[j] && a[i + 1] == b[j + 1] && a[i + 2] == b[j + 2]) return true;
+                if (sameEndpoint(a, i, b, j)) return true;
         return false;
+    }
+
+    private static boolean sameEndpoint(int[] a, int i, int[] b, int j) {
+        return a[i] == b[j] && a[i + 1] == b[j + 1] && a[i + 2] == b[j + 2];
+    }
+
+    private void markCorner(int end, int otherFace) {
+        if (end < 0 || end > 1 || otherFace < 0 || otherFace > 5
+            || CablePart.normalAxis(otherFace) == CablePart.normalAxis(geometry.face)
+            || geometry.points[end * 3 + CablePart.normalAxis(otherFace)] != CablePart.plane(otherFace))
+            throw new IllegalArgumentException("Invalid AWG corner");
+        cornerEnd = end;
+        cornerFace = otherFace;
     }
 
     private int direction() {
@@ -438,15 +498,16 @@ public final class AwgCablePart extends VoxelPart {
         var p = geometry.points;
         // The terminal must leave the block in the cable's direction, at the center of the legacy edge.
         if (p[boundary] == p[boundary + 3]) return null;
-        if (from != null && p[boundary] == plane && p[across] == 8) return from.load;
-        return to != null && p[boundary + 3] == plane && p[across + 3] == 8 ? to.load : null;
+        if (cornerEnd != 0 && from != null && p[boundary] == plane && p[across] == 8) return from.load;
+        return cornerEnd != 1 && to != null && p[boundary + 3] == plane && p[across + 3] == 8 ? to.load : null;
     }
 
     private Point point(BlockPos pos, int end) {
         int i = end * 3;
         var p = geometry.points;
         return new Point(16L * pos.getX() + p[i], 16L * pos.getY() + p[i + 1],
-            16L * pos.getZ() + p[i + 2], geometry.face);
+            16L * pos.getZ() + p[i + 2],
+            end == cornerEnd ? 8 + ((1 << geometry.face) | (1 << cornerFace)) : geometry.face);
     }
 
     private static Terminal acquire(Map<Point, Terminal> points, Point point) {
@@ -518,6 +579,10 @@ public final class AwgCablePart extends VoxelPart {
             tag.putInt("face", geometry.face);
             tag.putIntArray("ends", geometry.points);
         }
+        if (cornerEnd >= 0) {
+            tag.putInt("cornerEnd", cornerEnd);
+            tag.putInt("cornerFace", cornerFace);
+        }
         tag.put("run", run == null ? saved.copy() : run.save());
     }
 
@@ -530,6 +595,8 @@ public final class AwgCablePart extends VoxelPart {
         var state = tag.getCompoundOrEmpty("run");
         if (state.getCompoundOrEmpty("length").getIntOr("routeVoxels", -1) != part.geometry.length()) return null;
         try {
+            if (tag.contains("cornerEnd") || tag.contains("cornerFace"))
+                part.markCorner(tag.getIntOr("cornerEnd", -1), tag.getIntOr("cornerFace", -1));
             AwgCableRun.Companion.load(wire(), state, new VoltageState(), new VoltageState());
         } catch (IllegalArgumentException | IllegalStateException | java.util.NoSuchElementException e) {
             return null;
@@ -539,11 +606,15 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     @Override public void serialize(DataOutputStream out) throws IOException {
-        if (geometry.face == 0) {
+        if (geometry.face == 0 && cornerEnd < 0) {
             out.writeByte(x0); out.writeByte(z0); out.writeByte(x1); out.writeByte(z1);
         } else {
             out.writeByte(geometry.face);
             for (int coordinate : geometry.points) out.writeByte(coordinate);
+            if (cornerEnd >= 0) {
+                out.writeByte(cornerEnd);
+                out.writeByte(cornerFace);
+            }
         }
     }
 
@@ -555,7 +626,10 @@ public final class AwgCablePart extends VoxelPart {
             int face = in.readUnsignedByte();
             int[] coordinates = new int[6];
             for (int i = 0; i < coordinates.length; i++) coordinates[i] = in.readUnsignedByte();
-            return new AwgCablePart(face, coordinates);
+            var part = new AwgCablePart(face, coordinates);
+            if (in.available() == 2) part.markCorner(in.readUnsignedByte(), in.readUnsignedByte());
+            else if (in.available() != 0) throw new IOException("Invalid AWG corner payload");
+            return part;
         } catch (IllegalArgumentException e) {
             throw new IOException("Invalid AWG part", e);
         }
