@@ -40,6 +40,7 @@ public final class CableCases {
         cases.add(new AwgBendCase());
         cases.add(new AwgJunctionCase());
         for (var mount : net.minecraft.core.Direction.Plane.HORIZONTAL) cases.add(new AwgWallCase(mount));
+        for (var mount : net.minecraft.core.Direction.Plane.HORIZONTAL) cases.add(new AwgWallBendCase(mount));
         for (var scenario : AwgRoutingReliabilityCase.Scenario.values()) cases.add(new AwgRoutingReliabilityCase(scenario));
         cases.add(new BurnCase());
         cases.add(new RoutedCase());
