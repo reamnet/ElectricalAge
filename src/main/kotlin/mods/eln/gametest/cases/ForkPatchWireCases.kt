@@ -8,7 +8,9 @@ import mods.eln.misc.*
 import mods.eln.node.*
 import mods.eln.node.six.*
 import mods.eln.node.transparent.*
+import mods.eln.node.voxel.AwgCableRun
 import mods.eln.node.voxel.AwgWireLength
+import mods.eln.sim.mna.state.VoltageState
 import mods.eln.sim.IProcess
 import mods.eln.sim.mna.component.*
 import mods.eln.sixnode.electricalcable.*
@@ -18,7 +20,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Blocks
 
 object ForkPatchWireCases {
-    @JvmStatic fun cases(): List<TestCase> = listOf(Catalog(),VoxelAccounting(),Placement(),Junction(),Transition(false),Transition(true),SpoolSpan(),SpanBurn(),SpanHeat(),Fault())
+    @JvmStatic fun cases(): List<TestCase> = listOf(Catalog(),VoxelAccounting(),VoxelHeatRecovery(),Placement(),Junction(),Transition(false),Transition(true),SpoolSpan(),SpanBurn(),SpanHeat(),Fault())
     private fun wire(label: String="12 AWG",insulated: Boolean=true)=UtilityCables.all.first { it.material==UtilityCableMaterial.COPPER && it.sizeLabel==label && it.insulated==insulated && !it.melted && (!insulated || it.insulationVoltageRating in listOf(300.0,600.0,1000.0)) }
     private fun player(c: TestContext,key: String): net.neoforged.neoforge.common.util.FakePlayer {
         val p=net.neoforged.neoforge.common.util.FakePlayerFactory.get(c.level(),com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes(key.toByteArray()),key.take(16)))
@@ -101,6 +103,27 @@ object ForkPatchWireCases {
             val creative = AwgWireLength.creative(wire, 16)
             c.check("creative wire retains physical length with no refundable material",
                 creative.physicalMeters() == 1.0 && creative.recover(wire).isEmpty, "")
+        }
+    }
+    private class VoxelHeatRecovery : Base() {
+        override fun id() = "forkpatch_wire_voxel_heat_recovery"
+
+        override fun measure(c: TestContext) {
+            val wire = Eln.sixNodeItem.getDescriptor(2200) as UtilityCableDescriptor
+            val spool = wire.newItemStack()
+            wire.setRemainingLengthMeters(spool, 2.0)
+            val paid = requireNotNull(AwgWireLength.purchase(wire, spool, 13))
+            val heated = AwgCableRun.create(wire, paid, VoltageState(), VoltageState(), 106.0)
+            val cooled = AwgCableRun.load(wire, heated.save(), VoltageState(), VoltageState())
+            val scrap = cooled.recover()
+            val tag = ItemNbt.get(scrap)
+            val meters = tag?.getDoubleOr("wireScrapMeters", 0.0) ?: 0.0
+            c.check("damaged paid AWG cable returns only its original conductor as scrap",
+                heated.jacketDamaged && cooled.jacketDamaged && !cooled.conductorMelted
+                    && scrap.item === UtilityCables.scraps.parentItem && meters == 13.0 / 16
+                    && tag?.getDoubleOr("wireScrapAreaMm2", 0.0) == 3.309
+                    && wire.getRemainingLengthMeters(spool) + meters == 2.0
+                    && cooled.recover().isEmpty, "")
         }
     }
     private class Placement: Base() {

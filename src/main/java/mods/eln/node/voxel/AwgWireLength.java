@@ -57,6 +57,15 @@ public final class AwgWireLength {
         if (!wire.getActsAsSingleConductor()) throw new IllegalArgumentException("Expected a single-conductor spool");
     }
 
+    int routeVoxels() {
+        return routeVoxels;
+    }
+
+    void requireWire(UtilityCableDescriptor wire) {
+        requireSingleConductor(wire);
+        if (wire.parentItemDamage != descriptorId) throw new IllegalArgumentException("Wrong wire descriptor");
+    }
+
     public double physicalMeters() {
         return routeVoxels / VOXELS_PER_METER;
     }
@@ -85,8 +94,7 @@ public final class AwgWireLength {
 
     /** Recover intact wire once. Later failure handling can consume the same ledger for damaged recovery. */
     public ItemStack recover(UtilityCableDescriptor wire) {
-        requireSingleConductor(wire);
-        if (wire.parentItemDamage != descriptorId) throw new IllegalArgumentException("Wrong wire descriptor");
+        requireWire(wire);
         ItemStack result = ItemStack.EMPTY;
         if (paidVoxels() > 0) {
             result = wire.newItemStack();
