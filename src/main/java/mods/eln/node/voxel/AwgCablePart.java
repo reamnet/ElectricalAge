@@ -28,6 +28,10 @@ import java.util.WeakHashMap;
 public final class AwgCablePart extends VoxelPart {
     static final String KIND = "awg_cable";
     private static final int WIRE_ID = 2200;
+    private static final int MAX_ROUTE_BLOCKS = 64;
+    private static final Map<Player, Selection> SELECTIONS = new WeakHashMap<>();
+
+    private record Selection(ItemStack spool, ServerLevel level, BlockPos start, long expires) {}
     private static final Map<ServerLevel, Map<Point, Terminal>> TERMINALS = new WeakHashMap<>();
 
     private record Point(long x, int y, long z) {}
@@ -65,7 +69,36 @@ public final class AwgCablePart extends VoxelPart {
         return descriptor instanceof UtilityCableDescriptor && descriptor.parentItemDamage == WIRE_ID;
     }
 
-    /** Sneak-use on the floor lays one centered meter along the player's horizontal facing. */
+    /** Sneak-use in air switches the current spool between one-block and route placement. */
+    public static InteractionResult toggleRouting(net.minecraft.world.level.Level level, Player player, InteractionHand hand) {
+        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
+        if (level instanceof ServerLevel server && !player.isSpectator() && player.getAbilities().mayBuild) {
+            var spool = player.getMainHandItem();
+            if (selection(server, player, spool) == null) {
+                SELECTIONS.put(player, new Selection(spool, server, null, server.getGameTime() + CablePlacer.IDLE_TICKS));
+                tell(player, "AWG route: sneak-right-click the first floor block");
+            } else {
+                SELECTIONS.remove(player);
+                tell(player, "AWG route cancelled");
+            }
+        }
+        return InteractionResult.SUCCESS;
+    }
+
+    private static Selection selection(ServerLevel level, Player player, ItemStack spool) {
+        var selected = SELECTIONS.get(player);
+        if (selected != null && (selected.spool() != spool || selected.level() != level || level.getGameTime() >= selected.expires())) {
+            SELECTIONS.remove(player);
+            return null;
+        }
+        return selected;
+    }
+
+    private static void tell(Player player, String message) {
+        player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(message));
+    }
+
+    /** Sneak-use on the floor lays one meter, or selects a route endpoint while in route mode. */
     public static InteractionResult useSpool(UseOnContext ctx) {
         Player player = ctx.getPlayer();
         if (player == null || ctx.getHand() != InteractionHand.MAIN_HAND || ctx.getClickedFace() != Direction.UP)
@@ -80,6 +113,24 @@ public final class AwgCablePart extends VoxelPart {
             || !level.hasChunkAt(floor) || !level.mayInteract(player, floor) || !level.mayInteract(player, pos)
             || !new net.minecraft.world.phys.AABB(floor).inflate(0.01).contains(hit)
             || !(player.getEyePosition().distanceTo(hit) <= player.blockInteractionRange())) return InteractionResult.FAIL;
+
+        var selected = selection(level, player, spool);
+        if (selected != null) {
+            if (!canRouteIn(level, pos, player)) return InteractionResult.FAIL;
+            if (selected.start() == null) {
+                SELECTIONS.put(player, new Selection(spool, level, pos, level.getGameTime() + CablePlacer.IDLE_TICKS));
+                tell(player, "AWG route start set. Sneak-right-click the destination floor block");
+            } else if (!selected.start().equals(pos)) {
+                String error = route(level, selected.start(), pos, spool, player);
+                if (error != null) {
+                    tell(player, error);
+                    return InteractionResult.FAIL;
+                }
+                SELECTIONS.remove(player);
+                tell(player, "AWG route placed");
+            }
+            return InteractionResult.SUCCESS;
+        }
 
         boolean alongX = ctx.getHorizontalDirection().getAxis() == Direction.Axis.X;
         String error = place(level, pos, alongX ? 0 : 8, alongX ? 8 : 0, alongX ? 16 : 8, alongX ? 8 : 16, spool, player);
@@ -100,16 +151,58 @@ public final class AwgCablePart extends VoxelPart {
             return "AWG run needs a loaded block and a solid floor";
         }
         var part = new AwgCablePart(x0, z0, x1, z1);
-        int voxels = part.geometry.length();
+        return lay(level, List.of(pos), List.of(part), part.geometry.length(), spool, player);
+    }
+
+    private static boolean canRouteIn(ServerLevel level, BlockPos pos, Player player) {
+        if (level.isOutsideBuildHeight(pos) || !level.getWorldBorder().isWithinBounds(pos)
+            || !level.hasChunkAt(pos) || !level.mayInteract(player, pos) || !level.mayInteract(player, pos.below())
+            || !level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP)) return false;
+        var state = level.getBlockState(pos);
+        // Only air and existing voxel nodes can be restored by the normal laying rollback.
+        return state.isAir() || state.getBlock() instanceof VoxelNodeBlock;
+    }
+
+    private static String route(ServerLevel level, BlockPos start, BlockPos end, ItemStack spool, Player player) {
+        long dx = (long) end.getX() - start.getX(), dz = (long) end.getZ() - start.getZ();
+        if (start.getY() != end.getY() || (dx != 0 && dz != 0)) return "AWG routing needs endpoints in the same floor row";
+        long blocks = Math.abs(dx) + Math.abs(dz) + 1;
+        if (blocks > MAX_ROUTE_BLOCKS) return "AWG route exceeds 64 blocks";
+        long sx = 16L * start.getX() + 8, ex = 16L * end.getX() + 8;
+        long sz = 16L * start.getZ() + 8, ez = 16L * end.getZ() + 8;
+        long y = 16L * start.getY(), ox = Long.signum(dx) * 8L, oz = Long.signum(dz) * 8L;
+        var steps = List.of(new CableRouter.Step(sx - ox, y, sz - oz, 0, false),
+            new CableRouter.Step(ex + ox, y, ez + oz, 0, false));
+        var positions = new java.util.ArrayList<BlockPos>();
+        var parts = new java.util.ArrayList<AwgCablePart>();
+        int measured = 0;
+        for (var piece : CableRouter.pieces(steps, 2, 1)) {
+            var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
+            if (!canRouteIn(level, pos, player)) return "AWG route blocked or unsupported at " + pos.toShortString();
+            var points = piece.points();
+            var part = new AwgCablePart(points[0], points[2], points[3], points[5]);
+            positions.add(pos);
+            parts.add(part);
+            measured += part.geometry.length();
+        }
+        if (measured != blocks * 16) return "AWG route length mismatch";
+        return lay(level, positions, parts, measured, spool, player);
+    }
+
+    private static String lay(ServerLevel level, List<BlockPos> positions, List<AwgCablePart> parts,
+                              int voxels, ItemStack spool, Player player) {
         boolean creative = player != null && player.isCreative();
         if (spool.getCount() != 1 || !spool.is(wire().parentItem)) return "invalid AWG spool";
         var copy = creative ? ItemStack.EMPTY : spool.copy();
         var length = creative ? AwgWireLength.creative(wire(), voxels) : AwgWireLength.purchase(wire(), copy, voxels);
         if (length == null) return "insufficient or invalid AWG spool";
-        var coord = new mods.eln.misc.Coordonate(pos, level);
-        part.saved = AwgCableRun.Companion.create(wire(), length, new VoltageState(), new VoltageState(),
-            Ambient.relative(coord) + 20).save();
-        var error = Laying.lay(level, List.of(pos), List.of(part), player);
+        for (int i = 0; i < parts.size(); i++) {
+            var part = parts.get(i);
+            var coord = new mods.eln.misc.Coordonate(positions.get(i), level);
+            part.saved = AwgCableRun.Companion.create(wire(), length.take(part.geometry.length()),
+                new VoltageState(), new VoltageState(), Ambient.relative(coord) + 20).save();
+        }
+        var error = Laying.lay(level, positions, new java.util.ArrayList<VoxelPart>(parts), player);
         if (error == null && !creative) {
             ItemNbt.set(spool, ItemNbt.get(copy));
             spool.setCount(copy.getCount());

@@ -24,39 +24,50 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
 final class AwgWorldCase implements TestCase {
+    private final boolean route;
     private UtilityCableDescriptor wire;
     private ItemStack spool;
     private BlockPos first, second;
     private ResistorElement resistor;
     private FakePlayer player;
 
-    @Override public String id() { return "awg_voxel_world_run"; }
+    AwgWorldCase(boolean route) {
+        this.route = route;
+    }
+
+    @Override public String id() { return route ? "awg_voxel_world_route" : "awg_voxel_world_run"; }
     @Override public int ticks() { return 120; }
 
     @Override public void build(TestContext ctx) {
         player = FakePlayerFactory.get(ctx.level(), new com.mojang.authlib.GameProfile(
-            java.util.UUID.fromString("6aed75b5-e9d7-4660-9ee0-175f18d86552"), "eln_awg_test"));
+            java.util.UUID.nameUUIDFromBytes(id().getBytes(java.nio.charset.StandardCharsets.UTF_8)), "eln_awg_test"));
         player.setGameMode(GameType.SURVIVAL);
         wire = (UtilityCableDescriptor) Eln.sixNodeItem.getDescriptor(2200);
         spool = wire.newItemStack();
-        wire.setRemainingLengthMeters(spool, 3.125);
+        wire.setRemainingLengthMeters(spool, route ? 4.125 : 3.125);
         first = ctx.at(1, 1, 1);
         second = ctx.at(2, 1, 1);
         Wp9aCases.source(ctx, Wp9aCases.SOURCE, 0, 1, 12);
-        resistor = CableCases.end(ctx, 3, 1);
-        place(ctx, first);
-        var one = run(ctx, first);
-        ctx.check("one physical floor AWG run is installed", wire.getRemainingLengthMeters(spool) == 2.125
-            && Double.isFinite(one.getTemperatureCelsius()), "");
+        resistor = CableCases.end(ctx, route ? 4 : 3, 1);
+        if (route) {
+            placeRoute(ctx, ctx.at(3, 1, 1));
+        } else {
+            place(ctx, first);
+            var one = run(ctx, first);
+            ctx.check("one physical floor AWG run is installed", wire.getRemainingLengthMeters(spool) == 2.125
+                && Double.isFinite(one.getTemperatureCelsius()), "");
+            place(ctx, second);
+        }
         var quads = VoxelGeometry.of(new java.util.ArrayList<>(AwgCablePart.at(ctx.level(), first)));
         ctx.check("AWG run emits the existing insulated voxel cable mesh",
             !quads.isEmpty() && quads.stream().allMatch(q -> q.sprite().equals(VoxelGeometry.cableSprite(1))), "");
-        place(ctx, second);
         var bad = use(second, spool, InteractionHand.MAIN_HAND, Direction.UP);
         ctx.check("repeated click on blocked placement keeps the original debit and parts", bad == InteractionResult.FAIL
             && wire.getRemainingLengthMeters(spool) == 1.125 && AwgCablePart.at(ctx.level(), second).size() == 1, "");
-        checkRejectedActions(ctx);
-        checkRepeatRecovery(ctx);
+        if (!route) {
+            checkRejectedActions(ctx);
+            checkRepeatRecovery(ctx);
+        }
         ctx.after(35, () -> {
             checkCircuit(ctx);
             var original = run(ctx, second);
@@ -76,6 +87,32 @@ final class AwgWorldCase implements TestCase {
             mine(ctx, second);
             ctx.check("removing an AWG block leaves no paid run in that block", AwgCablePart.at(ctx.level(), second).isEmpty(), "");
         });
+    }
+
+    private void placeRoute(TestContext ctx, BlockPos end) {
+        player.setShiftKeyDown(true);
+        player.setItemInHand(InteractionHand.MAIN_HAND, spool);
+        spool.use(ctx.level(), player, InteractionHand.MAIN_HAND);
+        ctx.check("first endpoint stays provisional", use(first, spool, InteractionHand.MAIN_HAND, Direction.UP) == InteractionResult.SUCCESS
+            && use(first, spool, InteractionHand.MAIN_HAND, Direction.UP) == InteractionResult.SUCCESS
+            && ctx.level().isEmptyBlock(first) && wire.getRemainingLengthMeters(spool) == 4.125, "");
+        ctx.level().setBlockAndUpdate(second, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        var blocked = use(end, spool, InteractionHand.MAIN_HAND, Direction.UP);
+        ctx.check("solid intermediate block rejects the entire route",
+            blocked == InteractionResult.FAIL && ctx.level().isEmptyBlock(first) && ctx.level().isEmptyBlock(end)
+                && wire.getRemainingLengthMeters(spool) == 4.125, "");
+        ctx.level().removeBlock(second, false);
+        wire.setRemainingLengthMeters(spool, 2.9375);
+        var shortRoute = use(end, spool, InteractionHand.MAIN_HAND, Direction.UP);
+        ctx.check("short spool rejects the entire route without a debit",
+            shortRoute == InteractionResult.FAIL && ctx.level().isEmptyBlock(first) && ctx.level().isEmptyBlock(second)
+                && ctx.level().isEmptyBlock(end) && wire.getRemainingLengthMeters(spool) == 2.9375, "");
+        wire.setRemainingLengthMeters(spool, 4.125);
+        var placed = use(end, spool, InteractionHand.MAIN_HAND, Direction.UP);
+        ctx.check("two floor clicks install three paid one-meter runs",
+            placed == InteractionResult.SUCCESS && wire.getRemainingLengthMeters(spool) == 1.125
+                && AwgCablePart.at(ctx.level(), first).size() == 1 && AwgCablePart.at(ctx.level(), second).size() == 1
+                && AwgCablePart.at(ctx.level(), end).size() == 1, "");
     }
 
     private void place(TestContext ctx, BlockPos at) {
@@ -157,6 +194,6 @@ final class AwgWorldCase implements TestCase {
         double returned = ctx.level().getEntitiesOfClass(ItemEntity.class, new AABB(second).inflate(2)).stream()
             .map(ItemEntity::getItem).filter(s -> s.is(wire.parentItem)).mapToDouble(wire::getRemainingLengthMeters).sum();
         ctx.check("removed world wire refunds its paid meter exactly once",
-            returned == 1 && wire.getRemainingLengthMeters(spool) + returned + 1 == 3.125, "" + returned);
+            returned == 1 && wire.getRemainingLengthMeters(spool) + returned + (route ? 2 : 1) == (route ? 4.125 : 3.125), "" + returned);
     }
 }

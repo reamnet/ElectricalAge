@@ -66,3 +66,9 @@ Controlled placement currently supports straight floor segments only. Voxel rout
 Hold Copper 12 AWG Cable 600V in the main hand. Face along the desired axis, then sneak and right-click the top of a solid floor block to lay one centered meter in the block above. Ordinary right-click still uses six-node placement. To remove a voxel run, aim at it and mine it with shears, as with the other voxel cables.
 
 Only the server commits placement and the spool debit. It checks the hand, player permission and reach before calling the controlled placement operation. Rejected placements leave the original spool untouched. Survival removal drops the paid amount for intact wire, and creative placement uses a non-refundable ledger. Each click lays one block, with no multi-block routing or corner planning. The straight run uses the existing insulated voxel mesh and sprite.
+
+## Phase 1D-B2 straight routes
+
+With the spool in the main hand, sneak-right-click in air to enter route mode. Sneak-right-click the top of the first and last floor blocks in a row. Both endpoint blocks are included. Each must be within reach when clicked. Walking between clicks allows longer runs, up to 64 blocks. Sneak-right-click in air again to cancel. A plan expires after a minute, and completion returns the spool to one-block placement. Ordinary right-click retains six-node behavior.
+
+The straight route is divided at voxel-block boundaries by the existing cable router. Each piece must have a loaded, supported, permitted destination, and the existing voxel placement checks test collision before laying. The spool is debited on a copy, the paid length is partitioned among the parts, and the original spool is updated only after the entire route succeeds.

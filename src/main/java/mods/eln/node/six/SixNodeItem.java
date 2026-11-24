@@ -36,6 +36,14 @@ public class SixNodeItem extends Item implements IDescriptorItem {
     }
 
     @Override
+    public InteractionResult use(Level level, Player player, net.minecraft.world.InteractionHand hand) {
+        if (player.isShiftKeyDown() && AwgCablePart.supportsSpool(descriptor)) {
+            return AwgCablePart.toggleRouting(level, player, hand);
+        }
+        return super.use(level, player, hand);
+    }
+
+    @Override
     public InteractionResult useOn(UseOnContext ctx) {
         Level world = ctx.getLevel();
         if (ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown() && AwgCablePart.supportsSpool(descriptor)) {
