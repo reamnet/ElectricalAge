@@ -24,17 +24,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-/** Controlled floor-mounted straight runs of the existing 12 AWG spool. */
+/** Controlled floor- and wall-mounted straight runs of the existing 12 AWG spool. */
 public final class AwgCablePart extends VoxelPart {
     static final String KIND = "awg_cable";
     private static final int WIRE_ID = 2200;
     private static final int MAX_ROUTE_BLOCKS = 64;
     private static final Map<Player, Selection> SELECTIONS = new WeakHashMap<>();
 
-    private record Selection(ItemStack spool, ServerLevel level, BlockPos start, long expires) {}
+    private record Selection(ItemStack spool, ServerLevel level, BlockPos start, Direction mount, long expires) {}
     private static final Map<ServerLevel, Map<Point, Terminal>> TERMINALS = new WeakHashMap<>();
 
-    private record Point(long x, int y, long z) {}
+    private record Point(long x, long y, long z, int face) {}
 
     private static final class Terminal {
         final ElectricalLoad load = new ElectricalLoad();
@@ -48,17 +48,31 @@ public final class AwgCablePart extends VoxelPart {
     private Terminal from, to;
 
     private AwgCablePart(int x0, int z0, int x1, int z1) {
-        if (!valid(x0, z0, x1, z1)) throw new IllegalArgumentException("Invalid floor AWG run");
-        this.x0 = x0;
-        this.z0 = z0;
-        this.x1 = x1;
-        this.z1 = z1;
-        geometry = new CablePart(1, new CableSpec(3, CableSpec.BLACK), 0, new int[]{x0, 0, z0, x1, 0, z1});
+        this(0, new int[]{x0, 0, z0, x1, 0, z1});
     }
 
-    private static boolean valid(int x0, int z0, int x1, int z1) {
-        return x0 >= 0 && x0 <= 16 && x1 >= 0 && x1 <= 16 && z0 >= 0 && z0 <= 16 && z1 >= 0 && z1 <= 16
-            && (x0 == x1 ? z0 != z1 && x0 > 0 && x0 < 16 : z0 == z1 && z0 > 0 && z0 < 16);
+    private AwgCablePart(int face, int[] points) {
+        if (!valid(face, points)) throw new IllegalArgumentException("Invalid AWG run");
+        x0 = points[0];
+        z0 = points[2];
+        x1 = points[3];
+        z1 = points[5];
+        geometry = new CablePart(1, new CableSpec(3, CableSpec.BLACK), face, points);
+    }
+
+    private static boolean valid(int face, int[] points) {
+        if (face < 0 || face > 5 || face == Direction.UP.get3DDataValue() || points.length != 6) return false;
+        int normal = CablePart.normalAxis(face);
+        if (points[normal] != CablePart.plane(face) || points[normal + 3] != points[normal]) return false;
+        int varying = 0;
+        for (int axis = 0; axis < 3; axis++) {
+            if (axis == normal) continue;
+            int a = points[axis], b = points[axis + 3];
+            if (a < 0 || a > 16 || b < 0 || b > 16) return false;
+            if (a != b) varying++;
+            else if (a == 0 || a == 16) return false;
+        }
+        return varying == 1;
     }
 
     static UtilityCableDescriptor wire() {
@@ -75,8 +89,8 @@ public final class AwgCablePart extends VoxelPart {
         if (level instanceof ServerLevel server && !player.isSpectator() && player.getAbilities().mayBuild) {
             var spool = player.getMainHandItem();
             if (selection(server, player, spool) == null) {
-                SELECTIONS.put(player, new Selection(spool, server, null, server.getGameTime() + CablePlacer.IDLE_TICKS));
-                tell(player, "AWG route: sneak-right-click the first floor block");
+                SELECTIONS.put(player, new Selection(spool, server, null, null, server.getGameTime() + CablePlacer.IDLE_TICKS));
+                tell(player, "AWG route: sneak-right-click the first support face");
             } else {
                 SELECTIONS.remove(player);
                 tell(player, "AWG route cancelled");
@@ -107,15 +121,17 @@ public final class AwgCablePart extends VoxelPart {
     /** Sneak-use on the floor lays one meter, or selects a route endpoint while in route mode. */
     public static InteractionResult useSpool(UseOnContext ctx) {
         Player player = ctx.getPlayer();
-        if (player == null || ctx.getHand() != InteractionHand.MAIN_HAND || ctx.getClickedFace() != Direction.UP)
+        Direction mount = ctx.getClickedFace().getOpposite();
+        if (player == null || ctx.getHand() != InteractionHand.MAIN_HAND || mount == Direction.UP)
             return InteractionResult.FAIL;
         // Only the server lays the run or changes the spool.
         if (!(ctx.getLevel() instanceof ServerLevel level)) return InteractionResult.SUCCESS;
         BlockPos floor = ctx.getClickedPos();
         ItemStack spool = ctx.getItemInHand();
         var selected = selection(level, player, spool);
-        BlockPos pos = selected != null && level.getBlockState(floor).getBlock() instanceof VoxelNodeBlock
-            && hasCenterWire(level, floor) ? floor : floor.above();
+        if (selected == null && mount != Direction.DOWN) return InteractionResult.FAIL;
+        BlockPos pos = selected != null && mount == Direction.DOWN && hasCenterWire(level, floor)
+            ? floor : floor.relative(ctx.getClickedFace());
         var hit = ctx.getClickLocation();
         if (player.isSpectator() || !player.getAbilities().mayBuild || player.getMainHandItem() != spool
             || !level.hasChunkAt(floor) || !level.mayInteract(player, floor) || !level.mayInteract(player, pos)
@@ -123,12 +139,15 @@ public final class AwgCablePart extends VoxelPart {
             || !(player.getEyePosition().distanceTo(hit) <= player.blockInteractionRange())) return InteractionResult.FAIL;
 
         if (selected != null) {
-            if (!canRouteIn(level, pos, player)) return InteractionResult.FAIL;
+            if (!canRouteIn(level, pos, mount, player)) return InteractionResult.FAIL;
             if (selected.start() == null) {
-                SELECTIONS.put(player, new Selection(spool, level, pos, level.getGameTime() + CablePlacer.IDLE_TICKS));
-                tell(player, "AWG route start set. Sneak-right-click the destination floor block");
+                SELECTIONS.put(player, new Selection(spool, level, pos, mount, level.getGameTime() + CablePlacer.IDLE_TICKS));
+                tell(player, "AWG route start set. Sneak-right-click the destination support face");
+            } else if (selected.mount() != mount) {
+                return InteractionResult.FAIL;
             } else if (!selected.start().equals(pos)) {
-                String error = route(level, selected.start(), pos, spool, player);
+                String error = mount == Direction.DOWN ? route(level, selected.start(), pos, spool, player)
+                    : wallRoute(level, selected.start(), pos, mount, spool, player, -1);
                 if (error != null) {
                     tell(player, error);
                     return InteractionResult.FAIL;
@@ -153,7 +172,7 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     private static String place(ServerLevel level, BlockPos pos, int x0, int z0, int x1, int z1, ItemStack spool, Player player) {
-        if (!valid(x0, z0, x1, z1)) return "invalid AWG endpoints";
+        if (!valid(0, new int[]{x0, 0, z0, x1, 0, z1})) return "invalid AWG endpoints";
         if (!level.hasChunkAt(pos) || !level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP)) {
             return "AWG run needs a loaded block and a solid floor";
         }
@@ -161,11 +180,12 @@ public final class AwgCablePart extends VoxelPart {
         return lay(level, List.of(pos), List.of(part), part.geometry.length(), spool, player, -1, List.of());
     }
 
-    private static boolean canRouteIn(ServerLevel level, BlockPos pos, Player player) {
+    private static boolean canRouteIn(ServerLevel level, BlockPos pos, Direction mount, Player player) {
+        var support = pos.relative(mount);
         if (level.isOutsideBuildHeight(pos) || !level.getWorldBorder().isWithinBounds(pos)
-            || !level.hasChunkAt(pos)
-            || (player != null && (!level.mayInteract(player, pos) || !level.mayInteract(player, pos.below())))
-            || !level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP)) return false;
+            || !level.hasChunkAt(pos) || !level.hasChunkAt(support)
+            || (player != null && (!level.mayInteract(player, pos) || !level.mayInteract(player, support)))
+            || !level.getBlockState(support).isFaceSturdy(level, support, mount.getOpposite())) return false;
         var state = level.getBlockState(pos);
         // Only air and existing voxel nodes can be restored by the normal laying rollback.
         return state.isAir() || state.getBlock() instanceof VoxelNodeBlock;
@@ -213,6 +233,7 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     private boolean passesCenter() {
+        if (geometry.face != 0) return false;
         return x0 == x1 ? x0 == 8 && Math.min(z0, z1) <= 8 && Math.max(z0, z1) >= 8
             : z0 == 8 && Math.min(x0, x1) <= 8 && Math.max(x0, x1) >= 8;
     }
@@ -244,6 +265,45 @@ public final class AwgCablePart extends VoxelPart {
         return null;
     }
 
+    public static String wallRouteFailingAtForTests(ServerLevel level, BlockPos start, BlockPos end,
+                                                    Direction mount, ItemStack spool, int failAt) {
+        return wallRoute(level, start, end, mount, spool, null, failAt);
+    }
+
+    private static String wallRoute(ServerLevel level, BlockPos start, BlockPos end, Direction mount,
+                                    ItemStack spool, Player player, int failAt) {
+        int face = mount.get3DDataValue(), normal = CablePart.normalAxis(face);
+        long[] delta = {(long) end.getX() - start.getX(), (long) end.getY() - start.getY(), (long) end.getZ() - start.getZ()};
+        if (mount.getAxis().isVertical() || delta[normal] != 0) return "AWG wall endpoints must share one wall";
+        int along = -1;
+        for (int axis = 0; axis < 3; axis++) if (delta[axis] != 0) {
+            if (along >= 0) return "AWG wall routes must be straight";
+            along = axis;
+        }
+        if (along < 0 || Math.abs(delta[along]) >= MAX_ROUTE_BLOCKS) return "AWG route needs 2–64 wall blocks";
+        long[] a = {16L * start.getX() + 8, 16L * start.getY() + 8, 16L * start.getZ() + 8};
+        long[] b = {16L * end.getX() + 8, 16L * end.getY() + 8, 16L * end.getZ() + 8};
+        a[normal] += CablePart.plane(face) - 8;
+        b[normal] = a[normal];
+        a[along] -= Long.signum(delta[along]) * 8;
+        b[along] += Long.signum(delta[along]) * 8;
+        var steps = List.of(new CableRouter.Step(a[0], a[1], a[2], face, false),
+            new CableRouter.Step(b[0], b[1], b[2], face, false));
+        var positions = new java.util.ArrayList<BlockPos>();
+        var parts = new java.util.ArrayList<AwgCablePart>();
+        int voxels = 0;
+        for (var piece : CableRouter.pieces(steps, 2, 1)) {
+            var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
+            if (!canRouteIn(level, pos, mount, player)) return "AWG wall route blocked or unsupported at " + pos.toShortString();
+            var part = new AwgCablePart(piece.face(), piece.points());
+            positions.add(pos);
+            parts.add(part);
+            voxels += part.geometry.length();
+        }
+        if (voxels != (Math.abs(delta[along]) + 1) * 16) return "AWG wall route length mismatch";
+        return lay(level, positions, parts, voxels, spool, player, failAt, List.of());
+    }
+
     private static CableRouter.Step floorStep(long x, long y, long z) {
         return new CableRouter.Step(x, y, z, 0, false);
     }
@@ -261,7 +321,7 @@ public final class AwgCablePart extends VoxelPart {
         int measured = 0;
         for (var piece : CableRouter.pieces(steps, 2, 1)) {
             var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
-            if (!canRouteIn(level, pos, player)) return RouteLayout.rejected("AWG route blocked or unsupported at " + pos.toShortString());
+            if (!canRouteIn(level, pos, Direction.DOWN, player)) return RouteLayout.rejected("AWG route blocked or unsupported at " + pos.toShortString());
             if (!pos.equals(start) && !pos.equals(end) && hasCenterWire(level, pos))
                 return RouteLayout.rejected("AWG route would cross existing wire at " + pos.toShortString());
             var points = piece.points();
@@ -320,7 +380,7 @@ public final class AwgCablePart extends VoxelPart {
 
     boolean joins(AwgCablePart other) {
         // Collinear endpoints may meet, but never exempt overlapping collinear boxes.
-        if ((x0 == x1) == (other.x0 == other.x1)) return false;
+        if (geometry.face != 0 || other.geometry.face != 0 || (x0 == x1) == (other.x0 == other.x1)) return false;
         return other.hasEnd(x0, z0) || other.hasEnd(x1, z1);
     }
 
@@ -328,14 +388,23 @@ public final class AwgCablePart extends VoxelPart {
         return x == x0 && z == z0 || x == x1 && z == z1;
     }
 
-    ElectricalLoad terminal(Direction face, int along) {
-        int x = face == Direction.WEST ? 0 : face == Direction.EAST ? 16 : along;
-        int z = face == Direction.NORTH ? 0 : face == Direction.SOUTH ? 16 : along;
-        return x == x0 && z == z0 && from != null ? from.load : x == x1 && z == z1 && to != null ? to.load : null;
+    ElectricalLoad terminal(Direction exit, Direction mount) {
+        if (geometry.face != mount.get3DDataValue() || exit.getAxis() == mount.getAxis()) return null;
+        int normal = CablePart.normalAxis(geometry.face), boundary = CablePart.normalAxis(exit.get3DDataValue());
+        int across = 3 - normal - boundary;
+        int plane = CablePart.plane(exit.get3DDataValue());
+        var p = geometry.points;
+        // The terminal must leave the block in the cable's direction, at the center of the legacy edge.
+        if (p[boundary] == p[boundary + 3]) return null;
+        if (from != null && p[boundary] == plane && p[across] == 8) return from.load;
+        return to != null && p[boundary + 3] == plane && p[across + 3] == 8 ? to.load : null;
     }
 
-    private Point point(BlockPos pos, int x, int z) {
-        return new Point(16L * pos.getX() + x, pos.getY(), 16L * pos.getZ() + z);
+    private Point point(BlockPos pos, int end) {
+        int i = end * 3;
+        var p = geometry.points;
+        return new Point(16L * pos.getX() + p[i], 16L * pos.getY() + p[i + 1],
+            16L * pos.getZ() + p[i + 2], geometry.face);
     }
 
     private static Terminal acquire(Map<Point, Terminal> points, Point point) {
@@ -358,8 +427,8 @@ public final class AwgCablePart extends VoxelPart {
         var level = (ServerLevel) node.coordonate.world();
         var pos = node.coordonate.pos();
         var points = TERMINALS.computeIfAbsent(level, key -> new HashMap<>());
-        from = acquire(points, point(pos, x0, z0));
-        to = acquire(points, point(pos, x1, z1));
+        from = acquire(points, point(pos, 0));
+        to = acquire(points, point(pos, 1));
         run = AwgCableRun.Companion.load(wire(), saved, from.load, to.load);
         run.attach(Eln.simulator, () -> Ambient.relative(node.coordonate) + 20);
         saved = null;
@@ -372,8 +441,8 @@ public final class AwgCablePart extends VoxelPart {
         var level = (ServerLevel) node.coordonate.world();
         var pos = node.coordonate.pos();
         var points = TERMINALS.get(level);
-        release(points, point(pos, x0, z0), from);
-        release(points, point(pos, x1, z1), to);
+        release(points, point(pos, 0), from);
+        release(points, point(pos, 1), to);
         if (points.isEmpty()) TERMINALS.remove(level);
         from = to = null;
     }
@@ -386,8 +455,8 @@ public final class AwgCablePart extends VoxelPart {
     public AwgCableRun activeRun() { return run; }
 
     void nameTerminals(BlockPos pos, Map<Object, String> names) {
-        names.put(from.load, "AWG " + point(pos, x0, z0));
-        names.put(to.load, "AWG " + point(pos, x1, z1));
+        names.put(from.load, "AWG " + point(pos, 0));
+        names.put(to.load, "AWG " + point(pos, 1));
     }
 
     void liveLink(java.util.function.BiConsumer<ElectricalLoad, ElectricalLoad> link) {
@@ -402,14 +471,20 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     @Override public void write(CompoundTag tag) {
-        tag.putIntArray("ends", new int[]{x0, z0, x1, z1});
+        if (geometry.face == 0) tag.putIntArray("ends", new int[]{x0, z0, x1, z1});
+        else {
+            tag.putInt("face", geometry.face);
+            tag.putIntArray("ends", geometry.points);
+        }
         tag.put("run", run == null ? saved.copy() : run.save());
     }
 
     static AwgCablePart read(CompoundTag tag) {
         var ends = tag.getIntArray("ends").orElse(new int[0]);
-        if (ends.length != 4 || !valid(ends[0], ends[1], ends[2], ends[3])) return null;
-        var part = new AwgCablePart(ends[0], ends[1], ends[2], ends[3]);
+        int face = tag.getIntOr("face", 0);
+        if (face == 0 && ends.length == 4) ends = new int[]{ends[0], 0, ends[1], ends[2], 0, ends[3]};
+        if (!valid(face, ends)) return null;
+        var part = new AwgCablePart(face, ends);
         var state = tag.getCompoundOrEmpty("run");
         if (state.getCompoundOrEmpty("length").getIntOr("routeVoxels", -1) != part.geometry.length()) return null;
         try {
@@ -422,12 +497,23 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     @Override public void serialize(DataOutputStream out) throws IOException {
-        out.writeByte(x0); out.writeByte(z0); out.writeByte(x1); out.writeByte(z1);
+        if (geometry.face == 0) {
+            out.writeByte(x0); out.writeByte(z0); out.writeByte(x1); out.writeByte(z1);
+        } else {
+            out.writeByte(geometry.face);
+            for (int coordinate : geometry.points) out.writeByte(coordinate);
+        }
     }
 
     static AwgCablePart deserialize(DataInputStream in) throws IOException {
         try {
-            return new AwgCablePart(in.readUnsignedByte(), in.readUnsignedByte(), in.readUnsignedByte(), in.readUnsignedByte());
+            if (in.available() == 4) {
+                return new AwgCablePart(in.readUnsignedByte(), in.readUnsignedByte(), in.readUnsignedByte(), in.readUnsignedByte());
+            }
+            int face = in.readUnsignedByte();
+            int[] coordinates = new int[6];
+            for (int i = 0; i < coordinates.length; i++) coordinates[i] = in.readUnsignedByte();
+            return new AwgCablePart(face, coordinates);
         } catch (IllegalArgumentException e) {
             throw new IOException("Invalid AWG part", e);
         }

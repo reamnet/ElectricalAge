@@ -2672,14 +2672,15 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     }
 
     private ElectricalLoad awgLegacy(Direction side, LRDU lrdu) {
-        if (activeAwg.isEmpty() || side.applyLRDU(lrdu) != Direction.YN) return null;
+        if (activeAwg.isEmpty()) return null;
+        Direction mount = side.applyLRDU(lrdu);
         var other = getNeighbor(side);
         if (other == null || other instanceof VoxelNode) return null;
         if (other instanceof mods.eln.node.FacePins pins)
             for (var pin : pins.facePins(side.getInverse()))
-                if (side.getInverse().applyLRDU(pin.lrdu()) == Direction.YN) return null;
+                if (side.getInverse().applyLRDU(pin.lrdu()) == mount) return null;
         for (AwgCablePart part : activeAwg) {
-            var terminal = part.terminal(side.toEnumFacing(), 8);
+            var terminal = part.terminal(side.toEnumFacing(), mount.toEnumFacing());
             if (terminal != null) return terminal;
         }
         return null;

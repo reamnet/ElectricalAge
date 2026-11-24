@@ -86,3 +86,11 @@ The server preflights the whole X-first candidate, then preflights the Z-first c
 In route mode, select a cable's block as either endpoint by sneak-right-clicking the top of the centered AWG cable or its floor. A new arm ends at the block center. It taps a straight run from the side or uses a free direction at an existing elbow. The route rejects unselected crossings, fused wire and a fourth arm. Branching is limited to centered floor junctions.
 
 Tapping a straight run divides its existing paid length and heat between two independent edges. All three arms share the one center voltage state. The spool pays only for the new arm and the intervening run. The preflight ignores only the old straight part scheduled for replacement. The transaction restores that original part and its saved state if laying fails. Compatible existing saves use the same individual AWG part format, with no new registry ID.
+
+### Straight wall routes
+
+With the 12 AWG spool in the main hand, sneak-right-click in air to enter route mode. Then sneak-right-click two solid wall faces at the ends of the desired run. Click faces that point the same way and lie on the same plane. Endpoints may be in one horizontal row or one vertical column. The cable occupies the adjacent air or voxel blocks and includes both endpoint blocks. The usual limit is 64 blocks. Sneak-right-click in air to cancel. Ordinary right-click retains six-node placement, and the existing floor controls still apply.
+
+Wall runs use the same paid ledger, cable edge, thermal state, and voxel mesh as floor runs. Their saved geometry adds the mounting face and both three-axis endpoints. Original floor saves retain their previous format. Terminals share voltage only with coincident ends on the same mounting face. The existing midpoint edge connection works with compatible six-node devices mounted against the same wall. Shears remove the selected segment, with intact wire or scrap returned according to its state and paid length.
+
+Ceilings, wall bends, and transitions between faces remain outside this phase. Wall routes do not provide a preview.
