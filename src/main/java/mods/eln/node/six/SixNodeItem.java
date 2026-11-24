@@ -1,6 +1,7 @@
 package mods.eln.node.six;
 
 import mods.eln.node.NodeManager;
+import mods.eln.node.voxel.AwgCablePart;
 
 import mods.eln.generic.IDescriptorItem;
 import mods.eln.misc.Coordonate;
@@ -37,6 +38,9 @@ public class SixNodeItem extends Item implements IDescriptorItem {
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         Level world = ctx.getLevel();
+        if (ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown() && AwgCablePart.supportsSpool(descriptor)) {
+            return AwgCablePart.useSpool(ctx);
+        }
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         // the block in front of the clicked face, and the element faces back toward the clicked block
         // once cables are voxel cables (ElnConfig [cables] convertOnLoad), the old cable items are coils: ingredients and

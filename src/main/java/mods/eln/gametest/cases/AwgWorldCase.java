@@ -5,11 +5,20 @@ import mods.eln.gametest.Reload;
 import mods.eln.gametest.TestCase;
 import mods.eln.gametest.TestContext;
 import mods.eln.node.voxel.AwgCablePart;
-import mods.eln.node.voxel.VoxelNode;
-import mods.eln.node.voxel.VoxelNodeEntity;
+import mods.eln.node.voxel.VoxelGeometry;
 import mods.eln.sixnode.electricalcable.UtilityCableDescriptor;
 import mods.eln.sixnode.resistor.ResistorElement;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -19,11 +28,15 @@ final class AwgWorldCase implements TestCase {
     private ItemStack spool;
     private BlockPos first, second;
     private ResistorElement resistor;
+    private FakePlayer player;
 
     @Override public String id() { return "awg_voxel_world_run"; }
     @Override public int ticks() { return 120; }
 
     @Override public void build(TestContext ctx) {
+        player = FakePlayerFactory.get(ctx.level(), new com.mojang.authlib.GameProfile(
+            java.util.UUID.fromString("6aed75b5-e9d7-4660-9ee0-175f18d86552"), "eln_awg_test"));
+        player.setGameMode(GameType.SURVIVAL);
         wire = (UtilityCableDescriptor) Eln.sixNodeItem.getDescriptor(2200);
         spool = wire.newItemStack();
         wire.setRemainingLengthMeters(spool, 3.125);
@@ -35,10 +48,15 @@ final class AwgWorldCase implements TestCase {
         var one = run(ctx, first);
         ctx.check("one physical floor AWG run is installed", wire.getRemainingLengthMeters(spool) == 2.125
             && Double.isFinite(one.getTemperatureCelsius()), "");
+        var quads = VoxelGeometry.of(new java.util.ArrayList<>(AwgCablePart.at(ctx.level(), first)));
+        ctx.check("AWG run emits the existing insulated voxel cable mesh",
+            !quads.isEmpty() && quads.stream().allMatch(q -> q.sprite().equals(VoxelGeometry.cableSprite(1))), "");
         place(ctx, second);
-        var bad = AwgCablePart.place(ctx.level(), second, 0, 8, 16, 8, spool);
-        ctx.check("obstructed placement keeps the original debit and parts", bad != null
+        var bad = use(second, spool, InteractionHand.MAIN_HAND, Direction.UP);
+        ctx.check("repeated click on blocked placement keeps the original debit and parts", bad == InteractionResult.FAIL
             && wire.getRemainingLengthMeters(spool) == 1.125 && AwgCablePart.at(ctx.level(), second).size() == 1, "");
+        checkRejectedActions(ctx);
+        checkRepeatRecovery(ctx);
         ctx.after(35, () -> {
             checkCircuit(ctx);
             var original = run(ctx, second);
@@ -55,20 +73,65 @@ final class AwgWorldCase implements TestCase {
         });
         ctx.after(75, () -> {
             checkCircuit(ctx);
-            var node = node(ctx, second);
-            node.removePart(0, true);
-            node.removeEmptyBlock();
+            mine(ctx, second);
             ctx.check("removing an AWG block leaves no paid run in that block", AwgCablePart.at(ctx.level(), second).isEmpty(), "");
         });
     }
 
     private void place(TestContext ctx, BlockPos at) {
-        var error = AwgCablePart.place(ctx.level(), at, 0, 8, 16, 8, spool);
-        if (error != null) throw new IllegalStateException(error);
+        ctx.check("player sneak-use places a supported AWG run",
+            use(at, spool, InteractionHand.MAIN_HAND, Direction.UP) == InteractionResult.SUCCESS, "");
     }
 
-    private VoxelNode node(TestContext ctx, BlockPos pos) {
-        return (VoxelNode) ((VoxelNodeEntity) ctx.level().getBlockEntity(pos)).getNode();
+    private InteractionResult use(BlockPos pos, ItemStack stack, InteractionHand hand, Direction face) {
+        player.snapTo(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, -90, 90);
+        player.setShiftKeyDown(true);
+        player.setItemInHand(hand, stack);
+        var hit = new BlockHitResult(Vec3.atLowerCornerOf(pos).add(0.5, 0, 0.5), face, pos.below(), false);
+        return stack.useOn(new UseOnContext(player, hand, hit));
+    }
+
+    private void mine(TestContext ctx, BlockPos pos) {
+        player.setShiftKeyDown(false);
+        player.snapTo(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 90);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.SHEARS));
+        var state = ctx.level().getBlockState(pos);
+        state.getBlock().onDestroyedByPlayer(state, ctx.level(), pos, player, player.getMainHandItem(), true, state.getFluidState());
+    }
+
+    private void checkRejectedActions(TestContext ctx) {
+        var at = ctx.at(5, 1, 1);
+        var shortSpool = wire.newItemStack();
+        wire.setRemainingLengthMeters(shortSpool, 0.9375);
+        var insufficient = use(at, shortSpool, InteractionHand.MAIN_HAND, Direction.UP);
+        var offHand = use(at, spool, InteractionHand.OFF_HAND, Direction.UP);
+        var wallClick = use(at, spool, InteractionHand.MAIN_HAND, Direction.EAST);
+        player.snapTo(at.getX() + 20, at.getY(), at.getZ(), -90, 90);
+        var hit = new BlockHitResult(Vec3.atLowerCornerOf(at).add(0.5, 0, 0.5), Direction.UP, at.below(), false);
+        var distant = spool.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, hit));
+        ctx.check("server rejects short spools, off-hand, wall and out-of-range placement without mutation",
+            insufficient == InteractionResult.FAIL && offHand == InteractionResult.FAIL && wallClick == InteractionResult.FAIL
+                && distant == InteractionResult.FAIL && ctx.level().isEmptyBlock(at)
+                && wire.getRemainingLengthMeters(shortSpool) == 0.9375
+                && wire.getRemainingLengthMeters(spool) == 1.125, "");
+    }
+
+    private void checkRepeatRecovery(TestContext ctx) {
+        var at = ctx.at(6, 1, 1);
+        ItemStack circulating = wire.newItemStack();
+        wire.setRemainingLengthMeters(circulating, 1);
+        for (int cycle = 0; cycle < 3; cycle++) {
+            var action = use(at, circulating, InteractionHand.MAIN_HAND, Direction.UP);
+            ctx.check("one meter spool is consumed once", action == InteractionResult.SUCCESS && circulating.isEmpty(), "");
+            mine(ctx, at);
+            var drops = ctx.level().getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(0.5),
+                e -> e.getItem().is(wire.parentItem));
+            ctx.check("shears remove the aimed run and return one paid meter",
+                ctx.level().isEmptyBlock(at) && drops.size() == 1
+                    && wire.getRemainingLengthMeters(drops.getFirst().getItem()) == 1, "");
+            circulating = drops.getFirst().getItem().copy();
+            drops.getFirst().discard();
+        }
     }
 
     private mods.eln.node.voxel.AwgCableRun run(TestContext ctx, BlockPos pos) {

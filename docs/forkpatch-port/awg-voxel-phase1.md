@@ -60,3 +60,9 @@ The versioned run payload records joules relative to 20 °C, jacket and fusion s
 The world GameTest places two paid runs between the native Electrical Source and Power Resistor, measures series current and voltage drop, reloads one voxel node from its saved tag, then removes that run and checks the exact refund and open circuit. It also exercises the existing link-consistency audit. The reload test covers the actual node unload/reconstruction path. Ordinary chunk eviction retains ELN nodes in the simulation under the existing policy, and this phase has no dedicated chunk-eviction or server-restart test.
 
 Controlled placement currently supports straight floor segments only. Voxel routing, other mounting faces and machine pin layouts, a dedicated in-world unequal-branch and fusion fixture, client visual checks and fault visuals remain later work. Phase 1C's numerical branch and fusion tests still cover the underlying run model.
+
+## Phase 1D-B1 player controls
+
+Hold Copper 12 AWG Cable 600V in the main hand. Face along the desired axis, then sneak and right-click the top of a solid floor block to lay one centered meter in the block above. Ordinary right-click still uses six-node placement. To remove a voxel run, aim at it and mine it with shears, as with the other voxel cables.
+
+Only the server commits placement and the spool debit. It checks the hand, player permission and reach before calling the controlled placement operation. Rejected placements leave the original spool untouched. Survival removal drops the paid amount for intact wire, and creative placement uses a non-refundable ledger. Each click lays one block, with no multi-block routing or corner planning. The straight run uses the existing insulated voxel mesh and sprite.

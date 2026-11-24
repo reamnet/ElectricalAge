@@ -10,7 +10,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -57,25 +61,56 @@ public final class AwgCablePart extends VoxelPart {
         return (UtilityCableDescriptor) Eln.sixNodeItem.getDescriptor(WIRE_ID);
     }
 
+    public static boolean supportsSpool(mods.eln.node.six.SixNodeDescriptor descriptor) {
+        return descriptor instanceof UtilityCableDescriptor && descriptor.parentItemDamage == WIRE_ID;
+    }
+
+    /** Sneak-use on the floor lays one centered meter along the player's horizontal facing. */
+    public static InteractionResult useSpool(UseOnContext ctx) {
+        Player player = ctx.getPlayer();
+        if (player == null || ctx.getHand() != InteractionHand.MAIN_HAND || ctx.getClickedFace() != Direction.UP)
+            return InteractionResult.FAIL;
+        // Only the server lays the run or changes the spool.
+        if (!(ctx.getLevel() instanceof ServerLevel level)) return InteractionResult.SUCCESS;
+        BlockPos floor = ctx.getClickedPos();
+        BlockPos pos = floor.above();
+        ItemStack spool = ctx.getItemInHand();
+        var hit = ctx.getClickLocation();
+        if (player.isSpectator() || !player.getAbilities().mayBuild || player.getMainHandItem() != spool
+            || !level.hasChunkAt(floor) || !level.mayInteract(player, floor) || !level.mayInteract(player, pos)
+            || !new net.minecraft.world.phys.AABB(floor).inflate(0.01).contains(hit)
+            || !(player.getEyePosition().distanceTo(hit) <= player.blockInteractionRange())) return InteractionResult.FAIL;
+
+        boolean alongX = ctx.getHorizontalDirection().getAxis() == Direction.Axis.X;
+        String error = place(level, pos, alongX ? 0 : 8, alongX ? 8 : 0, alongX ? 16 : 8, alongX ? 8 : 16, spool, player);
+        return error == null ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+    }
+
     /**
      * Lay one supported run, then publish the debit to the supplied stack. A refused part
      * leaves the original stack untouched.
      */
     public static String place(ServerLevel level, BlockPos pos, int x0, int z0, int x1, int z1, ItemStack spool) {
+        return place(level, pos, x0, z0, x1, z1, spool, null);
+    }
+
+    private static String place(ServerLevel level, BlockPos pos, int x0, int z0, int x1, int z1, ItemStack spool, Player player) {
         if (!valid(x0, z0, x1, z1)) return "invalid AWG endpoints";
         if (!level.hasChunkAt(pos) || !level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP)) {
             return "AWG run needs a loaded block and a solid floor";
         }
         var part = new AwgCablePart(x0, z0, x1, z1);
         int voxels = part.geometry.length();
-        var copy = spool.copy();
-        var length = AwgWireLength.purchase(wire(), copy, voxels);
+        boolean creative = player != null && player.isCreative();
+        if (spool.getCount() != 1 || !spool.is(wire().parentItem)) return "invalid AWG spool";
+        var copy = creative ? ItemStack.EMPTY : spool.copy();
+        var length = creative ? AwgWireLength.creative(wire(), voxels) : AwgWireLength.purchase(wire(), copy, voxels);
         if (length == null) return "insufficient or invalid AWG spool";
         var coord = new mods.eln.misc.Coordonate(pos, level);
         part.saved = AwgCableRun.Companion.create(wire(), length, new VoltageState(), new VoltageState(),
             Ambient.relative(coord) + 20).save();
-        var error = Laying.lay(level, List.of(pos), List.of(part), null);
-        if (error == null) {
+        var error = Laying.lay(level, List.of(pos), List.of(part), player);
+        if (error == null && !creative) {
             ItemNbt.set(spool, ItemNbt.get(copy));
             spool.setCount(copy.getCount());
         }

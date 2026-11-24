@@ -216,7 +216,7 @@ public class VoxelNodeBlock extends NodeBlock implements net.minecraft.world.lev
                 for (int i = parts.size() - 1; i >= 0; i--)
                     for (int[] b : parts.get(i).boxes())
                         if (VoxelPart.contains(b, x, y, z, eps))
-                            return parts.get(i) instanceof CablePart ? mods.eln.node.BreakTool.Kind.SHEARS : mods.eln.node.BreakTool.Kind.PICKAXE;
+                            return parts.get(i) instanceof CablePart || parts.get(i) instanceof AwgCablePart ? mods.eln.node.BreakTool.Kind.SHEARS : mods.eln.node.BreakTool.Kind.PICKAXE;
         }
         return mods.eln.node.BreakTool.Kind.PICKAXE;
     }
