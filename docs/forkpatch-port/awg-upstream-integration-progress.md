@@ -46,3 +46,10 @@
 | Optional IPN dependency/annotation | Deferred | No pinned dependency changes; independent UI fixes still integrate |
 | Existing Arc Furnace/ForkPatch/AWG content | Already local; protected | Preserve local deltas during auto-merges and compare registry/assets after datagen |
 | Historical snapshots | Protected | No JSON changes or weakened tests |
+
+## Reliability history checkpoint
+- Merge commit `917d55a114a289d2df98b3924dc7554139276951` contains all six exact reliability commits, with no conflicts or duplicate replay.
+- `GRADLE_USER_HOME=/home/matthew/.cache/eln-awg-gradle ./gradlew :test --tests '*Awg*Test' --tests '*KitPreviewLifecycleTest' --tests '*KitOutlineTest'`: exit 0, 39 tests, 45s. Log `/tmp/awg-integration-reliability-tests.log`.
+- Upstream review confirms canonical controller is `RoutePlacer` / `RoutePlacer.Spec`, not separate cable/pipe plans. AWG must become a spec-backed paid-conductor path with atomic debit and cached-route revalidation; retaining two independent plan maps would discard upstream's intended shared UX.
+- Goggles ID @7740 conflicts with Motor Cowling; @7741 is Heavy Winding. New goggles will use the free @7742 slot, keeping every previously published port ID untouched.
+- Next: merge original upstream with `--no-commit`; resolve deliberate compatibility adaptations and compile before committing the upstream group. No test JVM currently uses this worktree's outputs.
