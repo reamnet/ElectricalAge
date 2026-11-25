@@ -58,7 +58,7 @@ reload and exact removal refunds.
 Supported straight edges on floors, walls and ceilings now use the same
 native lattice snap as generic cable taps. The AWG ledger splits by the
 actual distance on the edge and distributes stored heat and insulation
-exposure. Sagged runs and explicitly marked corner arms remain ineligible
+exposure. At that stage, sagged runs and explicitly marked corner arms were ineligible
 for taps. The former need a split of their sampled mesh, and the latter
 need their connector endpoint ownership carried through a split.
 
@@ -68,3 +68,38 @@ centerline. They remain rejected until the native piece conversion returns
 enough source-segment information to associate those shapes with paid
 conductors without adding wire or refunds. A partial slab surface alone
 does not remove that limitation.
+
+## Taps on supported sagged landings and corner arms
+
+A tap outside a sampled sag interval can now split the straight landing of a
+supported part. The split moves complete sample intervals to their respective
+child edges and rebases the arc offsets. It retains the original sample
+positions, normals and tangents. An aim on the displaced curve remains
+ineligible. The native support check and the planar branch geometry are still
+required.
+
+Supported straight corner arms can be tapped away from an explicitly marked
+connection point. The split assigns each old inner-corner mark or outer-port
+bit only to the child that keeps that endpoint. The tap does not create
+another corner connector.
+
+### Client and chunk check
+
+1. In a disposable world, use a native kit and comparable AWG spool on two
+   identical copies of a floor, slab, stair, and full-block outer corner.
+   Right-click a start face, look toward the endpoint, and add a waypoint.
+   Capture both the ghost and installed shape. Repeat with a short gap and a
+   tap on a supported straight landing or a corner arm. Check that a
+   displaced sag target cannot install a planar tee.
+2. Record Survival spool length before confirmation, after placement, and
+   after shears removal. A rejected stair wrap must leave the spool and
+   world unchanged. Compare supported shapes and material accounts after
+   reopening the world.
+3. Place the connector near a chunk boundary such as X=15/16, with one
+   arm across that boundary. Away from spawn and force-loaded chunks,
+   teleport at least 1,024 blocks away and let the server unload the area. Return and test power,
+   then remove the connector and confirm continuity is lost only through
+   that joint. Remove and count the recoverable paid pieces separately.
+
+Headless tests compare mesh data and exercise node save/reload. They do not
+verify the live client outline or the actual server chunk lifecycle.
