@@ -20,11 +20,21 @@ public final class KitOutline {
     private static volatile List<int[]> boxes = List.of();
     private static volatile int state = 1;
 
+    /** Drop world-space geometry when its client level goes away. */
+    public static void clear() {
+        boxes = List.of();
+        state = 1;
+        debugArrived = 0;
+    }
+
     public static void read(DataInputStream in) throws IOException {
         int k = in.readByte();   // (0 won't work, 1 works, 2 connects to a machine: KitPreview.send)
-        int n = in.readShort();
+        int n = in.readUnsignedShort();
+        if (k < 0 || k > 2 || n > 2000) throw new IOException("Invalid route preview header");
         List<int[]> l = new ArrayList<>(n);
         for (int i = 0; i < n; i++) l.add(new int[]{in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt()});
+        for (int[] b : l)
+            if (b[0] > b[3] || b[1] > b[4] || b[2] > b[5]) throw new IOException("Invalid route preview bounds");
         state = k;
         boxes = l;
         // (the route debug kit: say when this outline is first drawn; RouteDebug)

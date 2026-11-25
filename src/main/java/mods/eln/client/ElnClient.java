@@ -150,6 +150,8 @@ public final class ElnClient {
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent.class, mods.eln.client.render.KitOutline::onExtract);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent.class, mods.eln.client.render.VoxelOutline::onExtract);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent.class, mods.eln.client.render.DevicePreviewRender::onExtract);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.level.LevelEvent.Unload.class,
+            e -> { if (e.getLevel().isClientSide()) mods.eln.client.render.KitOutline.clear(); });
         ClientScreens.registerAll();
         mods.eln.client.render.WornCurios.register(modBus);
         mods.eln.gui.ElnNodeMenu.clientLayout = mods.eln.client.gui.ElnLayouts::apply;

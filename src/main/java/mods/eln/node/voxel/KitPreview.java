@@ -41,7 +41,7 @@ public final class KitPreview {
     static void invalidate(UUID player) {
         LAST.remove(player);
         SNAPS.remove(player);
-        GEN.merge(player, 1L, Long::sum);
+        advanceGeneration(player);
     }
 
     public static void tick(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post e) {
@@ -57,7 +57,7 @@ public final class KitPreview {
         }
         if (kit == null) {
             if (last != null && !last.sentEmpty) {
-                GEN.merge(p.getUUID(), 1L, Long::sum);
+                advanceGeneration(p.getUUID());
                 send(p, true, List.of());
                 LAST.put(p.getUUID(), new Last("", true));
             }
@@ -71,7 +71,7 @@ public final class KitPreview {
         key += "|" + kit.tier() + "|" + kit.spec() + "|" + kit.wire() + "|" + kit.length() + "|" + (plan == null ? "-" : plan.start + "" + plan.waypoints.size() + plan.touched) + "|" + p.isSecondaryUseActive();
         if (last != null && last.key.equals(key)) return;
         LAST.put(p.getUUID(), new Last(key, false));
-        long gen = GEN.merge(p.getUUID(), 1L, Long::sum);
+        long gen = advanceGeneration(p.getUUID());
         long tAim = System.nanoTime();
         boolean debug = RouteDebug.on(p);
         List<int[]> boxes = new ArrayList<>();
@@ -112,14 +112,14 @@ public final class KitPreview {
             var pivots = new ArrayList<>(wps);
             if (!pivots.isEmpty() && pivots.getLast().equals(at)) pivots.removeLast();
             WORKER.execute(() -> {
-                if (GEN.getOrDefault(id, 0L) != gen) return;
+                if (!isCurrent(id, gen)) return;
                 var space = CablePlacer.space(view);
                 if (startJoin != null) space = CablePlacer.around(space, startJoin);
                 if (endJoin != null) space = CablePlacer.around(space, endJoin);
                 var route = CableRouter.route(space, AwgCablePart.routeKind(wire),
                     start, pivots, at, PREVIEW_BUDGET_MS);
                 server.execute(() -> {
-                    if (GEN.getOrDefault(id, 0L) != gen || p.hasDisconnected() || p.level() != level
+                    if (!isCurrent(id, gen) || p.hasDisconnected() || p.level() != level
                         || CablePlacer.PLANS.get(id) != plan || !plan.matches(KitSupply.held(p))) return;
                     var answer = awgAnswer(level, plan, at, endJoin, have, route, p);
                     plan.awgPreview = answer.ok() ? new CablePlacer.AwgPreview(at, endJoin, pivots, route) : null;
@@ -130,7 +130,7 @@ public final class KitPreview {
             return;
         }
         WORKER.execute(() -> {
-            if (GEN.getOrDefault(id, 0L) != gen) return;   // (aimed elsewhere since)
+            if (!isCurrent(id, gen)) return;   // (aimed elsewhere since)
             long tRoute = System.nanoTime();
             Answer a = answer(view, tier, spec, start, startJoin, wps, at, endJoin, have);
             int exp = Router.LAST_EXPANSIONS.get();
@@ -139,9 +139,9 @@ public final class KitPreview {
             // sent from here, not handed back to the server thread: that waited for the next tick, 40-90 ms of every
             // update (the route debug kit found it; Baughn's slow start). The connection's send is thread-safe
             {
-                if (GEN.getOrDefault(id, 0L) != gen) return;
+                if (!isCurrent(id, gen)) return;
                 ServerPlayer now = p;
-                if (now.hasDisconnected()) return;
+                if (now.hasDisconnected() || now.level() != level) return;
                 List<int[]> bs = a.boxes;
                 if (device && a.ok) {
                     bs = new ArrayList<>(bs);
@@ -237,6 +237,18 @@ public final class KitPreview {
 
     /** Per player: the generation of the latest preview asked for (a newer one makes older answers stale). */
     private static final Map<UUID, Long> GEN = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final java.util.concurrent.atomic.AtomicLong NEXT_GENERATION = new java.util.concurrent.atomic.AtomicLong();
+
+    /** Tokens must not repeat when a player leaves and rejoins while an old worker is still queued. */
+    static long advanceGeneration(UUID player) {
+        long generation = NEXT_GENERATION.incrementAndGet();
+        GEN.put(player, generation);
+        return generation;
+    }
+
+    static boolean isCurrent(UUID player, long generation) {
+        return GEN.getOrDefault(player, 0L) == generation;
+    }
 
     /** One thread: previews queue behind each other, and stale ones are skipped. */
     private static final java.util.concurrent.ExecutorService WORKER = java.util.concurrent.Executors.newSingleThreadExecutor(r -> {
@@ -333,7 +345,7 @@ public final class KitPreview {
         key = "pipe|" + key + "|" + kit.tier() + "|" + kit.length() + "|" + (plan == null ? "-" : plan.start + "" + plan.waypoints.size() + plan.touched) + "|" + p.isSecondaryUseActive();
         if (last != null && last.key.equals(key)) return;
         LAST.put(p.getUUID(), new Last(key, false));
-        long gen = GEN.merge(p.getUUID(), 1L, Long::sum);
+        long gen = advanceGeneration(p.getUUID());
         List<int[]> boxes = new ArrayList<>();
         if (!(h instanceof BlockHitResult bh) || h.getType() != HitResult.Type.BLOCK || p.isSecondaryUseActive()) {
             send(p, true, boxes);
@@ -376,7 +388,7 @@ public final class KitPreview {
         UUID id = p.getUUID();
         var server = level.getServer();
         WORKER.execute(() -> {
-            if (GEN.getOrDefault(id, 0L) != gen) return;
+            if (!isCurrent(id, gen)) return;
             Answer ans;
             try {
                 ans = pipeAnswer(view, join, startJoin, tier, start, wps, end, have, toPort);
@@ -385,9 +397,9 @@ public final class KitPreview {
                 return;
             }
             {   // (sent from here, as the cable preview: no wait for the next tick)
-                if (GEN.getOrDefault(id, 0L) != gen) return;
+                if (!isCurrent(id, gen)) return;
                 ServerPlayer now = p;
-                if (now.hasDisconnected()) return;
+                if (now.hasDisconnected() || now.level() != level) return;
                 send(now, ans.ok(), ans.boxes(), ans.ok() && toPort);
                 now.sendOverlayMessage(net.minecraft.network.chat.Component.literal(ans.message()));
             }
