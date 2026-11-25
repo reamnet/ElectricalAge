@@ -276,6 +276,7 @@ public final class AwgCablePart extends VoxelPart {
         if (wires.isEmpty() || wires.size() > 2 || !arm.hasEnd(8, 8)) return "AWG junction is occupied";
         for (var existing : wires) {
             if (existing.cornerEnd >= 0) return "AWG face transitions cannot be tapped";
+            if (existing.geometry.hang2 != null) return "AWG sagged sections cannot be tapped";
             var state = existing.run;
             if (state == null || state.getConductorMelted()) return "AWG junction needs live conductor";
             if (existing.hasEnd(8, 8)) continue;
@@ -450,7 +451,7 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     CableRouter.End tapEnd(ServerLevel level, BlockPos pos, long[][] join) {
-        if (!passesCenter() || run == null || run.getConductorMelted()
+        if (!passesCenter() || geometry.hang2 != null || run == null || run.getConductorMelted()
             || !canRouteIn(level, pos, Direction.DOWN, null)) return null;
         long[] point = {pos.getX() * 16L + 8, pos.getY() * 16L, pos.getZ() * 16L + 8};
         join[0] = point;
