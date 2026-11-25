@@ -36,6 +36,7 @@ public final class CableCases {
     static final int CORE = 24;
 
     public static void addTo(List<TestCase> cases) {
+        cases.add(new mods.eln.node.voxel.AwgNativeRouteCase());
         cases.add(new AwgWorldCase(false));
         cases.add(new AwgWorldCase(true));
         cases.add(new AwgBendCase());

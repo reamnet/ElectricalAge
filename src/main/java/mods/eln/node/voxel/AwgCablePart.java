@@ -79,11 +79,11 @@ public final class AwgCablePart extends VoxelPart {
         return varying == 1;
     }
 
-    private static int width(UtilityCableDescriptor wire) {
+    static int width(UtilityCableDescriptor wire) {
         return Math.max(1, (int) Math.ceil(wire.render.width * 16));
     }
 
-    private static int height(UtilityCableDescriptor wire) {
+    static int height(UtilityCableDescriptor wire) {
         return Math.max(1, (int) Math.ceil(wire.render.height * 16));
     }
 
@@ -411,7 +411,7 @@ public final class AwgCablePart extends VoxelPart {
         return new CableRouter.Step(x, y, z, 0, false);
     }
 
-    private record RouteLayout(List<BlockPos> positions, List<AwgCablePart> parts, List<Split> splits, String error) {
+    record RouteLayout(List<BlockPos> positions, List<AwgCablePart> parts, List<Split> splits, String error) {
         static RouteLayout rejected(String error) {
             return new RouteLayout(List.of(), List.of(), List.of(), error);
         }
@@ -443,6 +443,75 @@ public final class AwgCablePart extends VoxelPart {
         var replaced = new HashMap<BlockPos, AwgCablePart>();
         for (var split : splits) replaced.put(split.node().coordonate.pos(), split.original());
         return new RouteLayout(positions, parts, splits, Laying.check(level, positions, parts, replaced));
+    }
+
+    CableRouter.End tapEnd(ServerLevel level, BlockPos pos, long[][] join) {
+        if (!passesCenter() || run == null || run.getConductorMelted()
+            || !canRouteIn(level, pos, Direction.DOWN, null)) return null;
+        long[] point = {pos.getX() * 16L + 8, pos.getY() * 16L, pos.getZ() * 16L + 8};
+        join[0] = point;
+        return new CableRouter.End(point[0], point[1], point[2], 0, -1);
+    }
+
+    /** Translate the native route once for both preview and placement. Unsupported geometry has no paid edge. */
+    static RouteLayout nativeLayout(ServerLevel level, UtilityCableDescriptor wire, CableRouter.Result route,
+                                    long[] startJoin, long[] endJoin, Player player) {
+        if (route.length() <= 0 || route.length() > MAX_ROUTE_BLOCKS * 16)
+            return RouteLayout.rejected("AWG routes need up to 64 m of conductor");
+        if (route.steps.stream().anyMatch(CableRouter.Step::outer))
+            return RouteLayout.rejected("AWG wire cannot wrap an outer corner");
+        var positions = new java.util.ArrayList<BlockPos>();
+        var parts = new java.util.ArrayList<AwgCablePart>();
+        int voxels = 0;
+        for (var piece : CableRouter.pieces(route.steps, width(wire), height(wire))) {
+            var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
+            if (piece.face() < 0 || !canRouteIn(level, pos, Direction.from3DDataValue(piece.face()), player))
+                return RouteLayout.rejected("AWG wire needs a clear, solid support at " + pos.toShortString());
+            var points = piece.points();
+            for (int i = 3; i < points.length; i += 3) {
+                int[] ends = java.util.Arrays.copyOfRange(points, i - 3, i + 3);
+                if (!valid(piece.face(), ends)) return RouteLayout.rejected("AWG wire needs flat block faces");
+                var part = new AwgCablePart(wire, piece.face(), ends);
+                if (!parts.isEmpty()) {
+                    var previous = parts.getLast();
+                    if (previous.geometry.face != part.geometry.face) {
+                        if (!positions.getLast().equals(pos) || previous.cornerEnd >= 0
+                            || !sameEndpoint(previous.geometry.points, 3, ends, 0))
+                            return RouteLayout.rejected("AWG face changes need a supported inner corner");
+                        previous.markCorner(1, part.geometry.face);
+                        part.markCorner(0, previous.geometry.face);
+                    }
+                }
+                positions.add(pos);
+                parts.add(part);
+                voxels += part.geometry.length();
+            }
+        }
+        if (parts.isEmpty() || voxels != route.length())
+            return RouteLayout.rejected("AWG wire cannot follow decorative extensions");
+        var splits = new java.util.ArrayList<Split>();
+        String error = startJoin == null ? null : planTap(level, positions.getFirst(), parts.getFirst(), splits);
+        if (error == null && endJoin != null) {
+            if (startJoin != null && positions.getFirst().equals(positions.getLast()))
+                return RouteLayout.rejected("AWG wire cannot tap the same block twice");
+            error = planTap(level, positions.getLast(), parts.getLast(), splits);
+        }
+        if (error != null) return RouteLayout.rejected(error);
+        for (int i = 0; i < parts.size(); i++) {
+            if ((i == 0 && startJoin != null) || (i == parts.size() - 1 && endJoin != null)) continue;
+            if (at(level, positions.get(i)).stream().anyMatch(parts.get(i)::joins))
+                return RouteLayout.rejected("Select the existing AWG wire as a route endpoint to tap it");
+        }
+        var replaced = new HashMap<BlockPos, AwgCablePart>();
+        for (var split : splits) replaced.put(split.node().coordonate.pos(), split.original());
+        return new RouteLayout(positions, parts, splits, Laying.check(level, positions, parts, replaced));
+    }
+
+    static String layNative(ServerLevel level, KitSupply kit, CableRouter.Result route, long[] startJoin, long[] endJoin,
+                            Player player, int failAt) {
+        var layout = nativeLayout(level, kit.wire(), route, startJoin, endJoin, player);
+        if (layout.error() != null) return layout.error();
+        return lay(level, layout.positions(), layout.parts(), route.length(), kit.spool(), player, failAt, layout.splits());
     }
 
     private static String lay(ServerLevel level, List<BlockPos> positions, List<AwgCablePart> parts,

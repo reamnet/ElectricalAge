@@ -51,6 +51,7 @@ public final class KitPreview {
         }
         if (kit == null) {
             if (last != null && !last.sentEmpty) {
+                GEN.merge(p.getUUID(), 1L, Long::sum);
                 send(p, true, List.of());
                 LAST.put(p.getUUID(), new Last("", true));
             }
@@ -61,7 +62,7 @@ public final class KitPreview {
         String key = h instanceof BlockHitResult bh && h.getType() == HitResult.Type.BLOCK
             ? bh.getBlockPos().toShortString() + bh.getDirection() + (int) Math.floor(bh.getLocation().x * 8) + "," + (int) Math.floor(bh.getLocation().y * 8)
             + "," + (int) Math.floor(bh.getLocation().z * 8) : "none";
-        key += "|" + kit.tier() + "|" + kit.spec() + "|" + kit.length() + "|" + (plan == null ? "-" : plan.start + "" + plan.waypoints.size() + plan.touched) + "|" + p.isSecondaryUseActive();
+        key += "|" + kit.tier() + "|" + kit.spec() + "|" + kit.wire() + "|" + kit.length() + "|" + (plan == null ? "-" : plan.start + "" + plan.waypoints.size() + plan.touched) + "|" + p.isSecondaryUseActive();
         if (last != null && last.key.equals(key)) return;
         LAST.put(p.getUUID(), new Last(key, false));
         long gen = GEN.merge(p.getUUID(), 1L, Long::sum);
@@ -73,7 +74,7 @@ public final class KitPreview {
             return;
         }
         long[][] join = new long[1][];
-        CableRouter.End at = CablePlacer.endAt(level, bh.getBlockPos(), bh.getDirection(), bh.getLocation(), plan == null, join, kit.tier());
+        CableRouter.End at = CablePlacer.endForSupply(level, bh.getBlockPos(), bh.getDirection(), bh.getLocation(), plan == null, join, kit);
         // a machine's port: snapped to it and in its own colour (Baughn: it wasn't obvious that cables connect to machines)
         boolean device = at != null && CablePlacer.isDevice(level, bh.getBlockPos(), bh.getLocation());
         if (at == null) {
@@ -81,7 +82,7 @@ public final class KitPreview {
             p.sendOverlayMessage(net.minecraft.network.chat.Component.literal(CablePlacer.noEnd(level, bh.getBlockPos())));
             return;
         }
-        if (plan == null || plan.tier != kit.tier()) {   // (where it would start: at once)
+        if (plan == null || !plan.matches(kit)) {   // (where it would start: at once)
             boxes.add(device ? port(at) : marker(at));
             send(p, true, boxes, device);
             return;
@@ -100,6 +101,27 @@ public final class KitPreview {
         long[] startJoin = plan.startJoin, endJoin = join[0];
         UUID id = p.getUUID();
         var server = level.getServer();
+        if (plan.wire != null) {
+            var wire = plan.wire;
+            var pivots = new ArrayList<>(wps);
+            if (!pivots.isEmpty() && pivots.getLast().equals(at)) pivots.removeLast();
+            WORKER.execute(() -> {
+                if (GEN.getOrDefault(id, 0L) != gen) return;
+                var space = CablePlacer.space(view);
+                if (startJoin != null) space = CablePlacer.around(space, startJoin);
+                if (endJoin != null) space = CablePlacer.around(space, endJoin);
+                var route = CableRouter.route(space, AwgCablePart.width(wire), AwgCablePart.height(wire),
+                    start, pivots, at, PREVIEW_BUDGET_MS);
+                server.execute(() -> {
+                    if (GEN.getOrDefault(id, 0L) != gen || p.hasDisconnected() || p.level() != level
+                        || CablePlacer.PLANS.get(id) != plan || !plan.matches(KitSupply.held(p))) return;
+                    var answer = awgAnswer(level, plan, at, endJoin, have, route, p);
+                    send(p, answer.ok(), answer.boxes(), false, debug);
+                    p.sendOverlayMessage(net.minecraft.network.chat.Component.literal(answer.message()));
+                });
+            });
+            return;
+        }
         WORKER.execute(() -> {
             if (GEN.getOrDefault(id, 0L) != gen) return;   // (aimed elsewhere since)
             long tRoute = System.nanoTime();
@@ -181,6 +203,24 @@ public final class KitPreview {
         if (have < len)
             return new Answer(false, boxes, String.format("Too long: %.1f blocks of cable, the kit holds %.1f", len / 16.0, have / 16.0));
         return new Answer(true, boxes, String.format("Route: %.1f blocks of cable", len / 16.0));
+    }
+
+    static Answer awgAnswer(ServerLevel level, CablePlacer.Plan plan, CableRouter.End at, long[] endJoin,
+                            int have, CableRouter.Result route, ServerPlayer player) {
+        if (route.error != null) return new Answer(false, List.of(marker(at)), "Can't reach there: " + route.error);
+        var layout = AwgCablePart.nativeLayout(level, plan.wire, route, plan.startJoin, endJoin, player);
+        if (layout.error() != null) return new Answer(false, List.of(marker(at)), layout.error());
+        var boxes = new ArrayList<int[]>();
+        for (int i = 0; i < layout.parts().size(); i++) {
+            var pos = layout.positions().get(i);
+            for (int[] b : layout.parts().get(i).boxes())
+                boxes.add(new int[]{pos.getX() * 16 + b[0], pos.getY() * 16 + b[1], pos.getZ() * 16 + b[2],
+                    pos.getX() * 16 + b[3], pos.getY() * 16 + b[4], pos.getZ() * 16 + b[5]});
+        }
+        double meters = route.length() / 16.0;
+        if (have < route.length())
+            return new Answer(false, boxes, String.format("Route needs %.2f m; spool holds %.2f m", meters, have / 16.0));
+        return new Answer(true, boxes, String.format("Route: %.2f m of AWG wire", meters));
     }
 
     /** The preview thread's time for one route (more than the click's: it doesn't hold up the server). */

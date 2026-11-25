@@ -31,6 +31,17 @@ public final class CablePlacer {
         final int tier;
         /** The kit's spec (power cables): a route is laid of one cable. */
         CableSpec spec;
+        mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire;
+        ItemStack spool;
+
+        boolean matches(KitSupply kit) {
+            return KitSupply.lays(kit, false, tier, spec) && wire == kit.wire()
+                && (wire == null || spool == kit.spool());
+        }
+
+        int width() { return wire == null ? tierOf(tier, spec).width() : AwgCablePart.width(wire); }
+        int height() { return wire == null ? tierOf(tier, spec).height() : AwgCablePart.height(wire); }
+
         final CableRouter.End start;
         final long[] startJoin;
         final List<CableRouter.End> waypoints = new ArrayList<>();
@@ -72,7 +83,7 @@ public final class CablePlacer {
     static void checkLapse(ServerPlayer p, long now) {
         Plan plan = PLANS.get(p.getUUID());
         if (plan == null) return;
-        boolean holding = KitSupply.lays(KitSupply.held(p), false, plan.tier, plan.spec);
+        boolean holding = plan.matches(KitSupply.held(p));
         String why = lapse(plan, now, holding, plan.dim == p.level().dimension(), p.position());
         if (why == null) return;
         PLANS.remove(p.getUUID());
@@ -334,6 +345,21 @@ public final class CablePlacer {
 
     /** The end at the hosted device in slot el (0..5: centred on that face) of v: the edge of its face nearest the block-local
      *  point h that has a connector; null if it has none. */
+    static CableRouter.End endForSupply(Level level, BlockPos pos, Direction face, Vec3 hit, boolean start,
+                                        long[][] join, KitSupply supply) {
+        if (supply.wire() != null && level instanceof ServerLevel server) {
+            var node = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(pos, level));
+            if (node instanceof VoxelNode voxel) {
+                int index = voxel.partAt(hit.x - pos.getX(), hit.y - pos.getY(), hit.z - pos.getZ());
+                if (index >= 0 && voxel.parts.get(index) instanceof AwgCablePart wire)
+                    return wire.tapEnd(server, pos, join);
+            }
+        }
+        var end = endAt(level, pos, face, hit, start, join, supply.tier());
+        if (supply.wire() != null && join[0] != null) return null;
+        return end;
+    }
+
     static CableRouter.End deviceEnd(VoxelNode v, BlockPos pos, int el, double[] h, boolean start) {
         return deviceEnd(v, pos, el, h, start, -1);
     }
@@ -506,7 +532,7 @@ public final class CablePlacer {
         Plan plan = PLANS.get(player.getUUID());
         long now = level.getGameTime();
         CableSpec spec = kit.spec();
-        boolean other = plan != null && (plan.tier != tier || !java.util.Objects.equals(plan.spec, spec));
+        boolean other = plan != null && (!plan.matches(kit));
         if (plan != null && (other || lapse(plan, now, true, plan.dim == level.dimension(), player.position()) != null)) {
             PLANS.remove(player.getUUID());
             if (other) player.sendOverlayMessage(Component.literal("Cable route cancelled (another kind of cable in hand)"));
@@ -518,9 +544,9 @@ public final class CablePlacer {
             KitPreview.note(player, "Out of reach");
             return true;
         }
-        if (plan == null && repair(player, level, pos, hit, kit, tier, spec)) return true;
+        if (plan == null && kit.wire() == null && repair(player, level, pos, hit, kit, tier, spec)) return true;
         long[][] join = new long[1][];
-        CableRouter.End at = endAt(level, pos, face, hit, plan == null, join, tier);
+        CableRouter.End at = endForSupply(level, pos, face, hit, plan == null, join, kit);
         if (at == null) {
             player.sendOverlayMessage(Component.literal(noEnd(level, pos)));
             return true;
@@ -529,6 +555,8 @@ public final class CablePlacer {
         if (plan == null) {
             Plan p = new Plan(tier, at, join[0], level.dimension());
             p.spec = spec;
+            p.wire = kit.wire();
+            p.spool = kit.spool();
             p.touched = now;
             PLANS.put(player.getUUID(), p);
             player.sendOverlayMessage(Component.literal("Cable route started: click faces for waypoints, a device or cable (or the last waypoint again) to finish, " + kit.undoHint() + " to undo"));
@@ -541,9 +569,12 @@ public final class CablePlacer {
             long tRoute = System.nanoTime();
             CableRouter.Result r = route(level, plan, null, null);
             KitPreview.slow("waypoint route (server thread)", tRoute, (plan.startJoin != null ? "from a cable, " : "") + Router.LAST_EXPANSIONS.get() + " expansions");
-            if (r.error != null) {
+            String why = r.error;
+            if (why == null && plan.wire != null)
+                why = AwgCablePart.nativeLayout(level, plan.wire, r, plan.startJoin, null, player).error();
+            if (why != null) {
                 plan.waypoints.remove(plan.waypoints.size() - 1);
-                KitPreview.note(player, "Can't reach that waypoint: " + r.error + " (" + kit.undoHint() + " to cancel the route)");
+                KitPreview.note(player, "Can't reach that waypoint: " + why + " (" + kit.undoHint() + " to cancel the route)");
             } else {
                 player.sendOverlayMessage(Component.literal(String.format("Waypoint %d: %.1f blocks so far", plan.waypoints.size(), r.length() / 16.0)));
                 show(player, level, r.steps);
@@ -568,13 +599,15 @@ public final class CablePlacer {
             show(player, level, r.steps);
             return true;
         }
-        String err = lay(level, tier, spec, r.steps, player);
+        String err = plan.wire == null ? lay(level, tier, spec, r.steps, player)
+            : AwgCablePart.layNative(level, kit, r, plan.startJoin, join[0], player, -1);
         if (err != null) {
+            if (again && plan.wire != null) plan.waypoints.add(end);
             KitPreview.note(player, "Can't lay it: " + err);
             return true;
         }
         PLANS.remove(player.getUUID());
-        if (!creative) {
+        if (!creative && plan.wire == null) {
             kit.take(len);
         }
         player.sendOverlayMessage(Component.literal(String.format("Laid %.1f blocks of cable", len / 16.0)));
@@ -653,8 +686,7 @@ public final class CablePlacer {
         CableRouter.Space s = space(level);
         if (plan.startJoin != null) s = around(s, plan.startJoin);
         if (endJoin != null) s = around(s, endJoin);
-        CablePart.Tier t = tierOf(plan.tier, plan.spec);
-        return CableRouter.route(s, t.width(), t.height(), plan.start, wps, last);
+        return CableRouter.route(s, plan.width(), plan.height(), plan.start, wps, last);
     }
 
     /** How many blocks of burnt cable one repair click mends at most (the burnt run, followed from the clicked piece). */

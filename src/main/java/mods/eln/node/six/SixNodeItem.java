@@ -2,6 +2,11 @@ package mods.eln.node.six;
 
 import mods.eln.node.NodeManager;
 import mods.eln.node.voxel.AwgCablePart;
+import mods.eln.node.voxel.CablePlacer;
+import mods.eln.node.voxel.KitSupply;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 
 import mods.eln.generic.IDescriptorItem;
 import mods.eln.misc.Coordonate;
@@ -38,6 +43,8 @@ public class SixNodeItem extends Item implements IDescriptorItem {
     @Override
     public InteractionResult use(Level level, Player player, net.minecraft.world.InteractionHand hand) {
         if (player.isShiftKeyDown() && AwgCablePart.supportsSpool(descriptor)) {
+            if (hand == InteractionHand.MAIN_HAND && player instanceof ServerPlayer server
+                && CablePlacer.undo(server)) return InteractionResult.SUCCESS;
             return AwgCablePart.toggleRouting(level, player, hand);
         }
         return super.use(level, player, hand);
@@ -46,8 +53,19 @@ public class SixNodeItem extends Item implements IDescriptorItem {
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         Level world = ctx.getLevel();
-        if (ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown() && AwgCablePart.supportsSpool(descriptor)) {
-            return AwgCablePart.useSpool(ctx);
+        if (ctx.getPlayer() != null && ctx.getHand() == InteractionHand.MAIN_HAND
+            && AwgCablePart.supportsSpool(descriptor)) {
+            if (world.isClientSide()) return InteractionResult.SUCCESS;
+            if (world instanceof ServerLevel level && ctx.getPlayer() instanceof ServerPlayer player) {
+                if (player.isSpectator() || !player.getAbilities().mayBuild
+                    || ctx.getItemInHand() != player.getMainHandItem()
+                    || !level.mayInteract(player, ctx.getClickedPos())) return InteractionResult.FAIL;
+                boolean sneak = player.isShiftKeyDown();
+                if (sneak && !CablePlacer.active(player.getUUID())) return AwgCablePart.useSpool(ctx);
+                CablePlacer.use(player, level, ctx.getClickedPos(), ctx.getClickedFace(),
+                    KitSupply.held(player), ctx.getClickLocation(), sneak);
+                return InteractionResult.SUCCESS;
+            }
         }
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         // the block in front of the clicked face, and the element faces back toward the clicked block

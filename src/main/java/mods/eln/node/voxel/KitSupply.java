@@ -23,6 +23,10 @@ public interface KitSupply {
     /** Use up len voxels (no more than length()). */
     void take(int len);
 
+    default mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire() { return null; }
+
+    default ItemStack spool() { return ItemStack.EMPTY; }
+
     /** What to sneak-click for to undo, in the placers' messages. */
     default String undoHint() {
         return "sneak-click";
@@ -58,11 +62,30 @@ public interface KitSupply {
         };
     }
 
+    static KitSupply awg(ItemStack stack, mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire) {
+        return new KitSupply() {
+            public boolean pipe() { return false; }
+            public int tier() { return 1; }
+            public CableSpec spec() { return null; }
+            public int length() {
+                return stack.getCount() == 1 ? (int) Math.floor(wire.getRemainingLengthMeters(stack) * 16) : 0;
+            }
+            public void take(int len) {
+                throw new UnsupportedOperationException("AWG spool debits are part of placement");
+            }
+            public mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire() { return wire; }
+            public ItemStack spool() { return stack; }
+        };
+    }
+
     /** The supply in p's main hand: a kit, or a Toolbag with a kind chosen that it holds; else null. */
     static KitSupply held(Player p) {
         if (p == null) return null;
         ItemStack s = p.getMainHandItem();
         if (s.getItem() instanceof CableKitItem || s.getItem() instanceof PipeKitItem) return of(s);
+        if (s.getItem() instanceof mods.eln.node.six.SixNodeItem item
+            && AwgCablePart.supportsSpool(item.descriptor))
+            return awg(s, (mods.eln.sixnode.electricalcable.UtilityCableDescriptor) item.descriptor);
         if (s.getItem() instanceof ToolbagItem) return ToolbagItem.supply(s);
         return null;
     }

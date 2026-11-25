@@ -130,10 +130,10 @@ object ForkPatchWireCases {
         lateinit var p: net.neoforged.neoforge.common.util.FakePlayer;lateinit var stack: ItemStack;lateinit var at: BlockPos
         override fun id()="forkpatch_wire_actual_spool_placement"
         override fun build(c: TestContext) {
-            p=player(c,"wire_placement");val d=wire();stack=d.newItemStack();d.setRemainingLengthMeters(stack,17.75);p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,stack)
+            p=player(c,"wire_placement");val d=wire();stack=d.newItemStack();d.setRemainingLengthMeters(stack,17.75);p.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,stack)
             val floor=c.at(3,0,3);at=floor.above()
             val hit=net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3(floor.x+.5,floor.y+1.0,floor.z+.5),net.minecraft.core.Direction.UP,floor,false)
-            stack.useOn(net.minecraft.world.item.context.UseOnContext(p,net.minecraft.world.InteractionHand.MAIN_HAND,hit))
+            stack.useOn(net.minecraft.world.item.context.UseOnContext(p,net.minecraft.world.InteractionHand.OFF_HAND,hit))
         }
         override fun measure(c: TestContext) {
             val d=wire();val node=NodeManager.instance.getNodeFromCoordonate(Coordonate(at,c.level())) as? SixNode
