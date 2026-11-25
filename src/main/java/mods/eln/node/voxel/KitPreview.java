@@ -141,7 +141,7 @@ public final class KitPreview {
             {
                 if (!isCurrent(id, gen)) return;
                 ServerPlayer now = p;
-                if (now.hasDisconnected()) return;
+                if (now.hasDisconnected() || now.level() != level) return;
                 List<int[]> bs = a.boxes;
                 if (device && a.ok) {
                     bs = new ArrayList<>(bs);
@@ -399,7 +399,7 @@ public final class KitPreview {
             {   // (sent from here, as the cable preview: no wait for the next tick)
                 if (!isCurrent(id, gen)) return;
                 ServerPlayer now = p;
-                if (now.hasDisconnected()) return;
+                if (now.hasDisconnected() || now.level() != level) return;
                 send(now, ans.ok(), ans.boxes(), ans.ok() && toPort);
                 now.sendOverlayMessage(net.minecraft.network.chat.Component.literal(ans.message()));
             }

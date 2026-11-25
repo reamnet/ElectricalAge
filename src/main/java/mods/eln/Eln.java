@@ -312,6 +312,8 @@ public class Eln {
                 mods.eln.node.voxel.ToolbagItem.forget(e.getEntity().getUUID());
                 mods.eln.node.voxel.ToolbagShears.forget(e.getEntity().getUUID());
             });
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent.class,
+            e -> mods.eln.node.voxel.KitPreview.forget(e.getEntity().getUUID()));
         // pipe routes being laid: forgotten on logout and death
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.class,
             e -> mods.eln.node.voxel.PipePlacer.forget(e.getEntity().getUUID()));

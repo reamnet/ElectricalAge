@@ -80,3 +80,17 @@ No actual client rendering has been launched or visually inspected in this workt
 - Material: 2.125 m spool becomes exactly 0.125 m for two 1 m conductors.
 - Assertion wording corrected to describe terminal identity rather than imply total global MNA counts. No snapshot/deserialization is used for eviction.
 - Partial eviction with an immediately adjacent resident chunk remains unverified. Corners/sags/melted/insulation-damaged parts have existing save/reload tests, but have NOT yet been put through this actual eviction fixture.
+
+## Next hardening checkpoint
+- Commit `182adb885`: actual powered cross-boundary eviction fixture and registration.
+- Extending fixture to three real eviction/reload cycles, retaining exact terminal objects each time and cleaning remote drops.
+- Client inspection found world-space KitOutline boxes survive client level teardown (no cleanup hook). Added clear on client level unload, explicit preview generation forgetting on server dimension change and level guards on shared generic/pipe workers.
+- Decoder previously allocated using signed packet count and accepted arbitrary states/inverted boxes. Added bounded count/state/bounds validation, preserving last valid outline on malformed/truncated input; wire format unchanged.
+- Added KitOutlineTest: valid packet/teardown, malformed/truncated atomic rejection, and empty cancellation. Tests currently running with AWG/preview suite, log `/tmp/awg-reliability-preview-tests.log`.
+- No graphical rendering claim: tests decode stored geometry and cleanup without a GPU/client.
+
+## Preview cleanup verified
+- `./gradlew :test --tests '*Awg*Test' --tests '*KitPreviewLifecycleTest' --tests '*KitOutlineTest'`: exit 0, 39 tests, zero failures, 2m03s.
+- KitOutline decoder/clear tests are headless; LevelEvent teardown and dimension event hooks compile, but real client visuals and dimension/disconnect flows are still manual checks.
+- Repeated chunk fixture now seeds a 60 C powered run with exposure 0.375 through the save schema, plus a separate fused run; each actual eviction/reload checks elevated heat, unchanged exposure, fused electrical inactivity and owned terminal identity. Final removal checks owned loads leave MNA and release component references.
+- Three-cycle focused GameTest running; `/tmp/awg-reliability-cycles.log`. Await result before committing fixture expansion.
