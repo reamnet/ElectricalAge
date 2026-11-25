@@ -80,7 +80,7 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     static RouteKind routeKind(UtilityCableDescriptor wire) {
-        return RouteKind.cable("awg", width(wire), height(wire)).withAir(RouteKind.NO_AIR);
+        return RouteKind.cable("awg", width(wire), height(wire));
     }
 
     static int width(UtilityCableDescriptor wire) {
@@ -457,6 +457,54 @@ public final class AwgCablePart extends VoxelPart {
         return new CableRouter.End(point[0], point[1], point[2], 0, -1);
     }
 
+    /**
+     * Recheck the cached centerline against the live world. At present an air run must be
+     * straight and anchored on both ends. Use the same support and clearance probes as Router.
+     */
+    private static String checkNativeSpans(CableRouter.Space space, RouteKind kind, List<CableRouter.Step> steps) {
+        int lattice = kind.lattice();
+        int air = 0, previousDirection = -1;
+        for (int i = 1; i < steps.size(); i++) {
+            var a = steps.get(i - 1);
+            var b = steps.get(i);
+            int direction = CableRouter.dirOf(a, b);
+            if (direction < 0) {
+                if (air != 0) return "AWG spans need a supported landing before turning";
+                previousDirection = -1;
+                continue;
+            }
+            if (a.attach() != b.attach()) return "AWG face changes need an explicit corner";
+            long[] p = {a.x(), a.y(), a.z()};
+            long length = Math.abs(a.x() - b.x()) + Math.abs(a.y() - b.y()) + Math.abs(a.z() - b.z());
+            if (length % lattice != 0) return "AWG span is off the routing grid";
+            int axis = CableRouter.axis(direction);
+            for (long traveled = 0; traveled < length; traveled += lattice) {
+                boolean supported = Router.surfaceSupported(space, kind, p, a.attach(), direction);
+                if (air > 0 && direction != previousDirection)
+                    return "AWG spans must stay straight until they land";
+                if (!supported) {
+                    if (previousDirection != direction) return "AWG spans need a straight supported takeoff";
+                    air += lattice;
+                    if (kind.airCost(air) < 0) return "AWG span exceeds the native air allowance";
+                } else air = 0;
+                if (Router.surfaceStepBlocked(space, kind, p, a.attach(), direction, !supported))
+                    return "AWG route clearance changed";
+                previousDirection = direction;
+                p[axis] += CableRouter.DV[direction][axis] * lattice;
+            }
+        }
+        return air == 0 ? null : "AWG spans need a supported landing";
+    }
+
+    private static boolean canHostNative(ServerLevel level, BlockPos pos, Direction mount, Player player) {
+        var support = pos.relative(mount);
+        if (level.isOutsideBuildHeight(pos) || !level.getWorldBorder().isWithinBounds(pos)
+            || !level.hasChunkAt(pos) || !level.hasChunkAt(support)
+            || (player != null && (!level.mayInteract(player, pos) || !level.mayInteract(player, support)))) return false;
+        var state = level.getBlockState(pos);
+        return state.isAir() || state.getBlock() instanceof VoxelNodeBlock;
+    }
+
     /** Translate the native route once for both preview and placement. Unsupported geometry has no paid edge. */
     static RouteLayout nativeLayout(ServerLevel level, UtilityCableDescriptor wire, CableRouter.Result route,
                                     long[] startJoin, long[] endJoin, Player player) {
@@ -464,12 +512,18 @@ public final class AwgCablePart extends VoxelPart {
             return RouteLayout.rejected("AWG routes need up to 64 m of conductor");
         if (route.steps.stream().anyMatch(CableRouter.Step::outer))
             return RouteLayout.rejected("AWG wire cannot wrap an outer corner");
+        var space = CablePlacer.space(level);
+        if (startJoin != null) space = CablePlacer.around(space, startJoin);
+        if (endJoin != null) space = CablePlacer.around(space, endJoin);
+        var kind = routeKind(wire);
+        var invalid = checkNativeSpans(space, kind, route.steps);
+        if (invalid != null) return RouteLayout.rejected(invalid);
         var positions = new java.util.ArrayList<BlockPos>();
         var parts = new java.util.ArrayList<AwgCablePart>();
         int voxels = 0;
-        for (var piece : CableRouter.pieces(route.steps, width(wire), height(wire))) {
+        for (var piece : CableRouter.pieces(route.steps, kind.width(), kind.height())) {
             var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
-            if (piece.face() < 0 || !canRouteIn(level, pos, Direction.from3DDataValue(piece.face()), player))
+            if (piece.face() < 0 || !canHostNative(level, pos, Direction.from3DDataValue(piece.face()), player))
                 return RouteLayout.rejected("AWG wire needs a clear, solid support at " + pos.toShortString());
             var points = piece.points();
             for (int i = 3; i < points.length; i += 3) {

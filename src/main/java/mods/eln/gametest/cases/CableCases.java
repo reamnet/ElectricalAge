@@ -37,6 +37,7 @@ public final class CableCases {
 
     public static void addTo(List<TestCase> cases) {
         cases.add(new mods.eln.node.voxel.AwgNativeRouteCase());
+        cases.add(new mods.eln.node.voxel.AwgNativeSpanCase());
         cases.add(new AwgWorldCase(false));
         cases.add(new AwgWorldCase(true));
         cases.add(new AwgBendCase());

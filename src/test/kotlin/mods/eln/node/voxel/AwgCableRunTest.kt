@@ -36,17 +36,17 @@ class AwgCableRunTest {
     private fun AwgCableRun.connect() = apply { attach(sim) { air } }
 
     @Test
-    fun nativeRouteProfileUsesGaugeDimensionsAndRequiresContinuousSupport() {
+    fun nativeRouteProfileUsesGaugeDimensionsAndNativeAirAllowance() {
         val copper12 = AwgCablePart.routeKind(wire)
         assertEquals(2, copper12.width())
         assertEquals(1, copper12.height())
-        assertEquals(0, copper12.airLimit())
+        assertEquals(20, copper12.airLimit())
         val thick = UtilityCableDescriptor("1000 kcmil", ALUMINUM, 506.707, 750.0, true, 1000.0,
             false, 110.0, "Aluminum test cable", CableRenderDescriptor("eln", "sprites/cable.png", 3.25f, 2.95f))
         val aluminum = AwgCablePart.routeKind(thick)
         assertEquals(4, aluminum.width())
         assertEquals(3, aluminum.height())
-        assertEquals(0, aluminum.airLimit())
+        assertEquals(copper12.airLimit(), aluminum.airLimit())
         assertTrue(RouteKind.cable("native", 2, 1).airLimit() > 0)
     }
 
