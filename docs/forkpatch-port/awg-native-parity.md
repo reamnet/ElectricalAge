@@ -16,3 +16,17 @@ validation of its replacement.
 | Junctions | Arbitrary eligible tap points | Centered floor taps up to three arms | Split heat and paid wire, prevent unintended junctions |
 | Machine ports | Native snapping, multiple offsets | Shared snapping, AWG terminal adapter requires a centered edge | Pin identity and masks need end-to-end coverage |
 | Preview, placement and refunds | Native outline, placement and kit debit | Shared outline and cached result, AWG translates and revalidates | Separate electrical and material backend is required |
+
+## After the first parity expansion
+
+| Capability | Result | Remaining difference |
+|---|---|---|
+| Shared controls, waypoints, preview and confirmed route | Existing native session and cached route remain in use | Live client visuals still need an in-game check |
+| Straight supported runs, bends and inner face transitions | Existing AWG edges remain in use | A single edge still cannot own a cross-face terminal at both ends |
+| Short gaps | Native 20-voxel air limit, support and clearance probes, and sag renderer | AWG currently requires straight flights with supported takeoff and landing on the same face |
+| Gap accounting | The debited and recovered length is the routed centerline, consistent with native kits | The outline shows centerline bounds, as on native kits. The installed sag is sampled display geometry |
+| Save and rollback | Existing straight saves read as before. Sag geometry has an optional bounded field and client payload | Dedicated chunk unload coverage for the new shapes remains pending |
+| Outer wraps, knuckles, along-edge extensions | Rejected | A removable connector must own continuity between explicitly identified neighbors. Native visual extensions cannot safely be turned into positive-length AWG heater/resistor segments or paid again |
+| Slabs, stairs and decorative hosts | Rejected where they require micro-planes or replacing a host | Extend the AWG save geometry and verify host restoration on every rollback path before enabling |
+| Grounded and wall branches, machine connectors | Existing centered floor taps and centered machine connections remain available | Native off-center and non-floor taps need endpoint-specific split, port and damage ownership tests |
+| Historical placement | Ordinary offhand six-node and older sneak routing still available | Retire the redundant centered router only after the shared path covers its tested shapes |
