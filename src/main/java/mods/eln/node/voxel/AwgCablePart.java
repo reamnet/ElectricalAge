@@ -64,6 +64,7 @@ public final class AwgCablePart extends VoxelPart {
         z1 = face < 0 ? z0 : points[5];
         this.wire = wire;
         geometry = CablePart.utilityGeometry(wire.name, face, points, width(wire), height(wire));
+        if (!geometry.valid()) throw new IllegalArgumentException("AWG cross-section does not fit");
     }
 
     private static boolean valid(int face, int[] points) {
@@ -78,7 +79,7 @@ public final class AwgCablePart extends VoxelPart {
         }
         if (face < 0 || face > 5 || points.length != 6) return false;
         int normal = CablePart.normalAxis(face);
-        if (points[normal] != CablePart.plane(face) || points[normal + 3] != points[normal]) return false;
+        if (points[normal] < 0 || points[normal] > 16 || points[normal + 3] != points[normal]) return false;
         int varying = 0;
         for (int axis = 0; axis < 3; axis++) {
             if (axis == normal) continue;
@@ -271,7 +272,7 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     private boolean passesCenter() {
-        if (geometry.face != 0) return false;
+        if (geometry.face != 0 || geometry.points[1] != 0) return false;
         return x0 == x1 ? x0 == 8 && Math.min(z0, z1) <= 8 && Math.max(z0, z1) >= 8
             : z0 == 8 && Math.min(x0, x1) <= 8 && Math.max(x0, x1) >= 8;
     }
@@ -526,7 +527,7 @@ public final class AwgCablePart extends VoxelPart {
             if (!level.hasChunkAt(support) || player != null && !level.mayInteract(player, support)) return false;
         }
         var state = level.getBlockState(pos);
-        return state.isAir() || state.getBlock() instanceof VoxelNodeBlock;
+        return state.isAir() || state.getBlock() instanceof VoxelNodeBlock || Mimic.allowed(state);
     }
 
     /** Translate the native route once for both preview and placement. Unsupported geometry has no paid edge. */
@@ -556,7 +557,8 @@ public final class AwgCablePart extends VoxelPart {
             }
             for (int i = 3; i < points.length; i += 3) {
                 int[] ends = java.util.Arrays.copyOfRange(points, i - 3, i + 3);
-                if (!valid(piece.face(), ends)) return RouteLayout.rejected("AWG wire needs flat block faces");
+                if (!valid(piece.face(), ends) || !CablePart.utilityGeometry(wire.name, piece.face(), ends, kind.width(), kind.height()).valid())
+                    return RouteLayout.rejected("AWG wire needs a clear planar edge");
                 var part = new AwgCablePart(wire, piece.face(), ends);
                 if (!parts.isEmpty()) {
                     var previous = parts.getLast();
@@ -717,7 +719,8 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     ElectricalLoad terminal(Direction exit, Direction mount) {
-        if (geometry.face != mount.get3DDataValue() || exit.getAxis() == mount.getAxis()) return null;
+        if (geometry.face != mount.get3DDataValue() || exit.getAxis() == mount.getAxis()
+            || geometry.points[CablePart.normalAxis(geometry.face)] != CablePart.plane(geometry.face)) return null;
         int normal = CablePart.normalAxis(geometry.face), boundary = CablePart.normalAxis(exit.get3DDataValue());
         int across = 3 - normal - boundary;
         int plane = CablePart.plane(exit.get3DDataValue());
@@ -831,7 +834,7 @@ public final class AwgCablePart extends VoxelPart {
             return;
         }
         if (outerEnds != 0) tag.putInt("outerEnds", outerEnds);
-        if (geometry.face == 0) tag.putIntArray("ends", new int[]{x0, z0, x1, z1});
+        if (geometry.face == 0 && geometry.points[1] == 0) tag.putIntArray("ends", new int[]{x0, z0, x1, z1});
         else {
             tag.putInt("face", geometry.face);
             tag.putIntArray("ends", geometry.points);
@@ -856,9 +859,10 @@ public final class AwgCablePart extends VoxelPart {
         var state = tag.getCompoundOrEmpty("run");
         var wire = wire(state.getCompoundOrEmpty("length").getIntOr("wire", -1));
         if (wire == null) return null;
-        var part = new AwgCablePart(wire, face, ends);
-        if (state.getCompoundOrEmpty("length").getIntOr("routeVoxels", -1) != part.geometry.length()) return null;
+        AwgCablePart part;
         try {
+            part = new AwgCablePart(wire, face, ends);
+            if (state.getCompoundOrEmpty("length").getIntOr("routeVoxels", -1) != part.geometry.length()) return null;
             if (tag.contains("cornerEnd") || tag.contains("cornerFace"))
                 part.markCorner(tag.getIntOr("cornerEnd", -1), tag.getIntOr("cornerFace", -1));
             part.setOuterEnds(tag.getIntOr("outerEnds", 0));
