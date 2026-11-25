@@ -31,7 +31,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +83,7 @@ public final class Wp9bCases {
      * pin(front) points to `pinTo`. The front is what the descriptor computes for that view.
      */
     static SixNodeElement placeToward(TestContext ctx, int damage, BlockPos p, UnaryOperator<LRDU> pin, net.minecraft.core.Direction pinTo) {
-        FakePlayer fp = FakePlayerFactory.getMinecraft(ctx.world());
+        FakePlayer fp = ctx.player();
         SixNodeDescriptor d = Eln.sixNodeItem.getDescriptor(damage);
         if (d == null) throw new IllegalStateException("no six node descriptor " + damage);
         float oldYaw = fp.getYRot();
@@ -248,10 +247,7 @@ public final class Wp9bCases {
         @Override
         public void build(TestContext ctx) {
             src = ctx.placeSix(SOURCE, ctx.at(0, 1, 1));
-            src.networkUnserialize(ctx.stream(out -> {
-                out.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                out.writeFloat(30f);
-            }));
+            ctx.setVolts(src, 30f);
             lv = ctx.placeSix(LV_CABLE, ctx.at(1, 1, 1));
             // geometry on the output pin (front, toward +X); the input pin (front.inverse()) connects with no cable in
             // a slot (built-in LV cable, Baughn 2026-10-17)

@@ -35,6 +35,7 @@ import static mods.eln.i18n.I18N.tr;
  * it greyed until the computer has taken it; Ctrl+C is Break for the active window (Baughn). Logs and lists scroll
  * here. Under it: Reset, power, its state and address, the chip slots and drives.
  */
+// Inventory Profiles Next (optional, client) must not sort here: its R fired on every r typed, and moved the ROM chip
 public class ComputerScreen extends ElnScreen {
     public static final int WIDTH = 498, HEIGHT = 358, CELL = 6, LINE = 10;
     /** The screen's cells start at (AREA_X, AREA_Y), in panel pixels. */
@@ -59,12 +60,11 @@ public class ComputerScreen extends ElnScreen {
     /** What only this player has: each line's edit, each log's and list's scroll. */
     final Map<String, LineEdit> edits;
     final Map<String, Integer> scrolls = new HashMap<>();
-    static long seq;
     String hint = "";
 
     /** A window being dragged (MOVE) or sized (SIZE) by this player: its new geometry so far. */
     static final int MOVE = 1, SIZE = 2;
-    int dragMode, dragWin, dragX, dragY, dragW, dragH;
+    int dragMode, dragWin, dragX, dragY, dragW, dragH, placesSeen;
     double dragFromX, dragFromY;
 
     /** An editor element's state on this client: the revision and text it was opened at, the text now, a save. */
@@ -147,10 +147,15 @@ public class ComputerScreen extends ElnScreen {
     }
 
     EditorState editorState(int t, int id) {
-        return (EditorState) render.screenState.computeIfAbsent("ed/" + t + "/" + id, k -> new EditorState());
+        return (EditorState) render.editorStates.computeIfAbsent("ed/" + t + "/" + id, k -> new EditorState());
     }
 
     // ---- the scene and this display's view of it
+
+    /** The pens the computer's scene draws with (Prefs). */
+    mods.eln.robotics.computer.screen.Pens pens() {
+        return mods.eln.robotics.computer.screen.Pens.of(scene().pens);
+    }
 
     Scene scene() {
         return render.scene;
@@ -275,8 +280,9 @@ public class ComputerScreen extends ElnScreen {
     }
 
     /** The editor elements of the active window, when nothing covers them, as code editor widgets placed over them. */
+    @SuppressWarnings("unchecked")
     void syncEditors() {
-        Scene.Window t = render.lit() && dragMode == 0 ? activeWindow() : null;   // (off, or a drag: none)
+        Scene.Window t = render.lit() && dragMode == 0 && render.operator && !render.usingCells ? activeWindow() : null;   // (off, a drag, a watcher: none)
         java.util.Set<String> want = new java.util.HashSet<>();
         if (t != null && t.ask == null)
             for (Map.Entry<Integer, Scene.Element> en : t.elements.entrySet()) {
@@ -289,8 +295,12 @@ public class ComputerScreen extends ElnScreen {
                 List<Object> m = e.msg;
                 EditorState st = editorState(active, en.getKey());
                 boolean replaced = false;
-                if (st.opened != m) {
-                    // a new editor message: the file opened again (a reused window number, AdventurAgent): start from it
+                if (!m.equals(st.opened) && st.opened instanceof List<?> om && Form.str((List<Object>) om, 8, "").equals(Form.str(m, 8, ""))
+                    && st.savingText != null && st.savingText.equals(Form.str(m, 10, "")))
+                    st.opened = m;   // (this player's own save, as the scene now keeps it: what they typed since stays)
+                if (!m.equals(st.opened)) {
+                    // a new editor message: the file opened again (a reused window number, AdventurAgent): start from it.
+                    // (by content: the same message replayed when the screen is opened again keeps the unsaved text)
                     st.opened = m;
                     st.baseRev = Form.str(m, 9, "");
                     st.baseText = st.text = Form.str(m, 10, "");
@@ -312,9 +322,12 @@ public class ComputerScreen extends ElnScreen {
                     if (w.getWidth() != pw || w.getHeight() != ph) w.setSize(pw, ph);
                     if (replaced && !w.buffer.text().equals(st.text)) w.buffer.setText(st.text);
                 }
+                // (an open menu would be drawn under the widget: it hides, keeping its text, cursor and bar, so a pick
+                // from the menu still finds it)
+                w.visible = !menuOpen;
             }
         // states of editors whose window is gone are forgotten
-        render.screenState.keySet().removeIf(key -> key.startsWith("ed/") && !scene().windows.containsKey(Integer.parseInt(key.split("/")[1])));
+        render.editorStates.keySet().removeIf(key -> !scene().windows.containsKey(Integer.parseInt(key.split("/")[1])));
         for (var it = editorWidgets.entrySet().iterator(); it.hasNext(); ) {
             var en = it.next();
             if (!want.contains(en.getKey())) {
@@ -346,6 +359,10 @@ public class ComputerScreen extends ElnScreen {
             minecraft.gui.setScreen(new ComputerScreen(menu, minecraft.player.getInventory(), title, render));
             return;
         }
+        if (render.places != placesSeen) {   // (the spec: a program's place wins over a drag in progress)
+            placesSeen = render.places;
+            if (dragMode != 0 && dragWin == render.placedWin) dragMode = 0;
+        }
         syncEditors();
         for (List<Object> m; (m = render.replies.poll()) != null; ) {
             int t = (int) Form.num(m, 1, -1), id = (int) Form.num(m, 2, -1);
@@ -355,10 +372,8 @@ public class ComputerScreen extends ElnScreen {
                 st.baseRev = Form.str(m, 4, "");
                 st.baseText = st.savingText;
                 st.status = tr("Saved");
-            } else {   // conflict: keep the player's text; a second save overwrites (Argon's review)
-                st.baseRev = Form.str(m, 4, "");
-                st.baseText = Form.str(m, 5, "");
-                st.status = tr("Changed on the disk meanwhile: Ctrl+S again overwrites it");
+            } else {   // conflict: refused, and refused again (Baughn 2026-11-24): the player's text stays, the file too
+                st.status = tr("Not saved: the file changed on the disk. Save As keeps your text");
             }
         }
         // lines the computer took are in its log now; ones it never took (off, stuck, refused) come back after 10 s
@@ -382,11 +397,23 @@ public class ComputerScreen extends ElnScreen {
         String[] tid = key.split("/");
         int t = Integer.parseInt(tid[0]), id = Integer.parseInt(tid[1]);
         EditorState st = editorState(t, id);
-        st.savingSeq = ++seq;
+        Object change = whole(t, id) ? st.text : hunks(st.baseText, st.text);
+        if (Form.print(new Form.Symbol("save"), (long) t, (long) id, render.seq + 1, st.baseRev == null ? "" : st.baseRev, change).length()
+            > mods.eln.robotics.computer.screen.ScreenHost.MAX_SAVE - 16) {   // (the server would drop it, and "Saving..." would stay; 16: the :gen added on sending)
+            st.status = tr("Too big to save in one go: save in smaller steps, or split the file");
+            return;
+        }
+        st.savingSeq = ++render.seq;
         st.savingText = st.text;
         st.status = tr("Saving...");
-        render.screenEvent(new Form.Symbol("save"), (long) t, (long) id, st.savingSeq, st.baseRev == null ? "" : st.baseRev,
-            hunks(st.baseText, st.text));
+        render.screenEvent(new Form.Symbol("save"), (long) t, (long) id, st.savingSeq, st.baseRev == null ? "" : st.baseRev, change);
+    }
+
+    /** Does the editor's program want whole texts in its saves (Wire 2: :whole true after its text), not hunks? */
+    boolean whole(int t, int id) {
+        Scene.Window w = scene().windows.get(t);
+        Scene.Element e = w == null ? null : w.elements.get(id);
+        return e != null && mods.eln.robotics.computer.screen.ScreenHost.whole(e);
     }
 
     /** One hunk covering what changed between the common first and last lines (none if nothing did). */
@@ -435,13 +462,19 @@ public class ComputerScreen extends ElnScreen {
         }
 
         @Override
+        public String editorText(int win, int id) {
+            var w = editorWidgets.get(win + "/" + id);
+            return w != null && !w.visible ? w.buffer.text() : null;   // (hidden under a menu: drawn as cells, as it stands)
+        }
+
+        @Override
         public boolean selected(String key) {
             return key.equals(selected);
         }
 
         @Override
         public String clock() {
-            return ComputerScreen.clock();
+            return ComputerScreen.clock(scene().clockHours);
         }
     };
 
@@ -450,7 +483,8 @@ public class ComputerScreen extends ElnScreen {
         Scene s = scene();
         int x0 = leftPos + AREA_X - 4, y0 = topPos + AREA_Y - 3;
         g.fill(x0, y0, x0 + s.w * CELL + 8, y0 + s.h * LINE + 6, 0xFF101418);
-        if (render.lit()) {
+        if (render.lit() && render.usingCells && render.cells != null) cells(g, render.cells);   // (a watcher: the composed picture)
+        else if (render.lit()) {
             Scene.Window t = activeWindow();
             SceneCells c = SceneCells.of(s, local, active);
             cells(g, c);
@@ -458,6 +492,13 @@ public class ComputerScreen extends ElnScreen {
             if (t != null) overlays(g, t);
             if (dragMode != 0) dragOutline(g);
             if (menuOpen) menus(g);
+        }
+        if (!render.operator) {   // (a watcher: Baughn 2026-11-24, one user at a time)
+            String who = render.operatorName.isEmpty() ? tr("someone else") : render.operatorName;
+            String msg = tr("Watching: in use by %1$", who);
+            int by = y0 + s.h * LINE + 6 - LINE;
+            g.fill(x0, by, x0 + s.w * CELL + 8, by + LINE, 0xE0303848);
+            g.text(font, msg, x0 + (s.w * CELL + 8 - font.width(msg)) / 2, by + 1, 0xFFFFE070, false);
         }
         // (off, or no chips: a dark screen, no text: Baughn 2026-11-18; the state shows under it)
         label(g, 9, slotsY - 11, tr("Expansion modules"));
@@ -508,7 +549,7 @@ public class ComputerScreen extends ElnScreen {
                 if (cp == ' ') continue;
                 int pp = c.paper[y * c.w + x];
                 if ((cp == SceneCells.DEPTH || cp == SceneCells.CLOSE || cp == SceneCells.SIZE || cp == SceneCells.ICONIFY)
-                    && (pp == SceneCells.TITLE_ACTIVE || pp == SceneCells.TITLE_IDLE)) continue;   // (a window's boxes: gadget())
+                    && (pp == pens().titleActive() || pp == pens().titleIdle())) continue;   // (a window's boxes: gadget())
                 if (cp >= 0x2500 && cp <= 0x257F) boxGlyph(g, cp, x, y, c.ink[y * c.w + x]);
                 else {
                     String ch = new String(Character.toChars(cp));
@@ -601,7 +642,7 @@ public class ComputerScreen extends ElnScreen {
     }
 
     void bevels(GuiGraphicsExtractor g, SceneCells c, Scene s) {
-        bevel(g, c, cx(0), cy(0), cx(c.w), cy(1), true, SceneCells.BAR, SceneCells.OWNER_BAR);   // the screen bar
+        bevel(g, c, cx(0), cy(0), cx(c.w), cy(1), true, pens().bar(), SceneCells.OWNER_BAR);   // the screen bar
         for (int wid : s.order) {
             Scene.Window w = s.windows.get(wid);
             if (w == null) continue;
@@ -729,7 +770,7 @@ public class ComputerScreen extends ElnScreen {
         for (int k = 1; k < l.size(); k++) {
             Object o = l.get(k);
             if (o instanceof List<?> it && !it.isEmpty())
-                out.add(new String[]{String.valueOf(it.get(0)), it.size() > 1 && it.get(1) instanceof String s ? s : ""});
+                out.add(item(it));
             else out.add(null);
         }
         return out;
@@ -741,9 +782,19 @@ public class ComputerScreen extends ElnScreen {
         for (int k = 1; k < l.size(); k++) {
             Object o = l.get(k);
             if (o instanceof List<?> it && !it.isEmpty())
-                out.add(new String[]{String.valueOf(it.get(0)), it.size() > 1 && it.get(1) instanceof String s ? s : ""});
+                out.add(item(it));
         }
         return out;
+    }
+
+    /**
+     * A menu item as the display needs it: label, Alt key, action and the editor it acts on (Wire 2:
+     * ["Save" "s" :save 4]; the action, not the label, says what the display does, in any language).
+     */
+    static String[] item(List<?> it) {
+        return new String[]{String.valueOf(it.get(0)), it.size() > 1 && it.get(1) instanceof String s ? s : "",
+            it.size() > 2 && it.get(2) instanceof Form.Keyword kw ? kw.name() : "",
+            it.size() > 3 && it.get(3) instanceof Long id ? String.valueOf(id) : ""};
     }
 
     static String menuTitle(Scene.Window t, int m) {
@@ -763,12 +814,12 @@ public class ComputerScreen extends ElnScreen {
         if (menuAt >= titles.size()) return;
         int tx = SceneCells.menuX(titles, menuAt);
         String title = titles.get(menuAt);
-        g.fill(cx(tx - 1), cy(0), cx(tx + title.length() + 1), cy(1), SceneCells.BAR_TEXT);
-        g.text(font, title, cx(tx), cy(0) + 1, SceneCells.BAR, false);
+        g.fill(cx(tx - 1), cy(0), cx(tx + title.length() + 1), cy(1), pens().barText());
+        g.text(font, title, cx(tx), cy(0) + 1, pens().bar(), false);
         List<String[]> items = menuItems(menuAt);
         if (items.isEmpty()) return;
         int x = tx - 1, w = menuWidth(items);
-        g.fill(cx(x), cy(1), cx(x + w), cy(1 + items.size()), SceneCells.BAR);
+        g.fill(cx(x), cy(1), cx(x + w), cy(1 + items.size()), pens().bar());
         // (it stands up: lit along its top and left, shadowed along its bottom and right)
         int x0 = cx(x), y0 = cy(1), x1 = cx(x + w), y1 = cy(1 + items.size());
         g.fill(x0, y0, x1, y0 + 1, 0xFFFFFFFF);
@@ -780,12 +831,12 @@ public class ComputerScreen extends ElnScreen {
             String[] it = items.get(i);
             int y = 1 + i;
             if (it == null) {
-                g.fill(cx(x) + 2, cy(y) + LINE / 2, cx(x + w) - 2, cy(y) + LINE / 2 + 1, 0xFF8A90A0);
+                g.fill(cx(x) + 2, cy(y) + LINE / 2, cx(x + w) - 2, cy(y) + LINE / 2 + 1, pens().titleIdle());
                 continue;
             }
             boolean off = menuAt > 0 && t != null && t.disabled.contains(title + "/" + it[0]), on = i == itemAt && !off;
-            if (on) g.fill(cx(x) + 1, cy(y), cx(x + w) - 1, cy(y + 1), SceneCells.BAR_TEXT);
-            int ink = off ? 0xFF9A9A9A : on ? SceneCells.BAR : SceneCells.BAR_TEXT;
+            if (on) g.fill(cx(x) + 1, cy(y), cx(x + w) - 1, cy(y + 1), pens().barText());
+            int ink = off ? 0xFF9A9A9A : on ? pens().bar() : pens().barText();
             g.text(font, it[0], cx(x + 1), cy(y) + 1, ink, false);
             if (!it[1].isEmpty()) g.text(font, "Alt-" + it[1].toUpperCase(), cx(x + w - 6), cy(y) + 1, ink, false);
         }
@@ -837,12 +888,76 @@ public class ComputerScreen extends ElnScreen {
             return;
         }
         Scene.Window t = activeWindow();
-        if (t != null) pick(t, menuTitle(t, m - 1), it[0]);
+        if (t != null) pick(t, menuTitle(t, m - 1), it);
     }
 
-    void pick(Scene.Window t, String menu, String item) {
-        if (t.disabled.contains(menu + "/" + item)) return;
-        render.screenEvent(new Form.Symbol("pick"), (long) active, menu, item);
+    void pick(Scene.Window t, String menu, String[] it) {
+        if (t.disabled.contains(menu + "/" + it[0])) return;
+        if (!editorAction(it[2], it[3])) return;   // (a Save As too big to send: no pick, or Ed would write the old text)
+        render.screenEvent(new Form.Symbol("pick"), (long) active, menu, it[0]);
+    }
+
+    /**
+     * Wire 2: a menu item's action acts on this display's editor before the pick goes to the program (Baughn
+     * 2026-11-24: actions are tags, never labels): :save saves first (only this display holds the text; Ed's Save, Run and
+     * Close carry it), :save-as sends the changes as a stash for the program to write under the new name, :find,
+     * :find-next and :go-to-line open the editor's bar or find again, :name gives the keys to the line asking a name.
+     * The item names the editor element; without one, the window's only editor.
+     */
+    boolean editorAction(String action, String element) {
+        if (action.isEmpty()) return true;
+        // (the editor the item names, or the window's only one; drawn or not: an editor covered by another window still
+        // has its text here, and Close must still save it)
+        String key = null;
+        Scene.Window win = activeWindow();
+        if (win == null) return true;
+        if (!element.isEmpty()) {
+            Scene.Element e = win.elements.get(Integer.parseInt(element));
+            key = e != null && e.kind.equals("editor") ? active + "/" + element : null;
+        } else
+            for (var en : win.elements.entrySet())
+                if (en.getValue().kind.equals("editor")) key = key == null ? active + "/" + en.getKey() : "";
+        if (key == null || key.isEmpty()) return true;   // (none, or several and the item doesn't say which)
+        var w = editorWidgets.get(key);
+        EditorState st = editorState(active, Integer.parseInt(key.split("/")[1]));
+        if (w == null && !action.equals("save") && !action.equals("save-as")) return true;   // (find and the like need it drawn)
+        switch (action) {
+            case "save" -> {
+                if (st.baseText == null || !st.text.equals(st.baseText)) save(key);
+            }
+            case "save-as" -> {   // (its changes, kept aside by the program and written only under the new name)
+                int eid = Integer.parseInt(key.split("/")[1]);
+                Object change = whole(active, eid) ? st.text : hunks(st.baseText, st.text);
+                if (Form.print(new Form.Symbol("stash"), (long) active, (long) eid, render.seq + 1, st.baseRev == null ? "" : st.baseRev, change).length()
+                    > mods.eln.robotics.computer.screen.ScreenHost.MAX_SAVE - 16) {   // (dropped, Save As would write the old text)
+                    st.status = tr("Too big to save in one go: save in smaller steps, or split the file");
+                    return false;
+                }
+                render.screenEvent(new Form.Symbol("stash"), (long) active, (long) eid, ++render.seq,
+                    st.baseRev == null ? "" : st.baseRev, change);
+                if (w != null) w.setFocused(false);   // (the keys go to the line that asks for the name)
+                setFocused(null);
+            }
+            case "name" -> {
+                if (w != null) w.setFocused(false);
+                setFocused(null);
+            }
+            case "find" -> {
+                setFocused(w);
+                w.openFind();
+            }
+            case "find-next" -> {
+                setFocused(w);
+                w.findNext();
+            }
+            case "go-to-line" -> {
+                setFocused(w);
+                w.openGoTo();
+            }
+            default -> {
+            }
+        }
+        return true;
     }
 
     /** A window brought back: restored if minimised (reported), raised and given the keyboard. */
@@ -875,11 +990,13 @@ public class ComputerScreen extends ElnScreen {
     String selected;
 
     /** The world's time of day for the clock, as the display sees it. */
-    static String clock() {
+    static String clock(int hours) {
         var level = Minecraft.getInstance().level;
         if (level == null) return "";
         long t = Math.floorMod(level.getOverworldClockTime() + 6000, 24000);
-        return String.format("%02d:%02d", t / 1000, t % 1000 * 60 / 1000);
+        int h = (int) (t / 1000), mi = (int) (t % 1000 * 60 / 1000);
+        if (hours == 12) return String.format("%2d:%02d %s", h % 12 == 0 ? 12 : h % 12, mi, h < 12 ? "am" : "pm");
+        return String.format("%02d:%02d", h, mi);
     }
 
     // ---- input
@@ -901,6 +1018,8 @@ public class ComputerScreen extends ElnScreen {
     public boolean mouseClicked(MouseButtonEvent ev, boolean doubleClick) {
         Scene s = scene();
         double mx = ev.x(), my = ev.y();
+        if (!render.operator && mx >= leftPos + AREA_X && my >= topPos + AREA_Y && mx < leftPos + AREA_X + s.w * CELL
+            && my < topPos + AREA_Y + s.h * LINE) return true;   // (a watcher's clicks on the screen go nowhere)
         if (!render.lit() || !onScreen(mx, my)) {
             closeMenu();
             return super.mouseClicked(ev, doubleClick);
@@ -1132,8 +1251,9 @@ public class ComputerScreen extends ElnScreen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
+        if (!render.operator) return false;
         String ed = focusedEditor();
-        if (ed != null) return editorWidgets.get(ed).charTyped(event);
+        if (ed != null) return menuOpen || editorWidgets.get(ed).charTyped(event);   // (hidden under a menu: nothing)
         Scene.Window t = render.lit() ? activeWindow() : null;
         if (t == null || t.ask != null) return super.charTyped(event);
         if (!fieldHasKeys() && focusedRaw(t) != null) {
@@ -1158,8 +1278,22 @@ public class ComputerScreen extends ElnScreen {
     }
 
     @Override
+    public boolean keyReleased(KeyEvent ev) {
+        Scene.Window t = render.operator && !fieldHasKeys() ? activeWindow() : null;
+        if (t != null && t.ask == null && !menuOpen && focusedRaw(t) != null) {   // (Wire 2: games hear keys let go)
+            int mods = (ev.hasShiftDown() ? 1 : 0) | (ev.hasControlDown() ? 2 : 0) | (ev.hasAltDown() ? 4 : 0);
+            String name = keyName(ev.key(), true);
+            if (name != null) {
+                render.screenEvent(new Form.Symbol("keyup"), (long) active, (long) focusId, name, (long) mods);
+                return true;
+            }
+        }
+        return super.keyReleased(ev);
+    }
+
+    @Override
     public boolean keyPressed(KeyEvent ev) {
-        if (fieldHasKeys()) return super.keyPressed(ev);
+        if (fieldHasKeys() || !render.operator) return super.keyPressed(ev);
         int k = ev.key();
         if (menuOpen && k == InputConstants.KEY_ESCAPE) {
             closeMenu();
@@ -1172,11 +1306,13 @@ public class ComputerScreen extends ElnScreen {
             for (int m = 0; m < t.menus.size(); m++)
                 for (String[] it : windowMenuItems(t, m))
                     if (it != null && it[1].equalsIgnoreCase(letter)) {
-                        pick(t, menuTitle(t, m), it[0]);
+                        pick(t, menuTitle(t, m), it);
                         return true;
                     }
         }
+        if (menuOpen) return true;   // (a hidden editor under the menu takes nothing)
         String ed = focusedEditor();
+        if (ed != null && k == InputConstants.KEY_ESCAPE && editorWidgets.get(ed).escape()) return true;   // (the find bar closes first)
         if (ed != null && k != InputConstants.KEY_ESCAPE) {
             if (k == InputConstants.KEY_S && ev.hasControlDownWithQuirk()) save(ed);
             else editorWidgets.get(ed).keyPressed(ev);
@@ -1249,7 +1385,7 @@ public class ComputerScreen extends ElnScreen {
     void submit(LineEdit le) {
         if (le.pending != null) return;   // (the last one isn't taken yet)
         String text = le.text.toString();
-        le.pendingSeq = ++seq;
+        le.pendingSeq = ++render.seq;
         le.pending = text;
         le.pendingAt = System.currentTimeMillis();
         if (!text.isBlank() && (le.history.isEmpty() || !le.history.getLast().equals(text))) le.history.add(text);

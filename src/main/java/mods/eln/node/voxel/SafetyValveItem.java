@@ -5,18 +5,21 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 
-/** A safety valve: right-click a straight stretch of pipe; its outlet points out of the pipe's most open side. */
+/**
+ * A safety valve, purge valve or breather (SafetyValvePart's modes): right-click a straight stretch of pipe; its outlet
+ * points out of the pipe's most open side (up if it can).
+ */
 public class SafetyValveItem extends Item implements PipeTool {
-    /** A purge valve (gas only) rather than a safety valve. */
-    final boolean purge;
+    /** SafetyValvePart.SAFETY, PURGE or BREATHER. */
+    final int mode;
 
     public SafetyValveItem(Properties p) {
-        this(p, false);
+        this(p, SafetyValvePart.SAFETY);
     }
 
-    public SafetyValveItem(Properties p, boolean purge) {
+    public SafetyValveItem(Properties p, int mode) {
         super(p);
-        this.purge = purge;
+        this.mode = mode;
     }
 
     @Override
@@ -28,10 +31,14 @@ public class SafetyValveItem extends Item implements PipeTool {
         var hit = ctx.getClickLocation();
         String err;
         if (level.getBlockEntity(pos) instanceof VoxelNodeEntity e && e.getNode() instanceof VoxelNode n)
-            err = n.addSafetyValveNear(hit.x - pos.getX(), hit.y - pos.getY(), hit.z - pos.getZ(), purge);
+            err = n.addSafetyValveNear(hit.x - pos.getX(), hit.y - pos.getY(), hit.z - pos.getZ(), mode);
         else err = "fit it on a pipe";
         if (err != null) {
-            if (player != null) player.sendOverlayMessage(Component.literal("Can't fit a " + (purge ? "purge" : "safety") + " valve: " + err));
+            if (player != null) player.sendOverlayMessage(Component.literal(switch (mode) {
+                case SafetyValvePart.PURGE -> mods.eln.i18n.I18N.tr("Can't fit a purge valve: %1$", err);
+                case SafetyValvePart.BREATHER -> mods.eln.i18n.I18N.tr("Can't fit a breather valve: %1$", err);
+                default -> mods.eln.i18n.I18N.tr("Can't fit a safety valve: %1$", err);
+            }));
             return InteractionResult.FAIL;
         }
         if (player == null || !player.isCreative()) ctx.getItemInHand().shrink(1);
@@ -40,7 +47,13 @@ public class SafetyValveItem extends Item implements PipeTool {
 
     /** Its tooltip lines (client ItemTooltips). */
     public java.util.List<String> tooltip() {
-        return purge
+        if (mode == SafetyValvePart.BREATHER)
+            // (Neon's wording; Baughn 2026-11-24: "also a good way to lose natural gas", a flare or gas tank the fix)
+            return java.util.List.of(mods.eln.i18n.I18N.tr("Lets gas out and air in to hold outside pressure, never liquid."),
+                mods.eln.i18n.I18N.tr("Vents a receiver tank so it neither pressurizes nor pulls a vacuum."),
+                mods.eln.i18n.I18N.tr("Natural gas escapes too; pipe it to a flare or a gas tank instead."),
+                mods.eln.i18n.I18N.tr("Fits on top of a pipe or tank stub; on a pipe's side, liquid shuts it."));
+        return mode == SafetyValvePart.PURGE
             ? java.util.List.of("Lets gas out of a pipe above its set pressure, never liquid.",
                 "Bleeds a crude tank's gas or the air of a filling run (set to 1.1 bar at first).",
                 "Fits on a straight stretch of pipe; right-click it with an empty hand to set it.")

@@ -211,6 +211,28 @@ class ApplicationsTest extends StdlibTest {
         assertNull(screen.scene.windows.get(4), "one calculator");
     }
 
+    /**
+     * Baughn (2026-11-22, "a little noisy"): an idle desk doesn't read the floppy; it looks again when the disk is
+     * written to (an application copied on shows up) or changed.
+     */
+    @Test
+    void anIdleDeskLeavesTheFloppyAlone() throws IOException {
+        m.floppy.insert(0, new Floppy(java.util.UUID.randomUUID(), applications(), false));
+        type("(proc/start \"desk\" run-file \"a:/startup.janet\")");
+        tick(40, "\n2\n> ");
+        run(80);
+        m.floppy.takeAccess(0);
+        run(200);   // (10 s: the desk's loop went round five times)
+        assertFalse(m.floppy.takeAccess(0), "no reads while nothing changed");
+        type("(do (disk/mkdir \"a:/Hello.app\") (spit \"a:/Hello.app/main.janet\" \"(print 1)\") :ok)");
+        tick(40, ":ok\n> ");
+        run(60);
+        boolean shown = false;
+        for (var en : screen.scene.windows.get(2).elements.entrySet())
+            shown |= en.getValue().kind.equals("icon") && "Hello".equals(Form.str(en.getValue().msg, 5, ""));
+        assertTrue(shown, "an application written to the disk shows up: " + dump(screen));
+    }
+
     /** Baughn (2026-11-18): two text modes, 80 x 25 (the start) and 120 x 40; windows are kept on the screen. */
     @Test
     void theScreenHasTwoModes() throws IOException {
@@ -221,6 +243,52 @@ class ApplicationsTest extends StdlibTest {
         assertEquals(40, screen.scene.h);
         type("(ui/mode 81 25)");
         tick(40, "the modes are");
+    }
+
+    /**
+     * lashtear (2026-11-23): saving a file over 31 KB in Ed halted a two-chip computer (Janet ran out of memory), and
+     * only a power cycle brought it back. Two chips, the desk, Ed on RAM:, the file typed in pieces to 33 KB: every
+     * save is written.
+     */
+    @Test
+    void edSavesABigFileOnTwoChips() throws IOException {
+        m.floppy.insert(0, new Floppy(java.util.UUID.randomUUID(), applications(), false));
+        type("(proc/start \"desk\" run-file \"a:/startup.janet\")");
+        tick(40, "\n2\n> ");
+        run(60);
+        String name = "RAM:/Untitled.janet";
+        type("(edit \"" + name + "\")");
+        run(20);
+        int w = screen.scene.windows.keySet().stream().filter(k -> k > 1 && k < 250).max(Integer::compare).orElse(-1);
+        Scene.Element ed = element(screen, w, 4);
+        assertNotNull(ed, "Ed's editor; " + dump(screen));
+        String rev = ed.msg.get(9).toString();
+        // (each save sends what changed: 40 lines of 64 bytes more, as a player types)
+        int have = 0;
+        for (long seq = 1; have < 520; seq++) {
+            List<Object> lines = new ArrayList<>();
+            for (int i = 0; i < 40; i++) lines.add(String.format("%-63d", have + i));
+            m.editor.give(event(new Form.Symbol("save"), (long) w, 4L, seq, rev, List.of(List.of((long) have, have == 0 ? 1L : 0L, lines))));
+            have += 40;
+            rev = savedRev(w, seq, 40);
+            assertFalse(m.halted(), "halted at " + have + " lines: " + screen.console);
+            assertNotNull(rev, "saved at " + have + " lines; " + dump(screen) + " " + screen.console);
+        }
+        // (its size without reading it: a slurp of 33 KB wants a 64 KB piece, which a two-chip computer may not have)
+        type("(with [f (file/open \"" + name + "\")] (file/seek f :end 0) (file/tell f))");
+        tick(60, String.valueOf(520 * 64 - 1));
+    }
+
+    /** A program that runs out of memory halts the computer, saying so and what is free; Reset brings it back. */
+    @Test
+    void runningOutOfMemoryHaltsSayingWhy() {
+        type("(do (def hog @[]) (forever (array/push hog (buffer/new-filled 20000))))");
+        run(200);
+        assertTrue(m.halted());
+        assertTrue(screen.console.indexOf("janet out of memory (the largest free piece is ") >= 0, screen.console.toString());
+        m.reset(Machine.RESET_POWER);
+        type("(+ 1 2)");
+        tick(200, "3\n> ");
     }
 
     @Test
@@ -236,6 +304,55 @@ class ApplicationsTest extends StdlibTest {
         m.editor.give(event(new Form.Symbol("close"), 2L));
         run(10);
         assertNull(screen.scene.windows.get(2), "the tab is gone; " + dump(screen));
+    }
+
+    /** Guide: the System disk's manual opens on its contents; a link goes to its node, Retrace comes back. */
+    @Test
+    void guideOpensTheManualAndFollowsLinks() throws IOException {
+        start("guide");
+        run(30);
+        var w = screen.scene.windows.get(2);
+        long shellLink = -1;
+        for (var en : w.elements.entrySet())
+            if (en.getValue().kind.equals("button") && "The Shell and its commands".equals(Form.str(en.getValue().msg, 6, ""))) shellLink = en.getKey();
+        assertTrue(shellLink > 0, "a link to the Shell's node on the contents page: " + dump(screen));
+        m.editor.give(event(new Form.Symbol("press"), 2L, shellLink));
+        run(20);
+        assertTrue(dump(screen).contains("The Shell and its commands") && dump(screen).contains("list a directory"), "the Shell's node: " + dump(screen));
+        m.editor.give(event(new Form.Symbol("press"), 2L, 2L));   // Retrace
+        run(20);
+        assertTrue(dump(screen).contains("Welcome to Dynamo"), "back on the contents: " + dump(screen));
+    }
+
+    /** Prefs: a choice shows at once; Save keeps it on the System disk, and prefs/load brings it back. */
+    @Test
+    void prefsShowAtOnceAndSaveOnTheSystemDisk() throws IOException {
+        start("prefs");
+        run(20);
+        long amber = -1, save = -1;
+        for (var en : screen.scene.windows.get(2).elements.entrySet())
+            if (en.getValue().kind.equals("button")) {
+                String label = Form.str(en.getValue().msg, 6, "").trim();
+                if (label.endsWith("Amber")) amber = en.getKey();
+                if (label.equals("Save")) save = en.getKey();
+            }
+        assertTrue(amber > 0 && save > 0, "Prefs' buttons: " + dump(screen));
+        m.editor.give(event(new Form.Symbol("press"), 2L, amber));
+        run(10);
+        assertEquals("Amber", screen.scene.pens, "shown at once");
+        m.editor.give(screen.submit(2, 6, "Mill"));
+        run(10);
+        m.editor.give(event(new Form.Symbol("press"), 2L, save));
+        run(20);
+        assertNull(screen.scene.windows.get(2), "Save closes it; " + dump(screen));
+        type("(do (prefs/apply (merge prefs/defaults {})) [(get (prefs/load) :pens) (get (prefs/load) :name)])");
+        tick(40, "(\"Amber\" \"Mill\")");
+        type("ui/pen-sets");
+        tick(40, "(\"" + String.join("\" \"", mods.eln.robotics.computer.screen.Pens.SETS.keySet()) + "\")");   // (the ROM names Java's sets)
+        type("(do (prefs/apply (prefs/load)) (bus/name))");
+        tick(40, "\"Mill\"");
+        run(5);
+        assertEquals("Amber", screen.scene.pens);
     }
 
     @Test
@@ -281,7 +398,7 @@ class ApplicationsTest extends StdlibTest {
             this.address = address;
             m = JanetRomTest.machine(3);
             m.bus.setState(address, true, null);
-            for (int t = 0; t < 80 && !screen.ready(); t++) {
+            for (int t = 0; t < 150 && !screen.ready(); t++) {
                 m.tick();
                 m.run(1_000_000);
                 screen.feed(m);

@@ -777,6 +777,12 @@ public class Wp12aContent implements ElnContent {
             descriptor = new GenericItemUsingDamageDescriptor(name);
             sharedItem.addElement(completId, descriptor);
         }
+        {
+            // Baughn 2026-11-25: a gas turbine's hot section, where steel won't do (tungsten on an alloy plate)
+            subId = 5;
+            completId = subId + (id << 6);
+            sharedItem.addElement(completId, new GenericItemUsingDamageDescriptor(TR_NAME(Type.NONE, "Hot Blade Set")));
+        }
     }
 
     public static void registerBrush(int id) {
@@ -815,6 +821,15 @@ public class Wp12aContent implements ElnContent {
     public static void registerMiscItem(int id) {
         int subId, completId;
         String name;
+        // Radar Goggles (Baughn 2026-11-24: a crafting item only): a Ground Radar with them can fly through its picture
+        // ForkPatch keeps sub-ID 60 for Motor Cowling and 61 for Heavy Winding.
+        sharedItem.addElement(62 + (id << 6), new mods.eln.generic.GenericItemUsingDamageDescriptor(TR_NAME(Type.NONE, "Radar Goggles")) {
+            @Override
+            public void addInformation(net.minecraft.world.item.ItemStack s, net.minecraft.world.entity.player.Player p, java.util.List list, boolean b) {
+                super.addInformation(s, p, list, b);
+                java.util.Collections.addAll(list, mods.eln.i18n.I18N.tr("Craft with a Ground Radar to fly\nthrough what it sees.").split("\n"));
+            }
+        });
         {
             subId = 0;
             name = TR_NAME(Type.NONE, "Cheap Chip");

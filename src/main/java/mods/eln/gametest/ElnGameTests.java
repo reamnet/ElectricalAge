@@ -115,11 +115,13 @@ public final class ElnGameTests {
         mods.eln.gametest.cases.PlumbingCases.addTo(l);
         mods.eln.gametest.cases.ShaftPlantCases.addTo(l);
         mods.eln.gametest.cases.HpPlantCases.addTo(l);
+        mods.eln.gametest.cases.StillPotCases.addTo(l);
         mods.eln.gametest.cases.PipeSizeCases.addTo(l);
         mods.eln.gametest.cases.GasPlantCases.addTo(l);
         mods.eln.gametest.cases.HeatExchangerCases.addTo(l);
         mods.eln.gametest.cases.MixerCases.addTo(l);
         mods.eln.gametest.cases.ShaftArtCases.addTo(l);
+        mods.eln.gametest.cases.WrenchTurnCases.addTo(l);
         l.addAll(mods.eln.gametest.cases.HitboxCases.cases());
         mods.eln.gametest.cases.PortHelperCases.addTo(l);
         mods.eln.gametest.cases.LampSupplyCases.addTo(l);
@@ -136,18 +138,24 @@ public final class ElnGameTests {
         mods.eln.gametest.cases.OilLakeCases.addTo(l);
         mods.eln.gametest.cases.ReservoirCases.addTo(l);
         mods.eln.gametest.cases.MinerCableCases.addTo(l);
+        mods.eln.gametest.cases.HandbookFixCases.addTo(l);
+        mods.eln.gametest.cases.FurnaceControlCases.addTo(l);
+        mods.eln.gametest.cases.BatteryCurveCases.addTo(l);
+        mods.eln.gametest.cases.PoleCableCases.addTo(l);
         mods.eln.gametest.cases.BusCases.addTo(l);
         mods.eln.gametest.cases.BusModuleCases.addTo(l);
         mods.eln.gametest.cases.BusDeviceCases.addTo(l);
         mods.eln.gametest.cases.BusSpCases.addTo(l);
         mods.eln.gametest.cases.AmbientCases.addTo(l);
         mods.eln.gametest.cases.PipeCases.addTo(l);
+        mods.eln.gametest.cases.JoinRouteCases.addTo(l);
         mods.eln.gametest.cases.PipeTransmitterCases.addTo(l);
         mods.eln.gametest.cases.FluidSpeciesCases.addTo(l);
         mods.eln.gametest.cases.CableCases.addTo(l);
         mods.eln.gametest.cases.CableAirCases.addTo(l);
         mods.eln.gametest.cases.ToolbagCases.addTo(l);
         mods.eln.gametest.cases.JunctionCases.addTo(l);
+        mods.eln.gametest.cases.PipeBreakCases.addTo(l);
         mods.eln.gametest.cases.SpecCases.addTo(l);
         mods.eln.gametest.cases.VoxelDeviceCases.addTo(l);
         mods.eln.gametest.cases.Wp12Cases.addTo(l);
@@ -160,6 +168,7 @@ public final class ElnGameTests {
         mods.eln.gametest.cases.AutoMinerCases.addTo(l);
         mods.eln.gametest.cases.OreDropCases.addTo(l);
         mods.eln.gametest.cases.RubberCases.addTo(l);
+        mods.eln.gametest.cases.GroundRadarCases.addTo(l);
         mods.eln.gametest.cases.ItemCapabilityCases.addTo(l);
         mods.eln.gametest.cases.LampMonsterCases.addTo(l);
         mods.eln.gametest.cases.BeltCases.addTo(l);
@@ -212,6 +221,11 @@ public final class ElnGameTests {
         // the test world's biomes vary from test to test: 20 C everywhere, as the cases' numbers assume (AmbientCases
         // lift it for their own devices)
         mods.eln.sim.Ambient.fixedC = 20.0;
+        // (the game's own fluid step budget, so a budget that cuts healthy plants shows up in stalls(): the 10 ms one
+        // broke more or less every plant on Incognito and no test saw it, run without it; Baughn 1573837175051522166.
+        // At 4x it lets the test plants' start-up transients through (a fuel furnace's first steps took over 400 ms; at
+        // 40 ms 27 tests stalled), and fails them if the game's budget is ever as tight as 10 ms was)
+        mods.eln.sim.fluid.CoreStep.budgetNanos = 4 * mods.eln.sim.fluid.CoreStep.GAME_BUDGET;
         GameTestContext ctx = new GameTestContext(helper, c.id());
         // tests share one level: a node left by an earlier test here would join this test's circuits
         net.minecraft.world.phys.AABB bounds = helper.getBounds();
@@ -242,10 +256,11 @@ public final class ElnGameTests {
                 ctx.check(c.id() + " measure", false, e.toString());
             }
             mods.eln.introspect.DescribeCheck.run(helper.getLevel(), helper.getBounds(), ctx::check);
-            stalls(helper, ctx);
+            if (c.checkStalls()) stalls(helper, ctx);
             if (c.checkLimitCycles()) limitCycles(helper, ctx);   // (before the round trip: reloaded nodes start a fresh record)
             links(helper, ctx);
             linksNeutral(helper, ctx);
+            fluidTopology(helper, ctx);
             persistence(helper, ctx);
             cleanUp(helper, ctx);
             ctx.finish();
@@ -367,6 +382,61 @@ public final class ElnGameTests {
                 single = v.coordonate + ": " + LinksDiff.difference(off, all, 6);
         }
         ctx.check("links: each block reconnected alone keeps the rules' network", single.isEmpty(), single);
+    }
+
+    /**
+     * The fluid world's topology around the test: the pure plan (FluidWorld.Plan.dump) is the same with the devices in
+     * their order, reversed and shuffled; the networks as built (FluidWorld.liveTopology, without a rebuild) have the
+     * plan's runs and networks, unless a rebuild is pending; and their hash is recorded, so two builds of the mod can be
+     * compared test by test.
+     */
+    static void fluidTopology(GameTestHelper helper, GameTestContext ctx) {
+        net.minecraft.world.phys.AABB bounds = helper.getBounds();
+        java.util.function.LongPredicate in = p -> {
+            var b = net.minecraft.core.BlockPos.of(p);
+            return bounds.contains(b.getX() + .5, b.getY() + .5, b.getZ() + .5);
+        };
+        var devices = mods.eln.fluid.FluidWorld.devices();
+        var plan = relative(mods.eln.fluid.FluidWorld.plan(devices).dump(in), bounds);
+        var live = relative(mods.eln.fluid.FluidWorld.liveTopology(in), bounds);
+        if (plan.isEmpty() && live.isEmpty()) return;
+        var reversed = new java.util.ArrayList<>(devices);
+        java.util.Collections.reverse(reversed);
+        var shuffled = new java.util.ArrayList<>(devices);
+        java.util.Collections.shuffle(shuffled, new java.util.Random(devices.size()));
+        var r = relative(mods.eln.fluid.FluidWorld.plan(reversed).dump(in), bounds);
+        var sh = relative(mods.eln.fluid.FluidWorld.plan(shuffled).dump(in), bounds);
+        ctx.check("fluid: the topology is the same whatever order the devices join in", plan.equals(r) && plan.equals(sh),
+            plan.size() + " lines" + (plan.equals(r) ? "" : "; reversed: " + LinksDiff.difference(plan, r, 6))
+                + (plan.equals(sh) ? "" : "; shuffled: " + LinksDiff.difference(plan, sh, 6)));
+        if (!mods.eln.fluid.FluidWorld.dirty()) {
+            var want = plan.stream().filter(l -> l.startsWith("run ") || l.startsWith("net ")).toList();
+            var got = live.stream().filter(l -> l.startsWith("run ") || l.startsWith("net ")).toList();
+            ctx.check("fluid: the networks built have the plan's runs and networks", want.equals(got), LinksDiff.difference(want, got, 6));
+        }
+        ctx.check("fluid: the networks as built", true, live.size() + " lines, " + (mods.eln.fluid.FluidWorld.dirty() ? "rebuild pending, " : "")
+            + "hash " + Integer.toHexString(String.join("\n", live).hashCode()));
+    }
+
+    /**
+     * Topology lines with their blocks ("x,y,z") relative to the test's corner, a run's or network's names sorted again,
+     * and sorted (the suite places tests anywhere).
+     */
+    static java.util.List<String> relative(java.util.List<String> lines, net.minecraft.world.phys.AABB bounds) {
+        var xyz = java.util.regex.Pattern.compile("(-?\\d+),(-?\\d+),(-?\\d+)");
+        int x0 = (int) Math.floor(bounds.minX), y0 = (int) Math.floor(bounds.minY), z0 = (int) Math.floor(bounds.minZ);
+        java.util.List<String> out = new java.util.ArrayList<>();
+        for (String l : lines) {
+            l = xyz.matcher(l).replaceAll(m -> (Integer.parseInt(m.group(1)) - x0) + "," + (Integer.parseInt(m.group(2)) - y0) + "," + (Integer.parseInt(m.group(3)) - z0));
+            if (l.startsWith("run ") || l.startsWith("net ")) {
+                var names = new java.util.ArrayList<>(java.util.List.of(l.substring(4).split(", ")));
+                java.util.Collections.sort(names);
+                l = l.substring(0, 4) + String.join(", ", names);
+            }
+            out.add(l);
+        }
+        java.util.Collections.sort(out);
+        return out;
     }
 
     /** The cable pieces' stored joints say what the live network has (CableVerify), over the voxel blocks in the test's bounds. */

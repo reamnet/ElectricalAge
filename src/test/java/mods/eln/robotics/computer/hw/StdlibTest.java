@@ -23,9 +23,10 @@ class StdlibTest {
 
     @BeforeEach
     void boot() throws IOException {
-        m = JanetRomTest.machine(3);
+        m = JanetRomTest.machine(2);   // (the fewest RAM chips Janet runs on, as many players build it: lashtear)
         m.bus.setState(200, true, null);
-        for (int t = 0; t < 80 && !screen.ready(); t++) {
+        // (the stdlib compiles at boot: ~83 ticks of 1M instructions with the System disk's tools, ~65 before)
+        for (int t = 0; t < 150 && !screen.ready(); t++) {
             m.tick();
             m.run(1_000_000);
             screen.feed(m);
@@ -67,9 +68,101 @@ class StdlibTest {
         m.editor.give(("(break " + t + ")\n").getBytes(StandardCharsets.UTF_8));
     }
 
+    /** Ed's answer to save seq on window w: its new revision, or null if it said nothing (or "conflict"). */
+    String savedRev(int w, long seq, int ticks) {
+        String want = "(saved " + w + " 4 " + seq + " ";
+        for (int t = 0; t < ticks; t++) {
+            m.tick();
+            m.run(1_000_000);
+            byte[] d = m.editor.take();
+            String text = new String(d, StandardCharsets.UTF_8);
+            screen.feed(d, m.terminal.take());
+            int k = text.indexOf(want);
+            if (k >= 0) return text.substring(k + want.length(), text.indexOf(")", k)).replace("\"", "");
+        }
+        return null;
+    }
+
     void type(String s) {
         mark();
         m.editor.give(screen.submit(s));
+    }
+
+    /** The Shell's plain commands: relative paths, cd, copy into a directory, errors said, Janet untouched. */
+    @Test
+    void shellCommandsRunAndJanetStillEvaluates() {
+        type("(spit \"RAM:/a.txt\" \"hello there\")");
+        tick(40, "\n> ");
+        type("cd RAM:");
+        tick(40, "RAM:/");
+        type("type a.txt");
+        tick(40, "hello there");
+        type("copy a.txt b.txt");
+        tick(40, "copied RAM:/a.txt to RAM:/b.txt");
+        type("makedir d");
+        tick(40, "made RAM:/d");
+        type("copy b.txt d/");
+        tick(40, "to RAM:/d/b.txt");
+        type("cd d");
+        tick(40, "RAM:/d/");
+        type("dir");
+        tick(40, "b.txt");
+        type("cd ..");
+        tick(40, "RAM:/\n");
+        type("type \"d/b.txt\"");
+        tick(40, "hello there");
+        type("delete nope.txt");
+        tick(40, "delete: ");
+        type("type");
+        tick(40, "usage: type file");
+        type("(+ 1 2)");
+        tick(40, "3");
+        type("help");
+        tick(40, "Shell commands");
+        assertTrue(out.indexOf("copy from to") >= 0, "help lists the commands: " + out);
+    }
+
+    /** A second Shell: its own window, line and current directory; what it prints goes to its own log. */
+    @Test
+    void aSecondShellHasItsOwnWindowAndDirectory() {
+        type("(shell/new)");
+        tick(40, "\n> ");
+        int w = screen.scene.windows.keySet().stream().filter(k -> k > 1 && k < 250).max(Integer::compare).orElse(-1);
+        assertTrue(w > 1, "a new window: " + screen.scene.windows.keySet());
+        for (int t = 0; t < 20 && !screen.scene.windows.get(w).elements.containsKey(2); t++) {
+            m.tick();
+            m.run(1_000_000);
+            screen.feed(m);
+        }
+        m.editor.give(screen.submit(w, "cd RAM:"));
+        m.editor.give(screen.submit(w, "(def here 42)"));
+        for (int t = 0; t < 40 && screen.log(w).indexOf("42") < 0; t++) {
+            m.tick();
+            m.run(1_000_000);
+            screen.feed(m);
+        }
+        assertTrue(screen.log(w).contains("RAM:/") && screen.log(w).contains("42"), "Shell 2's log: " + screen.log(w));
+        // Break on Shell 2 stops what it runs, and its line takes the next one (it hung before the joiners heard)
+        m.editor.give(screen.submit(w, "(sleep 100)"));
+        for (int t = 0; t < 5; t++) {
+            m.tick();
+            m.run(1_000_000);
+            screen.feed(m);
+        }
+        breakTab(w);
+        m.editor.give(screen.submit(w, "(+ 20 22 1000)"));
+        for (int t = 0; t < 40 && screen.log(w).indexOf("1042") < 0; t++) {
+            m.tick();
+            m.run(1_000_000);
+            screen.feed(m);
+        }
+        assertTrue(screen.log(w).contains("stopped by Break") && screen.log(w).contains("1042"), "Shell 2 after a Break: " + screen.log(w));
+        // the first Shell keeps A:/ and its own definitions
+        type("(dyn :cwd)");
+        tick(40, "\n> ");
+        type("help");
+        tick(40, "The current directory: A:/");
+        assertTrue(screen.log().contains("(dyn :cwd)\n\"A:/\""), "Shell 1 keeps A:/: " + screen.log());
     }
 
     @Test
@@ -207,7 +300,7 @@ class StdlibTest {
         tick(60, ":ok\n> ");
         m.reset(Machine.RESET_POWER);
         mark();
-        tick(80, "Running A:/main.janet");
+        tick(150, "Running A:/main.janet");
         for (int t = 0; t < 40 && !screen.log(2).contains("42"); t++) tick(1, null);
         assertTrue(screen.log(2).contains("42"), "it prints in its own tab: " + screen.log(2));
         assertEquals("main.janet", screen.scene.windows.get(2).title);
@@ -263,17 +356,7 @@ class StdlibTest {
         String rev = (String) ed.msg.get(9);
         // the client replaced line 1 ("two") with two lines
         m.editor.give(("(save 2 4 7 \"" + rev + "\" [[1 1 [\"TWO\" \"2b\"]]])\n").getBytes(StandardCharsets.UTF_8));
-        String newRev = null;
-        for (int t = 0; t < 20 && newRev == null; t++) {
-            byte[] d = m.editor.take();
-            String text = new String(d, StandardCharsets.UTF_8);
-            screen.feed(d, m.terminal.take());
-            int k = text.indexOf("(saved 2 4 7 ");
-            if (k >= 0) newRev = text.substring(k + 13, text.indexOf(")", k));
-            m.tick();
-            m.run(1_000_000);
-        }
-        assertNotNull(newRev, "saved");
+        assertNotNull(savedRev(2, 7, 20), "saved");
         type("(slurp \"a:/t.janet\")");
         tick(10, "@\"one\\nTWO\\n2b\\nthree\"\n> ");
         // a save against the old revision is refused, with the file as it is now
@@ -285,6 +368,30 @@ class StdlibTest {
             conflict = new String(m.editor.take(), StandardCharsets.UTF_8).contains("(conflict 2 4 8 ");
         }
         assertTrue(conflict);
+    }
+
+    /**
+     * Ed's menus: Save As asks on the path's row; the picking display's changes (its stash) go under the new name only,
+     * the original stays as it was on the disk, and Ed goes on with the new file.
+     */
+    @Test
+    void edSaveAsCopiesAndFollowsTheNewFile() {
+        m.floppy.insert(0, new Floppy(java.util.UUID.randomUUID(), null, false));
+        type("(do (disk/format :a) (spit \"a:/t.janet\" \"(print 1)\") (edit \"a:/t.janet\"))");
+        tick(60, "\n2\n> ");
+        var win = screen.scene.windows.get(2);
+        assertTrue(win.menus.toString().contains("Save As..."), "Ed's menus: " + win.menus);
+        String rev = (String) win.elements.get(4).msg.get(9);
+        m.editor.give(("(stash 2 4 9 \"" + rev + "\" [[0 1 [\"(print 2)\"]]])\n").getBytes(StandardCharsets.UTF_8));
+        m.editor.give("(pick 2 \"Project\" \"Save As...\")\n".getBytes(StandardCharsets.UTF_8));
+        for (int t = 0; t < 20 && !screen.scene.windows.get(2).elements.containsKey(101); t++) tick(1, null);
+        assertEquals("line", screen.scene.windows.get(2).elements.get(101).kind, "a line asks for the name");
+        m.editor.give(screen.submit(2, 101, "u.janet"));
+        for (int t = 0; t < 40 && !"a:/u.janet".equals(screen.scene.windows.get(2).elements.get(4).msg.get(8)); t++) tick(1, null);
+        assertEquals("a:/u.janet", screen.scene.windows.get(2).elements.get(4).msg.get(8), "the editor follows the new file");
+        type("[(string (slurp \"a:/u.janet\")) (string (slurp \"a:/t.janet\"))]");
+        tick(20, "(\"(print 2)\" \"(print 1)\")\n> ");
+        assertEquals("u.janet", screen.scene.windows.get(2).title, "the window's title follows the file");
     }
 
     @Test
@@ -382,7 +489,7 @@ class StdlibTest {
     void aLongLineIsTaken() {
         String expr = "(+ " + "1 ".repeat(200) + ")";
         var host = new mods.eln.robotics.computer.screen.ScreenHost();
-        host.fromComputer("(window 1 1 2 78 22 \"Shell\" [:close])\n".getBytes(StandardCharsets.UTF_8));
+        host.fromComputer("(window 1 1 2 78 22 \"Shell\" [:close])\n(line 1 2 0 -1 :fill \"> \")\n".getBytes(StandardCharsets.UTF_8));
         assertNotNull(host.check(new String(screen.submit(expr), StandardCharsets.UTF_8).trim()));
         type(expr);
         tick(20, "\n200\n> ");

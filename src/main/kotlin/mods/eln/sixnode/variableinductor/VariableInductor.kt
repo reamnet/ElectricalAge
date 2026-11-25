@@ -90,7 +90,7 @@ class VariableInductorElement(node:SixNode,side:Direction,d:SixNodeDescriptor):S
 }
 
 /** Reuses the destination's shortened, voxel-aware winding mesh and adds the source's signal port. */
-class VariableInductorRender(tile:SixNodeEntity,side:Direction,d:SixNodeDescriptor):PowerInductorSixRender(tile,side,d) {
+class VariableInductorRender(tile:SixNodeEntity,side:Direction,d:SixNodeDescriptor):mods.eln.powerprimitives.PowerPrimitiveSixRender(tile,side,d) {
     var inductance=0.0;private set
     var normalizedControl=1.0;private set
     override fun publishUnserialize(stream:DataInputStream) {

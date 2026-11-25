@@ -13,7 +13,7 @@ import static mods.eln.i18n.I18N.tr;
 /**
  * A wire-drawing machine (layout gui/wire_drawing.json): copper and rubber in, the kit or winding out; what to make
  * (kit or winding, cross-section, insulation and colour within the machine's limits, blocks or turns), what it takes,
- * the copper and rubber already in the machine, its state, and Start (one item a press).
+ * the copper and rubber it has (its slots plus what it already took from them), its state, and Start (one item a press).
  */
 public class WireDrawingScreen extends ElnScreen {
     final WireDrawingRender render;
@@ -72,11 +72,6 @@ public class WireDrawingScreen extends ElnScreen {
         return () -> used.getAsBoolean() ? s.get() : "";
     }
 
-    static String volts(int tier) {
-        double v = CableSpec.volts(tier);
-        return v >= 1000 ? (int) (v / 1000) + " kV" : (int) v + " V";
-    }
-
     @Override
     protected void init() {
         super.init();
@@ -103,14 +98,14 @@ public class WireDrawingScreen extends ElnScreen {
         java.util.function.BooleanSupplier poleMode = () -> r.mode == WireDrawingElement.POLE;
         text("mm2l", shown(wire, () -> poleMode.getAsBoolean() ? tr("Low-side wire") : tr("Wire")));
         when(wire, locked(button("mm2dn", () -> "<", () -> set(r.mode, r.mm2 - 1, r.tier, r.colour, r.amount))));
-        text("mm2", shown(wire, () -> WireDrawingDescriptor.fmt(CableSpec.MM2[r.mm2]) + " mm², " + String.format("%.0f A", CableSpec.AMPS[r.mm2])));
+        text("mm2", shown(wire, () -> CableSpec.mm2Number(CableSpec.MM2[r.mm2]) + " mm², " + String.format("%.0f A", CableSpec.AMPS[r.mm2])));
         when(wire, locked(button("mm2up", () -> ">", () -> set(r.mode, r.mm2 + 1, r.tier, r.colour, r.amount),
-            tr("Up to %1$ mm² on this machine", WireDrawingDescriptor.fmt(CableSpec.MM2[r.desc.maxMm2])))));
+            tr("Up to %1$ mm² on this machine", CableSpec.mm2Number(CableSpec.MM2[r.desc.maxMm2])))));
         text("insl", shown(ins, () -> poleMode.getAsBoolean() ? tr("Low side") : tr("Insulation")));
         when(ins, locked(button("insdn", () -> "<", () -> set(r.mode, r.mm2, r.tier - 1, r.colour, r.amount))));
-        text("ins", shown(ins, () -> volts(r.tier)));
+        text("ins", shown(ins, () -> CableSpec.voltsLabel(r.tier)));
         when(ins, locked(button("insup", () -> ">", () -> set(r.mode, r.mm2, r.tier + 1, r.colour, r.amount),
-            tr("Up to %1$ on this machine (pole transformers: 48, 230 or 400 V on the low side)", volts(r.desc.maxTier)))));
+            tr("Up to %1$ on this machine (pole transformers: 48, 230 or 400 V on the low side)", CableSpec.voltsLabel(r.desc.maxTier)))));
         text("coll", shown(colour, () -> tr("Colour")));
         when(colour, locked(button("coldn", () -> "<", () -> set(r.mode, r.mm2, r.tier, r.colour - 1, r.amount))));
         text("col", shown(colour, () -> DyeColor.byId(r.colour).getName().replace('_', ' ')));
@@ -135,14 +130,22 @@ public class WireDrawingScreen extends ElnScreen {
                 String.format("%.1f", l * WireDrawingDescriptor.rubberPerBlock(r.mode, r.tier, r.mm2)),
                 String.format("%.0f", l * WireDrawingDescriptor.energyPerBlock(r.mode, r.mm2) / 1000));
         });
-        text("buffer", () -> tr("Held: %1$ copper, %2$ rubber", String.format("%.2f", r.copper), String.format("%.2f", r.rubber)));
+        // what it has to draw from, comparable with "Takes" above: the slots plus what it already took from them (nero: a bare
+        // "Held" matched nothing; Baughn 1573703351592296449: count the slots too)
+        text("buffer", () -> {
+            var cu = menu.getSlot(WireDrawingElement.COPPER).getItem();   // (menu slots 0 and 1 are these, MenuSpecs' order)
+            var ru = menu.getSlot(WireDrawingElement.RUBBER).getItem();
+            double copper = r.copper + (WireDrawingElement.isCopper(cu) ? cu.getCount() : 0);
+            double rubber = r.rubber + (WireDrawingElement.isRubber(ru) ? ru.getCount() : 0);
+            return tr("Has %1$ copper, %2$ rubber", String.format("%.1f", Math.floor(copper * 10 + 1e-9) / 10), String.format("%.1f", Math.floor(rubber * 10 + 1e-9) / 10));   // (rounded down)
+        });
         text("status", () -> WireDrawingElement.statusText(r.status), () -> switch (r.status) {
-            case WireDrawingElement.NO_COPPER, WireDrawingElement.NO_RUBBER, WireDrawingElement.NO_POWER, WireDrawingElement.NO_CORE -> 0xFFA02020;
-            case WireDrawingElement.RUNNING -> 0xFF206020;
+            case WireDrawingElement.NO_COPPER, WireDrawingElement.NO_RUBBER, WireDrawingElement.NO_POWER, WireDrawingElement.NO_CORE -> ERROR_TEXT;
+            case WireDrawingElement.RUNNING -> OK_TEXT;
             default -> LABEL;
         });
         // one item a Start, no Stop (Baughn 2026-11-07: twice he made a second one he didn't mean to); greyed while drawing
-        var run = button("run", () -> r.running ? tr("Drawing...") : tr("Start"), () -> {
+        var run = button("run", () -> r.running ? tr("Busy") : tr("Start"), () -> {
             if (!r.running) r.clientRun(true);
         }, tr("Draws one item, then stops. Changing what to make scraps the wire drawn so far"));
         refreshers.add(() -> {

@@ -58,7 +58,7 @@ object ForkPatchVariableInductorCases {
             c.check("variable inductor: every face keeps two power ports and a separate signal input",e.getElectricalLoad(e.front.left())===e.negative && e.getElectricalLoad(e.front.right())===e.positive && e.getElectricalLoad(e.front)===e.control && e.getConnectionMask(e.front)==mods.eln.node.NodeBase.maskElectricalInputGate && e.getConnectionMask(e.front.inverse())==0,"")
             val system=requireNotNull(e.inductor.subSystem);val version=system.matrixVersion
             repeat(1000) { e.updateControl() }
-            val matrixValid:Boolean=Batch1Cases.field(system,"matrixValid")
+            val matrixValid:Boolean=mods.eln.gametest.TestContext.field(system,"matrixValid")
             c.check("variable inductor: stable quantized input preserves native LU factors",matrixValid && system.matrixVersion==version,"")
             published(c,e)
             // Snapshot a live controlled field without resetting its accepted current during restore.

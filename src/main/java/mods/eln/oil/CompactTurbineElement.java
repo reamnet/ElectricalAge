@@ -272,13 +272,23 @@ public class CompactTurbineElement extends TransparentNodeElement implements Flu
             loadedWell = mods.eln.fluid.FluidSaves.array(nbt, "well");
     }
 
+    /** Its output at its current limit, under a quarter of its voltage: something shorts it (or a far too big load). */
+    boolean shorted() {
+        return Math.abs(source.getCurrent()) > 0.9 * source.getImax() && Math.abs(load.getU()) < desc.nominalU / 4;
+    }
+
     /** What it is doing, in a line (Jade). */
     public String state() {
         double t = celsius();
         if (water <= 0) return I18N.tr("out of water: a bucket, or a pipe on top");
         if (t < 100) return I18N.tr("heating up: it boils at 100 °C");
+        // at its current limit with the voltage gone: a short (a Ground Cable on its line), not a weak fire, which would
+        // send the player for more chambers (AdventurAgent's handbook replay, 2026-11-21); before venting, which a
+        // short causes on a big fire (it takes almost nothing)
+        if (shorted()) return I18N.tr("shorted or badly overloaded: its output is near 0 V. A Ground Cable on its line? Remove it: the turbine needs none");
         if (ventW > 0) return I18N.tr("venting: more heat than it can use or shed");
-        if (governor < 0.9) return I18N.tr("short of heat: add combustion chambers for more power");
+        // (it can't see the furnace: it may already have all its chambers. AdventurAgent saw this at 4/4)
+        if (governor < 0.9) return I18N.tr("short of heat: a hotter fire (more combustion chambers, if the furnace has room) or less load");
         if (bypassW > 0) return I18N.tr("running; the heat the load doesn't take goes to its condenser");
         return I18N.tr("running");
     }
@@ -290,8 +300,8 @@ public class CompactTurbineElement extends TransparentNodeElement implements Flu
         info.put(I18N.tr("Generated power"), Utils.plotPower("", powerOut) + " / " + Utils.plotPower("", desc.nominalP));
         // (Erisi's chat review: nobody knew they needed more combustion chambers)
         info.put(I18N.tr("Heat in"), Utils.plotPower("", heatIn) + " / " + Utils.plotPower("", desc.nominalHeat()) + " " + I18N.tr("for full power"));
-        info.put(I18N.tr("Boiler"), String.format("%.0f °C", celsius()));
-        info.put(I18N.tr("Water"), String.format("%.0f / %d mB (%.2f mB/s)", water, CompactTurbineDescriptor.WATER_MB, waterRate));
+        info.put(I18N.tr("Boiler"), mods.eln.api.Meters.celsius(celsius()));
+        info.put(I18N.tr("Water"), mods.eln.sim.fluid.EaUnits.tank(water, CompactTurbineDescriptor.WATER_MB) + String.format(" (%.2f mB/s)", waterRate));
         info.put(I18N.tr("Voltage"), Utils.plotVolt("", load.getU()));
         return info;
     }

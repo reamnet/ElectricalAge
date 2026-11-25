@@ -38,9 +38,12 @@ public final class Runner implements Runnable {
 
     // input gathered for the next exchange; the screen's from any thread
     private final java.util.List<Packet> packetsIn = new java.util.ArrayList<>();
+    /** Typed keys for the next exchange (a reset may empty it from the slice's thread: dropAfterReset). */
     private final java.io.ByteArrayOutputStream keys = new java.io.ByteArrayOutputStream();
     private final java.util.concurrent.ConcurrentLinkedQueue<byte[]> displayIn = new java.util.concurrent.ConcurrentLinkedQueue<>();
     private byte[] displayLeft;
+    /** The machine's reset count at the last input taken: after a reset, what waits for the old program is dropped. */
+    private int inputResets;
     private final Floppy[] disks = new Floppy[2];
     private final boolean[] diskChanged = new boolean[2];
     private long hostTicks, machineTicks;
@@ -59,6 +62,7 @@ public final class Runner implements Runnable {
     public Runner(Machine machine) {
         this.machine = machine;
         machineTicks = hostTicks = machine.ticks();
+        inputResets = machine.resets();
     }
 
     // --- input ---
@@ -74,8 +78,17 @@ public final class Runner implements Runnable {
 
     /** Screen input (any thread); kick() to have it taken at once. */
     public void toEditor(byte[] b) {
+        // (bounded: a halted or busy computer and a client sending big saves mustn't fill the server's memory)
+        if (displayQueued.addAndGet(b.length) > DISPLAY_QUEUE_MAX) {
+            displayQueued.addAndGet(-b.length);
+            return;
+        }
         displayIn.add(b);
     }
+
+    /** Screen input queued for the program, bytes at most (the rest is dropped). */
+    static final int DISPLAY_QUEUE_MAX = 256 * 1024;
+    private final java.util.concurrent.atomic.AtomicInteger displayQueued = new java.util.concurrent.atomic.AtomicInteger();
 
     public void insert(int drive, Floppy f) {
         disks[drive] = f;
@@ -86,6 +99,30 @@ public final class Runner implements Runnable {
         this.address = address;
         this.onBus = onBus;
         this.levels = levels;
+    }
+
+    /**
+     * The machine was reset (the button, a program's own, a cold boot) since input was last taken: the screen events
+     * and keys sent to the old program are dropped with what Machine.reset emptied (lashtear's halted computer had
+     * three 33 KB saves waiting, and the rest of a cut-off one; the Machine held).
+     */
+    private void dropAfterReset() {
+        if (inputResets == machine.resets()) return;
+        inputResets = machine.resets();
+        displayIn.clear();
+        displayQueued.set(0);
+        displayLeft = null;
+        keys.reset();
+    }
+
+    /** Drop what waits for the program if the machine was reset since input was last taken (the Machine held). */
+    public void dropIfReset() {
+        dropAfterReset();
+    }
+
+    /** Screen input waiting in the runner for the program (tests). */
+    int screenInputWaiting() {
+        return displayIn.size() + (displayLeft != null ? 1 : 0);
     }
 
     /** Press Break (any thread): taken by the next kick, slice or exchange. */
@@ -185,9 +222,11 @@ public final class Runner implements Runnable {
             breakWanted = false;
             machine.pressBreak();
         }
+        dropAfterReset();
         while (true) {
             byte[] b = displayLeft != null ? displayLeft : displayIn.poll();
             if (b == null) return;
+            if (b != displayLeft) displayQueued.addAndGet(-b.length);
             int n = machine.editor.give(b);
             displayLeft = n < b.length ? java.util.Arrays.copyOfRange(b, n, b.length) : null;
             if (displayLeft != null) return;
@@ -215,6 +254,7 @@ public final class Runner implements Runnable {
             m.bus.give(packetsIn);
             packetsIn.clear();
         }
+        dropAfterReset();
         give(m.terminal, keys);
         takeScreenInput();
         for (int d = 0; d < 2; d++)

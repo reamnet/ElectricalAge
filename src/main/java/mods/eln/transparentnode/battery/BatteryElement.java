@@ -46,7 +46,7 @@ public class BatteryElement extends TransparentNodeElement {
     public ElectricalLoadHeatThermalLoad negativeETProcess = new ElectricalLoadHeatThermalLoad(negativeLoad, thermalLoad);
     public ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
 
-    public NbtBatteryProcess batteryProcess = new NbtBatteryProcess(positiveLoad, negativeLoad, null, 0, voltageSource);
+    public NbtBatteryProcess batteryProcess = new NbtBatteryProcess(positiveLoad, negativeLoad, null, voltageSource);
 
     public Resistor dischargeResistor = new Resistor(positiveLoad, negativeLoad);
     public ResistorSwitch cutSwitch = new ResistorSwitch("cutSwitch", cutLoad, positiveLoad);
@@ -93,13 +93,15 @@ public class BatteryElement extends TransparentNodeElement {
         electricalProcessList.add(batteryProcess);
         electricalProcessList.add(inventoryProcess.new Step());   // (the protection chips, every step)
         batteryProcess.chargeHeat = thermalLoad;
+        // (its terminals are outside the cut switch; a cut battery, or one its chip is holding back, sees only itself)
+        batteryProcess.terminal = () -> cutSwitch.getState() && cutSwitch.getBaseR() <= this.descriptor.electricalRs / 2 * 1.05
+            ? cutLoad.getU() - negativeLoad.getU() : batteryProcess.getU();
         thermalFastProcessList.add(negativeETProcess);
 
         slowProcessList.add(batterySlowProcess);
         slowProcessList.add(inventoryProcess);
 
         grounded = false;
-        batteryProcess.setIMax(this.descriptor.IMax);
 
         slowProcessList.add(thermalWatchdog);
 
@@ -265,9 +267,9 @@ public class BatteryElement extends TransparentNodeElement {
         Map<String, String> wailaList = new HashMap<String, String>();
         // (the energy's share, as the battery's screen shows it: Jade showed the charge, 10% while the screen said 2.5%;
         // the voltage falls as it empties, so the last tenth of the charge holds a fortieth of the energy: Baughn)
-        wailaList.put(I18N.tr("Charge"), Utils.plotPercent("", batteryProcess.getEnergy() / Math.max(1e-9, batteryProcess.getEnergyMax())));
+        wailaList.put(I18N.tr("Charge"), Utils.plotPercent(batteryProcess.getEnergy() / Math.max(1e-9, batteryProcess.getEnergyMax())));
         wailaList.put(I18N.tr("Energy"), Utils.plotEnergy("", batteryProcess.getEnergy()));
-        wailaList.put(I18N.tr("Life"), Utils.plotPercent("", batteryProcess.life));
+        wailaList.put(I18N.tr("Life"), Utils.plotPercent(batteryProcess.life));
         String p = inventoryProcess.describe();
         if (p != null) wailaList.put(I18N.tr("Protection"), p);
         if (Eln.wailaEasyMode) {

@@ -1,24 +1,15 @@
 package mods.eln.sixnode.powercapacitorsix;
 
 import mods.eln.gl.GL11;
-
-
-import mods.eln.misc.Utils;
-import mods.eln.Eln;
-import mods.eln.item.DielectricItem;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
-import mods.eln.misc.VoltageLevelColor;
 import mods.eln.misc.series.ISerie;
-import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.wiki.Data;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.Container;
-import net.minecraft.world.item.ItemStack;
+import mods.eln.powerprimitives.PowerCapacitorCore;
+import mods.eln.powerprimitives.PowerPrimitiveSixDescriptor;
 
-public class PowerCapacitorSixDescriptor extends SixNodeDescriptor {
+public class PowerCapacitorSixDescriptor extends PowerPrimitiveSixDescriptor implements PowerCapacitorCore.Spec {
 
     private Obj3D obj;
 
@@ -33,7 +24,7 @@ public class PowerCapacitorSixDescriptor extends SixNodeDescriptor {
                                        Obj3D obj,
                                        ISerie serie,
                                        double dischargeTao) {
-        super(name, PowerCapacitorSixElement.class, null);
+        super(name, PowerCapacitorSixElement.class);
         this.serie = serie;
         this.dischargeTao = dischargeTao;
         this.obj = obj;
@@ -42,81 +33,35 @@ public class PowerCapacitorSixDescriptor extends SixNodeDescriptor {
             CapacitorCore = obj.getPart("CapacitorCore");
             Base = obj.getPart("Base");
         }
-
-        voltageLevelColor = VoltageLevelColor.Neutral;
     }
 
-    public double getCValue(int cableCount, double nominalDielVoltage) {
-        if (cableCount == 0) return 1e-6;
-        double uTemp = nominalDielVoltage / Eln.LVU;
-        return serie.getValue(cableCount - 1) / uTemp / uTemp;
+    @Override
+    public ISerie capacitanceSerie() {
+        return serie;
     }
 
-    public double getCValue(Container inventory) {
-        ItemStack core = inventory.getItem(PowerCapacitorSixContainer.redId);
-        ItemStack diel = inventory.getItem(PowerCapacitorSixContainer.dielectricId);
-        if (Utils.isEmpty(core) || Utils.isEmpty(diel))
-            return getCValue(0, 0);
-        else {
-            return getCValue(core.getCount(), getUNominalValue(inventory));
-        }
+    /** 1 uF with an empty slot (the transparent node's is 0 F). */
+    @Override
+    public double emptyCapacitance() {
+        return 1e-6;
     }
 
-    public double getUNominalValue(Container inventory) {
-        ItemStack diel = inventory.getItem(PowerCapacitorSixContainer.dielectricId);
-        if (Utils.isEmpty(diel))
-            return 10000;
-        else {
-            DielectricItem desc = (DielectricItem) DielectricItem.getDescriptor(diel);
-            return desc.uNominal * diel.getCount();
-        }
+    @Override
+    public double dischargeTao() {
+        return dischargeTao;
     }
 
-    public void setParent(net.minecraft.world.item.Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addEnergy(newItemStack());
-    }
-
-    void draw() {
+    @Override
+    protected void draw() {
         if (null != Base) Base.draw();
         if (null != CapacitorCables) CapacitorCables.draw();
         if (null != CapacitorCore) CapacitorCore.draw();
     }
 
-    // 26.x port: shouldUseRenderHelper() removed (client rendering; redone in P3)
-
-    // 26.x port: handleRenderType() removed (client rendering; redone in P3)
-
     @Override
-    public boolean hasItemDraw() {
-        return true;
-    }
-
-    @Override
-    public void drawItem(boolean entity) {
-        GL11.glTranslatef(0.0f, 0.0f, -0.2f);
-        GL11.glScalef(1.25f, 1.25f, 1.25f);
-        GL11.glRotatef(-90.f, 0.f, 1.f, 0.f);
-        draw();
-
-    }
-
-    @Override
-    public LRDU getFrontFromPlace(Direction side, Player player) {
-        return super.getFrontFromPlace(side, player).left();
-    }
-
-    /** Small: placed anywhere on a face of a voxel block, in line on a cable, its leads shortened (Baughn, batch 3). */
-    @Override
-    public boolean placeAnywhere() {
-        return true;
-    }
-
-    @Override
-    public void drawPlaced(Direction side, LRDU front) {
-        LRDU turn = modelTurn(side, front);
-        if (turn != null) turn.glRotateOnX();
-        drawShort();
+    protected void turnToFront(LRDU front) {
+        GL11.glRotatef(90, 1, 0, 0);
+        front.glRotateOnX();
     }
 
     @Override
@@ -129,8 +74,8 @@ public class PowerCapacitorSixDescriptor extends SixNodeDescriptor {
         return inlineBounds(2, new Obj3DPart[]{CapacitorCore}, Base, CapacitorCore);
     }
 
-    /** Off centre: the core, its base and leads shortened to its pins. */
-    void drawShort() {
+    @Override
+    protected void drawShort() {
         drawStretched(2, SHORT_LEADS, Base, CapacitorCables);
         if (null != CapacitorCore) CapacitorCore.draw();
     }

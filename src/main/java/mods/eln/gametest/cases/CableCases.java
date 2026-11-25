@@ -119,10 +119,7 @@ public final class CableCases {
             for (int[] b : new int[][]{{6, 1, z + 1}, {5, 1, z + 1}, {4, 2, z + 1}, {3, 2, z + 1}}) c.floor(c.at(b[0], b[1], b[2]));
             mods.eln.misc.Direction wall = mods.eln.misc.Direction.ZP;
             var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) c.placeSix(SOURCE, c.at(6, 1, z), wall);
-            src.networkUnserialize(c.stream(out -> {
-                out.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                out.writeFloat(50);
-            }));
+            c.setVolts(src, 50);
             c.placeSix(LV_CABLE, c.at(5, 1, z), wall);                                       // C: on the block's -z face
             c.placeSix(LV_CABLE, c.at(5, 2, z + 1), mods.eln.misc.Direction.YN);              // B: on its top
             c.placeSix(LV_CABLE, c.at(5, 2, z + 1), mods.eln.misc.Direction.XN);              // B: on the wall's +x face
@@ -720,7 +717,7 @@ public final class CableCases {
                     }
             }
             burntBefore = burnt(c);
-            var player = Wp10bCases.player(c);
+            var player = c.player();
             player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
             net.minecraft.core.BlockPos at = c.at(3, 1, 1);
             var v = (mods.eln.node.voxel.VoxelNode) mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(at, c.level()));
@@ -730,11 +727,11 @@ public final class CableCases {
             var wrong = mods.eln.node.voxel.CableKitItem.kit(CablePart.tierOf("Signal Cable"), 16 * 20);
             double px = player.getX(), py = player.getY(), pz = player.getZ();
             player.snapTo(hit.x, hit.y + 0.5, hit.z, 0, 90);   // (over the cable: a click must be within reach)
-            handledWrong = mods.eln.node.voxel.CablePlacer.use(player, c.level(), at, net.minecraft.core.Direction.UP, wrong, CablePart.tierOf("Signal Cable"), hit);
+            handledWrong = mods.eln.node.voxel.CablePlacer.use(player, c.level(), at, net.minecraft.core.Direction.UP, wrong, hit);
             burntAfterWrong = burnt(c);
             var kit = mods.eln.node.voxel.CableKitItem.kit(LV, 16 * 20);
             kitBefore = mods.eln.node.voxel.KitItem.lengthForTests(kit);
-            handled = mods.eln.node.voxel.CablePlacer.use(player, c.level(), at, net.minecraft.core.Direction.UP, kit, LV, hit);
+            handled = mods.eln.node.voxel.CablePlacer.use(player, c.level(), at, net.minecraft.core.Direction.UP, kit, hit);
             kitAfter = mods.eln.node.voxel.KitItem.lengthForTests(kit);
             player.snapTo(px, py, pz, 0, 0);
             burntAfter = burnt(c);
@@ -881,7 +878,7 @@ public final class CableCases {
         public void build(TestContext c) {
             for (int q = 0; q < TABLE.length; q++) {
                 int[] t = TABLE[q];
-                var fp = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());
+                var fp = c.player();
                 var cm = new net.minecraft.world.inventory.CraftingMenu(7, fp.getInventory(),
                     net.minecraft.world.inventory.ContainerLevelAccess.create(c.level(), net.minecraft.core.BlockPos.ZERO));
                 cm.getSlot(1).set(new net.minecraft.world.item.ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(
@@ -979,12 +976,12 @@ public final class CableCases {
             pbox.setItem(0, pkit);
             var pstack = plate.copyWithCount(7);
             pkit.getItem().overrideOtherStackedOnMe(pkit, pstack, pslot, net.minecraft.world.inventory.ClickAction.PRIMARY,
-                net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level()),
+                c.player(),
                 net.minecraft.world.entity.SlotAccess.of(() -> net.minecraft.world.item.ItemStack.EMPTY, x -> { }));
             c.check("pipe kit: 7 plates clicked on fill 3 blocks and leave 1", mods.eln.node.voxel.PipeKitItem.length(pkit) == 64 && pstack.getCount() == 1,
                 mods.eln.node.voxel.PipeKitItem.length(pkit) + " / " + pstack.getCount());
             // Baughn: topping a kit up with cables like a bundle (a stack clicked onto the kit, or the kit onto a stack)
-            var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());
+            var player = c.player();
             var box = new net.minecraft.world.SimpleContainer(1);
             var slot = new net.minecraft.world.inventory.Slot(box, 0, 0, 0);
             var k1 = mods.eln.node.voxel.CableKitItem.kit(LV, 144);
@@ -1079,10 +1076,7 @@ public final class CableCases {
             if (e != null) Wp9aCases.orient(e, l -> l, xp);
             voxel(c, c.at(4, 1, 1), List.of(new CablePart(0, DOWN, new int[]{0, 0, 8, 4, 0, 8})));
             var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(c, Wp9aCases.SIGNAL_SOURCE, c.at(3, 1, 1), yn);
-            src.networkUnserialize(c.stream(o -> {
-                o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                o.writeFloat((float) mods.eln.Eln.SVU);
-            }));
+            c.setVolts(src, mods.eln.Eln.SVU);
             placed = "click: " + err + ", slot " + (e == null ? -1 : e.slot) + " at " + (e == null ? "-" : e.ox + "," + e.oy + "," + e.oz);
             placedOk = err == null && e != null && e.slot >= 6 && w.getElement(yn) == null && e.ox == 0 && e.oy == 0 && e.oz == 0;
             // beside a chip whose side toward it has no pin: too close
@@ -1137,7 +1131,7 @@ public final class CableCases {
         }
 
         public void build(TestContext c) {
-            var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());
+            var player = c.player();
             var yn = mods.eln.misc.Direction.YN;
             var xp = mods.eln.misc.Direction.XP;
             c.floor(c.at(1, 0, 1));
@@ -1180,7 +1174,7 @@ public final class CableCases {
         }
 
         public void build(TestContext c) {
-            var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());
+            var player = c.player();
             var yn = mods.eln.misc.Direction.YN;
             var xp = mods.eln.misc.Direction.XP;
             var not = mods.eln.Eln.sixNodeItem.getDescriptor(Wp9cCases.NOT);
@@ -1230,10 +1224,7 @@ public final class CableCases {
             var yn = mods.eln.misc.Direction.YN;
             for (int x = 0; x < 8; x++) c.floor(c.at(x, 0, 1));
             var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(c, Wp9aCases.SIGNAL_SOURCE, c.at(1, 1, 1), yn);
-            src.networkUnserialize(c.stream(o -> {
-                o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                o.writeFloat((float) mods.eln.Eln.SVU);
-            }));
+            c.setVolts(src, mods.eln.Eln.SVU);
             var v = ChipsPackedCase.block(c, c.at(5, 1, 1));
             err = String.valueOf(v.placeAnywhere(mods.eln.Eln.sixNodeItem.getDescriptor(Wp9cCases.NOT).newItemStack(), yn, 0.4, 0, 0.5, player));   // (two voxels off centre)
             chip = v.getElement(6);
@@ -1623,7 +1614,7 @@ public final class CableCases {
         }
 
         public void build(TestContext c) {
-            var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(c.level());
+            var player = c.player();
             var yn = mods.eln.misc.Direction.YN;
             v = ChipsPackedCase.block(c, c.at(1, 1, 1));
             var d = mods.eln.Eln.sixNodeItem.getDescriptor(Wp9aCases.SOURCE);
@@ -1632,10 +1623,7 @@ public final class CableCases {
                 return;
             }
             var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) v.getElement(6);
-            src.networkUnserialize(c.stream(o -> {
-                o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                o.writeFloat(50f);
-            }));
+            c.setVolts(src, 50f);
             int[] east = null;
             for (int[] t : v.pinTips(6)) if (yn.applyLRDU(mods.eln.misc.LRDU.fromInt(t[0])) == mods.eln.misc.Direction.XP) east = t;
             if (east == null || 16 - east[1] > 4) {
@@ -2049,10 +2037,7 @@ public final class CableCases {
             for (int[] b : new int[][]{{6, 1, z + 1}, {5, 1, z + 1}, {4, 2, z + 1}}) c.floor(c.at(b[0], b[1], b[2]));
             mods.eln.misc.Direction wall = mods.eln.misc.Direction.ZP;
             var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) c.placeSix(SOURCE, c.at(6, 1, z), wall);
-            src.networkUnserialize(c.stream(out -> {
-                out.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                out.writeFloat(50);
-            }));
+            c.setVolts(src, 50);
             c.placeSix(LV_CABLE, c.at(5, 1, z), wall);
             c.placeSix(LV_CABLE, c.at(5, 2, z + 1), mods.eln.misc.Direction.YN);
             c.placeSix(LV_CABLE, c.at(5, 2, z + 1), mods.eln.misc.Direction.XN);
@@ -2191,10 +2176,6 @@ public final class CableCases {
             return 5;
         }
 
-        static mods.eln.node.voxel.VoxelNode node(TestContext c, BlockPos p) {
-            return mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(p, c.level())) instanceof mods.eln.node.voxel.VoxelNode v ? v : null;
-        }
-
         static boolean linked(mods.eln.node.voxel.VoxelNode a, mods.eln.node.voxel.VoxelNode b) {
             if (a == null || b == null) return false;
             for (var nc : a.nodeConnectionList) {
@@ -2234,15 +2215,15 @@ public final class CableCases {
 
         public void measure(TestContext c) {
             BlockPos low = c.at(2, 1, 1), up = low.above(), top = up.above();
-            var nu = node(c, up);
-            links = linked(nu, node(c, low)) + "," + linked(nu, node(c, top)) + "," + (nu == null ? "no node" : nu.carved == null ? 0 : nu.carved.cardinality());
+            var nu = c.voxelAt(up);
+            links = linked(nu, c.voxelAt(low)) + "," + linked(nu, c.voxelAt(top)) + "," + (nu == null ? "no node" : nu.carved == null ? 0 : nu.carved.cardinality());
             c.check("shaft: the ceiling piece and the shaft's piece are joined across the blocks' boundary, and the shaft's and the top's",
                 links.startsWith("true,true,"), links);
             if (nu == null) return;
             nu.removePart(0, false);
             nu.lastPartGone();
             boolean still = c.level().getBlockState(up).getBlock() instanceof mods.eln.node.voxel.VoxelNodeBlock;
-            var again = node(c, up);
+            var again = c.voxelAt(up);
             after = still + "," + (again == null ? "no node" : again.carved == null ? "0" : String.valueOf(again.carved.cardinality()));
             c.check("shaft: its cable gone, the carved block stays carved (Baughn: the cut-out went with the cable)", still && again != null
                 && again.carved != null && again.carved.cardinality() == 256, after);

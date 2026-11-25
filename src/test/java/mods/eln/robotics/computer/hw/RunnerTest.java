@@ -37,6 +37,35 @@ class RunnerTest {
         assertFalse(r.machine.runnable(), "asleep waiting for input");
     }
 
+    /**
+     * lashtear (2026-11-23): a halted computer kept the screen events sent to it (Ctrl+S on a 33 KB file, again and
+     * again), and Reset handed them, and half of one, to the program it started. Reset drops them.
+     */
+    @Test
+    void resetDropsWhatTheOldProgramNeverRead() throws IOException {
+        Runner r = new Runner(JanetRomTest.machine(2));
+        ScreenProbe s = new ScreenProbe();
+        until(r, s, s::ready);
+        r.awaitIdle();
+        r.hold(() -> r.machine.halted = true);
+        byte[] big = ("(save 9 4 1 \"0\" [[0 1 [\"" + "x".repeat(40_000) + "\"]]])\n").getBytes(StandardCharsets.UTF_8);
+        for (int k = 0; k < 3; k++) r.toEditor(big);   // (more than the channel holds: the rest waits in the runner)
+        r.tick(true);
+        r.awaitIdle();
+        assertTrue(r.machine.editor.status() % 2 == 1, "input waiting in the channel");
+        assertTrue(r.screenInputWaiting() > 0, "and in the runner");
+        r.hold(() -> r.machine.reset(Machine.RESET_POWER));   // (as the Reset button does)
+        r.tick(true);
+        r.awaitIdle();
+        assertEquals(0, r.screenInputWaiting(), "nothing waiting in the runner after the reset");
+        // (the check that guards the drop: kept, the runner's events would be in the channel by now)
+        assertEquals(0, r.machine.editor.status() & 1, "nor in the channel");
+        ScreenProbe again = new ScreenProbe();
+        until(r, again, again::ready);
+        r.toEditor(again.submit("(* 6 7)"));
+        until(r, again, () -> again.done() && again.log().contains("\n42\n"));
+    }
+
     @Test
     void aSaveResumesMidSession() throws IOException {
         Runner r = new Runner(JanetRomTest.machine(2));
@@ -115,8 +144,11 @@ class RunnerTest {
         }
         assertTrue(s.ready(), "booted to the REPL through screenOut alone; console: " + s.console);
         r.awaitIdle();
-        r.tick(true);   // (a new tick's budget: the boot's last slice may have used up its own)
-        r.awaitIdle();
+        // (new ticks' budgets: the boot's last slices, finishing the stdlib's start, may have used up their own)
+        for (int t = 0; t < 4; t++) {
+            r.tick(true);
+            r.awaitIdle();
+        }
         // no tick() from here: the kick alone runs the computer, on what is left of this tick's budget
         r.toEditor(s.submit("(+ 40 2)"));
         r.kick();

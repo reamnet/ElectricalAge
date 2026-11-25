@@ -34,6 +34,11 @@ public final class FluidNode {
      * time (s) the cap on owed time dropped. Kept on the node, so a network rebuilt mid-stall keeps the record; not saved.
      */
     public double stallNow, longestStall, droppedTime;
+    /** Its network's count of heavy steps (CoreStep's background steps); on the node, so a rebuild keeps it. */
+    public int slowSteps;
+    /** Wall heat (J) a step moved that its devices haven't booked yet, when its network's core was replaced (CoreStep
+     *  hands a long step's heat out over its ticks): the next core hands it on. */
+    public double wallCarry;
     final Flash state = new Flash();
 
     public FluidNode(double volume, double z, double height, boolean fixed) {
@@ -94,6 +99,7 @@ public final class FluidNode {
     }
 
     public void update() {
+        guardFinite();
         if (CoreStep.ON) {
             coreUpdate();
             return;
@@ -143,6 +149,61 @@ public final class FluidNode {
     private void coreUpdate() {
         loadCore().update();
         state.fromCore(core, coreIds, volume);
+    }
+
+    /** Below this (kg) a negative mass is corrupt, not a rounding trace. */
+    static final double NEGATIVE_MASS = -1e-9;
+
+    /**
+     * Contents no honest step leaves (a non-finite energy or mass, or a mass under NEGATIVE_MASS) put right: every mass
+     * at least 0 (non-finite: 0), the energy theirs in equilibrium at T (K). Nothing changes otherwise. No update: the
+     * caller does it. True if it healed them.
+     */
+    public boolean heal(double T) {
+        boolean bad = !Double.isFinite(energy) || !(mWater >= NEGATIVE_MASS) || !(mAir >= NEGATIVE_MASS) || !Double.isFinite(mWater) || !Double.isFinite(mAir);
+        if (extra != null) for (double e : extra) bad |= !(e >= NEGATIVE_MASS) || !Double.isFinite(e);
+        if (!bad) return false;
+        mWater = Double.isFinite(mWater) ? Math.max(0, mWater) : 0;
+        mAir = Double.isFinite(mAir) ? Math.max(0, mAir) : 0;
+        if (extra != null) for (int i = 0; i < extra.length; i++) extra[i] = Double.isFinite(extra[i]) ? Math.max(0, extra[i]) : 0;
+        energy = energyAt(T);
+        return true;
+    }
+
+    /** The mod's log ("eln"), without loading Eln (unit tests run this class bare). */
+    private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger("eln");
+    /** Nodes guardFinite healed since its last warning, and when that was (System.nanoTime). */
+    private static int unwarnedHeals;
+    private static long lastHealWarn = Long.MIN_VALUE / 2;
+
+    /**
+     * A guard, not a model: contents heal() would put right (a non-finite energy or mass, or a mass under
+     * NEGATIVE_MASS), however they got there, healed at its last temperature (20 C if that isn't a sound one), with a
+     * warning at most once a minute naming where (asked for only then; null: its height). Unguarded, WaterAir.solve
+     * answers a NaN energy with its last temperature less 1 K, so the node cooled 1 K per update to the EOS floor
+     * (120 K) and every step of its network failed. CoreStep checks the core's own results first and writes a failing
+     * step out (CoreStep.failed) rather than heal it. True if it healed the node (no update: the caller does it;
+     * update() itself runs this first).
+     */
+    public boolean guardFinite(java.util.function.Supplier<Object> where) {
+        double u = energy, last = state.T, t = last > mods.eln.fluidcore.WaterAir.T_MIN && last < mods.eln.fluidcore.WaterAir.T_MAX ? last : Water.T_AMBIENT;
+        if (!heal(t)) return false;
+        long now = System.nanoTime();
+        synchronized (FluidNode.class) {
+            unwarnedHeals++;
+            if (now - lastHealWarn < 60_000_000_000L) return true;
+            Object at = where == null ? null : where.get();
+            LOG.warn("Electrical Age: a fluid node {} held {} J (a non-finite energy or mass, or a negative mass): reset to its contents at {} K ({} so healed since the last warning)",
+                at != null ? "at " + at : "at height " + z, u, String.format(java.util.Locale.ROOT, "%.1f", t), unwarnedHeals);
+            unwarnedHeals = 0;
+            lastHealWarn = now;
+        }
+        return true;
+    }
+
+    /** guardFinite(null): where unknown. */
+    public boolean guardFinite() {
+        return guardFinite(null);
     }
 
     /** Mass of species id (kg), both phases. */

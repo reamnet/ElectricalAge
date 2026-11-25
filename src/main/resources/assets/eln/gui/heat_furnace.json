@@ -27,7 +27,7 @@
   },
   {
    "text": "gain",
-   "sample": "Control gauge at 100%  (Power: 9999W)"
+   "sample": "Control gauge at 100%  (Power: 9.99kW)"
   },
   {
    "slider": "gain",
@@ -39,8 +39,12 @@
    "sample": "Fire: burning at 100%  falling"
   },
   {
+   "text": "bed",
+   "sample": "Bed 100% hot, air 100% open"
+  },
+  {
    "text": "heat",
-   "sample": "Set point: 1000°C  (Actual: 1000°C)"
+   "sample": "Set point: 1.00k°C  (needs a regulator)"
   },
   {
    "slider": "heat",

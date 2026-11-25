@@ -215,3 +215,47 @@ def polymeriser():
         cv.set(x, 12, h('#d6c496'))                                                # rubber crumb
     leds(cv, 6, 5)
     return cv
+
+
+# ------------------------------------------------------------------------------- ground radar
+ORANGE = (h('#4a2208'), h('#7a3a0e'), h('#b85a16'), h('#e07a22'), h('#f49a44'), h('#fcc07a'))
+
+
+def ground_radar():
+    """The orange antenna sled on its dark skid, the console behind it with a dark screen and LEDs, a whip antenna."""
+    cv = Canvas(16)
+    box(cv, 1, 14, 12, 1, 3, DARK, bevel=False)                                    # skid
+    box(cv, 1, 10, 12, 4, 3, ORANGE)                                               # the sled
+    sub(cv, lambda c: box(c, 6, 4, 7, 6, 3, ORANGE))                               # the console
+    for y in range(5, 8):
+        for x in range(7, 11):
+            cv.set(x, y, h('#16261c') if (x + y) % 3 else h('#2e6a3e'))           # its screen
+    leds(cv, 11, 8)
+    for y in range(0, 4):
+        cv.set(14, y, STEEL[3])                                                    # whip antenna
+    return cv
+
+
+def ground_radar_goggles():
+    """The Ground Radar with its goggles on the console's top: two pale lenses on a dark frame."""
+    cv = ground_radar()
+    for x in range(8, 13):
+        cv.set(x, 3, DARK[2])
+    for x, c in ((9, h('#bfe6f2')), (11, h('#bfe6f2'))):
+        cv.set(x, 2, c)
+    return cv
+
+
+def radar_goggles():
+    """Radar goggles: two round lenses in a dark frame on a brown strap."""
+    cv = Canvas(16)
+    for x in range(1, 15):
+        cv.set(x, 11, h('#6b4a2b'))
+        cv.set(x, 12, h('#4a321d'))
+    for cx in (5, 10):
+        for dy in range(-3, 4):
+            for dx in range(-3, 4):
+                d = dx * dx + dy * dy
+                if d <= 10:
+                    cv.set(cx + dx, 11 + dy, DARK[1] if d >= 5 else (h('#bfe6f2') if dx + dy < 0 else h('#6aa8c0')))
+    return cv

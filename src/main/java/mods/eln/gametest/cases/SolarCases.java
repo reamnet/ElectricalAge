@@ -35,11 +35,11 @@ public final class SolarCases {
 
     /** A physical test load owned by the element so normal node cleanup removes it. */
     static Resistor attachLoad(SolarPanelElement panel) {
-        NbtElectricalLoad positive = Batch1Cases.field(panel, "positiveLoad");
-        NbtElectricalLoad negative = Batch1Cases.field(panel, "negativeLoad");
-        Object descriptor = Batch1Cases.field(panel, "descriptor");
-        double vmp = Batch1Cases.field(descriptor, "optimumVoltage");
-        double imp = Batch1Cases.field(descriptor, "optimumCurrent");
+        NbtElectricalLoad positive = mods.eln.gametest.TestContext.field(panel, "positiveLoad");
+        NbtElectricalLoad negative = mods.eln.gametest.TestContext.field(panel, "negativeLoad");
+        Object descriptor = mods.eln.gametest.TestContext.field(panel, "descriptor");
+        double vmp = mods.eln.gametest.TestContext.field(descriptor, "optimumVoltage");
+        double imp = mods.eln.gametest.TestContext.field(descriptor, "optimumCurrent");
         Resistor load = new Resistor(positive, negative).setR(vmp / imp);
         panel.electricalComponentList.add(load);
         Eln.simulator.mna.addComponent(load);
@@ -47,12 +47,12 @@ public final class SolarCases {
     }
 
     static void checkLoadedCurve(TestContext ctx, SolarPanelElement panel, Resistor load) {
-        SolarPanelPowerProcess source = Batch1Cases.field(panel, "powerSource");
-        Object descriptor = Batch1Cases.field(panel, "descriptor");
-        double voc = Batch1Cases.field(descriptor, "openCircuitVoltage");
-        double vmp = Batch1Cases.field(descriptor, "optimumVoltage");
-        double imp = Batch1Cases.field(descriptor, "optimumCurrent");
-        double isc = Batch1Cases.field(descriptor, "shortCircuitCurrent");
+        SolarPanelPowerProcess source = mods.eln.gametest.TestContext.field(panel, "powerSource");
+        Object descriptor = mods.eln.gametest.TestContext.field(panel, "descriptor");
+        double voc = mods.eln.gametest.TestContext.field(descriptor, "openCircuitVoltage");
+        double vmp = mods.eln.gametest.TestContext.field(descriptor, "optimumVoltage");
+        double imp = mods.eln.gametest.TestContext.field(descriptor, "optimumCurrent");
+        double isc = mods.eln.gametest.TestContext.field(descriptor, "shortCircuitCurrent");
         double expected = SolarPanelPowerProcess.currentAtVoltage(load.getU(), source.getLightFactor(), voc, vmp, imp, isc);
         ctx.check("solar: loaded current follows the ForkPatch I-V curve",
             Math.abs(load.getCurrent() - expected) <= 1e-5 + .005 * isc,
@@ -89,7 +89,7 @@ public final class SolarCases {
         }
 
         public void measure(TestContext ctx) {
-            SolarPannelSlowProcess process = Batch1Cases.field(panel, "slowProcess");
+            SolarPannelSlowProcess process = TestContext.field(panel, "slowProcess");
             double light = process.getSolarLight();
             checkLoadedCurve(ctx, panel, load);
             ctx.check("solar: noon, clear sky: light > 0.5 (sun angle source on 26.x)", light > 0.5, String.format("light %.4f", light));

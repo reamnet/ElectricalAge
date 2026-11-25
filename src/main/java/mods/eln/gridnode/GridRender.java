@@ -37,6 +37,10 @@ public abstract class GridRender extends TransparentNodeElementRender {
     private record Wire(Vec3 start, Vec3 end, boolean halo) { }
     private java.util.List<Wire> geometry = java.util.List.of();
     private int spanGeometryRevision;
+    private net.minecraft.world.phys.AABB spanBounds;
+
+    @Override
+    public net.minecraft.world.phys.AABB renderBounds() { return spanBounds; }
 
     /** Changes only when the published cable mesh actually changes. */
     public int getSpanGeometryRevision() { return spanGeometryRevision; }
@@ -166,6 +170,12 @@ public abstract class GridRender extends TransparentNodeElementRender {
                 for (Catenary old:catenaries) old.destroy();
                 catenaries=replacement;geometry=java.util.List.copyOf(incoming);spanGeometryRevision++;
             }
+            var at = tileEntity.getBlockPos();
+            var bounds = new net.minecraft.world.phys.AABB(at).inflate(3);
+            for (Wire wire : incoming) for (Vec3 v : new Vec3[]{wire.start(), wire.end()})
+                bounds = bounds.minmax(new net.minecraft.world.phys.AABB(at.getX() + 0.5 + v.x, at.getY() + 0.5 + v.y,
+                    at.getZ() + 0.5 + v.z, at.getX() + 0.5 + v.x, at.getY() + 0.5 + v.y, at.getZ() + 0.5 + v.z).inflate(1, 3, 1));
+            spanBounds = bounds;
         } catch (IOException e) { e.printStackTrace(); }
     }
 

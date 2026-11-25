@@ -5566,5 +5566,41 @@
   "display": "400 V Industrial Cord",
   "kind": "shared_item",
   "name": "400_v_industrial_cord"
+ },
+ "eln:shared_item@4165": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Hot Blade Set",
+  "kind": "shared_item",
+  "name": "hot_blade_set"
+ },
+ "eln:shared_item@7742": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Radar Goggles",
+  "kind": "shared_item",
+  "name": "radar_goggles"
+ },
+ "eln:transparent_node@6208": {
+  "descriptor": "GroundRadarDescriptor",
+  "display": "Ground Radar",
+  "kind": "transparent_node",
+  "name": "ground_radar"
+ },
+ "eln:transparent_node@6209": {
+  "descriptor": "GroundRadarDescriptor",
+  "display": "Ground Radar w/Goggles",
+  "kind": "transparent_node",
+  "name": "ground_radar_with_goggles"
+ },
+ "eln:transparent_node@5332": {
+  "descriptor": "StillPotDescriptor",
+  "display": "Still Pot",
+  "kind": "transparent_node",
+  "name": "still_pot"
+ },
+ "eln:transparent_node@5336": {
+  "descriptor": "CondenserCoilDescriptor",
+  "display": "Condenser Coil",
+  "kind": "transparent_node",
+  "name": "condenser_coil"
  }
 }

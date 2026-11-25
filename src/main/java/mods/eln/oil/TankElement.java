@@ -164,43 +164,28 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
         return face <= 3 ? 8 * 17 + y : y * 17 + 8;   // (north/south: x then y; west/east: y then z)
     }
 
-    /** Placed facing the player, its ports made from that front; the wrench turns it (FluidPlacement). */
-    @Override
-    public void initializeFromThat(Direction front, net.minecraft.world.entity.LivingEntity entityLiving, net.minecraft.nbt.CompoundTag itemStackNbt) {
-        super.initializeFromThat(front, entityLiving, itemStackNbt);
-        remakePorts();
-    }
-
     @Override
     public Direction[] fronts() {
         // (one of a box, or about to be: it stays as placed; turning would re-form the box under it)
         if (group != null || !neighbours().isEmpty()) return new Direction[]{front};
-        return new Direction[]{Direction.XN, Direction.XP, Direction.ZN, Direction.ZP};
-    }
-
-    @Override
-    public boolean wrenchTurn(net.minecraft.world.entity.player.Player player) {
-        return mods.eln.fluid.FluidPlacement.turn(this);
+        return mods.eln.fluid.FluidPlacement.horizontal();
     }
 
     @Override
     public void remakePorts() {
-        makePorts();
-    }
-
-    void makePorts() {
         long at = node.coordonate.pos().asLong();
         List<FluidPort> out = new ArrayList<>();
         if (group == null) {
             out.add(new FluidPort(vessel, at, 1, 1.0, PORT_K));   // top: vapour
             out.add(new FluidPort(vessel, at, 0, 0.0, PORT_K));   // bottom: liquid
-            // (side ports draw at their true height, Baughn 2026-11-10: the low flange's bottom edge, the high flange's top
-            // edge, as liquid leaves a flange over its bottom and gas rises to its top; below the low flange is dead space,
-            // as in a real tank: drain it from the underside port, now that a tank needs no floor)
+            // (side ports draw at their true height, Baughn 2026-11-10: the low flange at its bottom edge, as liquid leaves a
+            // flange over its bottom; the high flange at its own height, its centre (Baughn 2026-11-24: at its top edge,
+            // liquid piped into it stood in the pipe); below the low flange is dead space, as in a real tank: drain it from
+            // the underside port, now that a tank needs no floor)
             for (Direction d : new Direction[]{front.left(), front.right(), front.back()}) {
                 int f = d.toEnumFacing().get3DDataValue();
                 out.add(new FluidPort(vessel, at, f, (LOW - FLANGE_HALF) / 16.0, PORT_K, sideSpot(f, LOW)));    // low: liquid
-                out.add(new FluidPort(vessel, at, f, (HIGH + FLANGE_HALF) / 16.0, PORT_K, sideSpot(f, HIGH)));  // high: vapour
+                out.add(new FluidPort(vessel, at, f, HIGH / 16.0, PORT_K, sideSpot(f, HIGH)));  // high: vapour
             }
         } else {
             // in a box: the ports on its outer faces, each drawing at its height in the whole vessel
@@ -214,29 +199,21 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
                 // (at their true height, Baughn 2026-11-10; the bottom row's low ports used to dip to the floor, since a
                 // box tank 9 % full gave nothing at its low flange and nothing could be piped under a tank: now one can)
                 out.add(new FluidPort(vessel, at, f, (j * 16 + LOW - FLANGE_HALF) / (16.0 * h), PORT_K, sideSpot(f, LOW)));
-                out.add(new FluidPort(vessel, at, f, (j * 16 + HIGH + FLANGE_HALF) / (16.0 * h), PORT_K, sideSpot(f, HIGH)));
+                out.add(new FluidPort(vessel, at, f, (j * 16 + HIGH) / (16.0 * h), PORT_K, sideSpot(f, HIGH)));
             }
         }
         ports = out;
     }
 
-    /** Which of its ports meet a port of whatever is beside it (a pipe's end, a device's flange): see `coupled`. */
+    /** Which of its ports couple to a port of whatever is beside it (a pipe's end, a device's flange; FluidPlacement.partners): see `coupled`. */
     int coupledPorts() {
         int mask = 0;
         var level = node.coordonate.world();
         for (FluidPort p : ports) {
-            var f = net.minecraft.core.Direction.from3DDataValue(p.face());
-            var there = net.minecraft.core.BlockPos.of(p.pos()).relative(f);
-            var other = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(there, level));
-            FluidDevice d = other instanceof FluidDevice fd ? fd
-                : other instanceof mods.eln.node.transparent.TransparentNode t && t.element instanceof FluidDevice fe ? fe : null;
-            if (d == null) continue;
-            for (FluidPort q : d.fluidPorts())
-                if (q.pos() == there.asLong() && q.face() == f.getOpposite().get3DDataValue() && q.at() == p.at()) {
-                    if (p.face() == 0) mask |= 1 << 13;   // (its underside port: counted, not drawn)
-                    else if (p.face() == 1) mask |= 1 << 12;
-                    else if (p.face() >= 2) mask |= 1 << (2 * p.face() + (p.at() == sideSpot(p.face(), HIGH) ? 1 : 0));
-                }
+            if (mods.eln.fluid.FluidPlacement.partners(level, p).isEmpty()) continue;
+            if (p.face() == 0) mask |= 1 << 13;   // (its underside port: counted, not drawn)
+            else if (p.face() == 1) mask |= 1 << 12;
+            else if (p.face() >= 2) mask |= 1 << (2 * p.face() + (p.at() == sideSpot(p.face(), HIGH) ? 1 : 0));
         }
         return mask;
     }
@@ -255,7 +232,7 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
     public void connectJob() {
         super.connectJob();
         if (vessel != null) {
-            makePorts();
+            remakePorts();
             FluidWorld.add(this);
             // (with its neighbours: a box may form)
             List<TankElement> seeds = neighbours();
@@ -289,11 +266,11 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
         own = new FluidNode(desc.volume, node.coordonate.y, 1.0, false);
         own.lossWPerK = LOSS_W_PER_K;
         if (loaded != null) {
-            mods.eln.fluid.FluidSaves.restore(own, loaded);
+            mods.eln.fluid.FluidSaves.restore(own, loaded, mods.eln.sim.Ambient.kelvin(node.coordonate), node.coordonate);
             own.update();
         } else own.fill(0, Water.P_ATM, mods.eln.sim.Ambient.kelvin(node.coordonate));
         vessel = own;
-        makePorts();
+        remakePorts();
         connect();
     }
 
@@ -319,7 +296,7 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
 
     @Override
     public String thermoMeterString(Direction side) {
-        return vessel == null ? "" : mods.eln.misc.Utils.plotCelsius("T:", vessel.T() - Water.T0);
+        return vessel == null ? "" : mods.eln.misc.Utils.plotCelsius("T:", vessel.T() - mods.eln.sim.PhysicalConstant.Tref);
     }
 
     @Override
@@ -386,10 +363,11 @@ public class TankElement extends TransparentNodeElement implements FluidDevice, 
     public Map<String, String> getWaila() {
         Map<String, String> info = new java.util.LinkedHashMap<>();   // (in order: Jade's headline is the first lines)
         if (vessel == null) return info;
-        info.put(I18N.tr("Pressure"), String.format("%.2f bar of %s, %.0f °C", vessel.P() / 1e5, EaUnits.contents(vessel), vessel.T() - Water.T0));
+        info.put(I18N.tr("Pressure"), String.format("%.2f bar of %s, %s", vessel.P() / 1e5, EaUnits.contents(vessel), mods.eln.api.Meters.celsius(vessel.T() - Water.T0)));
         info.put(I18N.tr("Contents"), EaUnits.composition(vessel));
         // (all its liquids: "Water" counted only water while the share counted latex too, LabAssistant)
-        info.put(I18N.tr("Liquid"), String.format("%.0f mB, %.0f%% full", vessel.liquidVolume() * Water.RHO_L / EaUnits.KG_PER_MB_WATER, fill() * 100));
+        info.put(I18N.tr("Liquid"), EaUnits.volume(vessel.liquidVolume() * Water.RHO_L / EaUnits.KG_PER_MB_WATER) + ", " + mods.eln.misc.Utils.plotPercent(fill()) + " full");
+        EaUnits.putViscosity(info, vessel);
         info.put(I18N.tr("Vessel"), group == null ? I18N.tr("one block") : String.format("%d x %d x %d blocks, %.0f buckets", group.sx, group.sy, group.sz,
             vessel.volume * Water.RHO_L / EaUnits.KG_PER_MB_WATER / 1000));
         // (its ports are drawn only where a pipe meets them: say where they are)

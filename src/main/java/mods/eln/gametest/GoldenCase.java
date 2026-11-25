@@ -115,6 +115,15 @@ final class GoldenCase implements TestCase {
         tier(m, "Medium Power Receiver Antenna", "electricalNominalVoltage", "electricalMaximalVoltage");
         tier(m, "High Power Transmitter Antenna", "electricalNominalVoltage", "electricalMaximalVoltage", "electricalNominalInputR");
         tier(m, "High Power Receiver Antenna", "electricalNominalVoltage", "electricalMaximalVoltage");
+        // (Baughn 2026-11-22: the lead-acid curve rescales the charge that holds the same energy; the current limit, never
+        // applied since the heating logic came, is gone)
+        for (String b : new String[]{"Cost Oriented Battery", "Capacity Oriented Battery", "Voltage Oriented Battery",
+            "Current Oriented Battery", "Life Oriented Battery", "Single-use Battery"}) {
+            Map<String, String> f = new java.util.LinkedHashMap<>(m.getOrDefault(b, Map.of()));
+            if (!b.startsWith("Single")) f.put("electricalQ", "lead-acid curve: the charge that holds its rated energy (Baughn 2026-11-22)");
+            f.put("IMax", "removed: never applied, heat limits a battery (Baughn 2026-11-22)");
+            m.put(b, f);
+        }
         tier(m, "Cost Oriented Battery", "electricalU", "electricalStdI", "electricalQ", "electricalRs", "lifeNominalCurrent", "IMax", "currentDropVoltage");
         tier(m, "Capacity Oriented Battery", "electricalU", "electricalStdI", "electricalQ", "electricalRs", "lifeNominalCurrent", "IMax", "currentDropVoltage");
         tier(m, "Voltage Oriented Battery", "electricalU", "electricalStdI", "electricalQ", "electricalRs", "lifeNominalCurrent", "IMax", "currentDropVoltage");
@@ -189,12 +198,15 @@ final class GoldenCase implements TestCase {
 
     /** Items new in 26.x (no 1.12 twin): Copper Coil, the thin winding wire (Baughn 2026-10-13). */
     static final java.util.Set<String> NEW_IN_26 = java.util.Set.of("eln:shared_item@4163",
+        "eln:shared_item@4165",   // the Hot Blade Set (Baughn 2026-11-25)
         "eln:transparent_node@5308",   // the Pipe Mixer (Baughn 2026-11-11)
         "eln:transparent_node@5888",   // the Industrial Resin Collector (the rubber chain, 2026-11-07)
         "eln:transparent_node@5952",   // the Carbon Black Burner (the rubber chain's oil route)
         "eln:transparent_node@6016",   // the Desulfuriser (the rubber chain's oil route)
         "eln:transparent_node@6080",   // the Steam Cracker (the rubber chain's oil route)
         "eln:transparent_node@6144",   // the Polymeriser (the rubber chain's oil route)
+        "eln:transparent_node@6208", "eln:transparent_node@6209",   // the Ground Radar, and w/Goggles (Baughn 2026-11-24)
+        "eln:shared_item@7742",   // Radar Goggles; 7740 remains ForkPatch Motor Cowling
         "eln:six_node@5955", "eln:six_node@5956",   // the three-channel data logger, the tilted terminal (Baughn 2026-10-30, board #45)
         "eln:six_node@7489",   // the Bus I/O Module (the field bus)
         "eln:six_node@7490", "eln:six_node@7491", "eln:six_node@7494",   // the Addressable Button and Light, the Floor Sensor (RS485, Baughn 2026-11-05)
@@ -217,6 +229,8 @@ final class GoldenCase implements TestCase {
         "eln:transparent_node@5304",   // the counterflow heat exchanger (Baughn 2026-10-29)
         "eln:transparent_node@5396",   // the Air Blower (todo #471, Baughn 2026-11-15)
         "eln:transparent_node@5328",   // the Large Boiler, 2x2x2 (todo #472, Baughn 2026-11-15)
+        "eln:transparent_node@5332",   // the Still Pot, 2x2x2 (refinery M2, todo #591, Baughn 2026-11-24)
+        "eln:transparent_node@5336",   // the Condenser Coil, 1x1x2 (refinery M2, Baughn 2026-11-24)
         "eln:transparent_node@5200",   // the steam injection wellhead (oil lakes, todo #138; Baughn 2026-10-30)
         "eln:transparent_node@5504",   // the Linear Servo Drive (the servo layer, Baughn 2026-11-02)
         "eln:transparent_node@5568",   // the computer (robotics phase 3, Baughn 2026-11-05)
@@ -231,6 +245,7 @@ final class GoldenCase implements TestCase {
         "Electrical Anvil",   // (their screen: Baughn 2026-10-26)
         "Three-Channel Data Logger", "Tilted Terminal Logger",   // (Baughn 2026-10-30, board #45)
         "Bus I/O Module",   // (the field bus)
+        "Ground Radar", "Ground Radar w/Goggles",   // (its batteries, Baughn 2026-11-24)
         "Addressable Button", "Addressable Light", "Floor Sensor", "Linear Servo Drive",   // (their address screen)
         "Computer",   // (its terminal, chips and drives)
         "48V Wire Drawing Machine", "230V Wire Drawing Machine",   // (what to make: Wires stage 4)

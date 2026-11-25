@@ -57,10 +57,27 @@ final class Laying {
 
     /** Check, then place every part; null if all are laid, else why not (and none is left laid). */
     static String lay(Level level, List<BlockPos> at, List<? extends VoxelPart> parts, Player player) {
-        return lay(level, at, parts, player, -1);
+        return lay(level, at, parts, List.of(), player, -1);
+    }
+
+    record Join(BlockPos pos, PipePart part, int x, int y, int z) { }
+
+    static String lay(Level level, List<BlockPos> at, List<? extends VoxelPart> parts, List<Join> joins, Player player) {
+        return lay(level, at, parts, joins, player, -1);
     }
 
     static String lay(Level level, List<BlockPos> at, List<? extends VoxelPart> parts, Player player, int failAt) {
+        return lay(level, at, parts, List.of(), player, failAt);
+    }
+
+    /** Validate joins first; preserve transaction ownership of every new part and host block on failure. */
+    private static String lay(Level level, List<BlockPos> at, List<? extends VoxelPart> parts, List<Join> joins,
+                              Player player, int failAt) {
+        for (Join j : joins) {
+            if (!(level.getBlockEntity(j.pos()) instanceof VoxelNodeEntity e) || !(e.getNode() instanceof VoxelNode n)) return "the pipe is gone";
+            String err = n.joinError(j.part(), j.x(), j.y(), j.z());
+            if (err != null) return err;
+        }
         String err = check(level, at, parts);
         if (err != null) return err;
         boolean[] newNodes = new boolean[parts.size()];
@@ -74,6 +91,11 @@ final class Laying {
                 if (i == failAt) return "forced";
                 err = PipeKitItem.place(level, pos, parts.get(i), player);
                 if (err != null) return err + " at " + pos.toShortString();
+            }
+            for (Join j : joins) {
+                err = level.getBlockEntity(j.pos()) instanceof VoxelNodeEntity e && e.getNode() instanceof VoxelNode n
+                    ? n.addJoined(j.part(), j.x(), j.y(), j.z()) : "the pipe is gone";
+                if (err != null) return err;
             }
             CableLinks.laid(at, parts);
             committed = true;

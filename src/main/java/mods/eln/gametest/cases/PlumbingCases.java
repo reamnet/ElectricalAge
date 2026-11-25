@@ -29,11 +29,16 @@ public final class PlumbingCases {
         cases.add(new TankSeparates());
         cases.add(new PumpMovesWater(false));
         cases.add(new PumpMovesWater(true));
+        cases.add(new PumpMovesWater(false, true));
         cases.add(new PressureValve(ValvePart.REDUCING));
         cases.add(new PressureValve(ValvePart.RELIEF));
         cases.add(new QualitySensor());
         cases.add(new TankBox());
         cases.add(new TankBoxSplits());
+        cases.add(new TankBoxOverFullReloads());
+        cases.add(new TankHealsOnLoad());
+        cases.add(new PipeHealsOnLoad(false));
+        cases.add(new PipeHealsOnLoad(true));
         cases.add(new TankBoxSettlesAfterBreak());
         cases.add(new TankBoxHitbox());
         cases.add(new TankBoxCornerPipeClick());
@@ -46,6 +51,95 @@ public final class PlumbingCases {
         cases.add(new TankStandsWithoutFloor());
         cases.add(new PurgeValve(false));
         cases.add(new PurgeValve(true));
+        for (Breather.Row r : Breather.Row.values()) cases.add(new Breather(r));
+        cases.add(new ValveDrawsAtItsPlace());
+        cases.add(new HighFlangeTakesLiquid());
+    }
+
+    /**
+     * Baughn 2026-11-24 ("unrealistic plumbing"): a tank's high side flange draws at its own height. A short iron pipe
+     * nine tenths full of water, level on the flange's height, runs into an empty tank's high flange: what stands over the
+     * flange's centre runs in (about half; drawn at the flange's top edge, none did), and the tank's air comes back out
+     * over it.
+     */
+    static final class HighFlangeTakesLiquid extends Big {
+        TankElement t;
+        double water0;
+
+        public String id() {
+            return "tank_high_flange_takes_liquid";
+        }
+
+        public int ticks() {
+            return 100;
+        }
+
+        public void build(TestContext ctx) {
+            t = tank(ctx, IRON_TANK, ctx.at(4, 1, 1), Direction.XP);   // (its back, west, faces the pipe)
+            PipeCases.lay(ctx, ctx.at(3, 1, 1), 0, 4, 12, 8, 16, 12, 8);
+            for (var part : ctx.voxelByEntity(ctx.at(3, 1, 1)).parts)
+                if (part instanceof mods.eln.node.voxel.PipePart pp && pp.fluid != null) {
+                    fill(pp.fluid, 0.9 * pp.fluid.volume * Water.RHO_L, Water.P_ATM, 293.15);
+                    water0 += pp.fluid.mWater;
+                }
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.line(String.format("high flange: %.4f kg of water in the pipe, %.4f kg in the tank now; %s", water0, t.vessel.mLiquid(), t.getWaila()));
+            ctx.check("tank: water piped into its high flange runs in, down to the flange's centre (over 40 %)", t.vessel.mLiquid() > 0.4 * water0,
+                String.format("%.4f of %.4f kg", t.vessel.mLiquid(), water0));
+        }
+    }
+
+    /**
+     * Baughn 2026-11-24 ("unrealistic plumbing"): a valve passes what stands at its own place in the run. An empty tank C
+     * above (air) feeds an iron run down a block and along to a valve, then on into tank B's low flange; the run before
+     * the valve holds a fifth of its volume of water. It drains through the open valve into B (a valve drew half way up
+     * each piece before it, so this water stood in the run). Shut, the valve holds it.
+     */
+    static final class ValveDrawsAtItsPlace extends Big {
+        final boolean[] open = {true, false};
+        final TankElement[] b = new TankElement[2];
+        final double[] water0 = new double[2];
+        String err = "";
+
+        public String id() {
+            return "pipe_valve_passes_liquid_at_its_place";
+        }
+
+        public int ticks() {
+            return 200;
+        }
+
+        public void build(TestContext ctx) {
+            for (int i = 0; i < 2; i++) {
+                int z = 1 + 4 * i;
+                tank(ctx, IRON_TANK, ctx.at(3, 3, z), Direction.XN);
+                PipeCases.lay(ctx, ctx.at(3, 2, z), 0, 8, 16, 8, 8, 0, 8);
+                PipeCases.lay(ctx, ctx.at(3, 1, z), 0, 8, 16, 8, 8, 4, 8, 16, 4, 8);
+                String e = ctx.voxelByEntity(ctx.at(3, 1, z)).addValve(12, 4, 8, ValvePart.ON_OFF);
+                if (e != null) err += e;
+                b[i] = tank(ctx, IRON_TANK, ctx.at(4, 1, z), Direction.XP);
+                for (var q : ctx.voxelByEntity(ctx.at(3, 1, z)).parts)
+                    if (q instanceof ValvePart v) v.open = open[i];
+                // a fifth of the run before the valve full of water (each of its pieces)
+                for (BlockPos q : new BlockPos[]{ctx.at(3, 2, z), ctx.at(3, 1, z)})
+                    for (var part : ctx.voxelByEntity(q).parts)
+                        if (part instanceof mods.eln.node.voxel.PipePart pp && pp.fluid != null && pp.passes(8, 10, 8)) {   // (not the piece after the valve)
+                            fill(pp.fluid, 0.2 * pp.fluid.volume * Water.RHO_L, Water.P_ATM, 293.15);
+                            water0[i] += pp.fluid.mWater;
+                        }
+            }
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.line(String.format("valve at its place: water put in the runs %.4f / %.4f kg; tank B behind the open valve %.4f kg, behind the shut one %.4f kg",
+                water0[0], water0[1], b[0].vessel.mLiquid(), b[1].vessel.mLiquid()));
+            ctx.check("valve: it fits", err.isEmpty(), err);
+            ctx.check("valve: open, the water along the bottom of the run goes through it (over 80 %)", b[0].vessel.mLiquid() > 0.8 * water0[0],
+                String.format("%.4f of %.4f kg", b[0].vessel.mLiquid(), water0[0]));
+            ctx.check("valve: shut, none does", b[1].vessel.mLiquid() < 0.02 * water0[1] + 1e-6, String.format("%.5f kg", b[1].vessel.mLiquid()));
+        }
     }
 
     static final int IRON_TANK = 40 + (82 << 6), ALLOY_TANK = 44 + (82 << 6), PUMP = 48 + (82 << 6);
@@ -205,20 +299,20 @@ public final class PlumbingCases {
             t = tank(ctx, IRON_TANK, ctx.at(2, 1, 1), Direction.XN);
             pipeAt = ctx.at(2, 2, 1);
             PipeCases.lay(ctx, pipeAt, 0, 8, 0, 8, 8, 12, 8);
-            var n = PipeCases.node(ctx, pipeAt);
+            var n = ctx.voxelByEntity(pipeAt);
             err = n.addSafetyValveNear(0.5, 8 / 16.0, 0.5, true);
             fill(t.vessel, (full ? 0.995 : 0.5) * t.vessel.volume * Water.RHO_L, 3e5, 300);
             water0 = t.vessel.mWater;
         }
 
         public void measure(TestContext ctx) {
-            var run = mods.eln.fluid.FluidWorld.nodeFor(((mods.eln.node.voxel.PipePart) PipeCases.node(ctx, pipeAt).parts.get(0)).fluid);
+            var run = mods.eln.fluid.FluidWorld.nodeFor(((mods.eln.node.voxel.PipePart) ctx.voxelByEntity(pipeAt).parts.get(0)).fluid);
             double water = t.vessel.mWater + run.mWater;
             ctx.line(String.format("purge valve (%s): tank %.3f bar, %.4f -> %.4f kg of water; %s", full ? "full" : "half", t.vessel.P() / 1e5, water0, water,
-                PipeCases.node(ctx, pipeAt).getWaila(false)));
+                ctx.voxelByEntity(pipeAt).getWaila(false)));
             ctx.check("purge valve: it fits on the pipe", err == null, "" + err);
             // (a client check: Jade's header read "Pipes and Cables" with the crosshair on the valve)
-            var vn = PipeCases.node(ctx, pipeAt);
+            var vn = ctx.voxelByEntity(pipeAt);
             String onValve = null, onPipe = vn.nameAt(0.5, 1 / 16.0, 0.5);
             for (var part : vn.parts)
                 if (part instanceof mods.eln.node.voxel.SafetyValvePart sv) {
@@ -230,6 +324,171 @@ public final class PlumbingCases {
             ctx.check("purge valve: no liquid goes, only the vapour in the gas (under 0.1 g)", water > water0 - 1e-4, String.format("%.6f kg lost", water0 - water));
             if (!full) ctx.check("purge valve: it bleeds the air down to its set pressure (under 1.3 bar)", t.vessel.P() < 1.3e5,
                 String.format("%.3f bar", t.vessel.P() / 1e5));
+        }
+    }
+
+    /**
+     * The breather valve (refinery M2, Baughn 2026-11-24): a purge valve's float out and a vacuum breaker in, at the air's
+     * pressure. Tank A (2,2,1) drains by gravity from its low east port down into receiver B's high west port (B at
+     * (4,1,1), lower); each has a breather on a stub on its top port.
+     * <ul>
+     * <li>FILLS: B fills from A with neither tank building pressure or pulling a vacuum (within 2.5 kPa of the air's);</li>
+     * <li>KEEPS_LIQUID: B over-filled until the water stands in its stub under the breather: no liquid leaves;</li>
+     * <li>PULLS_AIR: B alone, half full of water at 0.5 bar (a still pot pulled under): air comes in to ~1 atm;</li>
+     * <li>SAVES: a breather's part saves as a breather; safety and purge valves save and load as before (old tags too);
+     * Jade names it by its item.</li>
+     * </ul>
+     */
+    static final class Breather extends Big {
+        enum Row { FILLS, KEEPS_LIQUID, PULLS_AIR, SAVES }
+
+        final Row row;
+        TankElement a, b;
+        BlockPos aStub, bStub;
+        String errA, errB;
+        IProcess watch;
+        int tick;
+        double aLo = Double.MAX_VALUE, aHi = -Double.MAX_VALUE, bLo = Double.MAX_VALUE, bHi = -Double.MAX_VALUE, liquidOut, airIn, aWater0, bWater0, bP0;
+
+        Breather(Row row) {
+            this.row = row;
+        }
+
+        public String id() {
+            return "pipe_breather_valve_" + row.name().toLowerCase(java.util.Locale.ROOT);
+        }
+
+        public int ticks() {
+            return row == Row.KEEPS_LIQUID ? 600 : row == Row.FILLS ? 300 : 100;
+        }
+
+        /** A stub up out of a tank's top port, turning across the block above, with a breather on its top. */
+        static String stub(TestContext ctx, BlockPos above) {
+            PipeCases.lay(ctx, above, 0, 8, 0, 8, 8, 8, 8, 14, 8, 8);
+            return ctx.voxelByEntity(above).addSafetyValveNear(12 / 16.0, 8 / 16.0, 8 / 16.0, mods.eln.node.voxel.SafetyValvePart.BREATHER);
+        }
+
+        public void build(TestContext ctx) {
+            b = tank(ctx, IRON_TANK, ctx.at(4, 1, 1), Direction.XP);
+            bStub = ctx.at(4, 2, 1);
+            errB = stub(ctx, bStub);
+            if (row == Row.PULLS_AIR || row == Row.SAVES) {
+                fill(b.vessel, 0.5 * b.vessel.volume * Water.RHO_L, row == Row.PULLS_AIR ? 0.5e5 : Water.P_ATM, 293.15);
+            } else {
+                a = tank(ctx, IRON_TANK, ctx.at(2, 2, 1), Direction.XN);
+                aStub = ctx.at(2, 3, 1);
+                errA = stub(ctx, aStub);
+                // (A's low east port, down a block, into B's high west port)
+                PipeCases.lay(ctx, ctx.at(3, 2, 1), 0, 0, 4, 8, 8, 4, 8, 8, 0, 8);
+                PipeCases.lay(ctx, ctx.at(3, 1, 1), 0, 8, 16, 8, 8, 12, 8, 16, 12, 8);
+                fill(a.vessel, 0.9 * a.vessel.volume * Water.RHO_L, Water.P_ATM, 293.15);
+                fill(b.vessel, row == Row.KEEPS_LIQUID ? 0.85 * b.vessel.volume * Water.RHO_L : 0, Water.P_ATM, 293.15);
+                aWater0 = a.vessel.mLiquid();
+            }
+            bWater0 = b.vessel.mLiquid();
+            VoxelNode an = aStub == null ? null : ctx.voxelByEntity(aStub), bn = ctx.voxelByEntity(bStub);
+            bP0 = b.vessel.P();
+            Eln.simulator.addSlowProcess(watch = dt -> {
+                tick++;
+                for (VoxelNode n : an == null ? List.of(bn) : List.of(an, bn))
+                    for (var v : n.fluidVents()) {
+                        if (v.edge == null) continue;
+                        if (v.inward) airIn += v.edge.fAir * dt;
+                        else liquidOut += Math.max(0, v.edge.fLiquid) * dt;
+                    }
+                if (tick < 20) return;   // (pressures: past the first second, the empty line's first rush)
+                bLo = Math.min(bLo, b.vessel.P());
+                bHi = Math.max(bHi, b.vessel.P());
+                if (a != null) {
+                    aLo = Math.min(aLo, a.vessel.P());
+                    aHi = Math.max(aHi, a.vessel.P());
+                }
+            });
+        }
+
+        public void measure(TestContext ctx) {
+            Eln.simulator.removeSlowProcess(watch);
+            ctx.line(String.format("breather (%s): B from %.4f bar, %.4f..%.4f bar, %s; A %.4f..%.4f bar, %s; liquid out %.6f kg, air in %.6f kg; %s", row, bP0 / 1e5,
+                bLo / 1e5, bHi / 1e5, b.getWaila(), aLo / 1e5, aHi / 1e5, a == null ? "-" : a.getWaila(), liquidOut, airIn, ctx.voxelByEntity(bStub).getWaila(false)));
+            ctx.check("breather: it fits on top of the stub", errB == null && errA == null, errB + " / " + errA);
+            switch (row) {
+                case FILLS -> {
+                    mods.eln.node.voxel.SafetyValvePart sv = null;
+                    for (var part : ctx.voxelByEntity(bStub).parts) if (part instanceof mods.eln.node.voxel.SafetyValvePart s) sv = s;
+                    double airOut = sv == null || sv.ventedKg == null ? 0 : sv.ventedKg[mods.eln.sim.fluid.SpeciesRegistry.AIR];
+                    ctx.check("breather: it keeps count of what it let out by species (B's displaced air, for a room's air)", airOut > 0.1 * aWater0 / Water.RHO_L * 1.2,
+                        String.format("%.6f kg of air", airOut));
+                    ctx.check("breather: B fills from A by gravity (over a third of A's water)", b.vessel.mLiquid() > aWater0 / 3,
+                        String.format("%.3f of %.3f kg", b.vessel.mLiquid(), aWater0));
+                    // (within 2.5 kPa: B's high flange takes the water at its centre since 2026-11-24, and the fill runs faster)
+                    ctx.check("breather: B neither builds pressure nor pulls a vacuum (within 2.5 kPa of the air's)",
+                        bLo > Water.P_ATM - 2500 && bHi < Water.P_ATM + 2500, String.format("%.0f..%.0f Pa", bLo, bHi));
+                    ctx.check("breather: nor does A as it drains", aLo > Water.P_ATM - 2500 && aHi < Water.P_ATM + 2500, String.format("%.0f..%.0f Pa", aLo, aHi));
+                }
+                case KEEPS_LIQUID -> {
+                    ctx.check("breather: B fills to the brim", b.vessel.liquidVolume() > 0.97 * b.vessel.volume,
+                        String.format("%.1f %%", 100 * b.vessel.liquidVolume() / b.vessel.volume));
+                    // (all the water: the tanks' and the pipe runs', each run once)
+                    double water = a.vessel.mWater + b.vessel.mWater;
+                    var runs = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<FluidNode, Boolean>());
+                    for (BlockPos q : List.of(aStub, bStub, ctx.at(3, 2, 1), ctx.at(3, 1, 1)))
+                        for (var part : ctx.voxelByEntity(q).parts)
+                            if (part instanceof mods.eln.node.voxel.PipePart pipe && pipe.fluid != null) runs.add(mods.eln.fluid.FluidWorld.nodeFor(pipe.fluid));
+                    for (FluidNode r : runs) water += r.mWater;
+                    ctx.check("breather: no water leaves through it (all of it still in the tanks and pipes, to 0.1 g)", water > aWater0 + bWater0 - 1e-4,
+                        String.format("%.5f -> %.5f kg", aWater0 + bWater0, water));
+                    Object shown = ctx.voxelByEntity(bStub).getWaila(false).get("Breather valve");
+                    ctx.check("breather: the water reached it, and Jade says so", "Shut by liquid".equals(shown), "" + shown);
+                }
+                case PULLS_AIR -> {
+                    ctx.check("breather: air comes in to the vessel at 0.5 bar (over 0.1 g)", bP0 < 0.6e5 && airIn > 1e-4, String.format("from %.0f Pa, %.6f kg", bP0, airIn));
+                    ctx.check("breather: the vessel comes up to the air's pressure (within 1 kPa)", b.vessel.P() > Water.P_ATM - 1000,
+                        String.format("%.0f Pa", b.vessel.P()));
+                    ctx.check("breather: no water leaves", liquidOut < 1e-4, String.format("%.6f kg", liquidOut));
+                    mods.eln.node.voxel.SafetyValvePart sv = null;
+                    for (var part : ctx.voxelByEntity(bStub).parts) if (part instanceof mods.eln.node.voxel.SafetyValvePart s) sv = s;
+                    ctx.check("breather: it keeps count of the air it took in (for a room's air)", sv != null && Math.abs(sv.airInKg - airIn) <= 0.05 * airIn + 1e-7,
+                        sv == null ? "no valve" : String.format("%.6f kg counted, %.6f kg seen", sv.airInKg, airIn));
+                }
+                case SAVES -> saves(ctx);
+            }
+        }
+
+        void saves(TestContext ctx) {
+            var vn = ctx.voxelByEntity(bStub);
+            mods.eln.node.voxel.SafetyValvePart sv = null;
+            for (var part : vn.parts) if (part instanceof mods.eln.node.voxel.SafetyValvePart s) sv = s;
+            ctx.check("breather: placed as a breather", sv != null && sv.breather && sv.mode == mods.eln.node.voxel.SafetyValvePart.BREATHER, "" + sv);
+            if (sv == null) return;
+            int[] box = sv.boxes().get(0);
+            String name = vn.nameAt((box[0] + box[3]) / 32.0, (box[1] + box[4]) / 32.0, (box[2] + box[5]) / 32.0);
+            ctx.check("breather: Jade names it", "Pipe Breather Valve".equals(name), name);
+            ctx.check("breather: it has two vents (gas out, air in)", vn.fluidVents().size() == 2, "" + vn.fluidVents().size());
+            var t = new net.minecraft.nbt.CompoundTag();
+            sv.write(t);
+            t.putString("kind", mods.eln.node.voxel.SafetyValvePart.KIND);
+            var back = (mods.eln.node.voxel.SafetyValvePart) mods.eln.node.voxel.VoxelPart.load(t);
+            ctx.check("breather: its part saves and loads as a breather", back.breather && back.x == sv.x && back.outlet == sv.outlet, t.toString());
+            // safety and purge valves write what they wrote before the breather, and old tags load as what they were
+            var safety = new mods.eln.node.voxel.SafetyValvePart(8, 8, 8, 1, 2, 10e5);
+            var purge = new mods.eln.node.voxel.SafetyValvePart(8, 8, 8, 1, 2, 1.1e5, true);
+            var ts = new net.minecraft.nbt.CompoundTag();
+            var tp = new net.minecraft.nbt.CompoundTag();
+            safety.write(ts);
+            purge.write(tp);
+            ctx.check("breather: a safety valve's keys are as before", ts.keySet().equals(java.util.Set.of("at", "g", "set")), ts.toString());
+            ctx.check("breather: a purge valve's keys are as before", tp.keySet().equals(java.util.Set.of("at", "g", "set", "purge")), tp.toString());
+            var oldSafety = new net.minecraft.nbt.CompoundTag();
+            oldSafety.putString("kind", mods.eln.node.voxel.SafetyValvePart.KIND);
+            oldSafety.putIntArray("at", new int[]{8, 8, 8, 1, 2});
+            oldSafety.putBoolean("g", true);
+            oldSafety.putDouble("set", 12e5);
+            var oldPurge = oldSafety.copy();
+            oldPurge.putBoolean("purge", true);
+            var ls = (mods.eln.node.voxel.SafetyValvePart) mods.eln.node.voxel.VoxelPart.load(oldSafety);
+            var lp = (mods.eln.node.voxel.SafetyValvePart) mods.eln.node.voxel.VoxelPart.load(oldPurge);
+            ctx.check("breather: an old safety valve loads as one", ls.mode == mods.eln.node.voxel.SafetyValvePart.SAFETY && ls.setPa == 12e5, ls.mode + " " + ls.setPa);
+            ctx.check("breather: an old purge valve loads as one", lp.purge && !lp.breather, lp.mode + "");
         }
     }
 
@@ -297,12 +556,45 @@ public final class PlumbingCases {
         boolean sawCavitate, sawSteamBound, sawSteamCavitating;
         String steamJade = "", airJade = "";
 
+        /**
+         * background: its network starts counted as heavy, so its first steps run on CoreStep's background worker
+         * (as a plant too heavy for the server thread does), each held 3 ticks so that ticks pass while one runs, until,
+         * each taking no time of its own, they bring it back. Water put into a tank while a step runs is kept; the pump
+         * has moved water by the time it is back on the server thread; no water is made or lost.
+         */
+        final boolean background;
+        double booksMoved, booksOff, booksLast, flowKg, flowPeak;
+        long buildsSeen;
+        boolean sawBackground, sawWaiting, injected, back;
+        String note;
+        int maxSpan;
+        double water0, movedInBackground;
+        static final double INJECTED = 0.01;
+
         PumpMovesWater(boolean boiling) {
+            this(boiling, false);
+        }
+
+        PumpMovesWater(boolean boiling, boolean background) {
             this.boiling = boiling;
+            this.background = background;
         }
 
         public String id() {
-            return boiling ? "inline_pump_cavitates_on_boiling_water" : "inline_pump_moves_water";
+            return background ? "inline_pump_moves_water_in_the_background" : boiling ? "inline_pump_cavitates_on_boiling_water" : "inline_pump_moves_water";
+        }
+
+        @Override
+        public boolean checkStalls() {
+            // (its steps are held 3 ticks: it falls behind by design)
+            return !background;
+        }
+
+        double water() {
+            double m = 0;
+            var net = mods.eln.fluid.FluidWorld.networkOf(a.vessel);
+            if (net != null) for (var n : net.nodes) if (!n.fixed) m += n.mWater;
+            return m;
         }
 
         public int ticks() {
@@ -321,16 +613,51 @@ public final class PlumbingCases {
             BlockPos cable = pp.west(), src = cable.west();
             ctx.placeSix(Ids.six("Medium Voltage Cable"), cable);
             var s = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) ctx.placeSix(SOURCE, src);
-            s.networkUnserialize(ctx.stream(out -> {
-                out.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                out.writeFloat((float) mods.eln.Eln.MVU);
-            }));
+            ctx.setVolts(s, mods.eln.Eln.MVU);
             double T = boiling ? Water.TB : Water.T_AMBIENT;
             fill(a.vessel, 0.8 * a.vessel.volume * Water.RHO_L, Water.P_ATM, T);
             bWater0 = b.vessel.mLiquid();
+            if (background) {
+                a.vessel.slowSteps = 2 * mods.eln.sim.fluid.CoreStep.HEAVY_AFTER;
+                water0 = water();
+                mods.eln.sim.fluid.CoreStep.testHoldTicks = 3;
+            }
             // (a line in service: its iron at the water's temperature; cold, it subcooled the boiling water)
             for (BlockPos q : new BlockPos[]{pa.south(), pp.south()}) PipeCases.warm(ctx, q, T);
             Eln.simulator.addSlowProcess(watch = dt -> {
+                if (background) {
+                    var net = mods.eln.fluid.FluidWorld.networkOf(a.vessel);
+                    boolean bg = net != null && net.background();
+                    sawBackground |= bg;
+                    if (net != null) {   // (every tick, whatever thread its steps run on; a rebuilt network starts its books anew)
+                        double[] books = net.books();
+                        if (books[0] < booksLast) flowKg = books[1];   // (rebuilt)
+                        else for (var e : net.edges) flowKg += Math.abs(e.flow) * dt;
+                        booksLast = books[0];
+                        booksMoved = Math.max(booksMoved, books[0]);
+                        booksOff = Math.max(booksOff, Math.abs(flowKg - books[1]));
+                        flowPeak = Math.max(flowPeak, flowKg);
+                        buildsSeen = net.builds;
+                    }
+                    if (bg) {
+                        maxSpan = Math.max(maxSpan, net.span());
+                        String n = mods.eln.fluid.FluidWorld.heavyAt(a.node.coordonate.pos().asLong());
+                        if (n != null) note = n;
+                    }
+                    if (net != null && net.pending()) {
+                        sawWaiting = true;
+                        if (!injected) {   // (a device's write while a background step runs: a cup of cold water into B)
+                            injected = true;
+                            b.vessel.mWater += INJECTED;
+                            b.vessel.energy += INJECTED * Water.hLiquid(Water.T_AMBIENT);
+                            b.vessel.update();
+                        }
+                    }
+                    if (sawBackground && !back && a.vessel.slowSteps < mods.eln.sim.fluid.CoreStep.HEAVY_AFTER) {
+                        back = true;
+                        movedInBackground = b.vessel.mLiquid() - bWater0 - INJECTED;
+                    }
+                }
                 sawCavitate |= boiling ? p.cavitating : p.cavitating && !p.gasBound;
                 maxW = Math.max(maxW, p.wantW);
                 // (Jade: gas at its inlet reads as what it moves, steam or air; Baughn 2026-11-15: the pump works on gas as on water)
@@ -347,6 +674,23 @@ public final class PlumbingCases {
             Eln.simulator.removeSlowProcess(watch);
             double moved = b.vessel.mLiquid() - bWater0;
             ctx.line("inline pump" + (boiling ? " (boiling feed)" : "") + ": " + p.getWaila() + "; A " + a.getWaila() + "; B " + b.getWaila());
+            if (background) {
+                var net = mods.eln.fluid.FluidWorld.networkOf(a.vessel);
+                double w = water();
+                mods.eln.sim.fluid.CoreStep.testHoldTicks = 0;
+                moved -= INJECTED;
+                ctx.check("background steps: its first steps ran in the background, ticks passing while one ran", sawBackground && sawWaiting, sawBackground + " " + sawWaiting);
+                ctx.check("background steps: light again, it is back on the server thread", back && net != null && !net.background(), "slow steps " + a.vessel.slowSteps);
+                // (each step as long as the ticks since the last began: fluid time keeps up with the devices')
+                ctx.check("background steps: held 3 ticks, its steps stand for 3 or more", maxSpan >= 3, "span " + maxSpan);
+                // (what its steps moved is handed out over their ticks: all of it, once)
+                ctx.check("background steps: the flows its edges show, tick by tick, add up to what the core handed out", booksMoved > 1e-3 && flowPeak > 0.98 * booksMoved && flowPeak <= booksMoved * (1 + 1e-6) && booksOff <= 1e-6 * booksMoved,
+                    String.format("moved %.6f kg, flows sum to %.9f kg, at most %.3g kg from the core's", booksMoved, flowPeak, booksOff) + ", core built " + buildsSeen + " times");
+                ctx.check("background steps: Jade says it is a heavy network", note != null && note.contains("Heavy fluid network"), "" + note);
+                ctx.check("background steps: the pump moved water while in the background", movedInBackground > 0.001, String.format("%.4f kg", movedInBackground));
+                ctx.check("background steps: water put in while a step ran is kept, none made or lost", injected && Math.abs(w - water0 - INJECTED) < 1e-9 * water0,
+                    String.format("%.9f + %.3f -> %.9f kg", water0, INJECTED, w));
+            }
             if (!boiling) {
                 // (both tanks are sealed: A's air thins and B's compresses until the pump's 0.5 bar head and the fall
                 // balance them; with gas able to come back through a pipe's opening, ~0.04 kg reaches B, the rest fills
@@ -393,7 +737,7 @@ public final class PlumbingCases {
             a = tank(ctx, ALLOY_TANK, pa, Direction.XN);   // (its back, +x, faces the valve)
             b = tank(ctx, ALLOY_TANK, pb, Direction.XP);   // (its back, -x, faces the valve)
             PipeCases.lay(ctx, pv, 1, 0, 12, 8, 8, 12, 8, 16, 12, 8);   // (between the tanks' high, vapour ports)
-            VoxelNode n = PipeCases.node(ctx, pv);
+            VoxelNode n = ctx.voxelByEntity(pv);
             String err = n == null ? "no pipe node" : n.addValve(8, 12, 8, ValvePart.PRESSURE);
             if (err != null) throw new IllegalStateException("valve: " + err);
             for (var part : n.parts) if (part instanceof ValvePart vp) v = vp;
@@ -408,7 +752,7 @@ public final class PlumbingCases {
 
         public void measure(TestContext ctx) {
             double pa = a.vessel.P() / 1e5, pb = b.vessel.P() / 1e5;
-            ctx.line("pressure valve: A " + a.getWaila() + "; B " + b.getWaila() + "; pipe " + PipeCases.node(ctx, ctx.at(3, 1, 1)).getWaila(true));
+            ctx.line("pressure valve: A " + a.getWaila() + "; B " + b.getWaila() + "; pipe " + ctx.voxelByEntity(ctx.at(3, 1, 1)).getWaila(true));
             ctx.line(String.format("pressure valve (%s): A %.2f bar, B %.2f bar, %.0f%% open", pmode == ValvePart.REDUCING ? "reducing 3" : "relief 9", pa, pb, v.lift * 100));
             if (pmode == ValvePart.REDUCING) {
                 ctx.check("reducing valve: B held near 3 bar (2.5-3.6)", pb > 2.5 && pb < 3.6, String.format("%.2f bar", pb));
@@ -636,6 +980,222 @@ public final class PlumbingCases {
         }
     }
 
+    /**
+     * Incognito 2026-11-25: a 2 x 1 x 2 iron tank box pumped full (its liquid 1.000047 of its volume at nominal density,
+     * compressed against the walls at about 6 bar) saved its blocks' shares with negative air and NaN energy; reloaded, the
+     * box fell 1 K per update to -153 C. Filled as that box was and reloaded like a world load: its shares are finite and
+     * not negative, and the box comes back with its water, air, energy and temperature.
+     */
+    static final class TankBoxOverFullReloads extends Big {
+        final java.util.List<BlockPos> at = new java.util.ArrayList<>();
+        String bad = "", line = "";
+
+        public String id() {
+            return "tank_box_over_full_reloads";
+        }
+
+        public int ticks() {
+            return 4;
+        }
+
+        public void build(TestContext ctx) {
+            for (int x = 2; x <= 3; x++)
+                for (int z = 2; z <= 3; z++) {
+                    ctx.placeTransparent(IRON_TANK, ctx.at(x, 1, z));
+                    at.add(ctx.at(x, 1, z));
+                }
+            var g = ShaftArtCases.TankBoxReloads.at(ctx, at.get(0)).group;
+            if (g == null || g.members.size() != 4) {
+                bad = "not a box when built";
+                return;
+            }
+            FluidNode n = g.node;
+            n.mWater = 1.000047 * n.volume * Water.RHO_L;
+            n.extra = null;
+            n.mAir = 1.63e-3 * n.volume;   // (the live box's 5.5 mg)
+            n.energy = n.energyAt(291.47);
+            n.update();
+        }
+
+        public void measure(TestContext ctx) {
+            if (bad.isEmpty()) check(ctx);
+            ctx.line("tank box over full: " + line);
+            ctx.check("tank box over full: its shares are sane and it reloads unchanged", bad.isEmpty(), bad);
+        }
+
+        void check(TestContext ctx) {
+            var g = ShaftArtCases.TankBoxReloads.at(ctx, at.get(0)).group;
+            if (g == null) {
+                bad = "not a box before the reload";
+                return;
+            }
+            FluidNode n = g.node;
+            n.update();
+            double w0 = n.mWater, a0 = n.mAir, u0 = n.energy, t0 = n.T();
+            line = String.format("before: %.6f kg water, %.3g kg air, %.1f J, %.2f C, %.2f bar, liquid %.6f of its volume", w0, a0, u0, t0 - Water.T0, n.P() / 1e5,
+                n.liquidVolume() / n.volume);
+            if (n.liquidVolume() <= n.volume) bad += "not over full; ";
+            try {
+                var wb = mods.eln.oil.TankGroup.class.getDeclaredMethod("writeBack");
+                wb.setAccessible(true);
+                wb.invoke(g);
+            } catch (ReflectiveOperationException e) {
+                bad += e + "; ";
+                return;
+            }
+            double su = 0, sw = 0, sa = 0;
+            for (TankElement m : g.members) {
+                if (!Double.isFinite(m.own.energy) || m.own.mWater < 0 || m.own.mAir < 0)
+                    bad += String.format("share %.6f kg water, %.3g kg air, %s J; ", m.own.mWater, m.own.mAir, m.own.energy);
+                su += m.own.energy;
+                sw += m.own.mWater;
+                sa += m.own.mAir;
+            }
+            if (Math.abs(su - u0) > 1e-6 * Math.abs(u0) || Math.abs(sw - w0) > 1e-9 * w0 || Math.abs(sa - a0) > 1e-9 * a0 + 1e-15)
+                bad += String.format("shares sum to %.6f kg, %.3g kg, %.1f J; ", sw, sa, su);
+            try {
+                ShaftArtCases.reloadAll(ctx, at);
+            } catch (ReflectiveOperationException e) {
+                bad += e + "; ";
+                return;
+            }
+            var g2 = ShaftArtCases.TankBoxReloads.at(ctx, at.get(0)).group;
+            if (g2 == null) {
+                bad += "not a box after the reload; ";
+                return;
+            }
+            FluidNode r = g2.node;
+            r.update();
+            line += String.format("; after: %.6f kg water, %.3g kg air, %.1f J, %.2f C, %.2f bar", r.mWater, r.mAir, r.energy, r.T() - Water.T0, r.P() / 1e5);
+            // (the saves are floats: 1e-6 relative)
+            if (!Double.isFinite(r.energy) || Math.abs(r.energy - u0) > 1e-5 * Math.abs(u0) || Math.abs(r.mWater - w0) > 1e-6 * w0 || r.mAir < 0
+                || Math.abs(r.T() - t0) > 0.05)
+                bad += "the reloaded box differs; ";
+        }
+    }
+
+    /**
+     * A tank saved with NaN energy and negative air (as the over-full boxes of 2026-11-25 were) loads healed: its water
+     * kept, no air below 0, its energy finite, at the local ambient temperature (it fell 1 K per update to -153 C).
+     */
+    static final class TankHealsOnLoad implements TestCase {
+        String bad = "", line = "";
+
+        public String id() {
+            return "tank_heals_corrupt_save_on_load";
+        }
+
+        public int width() {
+            return 3;
+        }
+
+        public int ticks() {
+            return 10;
+        }
+
+        public void build(TestContext ctx) {
+            BlockPos p = ctx.at(1, 1, 1);
+            TankElement t = tank(ctx, IRON_TANK, p, Direction.XN);
+            fill(t.own, 0.5 * t.own.volume * Water.RHO_L, Water.P_ATM, 330);
+            double w = t.own.mWater;
+            ctx.after(2, () -> reload(ctx, p, w));
+        }
+
+        void reload(TestContext ctx, BlockPos p, double w) {
+            try {
+                var r = mods.eln.gametest.Reload.node(ctx.level(), p, tag -> {
+                    var el = OilCases.FuelBySpecies.holding(tag, "vesselW");
+                    el.putDouble("vesselU", Double.NaN);
+                    el.putDouble("vesselA", -0.16);
+                    return tag;
+                });
+                var f = (TankElement) ((mods.eln.node.transparent.TransparentNode) r.fresh).element;
+                double amb = mods.eln.sim.Ambient.kelvin(f.node.coordonate);
+                line = String.format("loaded: %.4f kg water (saved %.4f), %.3g kg air, %.1f J, %.2f C (ambient %.2f C)", f.own.mWater, w, f.own.mAir, f.own.energy,
+                    f.own.T() - Water.T0, amb - Water.T0);
+                if (!Double.isFinite(f.own.energy) || f.own.mAir < 0 || Math.abs(f.own.mWater - w) > 1e-6 * w || Math.abs(f.own.T() - amb) > 1) bad = line;
+            } catch (ReflectiveOperationException e) {
+                bad = e.toString();
+            }
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.line("tank heals on load: " + line);
+            ctx.check("tank heals on load: NaN energy and negative air load as its water at the ambient", bad.isEmpty(), bad);
+        }
+    }
+
+    /**
+     * A pipe piece saved with heavy oil and water heals on load with its oil counted (Gemini's review, 2026-11-25: the
+     * pipe healed its water and air, then took its other species on, so their energy was missing): saved with a NaN
+     * energy, it loads with its oil, at 20 C; saved with a sound energy but a negative mass of oil, it loads with none,
+     * at 20 C.
+     */
+    static final class PipeHealsOnLoad implements TestCase {
+        final boolean negativeOil;
+        String bad = "", line = "";
+
+        PipeHealsOnLoad(boolean negativeOil) {
+            this.negativeOil = negativeOil;
+        }
+
+        public String id() {
+            return negativeOil ? "pipe_heals_negative_oil_on_load" : "pipe_heals_nan_energy_with_oil_on_load";
+        }
+
+        public int width() {
+            return 3;
+        }
+
+        public int ticks() {
+            return 10;
+        }
+
+        static net.minecraft.nbt.CompoundTag holding(net.minecraft.nbt.CompoundTag t, String key) {
+            return OilCases.FuelBySpecies.holding(t, key);
+        }
+
+        public void build(TestContext ctx) {
+            BlockPos p = ctx.at(1, 1, 1);
+            PipeCases.lay(ctx, p, 0, 0, 8, 8, 16, 8, 8);
+            ctx.after(2, () -> reload(ctx, p));
+        }
+
+        void reload(TestContext ctx, BlockPos p) {
+            try {
+                var r = mods.eln.gametest.Reload.node(ctx.level(), p, tag -> {
+                    var pt = holding(tag, "pts");
+                    pt.putDouble("w", 0.01);
+                    pt.putDouble("a", 1e-6);
+                    pt.putDouble("u", negativeOil ? 800 : Double.NaN);
+                    pt.putInt("fv", mods.eln.fluid.FluidSaves.FORMAT);
+                    var sp = new net.minecraft.nbt.CompoundTag();
+                    sp.putDouble("eln:heavy_oil", negativeOil ? -0.002 : 0.005);
+                    pt.put("s", sp);
+                    return tag;
+                });
+                var vn = (VoxelNode) r.fresh;
+                int oil = mods.eln.sim.fluid.SpeciesRegistry.get().id("eln:heavy_oil");
+                for (var part : vn.parts)
+                    if (part instanceof mods.eln.node.voxel.PipePart pp && pp.fluid != null) {
+                        FluidNode f = pp.fluid;
+                        line = String.format("loaded: %.4f kg water, %.4f kg heavy oil, %.3g kg air, %.2f J, %.2f C", f.mWater, f.mass(oil), f.mAir, f.energy, f.T() - Water.T0);
+                        double wantOil = negativeOil ? 0 : 0.005;
+                        if (!Double.isFinite(f.energy) || Math.abs(f.mass(oil) - wantOil) > 1e-9 || Math.abs(f.mWater - 0.01) > 1e-9 || Math.abs(f.T() - Water.T_AMBIENT) > 0.5)
+                            bad = line;
+                    }
+                if (line.isEmpty()) bad = "no pipe piece loaded";
+            } catch (ReflectiveOperationException e) {
+                bad = e.toString();
+            }
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.line("pipe heals on load: " + line);
+            ctx.check(negativeOil ? "pipe heals on load: negative oil goes, at 20 C" : "pipe heals on load: NaN energy, its oil kept and counted, at 20 C", bad.isEmpty(), bad);
+        }
+    }
+
     /** Breaking a block of a 2 x 2 x 3 box: what's left isn't a box, so 11 one-block tanks, each with its share by layer. */
     static final class TankBoxSplits extends Big {
         java.util.List<TankElement> ts;
@@ -845,7 +1405,7 @@ public final class PlumbingCases {
             BlockPos pv = ctx.at(3, 1, 1), pb = ctx.at(4, 1, 1);
             b = tank(ctx, IRON_TANK, pb, Direction.XP);   // (its back, -x, faces the pipe)
             PipeCases.lay(ctx, pv, 1, 0, 4, 8, 16, 4, 8);   // (between their low, liquid ports)
-            VoxelNode n = PipeCases.node(ctx, pv);
+            VoxelNode n = ctx.voxelByEntity(pv);
             for (var part : n.parts) if (part instanceof mods.eln.node.voxel.PipePart pp) pipe = pp;
             fill(a.vessel, 0.6 * a.vessel.volume * Water.RHO_L, 10e5, Water.tsat(10e5));
             mass0 = a.vessel.mWater + b.vessel.mWater + pipe.fluid.mWater;
@@ -913,7 +1473,7 @@ public final class PlumbingCases {
         public void build(TestContext ctx) {
             BlockPos pv = ctx.at(4, 1, 4);
             PipeCases.lay(ctx, pv, 1, 0, 8, 8, 8, 8, 8, 16, 8, 8);
-            VoxelNode n = PipeCases.node(ctx, pv);
+            VoxelNode n = ctx.voxelByEntity(pv);
             n.addValve(8, 8, 8, ValvePart.THROTTLE);
             for (var part : n.parts) if (part instanceof ValvePart v) v.setting = 0.02;
             src = reservoir(pv.getY(), 6e5);

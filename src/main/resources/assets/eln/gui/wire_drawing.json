@@ -100,7 +100,7 @@
     },
     {
      "text": "ins",
-     "sample": "11 kV"
+     "sample": "11kV"
     },
     {
      "button": "insup",
@@ -170,7 +170,7 @@
   },
   {
    "text": "buffer",
-   "sample": "Held: 0.99 copper, 0.99 rubber"
+   "sample": "Has 64.9 copper, 64.9 rubber"
   },
   {
    "row": [
@@ -186,7 +186,7 @@
      "button": "run",
      "sample": [
       "Start",
-      "Stop"
+      "Busy"
      ],
      "width": 44
     }

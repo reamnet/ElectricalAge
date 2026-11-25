@@ -23,14 +23,55 @@ public class ComputerRender extends TransparentNodeElementRender {
     public final Scene scene = new Scene();
     /** The screen's own state that outlives one opening of it (each line's half-typed text and history). */
     public final java.util.Map<String, Object> screenState = new java.util.HashMap<>();
+    /** The open text editors' states (ComputerScreen.EditorState), kept apart from screenState's half-typed lines: in
+     *  one map the screen's tick took an editor's state for a line's and crashed the client (lashtear, 2026-11-20). */
+    public final java.util.Map<String, Object> editorStates = new java.util.HashMap<>();
     /** Replies to editors' saves, for the screen to take. */
     public final java.util.ArrayDeque<java.util.List<Object>> replies = new java.util.ArrayDeque<>();
+    /**
+     * Whether this player operates the computer (the server says: the first with the screen open), else whose it is
+     * now; and this player's last submission or save number, counting on from where the computer has got to.
+     */
+    public volatile boolean operator = true;
+    /**
+     * A watcher's picture of the screen (the server sends watchers composed cells, not the scene), and whether the
+     * last thing the server sent was cells (draw them) or the scene (this player operates it).
+     */
+    public volatile mods.eln.robotics.computer.screen.SceneCells cells;
+    public volatile boolean usingCells;
+    public long cellsVersion;
+    /** The last window a program placed on purpose, and how many places so far (a drag of it in progress stops). */
+    public volatile int placedWin = -1, places;
+    final java.util.Map<Integer, mods.eln.robotics.computer.screen.Scene.Pixmap> cellPixmaps = new java.util.LinkedHashMap<>();
+    public volatile String operatorName = "";
+    public long seq;
     /** Bumped when the scene changes, so the screen can see it. */
     public int sceneVersion;
 
     public ComputerRender(TransparentNodeEntity entity, TransparentNodeDescriptor d) {
         super(entity, d);
         desc = (ComputerDescriptor) d;
+        addLoopedSound(new mods.eln.sound.LoopedSound("eln:floppy_spin", coordonate()) {
+            @Override
+            public float getVolume() {
+                return SPIN_VOLUME * Math.max(0, Math.min(1, spin.get()));
+            }
+
+            @Override
+            public float getPitch() {   // spins up and down
+                return 0.6f + 0.4f * Math.max(0, Math.min(1, spin.get()));
+            }
+        });
+    }
+
+    /** A drive's motor (ComputerElement.spinning), smoothed: the whir rises and falls in about a third of a second. */
+    final mods.eln.misc.RcInterpolator spin = new mods.eln.misc.RcInterpolator(0.3f);
+    static final float SPIN_VOLUME = 0.18f;
+
+    @Override
+    public void refresh(float deltaT) {
+        super.refresh(deltaT);
+        spin.step(deltaT);
     }
 
     ScreenTexture picture;
@@ -50,11 +91,16 @@ public class ComputerRender extends TransparentNodeElementRender {
         if (picture == null) return;
         // (the picture keeps the screen's shape, 6 x 10 px cells, with black bars on the glass: Baughn)
         float aspect = scene.w * ComputerScreen.CELL / (float) (scene.h * ComputerScreen.LINE);
-        desc.drawPicture(picture.update(sceneVersion, () -> mods.eln.robotics.computer.screen.SceneCells.of(scene)), aspect);
+        var watched = usingCells ? cells : null;
+        if (watched != null) desc.drawPicture(picture.update(-1 - cellsVersion, () -> watched), aspect);
+        else desc.drawPicture(picture.update(sceneVersion, () -> mods.eln.robotics.computer.screen.SceneCells.of(scene)), aspect);
     }
 
     /** Each pixmap's texture on this client, made when first drawn and again when it changes (screen and monitor alike). */
-    final java.util.Map<Integer, Object[]> pixmapTextures = new java.util.HashMap<>();
+    // (least recently drawn first; past PIXMAP_TEXTURES the oldest goes. It was capped at 64 against 256 pictures a
+    // screen, and released all of them each time: past 64 drawn, every frame uploaded them all again)
+    final java.util.LinkedHashMap<Integer, Object[]> pixmapTextures = new java.util.LinkedHashMap<>(64, 0.75f, true);
+    static final int PIXMAP_TEXTURES = 320;
     static int pixmapNext;
 
     /** The texture of a pixmap (nearest filtering: dots stay square), or null where there is no GPU. */
@@ -63,7 +109,15 @@ public class ComputerRender extends TransparentNodeElementRender {
         Object[] have = pixmapTextures.get(key);
         if (have != null && have[1] == p) return (net.minecraft.resources.Identifier) have[0];
         try {
-            if (pixmapTextures.size() > 64) releasePixmaps();
+            if (pixmapTextures.size() >= PIXMAP_TEXTURES) {
+                var eldest = pixmapTextures.entrySet().iterator().next();
+                net.minecraft.client.Minecraft.getInstance().getTextureManager().release((net.minecraft.resources.Identifier) eldest.getValue()[0]);
+                pixmapTextures.remove(eldest.getKey());
+            }
+            if (have != null) {   // (the same key, another picture: its old texture goes)
+                net.minecraft.client.Minecraft.getInstance().getTextureManager().release((net.minecraft.resources.Identifier) have[0]);
+                pixmapTextures.remove(key);
+            }
             var id = net.minecraft.resources.Identifier.fromNamespaceAndPath("eln", "dynamic/computer_pixmap_" + pixmapNext++);
             var tex = new net.minecraft.client.renderer.texture.DynamicTexture(() -> "eln computer pixmap", p.w(), p.h(), true);
             var img = tex.getPixels();
@@ -99,6 +153,7 @@ public class ComputerRender extends TransparentNodeElementRender {
             address = stream.readByte() & 0xFF;
             onBus = stream.readBoolean();
             switchedOn = stream.readBoolean();
+            spin.setTarget(stream.readByte() != 0 ? 1 : 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,6 +172,16 @@ public class ComputerRender extends TransparentNodeElementRender {
 
     /** Send a screen protocol event (one message) to the computer. */
     public void screenEvent(Object... parts) {
+        if (!operator) return;   // (a watcher: the server would refuse it anyway)
+        // (the window's generation last: an event for one closed and opened again since never reaches the new one)
+        if (parts.length > 1 && parts[1] instanceof Long w && w != 0) {
+            var win = scene.windows.get((int) (long) w);
+            if (win != null && win.gen > 0) {
+                parts = java.util.Arrays.copyOf(parts, parts.length + 2);
+                parts[parts.length - 2] = Form.kw("gen");
+                parts[parts.length - 1] = (long) win.gen;
+            }
+        }
         net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(
             new ScreenEventPayload(tileEntity.getBlockPos(), Form.print(parts)));
     }
@@ -126,15 +191,42 @@ public class ComputerRender extends TransparentNodeElementRender {
     public void serverPacketUnserialize(DataInputStream stream) {
         try {
             byte kind = stream.readByte();
+            if (kind == ComputerElement.CELLS_ID) {
+                int n = stream.readInt();
+                if (n < 0 || n > 4 << 20) return;
+                byte[] b = new byte[n];
+                stream.readFully(b);
+                var c = mods.eln.robotics.computer.screen.CellsCodec.decode(b, cellPixmaps);
+                if (c == null) return;
+                cells = c;
+                usingCells = true;
+                scene.w = c.w;   // (the screen's size, for a watcher's window; the scene itself is the operator's)
+                scene.h = c.h;
+                cellsVersion++;
+                return;
+            }
             if (kind != ComputerElement.SCREEN_ID) return;
             int n = stream.readInt();
-            if (n < 0 || n > 1 << 20) return;
+            if (n < 0 || n > 4 << 20) return;
             byte[] b = new byte[n];
             stream.readFully(b);
             for (String line : new String(b, StandardCharsets.UTF_8).split("\n")) {
                 var m = Form.parse(line);
-                if (m == null || !scene.apply(m)) continue;
+                if (m != null && Form.verb(m).equals("operator")) {   // (this player's role, not part of the scene)
+                    operator = Boolean.TRUE.equals(m.size() > 1 ? m.get(1) : null);
+                    if (operator) usingCells = false;   // (the scene follows; a watcher keeps drawing its cells)
+                    if (operator) seq = Math.max(seq, Form.num(m, 2, 1) - 1);
+                    else operatorName = Form.str(m, 2, "");
+                    continue;
+                }
+                if (m == null) continue;
+                usingCells = false;   // (scene messages: this player operates it)
+                if (!scene.apply(m)) continue;
                 String v = Form.verb(m);
+                if (v.equals("place")) {
+                    placedWin = (int) Form.num(m, 1, -1);
+                    places++;
+                }
                 if (v.equals("saved") || v.equals("conflict")) {   // (for the screen's editors)
                     replies.add(m);
                     while (replies.size() > 16) replies.poll();

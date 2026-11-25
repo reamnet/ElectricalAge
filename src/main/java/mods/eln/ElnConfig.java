@@ -49,10 +49,12 @@ public final class ElnConfig {
             .defineInRange("autominerRange", 24, 1, 64);
         b.pop();
         b.push("fire");
-        COAL_LAG = b.comment("Seconds a coal fire (the stone heat furnace) takes to follow its setting: a first-order lag (Baughn: coal",
-                "plants change burn rate slowly).").defineInRange("coalLagSeconds", 180.0, 0.0, 3600.0);
+        COAL_LAG = b.comment("Seconds a coal fire (the stone heat furnace) takes to spread through its bed towards its air setting",
+                "(Baughn: coal plants change burn rate slowly). Its air valve (5 s) and a hot bed's cooling with the air shut (300 s)",
+                "are fixed: sim/Fire.java.").defineInRange("coalLagSeconds", 180.0, 0.0, 3600.0);
         // (no oil lag: the fuel heat furnace's inertia is its burner's mass, Baughn 2026-11-11)
-        MIN_FIRE = b.comment("Below this share of full power a fire asked to burn lower goes out.").defineInRange("minFire", 0.15, 0.0, 1.0);
+        MIN_FIRE = b.comment("Below this share of full power an oil flame asked to burn lower goes out, and a fire is lit at it. A coal",
+            "fire with its air shut smoulders until its bed is down to embers (sim/Fire.java EMBERS).").defineInRange("minFire", 0.15, 0.0, 1.0);
         COAL_KINDLE = b.comment("Seconds to relight a coal fire that went out.").defineInRange("coalKindleSeconds", 30.0, 0.0, 3600.0);
         OIL_LIGHT = b.comment("Seconds to light an oil burner.").defineInRange("oilLightSeconds", 3.0, 0.0, 3600.0);
         b.pop();
@@ -105,7 +107,7 @@ public final class ElnConfig {
         TERRAIN_MOTOR = b.comment("The terrain bike: its motor's draw at full speed, W (same top speed as the electric bike).")
             .defineInRange("terrainMotorWatts", 150.0, 0.0, 10000.0);
         b.pop();
-        // the electrical anvil (Baughn 2026-10-28: an 800 V pulse, maxed out, so players build capacitor banks)
+        // the electrical anvil (Baughn 2026-10-28: a pulse at its full rating (800 V then; HVU = 400 V since the tier rename), maxed out, so players build capacitor banks)
         b.push("anvil");
         ANVIL_POWER = b.comment("The electrical anvil's draw while it welds, W, at 400 V (the high-voltage cable's rating: 5000).")
             .defineInRange("power", 5000.0, 10.0, 1e6);

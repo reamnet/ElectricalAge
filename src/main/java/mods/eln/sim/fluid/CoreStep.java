@@ -15,7 +15,7 @@ import java.util.List;
  * legacy solve's is (rho k open / mu, or a valve's orifice law at the starting drop), and held for the step; the port
  * windows, the core's own thermodynamics for the nodes' reads and the legacy save values are not yet joined up.
  */
-final class CoreStep {
+public final class CoreStep {
     /** The core steps every network (the legacy solve is gone; Baughn 2026-11-10: straight to the end state). */
     static final boolean ON = true;
 
@@ -29,6 +29,8 @@ final class CoreStep {
     static int dumps;
     /** This network has been written out already (one dump each, so the 30 cover 30 networks). */
     private boolean dumped;
+    /** Its steps in a row whose result wasn't finite (each put back): from the second on, a stall (Jade's alarm). */
+    int nonFiniteRun;
 
     static {
         // (a sub-step failing at 1/256 of the tick ends the network's step at its last converged sub-step, the rest of the
@@ -38,7 +40,25 @@ final class CoreStep {
         Network.CUT_SHORT = true;
     }
 
+    /**
+     * The most wall time one network's step may take in the game (ns; 0: no limit; Network.MAX_STEP_NANOS): a stiff
+     * network once took a 60 s tick and the watchdog killed Incognito, in a loop, since its chunks are kept loaded (a
+     * steam line with water in it, 2026-11-21). Off (0) until a server starts (Eln, GAME_BUDGET); unit tests run without
+     * it, GameTests with it (ElnGameTests).
+     */
+    public static long budgetNanos = 0;
+    /**
+     * 250 ms (-Deln.fluidBudgetMs), with Network's hard stop at 1.5x inside a solve. 10 ms cut every network that
+     * sub-stepped for a moment (Baughn 1573837175051522166: more or less every plant was broken; a boiler at 0 g/s needed
+     * 10-25 ms a step), and 40 ms still cut 27 GameTests' start-up transients. It only bounds a network's first heavy
+     * steps: one that stays heavy moves to the background (HEAVY_AFTER); taking 250 ms every tick, one put Incognito at
+     * 4 TPS, and the watchdog killed it.
+     */
+    public static final long GAME_BUDGET = Long.getLong("eln.fluidBudgetMs", 250L) * 1_000_000L;
+
     final Network net = new Network();
+    /** Its last step ran out of Network.MAX_STEP_NANOS (FluidWorld says where). */
+    boolean overBudget;
     final List<FluidNode> nodes;
     final List<FluidEdge> edges;
     final Network.Node[] cn;
@@ -145,6 +165,7 @@ final class CoreStep {
         int[] ids = speciesOf(fn);
         if (c == null || c.nodes.size() != fn.nodes.size() || c.edges.size() != fn.edges.size() || !java.util.Arrays.equals(c.ids, ids)
             || !same(c.nodes, fn.nodes) || !same(c.edges, fn.edges)) {
+            if (c != null) c.abandon();   // (a background step of the core it replaces)
             c = new CoreStep(fn, ids);
             fn.core = c;
             fn.builds++;
@@ -201,8 +222,7 @@ final class CoreStep {
             if (c.fixed) continue;
             double T = c.T();
             // (a burst pipe's air venting from 50 bar cools towards 100 K as it expands: a physical state)
-            if (!Double.isFinite(c.U) || !Double.isFinite(c.P()) || !(T > 50 && T < 6000)) sane = false;
-            for (double x : c.m) if (!Double.isFinite(x)) sane = false;
+            if (!finite(c) || !Double.isFinite(c.P()) || !(T > 50 && T < 6000)) sane = false;
         }
         if (!sane) discardedSteps++;
         if (failedSteps == 1 || Long.bitCount(failedSteps) == 1)
@@ -234,6 +254,13 @@ final class CoreStep {
         } catch (java.io.IOException e) {
             System.out.println("[fluidcore] a step failed; could not write it out: " + e);
         }
+    }
+
+    /** Are a core node's energy and masses finite? */
+    static boolean finite(Network.Node c) {
+        if (!Double.isFinite(c.U)) return false;
+        for (double x : c.m) if (!Double.isFinite(x)) return false;
+        return true;
     }
 
     private void restore(double[][] m0, double[] u0) {
@@ -284,21 +311,161 @@ final class CoreStep {
     static final java.util.concurrent.atomic.AtomicLong CRAWLS = new java.util.concurrent.atomic.AtomicLong();
     private boolean stallDumped;
 
+    /**
+     * Background steps: a network whose steps took over a tenth of the budget (SYNC_SHARE; 25 ms in the game) HEAVY_AFTER
+     * times more often than not (FluidNode.slowSteps, kept on the nodes over rebuilds) is stepped on a worker thread, one
+     * step at a time, each started on a tick and applied on the first tick after it finishes, and each as long as the
+     * ticks since the one before it began (MAX_SPAN), its result handed out over those ticks (handOut): it keeps real
+     * time at a coarser step, and the server thread never waits for it. Dysnomia's plant (110 nodes, 2026-11-21) sat in a transient
+     * of ~500 steps at up to a second each: on the server thread it took Incognito to 4 TPS, and under any per-tick
+     * limit it never got through. Steps back under half that time bring it back to the server thread. (Baughn
+     * 1573800740550344846: a thread pool.)
+     */
+    public static final int HEAVY_AFTER = 10, SYNC_SHARE = 10;
+    /** A background step's own budget (ns): generous, since nothing waits for it; a runaway one still ends. */
+    static final long BACKGROUND_BUDGET = 20_000_000_000L;
+    private static final java.util.concurrent.ExecutorService WORKER = java.util.concurrent.Executors.newFixedThreadPool(2, r -> {
+        Thread t = new Thread(r, "Electrical Age fluid background");
+        t.setDaemon(true);
+        return t;
+    });
+    /** The background step under way and what finishing it needs. */
+    private java.util.concurrent.Future<?> job;
+    private Pending pending;
+    /** How long the last finished step took (ms), and whether it ran in the background (FluidWorld's log, the stats). */
+    public double lastMs;
+    public boolean background;
+    public int lastSpan = 1;
+
+    /** A started step: what finish() needs once it has run. */
+    private static final class Pending {
+        double tick, dt;
+        double[] xl, u0, h0, heat0;
+        double[][] m0;
+        long failures, sub0, cut0, crawls0;
+        volatile long took;
+        boolean background;
+        int slow, span;
+        long slept0;
+    }
+
+    /** Tests: a background step's result is taken no sooner than this many ticks after its start (a test server ticks as
+     *  fast as it can, so a step that takes real time would span no ticks to speak of). */
+    public static int testHoldTicks;
+    private int waited;
+    /**
+     * A background step covers the real time since the one before it began (Baughn 1574029078598778991: fluid time must
+     * not fall behind the devices', whose furnaces, timers and watchdogs run every tick: a network at a fraction of real
+     * time had its boilers overheat, 2026-11-21): the ticks since the last one was started, MAX_SPAN at most (the rest is
+     * dropped, and counts towards Jade's alarm). The cost of a transient doesn't grow with the step: its sub-steps do
+     * the same work (Dysnomia's blow-down: 23-31 s of solving per 30 s simulated, at 0.05 s steps and at 0.8 s).
+     */
+    static final int MAX_SPAN = 20;
+    private int ticksSince;
+    /**
+     * What the results so far still owe the devices, handed out evenly over the ticks their step stood for (ticksLeft),
+     * so a device books each tick what moved in a tick, and all of it once: per edge {liquid, vapour, air, enthalpy, all,
+     * work} (kg and J) and its species (kg), per node its wall heat (J).
+     */
+    private double[][] remE, remS;
+    private double[] remWall;
+    private int ticksLeft, behindTicks;
+    /** The length (s) of the last step the core really ran: asleep, it keeps that step's moves, for a step of that length. */
+    private double awakeDt;
+    /** Tests: all the mass its steps moved over edges (kg, absolute sum), and the sum of what each tick handed out to devices as flows (kg, absolute). */
+    public double movedKg, bookedSum;
+    private static long failureLogged;
+
+    boolean pending() {
+        return job != null;
+    }
+
+    /** Its network is replaced or forgotten: a background step under way is cancelled, and the heat it took given back. */
+    void abandon() {
+        flush();
+        if (job == null) return;
+        net.cancelled = true;
+        job.cancel(false);
+        for (int i = 0; i < cn.length; i++) nodes.get(i).heat += pending.heat0[i];
+        job = null;
+        pending = null;
+    }
+
+    /**
+     * Its core is replaced or forgotten: the wall heat still to be handed out stays with the nodes (FluidNode.wallCarry),
+     * for the next core; else a shell would never be debited for heat its water already took. What its edges still owed
+     * (flows, a turbine's work) is lost with it: devices book less than moved, never more.
+     */
+    private void flush() {
+        if (remWall == null) return;
+        for (int i = 0; i < remWall.length; i++) {
+            if (remWall[i] != 0 && !nodes.get(i).fixed) mods.eln.fluid.FluidWorld.carryWall(nodes.get(i), remWall[i]);
+            remWall[i] = 0;
+        }
+    }
+
     void step(FluidNetwork fn, double dt) {
+        boolean applied = false;
+        ticksSince++;
+        if (job != null) {
+            if (!job.isDone() || waited < testHoldTicks) {
+                waited++;
+                waiting(dt);
+                return;
+            }
+            Pending p = pending;
+            java.util.concurrent.Future<?> j = job;
+            job = null;
+            pending = null;
+            try {
+                j.get();
+            } catch (InterruptedException | java.util.concurrent.ExecutionException e) {
+                // (its core's state is unknown: a new one is built from the nodes, which still hold the step's start; said
+                // once a minute: on the server thread this would have been a crash, here it would be a line a tick)
+                long now = System.currentTimeMillis();
+                if (now - failureLogged > 60_000) {
+                    failureLogged = now;
+                    mods.eln.Eln.LOG.error("[fluidcore] a background step failed; its network starts over from its nodes", e);
+                }
+                for (int i = 0; i < cn.length; i++) nodes.get(i).heat += p.heat0[i];
+                flush();
+                fn.core = null;
+                waiting(dt);
+                return;
+            }
+            finish(p);
+            applied = true;   // (this tick has its results: the next step may start, but nothing more is applied or cleared)
+        }
+        int slow = 0;
+        for (FluidNode n : nodes) slow = Math.max(slow, n.slowSteps);
+        boolean bg = budgetNanos > 0 && slow >= HEAVY_AFTER;
+        if (applied && !bg) {   // (light again: back on this thread from the next tick, owing the ticks its last step took)
+            return;
+        }
+        // (a background step: as long as the ticks since the last one began)
+        int ticks = Math.max(1, ticksSince), span = bg ? Math.min(ticks, MAX_SPAN) : 1;
+        double droppedNow = bg ? (ticks - span) * dt : 0;
+        if (!bg) owed = Math.min(owed + (ticks - 1) * dt, OWED_MAX);
+        ticksSince = 0;
+        double[] heat0 = new double[cn.length];
         // (at most one tick's worth caught up per tick: devices step their own processes by the tick, and a second of
         // fluid landing in one tick would be a spike they all see)
-        double tick = dt, ask = dt + Math.min(owed, dt);
+        // (a background step is span ticks long; its time isn't owed)
+        double tick = dt, ask = bg ? span * dt : dt + Math.min(owed, dt);
         owed -= ask - dt;
         dt = ask;
         // contents in (the authority is the FluidNode; the core wakes by its own signature when they change)
         for (int i = 0; i < cn.length; i++) {
             FluidNode n = nodes.get(i);
             Network.Node c = cn[i];
+            if (!n.fixed && n.guardFinite(() -> mods.eln.fluid.FluidWorld.whereIs(n))) n.update();   // (a NaN put in by anything since the last step: healed, not stepped)
             c.m[0] = n.mWater;
             c.m[1] = n.mAir;
             for (int j = 2; j < c.m.length; j++) c.m[j] = n.extra != null && ids[j] - 2 < n.extra.length ? n.extra[ids[j] - 2] : 0;
             c.U = n.energy;
-            c.heat = n.fixed ? 0 : n.heat - n.lossWPerK * (n.T() - Water.T_AMBIENT);
+            // (devices add their heat (W) every tick: over the ticks since the last step began, their mean)
+            c.heat = n.fixed ? 0 : n.heat / ticks - n.lossWPerK * (n.T() - Water.T_AMBIENT);
+            heat0[i] = n.heat;
             n.heat = 0;
             c.wallUA = n.fixed ? 0 : n.wallUA;
             c.wallT = n.wallT;
@@ -370,28 +537,178 @@ final class CoreStep {
             c.setPa = e.setPa;
             c.relief = e.relief;
         }
-        long slept = net.stats.slept, failures = net.stats.failures;
-        double[][] m0 = new double[cn.length][];
-        double[] u0 = new double[cn.length], h0 = new double[cn.length];
+        Pending p = new Pending();
+        p.tick = tick;
+        p.dt = dt;
+        p.xl = xl;
+        p.slow = slow;
+        p.background = bg;
+        p.heat0 = heat0;
+        p.failures = net.stats.failures;
+        p.slept0 = net.stats.slept;
+        p.m0 = new double[cn.length][];
+        p.u0 = new double[cn.length];
+        p.h0 = new double[cn.length];
         for (int i = 0; i < cn.length; i++) {
-            m0[i] = cn[i].m.clone();
-            u0[i] = cn[i].U;
-            h0[i] = cn[i].heat;
+            p.m0[i] = cn[i].m.clone();
+            p.u0[i] = cn[i].U;
+            p.h0[i] = cn[i].heat;
         }
-        long sub0 = net.stats.substeps, cut0 = net.stats.cut, crawls0 = net.stats.crawls;
+        p.sub0 = net.stats.substeps;
+        p.cut0 = net.stats.cut;
+        p.crawls0 = net.stats.crawls;
+        if (bg) {
+            net.budget = BACKGROUND_BUDGET;
+            net.span = span;
+            behindTicks = 0;
+            pending = p;
+            double stepDt = dt;
+            background = true;
+            waited = 0;
+            p.span = span;
+            // (over MAX_SPAN ticks behind: that time is lost; waiting() counted it towards Jade's alarm tick by tick)
+            if (droppedNow > 0) mods.eln.fluid.FluidWorld.recordProgress(nodes, stallNow(), droppedNow);
+            job = WORKER.submit(() -> {
+                long t0 = System.nanoTime();
+                net.step(stepDt);
+                p.took = System.nanoTime() - t0;
+            });
+            if (!applied) waiting(tick);
+            return;
+        }
+        p.span = 1;
+        net.span = 1;
+        net.budget = -1;
+        Network.MAX_STEP_NANOS = budgetNanos;
+        long t0 = System.nanoTime();
         net.step(dt);
+        p.took = System.nanoTime() - t0;
+        finish(p);
+    }
+
+    /** A tick while a background step runs: the devices get this tick's share of the last results; the core isn't touched. */
+    private void waiting(double tick) {
+        overBudget = true;
+        // (its last result is still being handed out: on time. With nothing left it is behind; the next step covers
+        // that time, up to MAX_SPAN ticks)
+        boolean behind = ticksLeft <= 0;
+        if (behind) behindTicks++;
+        handOut(tick);
+        double before = stallNow();
+        mods.eln.fluid.FluidWorld.recordProgress(nodes, behind ? before + tick : before, 0);
+    }
+
+    /** The longest time (s) any of its nodes has now been behind. */
+    private double stallNow() {
+        double s = 0;
+        for (FluidNode n : nodes) s = Math.max(s, n.stallNow);
+        return s;
+    }
+
+    /** This tick's share of what the results still owe, onto the edges and nodes (rates per second; work and wall heat in J). */
+    private void handOut(double tick) {
+        if (remE == null) {
+            for (FluidEdge e : edges) clear(e);
+            for (FluidNode n : nodes) if (!n.fixed) n.wallJ = 0;
+            return;
+        }
+        int parts = Math.max(1, ticksLeft);
+        for (int k = 0; k < remE.length; k++) {
+            FluidEdge e = edges.get(k);
+            double[] r = remE[k];
+            double liquid = r[0] / parts, vapour = r[1] / parts, air = r[2] / parts, enthalpy = r[3] / parts, all = r[4] / parts, work = r[5] / parts;
+            r[0] -= liquid;
+            r[1] -= vapour;
+            r[2] -= air;
+            r[3] -= enthalpy;
+            r[4] -= all;
+            r[5] -= work;
+            e.fLiquid = liquid / tick;
+            e.fVapour = vapour / tick;
+            e.fAir = air / tick;
+            e.fEnthalpy = enthalpy / tick;
+            e.flow = all / tick;
+            bookedSum += Math.abs(all);
+            e.work = work / tick;
+            e.workJ = work;
+            double[] s = remS[k];
+            if (s == null) {
+                if (e.fSpecies != null) java.util.Arrays.fill(e.fSpecies, 0);
+                continue;
+            }
+            if (e.fSpecies == null || e.fSpecies.length < s.length) e.fSpecies = new double[s.length];
+            for (int j = 0; j < s.length; j++) {
+                double m = s[j] / parts;
+                s[j] -= m;
+                e.fSpecies[j] = m / tick;
+            }
+        }
+        for (int i = 0; i < remWall.length; i++) {
+            FluidNode n = nodes.get(i);
+            if (n.fixed) continue;
+            double q = remWall[i] / parts;
+            remWall[i] -= q;
+            n.wallJ = q;
+        }
+        if (ticksLeft > 0) ticksLeft--;
+    }
+
+    private static void clear(FluidEdge e) {
+        e.flow = e.fLiquid = e.fVapour = e.fAir = e.fEnthalpy = 0;
+        e.work = e.workJ = 0;
+        if (e.fSpecies != null) java.util.Arrays.fill(e.fSpecies, 0);
+    }
+
+    /** After the core's step (on this thread, or a background one's first tick after it): its results onto nodes and edges. */
+    /** Tests only: run on the core's network as a step's result is taken (to make that result what a solver bug would). */
+    static java.util.function.Consumer<Network> testAfterStep;
+
+    private void finish(Pending p) {
+        if (testAfterStep != null) testAfterStep.accept(net);
+        double tick = p.tick, dt = p.dt;
+        if (remE == null) {
+            remE = new double[ce.length][6];
+            remS = new double[ce.length][];
+            remWall = new double[cn.length];
+        }
+        double[] xl = p.xl, u0 = p.u0, h0 = p.h0;
+        double[][] m0 = p.m0;
+        long failures = p.failures, sub0 = p.sub0, cut0 = p.cut0, crawls0 = p.crawls0;
+        // (a step the core slept through keeps the moves of its last real step, which may have been longer or shorter
+        // than this one: scaled to this one's length)
+        boolean slept = net.stats.slept > p.slept0;
+        if (!slept) awakeDt = dt;
+        double kept = slept && awakeDt > 0 ? dt / awakeDt : 1;
+        boolean idle = p.background;   // (its time isn't owed)
+        lastMs = p.took / 1e6;
+        background = p.background;
+        overBudget = net.overBudget || p.background;
+        // (heavy: over a tenth of the budget; light: under half that. The count moves by one a step, HEAVY_AFTER * 2 at most)
+        long heavy = budgetNanos / SYNC_SHARE;
+        int next = budgetNanos <= 0 ? 0 : p.took > heavy ? Math.min(p.slow + 1, 2 * HEAVY_AFTER) : p.took < heavy / 2 ? Math.max(p.slow - 1, 0) : p.slow;
+        mods.eln.fluid.FluidWorld.recordSlow(nodes, next);
         // (solves accepted at the precision floor, counted to watch: a few thousand in the 28 steam GameTests)
         long crawled = CRAWLS.addAndGet(net.stats.crawls - crawls0);
         if (net.stats.crawls > crawls0 && Long.bitCount(crawled) == 1 && crawled >= 16) System.out.println("[fluidcore] solves accepted at the precision floor so far: " + crawled);
+        // (a result that isn't finite is a failed step, written out and put back below, never healed into the nodes: it
+        // did none of its time, which is owed; in a row, from the second on, its network is stalled)
+        boolean finite = true;
+        for (Network.Node c : cn) if (!c.fixed && !finite(c)) finite = false;
+        nonFiniteRun = finite ? 0 : nonFiniteRun + 1;
+        double done = finite ? net.done : 0;
         // (a step cut short covered less than dt: the rest is owed, so heat put in over it isn't lost and the network
         // catches up; flows below are what moved this tick, per tick, so what devices book from them balances)
-        owed += Math.max(0, dt - net.done);
+        if (!idle) owed += Math.max(0, dt - done);
         // (the stall record lives on the nodes, so a network rebuilt mid-stall, as a burst rebuilds it, keeps it)
         double before = 0;
         for (FluidNode n : nodes) before = Math.max(before, n.stallNow);
-        double stall = net.done < 0.5 * tick ? before + tick : 0, dropped = Math.max(0, owed - OWED_MAX);
+        // (a background step: by its own length; what it left undone is dropped, and one that fell behind its ticks keeps
+        // the stall its waiting ticks counted, so a network always behind reaches Jade's alarm)
+        double stall = idle ? (done < 0.5 * dt ? before + dt : behindTicks > 0 ? before : 0) : done < 0.5 * tick ? before + tick : 0;
+        if (nonFiniteRun == 1) stall = before;   // (one put back may be a fluke: the alarm from the second in a row)
+        double dropped = Math.max(0, owed - OWED_MAX) + (idle ? Math.max(0, dt - done) : 0);
         // (a network stalled for half a second is written out once more: its first failure is often a harmless one)
-        if (net.done == 0 && owed > OWED_MAX && !stallDumped) {
+        if (done == 0 && owed > OWED_MAX && !stallDumped) {
             stallDumped = true;
             dumped = false;
         }
@@ -401,33 +718,44 @@ final class CoreStep {
         owed = Math.min(owed, OWED_MAX);
         mods.eln.fluid.FluidWorld.recordProgress(nodes, stall, dropped);
         // (written out with the step length asked for: a replay at the tick's length isn't the step that failed)
-        if (net.stats.failures > failures) failed(dt, m0, u0, h0);
-        else if (net.stats.cut > cut0 || net.stats.substeps - sub0 > 64) slow(dt, m0, u0, h0, net.stats.substeps - sub0);
+        if (net.stats.failures > failures || !finite) failed(dt, m0, u0, h0);
+        if (!finite) {
+            // (put back: its devices' heat goes to the next step, and its wall heat and work, maybe NaN, to nobody)
+            for (int i = 0; i < cn.length; i++) {
+                nodes.get(i).heat += p.heat0[i];
+                cn[i].wallJ = 0;
+            }
+            for (Network.Edge c : ce) if (c != null) c.workJ = 0;
+            for (Network.Edge c : ceTop) if (c != null) c.workJ = 0;
+        }
+        else if (net.stats.cut > cut0 || net.stats.substeps - sub0 > 64L * p.span) slow(dt, m0, u0, h0, net.stats.substeps - sub0);
         dt = tick;
         // contents out
         for (int i = 0; i < cn.length; i++) {
             FluidNode n = nodes.get(i);
             if (n.fixed) continue;
             Network.Node c = cn[i];
-            n.mWater = c.m[0];
-            n.mAir = c.m[1];
+            // (what devices put into the node while a background step ran is carried over; on this thread it is nothing)
+            double dW = n.mWater - m0[i][0], dA = n.mAir - m0[i][1], dU = n.energy - u0[i];
+            n.mWater = Math.max(0, c.m[0] + dW);
+            n.mAir = Math.max(0, c.m[1] + dA);
             if (ids != null) {
                 int need = 0;
                 for (int j = 2; j < ids.length; j++) need = Math.max(need, ids[j] - 1);
                 if (n.extra == null || n.extra.length < need) n.extra = n.extra == null ? new double[need] : java.util.Arrays.copyOf(n.extra, need);
-                for (int j = 2; j < ids.length; j++) n.extra[ids[j] - 2] = c.m[j];
+                for (int j = 2; j < ids.length; j++) n.extra[ids[j] - 2] = Math.max(0, c.m[j] + (n.extra[ids[j] - 2] - m0[i][j]));
             }
-            n.energy = c.U;
+            n.energy = c.U + dU;
             // (asleep, the core keeps the last step's heat, as it keeps its edges' moves: a network sleeps in a steady
             // state, and a condenser's cooling or a boiler's shell passes heat through it all the same; read as 0, a
             // condenser asleep booked no heat)
-            n.wallJ = c.wallJ;
+            remWall[i] += c.wallJ * kept + mods.eln.fluid.FluidWorld.takeWallCarry(n);
+            n.guardFinite(() -> mods.eln.fluid.FluidWorld.whereIs(n));   // (what a device put in during a background step)
             n.update();
         }
-        // what each edge carried
+        // what each edge carried: added to what is still owed, and handed out over the ticks the step stood for
         int size = SpeciesRegistry.get().size();
         for (int k = 0; k < ce.length; k++) {
-            FluidEdge e = edges.get(k);
             Network.Edge c = ce[k];
             // (asleep, the core keeps the last step's moves: the state stands still, but a pump circulating round a loop
             // still circulates; reported as nothing, its loop flow read 0)
@@ -437,22 +765,28 @@ final class CoreStep {
                 for (int j = 0; j < both.length; j++) both[j] += ceTop[k].moved[j];
                 mv = both;
             }
-            e.flow = e.fLiquid = e.fVapour = e.fAir = e.fEnthalpy = 0;
-            e.work = c == null ? 0 : c.workJ / dt;
-            e.workJ = c == null ? 0 : c.workJ;
-            if (e.fSpecies != null) java.util.Arrays.fill(e.fSpecies, 0);
+            double[] r = remE[k];
+            if (c != null) r[5] += c.workJ * kept;
             if (mv == null) continue;
             int S = mv.length - 1;
-            double w = mv[0] / dt;
-            e.fLiquid = w * xl[k];
-            e.fVapour = w * (1 - xl[k]);
-            e.fAir = mv[1] / dt;
-            e.fEnthalpy = mv[S] / dt;
-            double total = 0;
-            for (int j = 0; j < S; j++) total += mv[j];
-            e.flow = total / dt;
-            if (e.fSpecies == null || e.fSpecies.length < size) e.fSpecies = new double[size];
-            for (int j = 0; j < S; j++) e.fSpecies[ids == null ? j : ids[j]] = mv[j] / dt;
+            if (kept != 1) {
+                mv = mv.clone();
+                for (int j = 0; j < mv.length; j++) mv[j] *= kept;
+            }
+            r[0] += mv[0] * xl[k];
+            r[1] += mv[0] * (1 - xl[k]);
+            r[2] += mv[1];
+            r[3] += mv[S];
+            if (remS[k] == null || remS[k].length < size) remS[k] = remS[k] == null ? new double[size] : java.util.Arrays.copyOf(remS[k], size);
+            for (int j = 0; j < S; j++) {
+                r[4] += mv[j];
+                movedKg += Math.abs(mv[j]);
+                remS[k][ids == null ? j : ids[j]] += mv[j];
+            }
         }
+        // (a remainder still being handed out keeps its ticks: a network just back on this thread doesn't get it at once)
+        ticksLeft = Math.max(ticksLeft, p.span);
+        lastSpan = p.span;
+        handOut(tick);
     }
 }

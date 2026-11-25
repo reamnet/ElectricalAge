@@ -13,6 +13,19 @@ public interface FluidDevice {
 
     List<FluidPort> fluidPorts();
 
+    /**
+     * Its block (BlockPos.asLong), naming its nodes in the world's topology plan (FluidWorld.Plan) whatever order the
+     * devices joined in; Long.MIN_VALUE: the world finds one (a machine's node block, else its lowest port's block).
+     */
+    default long fluidPos() {
+        return Long.MIN_VALUE;
+    }
+
+    /** A node's stable id inside the device for the plan's names (a voxel part's id); -1: its place among the device's nodes. */
+    default int fluidNodeId(FluidNode n) {
+        return -1;
+    }
+
     default List<Vent> fluidVents() {
         return List.of();
     }
@@ -222,6 +235,22 @@ public interface FluidDevice {
         public double setPa;
         /** This step's edge (set by the world when it builds the network). */
         public FluidEdge edge;
+
+        /**
+         * A breather's deadband either side of the air's pressure (Pa): the gas-out and air-in vents of a breathing vessel
+         * (a device's tip, a flare stack, the breather valve) each start to open this far past it, wide open at twice it.
+         */
+        public static final double BREATHE_PA = 300;
+
+        /** A breather's gas-out opening (0..1) at dp over the air's pressure (Pa). */
+        public static double breatheOut(double dp) {
+            return Math.max(0, Math.min(1, (dp - BREATHE_PA) / BREATHE_PA));
+        }
+
+        /** A breather's air-in opening (0..1) at dp over the air's pressure (Pa). */
+        public static double breatheIn(double dp) {
+            return breatheOut(-dp);
+        }
 
         public Vent(FluidNode node, double draw, double k) {
             this.node = node;

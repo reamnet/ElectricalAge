@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * What the next click with a cable kit would do, shown as outlines (Baughn 2026-10-18: no preview of where it goes;
+ * What the next click with a cable or pipe kit would do (RoutePlacer, through the kit's spec), shown as outlines (Baughn 2026-10-18: no preview of where it goes;
  * like the chisel's): before a route starts, the end it would start at; during one, the whole route to where the
  * player aims (the router runs on the server, so a few times a second, and only when the aim or the plan changes).
  * Sent as an EA packet (Eln.packetKitPreview): ok, then boxes in world voxels; drawn by client.render.KitOutline.
@@ -36,6 +36,7 @@ public final class KitPreview {
         LAST.remove(player);
         GEN.remove(player);
         SNAPS.remove(player);
+        LAST_NOTE.remove(player);
     }
 
     static void invalidate(UUID player) {
@@ -46,15 +47,10 @@ public final class KitPreview {
 
     public static void tick(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post e) {
         if (!(e.getEntity() instanceof ServerPlayer p) || !(p.level() instanceof ServerLevel level)) return;
-        CablePlacer.checkLapse(p, level.getGameTime());   // (every tick: Baughn found the outline slow at 4 ticks)
-        PipePlacer.checkLapse(p, level.getGameTime());
+        RoutePlacer.checkLapse(p, level.getGameTime());   // (every tick: Baughn found the outline slow at 4 ticks)
         if (ToolbagShears.tick(p, level)) return;   // (the Toolbag's shears outline the run to cut instead)
         Last last = LAST.get(p.getUUID());
         KitSupply kit = KitSupply.held(p);
-        if (kit != null && kit.pipe()) {
-            pipeTick(p, level, kit, last);
-            return;
-        }
         if (kit == null) {
             if (last != null && !last.sentEmpty) {
                 advanceGeneration(p.getUUID());
@@ -63,12 +59,16 @@ public final class KitPreview {
             }
             return;
         }
+        RoutePlacer.Spec k = RoutePlacer.of(kit);
         HitResult h = p.pick(p.blockInteractionRange(), 1f, false);
-        CablePlacer.Plan plan = CablePlacer.PLANS.get(p.getUUID());
+        RoutePlacer.Plan plan = RoutePlacer.plan(p.getUUID());
+        // (a route of another kit is no route here; the lapse check above has dropped it already)
+        if (plan != null && (plan.kind != k || plan.tier != kit.tier() || plan.dim != level.dimension())) plan = null;
         String key = h instanceof BlockHitResult bh && h.getType() == HitResult.Type.BLOCK
             ? bh.getBlockPos().toShortString() + bh.getDirection() + (int) Math.floor(bh.getLocation().x * 8) + "," + (int) Math.floor(bh.getLocation().y * 8)
             + "," + (int) Math.floor(bh.getLocation().z * 8) : "none";
-        key += "|" + kit.tier() + "|" + kit.spec() + "|" + kit.wire() + "|" + kit.length() + "|" + (plan == null ? "-" : plan.start + "" + plan.waypoints.size() + plan.touched) + "|" + p.isSecondaryUseActive();
+        key = k.noun + "|" + key + "|" + kit.tier() + "|" + kit.spec() + "|" + kit.wire() + "|" + kit.length() + "|"
+            + (plan == null ? "-" : plan.start + "" + plan.waypoints.size() + plan.touched) + "|" + p.isSecondaryUseActive();
         if (last != null && last.key.equals(key)) return;
         LAST.put(p.getUUID(), new Last(key, false));
         long gen = advanceGeneration(p.getUUID());
@@ -79,50 +79,42 @@ public final class KitPreview {
             send(p, true, boxes);
             return;
         }
-        long[][] join = new long[1][];
-        CableRouter.End at = CablePlacer.endForSupply(level, bh.getBlockPos(), bh.getDirection(), bh.getLocation(), plan == null, join, kit);
-        // a machine's port: snapped to it and in its own colour (Baughn: it wasn't obvious that cables connect to machines)
-        boolean device = at != null && CablePlacer.isDevice(level, bh.getBlockPos(), bh.getLocation());
-        if (at == null) {
+        RoutePlacer.Click c = k.endAt(level, bh.getBlockPos(), bh.getDirection(), bh.getLocation(), kit.tier(), plan == null, false);
+        if (c.at() == null) {
             send(p, false, boxes);
-            p.sendOverlayMessage(net.minecraft.network.chat.Component.literal(CablePlacer.noEnd(level, bh.getBlockPos())));
+            if (c.refusal() != null) p.sendOverlayMessage(net.minecraft.network.chat.Component.literal(c.refusal()));
             return;
         }
-        if (plan == null || !plan.matches(kit)) {   // (where it would start: at once)
-            boxes.add(device ? port(at) : marker(at));
-            send(p, true, boxes, device);
+        if (plan == null) {   // (where it would start: at once)
+            boxes.add(k.bigStartMarker || c.port() ? port(c.at()) : marker(c.at()));
+            send(p, true, boxes, c.port());
             return;
         }
         // the route: on the preview thread, over a snapshot of the blocks round its ends (Baughn: the router on the server
         // thread made the preview slow); the latest aim wins
         long tSnap = System.nanoTime();
-        RouteView view = snapshotFor(p, level, plan, at);
+        Job job = job(p, level, kit, plan, c);
         long snapMs = (System.nanoTime() - tSnap) / 1_000_000;
-        slow("preview snapshot (server thread)", tSnap, plan.startJoin != null ? "from a cable" : "");
+        String from = plan.startJoin != null ? "from a " + k.noun : "";
+        slow("preview snapshot (server thread)", tSnap, from);
         long tQueued = System.nanoTime();
-        int tier = kit.tier(), have = p.isCreative() ? Integer.MAX_VALUE : kit.length();
-        CableSpec spec = kit.spec();
-        List<CableRouter.End> wps = List.copyOf(plan.waypoints);
-        CableRouter.End start = plan.start;
-        long[] startJoin = plan.startJoin, endJoin = join[0];
         UUID id = p.getUUID();
-        var server = level.getServer();
         if (plan.wire != null) {
-            var wire = plan.wire;
-            var pivots = new ArrayList<>(wps);
-            if (!pivots.isEmpty() && pivots.getLast().equals(at)) pivots.removeLast();
+            RoutePlacer.Plan awgPlan = plan;
+            if (job.refused() != null) {
+                send(p, false, List.of(marker(job.to())));
+                p.sendOverlayMessage(net.minecraft.network.chat.Component.literal(job.refused()));
+                return;
+            }
             WORKER.execute(() -> {
                 if (!isCurrent(id, gen)) return;
-                var space = CablePlacer.space(view);
-                if (startJoin != null) space = CablePlacer.around(space, startJoin);
-                if (endJoin != null) space = CablePlacer.around(space, endJoin);
-                var route = CableRouter.route(space, AwgCablePart.routeKind(wire),
-                    start, pivots, at, PREVIEW_BUDGET_MS);
-                server.execute(() -> {
+                var routed = ((AwgRouteSpec) awgPlan.kind).route(job.view(), job.tier(), job.spec(), job.start(),
+                    job.startJoin(), job.wps(), job.to(), job.endJoin(), PREVIEW_BUDGET_MS);
+                level.getServer().execute(() -> {
                     if (!isCurrent(id, gen) || p.hasDisconnected() || p.level() != level
-                        || CablePlacer.PLANS.get(id) != plan || !plan.matches(KitSupply.held(p))) return;
-                    var answer = awgAnswer(level, plan, at, endJoin, have, route, p);
-                    plan.awgPreview = answer.ok() ? new CablePlacer.AwgPreview(at, endJoin, pivots, route) : null;
+                        || RoutePlacer.plan(id) != awgPlan || !awgPlan.laidBy(KitSupply.held(p))) return;
+                    var answer = awgAnswer(level, awgPlan, job.to(), job.endJoin(), job.have(), routed.path(), p);
+                    awgPlan.awgPreview = answer.ok() ? new CablePlacer.AwgPreview(job.to(), job.endJoin(), job.wps(), routed.path()) : null;
                     send(p, answer.ok(), answer.boxes(), false, debug);
                     p.sendOverlayMessage(net.minecraft.network.chat.Component.literal(answer.message()));
                 });
@@ -132,36 +124,98 @@ public final class KitPreview {
         WORKER.execute(() -> {
             if (!isCurrent(id, gen)) return;   // (aimed elsewhere since)
             long tRoute = System.nanoTime();
-            Answer a = answer(view, tier, spec, start, startJoin, wps, at, endJoin, have);
+            Answer a;
+            try {
+                a = job.answer();
+            } catch (RuntimeException ex) {
+                Eln.LOG.warn(k.title() + " route preview failed", ex);
+                return;
+            }
             int exp = Router.LAST_EXPANSIONS.get();
             long waitMs = (tRoute - tQueued) / 1_000_000, routeMs = (System.nanoTime() - tRoute) / 1_000_000;
-            slow("preview route (worker)", tRoute, (startJoin != null ? "from a cable, " : "") + exp + " expansions");
+            slow("preview route (worker)", tRoute, (from.isEmpty() ? "" : from + ", ") + exp + " expansions");
             // sent from here, not handed back to the server thread: that waited for the next tick, 40-90 ms of every
             // update (the route debug kit found it; Baughn's slow start). The connection's send is thread-safe
-            {
-                if (!isCurrent(id, gen)) return;
-                ServerPlayer now = p;
-                if (now.hasDisconnected() || now.level() != level) return;
-                List<int[]> bs = a.boxes;
-                if (device && a.ok) {
-                    bs = new ArrayList<>(bs);
-                    bs.add(port(at));
-                }
-                send(now, a.ok, bs, device && a.ok, debug);
-                if (debug)
-                    RouteDebug.report(now, (System.nanoTime() - tAim) / 1_000_000, snapMs, waitMs, routeMs, exp, startJoin != null,
-                        RouteDebug.token(tier, start, startJoin, wps, at, endJoin));
-                // (always a line: a "can't reach" left over from a moment ago read as if the route drawn now were wrong)
-                now.sendOverlayMessage(net.minecraft.network.chat.Component.literal(a.message));
-            }
+            if (!isCurrent(id, gen)) return;
+            if (p.hasDisconnected() || p.level() != level) return;
+            send(p, a.ok, a.boxes, c.port() && a.ok, debug);
+            if (debug)
+                RouteDebug.report(p, (System.nanoTime() - tAim) / 1_000_000, snapMs, waitMs, routeMs, exp, job.startJoin() != null ? k.noun : null,
+                    RouteDebug.token(k, job.tier(), job.start(), job.startJoin(), job.wps(), job.to(), job.endJoin()));
+            // (always a line: a "can't reach" left over from a moment ago read as if the route drawn now were wrong)
+            p.sendOverlayMessage(net.minecraft.network.chat.Component.literal(a.message));
         });
+    }
+
+    /** A route preview to work out on the preview thread: the plan's route to the aim (to), over a snapshot round it. */
+    record Job(RoutePlacer.Spec<?> k, RouteView view, int tier, CableSpec spec, CableRouter.End start, long[] startJoin, List<CableRouter.End> wps,
+               CableRouter.End to, long[] endJoin, int have, RoutePlacer.Click c, boolean again, String refused) {
+        /**
+         * The answer: the click's refusal if it would be refused (RoutePlacer.startRefusal), else the route; one that
+         * works says what the click would do there: connect to a machine, join the cable or pipe aimed at, end at the
+         * last waypoint (an open end), or add a waypoint (Baughn: the pipes' suffix, for both kinds; wording Neon's:
+         * "Cable: 7.5 blocks \u2014 joins").
+         */
+        Answer answer() {
+            if (refused != null) return new Answer(false, new ArrayList<>(List.of(marker(to))), refused);
+            Answer a = KitPreview.answer(k, view, tier, spec, start, startJoin, wps, to, endJoin, have);
+            // (a waypoint still on the old run the route starts on: nothing laid yet, but the click takes it)
+            if (!a.ok && RoutePlacer.INSIDE.equals(a.message) && !c.finish() && c.join() == null && !again)
+                return new Answer(true, new ArrayList<>(List.of(marker(to))), String.format("%s: 0.0 blocks", k.title()) + suffix(false, false, false));
+            if (!a.ok) return a;
+            List<int[]> bs = a.boxes;
+            if (k.portCube && c.port()) {
+                bs = new ArrayList<>(bs);
+                bs.add(port(to));
+            }
+            return new Answer(true, bs, a.message + suffix(again, c.join() != null, c.finish()));
+        }
+    }
+
+    /** The preview's route for the player's plan to the aim c (its snapshot taken now, on the server thread). */
+    static Job job(ServerPlayer p, ServerLevel level, KitSupply kit, RoutePlacer.Plan plan, RoutePlacer.Click c) {
+        List<CableRouter.End> wps = new ArrayList<>(plan.waypoints);
+        CableRouter.End to = c.at();
+        // (aimed at the last waypoint: the route ends there, as the click would)
+        boolean again = RoutePlacer.again(plan, c);
+        if (again) to = wps.remove(wps.size() - 1);
+        String refused = RoutePlacer.startRefusal(plan, c, again, kit);
+        RouteView view = null;
+        if (refused == null) {
+            List<long[]> ends = new ArrayList<>();
+            for (CableRouter.End w : plan.waypoints) ends.add(new long[]{w.x(), w.y(), w.z()});
+            ends.add(new long[]{plan.start.x(), plan.start.y(), plan.start.z()});
+            ends.add(new long[]{to.x(), to.y(), to.z()});
+            view = snapshotAround(p, level, ends);
+        }
+        int have = p.isCreative() ? Integer.MAX_VALUE : kit.length();
+        return new Job(plan.kind, view, plan.tier, plan.spec, plan.start, plan.startJoin, List.copyOf(wps), to, c.join(), have, c, again, refused);
+    }
+
+    /** What the click would do, after the preview's length: " \u2014 open end", " \u2014 joins", " \u2014 connects" or " \u2014 waypoint". */
+    static String suffix(boolean again, boolean join, boolean finish) {
+        return again ? " \u2014 open end" : join ? " \u2014 joins" : finish ? " \u2014 connects" : " \u2014 waypoint";
+    }
+
+    /**
+     * The preview's action-bar line for the player aiming at hit on face of pos with kit, worked out at once (GameTests):
+     * why there is no end there, the route's line, or null (no route started and nothing to say).
+     */
+    public static String previewForTests(ServerPlayer p, KitSupply kit, BlockPos pos, net.minecraft.core.Direction face, net.minecraft.world.phys.Vec3 hit) {
+        ServerLevel level = (ServerLevel) p.level();
+        RoutePlacer.Plan plan = RoutePlacer.plan(p.getUUID());
+        if (plan != null && plan.kind != RoutePlacer.of(kit)) plan = null;
+        RoutePlacer.Click c = RoutePlacer.of(kit).endAt(level, pos, face, hit, kit.tier(), plan == null, false);
+        if (c.at() == null) return c.refusal();
+        return plan == null ? null : job(p, level, kit, plan, c).answer().message;
     }
 
     /**
      * Why a route click failed, on its own line above the action bar for a few seconds (Baughn 2026-11-18, #521: the
      * preview's next line, the route's length, replaced it on the action bar at once; client.RouteNoteHud).
      */
-    static void note(ServerPlayer p, String message) {
+    public static void note(ServerPlayer p, String message) {
+        LAST_NOTE.put(p.getUUID(), message);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try (DataOutputStream out = new DataOutputStream(bos)) {
             out.writeByte(Eln.packetRouteNote);
@@ -180,39 +234,38 @@ public final class KitPreview {
     static final long SLOW_MS = 30;
 
     /** What the preview shows for a route: ok or not, its boxes (or a marker at the end), and the action-bar line. */
+    /** The last note sent to each player (GameTests read what a click said). */
+    private static final Map<UUID, String> LAST_NOTE = new java.util.concurrent.ConcurrentHashMap<>();
+
+    public static String lastNoteForTests(UUID player) {
+        return LAST_NOTE.get(player);
+    }
+
+    public static void clearNoteForTests(UUID player) {
+        LAST_NOTE.remove(player);
+    }
+
     public record Answer(boolean ok, List<int[]> boxes, String message) {}
 
-    /** The route to {@code at}, over a view of the world (the preview thread). */
+    /** A cable route to {@code at}, over a view of the world (GameTests: the snapshot gives the live route). */
     public static Answer answer(RouteView view, int tier, CableRouter.End start, long[] startJoin, List<CableRouter.End> wps, CableRouter.End at,
-                         long[] endJoin, int have) {
-        return answer(view, tier, null, start, startJoin, wps, at, endJoin, have);
+                                long[] endJoin, int have) {
+        return answer(CablePlacer.ROUTE, view, tier, null, start, startJoin, wps, at, endJoin, have);
     }
 
-    public static Answer answer(RouteView view, int tier, CableSpec spec, CableRouter.End start, long[] startJoin, List<CableRouter.End> wps,
-                                CableRouter.End at, long[] endJoin, int have) {
-        CableRouter.Space sp = CablePlacer.space(view);
-        if (startJoin != null) sp = CablePlacer.around(sp, startJoin);
-        if (endJoin != null) sp = CablePlacer.around(sp, endJoin);
-        CablePart.Tier t = CablePlacer.tierOf(tier, spec);
-        CableRouter.Result r = CableRouter.route(sp, t.width(), t.height(), start, wps, at, PREVIEW_BUDGET_MS);
-        List<int[]> boxes = new ArrayList<>();
-        if (r.error != null) {
-            boxes.add(marker(at));
-            return new Answer(false, boxes, "Can't reach there: " + r.error + " (sneak-click to cancel the route)");
-        }
-        for (CableRouter.Piece pc : CableRouter.pieces(r.steps, t.width(), t.height())) {
-            CablePart part = pc.face() < 0 ? CablePart.knuckle(tier, spec, pc.points()[0], pc.points()[1], pc.points()[2]) : new CablePart(tier, spec, pc.face(), pc.points());
-            for (int[] b : part.boxes())
-                boxes.add(new int[]{(int) pc.bx() * 16 + b[0], (int) pc.by() * 16 + b[1], (int) pc.bz() * 16 + b[2],
-                    (int) pc.bx() * 16 + b[3], (int) pc.by() * 16 + b[4], (int) pc.bz() * 16 + b[5]});
-        }
+    /** The kind's route to end over a view of the world (the preview thread): its outline and length, or why not. */
+    static <P> Answer answer(RoutePlacer.Spec<P> k, RouteView view, int tier, CableSpec spec, CableRouter.End start, long[] startJoin,
+                             List<CableRouter.End> wps, CableRouter.End end, long[] endJoin, int have) {
+        RoutePlacer.Routed<P> r = k.route(view, tier, spec, start, startJoin, wps, end, endJoin, PREVIEW_BUDGET_MS);
+        if (r.error() != null) return new Answer(false, new ArrayList<>(List.of(marker(end))), RoutePlacer.unrouted(r));
+        List<int[]> boxes = k.boxes(r, tier, spec);
         int len = r.length();
         if (have < len)
-            return new Answer(false, boxes, String.format("Too long: %.1f blocks of cable, the kit holds %.1f", len / 16.0, have / 16.0));
-        return new Answer(true, boxes, String.format("Route: %.1f blocks of cable", len / 16.0));
+            return new Answer(false, boxes, String.format("Too long: %.1f blocks of %s, the kit holds %.1f", len / 16.0, k.noun, have / 16.0));
+        return new Answer(true, boxes, String.format("%s: %.1f blocks", k.title(), len / 16.0));
     }
 
-    static Answer awgAnswer(ServerLevel level, CablePlacer.Plan plan, CableRouter.End at, long[] endJoin,
+    static Answer awgAnswer(ServerLevel level, RoutePlacer.Plan plan, CableRouter.End at, long[] endJoin,
                             int have, CableRouter.Result route, ServerPlayer player) {
         if (route.error != null) return new Answer(false, List.of(marker(at)), "Can't reach there: " + route.error);
         var layout = AwgCablePart.nativeLayout(level, plan.wire, route, plan.startJoin, endJoin, player);
@@ -237,6 +290,7 @@ public final class KitPreview {
 
     /** Per player: the generation of the latest preview asked for (a newer one makes older answers stale). */
     private static final Map<UUID, Long> GEN = new java.util.concurrent.ConcurrentHashMap<>();
+
     private static final java.util.concurrent.atomic.AtomicLong NEXT_GENERATION = new java.util.concurrent.atomic.AtomicLong();
 
     /** Tokens must not repeat when a player leaves and rejoins while an old worker is still queued. */
@@ -261,14 +315,6 @@ public final class KitPreview {
     private record Snap(RouteView view, int x0, int y0, int z0, int x1, int y1, int z1, long taken) {}
 
     private static final Map<UUID, Snap> SNAPS = new HashMap<>();
-
-    static RouteView snapshotFor(ServerPlayer p, ServerLevel level, CablePlacer.Plan plan, CableRouter.End at) {
-        List<long[]> ends = new ArrayList<>();
-        for (CableRouter.End e : plan.waypoints) ends.add(new long[]{e.x(), e.y(), e.z()});
-        ends.add(new long[]{plan.start.x(), plan.start.y(), plan.start.z()});
-        ends.add(new long[]{at.x(), at.y(), at.z()});
-        return snapshotAround(p, level, ends);
-    }
 
     /** A snapshot of the blocks round these route ends (world voxels), reused while the aim stays inside it. */
     static RouteView snapshotAround(ServerPlayer p, ServerLevel level, List<long[]> ends) {
@@ -330,123 +376,13 @@ public final class KitPreview {
         ElnNet.sendToPlayer(p, bos);
     }
 
-    /**
-     * The same live outline for a pipe kit (Baughn: pipes didn't show while picking waypoints, only particles after a
-     * click): aimed at a port with no route yet, the port; with a route started, the pipe as it would be laid to the
-     * port, pipe join or waypoint under the crosshair (PipePlacer.use's rules), routed on the preview thread.
-     */
-    static void pipeTick(ServerPlayer p, ServerLevel level, KitSupply kit, Last last) {
-        HitResult h = p.pick(p.blockInteractionRange(), 1f, false);
-        PipePlacer.Plan plan = PipePlacer.PLANS.get(p.getUUID());
-        if (plan != null && (plan.dim != level.dimension() || plan.tier != kit.tier())) plan = null;
-        String key = h instanceof BlockHitResult bh && h.getType() == HitResult.Type.BLOCK
-            ? bh.getBlockPos().toShortString() + bh.getDirection() + (int) Math.floor(bh.getLocation().x * 8) + "," + (int) Math.floor(bh.getLocation().y * 8)
-            + "," + (int) Math.floor(bh.getLocation().z * 8) : "none";
-        key = "pipe|" + key + "|" + kit.tier() + "|" + kit.length() + "|" + (plan == null ? "-" : plan.start + "" + plan.waypoints.size() + plan.touched) + "|" + p.isSecondaryUseActive();
-        if (last != null && last.key.equals(key)) return;
-        LAST.put(p.getUUID(), new Last(key, false));
-        long gen = advanceGeneration(p.getUUID());
-        List<int[]> boxes = new ArrayList<>();
-        if (!(h instanceof BlockHitResult bh) || h.getType() != HitResult.Type.BLOCK || p.isSecondaryUseActive()) {
-            send(p, true, boxes);
-            return;
-        }
-        PipeRouter.End port = PipePlacer.portAt(level, bh.getBlockPos(), bh.getDirection(), bh.getLocation());
-        if (port == null) port = PipePlacer.devicePort(level, bh.getBlockPos(), bh.getLocation());
-        long[] join = port == null ? PipePlacer.joinPoint(level, bh.getBlockPos(), bh.getLocation()) : null;
-        PipeRouter.End surface = port == null && join == null
-            ? PipePlacer.surfacePoint(PipePlacer.space(level), bh.getBlockPos(), bh.getDirection(), bh.getLocation(), PipePart.GRID[kit.tier()]) : null;
-        if (plan == null) {   // (where it would start: a port, a point on a pipe, or a point on the surface)
-            PipeRouter.End s = port != null ? port : join != null ? new PipeRouter.End(join[0], join[1], join[2], -1) : surface;
-            if (s != null) boxes.add(new int[]{(int) s.x() - 2, (int) s.y() - 2, (int) s.z() - 2, (int) s.x() + 2, (int) s.y() + 2, (int) s.z() + 2});
-            send(p, s != null, boxes, port != null);
-            return;
-        }
-        PipeRouter.End end;
-        List<PipeRouter.End> wpsNow = new ArrayList<>(plan.waypoints);
-        PipeRouter.End lastWp = wpsNow.isEmpty() ? null : wpsNow.get(wpsNow.size() - 1);
-        boolean again = surface != null && lastWp != null && surface.x() == lastWp.x() && surface.y() == lastWp.y() && surface.z() == lastWp.z();
-        if (port != null) end = port;
-        else if (join != null) end = new PipeRouter.End(join[0], join[1], join[2], -1);
-        else if (again) end = wpsNow.remove(wpsNow.size() - 1);   // (clicked again: it would end capped there)
-        else if (surface != null) end = surface;
-        else {
-            send(p, false, boxes);
-            p.sendOverlayMessage(net.minecraft.network.chat.Component.literal("No room for a pipe there"));
-            return;
-        }
-        List<long[]> ends = new ArrayList<>();
-        for (PipeRouter.End e : plan.waypoints) ends.add(new long[]{e.x(), e.y(), e.z()});
-        ends.add(new long[]{plan.start.x(), plan.start.y(), plan.start.z()});
-        ends.add(new long[]{end.x(), end.y(), end.z()});
-        RouteView view = snapshotAround(p, level, ends);
-        int tier = plan.tier, have = p.isCreative() ? Integer.MAX_VALUE : kit.length();
-        List<PipeRouter.End> wps = List.copyOf(wpsNow);
-        PipeRouter.End start = plan.start;
-        long[] startJoin = plan.startJoin;
-        boolean toPort = port != null;
-        UUID id = p.getUUID();
-        var server = level.getServer();
-        WORKER.execute(() -> {
-            if (!isCurrent(id, gen)) return;
-            Answer ans;
-            try {
-                ans = pipeAnswer(view, join, startJoin, tier, start, wps, end, have, toPort);
-            } catch (RuntimeException ex) {
-                Eln.LOG.warn("Pipe route preview failed", ex);
-                return;
-            }
-            {   // (sent from here, as the cable preview: no wait for the next tick)
-                if (!isCurrent(id, gen)) return;
-                ServerPlayer now = p;
-                if (now.hasDisconnected() || now.level() != level) return;
-                send(now, ans.ok(), ans.boxes(), ans.ok() && toPort);
-                now.sendOverlayMessage(net.minecraft.network.chat.Component.literal(ans.message()));
-            }
-        });
-    }
-
-    /** A pipe route's preview: the pipe as it would be laid from start over the waypoints to end (world voxels). */
-    public static Answer pipeAnswer(RouteView view, long[] join, int tier, PipeRouter.End start, List<PipeRouter.End> wps, PipeRouter.End end,
-                                    int have, boolean toPort) {
-        return pipeAnswer(view, join, null, tier, start, wps, end, have, toPort);
-    }
-
-    /** ... free round a start on a pipe too (startJoin, or null). */
-    public static Answer pipeAnswer(RouteView view, long[] join, long[] startJoin, int tier, PipeRouter.End start, List<PipeRouter.End> wps,
-                                    PipeRouter.End end, int have, boolean toPort) {
-        PipeRouter.Space sp = PipePlacer.space(view);
-        if (join != null) sp = PipePlacer.spaceAround(sp, join, PipePart.JOIN_CLEAR);
-        if (startJoin != null) sp = PipePlacer.spaceAround(sp, startJoin, PipePart.JOIN_CLEAR);
-        PipeRouter.Result r = PipeRouter.route(sp, PipePart.GRID[tier], start, wps, end, PREVIEW_BUDGET_MS);
-        List<int[]> bs = new ArrayList<>();
-        boolean ok = r.error == null;
-        String msg;
-        if (!ok) {
-            bs.add(new int[]{(int) end.x() - 1, (int) end.y() - 1, (int) end.z() - 1, (int) end.x() + 1, (int) end.y() + 1, (int) end.z() + 1});
-            msg = "Can't reach there: " + r.error + " (sneak-click to cancel the route)";
-        } else {
-            for (var e : PipeRouter.perBlock(r.points).entrySet()) {
-                long bx = e.getKey().get(0), by = e.getKey().get(1), bz = e.getKey().get(2);
-                for (int[] pts : e.getValue())
-                    for (int[] b : new PipePart(tier, pts).boxes())
-                        bs.add(new int[]{(int) bx * 16 + b[0], (int) by * 16 + b[1], (int) bz * 16 + b[2], (int) bx * 16 + b[3], (int) by * 16 + b[4], (int) bz * 16 + b[5]});
-            }
-            int len = r.length();
-            if (have < len) {
-                ok = false;
-                msg = String.format("Too long: %.1f blocks of pipe, the kit holds %.1f", len / 16.0, have / 16.0);
-            } else msg = String.format("Route: %.1f blocks of pipe", len / 16.0) + (toPort ? "" : join != null ? " (joins the pipe)" : " (waypoint)");
-        }
-        return new Answer(ok, bs, msg);
-    }
-
-    /** pipeAnswer from start to end with no waypoints, on a snapshot round them (GameTests). */
+    /** A pipe route's preview from start to end with no waypoints, on a snapshot round them (GameTests). */
     public static Answer pipeAnswerForTests(ServerLevel level, int tier, PipeRouter.End start, PipeRouter.End end) {
         int m = PipeRouter.MARGIN / 16 + 2;
         int x0 = (int) Math.floorDiv(Math.min(start.x(), end.x()), 16) - m, y0 = (int) Math.floorDiv(Math.min(start.y(), end.y()), 16) - m;
         int z0 = (int) Math.floorDiv(Math.min(start.z(), end.z()), 16) - m, x1 = (int) Math.floorDiv(Math.max(start.x(), end.x()), 16) + m;
         int y1 = (int) Math.floorDiv(Math.max(start.y(), end.y()), 16) + m, z1 = (int) Math.floorDiv(Math.max(start.z(), end.z()), 16) + m;
-        return pipeAnswer(RouteView.snapshot(level, x0, y0, z0, x1, y1, z1), null, tier, start, List.of(), end, Integer.MAX_VALUE, false);
+        return answer(PipePlacer.ROUTE, RouteView.snapshot(level, x0, y0, z0, x1, y1, z1), tier, null, PipePlacer.end(start), null, List.of(),
+            PipePlacer.end(end), null, Integer.MAX_VALUE);
     }
 }

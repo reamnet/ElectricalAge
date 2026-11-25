@@ -187,6 +187,12 @@ public final class LabCommands {
                 .then(Commands.literal("oilrubber").executes(c -> demo(c.getSource(), () -> oilRubber(c.getSource(), BlockPos.containing(c.getSource().getPosition())))))
                 .then(Commands.literal("latex").executes(c -> demo(c.getSource(), () -> latex(c.getSource(), BlockPos.containing(c.getSource().getPosition())))))
                 .then(Commands.literal("converters").executes(c -> demo(c.getSource(), () -> converters(c.getSource(), BlockPos.containing(c.getSource().getPosition())))))
+                .then(Commands.literal("radar").executes(c -> demo(c.getSource(), () -> radar(c.getSource(), BlockPos.containing(c.getSource().getPosition()), 1, 1)))
+                    .then(Commands.argument("range", IntegerArgumentType.integer(1, mods.eln.transparentnode.groundradar.GroundRadarDescriptor.MAX_RANGE))
+                        .then(Commands.argument("detail", IntegerArgumentType.integer(1, mods.eln.transparentnode.groundradar.GroundRadarDescriptor.MAX_DETAIL))
+                            .executes(c -> demo(c.getSource(), () -> radar(c.getSource(), BlockPos.containing(c.getSource().getPosition()),
+                                IntegerArgumentType.getInteger(c, "range"), IntegerArgumentType.getInteger(c, "detail")))))))
+                .then(Commands.literal("autominer").executes(c -> demo(c.getSource(), () -> autominer(c.getSource(), BlockPos.containing(c.getSource().getPosition())))))
                 .then(Commands.literal("computers").executes(c -> demo(c.getSource(), () -> computers(c.getSource(), BlockPos.containing(c.getSource().getPosition())))))
                 .then(Commands.literal("loggerdemo").executes(c -> demo(c.getSource(), () -> loggerDemo(c.getSource(), BlockPos.containing(c.getSource().getPosition())))))
                 .then(Commands.literal("spmodules").executes(c -> demo(c.getSource(), () -> spModules(c.getSource(), BlockPos.containing(c.getSource().getPosition())))))
@@ -545,16 +551,7 @@ public final class LabCommands {
         for (int i = 0; i < 3; i++) {
             var s = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(level, player, 1 + (3 << 6), pos.offset(at[i][0], at[i][1], at[i][2]));
             orient(s, l -> l, toward[i]);
-            float u = volts[i];
-            try {
-                var bos = new java.io.ByteArrayOutputStream();
-                var o = new java.io.DataOutputStream(bos);
-                o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                o.writeFloat(u);
-                s.networkUnserialize(new java.io.DataInputStream(new java.io.ByteArrayInputStream(bos.toByteArray())));
-            } catch (java.io.IOException e) {
-                throw new IllegalStateException(e);
-            }
+            volts(s, volts[i]);
         }
         for (int[] pts : new int[][]{{16, 0, 4, 8, 0, 4, 8, 0, 0}, {16, 0, 8, 0, 0, 8}, {16, 0, 12, 8, 0, 12, 8, 0, 16}}) {
             String err = mods.eln.node.voxel.PipeKitItem.place(level, pos, new mods.eln.node.voxel.CablePart(0, 0, pts), null);
@@ -587,6 +584,102 @@ public final class LabCommands {
      * powered at 50 V from a source behind it, with Janet, 2 RAM and an Applications floppy, at addresses 60 and 61. They
      * face opposite ways 4 blocks apart, so their bus pins face each other, and a bus cable joins the pins.
      */
+    /**
+     * A Ground Radar w/Goggles at pos with two full portable batteries, and its picture of the ground under pos scanned at once and
+     * written as radar-X_Y_Z.png in the world's folder: every layer seen from above (top left first, by rows) and the
+     * side view through the centre along x (lab look-dev and client checks).
+     */
+    static int radar(CommandSourceStack src, BlockPos pos, int range, int detail) {
+        var level = src.getLevel();
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);
+        var r = (mods.eln.transparentnode.groundradar.GroundRadarElement) placeTransparent(level, player, "Ground Radar w/Goggles", pos);   // (the goggles: its view can be tried too)
+        r.setSettings(range, detail);
+        for (int i = 0; i < 2; i++) {
+            var b = mods.eln.Eln.findItemStack("Portable Battery");
+            var e = (mods.eln.item.electricalinterface.IItemEnergyBattery) mods.eln.misc.Utils.getItemObject(b);
+            e.setEnergy(b, e.getEnergyMax(b));
+            r.getInventory().setItem(i, b);
+        }
+        long t0 = System.nanoTime();
+        var dense = new java.util.HashMap<String, Integer>();
+        mods.eln.transparentnode.groundradar.GroundRadarWorld.dense = dense;
+        var scan = mods.eln.transparentnode.groundradar.GroundRadarElement.scanNow(level, pos, range, detail);
+        mods.eln.transparentnode.groundradar.GroundRadarWorld.dense = null;
+        String top = dense.entrySet().stream().sorted((a, b) -> b.getValue() - a.getValue()).limit(6).map(e -> e.getKey() + " " + e.getValue())
+            .collect(java.util.stream.Collectors.joining(", "));
+        r.keepPicture(scan);
+        long ms = (System.nanoTime() - t0) / 1_000_000;
+        int n = scan.n, s = Math.max(1, 96 / n), cols = 8, L = scan.layers.length, rows = (L + cols - 1) / cols;
+        int w = cols * (n * s + 4), h = rows * (n * s + 4) + L * 6 + 8;
+        var img = new java.awt.image.BufferedImage(w, h, java.awt.image.BufferedImage.TYPE_INT_RGB);
+        for (int k = 0; k < L; k++) {
+            int ox = (k % cols) * (n * s + 4), oy = (k / cols) * (n * s + 4);
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                    for (int a = 0; a < s; a++)
+                        for (int b = 0; b < s; b++) img.setRGB(ox + i * s + a, oy + j * s + b, mods.eln.transparentnode.groundradar.GroundScan.colour(scan, k, i, j) & 0xFFFFFF);
+        }
+        int sy = rows * (n * s + 4) + 4;
+        for (int k = 0; k < L; k++)
+            for (int i = 0; i < n; i++)
+                for (int a = 0; a < s * 2; a++)
+                    for (int b = 0; b < 6; b++) if (i * s * 2 + a < w) img.setRGB(i * s * 2 + a, sy + k * 6 + b, mods.eln.transparentnode.groundradar.GroundScan.colour(scan, k, i, n / 2) & 0xFFFFFF);
+        double kj = mods.eln.transparentnode.groundradar.GroundRadarDescriptor.J_PER_CELL * scan.cells() / 1000;
+        var file = level.getServer().getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT)
+            .resolve("radar-" + pos.getX() + "_" + pos.getY() + "_" + pos.getZ() + ".png");
+        try {
+            javax.imageio.ImageIO.write(img, "png", file.toFile());
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException(e);
+        }
+        // the goggles' view in a few bands, from over the radar looking down into the cone (radar-...-view-BAND.png)
+        var rv = new mods.eln.transparentnode.groundradar.RadarView(scan);
+        double[][] bands = {{-0.3, 0.6}, {2.2, 3.2}, {4.0, 8.5}, {4.0, 4.6}, {4.6, 6.0}};
+        String[] names = {"air", "rock", "ores", "copper", "iron"};
+        for (int bi = 0; bi < bands.length; bi++) {
+            int vw = 384, vh = 216;
+            int[] px = new int[vw * vh];
+            rv.render(px, vw, vh, pos.getX() + 0.5, pos.getY() + 16, pos.getZ() + 0.5 - 12, 0, 50, 70, bands[bi][0], bands[bi][1], 0, 1);
+            var vimg = new java.awt.image.BufferedImage(vw, vh, java.awt.image.BufferedImage.TYPE_INT_RGB);
+            vimg.setRGB(0, 0, vw, vh, px, 0, vw);
+            try {
+                javax.imageio.ImageIO.write(vimg, "png", file.resolveSibling("radar-" + pos.getX() + "_" + pos.getY() + "_" + pos.getZ() + "-view-" + names[bi] + ".png").toFile());
+            } catch (java.io.IOException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        StringBuilder oil = new StringBuilder();
+        for (int k = 0; k < L; k++) {
+            int c = 0;
+            for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) if ((scan.flagsAt(k, i, j) & mods.eln.transparentnode.groundradar.GroundScan.OIL) != 0) c++;
+            if (c > 0) oil.append(" y").append(scan.cy - 1 - scan.layers[k].depth()).append(':').append(c);
+        }
+        String oilCells = oil.length() == 0 ? " none" : oil.toString();
+        src.sendSuccess(() -> Component.literal("ground radar at " + pos.toShortString() + " range " + range + " detail " + detail + ": " + n + " across, " + L + " layers, "
+            + scan.cells() + " cells (" + String.format("%.1f", kj) + " kJ, " + scan.encode().length / 1024 + " KiB sent) in " + ms + " ms, picture " + file.getFileName()
+            + "; oil cells by layer top:" + oilCells + "; dense samples: " + top), false);
+        return 1;
+    }
+
+    /**
+     * An Auto Miner at pos with the best drill and 64 pipes, fed its voltage by a source in the simulation (no cables):
+     * its monitor's view, its digging (lab look-dev). The source goes with the next restart.
+     */
+    static int autominer(CommandSourceStack src, BlockPos pos) {
+        var level = src.getLevel();
+        var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);
+        var m = (mods.eln.transparentnode.autominer.AutoMinerElement) placeTransparent(level, player, "Auto Miner", pos);
+        m.getInventory().setItem(mods.eln.transparentnode.autominer.AutoMinerContainer.electricalDrillSlotId, mods.eln.gametest.cases.AutoMinerCases.drill());
+        m.getInventory().setItem(mods.eln.transparentnode.autominer.AutoMinerContainer.MiningPipeSlotId,
+            mods.eln.registry.ElnDeviceRegistry.miningPipeDescriptor.newItemStack(64));
+        m.getInventory().setChanged();
+        mods.eln.sim.ElectricalLoad load = mods.eln.gametest.TestContext.field(m, "inPowerLoad");
+        double u = mods.eln.gametest.TestContext.<Double>field(m.getDescriptor(), "nominalVoltage");
+        mods.eln.Eln.simulator.addElectricalComponent(new mods.eln.sim.mna.component.VoltageSource("lab auto miner", load, null).setU(u));
+        src.sendSuccess(() -> Component.literal("auto miner at " + pos.toShortString() + ", powered at " + u + " V"), false);
+        return 1;
+    }
+
     static int computers(CommandSourceStack src, BlockPos pos) {
         var level = src.getLevel();
         var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);
@@ -636,10 +729,7 @@ public final class LabCommands {
         host(level, player, cable, step(p, side));
         var src = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(level, player, 3 << 6, step(step(p, side), side));
         orient(src, l -> l, side.getInverse());
-        src.networkUnserialize(packet(o -> {
-            o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-            o.writeFloat((float) volts);
-        }));
+        volts(src, volts);
     }
 
     /**
@@ -735,10 +825,7 @@ public final class LabCommands {
             host(level, player, lv, step(p, left));
             var feed = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(level, player, 3 << 6, step(step(p, left), left));
             orient(feed, l -> l, right);
-            feed.networkUnserialize(packet(o -> {
-                o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                o.writeFloat((float) mods.eln.Eln.LVU);
-            }));
+            volts(feed, mods.eln.Eln.LVU);
             host(level, player, (int) r[3], step(p, right));
             if ((boolean) r[6]) host(level, player, sixId("Ground Cable"), step(step(p, right), right));
             if (t instanceof mods.eln.transparentnode.transformer.VariableTransformerElement) {
@@ -925,7 +1012,7 @@ public final class LabCommands {
             var pb = mods.eln.node.voxel.PipePlacer.portAtForTests(level, pp, pe.front.back().toEnumFacing());
             if (pa == null || pb == null) b = "ports " + pa + " " + pb + " (polymeriser front " + pe.front + ")";
             else {
-                var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(level), 4, pa, java.util.List.of(), pb);
+                var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(level), 4, pa, java.util.List.of(), pb);
                 String err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(level, 0, r.points, null);
                 b = err == null ? "piped to the polymeriser at " + pp.toShortString() : err;
             }
@@ -982,7 +1069,7 @@ public final class LabCommands {
         final String poured = "filling in a second";
         var b = toDev == null ? null : mods.eln.node.voxel.PipePlacer.portAtForTests(level, tp, toDev);
         if (a == null || b == null) return "ports " + a + " " + b;
-        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(level), 4, a, java.util.List.of(), b);
+        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(level), 4, a, java.util.List.of(), b);
         String err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(level, 0, r.points, null);
         return (err == null ? "piped" : err) + (latexMb > 0 ? ", " + poured : "");
     }
@@ -1018,10 +1105,7 @@ public final class LabCommands {
             host(level, player, hv ? 12 + (32 << 6) : lv ? 4 + (32 << 6) : 8 + (32 << 6), step(p, side));   // a Low/Medium/High Voltage Cable
             var feed = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(level, player, 3 << 6, step(step(p, side), side));
             orient(feed, l -> l, side.getInverse());
-            feed.networkUnserialize(packet(o -> {
-                o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                o.writeFloat((float) (hv ? mods.eln.Eln.HVU : lv ? mods.eln.Eln.LVU : mods.eln.Eln.MVU));
-            }));
+            volts(feed, (hv ? mods.eln.Eln.HVU : lv ? mods.eln.Eln.LVU : mods.eln.Eln.MVU));
             if (e instanceof mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceElement f) {
                 f.getInventory().setItem(mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceElement.heatingCorpSlotId,
                     mods.eln.Eln.findItemStack("230V Tungsten Heating Corp", 1));
@@ -1054,10 +1138,7 @@ public final class LabCommands {
         for (int row = 0; row < 2; row++) {
             BlockPos o = pos.offset(0, 0, 3 * row);
             var feed = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(level, player, 3 << 6, o);
-            feed.networkUnserialize(packet(out -> {
-                out.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                out.writeFloat((float) mods.eln.Eln.LVU);
-            }));
+            volts(feed, mods.eln.Eln.LVU);
             for (int x : new int[]{1, 3, 5})
                 for (var part : mods.eln.node.voxel.CablePart.arms(lv, 0, 4, 5)) {   // (on the floor, west to east)
                     String err = mods.eln.node.voxel.PipeKitItem.place(level, o.offset(x, 0, 0), part, null);
@@ -1115,10 +1196,7 @@ public final class LabCommands {
         var back = c.front.back().toEnumFacing();
         host(level, player, 4 + (32 << 6), p.relative(back));   // a low voltage cable
         var source = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) host(level, player, 3 << 6, p.relative(back, 2));
-        source.networkUnserialize(packet(o -> {
-            o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-            o.writeFloat(50f);
-        }));
+        volts(source, 50f);
         c.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(mods.eln.robotics.Robotics.JANET_ROM.get()));
         c.getInventory().setItem(1, new net.minecraft.world.item.ItemStack(mods.eln.robotics.Robotics.RAM_CHIP.get()));
         c.getInventory().setItem(2, new net.minecraft.world.item.ItemStack(mods.eln.robotics.Robotics.RAM_CHIP.get()));
@@ -1134,6 +1212,14 @@ public final class LabCommands {
 
     interface PacketWriter {
         void write(java.io.DataOutputStream o) throws java.io.IOException;
+    }
+
+    /** Set an Electrical (or Signal) Source to u volts through its GUI packet (as TestContext.setVolts). */
+    static void volts(mods.eln.node.six.SixNodeElement source, double u) {
+        source.networkUnserialize(packet(o -> {
+            o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
+            o.writeFloat((float) u);
+        }));
     }
 
     static java.io.DataInputStream packet(PacketWriter w) {
@@ -1361,19 +1447,9 @@ public final class LabCommands {
         return out.toString();
     }
 
+    /** TestContext.field, as an Object (its callers here format or cast the value). */
     public static Object field(Object o, String name) {
-        for (Class<?> c = o.getClass(); c != null; c = c.getSuperclass()) {
-            try {
-                var f = c.getDeclaredField(name);
-                f.setAccessible(true);
-                return f.get(o);
-            } catch (NoSuchFieldException e) {
-                // superclass
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        throw new IllegalStateException("no field " + name + " in " + o.getClass());
+        return TestContext.field(o, name);
     }
 
     public static int sixId(String name) {

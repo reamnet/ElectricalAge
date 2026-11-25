@@ -65,6 +65,7 @@ public final class Machine implements Mmio {
         devices[BUS] = bus;
         devices[FLOPPY] = floppy;
         devices[EDITOR] = editor;
+        editor.mem = terminal.mem = mem;   // (block transfers)
         devices[POWER] = new Device() {
             @Override
             public int read(int off) {
@@ -98,9 +99,19 @@ public final class Machine implements Mmio {
         return resets;
     }
 
-    /** Start from the boot vector: registers cleared, RAM kept (a reset doesn't clear chips). */
+    /** What the screen says first after every reset (Wire 2's hello, with its newline), or null. */
+    public volatile byte[] hello;
+
+    /**
+     * Start from the boot vector: registers cleared, RAM kept (a reset doesn't clear chips). The screen channels are
+     * emptied: events the old program never read would reach the new one, and output it didn't finish would run into
+     * the new program's first line.
+     */
     public void reset(int cause) {
         resets++;
+        terminal.clear();
+        editor.clear();
+        if (hello != null) editor.give(hello);   // (the screen's hello waits for the program: Wire 2)
         cpu.reset(Memory.BOOT_VECTOR);
         halted = false;
         resetCause = cause;
@@ -277,6 +288,9 @@ public final class Machine implements Mmio {
         }
         mem.restoreRam(saved.pages());
         cpu.time = ticks;
+        // (the channels' buffers aren't saved: a newline ends whatever half event the program was reading, so the next
+        // one isn't glued to it; an empty line is ignored)
+        editor.give(new byte[]{'\n'});
         lines();
         return true;
     }

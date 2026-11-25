@@ -14,10 +14,10 @@ import java.util.List;
  * (electric heater, fuel heat furnace, heat furnace); above 100 °C the heat above boiling turns water into steam:
  * 175 J per mB of water (67.5 g: 20 -> 100 °C plus 2257 J/g), and 1 mB of water makes 67.5 mB of steam (design v2:
  * EA steam is 1 mg per mB). Steam is drawn off through the fluid capability (pipes) to EA's steam turbine.
- * Placeholder model: the electric furnace.
+ * Models: mods.eln.cad.models.Boiler; the Large Boiler's, mods.eln.cad.models.LargeBoiler.
  */
 public class BoilerDescriptor extends TransparentNodeDescriptor {
-    public static final double J_PER_MB_WATER = 175, STEAM_PER_WATER = 67.5, BOIL_C = 100;
+    public static final double J_PER_MB_WATER = 175, STEAM_PER_WATER = mods.eln.sim.fluid.EaUnits.STEAM_MB_PER_WATER_MB, BOIL_C = 100;
     final Obj3D obj;
     /**
      * What sets a boiler's size (the Boiler's values; large() gives the Large Boiler's): the vessel (m3) and its rated
@@ -65,8 +65,9 @@ public class BoilerDescriptor extends TransparentNodeDescriptor {
     /**
      * The Large Boiler as Baughn asked for it (2026-11-15: "It needs at least one face free for a signal output. How
      * about making it 2x2x2, physically?"): large()'s ratings in a 2x2x2 body, one node at its front-bottom-left block
-     * and seven ghost blocks to the right, back and up (LargeBoilerElement: twelve thermal faces, two steam outlets on
-     * top, the feed flange and the level signal on the front). PROTOTYPE: the Boiler's model at twice the size.
+     * and seven ghost blocks to the right, back and up (LargeBoilerElement: six thermal faces on its lower blocks, two
+     * steam outlets on top, the feed flange and the level signal on the front). Its model
+     * (mods.eln.cad.models.LargeBoiler) is drawn full size from the origin block.
      */
     public static BoilerDescriptor twoByTwo(String name, String model) {
         var d = new BoilerDescriptor(name, model, LargeBoilerElement.class).large();
@@ -91,8 +92,7 @@ public class BoilerDescriptor extends TransparentNodeDescriptor {
     /** A boiler may also stand on another EA device (a steam turbine: its dome port feeds the turbine's inlet below). */
     @Override
     public boolean isFloor(net.minecraft.world.level.block.Block below) {
-        return super.isFloor(below) || below instanceof mods.eln.node.transparent.TransparentNodeBlock
-            || below instanceof mods.eln.node.voxel.VoxelNodeBlock;   // (or on a pipe: its dome port feeds the pipe below)
+        return super.isFloor(below) || onDeviceOrPipe(below);   // (or on a pipe: its dome port feeds the pipe below)
     }
 
     /** The dial's span: DIAL_MAX_C at the end of its 270 degree sweep. */
@@ -121,7 +121,7 @@ public class BoilerDescriptor extends TransparentNodeDescriptor {
         super.addInformation(stack, player, list, adv);
         if (height > 1) {
             list.add("2 x 2 x 2 blocks, placed from its front bottom left; it grows right, back and up");
-            list.add("Heat in on all twelve faces of its back and flanks; steam out on the two rear top faces;");
+            list.add("Heat in on the six lower faces of its back and flanks; steam out on the two rear top faces;");
             list.add("water in at the front, low right; the level signal at the front, low left, 0 V empty to 5 V full");
         } else {
             list.add("Water in by pipe (right flank), heat in from a heater or furnace on the back or a flank, steam out by pipe");

@@ -15,7 +15,7 @@ import java.util.List;
 
 import static mods.eln.i18n.I18N.tr;
 
-public class ThermalDissipatorPassiveDescriptor extends TransparentNodeDescriptor {
+public class ThermalDissipatorPassiveDescriptor extends TransparentNodeDescriptor implements mods.eln.node.transparent.FrontDrawnRender.Drawn {
     public double thermalRs, thermalRp, thermalC;
     public Obj3D obj;
     Obj3DPart main;
@@ -60,13 +60,14 @@ public class ThermalDissipatorPassiveDescriptor extends TransparentNodeDescripto
 
         super.addInformation(itemStack, entityPlayer, list, par4);
         list.add(tr("Used to cool down turbines."));
-        list.add(tr("Max. temperature: %1$°C", Utils.plotValue(warmLimit)));
+        list.add(tr("Max. temperature: %1$", Utils.plotCelsius(warmLimit)));
         list.add(tr("Nominal usage:"));
-        list.add("  " + tr("Temperature: %1$°C", Utils.plotValue(nominalT)));
+        list.add("  " + tr("Temperature: %1$", Utils.plotCelsius(nominalT)));
         list.add("  " + tr("Cooling power: %1$W", Utils.plotValue(nominalP)));
     }
 
 
+    @Override
     public void draw() {
         if (main != null) main.draw();
     }

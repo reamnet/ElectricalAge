@@ -37,7 +37,7 @@ public final class AwgNativeRouteCase implements TestCase {
         var pivot = ctx.at(4, 0, 1);
         var end = ctx.at(4, 0, 4);
         click(player, start);
-        var plan = CablePlacer.PLANS.get(player.getUUID());
+        var plan = RoutePlacer.PLANS.get(player.getUUID());
         ctx.check("normal click starts a shared session with the original spool", plan != null && plan.wire == wire, "");
         var aim = end(end);
         var first = CablePlacer.route(ctx.level(), plan, end(pivot), null);

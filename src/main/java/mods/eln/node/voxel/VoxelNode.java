@@ -313,7 +313,11 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         if (p instanceof CablePart c) return c.burnt != null ? ItemStack.EMPTY : CableKitItem.kit(c.tier, c.spec, c.dropLength());
         if (p instanceof ValvePart v) return valveItem(v);
         if (p instanceof AdapterPart) return new ItemStack(mods.eln.registry.ElnRegistry.PIPE_ADAPTER.get());
-        if (p instanceof SafetyValvePart sv) return new ItemStack(sv.purge ? mods.eln.registry.ElnRegistry.PIPE_PURGE_VALVE.get() : mods.eln.registry.ElnRegistry.PIPE_SAFETY_VALVE.get());
+        if (p instanceof SafetyValvePart sv) return new ItemStack(switch (sv.mode) {
+            case SafetyValvePart.PURGE -> mods.eln.registry.ElnRegistry.PIPE_PURGE_VALVE.get();
+            case SafetyValvePart.BREATHER -> mods.eln.registry.ElnRegistry.PIPE_BREATHER_VALVE.get();
+            default -> mods.eln.registry.ElnRegistry.PIPE_SAFETY_VALVE.get();
+        });
         if (p instanceof PipeSensorPart s) return sensorItem(s);
         return ItemStack.EMPTY;
     }
@@ -465,20 +469,14 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         return out;
     }
 
-    /** Junctions left with fewer than two arms go; their contents go into the arm that is left (if any). */
+    /**
+     * Junctions left with fewer than two arms go, and their contents with them, as a broken pipe's do (Baughn
+     * 2026-11-25): given to the arm left, a junction full of water pressed into a short arm took its run to thousands of
+     * bar, and it burst.
+     */
     private void pruneJunctions() {
         for (int i = parts.size() - 1; i >= 0; i--)
-            if (parts.get(i) instanceof JunctionPart j) {
-                List<PipePart> arms = armsAt(j.x, j.y, j.z);
-                if (arms.size() >= 2) continue;
-                if (!arms.isEmpty() && arms.get(0).fluid != null && j.fluid != null) {
-                    // (the arm's piece holds its run's contents only after a write-back, and is edited here)
-                    mods.eln.fluid.FluidWorld.handBack(arms.get(0).fluid);
-                    arms.get(0).fluid.addShareOf(j.fluid, 1);
-                    arms.get(0).fluid.update();
-                }
-                parts.remove(i);
-            }
+            if (parts.get(i) instanceof JunctionPart j && armsAt(j.x, j.y, j.z).size() < 2) parts.remove(i);
     }
 
     /**
@@ -549,6 +547,19 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     @Override
     public Object fluidLevel() {
         return coordonate.dimention;
+    }
+
+    @Override
+    public long fluidPos() {
+        return coordonate.pos().asLong();
+    }
+
+    /** A pipe's or junction's node: its part's id. */
+    @Override
+    public int fluidNodeId(mods.eln.sim.fluid.FluidNode n) {
+        for (VoxelPart p : parts)
+            if (p instanceof PipePart pipe && pipe.fluid == n || p instanceof JunctionPart j && j.fluid == n) return p.id;
+        return -1;
     }
 
     @Override
@@ -633,7 +644,10 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             double k = PipePart.K_PER_BLOCK[Math.min(a.tier, b.tier)] * (v.mode == ValvePart.PRESSURE ? 1 : 4);   // (a quarter block of pipe; a
             // pressure valve's seat is narrower, a block's worth, so it can hold its set point without overshooting)
             // (a valve meters by the orifice law, its seat the smaller pipe's bore area: VOLUME_PER_BLOCK is m^3 a metre)
-            Link l = new Link(a.fluid, 0.5, b.fluid, 0.5, k).area(PipePart.VOLUME_PER_BLOCK[Math.min(a.tier, b.tier)]);
+            // (it passes what stands at its own place in the run: on a level run the bottom of the bore, so liquid along
+            // the bottom goes through; on an upright one its own height. It drew half way up each piece before it, so a run
+            // with a riser before it had to fill half full before a drop passed: Baughn 2026-11-24, "unrealistic")
+            Link l = new Link(a.fluid, valveDraw(a, v), b.fluid, valveDraw(b, v), k).area(PipePart.VOLUME_PER_BLOCK[Math.min(a.tier, b.tier)]);
             if (v.mode == ValvePart.PRESSURE) l.kind(mods.eln.sim.fluid.FluidEdge.Kind.REGULATOR);
             l.open = v.opening();
             valveLinks.put(l, v);
@@ -642,6 +656,14 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     }
 
     private java.util.Map<Link, ValvePart> valveLinks;
+
+    /** Where on pipe's node a valve at v draws (0..1): the bottom of the bore at the valve on a level run, the valve's
+     *  own height on an upright one. */
+    double valveDraw(PipePart pipe, ValvePart v) {
+        mods.eln.sim.fluid.FluidNode n = pipe.fluid;
+        double at = coordonate.y + (v.y - (v.axis == 1 ? 0 : pipe.bore() / 2.0)) / 16.0;
+        return n.height > 0 ? Math.max(0, Math.min(1, (at - n.z) / n.height)) : 0.5;
+    }
 
     /** Which side of a valve, along its axis, a pipe ending at it lies on (+1 or -1). */
     static int side(PipePart pipe, ValvePart v) {
@@ -678,6 +700,11 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
 
     /** ... or a purge valve (gas only), set just over the air's pressure. */
     public String addSafetyValveNear(double hx, double hy, double hz, boolean purge) {
+        return addSafetyValveNear(hx, hy, hz, purge ? SafetyValvePart.PURGE : SafetyValvePart.SAFETY);
+    }
+
+    /** ... of any mode (SafetyValvePart.SAFETY, PURGE, BREATHER; a breather has no set pressure: the air's). */
+    public String addSafetyValveNear(double hx, double hy, double hz, int mode) {
         int idx = partAt(hx, hy, hz);
         if (idx >= 0 && (parts.get(idx) instanceof SafetyValvePart || parts.get(idx) instanceof ValvePart)) return "there's a valve there already";
         for (VoxelPart q : parts) if (q instanceof SafetyValvePart) return "one safety valve per block (this one has one)";
@@ -715,8 +742,11 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             }
         }
         if (outlet < 0) return "no room around the pipe there";
-        var v = new SafetyValvePart(best[0], best[1], best[2], outlet, pipe.bore(),
-            purge ? SafetyValvePart.PURGE_PA : pipe.reliefPa(), purge);
+        var v = new SafetyValvePart(best[0], best[1], best[2], outlet, pipe.bore(), switch (mode) {
+            case SafetyValvePart.PURGE -> SafetyValvePart.PURGE_PA;
+            case SafetyValvePart.BREATHER -> mods.eln.sim.fluid.Water.P_ATM;
+            default -> pipe.reliefPa();
+        }, mode);
         parts.add(v);
         markUsed();
         changed();
@@ -919,6 +949,10 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         if (pi >= 0 && parts.get(pi) instanceof CablePart c && c.spec != null && recolour(player, pi, c)) return true;
         if (player.getMainHandItem().isEmpty()) {
             int i = pi;
+            if (i >= 0 && parts.get(i) instanceof SafetyValvePart sv && sv.breather) {
+                player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Fixed at outside pressure; nothing to set.")));
+                return true;
+            }
             if (i >= 0 && parts.get(i) instanceof SafetyValvePart sv) {
                 // (Baughn 2026-10-27: a screen with a slider, not stepping through presets)
                 if (player instanceof net.minecraft.server.level.ServerPlayer sp) openPartScreen(sp, i, SCREEN_SAFETY, sv.setPa / 1e5);
@@ -1010,7 +1044,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                     } else if (f >= 0) v.setPa = Math.max(ValvePart.MIN_BAR, Math.min(ValvePart.MAX_BAR, f)) * 1e5;
                     setNeedPublish(true);
                 }
-                if (i >= 0 && i < parts.size() && parts.get(i) instanceof SafetyValvePart sv && Float.isFinite(f)) {
+                if (i >= 0 && i < parts.size() && parts.get(i) instanceof SafetyValvePart sv && !sv.breather && Float.isFinite(f)) {
                     sv.setPa = Math.max(SafetyValvePart.MIN_BAR, Math.min(SafetyValvePart.MAX_BAR, f)) * 1e5;
                     setNeedPublish(true);
                 }
@@ -1059,12 +1093,17 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
      * run). Null, and why in err[0], if no other front fits.
      */
     public LRDU wrenchTurn(mods.eln.node.six.SixNodeElement e, String[] err) {
+        return wrenchTurn(e, 1, err);
+    }
+
+    /** As wrenchTurn(e, err), stepping step quarter turns at a time (SixNodeElement.wrenchStep: 2 skips the quarter turns). */
+    public LRDU wrenchTurn(mods.eln.node.six.SixNodeElement e, int step, String[] err) {
         List<int[]> held = new ArrayList<>();   // (tip x, y, z, mask of each joined pin)
         for (Pin p : pins(e)) if (e.slotMask.get(p.lrdu())) held.add(new int[]{p.tip()[0], p.tip()[1], p.tip()[2], p.mask()});
         LRDU was = e.front, f = was;
         String why = null;
-        for (int k = 0; k < 3; k++) {
-            f = f.getNextClockwise();
+        for (int k = step; k < 4; k += step) {
+            for (int i = 0; i < step; i++) f = f.getNextClockwise();
             boolean keeps = true;
             if (!held.isEmpty()) {
                 e.front = f;
@@ -1371,26 +1410,45 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     /** Why part can't join the pipe at (x, y, z), or null: addJoined's checks, also run before any of a joining route
      *  is laid (so a refused join lays nothing). */
     public String joinError(PipePart part, int x, int y, int z) {
+        return joinError(parts, used, part, x, y, z);
+    }
+
+    /**
+     * The same for a block's parts and used voxels as a route view has them (PipePlacer.ROUTE: the junction a route
+     * moves to where it leaves the old pipe, checked when routed, so the preview and the click agree).
+     */
+    static String joinError(List<VoxelPart> parts, BitSet used, PipePart part, int x, int y, int z) {
         if (!part.valid()) return "not a straight-pieced pipe inside the block";
         boolean any = false;
         for (VoxelPart p : parts) any |= p instanceof PipePart pp && pp.passes(x, y, z);
         if (!any) return "no pipe there to join";
-        if (fittingAt(x, y, z)) return "a valve or sensor sits there";
+        if (fittingAt(parts, x, y, z)) return "a valve or sensor sits there";
         // (a tee takes a third arm, a cross a fourth; no more)
-        if (junctionAt(x, y, z) != null && armsAt(x, y, z).size() >= 4) return "a cross takes no more pipes";
+        boolean junction = false;
+        int arms = 0;
+        for (VoxelPart p : parts) {
+            junction |= p instanceof JunctionPart j && j.x == x && j.y == y && j.z == z;
+            if (p instanceof PipePart pipe && endsAt(pipe, x, y, z)) arms++;
+        }
+        if (junction && arms >= 4) return "a cross takes no more pipes";
         int h = PipePart.JOIN_CLEAR;
         BitSet want = new BitSet(4096);
         for (int[] b : part.boxes()) fill(want, b);
         BitSet around = new BitSet(4096);
         fill(around, new int[]{Math.max(0, x - h), Math.max(0, y - h), Math.max(0, z - h), Math.min(16, x + h), Math.min(16, y + h), Math.min(16, z + h)});
         want.andNot(around);
-        if (want.intersects(used)) return "something is in the way";
+        if (used != null && want.intersects(used)) return "something is in the way";
         return null;
     }
 
     /** Is a valve, safety valve or pipe sensor at that point of a pipe? (A third pipe there would end at the valve and
      *  uncouple all three: its link needs exactly two pipe ends.) */
     boolean fittingAt(int x, int y, int z) {
+        return fittingAt(parts, x, y, z);
+    }
+
+    /** The same among a block's parts (as a route view has them). */
+    static boolean fittingAt(List<VoxelPart> parts, int x, int y, int z) {
         for (VoxelPart p : parts)
             if (p instanceof ValvePart v && v.x == x && v.y == y && v.z == z || p instanceof SafetyValvePart s && s.x == x && s.y == y && s.z == z
                 || p instanceof PipeSensorPart s2 && s2.x == x && s2.y == y && s2.z == z) return true;
@@ -1409,7 +1467,18 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                     vents.put(v, p);
                 } else if (p instanceof SafetyValvePart sv && pipeUnder(sv) != null) {
                     PipePart under = pipeUnder(sv);
-                    double draw = sv.outlet == 1 ? 1 : sv.outlet == 0 ? 0 : 0.5;   // (a valve on top lets out what's at the top)
+                    double draw = sv.draw();
+                    if (sv.breather) {
+                        // (a purge valve's float out and a vacuum breaker in, FlareStackElement's pair; opened by the pressure
+                        // under it, before each step)
+                        Vent out = new Vent(under.fluid, draw, SafetyValvePart.VENT_K);
+                        out.gasOnly = true;
+                        Vent in = new Vent(under.fluid, draw, SafetyValvePart.VENT_K);
+                        in.inward = true;
+                        vents.put(out, p);
+                        vents.put(in, p);
+                        continue;
+                    }
                     Vent vent = new Vent(under.fluid, draw, sv.purge ? SafetyValvePart.VENT_K : SafetyValvePart.RELIEF_K);
                     vent.gasOnly = sv.purge;
                     if (!sv.purge) {
@@ -1497,7 +1566,12 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
             for (var e : vents.entrySet())
                 if (e.getValue() instanceof SafetyValvePart sv) {
                     double P = mods.eln.fluid.FluidWorld.nodeFor(e.getKey().node).P();
-                    if (sv.purge) e.getKey().open = sv.follow(P, dt);
+                    if (sv.breather) {
+                        double[] o = SafetyValvePart.breathe(P);
+                        e.getKey().open = e.getKey().inward ? o[1] : o[0];
+                        sv.pAvg = P;
+                        sv.lift = Math.max(o[0], o[1]);
+                    } else if (sv.purge) e.getKey().open = sv.follow(P, dt);
                     else e.getKey().setPa = sv.relieve(P);
                 }
     }
@@ -1543,6 +1617,10 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         }
         if (changed) changed();
         showAdapters();
+        // what its safety, purge and breather valves let out (and a breather took in), for whoever reads the room's air
+        if (vents != null)
+            for (var e : vents.entrySet())
+                if (e.getValue() instanceof SafetyValvePart sv && e.getKey().edge != null) sv.book(e.getKey().edge, e.getKey().inward, dt);
         // jets out of burst pipes
         if (vents != null && level instanceof net.minecraft.server.level.ServerLevel sl)
             for (var e : vents.entrySet())
@@ -1552,7 +1630,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                     var origin = new net.minecraft.world.phys.Vec3(coordonate.x + c[0] / 16.0, coordonate.y + c[1] / 16.0, coordonate.z + c[2] / 16.0)
                         .add(dir.getStepX() * pipe.drawn() / 32.0, dir.getStepY() * pipe.drawn() / 32.0, dir.getStepZ() * pipe.drawn() / 32.0);
                     SteamJet.tick(sl, origin, dir, e.getKey().edge, SteamJet.MAX_LENGTH);
-                } else if (e.getValue() instanceof SafetyValvePart sv && e.getKey().edge != null && sv.lift > 0) {
+                } else if (e.getValue() instanceof SafetyValvePart sv && !sv.breather && e.getKey().edge != null && sv.lift > 0) {
                     var dir = net.minecraft.core.Direction.from3DDataValue(sv.outlet);
                     int[] b = sv.boxes().get(0);
                     var origin = new net.minecraft.world.phys.Vec3(coordonate.x + (b[0] + b[3]) / 32.0, coordonate.y + (b[1] + b[4]) / 32.0,
@@ -2864,9 +2942,26 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         }
         var n = mods.eln.fluid.FluidWorld.nodeFor(pipe.fluid);
         out.put("Pipe", PipePart.TIER_NAME[pipe.tier] + (pipe.burst ? ", BURST" : ""));
+        // (its breather or safety valves next, in Jade's headline whichever part of the block is looked at: AdventurAgent
+        // saw a breather's state only past the headline)
+        for (VoxelPart p : parts)
+            if (p instanceof SafetyValvePart sv && sv.breather) {
+                // (Neon's wording)
+                // (by what it let through in the last second, SafetyValvePart.HOLD_S, not this step's opening: it flickered)
+                String name = mods.eln.i18n.I18N.tr("Breather valve");
+                out.put(out.containsKey(name) ? name + " " + out.size() : name,
+                    n.level() >= Math.min(sv.draw(), 0.95) && n.liquidVolume() > 0 ? mods.eln.i18n.I18N.tr("Shut by liquid") : sv.ventShown > 0 ? mods.eln.i18n.I18N.tr("Venting gas")
+                        : sv.airShown > 0 ? mods.eln.i18n.I18N.tr("Drawing air") : mods.eln.i18n.I18N.tr("Idle"));
+            } else if (p instanceof SafetyValvePart sv) {
+                String name = sv.purge ? "Purge valve" : "Safety valve";
+                out.put(out.containsKey(name) ? name + " " + (out.size()) : name,
+                    String.format(sv.purge ? "%.1f bar%s" : "%.0f bar%s", sv.setPa / 1e5, sv.opening(n.P()) <= 0 ? ""
+                        : sv.purge && n.level() >= 0.999 ? ", shut: liquid at it" : sv.purge ? ", venting gas" : ", blowing"));
+            }
         // (Baughn: say what the pressure is of; steam in grams)
-        out.put("Pressure", String.format("%.2f bar of %s, %.0f °C", n.P() / 1e5, EaUnits.contents(n), n.T() - 273.15));
+        out.put("Pressure", String.format("%.2f bar of %s, %s", n.P() / 1e5, EaUnits.contents(n), mods.eln.api.Meters.celsius(n.T() - 273.15)));
         out.put("Contents", EaUnits.composition(n));
+        EaUnits.putViscosity(out, n);
         for (VoxelPart p : parts)
             if (p instanceof ValvePart v) out.put(switch (v.mode) {
                 case ValvePart.CONTROL -> "Control valve";
@@ -2878,17 +2973,10 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
                     v.setPoint() / 1e5, v.signalled() ? " by signal" : "", v.opening() * 100)
                 : String.format("%.0f%% open", v.opening() * 100));
         for (VoxelPart p : parts)
-            if (p instanceof SafetyValvePart sv) {
-                String name = sv.purge ? "Purge valve" : "Safety valve";
-                out.put(out.containsKey(name) ? name + " " + (out.size()) : name,
-                    String.format(sv.purge ? "%.1f bar%s" : "%.0f bar%s", sv.setPa / 1e5, sv.opening(n.P()) <= 0 ? ""
-                        : sv.purge && n.level() >= 0.999 ? ", shut: liquid at it" : sv.purge ? ", venting gas" : ", blowing"));
-            }
-        for (VoxelPart p : parts)
             if (p instanceof PipeSensorPart s) out.put(s.name(), String.format(s.sensing == PipeSensorPart.PRESSURE ? "%.2f %s (absolute) of %.0f: %.1f V" : "%.0f %s of %.0f: %.1f V",
                 s.reading, s.unit(), s.scale, s.share() * mods.eln.Eln.SVU));
         if (!details) return out;
-        out.put("Liquid", String.format("%.0f mB", n.liquidVolume() * mods.eln.sim.fluid.Water.RHO_L / EaUnits.KG_PER_MB_WATER));
+        out.put("Liquid", EaUnits.volume(n.liquidVolume() * mods.eln.sim.fluid.Water.RHO_L / EaUnits.KG_PER_MB_WATER));
         out.put("Run volume", String.format("%.2f L", n.volume * 1000));
         out.put("Rating", String.format("works to %.0f bar, bursts at %.0f", pipe.workingPa(n.T()) / 1e5, pipe.burstPa(n.T()) / 1e5));
         for (VoxelPart p : parts) if (p instanceof AdapterPart a) out.put("Adapter", net.minecraft.core.Direction.from3DDataValue(a.face).getName());
@@ -2912,7 +3000,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         CableNet.Conductor k = conductorOf(part);
         if (k != null && k.thermal != null) return mods.eln.misc.Utils.plotCelsius("T", k.thermal.Tc);
         PipePart pipe = pipeOf(part);
-        return pipe == null ? "" : String.format("%.0f °C  ", mods.eln.fluid.FluidWorld.nodeFor(pipe.fluid).T() - 273.15);
+        return pipe == null ? "" : mods.eln.api.Meters.celsius(mods.eln.fluid.FluidWorld.nodeFor(pipe.fluid).T() - 273.15) + "  ";
     }
 
     /** By side (a face's hosted device; else the block's first cable, then its first pipe: callers without a hit). */

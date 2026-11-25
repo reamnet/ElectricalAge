@@ -84,7 +84,7 @@ class ReplayTest {
             assertEquals(0, Sparse.FALLBACKS - fallbacks, "solves that fell back to the dense solve");
             // (before: 11-13 iterations, ~75 solves and 1-2 sub-steps a step)
             org.junit.jupiter.api.Assertions.assertTrue(net.stats.iterations <= 8 * steps, "iterations: " + net.stats.iterations);
-            org.junit.jupiter.api.Assertions.assertTrue(net.stats.substeps <= steps / 4, "sub-steps: " + net.stats.substeps);
+            org.junit.jupiter.api.Assertions.assertTrue(net.stats.substeps <= steps / 8, "sub-steps: " + net.stats.substeps);
         } finally {
             Network.MAX_DEPTH = depth;
             Network.CUT_SHORT = cut;
@@ -256,6 +256,45 @@ class ReplayTest {
         }
     }
 
+    /**
+     * A player's turbine plant on Incognito (2026-11-21, the game's slow-step dump; 36 nodes): the server crash-looped
+     * on its step. A 0.1 L pump suction between two stopped pumps had been drawn down to 4 ug of air at 3e-5 bar, its
+     * only live link a wall of 3 W/K. The water/air solve accepted an energy within 1e-9 J, 4e-4 K in that pocket, and
+     * Newton's correction to its energy (the wall heat's residual over the wall's slope, ~1e-9 J) fell inside it: the
+     * state never moved, and its energy row stalled at 0.1 of the node, falling only with the step, down to 6e-6 s. With
+     * these settings each step hit the 256 sub-step cap in ~1200-1450 iterations, covering 0.038 s of the first tick and
+     * 0.0003 s of the next. With WaterAir.energyTol: a couple of sub-steps over these 40 steps, ~20 iterations a step.
+     */
+    @Test
+    void vacuumPocketBehindAWallSteps() throws Exception {
+        int depth = Network.MAX_DEPTH;
+        boolean cut = Network.CUT_SHORT;
+        try {
+            Network.MAX_DEPTH = 8;
+            Network.CUT_SHORT = true;
+            String text;
+            try (var in = ReplayTest.class.getResourceAsStream("/replay/turbine-plant-vacuum-pocket-behind-a-wall.txt")) {
+                text = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            }
+            double[] dt = new double[1];
+            Network net = NetworkDump.read(text, dt);
+            int steps = 40;
+            for (int i = 0; i < steps; i++) {
+                net.step(dt[0]);
+                assertEquals(dt[0], net.done, 1e-12, "step " + i + " covered");
+            }
+            System.out.printf("vacuum pocket: %d steps, iterations %d, substeps %d%n", steps, net.stats.iterations, net.stats.substeps);
+            assertEquals(0, net.stats.failures, "failed sub-steps");
+            // (a few sub-steps are fine: before, every step hit the cap of 256 and covered a fraction of its time)
+            org.junit.jupiter.api.Assertions.assertTrue(net.stats.substeps <= steps / 4, "sub-steps: " + net.stats.substeps);
+            // (before: the sub-step cap and ~1200-1450 iterations on each step; now ~850 over these steps)
+            org.junit.jupiter.api.Assertions.assertTrue(net.stats.iterations <= 30 * steps, "iterations: " + net.stats.iterations);
+        } finally {
+            Network.MAX_DEPTH = depth;
+            Network.CUT_SHORT = cut;
+        }
+    }
+
     @Test
     void replayDumps() throws Exception {
         String dir = System.getenv("FLUIDCORE_REPLAY");
@@ -284,5 +323,63 @@ class ReplayTest {
         }
         Network.MAX_DEPTH = depth;
         assertEquals(depth, Network.MAX_DEPTH);
+    }
+
+    /**
+     * A still's condensate line (LabAgent's still, sensible batch, steady boiling; 2026-11-24): 17 mL running full of
+     * gasoline, its bubble squeezed to 1e-12 of the node. The flash's polish crawled one e-fold of the bubble a step
+     * towards it (dT scaled with it, until the energy ran away), fell to the bracket 0.8 times a network step, and then
+     * crawled on rounding; a third of the still's flash work. Now a shrinking bubble's step is taken in 1/Vg, an
+     * overshoot past what the liquid can be squeezed backs off, and a step below resolution is accepted.
+     */
+    @Test
+    void aStillsFullCondensateLineSolvesWithoutTheBracket() throws Exception {
+        int depth = Network.MAX_DEPTH;
+        boolean cut = Network.CUT_SHORT, count = MixFluid.COUNT;
+        try {
+            Network.MAX_DEPTH = 8;
+            Network.CUT_SHORT = true;
+            MixFluid.COUNT = true;
+            String text;
+            try (var in = ReplayTest.class.getResourceAsStream("/replay/still-sensible-1200.txt")) {
+                text = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            }
+            double[] dt = new double[1];
+            Network net = NetworkDump.read(text, dt);
+            long b0 = MixFluid.BRACKETS;
+            int steps = 20;
+            for (int i = 0; i < steps; i++) {
+                net.step(dt[0]);
+                assertEquals(dt[0], net.done, 1e-12, "step " + i + " covered");
+            }
+            double brackets = (MixFluid.BRACKETS - b0) / (double) steps;
+            System.out.printf("still condensate line: %.2f brackets a step, %.1f iterations a step%n", brackets, net.stats.iterations / (double) steps);
+            org.junit.jupiter.api.Assertions.assertTrue(brackets <= 0.3, "brackets a step: " + brackets);
+            assertEquals(0, net.stats.failures);
+            // (the old polish on the same steps: it does fall to the bracket here, and the new one ends where it does)
+            MixFluid.SHRINK_STEP = false;
+            MixFluid.STEP_FLOOR = false;
+            Network old = NetworkDump.read(text, dt);
+            long b1 = MixFluid.BRACKETS;
+            for (int i = 0; i < steps; i++) old.step(dt[0]);
+            double oldBrackets = (MixFluid.BRACKETS - b1) / (double) steps;
+            double worstT = 0, worstP = 0;
+            for (int i = 0; i < net.nodes.size(); i++) {
+                Network.Node a = net.nodes.get(i), b = old.nodes.get(i);
+                if (a.fixed || a.mass() < 1e-6) continue;
+                worstT = Math.max(worstT, Math.abs(a.T() - b.T()));
+                if (a.level() <= 0.999) worstP = Math.max(worstP, Math.abs(a.P() - b.P()));
+            }
+            System.out.printf("  old polish: %.2f brackets a step; worst %.3g K, %.3g Pa apart%n", oldBrackets, worstT, worstP);
+            org.junit.jupiter.api.Assertions.assertTrue(oldBrackets >= 0.5, "the old polish's brackets a step: " + oldBrackets);
+            org.junit.jupiter.api.Assertions.assertTrue(worstT < 1e-3, "temperature off the old polish by " + worstT);
+            org.junit.jupiter.api.Assertions.assertTrue(worstP < 1, "pressure off the old polish by " + worstP);
+        } finally {
+            Network.MAX_DEPTH = depth;
+            Network.CUT_SHORT = cut;
+            MixFluid.COUNT = count;
+            MixFluid.SHRINK_STEP = true;
+            MixFluid.STEP_FLOOR = true;
+        }
     }
 }

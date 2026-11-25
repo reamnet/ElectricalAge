@@ -51,6 +51,7 @@ public class Wp10aContent implements ElnContent {
         registerResinCollector(92);
         registerCarbonBlackBurner(93);
         registerDesulfuriser(94);
+        registerGroundRadar(97);
         registerSteamCracker(95);
         registerPolymeriser(96);
     }
@@ -71,6 +72,16 @@ public class Wp10aContent implements ElnContent {
 
     /** The Desulfuriser (the rubber chain's oil route, 2026-11-07): in line on a cut's pipe, 230 V, 1 kW. Model
      *  mods.eln.cad.models.Desulfuriser. */
+    /** The Ground Radar (Baughn 2026-11-24): scans the ground under it on two portable batteries. Model
+     *  mods.eln.cad.models.GroundRadar. */
+    public static void registerGroundRadar(int id) {
+        transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.transparentnode.groundradar.GroundRadarDescriptor(
+            TR_NAME(Type.NONE, "Ground Radar"), "ground_radar", false));
+        // (with goggles, a crafting item, it can fly through its picture: Baughn 2026-11-24)
+        transparentNodeItem.addDescriptor(1 + (id << 6), new mods.eln.transparentnode.groundradar.GroundRadarDescriptor(
+            TR_NAME(Type.NONE, "Ground Radar w/Goggles"), "ground_radar", true));
+    }
+
     public static void registerDesulfuriser(int id) {
         transparentNodeItem.addDescriptor(0 + (id << 6), new mods.eln.transparentnode.desulfuriser.DesulfuriserDescriptor(
             TR_NAME(Type.NONE, "Desulfuriser"), "desulfuriser", MVU, 1000, meduimVoltageCableDescriptor));
@@ -117,6 +128,10 @@ public class Wp10aContent implements ElnContent {
         // Baughn 2026-11-15: a Large Boiler of alloy plate, about four Boilers, 2x2x2 blocks (here: the steam group 82 is
         // full). Sub-id 12 was its one-block prototype, never shipped: left unused. Its own model (largeboiler, todo #522).
         transparentNodeItem.addDescriptor(16 + (id << 6), mods.eln.oil.BoilerDescriptor.twoByTwo(TR_NAME(Type.NONE, "Large Boiler"), "largeboiler"));
+        // refinery M2 (todo #591, Baughn: batch first): the Still Pot, a 2x2x2 kettle heated as the Large Boiler is
+        transparentNodeItem.addDescriptor(20 + (id << 6), new mods.eln.oil.StillPotDescriptor(TR_NAME(Type.NONE, "Still Pot"), "stillpot"));
+        // its condenser (Baughn 2026-11-24: "Condenser Coil"): a 1x1x2 drum cooled through thermal faces
+        transparentNodeItem.addDescriptor(24 + (id << 6), new mods.eln.oil.CondenserCoilDescriptor(TR_NAME(Type.NONE, "Condenser Coil"), "condensercoil"));
     }
 
     /** 26.x oil & steam: electric heaters and the boiler (placeholder models). */
@@ -131,7 +146,7 @@ public class Wp10aContent implements ElnContent {
         heater200.repairPart = "230V Copper Heating Corp";
         transparentNodeItem.addDescriptor(4 + (id << 6), heater200);
         transparentNodeItem.addDescriptor(8 + (id << 6), new mods.eln.oil.BoilerDescriptor(TR_NAME(Type.NONE, "Boiler"), "boiler"));
-        // Baughn: small steam turbines with the generator built in; they replace the heat turbines (now uncraftable)
+        // Baughn: small steam turbines with the generator built in; they replaced the heat turbines (removed 2026-11-23)
         transparentNodeItem.addDescriptor(12 + (id << 6), new mods.eln.oil.SteamGeneratorDescriptor(TR_NAME(Type.NONE, "48V Steam Turbine"),
             LVU, 1000, lowVoltageCableDescriptor, "steamturbine50v"));
         transparentNodeItem.addDescriptor(16 + (id << 6), new mods.eln.oil.SteamGeneratorDescriptor(TR_NAME(Type.NONE, "230V Steam Turbine"),

@@ -281,13 +281,13 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
         var c = node.coordonate;
         vessel = new FluidNode(desc.volume, c.y, desc.height, false);
         if (loaded != null) {
-            mods.eln.fluid.FluidSaves.restore(vessel, loaded);
+            mods.eln.fluid.FluidSaves.restore(vessel, loaded, mods.eln.sim.Ambient.kelvin(c), c);
             vessel.update();
         } else fromTanks(tanks.water(), tanks.steam());
         showTanks();
         feed = new FluidNode(FEED_VOLUME, c.y + FEED_DRAW, 0.1, false);
         if (loadedFeed != null) {
-            mods.eln.fluid.FluidSaves.restore(feed, loadedFeed);
+            mods.eln.fluid.FluidSaves.restore(feed, loadedFeed, mods.eln.sim.Ambient.kelvin(c), c);
             feed.update();
         } else feed.fill(0, Water.P_ATM, mods.eln.sim.Ambient.kelvin(node.coordonate));
         feed.lumpable = true;   // (it merges into the pipe on its flange: no stub to fill first)
@@ -366,21 +366,21 @@ public class BoilerElement extends TransparentNodeElement implements FluidDevice
         }
         info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermal.Tc));
         if (vessel != null)   // (dry, it is the gas's: AdventurAgent read "Water temperature" with no water)
-            info.put(vessel.mLiquid() > 1e-6 ? I18N.tr("Water temperature") : I18N.tr("Gas temperature"), String.format("%.0f °C", vessel.T() - Water.T0));
+            info.put(vessel.mLiquid() > 1e-6 ? I18N.tr("Water temperature") : I18N.tr("Gas temperature"), mods.eln.api.Meters.celsius(vessel.T() - Water.T0));
         // (Erisi's chat review: how the heater's temperature and the pressure relate: it boils only under its shell's)
         if (vessel != null && vessel.mLiquid() > 1e-6)
-            info.put(I18N.tr("Boils at"), String.format(I18N.tr("%.0f °C at its %.1f bar: the shell must be hotter to make steam"),
-                Water.tsat(Math.max(vessel.P(), Water.P_ATM)) - Water.T0, vessel.P() / 1e5));
+            info.put(I18N.tr("Boils at"), String.format(I18N.tr("%s at its %.1f bar: the shell must be hotter to make steam"),
+                mods.eln.api.Meters.celsius(Water.tsat(Math.max(vessel.P(), Water.P_ATM)) - Water.T0), vessel.P() / 1e5));
         // (the vessel's own water, not the capability's view capped at the rating: an overfilled boiler showed 8000)
         int water = vessel != null ? (int) Math.floor(vessel.mLiquid() / EaUnits.KG_PER_MB_WATER) : tanks.water();
-        info.put(I18N.tr("Water"), water + " / " + desc.waterMb + " mB" + (water > desc.waterMb ? I18N.tr(": overfull") : ""));
+        info.put(I18N.tr("Water"), mods.eln.sim.fluid.EaUnits.tank(water, desc.waterMb) + (water > desc.waterMb ? I18N.tr(": overfull") : ""));
         // (Baughn: steam in grams, not mB)
         info.put(I18N.tr("Steam to give"), EaUnits.steamGrams(tanks.steam()));
         info.put(I18N.tr("Steam made"), EaUnits.steamGrams(steamRate) + "/s");
         // (Baughn: "At half height: liquid" didn't say what it meant)
-        info.put(I18N.tr("Front signal"), I18N.tr("%1$% of the gauge glass", Math.round(100 * Math.max(0, Math.min(1, fill())))));
+        info.put(I18N.tr("Front signal"), I18N.tr("%1$ of the gauge glass", Utils.plotPercent(Math.max(0, Math.min(1, fill())))));
         double wet = heatingShare();
-        if (wet < 0.999) info.put(I18N.tr("Heating surface"), I18N.tr("%1$% under water: the shell runs hot", Math.round(100 * (wet - DRY_SHARE) / (1 - DRY_SHARE))));
+        if (wet < 0.999) info.put(I18N.tr("Heating surface"), I18N.tr("%1$ under water: the shell runs hot", Utils.plotPercent((wet - DRY_SHARE) / (1 - DRY_SHARE))));
         return info;
     }
 }

@@ -385,25 +385,9 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         return ports;
     }
 
-    /** Placed facing the player, its ports made from that front; the wrench turns it (FluidPlacement). */
-    @Override
-    public void initializeFromThat(Direction front, net.minecraft.world.entity.LivingEntity entityLiving, net.minecraft.nbt.CompoundTag itemStackNbt) {
-        super.initializeFromThat(front, entityLiving, itemStackNbt);
-        remakePorts();
-    }
-
-    @Override
-    public Direction[] fronts() {
-        return mods.eln.fluid.FluidPlacement.horizontal();
-    }
-
+    /** Its ports, from where it faces now (a turned turbine's exhaust moves with it). */
     @Override
     public void remakePorts() {
-        makePorts();
-    }
-
-    /** Its ports, from where it faces now (a turned turbine's exhaust moves with it). */
-    void makePorts() {
         long pos = node.coordonate.pos().asLong();
         ports = List.of(new FluidPort(inlet, pos, 1, 1.0, spec.portK),   // the inlet on top
             // the exhaust behind: made for a large alloy pipe (low-pressure steam, to an LP turbine or a condenser)
@@ -414,7 +398,7 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
     public void connectJob() {
         super.connectJob();
         if (inlet != null) {
-            makePorts();
+            remakePorts();
             FluidWorld.add(this);
         }
     }
@@ -454,7 +438,7 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         load(exhaust, loadedEx, T);
         turbine = new FluidDevice.Link(inlet, 1.0, exhaust, 0.5, spec.portK).turbine(nozzle(), spec.eta);
         exhaustVent = new FluidDevice.Vent(exhaust, 0.5, mods.eln.node.voxel.PipePart.LARGE_END_K);
-        makePorts();
+        remakePorts();
         super.initialize();
     }
 
@@ -559,8 +543,8 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         info.put(I18N.tr("Exhaust"), exhaustPiped ? String.format("%.2f bar, piped", exhaustPa() / 1e5) : I18N.tr("to the air"));
         if (inlet != null) info.put(I18N.tr("Work per kg"), String.format("%.0f kJ/kg", jPerKg() / 1000));
         if (wetShare() > 0.01) info.put(I18N.tr("Water in its way"), String.format("%.0f%%%s", wetShare() * 100,
-            brakeW > 0 ? String.format(", braking %.1f kW", brakeW / 1000) : ""));
-        info.put(I18N.tr("Steam valve"), tripped ? I18N.tr("tripped by overspeed") : String.format("%.0f%%", Math.min(gate, controls.limit) * 100));
+            brakeW > 0 ? ", braking " + mods.eln.api.Meters.watts(brakeW) : ""));
+        info.put(I18N.tr("Steam valve"), tripped ? I18N.tr("tripped by overspeed") : Utils.plotPercent(Math.min(gate, controls.limit)));
         info.put(I18N.tr("Governor"), controls.isManual() ? I18N.tr("off: manual control, no overspeed trip") : I18N.tr("automatic, trips over 880 rad/s"));
         info.put(I18N.tr("Control"), controls.controlExternal ? String.format("external, %.0f%%", controls.limit * 100)
             : controls.hasRegulator() ? String.format("holds %.1f bar at the inlet", controls.targetBar) : String.format("throttle %.0f%%", controls.throttle * 100));

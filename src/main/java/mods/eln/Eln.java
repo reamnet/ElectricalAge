@@ -21,7 +21,7 @@ public class Eln {
     /** Wireless signal transmitter range (1.12 config wireless.txRange, default 32). */
     public static int wirelessTxRange = 32;
 
-    /** 1.12 config balancing.heatTurbinePowerFactor (default 1). */
+    /** Retained for the port's legacy heat turbine saves. */
     public static double heatTurbinePowerFactor = 1;
     public static double windTurbinePowerFactor = 1;
     public static double waterTurbinePowerFactor = 1;
@@ -277,6 +277,7 @@ public class Eln {
             mods.eln.registry.ElnRegistry.afterRegistration();
             mods.eln.registry.ElnMachineRecipes.registerAll();
             simulator.init();
+            mods.eln.sim.fluid.CoreStep.budgetNanos = mods.eln.sim.fluid.CoreStep.GAME_BUDGET;   // (a stiff fluid network runs slow, not the server)
             simulator.addSlowProcess(wind = new mods.eln.misc.WindProcess());
             simulator.addSlowProcess(mods.eln.fluid.FluidWorld.reset());   // (before the devices' own: they see this tick's state)
             for (ElnContent c : CONTENT) c.serverAboutToStart();
@@ -284,8 +285,7 @@ public class Eln {
         NeoForge.EVENT_BUS.addListener(ServerStoppedEvent.class, e -> {
             simulator.stop();
             mods.eln.fluid.FluidWorld.reset();
-            mods.eln.node.voxel.PipePlacer.forgetAll();
-            mods.eln.node.voxel.CablePlacer.forgetAll();
+            mods.eln.node.voxel.RoutePlacer.forgetAll();
             for (ElnContent c : CONTENT) c.serverStopped();
             serverEventListener.clear();
             nodeManager.clear();
@@ -296,6 +296,10 @@ public class Eln {
         // 1.12 ran the simulator in ServerTickEvent phase START
         NeoForge.EVENT_BUS.addListener(ServerTickEvent.Pre.class, e -> simulator.tick());
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre.class, mods.eln.node.voxel.KitItem::onPickup);
+        // (after Open Parties and Claims' cancel, and seeing it: a bike's owner may pick it up in any claim)
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, true,
+            net.neoforged.neoforge.event.entity.player.AttackEntityEvent.class, mods.eln.bike.ElectricBike::ownerMayAttack);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre.class, mods.eln.gridnode.OverheadCableItem::onPickup);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.ItemCraftedEvent.class, mods.eln.node.voxel.CableKitRecipes::crafted);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.ItemCraftedEvent.class, mods.eln.node.voxel.PipeKitRecipes::crafted);
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock.class, mods.eln.node.voxel.ChiselItem::onLeftClick);
@@ -314,19 +318,14 @@ public class Eln {
             });
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent.class,
             e -> mods.eln.node.voxel.KitPreview.forget(e.getEntity().getUUID()));
-        // pipe routes being laid: forgotten on logout and death
+        // cable and pipe routes being laid: forgotten on logout and death (Baughn: they never timed out)
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.class,
-            e -> mods.eln.node.voxel.PipePlacer.forget(e.getEntity().getUUID()));
+            e -> mods.eln.node.voxel.RoutePlacer.forget(e.getEntity().getUUID()));
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.living.LivingDeathEvent.class,
-            e -> mods.eln.node.voxel.PipePlacer.forget(e.getEntity().getUUID()));
+            e -> mods.eln.node.voxel.RoutePlacer.forget(e.getEntity().getUUID()));
         // ... and the starting pole of an overhead line
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.class,
             e -> mods.eln.gridnode.GridElement.forget(e.getEntity().getUUID()));
-        // ... and cable routes (Baughn: they never timed out)
-        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.class,
-            e -> mods.eln.node.voxel.CablePlacer.forget(e.getEntity().getUUID()));
-        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.entity.living.LivingDeathEvent.class,
-            e -> mods.eln.node.voxel.CablePlacer.forget(e.getEntity().getUUID()));
         NeoForge.EVENT_BUS.addListener(ServerTickEvent.Post.class, e -> mods.eln.node.NodeOrphans.tick(e.getServer()));
         // X-ray scanner: ore blocks per material come from tags
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.TagsUpdatedEvent.class, e -> mods.eln.item.xray.XRayFilter.invalidate());

@@ -27,7 +27,7 @@ abstract public class GridElement extends TransparentNodeElement {
     /**
      * The last place any given player tried to link two instance nodes.
      */
-    private record Pending(Coordonate coordinate, int terminal) { }
+    private record Pending(Coordonate coordinate, int terminal, Direction side) { }
     private static final HashMap<UUID, Pending> pending = new HashMap<>();
     public final HashSet<GridLink> gridLinkList = new HashSet<>();
     public final HashSet<GridLink> gridLinksBooting = new HashSet<>();
@@ -71,41 +71,41 @@ abstract public class GridElement extends TransparentNodeElement {
         UUID id=player.getUUID();
         int terminal=selectedGridTerminal(side);
         if (!allowsNewGridLinks() || gridLoads(terminal).isEmpty() || (!bare && (!acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || !GridCablePlan.acceptsChannels(cable,gridLoads(terminal).size())))) {
-            Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Select an overhead grid terminal and intact power cable"));pending.remove(id);return true;
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Select an overhead grid terminal and intact power cable")));pending.remove(id);return true;
         }
         var first=pending.get(id);
         GridElement other=first==null || first.coordinate().dimention != coordonate().dimention ? null :GridLink.getElementFromCoordinate(first.coordinate());
-        if (other==this) { pending.remove(id);Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Cancelled connection"));return true; }
+        if (other==this) { pending.remove(id);player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Cancelled connection")));return true; }
         if (other==null) {
-            pending.put(id,new Pending(coordonate(),terminal));Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Setting starting point"));return true;
+            pending.put(id,new Pending(coordonate(),terminal,side));player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Setting starting point")));return true;
         }
         pending.remove(id);
         if (bare) {
             try {
-                if (!canConnect(other) || !validLOS(other))
+                if (!canConnect(other) || !lineOfSight(other, side, first.side()))
                     throw new IllegalArgumentException(mods.eln.i18n.I18N.tr("Cannot connect these two objects"));
                 int cost = GridLink.addBareLink(other, this, first.terminal(), terminal, stack);
                 if (cost > 0) {
                     if (!player.isCreative()) OverheadCableItem.take(stack, cost);
                     player.getInventory().setChanged();
                 }
-                Utils.sendMessage(player, mods.eln.i18n.I18N.tr(cost > 0 ? "Added connection" : "Already connected"));
+                player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr(cost > 0 ? "Added connection" : "Already connected")));
             } catch (IllegalArgumentException ex) {
-                Utils.sendMessage(player, ex.getMessage());
+                player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(ex.getMessage()));
             }
             return true;
         }
         int length=GridCablePlan.requiredUnits(cable,(int)Math.ceil(other.coordonate().trueDistanceTo(coordonate())),gridLoads(terminal).size());
         var utility=cable instanceof mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire?wire:null;
         boolean enough=utility==null?stack.getCount()>=length:stack.getCount()==1 && (player.isCreative() || utility.getRemainingLengthMeters(stack)+1e-6>=length);
-        if (!enough) { Utils.sendMessage(player,mods.eln.i18n.I18N.tr("You need %1$ units of cable",length));return true; }
+        if (!enough) { player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("You need %1$ units of cable",length)));return true; }
         try {
-            if (!canConnect(other) || !validLOS(other)) throw new IllegalArgumentException(mods.eln.i18n.I18N.tr("Cannot connect these two objects"));
+            if (!canConnect(other) || !lineOfSight(other, side, first.side())) throw new IllegalArgumentException(mods.eln.i18n.I18N.tr("Cannot connect these two objects"));
             ItemStack paid=utility==null?stack.copyWithCount(length):utility.segment(stack,(double)length);
             if (GridLink.addLink(other,this,first.terminal(),terminal,cable,length,paid)) {
-                if(utility==null)stack.shrink(length);else if(!player.isCreative())utility.consume(stack,(double)length);player.getInventory().setChanged();Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Added connection"));
-            } else Utils.sendMessage(player,mods.eln.i18n.I18N.tr("Already connected"));
-        } catch (IllegalArgumentException ex) { Utils.sendMessage(player,ex.getMessage()); }
+                if(utility==null)stack.shrink(length);else if(!player.isCreative())utility.consume(stack,(double)length);player.getInventory().setChanged();player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Added connection")));
+            } else player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Already connected")));
+        } catch (IllegalArgumentException ex) { player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(ex.getMessage())); }
         return true;
     }
 
@@ -187,10 +187,41 @@ abstract public class GridElement extends TransparentNodeElement {
     protected void onLinksChanged() {
     }
 
-    // TODO: This should check if the wire isn't passing through blocks.
-    private boolean validLOS(GridElement other) {
+    /** Check every rendered conductor against blocks, excluding the poles and their ghosts. */
+    public boolean lineOfSight(GridElement other, Direction mySide, Direction otherSide) {
+        net.minecraft.world.level.Level level = coordonate().world();
+        if (level == null) return true;
+        int mine = selectedGridTerminal(mySide), theirs = other.selectedGridTerminal(otherSide);
+        for (int i = 0; i < Math.min(renderWireCount(mine), other.renderWireCount(theirs)); i++) {
+            Vec3 a = centre(this).add(renderedGridCablePoint(mine, i));
+            Vec3 b = centre(other).add(other.renderedGridCablePoint(theirs, i));
+            int n = (int) Math.ceil(a.distanceTo(b) / 0.125);
+            for (int k = 1; k < n; k++) {
+                Vec3 q = a.lerp(b, k / (double) n);
+                net.minecraft.core.BlockPos bp = net.minecraft.core.BlockPos.containing(q);
+                if (!level.isLoaded(bp) || ownBlock(other, bp, level)) continue;
+                var state = level.getBlockState(bp);
+                if (state.isAir()) continue;
+                for (var box : state.getCollisionShape(level, bp).toAabbs())
+                    if (box.move(bp).contains(q)) return false;
+            }
+        }
         return true;
     }
+
+    static Vec3 centre(GridElement e) {
+        Coordonate c = e.coordonate();
+        return new Vec3(c.x + 0.5, c.y + 0.5, c.z + 0.5);
+    }
+
+    /** Is bp one of the two poles, or a ghost block of either? */
+    private boolean ownBlock(GridElement other, net.minecraft.core.BlockPos bp, net.minecraft.world.level.Level level) {
+        Coordonate c = new Coordonate(bp, level);
+        if (c.equals(coordonate()) || c.equals(other.coordonate())) return true;
+        var g = mods.eln.Eln.ghostManager.getGhost(c);
+        return g != null && (g.getObservatorCoordonate().equals(coordonate()) || g.getObservatorCoordonate().equals(other.coordonate()));
+    }
+
 
     // Return false if connecting grid elements that can't connect.
     protected boolean canConnect(GridElement other) {

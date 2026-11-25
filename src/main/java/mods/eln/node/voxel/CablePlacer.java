@@ -11,47 +11,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
- * Laying a routed cable with a cable kit (notes/cables/PLAN.md; Baughn: the pipes' UX, but cables run against faces).
- * Right-click a face to start (a block's face: the cable starts there, lying on it; a device: the cable starts at the
- * edge of its face nearest the click; a cable: it starts as a branch of it). Right-click more faces for waypoints;
- * right-click a device or a cable to finish there, or the last waypoint again to end the cable there. Sneak-right-click
- * takes back the last waypoint (or cancels). The planned route shows as particles.
+ * The cable kit's side of RoutePlacer (Baughn: the pipes' UX, but cables run against faces): where
+ * a click ends (a block's face: the cable starts there, lying on it; a device: the cable starts at the edge of its face
+ * nearest the click; a cable: it starts as a branch of it), how a cable is routed against faces and laid, and mending a
+ * burnt run with a kit (ROUTE, the cable spec). The route's state and clicks are RoutePlacer's.
  */
 public final class CablePlacer {
     private CablePlacer() {
-    }
-
-    public static final class Plan {
-        final int tier;
-        /** The kit's spec (power cables): a route is laid of one cable. */
-        CableSpec spec;
-        mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire;
-        ItemStack spool;
-        AwgPreview awgPreview;
-
-        boolean matches(KitSupply kit) {
-            return KitSupply.lays(kit, false, tier, spec) && wire == kit.wire()
-                && (wire == null || spool == kit.spool());
-        }
-
-        final CableRouter.End start;
-        final long[] startJoin;
-        final List<CableRouter.End> waypoints = new ArrayList<>();
-        final net.minecraft.resources.ResourceKey<Level> dim;
-        long touched;
-
-        Plan(int tier, CableRouter.End start, long[] startJoin, net.minecraft.resources.ResourceKey<Level> dim) {
-            this.tier = tier;
-            this.start = start;
-            this.startJoin = startJoin;
-            this.dim = dim;
-        }
     }
 
     record AwgPreview(CableRouter.End end, long[] join, List<CableRouter.End> waypoints, CableRouter.Result route) {
@@ -60,42 +30,70 @@ public final class CablePlacer {
         }
     }
 
-    static final Map<UUID, Plan> PLANS = new HashMap<>();
+    /** The cable kit in RoutePlacer's one flow (a route's path: the router's steps). */
+    static final RoutePlacer.Spec<List<CableRouter.Step>> ROUTE = new RoutePlacer.Spec<>("cable", "a device or cable", 0xFFB040, 0.7f, false, true) {
+        @Override
+        RoutePlacer.Click endAt(Level level, BlockPos pos, Direction face, Vec3 hit, int tier, boolean start, boolean click) {
+            long[][] join = new long[1][];
+            CableRouter.End at = CablePlacer.endAt(level, pos, face, hit, start, join, tier);
+            if (at == null) return RoutePlacer.Click.none(noEnd(level, pos, hit));
+            // a machine's port: snapped to it and in its own colour (Baughn: it wasn't obvious that cables connect to machines)
+            return new RoutePlacer.Click(at, join[0], at.dir() >= 0, isDevice(level, pos, hit), null);
+        }
 
+        @Override
+        RoutePlacer.Routed<List<CableRouter.Step>> route(RouteView view, int tier, CableSpec spec, CableRouter.End start, long[] startJoin,
+                                                        List<CableRouter.End> wps, CableRouter.End end, long[] endJoin, long budgetMs) {
+            return CablePlacer.route(view, tier, spec, start, startJoin, wps, end, endJoin, budgetMs);
+        }
+
+        @Override
+        String lay(Level level, int tier, CableSpec spec, RoutePlacer.Routed<List<CableRouter.Step>> r, long[] startJoin, long[] endJoin,
+                   net.minecraft.world.entity.player.Player player) {
+            return CablePlacer.lay(level, tier, spec, r.path(), player);
+        }
+
+        @Override
+        List<int[]> boxes(RoutePlacer.Routed<List<CableRouter.Step>> r, int tier, CableSpec spec) {
+            CablePart.Tier t = tierOf(tier, spec);
+            List<int[]> boxes = new ArrayList<>();
+            for (CableRouter.Piece pc : CableRouter.pieces(r.path(), t.width(), t.height())) {
+                CablePart part = pc.face() < 0 ? CablePart.knuckle(tier, spec, pc.points()[0], pc.points()[1], pc.points()[2]) : new CablePart(tier, spec, pc.face(), pc.points());
+                for (int[] b : part.boxes())
+                    boxes.add(new int[]{(int) pc.bx() * 16 + b[0], (int) pc.by() * 16 + b[1], (int) pc.bz() * 16 + b[2],
+                        (int) pc.bx() * 16 + b[3], (int) pc.by() * 16 + b[4], (int) pc.bz() * 16 + b[5]});
+            }
+            return boxes;
+        }
+
+        @Override
+        List<double[]> trace(RoutePlacer.Routed<List<CableRouter.Step>> r) {
+            List<double[]> out = new ArrayList<>();
+            for (CableRouter.Step st : r.path())   // (just off the face it lies on)
+                out.add(new double[]{st.x(), st.y(), st.z(), CableRouter.DV[st.attach()][0] * -0.05, CableRouter.DV[st.attach()][1] * -0.05,
+                    CableRouter.DV[st.attach()][2] * -0.05});
+            return out;
+        }
+
+        @Override
+        boolean repair(ServerPlayer player, ServerLevel level, BlockPos pos, Vec3 hit, KitSupply kit) {
+            return CablePlacer.repair(player, level, pos, hit, kit, kit.tier(), kit.spec());
+        }
+    };
+
+    /** Drop the player's route if it is a cable's (tests: mock players share one UUID). */
     public static void forget(UUID player) {
-        PLANS.remove(player);
+        if (active(player)) RoutePlacer.forget(player);
     }
 
-    /** A route left alone this long lapses (Baughn: waypoints must time out; a later cable started from an old attempt). */
-    public static final long IDLE_TICKS = 20 * 60;
-
-    /**
-     * Why a route being laid lapses now, or null if it holds: another item in hand (Baughn's rule), a minute without a
-     * click, the player further from its last point than a full kit reaches, another dimension.
-     */
-    static String lapse(Plan plan, long now, boolean holdingItsKit, boolean sameDim, Vec3 at) {
-        if (!sameDim) return "another dimension";
-        if (!holdingItsKit) return "another item in hand";
-        if (now - plan.touched > IDLE_TICKS) return "a minute without a click";
-        CableRouter.End last = plan.waypoints.isEmpty() ? plan.start : plan.waypoints.get(plan.waypoints.size() - 1);
-        double dx = at.x * 16 - last.x(), dy = at.y * 16 - last.y(), dz = at.z * 16 - last.z();
-        if (dx * dx + dy * dy + dz * dz > (double) KitItem.MAX * KitItem.MAX) return "too far from it";
-        return null;
+    /** Undo a cable session through the shared controller (including AWG spools). */
+    public static boolean undo(ServerPlayer player) {
+        return active(player.getUUID()) && RoutePlacer.undo(player, (ServerLevel) player.level());
     }
 
-    /** Each player tick (KitPreview): drop a route that lapsed, and say why. */
-    static void checkLapse(ServerPlayer p, long now) {
-        Plan plan = PLANS.get(p.getUUID());
-        if (plan == null) return;
-        boolean holding = plan.matches(KitSupply.held(p));
-        String why = lapse(plan, now, holding, plan.dim == p.level().dimension(), p.position());
-        if (why == null) return;
-        PLANS.remove(p.getUUID());
-        p.sendOverlayMessage(Component.literal("Cable route dropped (" + why + ")"));
-    }
-
-    public static void forgetAll() {
-        PLANS.clear();
+    /** The AWG plan's native path, also used by its existing regression fixtures. */
+    static CableRouter.Result route(ServerLevel level, RoutePlacer.Plan plan, CableRouter.End end, long[] endJoin) {
+        return RoutePlacer.route((AwgRouteSpec) plan.kind, level, plan, end, endJoin).path();
     }
 
     /** The world for the cable router: the pipe router's obstacles, and full solid blocks to lay cables on. */
@@ -105,7 +103,7 @@ public final class CablePlacer {
 
     /** ... read through a view of the world (live, or a snapshot for the preview thread). */
     public static CableRouter.Space space(RouteView view) {
-        PipeRouter.Space blocked = PipePlacer.space(view);
+        PipeRouter.Space blocked = RouteView.obstacles(view);
         return new CableRouter.Space() {
             @Override
             public boolean blocked(long x0, long y0, long z0, long x1, long y1, long z1) {
@@ -171,11 +169,69 @@ public final class CablePlacer {
         return true;
     }
 
+    /**
+     * A cable route from start over the waypoints to end, each end maybe on an old cable (join point or null): free round
+     * the joins (around), and through the old cable itself near them where it is the kit's own (JoinRun); a route that
+     * runs inside the old cable there is cut where it leaves it, so no piece is laid over it (todo #516).
+     */
+    static RoutePlacer.Routed<List<CableRouter.Step>> route(RouteView view, int tier, CableSpec spec, CableRouter.End start, long[] startJoin,
+                                                             List<CableRouter.End> wps, CableRouter.End end, long[] endJoin, long budgetMs) {
+        JoinRun sj = startJoin == null ? null : JoinRun.cable(view, startJoin, start.attach(), tier, spec);
+        JoinRun ej = endJoin == null ? null : JoinRun.cable(view, endJoin, end.attach(), tier, spec);
+        RoutePlacer.Routed<List<CableRouter.Step>> r = route(view, tier, spec, start, startJoin, sj, wps, end, endJoin, ej, true, budgetMs);
+        // (a route that came back onto or across the old cable away from its cut, as after a waypoint: the freed voxels
+        // let it. Routed again without them, as before JoinRun, it goes round; through the free cube round the join
+        // point it still can, and is refused rather than laid over the old cable or refused only by the click)
+        CablePart.Tier ti = tierOf(tier, spec);
+        if (crosses(r, sj, ej, ti)) {
+            r = route(view, tier, spec, start, startJoin, sj, wps, end, endJoin, ej, false, budgetMs);
+            if (crosses(r, sj, ej, ti)) return new RoutePlacer.Routed<>("it crosses the cable it joins", 0, null);
+        }
+        return r;
+    }
+
+    /** Does a route found come back onto or across the old cable at either join away from its cut (JoinRun.crosses)? */
+    private static boolean crosses(RoutePlacer.Routed<List<CableRouter.Step>> r, JoinRun sj, JoinRun ej, CablePart.Tier t) {
+        if (r.error() != null || sj == null && ej == null) return false;
+        List<long[]> pts = new ArrayList<>();
+        List<Integer> attach = new ArrayList<>();
+        for (CableRouter.Step st : r.path()) {
+            pts.add(new long[]{st.x(), st.y(), st.z()});
+            attach.add(st.attach());
+        }
+        int lo = t.width() / 2, hi = t.width() - lo;
+        boolean s = sj != null, e = ej != null;
+        return s && sj.crosses(pts, attach, s, e, lo, hi, t.height()) || e && ej.crosses(pts, attach, s, e, lo, hi, t.height());
+    }
+
+    /** One routing: free through the old cable near the joins (free) or not, cut where it leaves them. */
+    private static RoutePlacer.Routed<List<CableRouter.Step>> route(RouteView view, int tier, CableSpec spec, CableRouter.End start, long[] startJoin,
+                                                                     JoinRun sj, List<CableRouter.End> wps, CableRouter.End end, long[] endJoin,
+                                                                     JoinRun ej, boolean free, long budgetMs) {
+        RouteView v = view;
+        if (free && sj != null) v = sj.freeing(v);
+        if (free && ej != null) v = ej.freeing(v);
+        CableRouter.Space s = space(v);
+        if (startJoin != null) s = around(s, startJoin);
+        if (endJoin != null) s = around(s, endJoin);
+        CablePart.Tier t = tierOf(tier, spec);
+        CableRouter.Result r = CableRouter.route(s, t.width(), t.height(), start, wps, end, budgetMs);
+        if (r.error != null) return new RoutePlacer.Routed<>(r.error, 0, null);
+        List<CableRouter.Step> steps = r.steps;
+        if (sj != null && steps != null) steps = sj.trimStepsHead(steps);
+        if (ej != null && steps != null) steps = ej.trimStepsTail(steps);
+        if (steps == null) return RoutePlacer.Routed.said(RoutePlacer.INSIDE);
+        long[] from = startJoin == null ? null : new long[]{steps.get(0).x(), steps.get(0).y(), steps.get(0).z()};
+        CableRouter.Step last = steps.get(steps.size() - 1);
+        long[] to = endJoin == null ? null : new long[]{last.x(), last.y(), last.z()};
+        return new RoutePlacer.Routed<>(null, new CableRouter.Result(steps, null).length(), steps, from, to);
+    }
+
     /** Free round a junction point (the new cable meets the old one there): of what's in the way there, only the old
      *  cable; solid blocks stay solid (they were free too, and a route could pass through a floor beside a junction). */
     static CableRouter.Space around(CableRouter.Space s, long[] p) {
         final int h = 4;
-        PipeRouter.Space free = PipePlacer.spaceAround(s, p, h);
+        PipeRouter.Space free = RouteView.freeAround(s, p, h);
         // (the cube's solid voxels worked out once: asked per query, each voxel of a voxel block recomputed that block's
         // shapes, and a route from a cable spent 100 ms over 43 steps on the server thread: Baughn's slow start)
         boolean[] solidIn = new boolean[8 * h * h * h];
@@ -226,8 +282,37 @@ public final class CablePlacer {
         return noEnd(level, pos);
     }
 
+    /** Drops a player's unfinished route (tests: mock players share one UUID, so a plan left over leaks into the next case). */
+    public static void cancelForTests(UUID player) {
+        forget(player);
+    }
+
+    public static String noEndForTests(Level level, BlockPos pos, Vec3 hit) {
+        return noEnd(level, pos, hit);
+    }
+
+    /** The same, for a click at hit: a Lamp Socket still in Lamp Supply mode (as every socket ships) has no cable pin;
+     *  it says how to give it one (AdventurAgent, the handbook play-through: "Not a place for a cable" told nothing). */
+    static final String LAMP_SUPPLY = "This socket takes wireless Lamp Supply power: switch it to Cable in its screen first";
+
+    static String noEnd(Level level, BlockPos pos, Vec3 hit) {
+        var n = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(pos, level));
+        if (n instanceof VoxelNode v && hit != null) {
+            int el = v.elementAt(hit.x - pos.getX(), hit.y - pos.getY(), hit.z - pos.getZ(), 2);
+            if (el >= 0 && v.sideElementList[el] instanceof mods.eln.sixnode.lampsocket.LampSocketElement ls && ls.poweredByLampSupply())
+                return LAMP_SUPPLY;
+        } else if (n instanceof mods.eln.node.six.SixNode six)   // (a socket in an old six-node block)
+            for (var e : six.sideElementList)
+                if (e instanceof mods.eln.sixnode.lampsocket.LampSocketElement ls && ls.poweredByLampSupply()) return LAMP_SUPPLY;
+        return noEnd(level, pos);
+    }
+
     static String noEnd(Level level, BlockPos pos) {
         var n = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(pos, level));
+        // a utility pole's foot is a socket only with a pole transformer fitted (its low side)
+        if (n instanceof mods.eln.node.transparent.TransparentNode t && t.element instanceof mods.eln.gridnode.electricalpole.ElectricalPoleElement pole
+            && !pole.hasTransformer())
+            return "This pole has no transformer: fit a Pole Transformer (right-click the pole with it), then its foot takes a cable";
         return n != null && !(n instanceof VoxelNode) ? "No connector there: try another face or edge of the machine" : "Not a place for a cable";
     }
 
@@ -270,16 +355,25 @@ public final class CablePlacer {
                 long[] best = null;
                 int bestFace = -1;
                 double bd = Double.MAX_VALUE;
-                for (CablePart c : cands) {
-                    int[] point = nearestTap(c, hx, hy, hz);
-                    if (point == null) continue;
-                    double distance = tapDistance(point, hx, hy, hz);
-                    if (distance < bd) {
-                        bd = distance;
-                        best = new long[]{pos.getX() * 16L + point[0], pos.getY() * 16L + point[1], pos.getZ() * 16L + point[2]};
-                        bestFace = c.face;
+                // (inside the block, never on its faces: a branch from a point on a face looked, from either block, like
+                // a plain corner, and got no sleeve; AdventurAgent)
+                for (CablePart c : cands)
+                for (int a = 2; a <= 14; a += 2)
+                    for (int b = 2; b <= 14; b += 2) {
+                        int[] q = new int[3];
+                        int nx = CablePart.normalAxis(c.face);
+                        int[] o = VoxelGeometry.others(nx);
+                        q[nx] = c.points[nx];
+                        q[o[0]] = a;
+                        q[o[1]] = b;
+                        if (!c.passes(q[0], q[1], q[2])) continue;
+                        double d = sq(q[0] - hx * 16) + sq(q[1] - hy * 16) + sq(q[2] - hz * 16);
+                        if (d < bd) {
+                            bd = d;
+                            best = new long[]{pos.getX() * 16L + q[0], pos.getY() * 16L + q[1], pos.getZ() * 16L + q[2]};
+                            bestFace = c.face;
+                        }
                     }
-                }
                 if (best == null) return null;
                 join[0] = best;
                 return new CableRouter.End(best[0], best[1], best[2], bestFace, -1);
@@ -299,7 +393,10 @@ public final class CablePlacer {
             double bd = Double.MAX_VALUE;
             for (int g = 0; g < 6; g++) {
                 if (CableRouter.axis(g) == fa) continue;
-                if (n.getSideConnectionMask(side, side.getLRDUGoingTo(mods.eln.misc.Direction.fromEnumFacing(Direction.from3DDataValue(g)))) == 0) continue;
+                int m = n.getSideConnectionMask(side, side.getLRDUGoingTo(mods.eln.misc.Direction.fromEnumFacing(Direction.from3DDataValue(g))));
+                // (a connector of the kit's kind: an LV kit laid to a heater's thermal back said "Laid" and carried
+                // nothing, AdventurAgent's handbook replay)
+                if (m == 0 || !kindOn(n, side, g, m, tier)) continue;
                 double d = g % 2 == 0 ? h[CableRouter.axis(g)] : 1 - h[CableRouter.axis(g)];
                 if (d < bd) {
                     bd = d;
@@ -322,7 +419,7 @@ public final class CablePlacer {
                 int lw = w == 0 ? -face.getStepZ() : w == 2 ? face.getStepX() : 0;   // (left, seen facing the face from outside)
                 for (var pin : fp.facePins(side)) {
                     if (side.applyLRDU(pin.lrdu()).toEnumFacing().get3DDataValue() != edge) continue;
-                    if (tier >= 0 && !mods.eln.node.NodeBase.compareConnectionMask(pin.mask(), DevicePlacer.tierMask(tier))) continue;
+                    if (!DevicePlacer.fits(pin.mask(), tier)) continue;
                     int at = 8 + pin.leftward() * lw;
                     double d = Math.abs(at - h[w] * 16);
                     if (d < best) {
@@ -336,6 +433,23 @@ public final class CablePlacer {
         CableRouter.End snapped = snapToPort(level, pos, face, hx, hy, hz, start, join, tier);
         if (snapped != null) return snapped;
         return surface(pos, face, hx, hy, hz);
+    }
+
+    /**
+     * Has the machine's face side a connector of the kit's tier on edge g (mask m)? On a FacePins edge only its pins
+     * count: such an edge takes no plain connection.
+     */
+    static boolean kindOn(mods.eln.node.NodeBase n, mods.eln.misc.Direction side, int g, int m, int tier) {
+        if (n instanceof mods.eln.node.FacePins fp) {
+            boolean pinned = false;
+            for (var pin : fp.facePins(side)) {
+                if (side.applyLRDU(pin.lrdu()).toEnumFacing().get3DDataValue() != g) continue;
+                pinned = true;
+                if (DevicePlacer.fits(pin.mask(), tier)) return true;
+            }
+            if (pinned) return false;
+        }
+        return DevicePlacer.fits(m, tier);
     }
 
     /** The end at the hosted device in slot el (0..5: centred on that face) of v: the edge of its face nearest the block-local
@@ -394,7 +508,7 @@ public final class CablePlacer {
             double bd = Double.MAX_VALUE;
             for (VoxelNode.Pin p : VoxelNode.pins(e)) {
                 // a pin of the kit's kind (AdventurAgent: a thermal kit ended at a thermal probe's signal pin)
-                if (tier >= 0 && !mods.eln.node.NodeBase.compareConnectionMask(p.mask(), DevicePlacer.tierMask(tier)))
+                if (!DevicePlacer.fits(p.mask(), tier))
                     continue;
                 double d = sq(p.tip()[0] - h[0] * 16) + sq(p.tip()[1] - h[1] * 16) + sq(p.tip()[2] - h[2] * 16);
                 if (d < bd) {
@@ -435,7 +549,7 @@ public final class CablePlacer {
                 }
                 if (!pinned) points.add(new int[]{c[0], c[1], c[2], host.getConnectionMask(lrdu)});
                 for (int[] q : points) {
-                    if (q[3] == 0 || tier >= 0 && !mods.eln.node.NodeBase.compareConnectionMask(q[3], DevicePlacer.tierMask(tier))) continue;
+                    if (q[3] == 0 || !DevicePlacer.fits(q[3], tier)) continue;
                     double d = sq(q[0] - h[0] * 16) + sq(q[1] - h[1] * 16) + sq(q[2] - h[2] * 16);
                     if (d < bd) {
                         bd = d;
@@ -453,7 +567,7 @@ public final class CablePlacer {
             if (CableRouter.axis(g) == fa) continue;
             var out = mods.eln.misc.Direction.fromEnumFacing(Direction.from3DDataValue(g));
             int m = v.getSideConnectionMask(out, out.getLRDUGoingTo(side));
-            if (m == 0 || tier >= 0 && !mods.eln.node.NodeBase.compareConnectionMask(m, DevicePlacer.tierMask(tier))) continue;
+            if (m == 0 || !DevicePlacer.fits(m, tier)) continue;
             double d = g % 2 == 0 ? h[CableRouter.axis(g)] : 1 - h[CableRouter.axis(g)];
             if (d < bd) {
                 bd = d;
@@ -542,103 +656,14 @@ public final class CablePlacer {
         return v * v;
     }
 
-    /** A cable kit used on a block face: start, extend or finish a route. Returns true if it handled the click. */
-    public static boolean use(ServerPlayer player, ServerLevel level, BlockPos pos, Direction face, ItemStack kit, int tier, Vec3 hit) {
+    /** A cable kit used on a block face: start, extend or finish a route (RoutePlacer). Returns true if it handled the click. */
+    public static boolean use(ServerPlayer player, ServerLevel level, BlockPos pos, Direction face, ItemStack kit, Vec3 hit) {
         return use(player, level, pos, face, KitSupply.of(kit), hit, player.isSecondaryUseActive());
     }
 
     /** The same, laid from a supply (a kit, or several taken as one); sneak: the click takes back a waypoint or cancels. */
     public static boolean use(ServerPlayer player, ServerLevel level, BlockPos pos, Direction face, KitSupply kit, Vec3 hit, boolean sneak) {
-        int tier = kit.tier();
-        Plan plan = PLANS.get(player.getUUID());
-        long now = level.getGameTime();
-        CableSpec spec = kit.spec();
-        boolean other = plan != null && (!plan.matches(kit));
-        if (plan != null && (other || lapse(plan, now, true, plan.dim == level.dimension(), player.position()) != null)) {
-            PLANS.remove(player.getUUID());
-            if (other) player.sendOverlayMessage(Component.literal("Cable route cancelled (another kind of cable in hand)"));
-            plan = null;
-        }
-        if (plan != null) plan.touched = now;
-        if (sneak) return undo(player);
-        if (!reachable(player, pos, hit)) {
-            KitPreview.note(player, "Out of reach");
-            return true;
-        }
-        if (plan == null && kit.wire() == null && repair(player, level, pos, hit, kit, tier, spec)) return true;
-        long[][] join = new long[1][];
-        CableRouter.End at = endForSupply(level, pos, face, hit, plan == null, join, kit);
-        if (at == null) {
-            player.sendOverlayMessage(Component.literal(noEnd(level, pos)));
-            return true;
-        }
-        boolean device = at.dir() >= 0;
-        if (plan == null) {
-            Plan p = new Plan(tier, at, join[0], level.dimension());
-            p.spec = spec;
-            p.wire = kit.wire();
-            p.spool = kit.spool();
-            p.touched = now;
-            PLANS.put(player.getUUID(), p);
-            player.sendOverlayMessage(Component.literal("Cable route started: click faces for waypoints, a device or cable (or the last waypoint again) to finish, " + kit.undoHint() + " to undo"));
-            return true;
-        }
-        CableRouter.End last = plan.waypoints.isEmpty() ? null : plan.waypoints.get(plan.waypoints.size() - 1);
-        boolean again = last != null && last.x() == at.x() && last.y() == at.y() && last.z() == at.z() && last.attach() == at.attach();
-        if (!device && join[0] == null && !again) {
-            plan.waypoints.add(at);
-            long tRoute = System.nanoTime();
-            CableRouter.Result r = route(level, plan, null, null);
-            KitPreview.slow("waypoint route (server thread)", tRoute, (plan.startJoin != null ? "from a cable, " : "") + Router.LAST_EXPANSIONS.get() + " expansions");
-            String why = r.error;
-            if (why == null && plan.wire != null)
-                why = AwgCablePart.nativeLayout(level, plan.wire, r, plan.startJoin, null, player).error();
-            if (why != null) {
-                plan.waypoints.remove(plan.waypoints.size() - 1);
-                KitPreview.note(player, "Can't reach that waypoint: " + why + " (" + kit.undoHint() + " to cancel the route)");
-            } else {
-                player.sendOverlayMessage(Component.literal(String.format("Waypoint %d: %.1f blocks so far", plan.waypoints.size(), r.length() / 16.0)));
-                show(player, level, r.steps);
-            }
-            return true;
-        }
-        // finish: at a device, a cable, or the last waypoint
-        CableRouter.End end = again ? plan.waypoints.remove(plan.waypoints.size() - 1) : at;
-        long tRoute = System.nanoTime();
-        var preview = plan.awgPreview;
-        CableRouter.Result r = preview != null && preview.matches(end, join[0], plan.waypoints)
-            ? preview.route() : route(level, plan, end, join[0]);
-        KitPreview.slow("click route (server thread)", tRoute, (plan.startJoin != null ? "from a cable, " : "") + Router.LAST_EXPANSIONS.get() + " expansions");
-        if (r.error != null) {
-            if (again) plan.waypoints.add(end);
-            KitPreview.note(player, "No route: " + r.error + " (" + kit.undoHint() + " to cancel the route)");
-            return true;
-        }
-        int len = r.length();
-        boolean creative = player.isCreative();
-        if (!creative && kit.length() < len) {
-            if (again) plan.waypoints.add(end);
-            player.sendOverlayMessage(Component.literal(String.format("This route takes %.1f blocks of cable; the kit holds %.1f", len / 16.0, kit.length() / 16.0)));
-            show(player, level, r.steps);
-            return true;
-        }
-        String err = plan.wire == null ? lay(level, tier, spec, r.steps, player)
-            : AwgCablePart.layNative(level, kit, r, plan.startJoin, join[0], player, -1);
-        if (err != null) {
-            if (plan.wire != null) {
-                if (again) plan.waypoints.add(end);
-                plan.awgPreview = null;
-                KitPreview.invalidate(player.getUUID());
-            }
-            KitPreview.note(player, "Can't lay it: " + err);
-            return true;
-        }
-        PLANS.remove(player.getUUID());
-        if (!creative && plan.wire == null) {
-            kit.take(len);
-        }
-        player.sendOverlayMessage(Component.literal(String.format("Laid %.1f blocks of cable", len / 16.0)));
-        return true;
+        return RoutePlacer.use(player, level, pos, face, kit, hit, sneak);
     }
 
     /**
@@ -658,65 +683,16 @@ public final class CablePlacer {
     /** Blocks past the player's reach a click may be (client and server eyes differ by a tick's movement). */
     static final double REACH_SLACK = 0.25;
 
-    /** Keep the player's route from lapsing as idle (the Toolbag's radial is open). */
-    static void touch(UUID player, long now) {
-        Plan p = PLANS.get(player);
-        if (p != null) p.touched = now;
-    }
-
-    /** Take back the route's last waypoint, or cancel it if it has none; false if there is no route. */
-    public static boolean undo(ServerPlayer player) {
-        Plan plan = PLANS.get(player.getUUID());
-        if (plan == null) return false;
-        if (plan.waypoints.isEmpty()) {
-            PLANS.remove(player.getUUID());
-            KitPreview.note(player, "Cable route cancelled");
-        } else {
-            plan.waypoints.remove(plan.waypoints.size() - 1);
-            // (on the note line: the preview's next line takes the action bar at once, and a waypoint on the way to the
-            // aim changes neither the route drawn nor its length; AdventurAgent read an Undo as doing nothing)
-            KitPreview.note(player, "Waypoint taken back (" + plan.waypoints.size() + " left)");
-        }
-        return true;
-    }
-
-    /** The waypoints of the player's route (-1 if none). */
+    /** The waypoints of the player's cable route (-1 if none). */
     public static int waypoints(UUID player) {
-        Plan p = PLANS.get(player);
-        return p == null ? -1 : p.waypoints.size();
+        RoutePlacer.Plan p = RoutePlacer.plan(player);
+        return !active(player) ? -1 : p.waypoints.size();
     }
 
-    /** Is a route being laid by this player? */
+    /** Is a cable route being laid by this player? */
     public static boolean active(UUID player) {
-        return PLANS.containsKey(player);
-    }
-
-    /** Drop the player's route; its waypoints (empty if none). */
-    static List<CableRouter.End> drop(UUID player) {
-        Plan p = PLANS.remove(player);
-        return p == null ? List.of() : new ArrayList<>(p.waypoints);
-    }
-
-    /** Add waypoints to the player's route (a Toolbag's new kind keeps them). */
-    static void addWaypoints(UUID player, List<CableRouter.End> wps) {
-        Plan p = PLANS.get(player);
-        if (p != null) p.waypoints.addAll(wps);
-    }
-
-    static CableRouter.Result route(Level level, Plan plan, CableRouter.End end, long[] endJoin) {
-        List<CableRouter.End> wps = new ArrayList<>(plan.waypoints);
-        CableRouter.End last = end;
-        if (last == null) {
-            if (wps.isEmpty()) return new CableRouter.Result(List.of(), null);
-            last = wps.remove(wps.size() - 1);
-        }
-        CableRouter.Space s = space(level);
-        if (plan.startJoin != null) s = around(s, plan.startJoin);
-        if (endJoin != null) s = around(s, endJoin);
-        if (plan.wire != null)
-            return CableRouter.route(s, AwgCablePart.routeKind(plan.wire), plan.start, wps, last, PipeRouter.TIME_BUDGET_MS);
-        var tier = tierOf(plan.tier, plan.spec);
-        return CableRouter.route(s, tier.width(), tier.height(), plan.start, wps, last);
+        var p = RoutePlacer.plan(player);
+        return p != null && (p.kind == ROUTE || p.kind instanceof AwgRouteSpec);
     }
 
     /** How many blocks of burnt cable one repair click mends at most (the burnt run, followed from the clicked piece). */
@@ -799,13 +775,9 @@ public final class CablePlacer {
 
     /** Route between two ends, each maybe joining an old cable (join point or null), and lay it (GameTests). */
     public static String routeAndLayJoinedForTests(Level level, int tier, CableRouter.End start, long[] startJoin, CableRouter.End end, long[] endJoin) {
-        CablePart.Tier t = tierOf(tier, null);   // (the preset's cross-section, as lay() lays it)
-        CableRouter.Space s = space(level);
-        if (startJoin != null) s = around(s, startJoin);
-        if (endJoin != null) s = around(s, endJoin);
-        var r = CableRouter.route(s, t.width(), t.height(), start, List.of(), end);
-        if (r.error != null) return r.error;
-        return lay(level, tier, r.steps, null);
+        var r = route(RouteView.live(level), tier, null, start, startJoin, List.of(), end, endJoin, PipeRouter.TIME_BUDGET_MS);
+        if (r.error() != null) return r.error();
+        return lay(level, tier, r.path(), null);
     }
 
     /** Route between two ends and lay it (GameTests). Null if done, else why not. */
@@ -859,20 +831,5 @@ public final class CablePlacer {
             at.add(new BlockPos((int) p.bx(), (int) p.by(), (int) p.bz()));
         }
         return Laying.lay(level, at, parts, player);   // (all or nothing)
-    }
-
-
-    static void show(ServerPlayer player, ServerLevel level, List<CableRouter.Step> steps) {
-        var dust = new net.minecraft.core.particles.DustParticleOptions(0xFFB040, 0.7f);
-        for (int i = 1; i < steps.size(); i++) {
-            CableRouter.Step a = steps.get(i - 1), b = steps.get(i);
-            int n = (int) Math.max(1, (Math.abs(b.x() - a.x()) + Math.abs(b.y() - a.y()) + Math.abs(b.z() - a.z())) / 4);
-            double[] off = {CableRouter.DV[b.attach()][0] * -0.05, CableRouter.DV[b.attach()][1] * -0.05, CableRouter.DV[b.attach()][2] * -0.05};
-            for (int k = 0; k <= n; k++) {
-                double t = k / (double) n;
-                level.sendParticles(player, dust, true, false, (a.x() + (b.x() - a.x()) * t) / 16.0 + off[0], (a.y() + (b.y() - a.y()) * t) / 16.0 + off[1],
-                    (a.z() + (b.z() - a.z()) * t) / 16.0 + off[2], 1, 0, 0, 0, 0);
-            }
-        }
     }
 }

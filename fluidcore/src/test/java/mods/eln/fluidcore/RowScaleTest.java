@@ -70,6 +70,10 @@ class RowScaleTest {
             }
             double mIn = 0, mOut = 0, eIn = 0, eOut = 0;
             for (int s = 0; s < steps; s++) {
+                // (kept awake, so the variants' iteration counts compare step for step: with WaterAir.energyTol's tighter floor
+                // for light nodes (the slices hold 0.06 g), today's rows settle and slept after ~110 steps,
+                // skipping solves, and the iteration comparison was no longer like for like)
+                net.wake();
                 net.step(DT);
                 mIn += src.moved[0] + src.moved[1];
                 eIn += src.moved[2];

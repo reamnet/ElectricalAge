@@ -14,7 +14,7 @@ unless a path says otherwise. Fluid physics and the MNA itself: see simulation.m
 | `PipePart` / `ValvePart` / `SafetyValvePart` / `PipeSensorPart` / `AdapterPart` | both | Pipes and fittings (`PipeSensorPart`: a signal output joined to the block's signal cables, as a control valve's input; no longer made since 2026-11-02, loaded and working where fitted); `AdapterPart.tanks` is the fluid capability (capabilities.md) |
 | `CableNet` | server | Groups a node's cable pieces into `Conductor`s and builds their loads |
 | `CableRouter`, `PipeRouter` | server | A* routers, pure Java (world behind a `Space` interface) |
-| `CablePlacer`, `PipePlacer`, `KitPreview` | server | Kit UX: start, waypoints, finish; preview outlines sent as `Eln.packetKitPreview`; a failed click's reason (no route, can't reach a waypoint, can't lay) as `Eln.packetRouteNote`, drawn by client `RouteNoteHud` above the action bar for 3 s, since the preview's length line takes the action bar at once (Baughn 2026-11-18, #521) |
+| `RoutePlacer`, `CablePlacer`, `PipePlacer`, `KitPreview` | server | Kit UX, one flow for both kinds: `RoutePlacer` holds the route (start, waypoints, finish, undo, lapse); `CablePlacer.ROUTE` and `PipePlacer.ROUTE` are the kinds' specs (where a click ends, routing, laying, the preview's answer); `KitPreview` one preview through the spec, outlines sent as `Eln.packetKitPreview`; a failed click's reason (no route, can't reach a waypoint, can't lay) as `Eln.packetRouteNote`, drawn by client `RouteNoteHud` above the action bar for 3 s, since the preview's length line takes the action bar at once (Baughn 2026-11-18, #521) |
 | `KitItem`, `KitRecipes`, `CableKitItem`, `PipeKitItem`, `CableKitRecipes`, `PipeKitRecipes` | both | Kits: length in custom data "kitLen" (1024 voxels max). One shared fill/unroll code for both kinds (`KitRecipes`): coils or plates into a kit, a lone kit back to one block of coil or plates, kits merge up to a full kit with the rest left in the grid |
 | `Mimic`, `ChiselItem`, `ChiselBrush` | server (`ChiselBrush`: both, pure) | Imitate passive decorative blocks (stairs, slabs, fences, walls, panes, bars, carpets); carve plain blocks (see Chisel) |
 | `CableConverter` | server | Six-node block -> voxel node and back |
@@ -188,9 +188,13 @@ the rules above; the joints are kept alongside:
   port (`PipeTransmitterElement.aimBoxes`): the end of the pipe laid to it covered the body from most angles, so Jade
   and clicks got the pipe. Breaking still picks by `VoxelNodeBlock`'s own rule.
 - A pipe kit route doesn't start or end at a device's port that already has a pipe (`PipePlacer.portTaken`; a lab test
-  laid a second pipe beside the first).
+  laid a second pipe beside the first). The same holds for every machine's fluid port, the Large Boiler's ghost ports
+  included (`FluidPlacement.partners`: FluidWorld's one coupling rule, `FluidWorld.couples`, asked of the block in front of the port;
+  AdventurAgent: a second route to a tank's piped port "gave up"), in the preview and on the click.
 - Its kind shows on the body's top: a coloured plate (pressure blue, temperature red, quality green) with a raised white
-  letter P, T or Q for colourblind players. Jade's three headline lines: the reading, the output volts, the full scale.
+  letter P, T or Q for colourblind players. Jade's three headline lines: the reading, the output volts, the full scale. Under them, when the run holds a liquid other than water, its viscosity
+  (`EaUnits.viscosity`, todo #590). A pipe's own Jade has the same line (`EaUnits.putViscosity`), third, in the headline,
+  when the liquid is thick (200x water or more), else after the contents.
 - Its own hidden items are out of the creative tab (`addWithoutRegistry`) and JEI (`compat/JeiPages.hidden`).
 - Its port is `PORT_HEIGHT` (4) voxels off the face over its centre (`PipeTransmitterElement.port`), clear of its
   2-voxel body. `PipePlacer.devicePort` makes it a routing end any way round (dir -1) when a pipe kit clicks the
@@ -218,7 +222,7 @@ others, including voxel nodes via `VoxelNode.slowProcesses()`) -> `Conductor.bur
   before a write or rebuild), `"hang"`/`"hang2"` (drawn hang), `"j"` (joints: a list of int arrays, sorted; see Stored links).
 - Each part `"id"` (in its `p<i>` compound), the node `"nextPartId"`.
 - `PipePart`: `"tier"`, `"pts"`, `"burst"`, `"burstDir"`, `"w"`, `"a"`, `"u"`. `ValvePart`: `"at"`, `"open"`.
-  `SafetyValvePart`: `"at"`, `"set"`. `PipeSensorPart`: `"at"` (x, y, z, outlet, bore, kind), `"scale"`, its output. `AdapterPart`: `"face"`. Unknown kinds load as nothing (dropped).
+  `SafetyValvePart`: `"at"`, `"set"`, `"purge"` (a purge valve), `"breather"` (a breather valve; absent on the others, so their saves are as before). `PipeSensorPart`: `"at"` (x, y, z, outlet, bore, kind), `"scale"`, its output. `AdapterPart`: `"face"`. Unknown kinds load as nothing (dropped).
 - Client publish: part count, then kind + length-prefixed bytes per part, then SixNode's elements
   (`publishBeforeElements`).
 
@@ -304,23 +308,76 @@ holds them to frozen copies of the routers before the merge (`LegacyCableRouter`
   `fluidLinks` links each arm's end to it (the end's own conductance and height; a level end an opening as tall as the
   bore, the junction an opening as tall as its body, so a vertical arm gets the counter-flow pair: a sealed riser drains,
   `FluidDevice.Link.spanA/spanB`). So each branch is its own run. It takes up to four arms, isn't aimed at on its own
-  (`partAt` gives the nearest arm), and goes when fewer than two arms are left, its contents into the last. Over its
-  arms' rating an arm at it bursts. Old saves' coinciding ends (no part) stay lumped until the phase 3 converter.
+  (`partAt` gives the nearest arm), and goes when fewer than two arms are left, its contents with it (Baughn
+  2026-11-25: given to the last arm, they squeezed its run to thousands of bar). Over its arms' rating an arm at it
+  bursts. Old saves' coinciding ends (no part) stay lumped until the phase 3 converter.
   `FluidWorld` reports any node under `MIN_RELIABLE_VOLUME` (1e-6 m^3) once (Baughn). Tests: `JunctionCases`.
 
 ## Laying and the kit UX
 
 - `Laying`: all or nothing for both kits. Every new part is checked against the world and the route's other parts in
   its block (pieces of one cable may overlap where they touch), then all are placed; a late failure takes back what
-  was placed. Pipe junctions (`VoxelNode.joinError`) are checked before anything is laid.
-- Both kits work alike (Baughn 2026-11-11): start at a port, on an old run (a branch) or any surface; waypoints are
-  points on clicked surfaces (pipes: in the block in front, as near the face as the lattice allows,
-  `PipePlacer.surfacePoint`); finish at a port, on a run, or by clicking the last waypoint again (the run ends there,
-  a pipe capped); sneak-click takes back a waypoint or cancels; a route lapses each tick (another dimension or item, a
-  minute idle, too far). The pipe kit's old one-straight-block click is gone (Baughn). A pipe route may start and end
-  on pipes (`PipePlacer.layJoined` with both joins).
+  was placed. A pipe's joins (`Laying.Join`) are part of the same lay: checked first (`VoxelNode.joinError`), put in
+  after the pieces (`addJoined`), and a refused one takes the pieces back.
+- Both kits are one flow, `RoutePlacer` (Baughn 2026-11-11: one kit UX; 2026-11-21: cables have the better UX, pipes
+  move onto it): start at a port, on an old run (a branch) or any surface; waypoints are points on clicked surfaces
+  (pipes: in the block in front, as near the face as the lattice allows, `PipePlacer.surfacePoint`); finish at a port,
+  on a run, or by clicking the last waypoint again (the run ends there, a pipe capped); never back at the start spot,
+  neither as the first waypoint nor as the finish; sneak-click takes back a waypoint (and draws the route left as
+  particles) or cancels; a failed click's note says how to cancel the route; a route lapses (`RoutePlacer.lapse`: another
+  dimension or item, a minute idle, too far), checked each tick and on each click. A player has one route, of either
+  kind. The pipe kit's old one-straight-block click is gone (Baughn). A pipe route may start and end on pipes
+  (`PipePlacer.layJoined` with both joins).
+- Near a join (a route started or finished on an old run) the route may run inside the old run (`JoinRun`, todo #516;
+  Baughn: "let the pathfinder pass through same-type voxels of the cable within 4-5 voxels of the waypoint"): within
+  `JoinRun.REACH` (6) voxels along it from the join point (across block faces too), the old run's voxels are taken out of the
+  used voxels the router sees (`RouteView.freeing`; the view's `parts` give the old run, a snapshot's too), and the route
+  is cut where it leaves the old run's centre line (`Spec.route`, so the preview's outline, the length and the kit's cost
+  are of what is laid). The new run starts or ends there: a splice, or at the old run's end its continuation (a pipe's
+  join moves there, `Routed.startJoin/endJoin`; on a block's face it is a port coupling, no junction). Only the kit's own
+  cable (same tier, spec and face) or any pipe (the join rule) is run through; a pipe's fittings and junctions are not.
+  Before, a route from a point just short of a cable's end laid a piece over its last voxels, and a pipe hopped over a
+  dead stub. Routes along the old run past its end from further away still run beside it (a parallel run, not
+  overlapping): `JoinRouteCases`' unchecked rows. A route wholly inside the old run lays nothing: "That path is already laid" (`RoutePlacer.INSIDE`, wording Neon); a
+  waypoint whose route so far lies inside it is taken (nothing laid yet). A route that comes back onto or across the old
+  run away from its cut (after a waypoint; `JoinRun.crosses`) is routed again without the freed voxels, and if it still
+  crosses (through the free cube round the join point) it is refused: "it crosses the cable it joins" (a pipe route that
+  passes back through the joined pipe's block, over or under it, says the same for the pipe). A pipe route joining an
+  old pipe doesn't rest against it within `JoinRun.REST_REACH` (2 blocks) of the join (`PipeRouter.Space.rests`, which
+  is `blocked` elsewhere): the soft support drew a short loop's first leg along beside the old pipe for a block
+  (AdventurAgent). A pipe's moved
+  junction is checked when routed (`VoxelNode.joinError` on the view's parts and used voxels), so the preview refuses as
+  the click does. A cut at an old pipe's end inside a block makes a two-armed junction there, as a join at that end
+  always did, not a plain straight pipe. `JoinRun` walks the old run voxel by voxel on the route's view (a preview
+  snapshot off the server thread too, through other branches' splices, at most `REACH` voxels); the toolbag shears'
+  walk (`ToolbagShears.run`) follows whole pieces by their CONT joints on the live level and stops at splices, so the two
+  stay separate. The snapshot shares the part objects; what JoinRun reads of them is final.
+- Per kind, in its spec (`RoutePlacer.Spec`): the ends (`endAt`: a cable's connectors and edge rule, a pipe's ports,
+  with "Its port already has a pipe" for a machine's piped port or a pipe sensor's), routing (surface or free), laying (cables with their hang,
+  pipes with their junctions), the join rule (cables: the same tier or two power cables; pipes: any pipe tier, the
+  junction takes the lower; Baughn 2026-11-21), the parts' outline for the preview (`boxes`), mending a burnt cable run
+  by clicking it (cables; a pipe bursts), the particles' colour, what the start message names as a finish, and the
+  preview's markers (a pipe's start always the port cube). A route's path is the spec's type (`Spec<P>`, `Routed<P>`).
+  The placers' end is `CableRouter.End` for both (a pipe's: attach -1, dir as a face; `PipePlacer.end` adapts it,
+  `PipeEndAdapterTest`); the routers and their direction orders are unchanged.
+- The preview (`KitPreview.tick`, one for both): the start before a route, then the route to the aim on the preview
+  thread over a snapshot (`KitPreview.Job`, one `KitPreview.answer` through the spec: "Can't reach: ...", "Too long:
+  ...", or "Cable: 7.5 blocks") ending with what the click would do: " — connects" at a machine, " — joins", " — open
+  end" at the last waypoint, or " — waypoint" (wording: Neon). It shows the click's refusals too: back at the start
+  spot (`RoutePlacer.startRefusal`), a pipe sensor's port that has a pipe. Slow steps go to the log (`KitPreview.slow`) and the
+  route debug kit (`RouteDebug`, `/elnlab debugkit` on a cable or pipe kit; a pipe's replay token starts `p_`) reports
+  each preview, for both kinds.
+- Breaking a pipe deletes what was in it (Baughn 2026-11-25), whichever way it goes (mined, the shears, `removePart`, the
+  block destroyed): the rebuild writes the old run's lump into all its pieces and sums the new runs from those left, so
+  the rest keep their shares at the same state and the piece's share is gone. Tests: `PipeBreakCases`
+  (`pipe_break_deletes_<water|steam>_<player|nobody|shears|end_join|tee>`, `pipe_break_deletes_water_burst`: the runs left
+  hold exactly their shares, at the same pressure and temperature, also after a reload).
 - Tests: `RouteLeakCases` (lay/break/re-lay rounds leave nothing in the simulator or fluid world),
-  `PipeCases` (`pipe_laying_all_or_nothing`, `pipe_kit_starts_anywhere_and_caps`, `pipe_kit_branches_pipe_to_pipe`).
+  `PipeCases` (`pipe_laying_all_or_nothing`, `pipe_kit_starts_anywhere_and_caps` with the start-spot refusal,
+  `pipe_kit_branches_pipe_to_pipe`, `kit_preview_says_what_the_click_does`, `pipe_kit_refuses_a_taken_port`),
+  `HandbookFixCases` (a cable route can't end where it started), `CableRouteLapseTest`, `JoinRouteCases` (routes started
+  or finished on an old cable or pipe near its end, at its end, from the side: no piece over it, no dead stub, one
+  network; rows logged unchecked for routes along it past its end and an MV kit on an LV run).
 
 ## Toolbag
 
@@ -338,7 +395,9 @@ holds them to frozen copies of the routers before the merge (`LegacyCableRouter`
   then colour, only what it holds; a pick that leaves no choice beyond, or the centre, sends `packetToolbagChoice`.
   The click that opened it is kept (`PENDING`, 30 s, same dimension, within 10 blocks) and replayed as the route's
   start once the kind is chosen. With a route on the radial adds Undo and Cancel (the bag's sneak-click is the radial),
-  and a new kind restarts the route from its start click (`STARTED`), a cable's waypoints kept for a cable.
+  and a new kind restarts the route from its start click (`STARTED`), its waypoints kept where they fit: a cable's for
+  another cable kind, a pipe's for another pipe kind (a cable's face points and a pipe's block-middle points don't carry
+  over between the two; "Restarted as ... — waypoints cleared"; within a family "Now ...; waypoints kept.").
 - Client `ToolbagHud`: the chosen kind and a terse usage line above the route note while the bag is in hand.
 - A kit or bag click must be within reach, its point on or in the clicked block (`CablePlacer.reachable`; else "Out
   of reach"; the player's reach plus `REACH_SLACK` 0.25, where the server itself takes a block more): AdventurAgent's
@@ -354,7 +413,7 @@ holds them to frozen copies of the routers before the merge (`LegacyCableRouter`
   each: burnt pieces give nothing), puts it back into the bag (its kits of that kind topped up, then empty slots, the
   rest dropped at the player) and wears the shears by one. A right-click, or the bag leaving the hand, cancels.
 - `ToolbagCases`: slots; a cable click lays its kind across two kits; a kind it lacks; the radial starts at the click
-  and a new kind keeps the start; a pipe click; Cancel; reach, sneak on a pipe route, Undo; the shears (a span back
+  and a new kind keeps the start; a pipe click; a new pipe kind keeps the waypoints, a cable kind doesn't; Cancel; reach, sneak on a pipe route, Undo; the shears (a span back
   into the bag, not past a junction; a full bag drops; no shears; cancel; a pipe run).
 
 ## Chisel

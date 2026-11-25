@@ -10,6 +10,8 @@ package mods.eln.sim.fluid;
  * <li>the coking index: each species' `coking` by its share (residue 1, heavy oil 0.15, diesel 0.01, light cuts 0).
  * Over the device's balance it fouls (0..FOUL_MAX, that share of its power gone), under it it clears again; no
  * damage.</li>
+ * <li>the choke (Baughn 2026-11-23): from its class's limit (TURBINE_CHOKE, PISTON_CHOKE) an engine's injectors choke. It takes no fuel and gives no power
+ * until the fuel in it is better; no damage. The furnace burner never chokes: it is meant to burn dirty fuel.</li>
  * </ul>
  */
 public final class FuelQuality {
@@ -27,6 +29,22 @@ public final class FuelQuality {
      * (78-88 % pure) does, its second pass or a tray column's (97-99 %) doesn't.
      */
     public static final double FURNACE_BALANCE = 0.05, ENGINE_BALANCE = 0.02;
+    /**
+     * The coking index from which an engine chokes (Baughn 2026-11-23: off-spec fuel loses power at once, fouls over a
+     * threshold, and chokes the engine past a further one, set so that a halfway sensible distillery never triggers it
+     * but a badly built or uncontrolled one can), by engine class (Baughn 2026-11-24: piston engines can't run heavy
+     * oil at all; the turbine keeps it).
+     * <ul>
+     * <li>TURBINE_CHOKE (the Gas Turbine): between heavy oil (0.15), which it burns, fouling, and dead crude (0.216):
+     * crude chokes it, and so does diesel with over 17 % residue in it.</li>
+     * <li>PISTON_CHOKE (the Fuel Generator; a diesel motor later): from the Still Pot's GameTests, between a sensibly run
+     * still's cuts (gasoline 0.000, diesel 0.022 with its 9 % heavy oil: still_pot_sensible_batch, StillSketchTest) and a
+     * badly run one's products (overfired at 25 kW 0.10-0.17: still_pot_overfire, StillSketchTest). A 15 kW batch's
+     * product (0.03, still_pot_overfired_batch) fouls a piston engine and doesn't choke it. Straight heavy oil (0.15) and
+     * a heavy cut (0.09-0.13) choke one.</li>
+     * </ul>
+     */
+    public static final double TURBINE_CHOKE = 0.18, PISTON_CHOKE = 0.05;
     /** Fouling per unit of index over the balance: dead crude (index 0.2159) fouls a furnace burner at rate 1. */
     public static final double FOUL_PER_INDEX = 1 / (0.2159 - FURNACE_BALANCE);
     /** At rate 1 and full power a device fouls completely in this long (s). */
@@ -54,6 +72,11 @@ public final class FuelQuality {
         /** The share of its power an engine gets on it: 1 - 2 x the share outside the window, not under 0. */
         public double power() {
             return powerFactor(off());
+        }
+
+        /** Does it choke an engine whose class chokes from limit (TURBINE_CHOKE, PISTON_CHOKE): no fuel taken, no power. */
+        public boolean choked(double limit) {
+            return coking >= limit;
         }
     }
 
@@ -116,8 +139,12 @@ public final class FuelQuality {
         return Math.exp(ln);
     }
 
-    /** "87 % in range, 13 % too heavy: 74 % power" for a readout. */
-    public static String describe(Rating r) {
+    /**
+     * "87 % in range, 13 % too heavy: 74 % power" for a readout; for fuel that chokes an engine, that instead (its power
+     * would mislead: it gives none).
+     */
+    public static String describe(Rating r, double limit) {
+        if (r.choked(limit)) return String.format(mods.eln.i18n.I18N.tr("chokes engine; coking %.3f, limit %.2f"), r.coking, limit);
         StringBuilder s = new StringBuilder(String.format("%.0f%% in range", (1 - r.off()) * 100));
         if (r.light > 0.0005) s.append(String.format(", %.0f%% too light", r.light * 100));
         if (r.heavy > 0.0005) s.append(String.format(", %.0f%% too heavy", r.heavy * 100));

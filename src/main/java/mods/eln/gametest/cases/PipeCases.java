@@ -7,7 +7,6 @@ import mods.eln.node.voxel.PipeKitItem;
 import mods.eln.node.voxel.PipePart;
 import mods.eln.node.voxel.VoxelNode;
 import mods.eln.node.voxel.VoxelPart;
-import mods.eln.node.voxel.VoxelNodeEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,6 +39,8 @@ public final class PipeCases {
         cases.add(new LayingAllOrNothing());
         cases.add(new KitStartsAnywhereAndCaps());
         cases.add(new KitBranchesPipeToPipe());
+        cases.add(new KitPreviewSaysWhatTheClickDoes());
+        cases.add(new KitRefusesATakenPort());
         cases.add(new KitCrafting());
         cases.add(new ThrottleAndControlValves());
         cases.add(new Burst());
@@ -50,6 +51,7 @@ public final class PipeCases {
         cases.add(new LeakFire(0));
         cases.add(new LeakFire(1));
         cases.add(new LeakFire(2));
+        cases.add(new JadeViscosity());
         cases.add(new ValveByPlayer());
         cases.add(new KitPickupMerges());
         cases.add(new PipeRoutePreview());
@@ -59,13 +61,22 @@ public final class PipeCases {
         cases.add(new VoxelGallery());
     }
 
-    static VoxelNode node(TestContext ctx, BlockPos p) {
-        return ctx.level().getBlockEntity(p) instanceof VoxelNodeEntity e && e.getNode() instanceof VoxelNode n ? n : null;
+    /** Fill every pipe (and junction) in these blocks with steam at about 6 bar and 150 C. */
+    static void steam(TestContext c, BlockPos... blocks) {
+        for (BlockPos p : blocks)
+            for (mods.eln.node.voxel.VoxelPart q : c.voxelByEntity(p).parts)
+                if (q instanceof PipePart || q instanceof mods.eln.node.voxel.JunctionPart) {
+                    // (a junction too: a cold fitting on a line of hot steam condenses it all, as cold iron would)
+                    var f = q instanceof PipePart pipe ? pipe.fluid : ((mods.eln.node.voxel.JunctionPart) q).fluid;
+                    f.fill(0, 1, 423.15);
+                    mods.eln.sim.fluid.EaUnits.addWater(f, 6e5 * f.volume / (461.5 * 423.15), 423.15, true);
+                    mods.eln.fluid.FluidWorld.changed(c.voxelByEntity(p));
+                }
     }
 
     /** The walls of every pipe at p at T (K): a line that has been in service. */
     static void warm(TestContext ctx, BlockPos p, double T) {
-        VoxelNode n = node(ctx, p);
+        VoxelNode n = ctx.voxelByEntity(p);
         if (n != null) for (var part : n.parts) if (part instanceof PipePart pipe) pipe.wallTemp = T;
     }
 
@@ -117,10 +128,10 @@ public final class PipeCases {
             mods.eln.Eln.simulator.addSlowProcess(fire = t -> hot.thermal.moveEnergyTo(3000 * t));
             lay(ctx, ctx.at(1, 1, 2), 0, 8, 8, 0, 8, 8, 8);
             lay(ctx, ctx.at(3, 1, 2), 0, 8, 8, 0, 8, 8, 8);
-            coldPipe = (PipePart) node(ctx, ctx.at(1, 1, 2)).parts.get(0);
-            hotPipe = (PipePart) node(ctx, ctx.at(3, 1, 2)).parts.get(0);
+            coldPipe = (PipePart) ctx.voxelByEntity(ctx.at(1, 1, 2)).parts.get(0);
+            hotPipe = (PipePart) ctx.voxelByEntity(ctx.at(3, 1, 2)).parts.get(0);
             lay(ctx, ctx.at(5, 1, 2), 0, 8, 8, 0, 8, 8, 8);
-            fullPipe = (PipePart) node(ctx, ctx.at(5, 1, 2)).parts.get(0);
+            fullPipe = (PipePart) ctx.voxelByEntity(ctx.at(5, 1, 2)).parts.get(0);
             // the cold boiler's pipe: full of water at 10 bar (a feed pump's pressure)
             m0 = coldPipe.fluid.volume * mods.eln.sim.fluid.Water.RHO_L * 0.9;
             coldPipe.fluid.fill(m0, 10e5, mods.eln.sim.fluid.Water.T_AMBIENT);
@@ -277,7 +288,7 @@ public final class PipeCases {
             boiler.reconnect();
             boiler.fromTanks(0, 0);
             lay(ctx, ctx.at(2, 2, 2), 0, 8, 0, 8, 8, 8, 8, 8, 8, 0);   // up from the pump, then north into the flange
-            pipe = (PipePart) node(ctx, ctx.at(2, 2, 2)).parts.get(0);
+            pipe = (PipePart) ctx.voxelByEntity(ctx.at(2, 2, 2)).parts.get(0);
             pump = pumpInWater(ctx, l, 2, 2);
             pump.front = mods.eln.misc.Direction.ZP;   // (power on the flanks: east and west)
             pump.reconnect();
@@ -359,10 +370,7 @@ public final class PipeCases {
         static void signal(TestContext ctx, Wp10aCases.Layout l, mods.eln.oil.SubmersiblePumpElement p, float u) {
             BlockPos cp = p.node.coordonate.pos().west();
             var s = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) l.six(Wp10bCases.SIGNAL_SOURCE, cp);
-            s.networkUnserialize(ctx.stream(o -> {
-                o.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                o.writeFloat(u);
-            }));
+            ctx.setVolts(s, u);
         }
 
         public void measure(TestContext ctx) {
@@ -392,7 +400,7 @@ public final class PipeCases {
             var boiler = (mods.eln.oil.BoilerElement) l.device(8 + (82 << 6), 1, 1);
             boiler.fromTanks(2000, 0);
             boiler.showTanks();
-            var fp = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(ctx.level());
+            var fp = ctx.player();
             fp.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
             fp.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.WATER_BUCKET));
             before = boiler.tanks.water();
@@ -431,14 +439,14 @@ public final class PipeCases {
             b = ctx.at(1, 1, 1);
             lay(ctx, b, 0, 0, 4, 8, 16, 4, 8);
             lay(ctx, b, 0, 8, 12, 0, 8, 12, 16);
-            var n = node(ctx, b);
+            var n = ctx.voxelByEntity(b);
             ((PipePart) n.parts.get(0)).fluid.fill(0, 5e5, 293.15);
             ((PipePart) n.parts.get(1)).fluid.fill(0, 2e5, 293.15);
             mods.eln.fluid.FluidWorld.changed(n);
         }
 
         public void measure(TestContext ctx) {
-            var n = node(ctx, b);
+            var n = ctx.voxelByEntity(b);
             String a = String.valueOf(n.getWaila(false, 0).get("Pressure")), c = String.valueOf(n.getWaila(false, 1).get("Pressure"));
             ctx.line("jade aimed pipe: part 0 " + a + "; part 1 " + c);
             ctx.check("Jade on each of two pipes in a block shows that pipe's run", a.startsWith("5.0") && c.startsWith("2.0"), a + " / " + c);
@@ -451,7 +459,7 @@ public final class PipeCases {
             var cb = ctx.at(1, 1, 0);
             PipeKitItem.place(ctx.level(), cb, new mods.eln.node.voxel.CablePart(0, 0, new int[]{0, 0, 3, 16, 0, 3}), null);
             PipeKitItem.place(ctx.level(), cb, new mods.eln.node.voxel.CablePart(1, 0, new int[]{0, 0, 12, 16, 0, 12}), null);
-            var cn = node(ctx, cb);
+            var cn = ctx.voxelByEntity(cb);
             var w0 = cn.getWaila(false, 0);
             var w1 = cn.getWaila(false, 1);
             ctx.line("jade aimed cable: part 0 " + w0 + "; part 1 " + w1 + "; none " + cn.getWaila(false, -1));
@@ -540,7 +548,7 @@ public final class PipeCases {
         }
 
         static mods.eln.node.voxel.PipeSensorPart sensor(TestContext ctx, BlockPos p, int sensing) {
-            for (VoxelPart q : node(ctx, p).parts) if (q instanceof mods.eln.node.voxel.PipeSensorPart s && s.sensing == sensing) return s;
+            for (VoxelPart q : ctx.voxelByEntity(p).parts) if (q instanceof mods.eln.node.voxel.PipeSensorPart s && s.sensing == sensing) return s;
             return null;
         }
 
@@ -549,20 +557,15 @@ public final class PipeCases {
             b = ctx.at(2, 1, 1);
             c = ctx.at(3, 1, 1);
             for (BlockPos p : new BlockPos[]{a, b, c}) lay(ctx, p, 0, 0, 8, 8, 16, 8, 8);
-            errP = node(ctx, a).addSensorNear(0.5, 0.5, 0.5, mods.eln.node.voxel.PipeSensorPart.PRESSURE);
-            errT = node(ctx, c).addSensorNear(0.5, 0.5, 0.5, mods.eln.node.voxel.PipeSensorPart.TEMPERATURE);
-            second = node(ctx, a).addSensorNear(0.25, 0.5, 0.5, mods.eln.node.voxel.PipeSensorPart.TEMPERATURE);
+            errP = ctx.voxelByEntity(a).addSensorNear(0.5, 0.5, 0.5, mods.eln.node.voxel.PipeSensorPart.PRESSURE);
+            errT = ctx.voxelByEntity(c).addSensorNear(0.5, 0.5, 0.5, mods.eln.node.voxel.PipeSensorPart.TEMPERATURE);
+            second = ctx.voxelByEntity(a).addSensorNear(0.25, 0.5, 0.5, mods.eln.node.voxel.PipeSensorPart.TEMPERATURE);
             // a signal cable along the floor of each block: the sensor's output joins it
             for (BlockPos p : new BlockPos[]{a, c}) {
                 String ce = PipeKitItem.place(ctx.level(), p, new mods.eln.node.voxel.CablePart(0, 0, new int[]{0, 0, 3, 16, 0, 3}), null);
                 if (ce != null) errP = "cable: " + ce;
             }
-            for (BlockPos p : new BlockPos[]{a, b, c}) {
-                var f = ((PipePart) node(ctx, p).parts.get(0)).fluid;
-                f.fill(0, 1, 423.15);
-                mods.eln.sim.fluid.EaUnits.addWater(f, 6e5 * f.volume / (461.5 * 423.15), 423.15, true);   // (~6 bar of vapour at 150 C)
-                mods.eln.fluid.FluidWorld.changed(node(ctx, p));
-            }
+            steam(ctx, a, b, c);
         }
 
         public void measure(TestContext ctx) {
@@ -571,9 +574,9 @@ public final class PipeCases {
             ctx.check("a second sensor in a block is refused", second != null, "" + second);
             var ps = sensor(ctx, a, mods.eln.node.voxel.PipeSensorPart.PRESSURE);
             var ts = sensor(ctx, c, mods.eln.node.voxel.PipeSensorPart.TEMPERATURE);
-            var n = mods.eln.fluid.FluidWorld.nodeFor(((PipePart) node(ctx, b).parts.get(0)).fluid);
+            var n = mods.eln.fluid.FluidWorld.nodeFor(((PipePart) ctx.voxelByEntity(b).parts.get(0)).fluid);
             ctx.line(String.format("pipe sensors: run %.2f bar %.0f C; pressure sensor %.2f bar -> %.2f V; temperature sensor %.0f C -> %.2f V; %s",
-                n.P() / 1e5, n.T() - 273.15, ps.reading, ps.out.getU(), ts.reading, ts.out.getU(), node(ctx, a).getWaila(false)));
+                n.P() / 1e5, n.T() - 273.15, ps.reading, ps.out.getU(), ts.reading, ts.out.getU(), ctx.voxelByEntity(a).getWaila(false)));
             ctx.check("pressure sensor reads the run (absolute)", Math.abs(ps.reading - n.P() / 1e5) < 0.05 && ps.reading > 2, String.format("%.2f", ps.reading));
             ctx.check("pressure sensor: its signal is the reading over 25 bar", Math.abs(ps.out.getU() - ps.reading / 25 * mods.eln.Eln.SVU) < 0.01 * mods.eln.Eln.SVU, String.format("%.2f V", ps.out.getU()));
             ctx.check("temperature sensor reads the run", Math.abs(ts.reading - (n.T() - 273.15)) < 1 && ts.reading > 50, String.format("%.0f", ts.reading));
@@ -584,10 +587,10 @@ public final class PipeCases {
                 new net.minecraft.world.phys.Vec3(a.getX() + (db[0] + db[3]) / 32.0, a.getY() + (db[1] + db[4]) / 32.0, a.getZ() + (db[2] + db[5]) / 32.0), true, new long[1][]);
             ctx.check("a cable ends on the floor under a pipe sensor", end != null && end.y() == a.getY() * 16L && end.attach() == 0, "" + end);
             double before = ps.scale;
-            var player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(ctx.level());
-            int idx = node(ctx, a).parts.indexOf(ps);
+            var player = ctx.player();
+            int idx = ctx.voxelByEntity(a).parts.indexOf(ps);
             int[] bx = ps.boxes().get(0);
-            node(ctx, a).onBlockActivated(player, mods.eln.misc.Direction.YP, (bx[0] + bx[3]) / 32f, (bx[1] + bx[4]) / 32f, (bx[2] + bx[5]) / 32f);
+            ctx.voxelByEntity(a).onBlockActivated(player, mods.eln.misc.Direction.YP, (bx[0] + bx[3]) / 32f, (bx[1] + bx[4]) / 32f, (bx[2] + bx[5]) / 32f);
             ctx.check("a right-click steps the full scale (25 -> 50 bar)", before == 25 && ps.scale == 50, ps.scale + " (part " + idx + ")");
         }
     }
@@ -697,7 +700,7 @@ public final class PipeCases {
         public void measure(TestContext ctx) {
             mods.eln.Eln.simulator.removeSlowProcess(fire);
             double p = turbine.source.getEffectiveP();
-            VoxelNode n = node(ctx, first);
+            VoxelNode n = ctx.voxelByEntity(first);
             var net = mods.eln.fluid.FluidWorld.networkOf(boiler.vessel);
             ctx.line("pipe: boiler " + boiler.getWaila() + ", turbine " + turbine.getWaila() + ", network " + (net == null ? 0 : net.nodes.size()) + " nodes");
             // (the 4 pipe blocks are one run: one lumped node; with the boiler, its feed inlet and the turbine's inlet: 4
@@ -752,7 +755,7 @@ public final class PipeCases {
                 err = "ports not found: " + a + " " + b;
                 return;
             }
-            var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(level), 4, a, List.of(), b);
+            var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(level), 4, a, List.of(), b);
             if (r.error != null) {
                 err = r.error;
                 return;
@@ -809,7 +812,7 @@ public final class PipeCases {
             var a = mods.eln.node.voxel.PipePlacer.portAtForTests(level, ctx.at(1, 1, 1), net.minecraft.core.Direction.UP);
             long[] join = {joinBlock.getX() * 16L + 8, joinBlock.getY() * 16L + 8, joinBlock.getZ() * 16L + 8};
             err = mods.eln.node.voxel.PipePlacer.routeAndJoinForTests(level, 0, a, join);
-            VoxelNode n = node(ctx, joinBlock);
+            VoxelNode n = ctx.voxelByEntity(joinBlock);
             partsAtJoin = n == null ? 0 : (int) n.parts.stream().filter(q -> q instanceof mods.eln.node.voxel.PipePart).count();
             junction = n != null && n.parts.stream().anyMatch(q -> q instanceof mods.eln.node.voxel.JunctionPart);
             if (n != null)
@@ -888,7 +891,7 @@ public final class PipeCases {
             for (int x = 0; x < w; x++)
                 for (int y = 0; y < 4; y++)
                     for (int z = 0; z < w; z++) {
-                        VoxelNode v = node(ctx, ctx.at(x, y, z));
+                        VoxelNode v = ctx.voxelByEntity(ctx.at(x, y, z));
                         if (v != null) n += v.parts.size();
                     }
             return n;
@@ -901,7 +904,7 @@ public final class PipeCases {
             lay(ctx, ctx.at(4, 2, 1), 0, 0, 8, 8, 16, 8, 8);
             lay(ctx, ctx.at(3, 2, 1), 0, 4, 8, 8, 16, 8, 8);
             BlockPos jb = ctx.at(4, 2, 1);
-            VoxelNode n = node(ctx, jb);
+            VoxelNode n = ctx.voxelByEntity(jb);
             valveErr = n == null ? "no node" : n.addValve(8, 8, 8);
             before = pieces(ctx, width());
             var a = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), ctx.at(1, 1, 1), net.minecraft.core.Direction.UP);
@@ -942,13 +945,13 @@ public final class PipeCases {
             lay(ctx, ctx.at(1, 1, 1), 0, 8, 12, 0, 8, 12, 16);
             ctx.level().setBlock(ctx.at(3, 1, 1), net.minecraft.world.level.block.Blocks.OAK_SLAB.defaultBlockState()
                 .setValue(net.minecraft.world.level.block.SlabBlock.TYPE, net.minecraft.world.level.block.state.properties.SlabType.TOP), 3);
-            VoxelNode old = node(ctx, ctx.at(1, 1, 1));
+            VoxelNode old = ctx.voxelByEntity(ctx.at(1, 1, 1));
             partsBefore = old == null ? -1 : old.parts.size();
             BlockPos o = ctx.at(0, 0, 0);
             long y = o.getY() * 16L + 16 + 4, z = o.getZ() * 16L + 16 + 12;
             java.util.List<long[]> pts = java.util.List.of(new long[]{o.getX() * 16L + 16 + 4, y, z}, new long[]{o.getX() * 16L + 5 * 16 + 12, y, z});
             err = mods.eln.node.voxel.PipePlacer.layFailingForTests(ctx.level(), 0, pts, -1);
-            VoxelNode after = node(ctx, ctx.at(1, 1, 1));
+            VoxelNode after = ctx.voxelByEntity(ctx.at(1, 1, 1));
             partsAfter = after == null ? -1 : after.parts.size();
             airAgain = ctx.level().getBlockState(ctx.at(2, 1, 1)).isAir() && ctx.level().getBlockState(ctx.at(4, 1, 1)).isAir();
             stairAgain = ctx.level().getBlockState(ctx.at(3, 1, 1)).getBlock() == net.minecraft.world.level.block.Blocks.OAK_SLAB;
@@ -971,16 +974,18 @@ public final class PipeCases {
         double x = p.getX(), y = p.getY(), z = p.getZ();
         p.snapTo(hit.x, hit.y + 0.5, hit.z, 0, 90);
         try {
-            return mods.eln.node.voxel.PipePlacer.use(p, ctx.level(), pos, face, kit, tier, hit);
+            return mods.eln.node.voxel.PipePlacer.use(p, ctx.level(), pos, face, kit, hit);
         } finally {
             p.snapTo(x, y, z, 0, 0);
         }
     }
 
-    /** The pipe kit as the cable kit (Baughn 2026-11-11): a route starts on a plain floor, a waypoint further along, the
-     *  same spot clicked again ends it capped there; it lies low along the floor, and the kit pays its length. */
+    /** The pipe kit as the cable kit (Baughn 2026-11-11): a route starts on a plain floor; the start spot clicked again
+     *  is refused as a waypoint (the cable kit's rule); a waypoint further along, the same spot clicked again ends it
+     *  capped there; it lies low along the floor, and the kit pays its length. */
     static final class KitStartsAnywhereAndCaps implements TestCase {
-        boolean started, waypoint, finished;
+        boolean started, waypoint, finished, startRefused;
+        String startSpot = "";
         int blocks, lowest = 99, kitBefore, kitAfter;
         boolean validStarts = true;
         String bad = "";
@@ -998,7 +1003,7 @@ public final class PipeCases {
         }
 
         public void build(TestContext ctx) {
-            var p = Wp10bCases.player(ctx);
+            var p = ctx.player();
             p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
             mods.eln.node.voxel.PipePlacer.forget(p.getUUID());
             ItemStack kit = PipeKitItem.kit(0, 16 * 16);
@@ -1006,11 +1011,16 @@ public final class PipeCases {
             BlockPos a = ctx.at(1, 0, 1), b = ctx.at(5, 0, 1);
             var up = net.minecraft.core.Direction.UP;
             started = kitClick(ctx, p, kit, 0, a, up, net.minecraft.world.phys.Vec3.atLowerCornerOf(a).add(0.5, 1, 0.5));
+            boolean handled = kitClick(ctx, p, kit, 0, a, up, net.minecraft.world.phys.Vec3.atLowerCornerOf(a).add(0.5, 1, 0.5));
+            int wps = mods.eln.node.voxel.RoutePlacer.waypoints(p.getUUID());
+            boolean on = mods.eln.node.voxel.PipePlacer.active(p.getUUID());
+            startRefused = handled && wps == 0 && on;
+            startSpot = "handled " + handled + ", waypoints " + wps + ", route on " + on;
             waypoint = kitClick(ctx, p, kit, 0, b, up, net.minecraft.world.phys.Vec3.atLowerCornerOf(b).add(0.5, 1, 0.5));
             finished = kitClick(ctx, p, kit, 0, b, up, net.minecraft.world.phys.Vec3.atLowerCornerOf(b).add(0.5, 1, 0.5));
             kitAfter = PipeKitItem.length(kit);
             for (int x = 0; x < width(); x++) {
-                VoxelNode n = node(ctx, ctx.at(x, 1, 1));
+                VoxelNode n = ctx.voxelByEntity(ctx.at(x, 1, 1));
                 if (n == null) continue;
                 blocks++;
                 for (VoxelPart part : n.parts)
@@ -1033,6 +1043,7 @@ public final class PipeCases {
 
         public void measure(TestContext ctx) {
             ctx.check("pipe kit: a route starts on a plain floor", started && waypoint && finished, started + " " + waypoint + " " + finished);
+            ctx.check("pipe kit: the start spot is no waypoint, the route stays on", startRefused, startSpot);
             ctx.check("pipe kit: clicking the last waypoint again lays it, ended there", blocks >= 5, blocks + " blocks");
             ctx.check("pipe kit: it lies low along the floor", lowest == 4, "lowest point y " + lowest);
             ctx.check("pipe kit: the kit pays its length", kitBefore - kitAfter >= 4 * 16, (kitBefore - kitAfter) + " voxels");
@@ -1065,7 +1076,7 @@ public final class PipeCases {
                 lay(ctx, ctx.at(x, 1, 0), 0, 0, 8, 8, 16, 8, 8);
                 lay(ctx, ctx.at(x, 1, 2), 0, 0, 8, 8, 16, 8, 8);
             }
-            var p = Wp10bCases.player(ctx);
+            var p = ctx.player();
             p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
             mods.eln.node.voxel.PipePlacer.forget(p.getUUID());
             ItemStack kit = PipeKitItem.kit(0, 16 * 16);
@@ -1073,7 +1084,7 @@ public final class PipeCases {
             var up = net.minecraft.core.Direction.UP;
             started = kitClick(ctx, p, kit, 0, a, up, net.minecraft.world.phys.Vec3.atLowerCornerOf(a).add(0.5, 9.0 / 16, 0.5));
             finished = kitClick(ctx, p, kit, 0, b, up, net.minecraft.world.phys.Vec3.atLowerCornerOf(b).add(0.5, 9.0 / 16, 0.5));
-            VoxelNode na = node(ctx, a), nb = node(ctx, b);
+            VoxelNode na = ctx.voxelByEntity(a), nb = ctx.voxelByEntity(b);
             partsA = na == null ? 0 : (int) na.parts.stream().filter(q -> q instanceof mods.eln.node.voxel.PipePart).count();
             partsB = nb == null ? 0 : (int) nb.parts.stream().filter(q -> q instanceof mods.eln.node.voxel.PipePart).count();
             junctions = (na != null && na.parts.stream().anyMatch(q -> q instanceof mods.eln.node.voxel.JunctionPart) ? 1 : 0)
@@ -1082,7 +1093,7 @@ public final class PipeCases {
         }
 
         public void measure(TestContext ctx) {
-            VoxelNode na = node(ctx, ctx.at(1, 1, 0)), nb = node(ctx, ctx.at(5, 1, 2));
+            VoxelNode na = ctx.voxelByEntity(ctx.at(1, 1, 0)), nb = ctx.voxelByEntity(ctx.at(5, 1, 2));
             Object fa = na == null ? null : ((PipePart) na.parts.get(0)).fluid, fb = nb == null ? null : ((PipePart) nb.parts.get(0)).fluid;
             var netA = fa == null ? null : mods.eln.fluid.FluidWorld.networkOf((mods.eln.sim.fluid.FluidNode) fa);
             var netB = fb == null ? null : mods.eln.fluid.FluidWorld.networkOf((mods.eln.sim.fluid.FluidNode) fb);
@@ -1090,6 +1101,147 @@ public final class PipeCases {
             ctx.check("pipe kit: each run is cut at its junction, plus the new pipe: 3 pieces each", partsA == 3 && partsB == 3, partsA + " / " + partsB);
             ctx.check("pipe kit: a junction fitting at each", junctions == 2, junctions + "");
             ctx.check("pipe kit: both runs and the branch are one network", netA != null && netA == netB, netA + " / " + netB);
+        }
+    }
+
+    /**
+     * The preview's line says what the next click would do, for cables and pipes alike (the pipes' suffix, Baughn: one
+     * kit UX): a route started on the floor and aimed at more floor adds a waypoint; aimed at an old cable or pipe of
+     * the kind, it joins it; aimed back at the start, the click's refusal.
+     */
+    static final class KitPreviewSaysWhatTheClickDoes implements TestCase {
+        String cableFloor, cableJoin, pipeFloor, pipeJoin, cableStart, pipeStart;
+
+        public String id() {
+            return "kit_preview_says_what_the_click_does";
+        }
+
+        public int width() {
+            return 9;
+        }
+
+        public int height() {
+            return 7;
+        }
+
+        public int depth() {
+            return 7;
+        }
+
+        public void build(TestContext ctx) {
+            var level = ctx.level();
+            for (int x = 0; x < 9; x++) for (int z = 0; z < 7; z++) ctx.floor(ctx.at(x, 0, z));
+            int lv = mods.eln.node.voxel.CablePart.tierOf("Low Voltage Cable");
+            // an LV cable along the floor at z 5, a pipe one block up at z 3
+            BlockPos c0 = ctx.at(1, 0, 5), c1 = ctx.at(5, 0, 5);
+            mods.eln.node.voxel.CablePlacer.routeAndLayForTests(level, lv,
+                new mods.eln.node.voxel.CableRouter.End(c0.getX() * 16L + 8, (c0.getY() + 1) * 16L, c0.getZ() * 16L + 8, 0, -1),
+                new mods.eln.node.voxel.CableRouter.End(c1.getX() * 16L + 8, (c1.getY() + 1) * 16L, c1.getZ() * 16L + 8, 0, -1));
+            for (int x = 1; x < 6; x++) lay(ctx, ctx.at(x, 1, 3), 0, 0, 8, 8, 16, 8, 8);
+            var p = ctx.player();
+            p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+            var up = net.minecraft.core.Direction.UP;
+            BlockPos start = ctx.at(1, 0, 1), floor = ctx.at(4, 0, 1);
+            var startHit = net.minecraft.world.phys.Vec3.atLowerCornerOf(start).add(0.5, 1, 0.5);
+            var floorHit = net.minecraft.world.phys.Vec3.atLowerCornerOf(floor).add(0.5, 1, 0.5);
+            double x = p.getX(), y = p.getY(), z = p.getZ();
+            p.snapTo(startHit.x, startHit.y + 0.5, startHit.z, 0, 90);
+            try {
+                mods.eln.node.voxel.RoutePlacer.forget(p.getUUID());
+                mods.eln.node.voxel.KitPreview.forget(p.getUUID());   // (no snapshot left from another case)
+                ItemStack cable = mods.eln.node.voxel.CableKitItem.kit(lv, 16 * 16);
+                var cs = mods.eln.node.voxel.KitSupply.of(cable);
+                mods.eln.node.voxel.CablePlacer.use(p, level, start, up, cs, startHit, false);
+                cableFloor = mods.eln.node.voxel.KitPreview.previewForTests(p, cs, floor, up, floorHit);
+                cableStart = mods.eln.node.voxel.KitPreview.previewForTests(p, cs, start, up, startHit);
+                BlockPos onCable = ctx.at(4, 1, 5);
+                cableJoin = mods.eln.node.voxel.KitPreview.previewForTests(p, cs, onCable, up,
+                    net.minecraft.world.phys.Vec3.atLowerCornerOf(onCable).add(0.5, 0.5 / 16, 0.5));
+                mods.eln.node.voxel.RoutePlacer.forget(p.getUUID());
+                ItemStack pipe = PipeKitItem.kit(0, 16 * 16);
+                var ps = mods.eln.node.voxel.KitSupply.of(pipe);
+                mods.eln.node.voxel.PipePlacer.use(p, level, start, up, ps, startHit, false);
+                pipeFloor = mods.eln.node.voxel.KitPreview.previewForTests(p, ps, floor, up, floorHit);
+                pipeStart = mods.eln.node.voxel.KitPreview.previewForTests(p, ps, start, up, startHit);
+                BlockPos onPipe = ctx.at(4, 1, 3);
+                pipeJoin = mods.eln.node.voxel.KitPreview.previewForTests(p, ps, onPipe, up,
+                    net.minecraft.world.phys.Vec3.atLowerCornerOf(onPipe).add(0.5, 9.0 / 16, 0.5));
+            } finally {
+                mods.eln.node.voxel.RoutePlacer.forget(p.getUUID());
+                p.snapTo(x, y, z, 0, 0);
+                p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+            }
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.check("kit preview: a cable route aimed at the floor adds a waypoint", cableFloor != null && cableFloor.endsWith(" \u2014 waypoint"), cableFloor);
+            ctx.check("kit preview: a cable route aimed at a cable joins it", cableJoin != null && cableJoin.endsWith(" \u2014 joins"), cableJoin);
+            ctx.check("kit preview: a pipe route aimed at the floor adds a waypoint", pipeFloor != null && pipeFloor.endsWith(" \u2014 waypoint"), pipeFloor);
+            ctx.check("kit preview: aimed back at the start, the click's refusal (cable, pipe)",
+                cableStart != null && cableStart.startsWith("That's the start.") && pipeStart != null && pipeStart.startsWith("That's the start."),
+                cableStart + " / " + pipeStart);
+            ctx.check("kit preview: a pipe route aimed at a pipe joins it", pipeJoin != null && pipeJoin.endsWith(" \u2014 joins"), pipeJoin);
+        }
+    }
+
+    /**
+     * A machine's port that already has a pipe is refused, in the preview and on the click, with the pipe sensor's words
+     * (AdventurAgent: a second route to a tank's piped port said "gave up: too far or too tangled"); while free, the same
+     * port takes a route.
+     */
+    static final class KitRefusesATakenPort implements TestCase {
+        String first, preview, second;
+        boolean laid, refused;
+
+        public String id() {
+            return "pipe_kit_refuses_a_taken_port";
+        }
+
+        public void build(TestContext ctx) {
+            var level = ctx.level();
+            BlockPos tp = ctx.at(4, 1, 1);
+            var tank = (mods.eln.oil.TankElement) ctx.placeTransparent(PlumbingCases.IRON_TANK, tp);
+            tank.front = mods.eln.misc.Direction.XP;   // (its back, with a low side port, to the west)
+            tank.reconnect();
+            var p = ctx.player();
+            p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+            var up = net.minecraft.core.Direction.UP;
+            var west = net.minecraft.core.Direction.WEST;
+            var portHit = net.minecraft.world.phys.Vec3.atLowerCornerOf(tp).add(0, 0.3, 0.5);
+            double x = p.getX(), y = p.getY(), z = p.getZ();
+            p.snapTo(tp.getX() - 1.5, tp.getY(), tp.getZ() + 0.5, 0, 0);
+            try {
+                mods.eln.node.voxel.RoutePlacer.forget(p.getUUID());
+                ItemStack kit = PipeKitItem.kit(0, 16 * 16);
+                var ks = mods.eln.node.voxel.KitSupply.of(kit);
+                // a route from the floor to the free port: laid
+                BlockPos s1 = ctx.at(1, 0, 0);
+                mods.eln.node.voxel.PipePlacer.use(p, level, s1, up, ks, net.minecraft.world.phys.Vec3.atLowerCornerOf(s1).add(0.5, 1, 0.5), false);
+                mods.eln.node.voxel.PipePlacer.use(p, level, tp, west, ks, portHit, false);
+                laid = !mods.eln.node.voxel.PipePlacer.active(p.getUUID()) && ctx.voxelByEntity(ctx.at(3, 1, 1)) != null;
+                first = "route laid " + laid;
+                // a second route to it: refused, the route still on, nothing laid
+                BlockPos s2 = ctx.at(1, 0, 2);
+                mods.eln.node.voxel.PipePlacer.use(p, level, s2, up, ks, net.minecraft.world.phys.Vec3.atLowerCornerOf(s2).add(0.5, 1, 0.5), false);
+                preview = mods.eln.node.voxel.KitPreview.previewForTests(p, ks, tp, west, portHit);
+                var v = ctx.voxelByEntity(ctx.at(3, 1, 1));
+                int before = v == null ? -1 : v.parts.size();
+                mods.eln.node.voxel.PipePlacer.use(p, level, tp, west, ks, portHit, false);
+                v = ctx.voxelByEntity(ctx.at(3, 1, 1));
+                int after = v == null ? -1 : v.parts.size();
+                refused = mods.eln.node.voxel.PipePlacer.active(p.getUUID()) && before == after;
+                second = "route on " + mods.eln.node.voxel.PipePlacer.active(p.getUUID()) + ", parts by the port " + before + " -> " + after;
+            } finally {
+                mods.eln.node.voxel.RoutePlacer.forget(p.getUUID());
+                p.snapTo(x, y, z, 0, 0);
+                p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+            }
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.check("pipe kit: a free tank port takes a route", laid, first);
+            ctx.check("pipe kit: the preview at the piped port says it's taken", preview != null && preview.startsWith("Its port already has a pipe"), "" + preview);
+            ctx.check("pipe kit: a second route to the piped port is refused", refused, second);
         }
     }
 
@@ -1111,7 +1263,7 @@ public final class PipeCases {
         }
 
         public void build(TestContext ctx) {
-            var p = Wp10bCases.player(ctx);
+            var p = ctx.player();
             p.getInventory().clearContent();
             p.getInventory().add(PipeKitItem.kit(0, 16));
             var ent = new net.minecraft.world.entity.item.ItemEntity(ctx.level(), p.getX(), p.getY(), p.getZ(), PipeKitItem.kit(0, 40));
@@ -1156,7 +1308,7 @@ public final class PipeCases {
         public void build(TestContext ctx) {
             at = ctx.at(1, 1, 1);
             lay(ctx, at, 0, 0, 8, 8, 16, 8, 8);
-            var p = Wp10bCases.player(ctx);
+            var p = ctx.player();
             p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
             var stack = new ItemStack(mods.eln.registry.ElnRegistry.PIPE_VALVE.get());
             p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, stack);
@@ -1168,7 +1320,7 @@ public final class PipeCases {
         }
 
         public void measure(TestContext ctx) {
-            VoxelNode n = node(ctx, at);
+            VoxelNode n = ctx.voxelByEntity(at);
             boolean valve = false;
             if (n != null) for (VoxelPart q : n.parts) if (q instanceof mods.eln.node.voxel.ValvePart) valve = true;
             ctx.check("pipe: a player's right-click with a valve fits it", valve, result);
@@ -1210,7 +1362,7 @@ public final class PipeCases {
         }
 
         public void measure(TestContext ctx) {
-            VoxelNode n = node(ctx, at);
+            VoxelNode n = ctx.voxelByEntity(at);
             ctx.check("pipe: an adapter goes on the stone's face, with its stub", n != null && n.adapterOn(net.minecraft.core.Direction.WEST.get3DDataValue()) != null, "");
             if (n == null) return;
             PipePart stub = null;
@@ -1280,7 +1432,7 @@ public final class PipeCases {
         }
 
         public void measure(TestContext ctx) {
-            VoxelNode n = node(ctx, at);
+            VoxelNode n = ctx.voxelByEntity(at);
             if (n == null) {
                 ctx.check("pipe: an oil adapter goes on the stone's face", false, "");
                 return;
@@ -1329,7 +1481,7 @@ public final class PipeCases {
         }
 
         PipePart pipe(TestContext ctx) {
-            for (VoxelPart p : node(ctx, at).parts) if (p instanceof PipePart pp) return pp;
+            for (VoxelPart p : ctx.voxelByEntity(at).parts) if (p instanceof PipePart pp) return pp;
             return null;
         }
 
@@ -1390,19 +1542,19 @@ public final class PipeCases {
             b = ctx.at(2, 1, 1);
             c = ctx.at(3, 1, 1);
             for (BlockPos p : new BlockPos[]{a, b, c}) lay(ctx, p, 0, 0, 8, 8, 16, 8, 8);
-            err = node(ctx, b).addValve();
+            err = ctx.voxelByEntity(b).addValve();
             if (err != null) return;
-            for (VoxelPart p : node(ctx, b).parts) if (p instanceof mods.eln.node.voxel.ValvePart v) v.open = false;
-            ((PipePart) node(ctx, a).parts.get(0)).fluid.fill(0, 5e5, 293.15);
-            mods.eln.fluid.FluidWorld.changed(node(ctx, a));
+            for (VoxelPart p : ctx.voxelByEntity(b).parts) if (p instanceof mods.eln.node.voxel.ValvePart v) v.open = false;
+            ((PipePart) ctx.voxelByEntity(a).parts.get(0)).fluid.fill(0, 5e5, 293.15);
+            mods.eln.fluid.FluidWorld.changed(ctx.voxelByEntity(a));
         }
 
         public void measure(TestContext ctx) {
             ctx.check("pipe: a valve fits in a straight pipe", err == null, "" + err);
             if (err != null) return;
-            double pa = ((PipePart) node(ctx, a).parts.get(0)).fluid.P(), pc = ((PipePart) node(ctx, c).parts.get(0)).fluid.P();
+            double pa = ((PipePart) ctx.voxelByEntity(a).parts.get(0)).fluid.P(), pc = ((PipePart) ctx.voxelByEntity(c).parts.get(0)).fluid.P();
             ctx.check("pipe: shut, it holds (5 bar on one side, 1 on the other)", pa > 3e5 && pc < 1.5e5, String.format("%.2f / %.2f bar", pa / 1e5, pc / 1e5));
-            var parts = node(ctx, b).parts;
+            var parts = ctx.voxelByEntity(b).parts;
             ctx.check("pipe: the pipe was cut in two around the valve", parts.size() == 3, parts.size() + " parts");
         }
     }
@@ -1439,7 +1591,7 @@ public final class PipeCases {
         }
 
         static mods.eln.node.voxel.ValvePart valve(TestContext ctx, BlockPos p) {
-            for (VoxelPart q : node(ctx, p).parts) if (q instanceof mods.eln.node.voxel.ValvePart v) return v;
+            for (VoxelPart q : ctx.voxelByEntity(p).parts) if (q instanceof mods.eln.node.voxel.ValvePart v) return v;
             return null;
         }
 
@@ -1449,7 +1601,7 @@ public final class PipeCases {
             for (int r = 0; r < 4; r++) {
                 runs[r] = new BlockPos[]{ctx.at(1, 1, r), ctx.at(2, 1, r), ctx.at(3, 1, r)};
                 for (BlockPos p : runs[r]) lay(ctx, p, 0, 0, 8, 8, 16, 8, 8);
-                String e = node(ctx, runs[r][1]).addValve(8, 8, 8, modes[r]);
+                String e = ctx.voxelByEntity(runs[r][1]).addValve(8, 8, 8, modes[r]);
                 if (e != null) err += "run " + r + ": " + e + "; ";
             }
             if (!err.isEmpty()) return;
@@ -1459,11 +1611,11 @@ public final class PipeCases {
                 var bos = new java.io.ByteArrayOutputStream();
                 var out = new java.io.DataOutputStream(bos);
                 out.writeByte(mods.eln.node.voxel.VoxelNode.PART_PACKET);
-                int idx = node(ctx, runs[1][1]).parts.indexOf(valve(ctx, runs[1][1]));
+                int idx = ctx.voxelByEntity(runs[1][1]).parts.indexOf(valve(ctx, runs[1][1]));
                 valve(ctx, runs[1][1]).setting = 0;
                 out.writeByte(idx);
                 out.writeFloat(1f);
-                node(ctx, runs[1][1]).networkUnserialize(new java.io.DataInputStream(new java.io.ByteArrayInputStream(bos.toByteArray())),
+                ctx.voxelByEntity(runs[1][1]).networkUnserialize(new java.io.DataInputStream(new java.io.ByteArrayInputStream(bos.toByteArray())),
                     null);
             } catch (java.io.IOException e) {
                 err += e;
@@ -1473,13 +1625,13 @@ public final class PipeCases {
             source = new mods.eln.sim.mna.component.VoltageSource("test", control.signal, null).setU(mods.eln.Eln.SVU);
             mods.eln.Eln.simulator.addElectricalComponent(source);
             for (int r = 0; r < 4; r++) {
-                ((PipePart) node(ctx, runs[r][0]).parts.get(0)).fluid.fill(0, 5e5, 293.15);
-                mods.eln.fluid.FluidWorld.changed(node(ctx, runs[r][0]));
+                ((PipePart) ctx.voxelByEntity(runs[r][0]).parts.get(0)).fluid.fill(0, 5e5, 293.15);
+                mods.eln.fluid.FluidWorld.changed(ctx.voxelByEntity(runs[r][0]));
             }
         }
 
         double[] p(TestContext ctx, int r) {
-            return new double[]{((PipePart) node(ctx, runs[r][0]).parts.get(0)).fluid.P(), ((PipePart) node(ctx, runs[r][2]).parts.get(0)).fluid.P()};
+            return new double[]{((PipePart) ctx.voxelByEntity(runs[r][0]).parts.get(0)).fluid.P(), ((PipePart) ctx.voxelByEntity(runs[r][2]).parts.get(0)).fluid.P()};
         }
 
         public void measure(TestContext ctx) {
@@ -1524,17 +1676,17 @@ public final class PipeCases {
             lay(ctx, a, 0, 0, 8, 8, 16, 8, 8);
             lay(ctx, b, 0, 0, 8, 8, 16, 8, 8);
             for (BlockPos p : new BlockPos[]{a, b}) {
-                VoxelNode n = node(ctx, p);
+                VoxelNode n = ctx.voxelByEntity(p);
                 ((PipePart) n.parts.get(0)).fluid.fill(0, 50e5, 293.15);
                 mods.eln.fluid.FluidWorld.changed(n);
             }
         }
 
         public void measure(TestContext ctx) {
-            PipePart pa = (PipePart) node(ctx, a).parts.get(0), pb = (PipePart) node(ctx, b).parts.get(0);
+            PipePart pa = (PipePart) ctx.voxelByEntity(a).parts.get(0), pb = (PipePart) ctx.voxelByEntity(b).parts.get(0);
             ctx.check("pipe: one piece of the run burst", pa.burst ^ pb.burst, pa.burst + " " + pb.burst);
             ctx.check("pipe: the run vented to the air", pa.fluid.P() < 2e5, String.format("%.2f bar", pa.fluid.P() / 1e5));
-            VoxelNode n = node(ctx, pa.burst ? a : b);
+            VoxelNode n = ctx.voxelByEntity(pa.burst ? a : b);
             n.removePart(0, true);
             var items = ctx.level().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(a).inflate(3));
             ctx.check("pipe: a burst piece drops nothing", items.isEmpty(), items.size() + " items");
@@ -1581,7 +1733,7 @@ public final class PipeCases {
                 for (BlockPos p : new BlockPos[]{ctx.at(1, 1, 0), ctx.at(2, 1, 2), ctx.at(0, 1, 1), ctx.at(3, 1, 1)})
                     ctx.level().setBlock(p, net.minecraft.world.level.block.Blocks.TORCH.defaultBlockState(), 3);
             for (BlockPos p : new BlockPos[]{a, b}) {
-                VoxelNode n = node(ctx, p);
+                VoxelNode n = ctx.voxelByEntity(p);
                 var f = ((PipePart) n.parts.get(0)).fluid;
                 f.fill(0, 45e5, T);
                 f.addMass(id, 0.6 * f.volume * reg.byId(id).rhoL);
@@ -1592,7 +1744,7 @@ public final class PipeCases {
         }
 
         public void measure(TestContext ctx) {
-            PipePart pa = (PipePart) node(ctx, a).parts.get(0), pb = (PipePart) node(ctx, b).parts.get(0);
+            PipePart pa = (PipePart) ctx.voxelByEntity(a).parts.get(0), pb = (PipePart) ctx.voxelByEntity(b).parts.get(0);
             ctx.check("leak fire: the run burst", pa.burst || pb.burst, pa.burst + " " + pb.burst);
             var run = mods.eln.fluid.FluidWorld.nodeFor(pa.fluid);
             ctx.line(String.format("leak fire: the run at %.1f K, %.2f bar, %.3f kg", run.T(), run.P() / 1e5, run.mass()));
@@ -1606,6 +1758,105 @@ public final class PipeCases {
             for (BlockPos p : BlockPos.betweenClosed(ctx.at(0, 0, 0), ctx.at(3, 3, 2)))
                 if (ctx.level().getBlockState(p).getBlock() instanceof net.minecraft.world.level.block.BaseFireBlock)
                     ctx.level().setBlock(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+        }
+    }
+
+    /**
+     * Viscosity in Jade (design-398 6 A, thick liquid crawling through a pipe read as a bug): three separate runs, cold
+     * heavy oil (thick: the line third, in the headline, with the fix), diesel (thin: after the contents) and steam (no
+     * line: gas); an iron tank of cold heavy oil (third too, before its liquid line); a pipe sensor on a wall, piped to a
+     * run of diesel (under its three lines).
+     */
+    static final class JadeViscosity implements TestCase {
+        BlockPos oil, diesel, steam, tankAt, sensorAt, sensorRun;
+        mods.eln.oil.TankElement tank;
+        String sensorErr;
+
+        public String id() {
+            return "pipe_jade_viscosity";
+        }
+
+        public int width() {
+            return 6;
+        }
+
+        public int ticks() {
+            return 20;
+        }
+
+        public void build(TestContext ctx) {
+            oil = ctx.at(1, 1, 1);
+            diesel = ctx.at(3, 1, 1);
+            steam = ctx.at(5, 1, 1);
+            var reg = mods.eln.sim.fluid.SpeciesRegistry.get();
+            for (BlockPos p : new BlockPos[]{oil, diesel, steam}) lay(ctx, p, 0, 0, 8, 8, 16, 8, 8);
+            for (BlockPos p : new BlockPos[]{oil, diesel}) {
+                VoxelNode n = ctx.voxelByEntity(p);
+                var f = ((PipePart) n.parts.get(0)).fluid;
+                int id = reg.id(p == oil ? "eln:heavy_oil" : "eln:diesel");
+                f.fill(0, 1e5, 293.15);
+                f.addMass(id, 0.6 * f.volume * reg.byId(id).rhoL);
+                f.energy = f.energyAt(293.15);
+                f.update();
+                mods.eln.fluid.FluidWorld.changed(n);
+            }
+            steam(ctx, steam);
+            tankAt = ctx.at(1, 1, 4);
+            tank = (mods.eln.oil.TankElement) ctx.placeTransparent(PlumbingCases.IRON_TANK, tankAt);
+            ctx.after(2, () -> {
+                var v = tank.vessel;
+                mods.eln.sim.fluid.EaUnits.add(v, reg.id("eln:heavy_oil"), 0.3 * v.volume * reg.byId(reg.id("eln:heavy_oil")).rhoL, 293.15, false);
+                v.update();
+            });
+            // (a pipe sensor on a wall, as pipe_transmitter_wall_temperature, its run full of diesel)
+            sensorAt = ctx.at(4, 1, 4);
+            sensorRun = ctx.at(5, 1, 4);
+            ctx.floor(sensorAt.north());
+            sensorErr = mods.eln.node.voxel.PipeSensorItem.place(ctx.level(), sensorAt.north(), net.minecraft.core.Direction.SOUTH,
+                new net.minecraft.world.phys.Vec3(sensorAt.getX() + 0.5, sensorAt.getY() + 0.5, sensorAt.getZ()), mods.eln.node.voxel.PipeSensorPart.TEMPERATURE, ctx.player());
+            if (sensorErr != null) return;
+            int[] port = PipeTransmitterCases.device(ctx, sensorAt).port();
+            sensorErr = ctx.voxelByEntity(sensorAt).addPart(new PipePart(0, new int[]{port[0], port[1], port[2], 16, port[1], port[2]}));
+            lay(ctx, sensorRun, 0, 0, port[1], port[2], 16, port[1], port[2]);
+            for (BlockPos p : new BlockPos[]{sensorAt, sensorRun}) {
+                VoxelNode n = ctx.voxelByEntity(p);
+                for (var part : n.parts)
+                    if (part instanceof PipePart pp) {
+                        var f = pp.fluid;
+                        int id = reg.id("eln:diesel");
+                        f.fill(0, 1e5, 293.15);
+                        f.addMass(id, 0.6 * f.volume * reg.byId(id).rhoL);
+                        f.energy = f.energyAt(293.15);
+                        f.update();
+                    }
+                mods.eln.fluid.FluidWorld.changed(n);
+            }
+        }
+
+        public void measure(TestContext ctx) {
+            var t = tank.getWaila();
+            var tk = new java.util.ArrayList<>(t.keySet());
+            String visc = mods.eln.i18n.I18N.tr("Viscosity");
+            ctx.check("tank viscosity: cold heavy oil is thick, third in its Jade, before its liquid line", tk.indexOf(visc) == 2
+                && tk.indexOf(mods.eln.i18n.I18N.tr("Liquid")) == 3 && t.get(visc).startsWith("thick heavy oil, "), "" + t);
+            ctx.check("pipe sensor viscosity: placed, piped to a run", sensorErr == null, "" + sensorErr);
+            if (sensorErr == null) {
+                var w = PipeTransmitterCases.device(ctx, sensorAt).getWaila();
+                var wk = new java.util.ArrayList<>(w.keySet());
+                ctx.check("pipe sensor viscosity: its run's diesel, under its three lines", wk.indexOf(visc) == 3
+                    && w.get(visc).startsWith("thin diesel, "), "" + w);
+            }
+            var o = ctx.voxelByEntity(oil).getWaila(false, 0);
+            var d = ctx.voxelByEntity(diesel).getWaila(false, 0);
+            var s = ctx.voxelByEntity(steam).getWaila(false, 0);
+            ctx.line("pipe viscosity: heavy oil " + o + "; diesel " + d + "; steam " + s);
+            var ok = new java.util.ArrayList<>(o.keySet());
+            var dk = new java.util.ArrayList<>(d.keySet());
+            ctx.check("pipe viscosity: cold heavy oil is thick, third in Jade (its headline), with the fix", ok.indexOf(visc) == 2
+                && o.get(visc).startsWith("thick heavy oil, ") && o.get(visc).endsWith("heat or dilute"), "" + o);
+            ctx.check("pipe viscosity: diesel is thin, after the contents", dk.indexOf(visc) == dk.indexOf("Contents") + 1
+                && d.get(visc).startsWith("thin diesel, ") && d.get(visc).contains(" mPa s, "), "" + d);
+            ctx.check("pipe viscosity: none for steam", !s.containsKey(visc), "" + s);
         }
     }
 
@@ -1735,7 +1986,7 @@ public final class PipeCases {
             lay(ctx, at, 0, 0, 4, 8, 16, 4, 8);                       // along x, low
             lay(ctx, at, 1, 8, 12, 0, 8, 12, 16);                     // along z, high (alloy)
             refused = PipeKitItem.place(ctx.level(), at, new PipePart(0, new int[]{8, 4, 0, 8, 4, 16}), null);
-            VoxelNode n = node(ctx, at);
+            VoxelNode n = ctx.voxelByEntity(at);
             int low = n.partAt(0.5, 4 / 16.0, 0.5);
             emptyAfterFirst = n.removePart(low, true);
             partsLeft = n.parts.size();
@@ -1847,7 +2098,7 @@ public final class PipeCases {
         public void build(TestContext ctx) {
             BlockPos p = ctx.at(4, 1, 1);
             lay(ctx, p, 1, 0, 8, 8, 16, 8, 8);   // (one alloy block, its east end shut)
-            VoxelNode n = node(ctx, p);
+            VoxelNode n = ctx.voxelByEntity(p);
             for (VoxelPart part : n.parts) if (part instanceof PipePart q) pipe = q.fluid;
             pipe.fill(0.97 * pipe.volume * mods.eln.sim.fluid.Water.RHO_L, mods.eln.sim.fluid.Water.P_ATM, 293.15);
             var src = new mods.eln.sim.fluid.FluidNode(1.0, p.getY(), 1.0, false).fill(0.7 * mods.eln.sim.fluid.Water.RHO_L, 50e5, 293.15);
@@ -1903,7 +2154,7 @@ public final class PipeCases {
         double mass(TestContext ctx) {
             double m = 0;
             for (BlockPos p : new BlockPos[]{a, b, c})
-                for (VoxelPart part : node(ctx, p).parts) if (part instanceof PipePart q) m += q.fluid.mWater + q.fluid.mAir;
+                for (VoxelPart part : ctx.voxelByEntity(p).parts) if (part instanceof PipePart q) m += q.fluid.mWater + q.fluid.mAir;
             return m;
         }
 
@@ -1916,7 +2167,7 @@ public final class PipeCases {
             lay(ctx, c, 0, 0, 8, 8, 12, 8, 8);
             mods.eln.sim.fluid.FluidNode mid = null;
             for (BlockPos p : new BlockPos[]{a, b, c})
-                for (VoxelPart part : node(ctx, p).parts)
+                for (VoxelPart part : ctx.voxelByEntity(p).parts)
                     if (part instanceof PipePart q) {
                         q.fluid.fill(0, mods.eln.sim.fluid.Water.P_ATM, 293.15);
                         if (p == b) mid = q.fluid;
@@ -1927,7 +2178,7 @@ public final class PipeCases {
             flow = mods.eln.sim.fluid.FluidDevice.Flow.source(mid, 0.5, mods.eln.sim.fluid.SpeciesRegistry.AIR, 400);
             flow.rate = rate;
             var flows = List.of(flow);
-            Object level = node(ctx, b).fluidLevel();
+            Object level = ctx.voxelByEntity(b).fluidLevel();
             dev = new mods.eln.sim.fluid.FluidDevice() {
                 public Object fluidLevel() {
                     return level;

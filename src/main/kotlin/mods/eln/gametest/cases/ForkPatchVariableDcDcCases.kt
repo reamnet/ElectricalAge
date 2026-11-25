@@ -78,7 +78,7 @@ object ForkPatchVariableDcDcCases {
                 val systems=listOfNotNull(e.primaryInternal.subSystem,e.secondaryInternal.subSystem).distinct()
                 val versions=systems.map { it.matrixVersion }
                 repeat(1000) { e.updateControl();e.windings.forEach { it.update() } }
-                c.check("variable DC/DC: stable control and cached winding properties retain native LU factors",systems.map { it.matrixVersion }==versions && systems.all { Batch1Cases.field<Boolean>(it,"matrixValid") },"")
+                c.check("variable DC/DC: stable control and cached winding properties retain native LU factors",systems.map { it.matrixVersion }==versions && systems.all { mods.eln.gametest.TestContext.field<Boolean>(it,"matrixValid") },"")
                 val input=e.primarySource.p;val output=e.secondarySource.p
                 c.check("variable DC/DC: accepted winding ports conserve power",abs(input+output)<1e-6*maxOf(1.0,abs(input)),"$input / $output")
                 c.check("variable DC/DC: paid copper resistance produces real thermal loss",e.primaryResistance.r>0 && e.secondaryResistance.r>e.primaryResistance.r && e.windings.sumOf { it.heating.sampledJoules }>0,"")

@@ -77,7 +77,7 @@ public class OverheadCableItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, net.minecraft.world.item.component.TooltipDisplay display,
                                 java.util.function.Consumer<Component> out, net.minecraft.world.item.TooltipFlag flag) {
         CableSpec spec = new CableSpec(mm2(stack), 0);
-        out.accept(Component.literal(mods.eln.transparentnode.wiredrawing.WireDrawingDescriptor.fmt(CableSpec.MM2[spec.mm2()])
+        out.accept(Component.literal(CableSpec.mm2Number(CableSpec.MM2[spec.mm2()])
             + String.format(" mm² bare copper, %.0f A", spec.amps())).withStyle(net.minecraft.ChatFormatting.GRAY));
         out.accept(Component.literal("For the spans between utility poles: right-click one pole, then the next")
             .withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
@@ -111,5 +111,36 @@ public class OverheadCableItem extends Item {
         net.minecraft.world.item.component.CustomData.update(net.minecraft.core.component.DataComponents.CUSTOM_DATA, self, t -> t.putInt(BLOCKS, now));
         take(other, n);
         return true;
+    }
+
+    /**
+     * Picking up a piece tops up the player's pieces of the same cross-section first, up to MAX_BLOCKS each (nero
+     * 1573459054402084968: they stayed apart, to be clicked together by hand), as kits do. What's left is picked up as
+     * usual.
+     */
+    public static void onPickup(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre e) {
+        var ent = e.getItemEntity();
+        ItemStack s = ent.getItem();
+        if (!is(s) || e.getPlayer().level().isClientSide() || ent.hasPickUpDelay()) return;
+        int len = blocks(s), mm2 = mm2(s);
+        var inv = e.getPlayer().getInventory();
+        for (int i = 0; i < inv.getContainerSize() && len > 0; i++) {
+            ItemStack o = inv.getItem(i);
+            if (o == s || !is(o) || mm2(o) != mm2) continue;
+            int room = MAX_BLOCKS - blocks(o);
+            if (room <= 0) continue;
+            int n = Math.min(room, len), now = blocks(o) + n;
+            net.minecraft.world.item.component.CustomData.update(net.minecraft.core.component.DataComponents.CUSTOM_DATA, o, t -> t.putInt(BLOCKS, now));
+            len -= n;
+        }
+        if (len == blocks(s)) return;
+        if (len <= 0) {
+            e.getPlayer().take(ent, 1);
+            ent.discard();
+            e.setCanPickup(net.minecraft.util.TriState.FALSE);
+        } else {
+            int left = len;
+            net.minecraft.world.item.component.CustomData.update(net.minecraft.core.component.DataComponents.CUSTOM_DATA, s, t -> t.putInt(BLOCKS, left));
+        }
     }
 }

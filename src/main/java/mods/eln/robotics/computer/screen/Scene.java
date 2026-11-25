@@ -25,8 +25,13 @@ public final class Scene {
     public static final int KERNEL = 0;
 
     public int w = DEFAULT_W, h = DEFAULT_H;
+    /** Windows opened so far (each opening's generation). */
+    public int gens;
     /** The screen bar's title. */
     public String title = "";
+    /** The pen set's name (Pens; Prefs), and the clock's hours on the menu bar (24 or 12). */
+    public String pens = "Grid Blue";
+    public int clockHours = 24;
     /** Windows by id, in the order they were first opened. */
     public final Map<Integer, Window> windows = new LinkedHashMap<>();
     /** The stacking order, back to front. */
@@ -48,7 +53,7 @@ public final class Scene {
      * 1572655325104832613: icons, Gorillas' gorillas, the desk's picture). version counts changes, for displays' textures.
      */
     public record Pixmap(int w, int h, int[] argb, int version) {
-        static int versions;
+        static final java.util.concurrent.atomic.AtomicInteger versions = new java.util.concurrent.atomic.AtomicInteger();
 
         static Pixmap of(List<Object> m) {
             int w = (int) Form.num(m, 2, 0), h = (int) Form.num(m, 3, 0);
@@ -67,7 +72,7 @@ public final class Scene {
                 int k = c >= '0' && c <= '9' ? c - '0' : c >= 'a' && c <= 'z' ? c - 'a' + 10 : -1;
                 argb[i] = k >= 0 && k < colours.length ? colours[k] : 0;
             }
-            return new Pixmap(w, h, argb, ++versions);
+            return new Pixmap(w, h, argb, versions.incrementAndGet());
         }
     }
 
@@ -99,6 +104,8 @@ public final class Scene {
         /** Minimised to an icon on the desk (shared: the last report wins), and that icon's picture (0: the built-in). */
         public boolean minimized;
         public int icon;
+        /** Which opening of this window number it is (Wire 2: events name it). */
+        public int gen;
 
         Window(String title) {
             this.title = title;
@@ -179,13 +186,54 @@ public final class Scene {
             if (lines.isEmpty()) lines.add(new ArrayList<>());
             String[] parts = text.split("\n", -1);
             for (int k = 0; k < parts.length; k++) {
-                if (k > 0) {
-                    lines.add(new ArrayList<>());
-                    while (lines.size() > LOG_LINES) lines.poll();
+                if (k > 0) newLine();
+                if (parts[k].isEmpty()) continue;
+                // (a line is at most LINE_MAX characters: one that never ends wraps, rather than growing for ever)
+                List<Run> last = lines.peekLast();
+                int have = 0;
+                for (Run r : last) have += r.text().length();
+                String rest = parts[k];
+                while (have + rest.length() > LINE_MAX) {
+                    int take = LINE_MAX - have;
+                    if (take > 0) run(last, colour, rest.substring(0, take));
+                    rest = rest.substring(Math.max(0, take));
+                    newLine();
+                    last = lines.peekLast();
+                    have = 0;
                 }
-                if (!parts[k].isEmpty()) lines.peekLast().add(new Run(colour, parts[k]));
+                if (!rest.isEmpty()) run(last, colour, rest);
             }
+            // (the oldest lines go: a log's share of the screen's budget)
+            while (chars > LOG_CHARS && lines.size() > 1) dropOldest();
         }
+
+        private void run(List<Run> line, String colour, String text) {
+            line.add(new Run(colour, text));
+            chars += text.length();
+        }
+
+        private void newLine() {
+            lines.add(new ArrayList<>());
+            while (lines.size() > LOG_LINES) dropOldest();
+        }
+
+        private void dropOldest() {
+            for (Run r : lines.poll()) chars -= r.text().length();
+        }
+
+        /** The characters of the runs this log holds (kept exact as lines come and go). */
+        int chars;
+    }
+
+    /** A log line's characters at most; a log's characters at most (its oldest lines go); logs a screen. */
+    public static final int LINE_MAX = 1000, LOG_CHARS = 128 * 1024, MAX_LOGS = 32;
+    /** A screen's pictures' dots in all (32 of the largest). */
+    public static final long PIXMAP_DOTS = 32L * PIXMAP_W * PIXMAP_H;
+
+    int logs() {
+        int n = 0;
+        for (Window w : windows.values()) for (Element e : w.elements.values()) if (e.kind.equals("log")) n++;
+        return n;
     }
 
     static final java.util.Set<String> ELEMENTS = java.util.Set.of("box", "text", "log", "line", "button", "list", "editor", "raw",
@@ -206,7 +254,17 @@ public final class Scene {
                     title = "";
                     pixmaps.clear();
                     backdrop = 0;
+                    pens = "Grid Blue";
+                    clockHours = 24;
                 } else for (Window win : windows.values()) fit(win);
+                return true;
+            }
+            case "pens" -> {
+                pens = Pens.SETS.containsKey(Form.str(m, 1, "")) ? Form.str(m, 1, "") : "Grid Blue";
+                return true;
+            }
+            case "clock" -> {
+                clockHours = Form.num(m, 1, 24) == 12 ? 12 : 24;
                 return true;
             }
             case "title" -> {
@@ -217,6 +275,9 @@ public final class Scene {
                 int id = (int) Form.num(m, 1, -1);
                 Pixmap p = id >= 1 && id <= 4095 ? Pixmap.of(m) : null;
                 if (p == null || (!pixmaps.containsKey(id) && pixmaps.size() >= MAX_PIXMAPS)) return false;
+                long dots = (long) p.w() * p.h();
+                for (var e : pixmaps.entrySet()) if (e.getKey() != id) dots += (long) e.getValue().w() * e.getValue().h();
+                if (dots > PIXMAP_DOTS) return false;   // (a screen's pictures in all: the save file and a newcomer's copy)
                 pixmaps.put(id, p);
                 return true;
             }
@@ -234,8 +295,7 @@ public final class Scene {
                 if (win.minimized && active == win(m)) active = -1;
                 return true;
             }
-            case "icon" -> {
-                if (m.size() > 3) break;   // (an icon element: (icon w id x y "label" pixmap))
+            case "window-icon" -> {   // (Wire 2: was a three-word icon, told apart from the element by its length)
                 Window win = windows.get(win(m));
                 if (win == null) return false;
                 win.icon = (int) Math.max(0, Form.num(m, 2, 0));
@@ -247,9 +307,14 @@ public final class Scene {
                 Window win = windows.get(id);
                 java.util.Set<String> flags = flags(m.size() > 7 ? m.get(7) : null);
                 if (win == null) {
-                    if (windows.size() >= MAX_WINDOWS) return false;
+                    if (id != KERNEL && windows.size() - (windows.containsKey(KERNEL) ? 1 : 0) >= MAX_WINDOWS) return false;   // (the Kernel's is always room for)
                     win = new Window(Form.str(m, 6, ""));
                     win.flags = flags;
+                    // (its generation: the server counts the windows it opened; a display takes the server's number, which
+                    // comes as :gen n after the flags, and puts it on its events, so one for a window that has since been
+                    // closed and opened again never reaches the new one: Wire 2)
+                    win.gen = m.size() > 9 && m.get(8) instanceof Form.Keyword k && k.name().equals("gen") ? (int) Form.num(m, 9, 0) : ++gens;
+                    gens = Math.max(gens, win.gen);
                     win.x = (int) Form.num(m, 2, 1);
                     win.y = (int) Form.num(m, 3, 2);
                     win.cw = (int) Form.num(m, 4, 20);
@@ -369,7 +434,6 @@ public final class Scene {
                 return element(v, m);
             }
         }
-        return element(v, m);   // (an icon element)
     }
 
     /** An element message (box, text, ..., image, icon): made, or changed in place. */
@@ -384,6 +448,7 @@ public final class Scene {
             return true;
         }
         if (old == null && win.elements.size() >= MAX_ELEMENTS) return false;
+        if (v.equals("log") && logs() >= MAX_LOGS) return false;   // (each keeps up to LOG_CHARS: a screen's budget)
         win.elements.remove(id);
         win.elements.put(id, new Element(v, m));
         return true;
@@ -548,11 +613,47 @@ public final class Scene {
         return v.equals("text") || v.equals("box") || v.equals("busy") || v.equals("button");
     }
 
+    /**
+     * A save landed ((saved w id seq rev), with the hunks the operator sent): the editor element keeps the text as saved
+     * and its new revision, so whoever opens the screen next edits the file as it is, not as it was first opened. The
+     * computer needn't send the whole text again (a 32 KB message on a two-chip computer). Hunks that don't apply leave it.
+     */
+    public void saved(List<Object> m, Object change) {
+        Window w = windows.get((int) Form.num(m, 1, -1));
+        Element e = w == null ? null : w.elements.get((int) Form.num(m, 2, -1));
+        if (e == null || !e.kind.equals("editor") || e.msg.size() < 11) return;
+        if (change instanceof String whole) {   // (a whole-text save)
+            List<Object> msg = new ArrayList<>(e.msg);
+            msg.set(9, Form.str(m, 4, ""));
+            msg.set(10, whole);
+            e.msg = msg;
+            return;
+        }
+        if (!(change instanceof List<?> hunks)) return;
+        String[] lines = Form.str(e.msg, 10, "").split("\n", -1);
+        List<String> out = new ArrayList<>();
+        int at = 0;
+        for (Object o : hunks) {
+            if (!(o instanceof List<?> hk) || hk.size() < 3 || !(hk.get(0) instanceof Long start) || !(hk.get(1) instanceof Long del)
+                || !(hk.get(2) instanceof List<?> ins) || start < at || del < 0 || start + del > lines.length) return;
+            for (int k = at; k < start; k++) out.add(lines[k]);
+            for (Object l : ins) out.add(String.valueOf(l));
+            at = (int) (start + del);
+        }
+        for (int k = at; k < lines.length; k++) out.add(lines[k]);
+        List<Object> msg = new ArrayList<>(e.msg);
+        msg.set(9, Form.str(m, 4, ""));
+        msg.set(10, String.join("\n", out));
+        e.msg = msg;
+    }
+
     /** The messages that rebuild this scene on an empty one, after a (reset w h). */
     public List<String> replay() {
         List<String> out = new ArrayList<>();
         out.add(Form.print(new Form.Symbol("reset"), (long) w, (long) h));
         if (!title.isEmpty()) out.add(Form.print(new Form.Symbol("title"), title));
+        if (!pens.equals("Grid Blue")) out.add(Form.print(new Form.Symbol("pens"), pens));
+        if (clockHours != 24) out.add(Form.print(new Form.Symbol("clock"), (long) clockHours));
         for (var pe : pixmaps.entrySet()) out.add(pixmapMessage(pe.getKey(), pe.getValue()));
         if (backdrop != 0) out.add(Form.print(new Form.Symbol("backdrop"), (long) backdrop));
         if (!baseDict.isEmpty()) out.add(Form.print(new Form.Symbol("dict"), 0L, baseDict));
@@ -561,9 +662,10 @@ public final class Scene {
             Window win = we.getValue();
             List<Object> fl = new ArrayList<>();
             for (String f : win.flags) fl.add(Form.kw(f));
-            out.add(Form.print(new Form.Symbol("window"), t, (long) win.x, (long) win.y, (long) win.cw, (long) win.ch, win.title, fl));
+            out.add(Form.print(new Form.Symbol("window"), t, (long) win.x, (long) win.y, (long) win.cw, (long) win.ch, win.title, fl,
+                Form.kw("gen"), (long) win.gen));
             if (!win.menus.isEmpty()) out.add(Form.print(new Form.Symbol("menus"), t, win.menus));
-            if (win.icon != 0) out.add(Form.print(new Form.Symbol("icon"), t, (long) win.icon));
+            if (win.icon != 0) out.add(Form.print(new Form.Symbol("window-icon"), t, (long) win.icon));
             if (win.minimized) out.add(Form.print(new Form.Symbol("minimize"), t));
             for (String d : win.disabled) {
                 String[] p = d.split("/", 2);
@@ -575,7 +677,7 @@ public final class Scene {
                 out.add(Form.print(e.msg));
                 long id = ee.getKey();
                 if (e.kind.equals("log")) {
-                    // the lines, one append per run of a colour
+                    // the lines, one append per run of a colour (and per 8 K)
                     StringBuilder b = new StringBuilder();
                     String colour = null;
                     boolean first = true;
@@ -589,6 +691,10 @@ public final class Scene {
                             }
                             colour = r.colour();
                             b.append(r.text());
+                            if (b.length() > 8192) {   // (in pieces: a full log as one message passed the line limit)
+                                out.add(Form.print(new Form.Symbol("append"), t, id, Form.kw(colour), b.toString()));
+                                b.setLength(0);
+                            }
                         }
                     }
                     if (b.length() > 0 || colour != null)

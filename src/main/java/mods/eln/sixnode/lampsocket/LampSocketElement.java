@@ -46,6 +46,11 @@ public class LampSocketElement extends SixNodeElement {
     public Resistor lampResistor = new Resistor(positiveLoad, null);
 
     boolean poweredByLampSupply = true;
+
+    /** Does it take its power wirelessly from a Lamp Supply (it then has no cable pin)? */
+    public boolean poweredByLampSupply() {
+        return poweredByLampSupply;
+    }
     boolean grounded = true;
 
     /**
@@ -300,15 +305,15 @@ public class LampSocketElement extends SixNodeElement {
         return bulb.nominalP;
     }
 
+    /** A socket that only looks right one way up turns half a turn per wrench click. */
+    @Override
+    protected int wrenchStep() {
+        return socketDescriptor.rotateOnlyBy180Deg ? 2 : 1;
+    }
+
     @Override
     public boolean onBlockActivated(Player entityPlayer, Direction side, float vx, float vy, float vz) {
-        if (Utils.isPlayerUsingWrench(entityPlayer)) {
-            front = front.getNextClockwise();
-            if (socketDescriptor.rotateOnlyBy180Deg)
-                front = front.getNextClockwise();
-            reconnect();
-            return true;
-        }
+        if (onBlockActivatedRotate(entityPlayer)) return true;
 
         ItemStack currentItemStack = entityPlayer.getMainHandItem();
         if (!Utils.isEmpty(currentItemStack)) {

@@ -88,10 +88,7 @@ public class ToolbagItem extends Item implements PipeTool {
             if (pipe) return new String[]{"Iron pipe", "Alloy pipe", "Large pipe"}[Math.max(0, Math.min(2, tier))];
             return switch (tier) {
                 case 0 -> "Signal";
-                case 1 -> "48 V";
-                case 2 -> "230 V";
-                case 3 -> "400 V";
-                case 4 -> "11 kV";
+                case 1, 2, 3, 4 -> CableSpec.voltsLabel(tier);
                 case 5 -> "Thermal";
                 default -> "Bus";
             };
@@ -186,9 +183,16 @@ public class ToolbagItem extends Item implements PipeTool {
                 setContents(bag, c);
             }
 
-            public String undoHint() {
+            @Override
+            public String undoSentence() {
+                return "Sneak-click for Undo.";
+            }
+
+            @Override
+            public String cancelClause() {
                 return "sneak-click for Undo";
             }
+
         };
     }
 
@@ -214,7 +218,7 @@ public class ToolbagItem extends Item implements PipeTool {
     }
 
     static boolean routing(Player p) {
-        return CablePlacer.active(p.getUUID()) || PipePlacer.active(p.getUUID());
+        return RoutePlacer.active(p.getUUID());
     }
 
     @Override
@@ -280,8 +284,7 @@ public class ToolbagItem extends Item implements PipeTool {
     }
 
     static void lay(ServerPlayer p, ServerLevel level, KitSupply s, Click c) {
-        if (s.pipe()) PipePlacer.use(p, level, c.pos(), c.face(), s, c.hit(), false);
-        else CablePlacer.use(p, level, c.pos(), c.face(), s, c.hit(), false);
+        RoutePlacer.use(p, level, c.pos(), c.face(), s, c.hit(), false);
     }
 
     /** The kind of the cable or pipe under the click (a knuckle's cable too), or null. */
@@ -305,8 +308,7 @@ public class ToolbagItem extends Item implements PipeTool {
             KitPreview.note(p, "The toolbag holds no kits: right-click the air to open it");
             return;
         }
-        CablePlacer.touch(p.getUUID(), p.level().getGameTime());   // (the radial open isn't idleness)
-        PipePlacer.touch(p.getUUID(), p.level().getGameTime());
+        RoutePlacer.touch(p.getUUID(), p.level().getGameTime());   // (the radial open isn't idleness)
         if (start != null) PENDING.put(p.getUUID(), start);
         else PENDING.remove(p.getUUID());
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -339,16 +341,13 @@ public class ToolbagItem extends Item implements PipeTool {
         ItemStack bag = p.getMainHandItem();
         if (!(bag.getItem() instanceof ToolbagItem) || !(p.level() instanceof ServerLevel level)) return;
         Click pending = PENDING.remove(p.getUUID());
-        CablePlacer.touch(p.getUUID(), level.getGameTime());
-        PipePlacer.touch(p.getUUID(), level.getGameTime());
+        RoutePlacer.touch(p.getUUID(), level.getGameTime());
         if (action == UNDO || action == CANCEL) {
             if (action == CANCEL) {
-                boolean had = routing(p);
-                CablePlacer.drop(p.getUUID());
-                PipePlacer.drop(p.getUUID());
+                boolean had = RoutePlacer.drop(p.getUUID()) != null;
                 STARTED.remove(p.getUUID());
                 if (had) KitPreview.note(p, "Route cancelled");
-            } else if (!CablePlacer.undo(p)) PipePlacer.undo(p, level);
+            } else RoutePlacer.undo(p, level);
             return;
         }
         if (kind == null || !kinds(bag).containsKey(kind)) {
@@ -359,19 +358,23 @@ public class ToolbagItem extends Item implements PipeTool {
         select(bag, kind);
         KitSupply s = supply(bag, kind);
         if (routing(p)) {
-            // a route on: the new kind from the same start; a cable's waypoints kept for a cable
+            // a route on: the new kind from the same start, its waypoints kept where they fit: a cable's for a cable, a
+            // pipe's for a pipe (points on a face, points in a block's middle: they don't carry over between the two)
             if (kind.equals(was)) return;
             Click start = STARTED.get(p.getUUID());
-            boolean wasPipe = PipePlacer.active(p.getUUID());
-            List<CableRouter.End> wps = CablePlacer.drop(p.getUUID());
-            PipePlacer.drop(p.getUUID());
+            RoutePlacer.Plan old = RoutePlacer.drop(p.getUUID());   // (not null: a route is on)
             if (start == null || start.dim() != level.dimension()) {
                 KitPreview.note(p, "Route dropped: start it again with the new kind");
                 return;
             }
             lay(p, level, s, start);
-            if (!s.pipe() && !wasPipe) CablePlacer.addWaypoints(p.getUUID(), wps);
-            else if (!wps.isEmpty() || wasPipe != s.pipe()) p.sendOverlayMessage(Component.literal("Route restarted as " + kind.label() + " (waypoints dropped)"));
+            if (old.kind == RoutePlacer.of(s)) {
+                // (over the start message: the route goes on, as a new kind; AdventurAgent read "route started" as a restart.
+                // A start refused at the new kind keeps its own reason)
+                if (!RoutePlacer.active(p.getUUID())) return;
+                RoutePlacer.addWaypoints(p.getUUID(), old.waypoints);
+                p.sendOverlayMessage(Component.literal("Now " + kind.label() + (old.waypoints.isEmpty() ? "." : "; waypoints kept.")));
+            } else p.sendOverlayMessage(Component.literal("Restarted as " + kind.label() + " \u2014 waypoints cleared"));
             return;
         }
         if (pending == null) {

@@ -37,6 +37,30 @@ public final class FluidNetwork {
 
     /** Time spent stepping (ns) and steps since built (/elnlab fluidstats). */
     public long nanos, steps;
+
+    /** Did its last step run out of its time (Network.MAX_STEP_NANOS), or is it stepped in the background? */
+    public boolean overBudget() {
+        return core != null && core.overBudget;
+    }
+
+    /** Is it stepped in the background (CoreStep), and how long its last step took (ms). */
+    public boolean background() {
+        return core != null && core.background;
+    }
+
+    /** Tests: the mass its core's steps moved over edges, and the sum its core handed out as edge flows ({moved, handed out}, kg). */
+    public double[] books() {
+        return core == null ? new double[2] : new double[]{core.movedKg, core.bookedSum};
+    }
+
+    /** How many ticks its last background step stood for (1 on the server thread). */
+    public int span() {
+        return core == null ? 1 : core.lastSpan;
+    }
+
+    public double lastStepMs() {
+        return core == null ? 0 : core.lastMs;
+    }
     /** Times its core network was built: once, unless its nodes, edges or species keep changing. */
     public long builds;
 
@@ -57,9 +81,20 @@ public final class FluidNetwork {
         return core == null ? null : core.net.stats;
     }
 
-    /** The core network as a replayable dump (NetworkDump) at step length dt, or null before its first step. */
+    /** The core network as a replayable dump (NetworkDump) at step length dt, or null before its first step or while a
+     *  background step is changing it. */
     public String dump(double dt) {
-        return core == null ? null : mods.eln.fluidcore.NetworkDump.write(core.net, dt);
+        return core == null || core.pending() ? null : mods.eln.fluidcore.NetworkDump.write(core.net, dt);
+    }
+
+    /** Is a background step under way (CoreStep)? */
+    public boolean pending() {
+        return core != null && core.pending();
+    }
+
+    /** It is being replaced or forgotten: a background step under way is cancelled and its heat given back. */
+    public void abandon() {
+        if (core != null) core.abandon();
     }
 
     /** Port band (fraction of a node's height) over which a port goes from drawing gas to drawing liquid. */

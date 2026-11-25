@@ -78,11 +78,13 @@ final class GoldenRecipesCase implements TestCase {
         "eln:thermal_insulation", "eln:copper_cable", "eln:power_resistor", "eln:dc_dc_converter", "eln:rheostat",
         "eln:thermistor", "eln:power_inductor", "eln:small_50_v_copper_heating_corp", "eln:50_v_copper_heating_corp",
         // the fuel burners from alloy plates, not stone combustion chambers (Baughn 2026-11-11)
-        "eln:small_fuel_burner", "eln:medium_fuel_burner", "eln:big_fuel_burner");
+        "eln:small_fuel_burner", "eln:medium_fuel_burner", "eln:big_fuel_burner",
+        // the shaft devices from their parts: blades on a Joint in a casing, windings round a core (Baughn 2026-11-25)
+        "eln:steam_turbine", "eln:generator", "eln:gas_turbine");
 
     /**
      * 1.12 outputs dropped on purpose: copper tools and armour, vanilla since 1.21.9 (Baughn, 2026-10-11); the heat
-     * turbines, replaced by the 50V/200V steam turbines (Baughn, 2026-10-14).
+     * turbines, replaced by the 48V/230V steam turbines (Baughn, 2026-10-14) and removed from the mod (Baughn, 2026-11-23).
      */
     static final Set<String> REMOVED = Set.of(
         // the insulated cable items are retired: hand recipes make cable kits instead (Baughn 2026-11-07)
@@ -238,6 +240,7 @@ final class GoldenRecipesCase implements TestCase {
         List<String> conditionalNames = new ArrayList<>(), deferred = new ArrayList<>();
         for (JsonElement e : golden.getAsJsonArray("crafting")) {
             JsonObject g = e.getAsJsonObject();
+            if (REMOVED.contains(g.get("id").getAsString())) continue;   // gone, or kept but no longer craftable
             JsonObject outJ = g.getAsJsonObject("output");
             Item out = map(outJ, unknown);
             int count = outJ.has("count") ? outJ.get("count").getAsInt() : 1;
@@ -245,7 +248,6 @@ final class GoldenRecipesCase implements TestCase {
                 deferred.add(g.get("id").getAsString());
                 continue;
             }
-            if (REMOVED.contains(g.get("id").getAsString())) continue;   // gone, or kept but no longer craftable
             if (out == null) {
                 failed.add(g.get("id").getAsString() + ": output not on 26.x");
                 continue;

@@ -53,7 +53,7 @@ public class ComputerElement extends TransparentNodeElement {
     /** Screen packets: reset, its address, Break, a screen protocol event (one line). */
     public static final byte RESET_ID = 2, SET_ADDRESS_ID = 3, BREAK_ID = 4, SCREEN_EVENT_ID = 7, POWER_ID = 8;
     /** Server-to-screen packets: protocol lines to apply. */
-    public static final byte SCREEN_ID = 4;
+    public static final byte SCREEN_ID = 4, CELLS_ID = 5;
     /** Events a player may send a tick (Argon's review: clients are untrusted). */
     static final int EVENTS_PER_TICK = 20;
 
@@ -67,11 +67,16 @@ public class ComputerElement extends TransparentNodeElement {
     boolean loadPending = true;
     byte status = OFF;
     public final mods.eln.robotics.computer.screen.ScreenHost screen = new mods.eln.robotics.computer.screen.ScreenHost();
+    /** The players with the screen open, as watch() last saw them (the first of them operates it). */
+    volatile List<ServerPlayer> typing = List.of();
     /**
-     * The players watching the screen, as watch() last saw them (read by the pool and network threads): those with it
-     * open, and those near enough to see the monitor (Baughn 2026-11-18). Only the first may type (typing).
+     * The one player whose events the computer takes (Baughn 2026-11-24: "Computers are single user in principle"):
+     * the first of those with the screen open; everyone else only watches. Submission and save numbers belong to the
+     * computer: each new operator starts after the highest one it has seen (seqHigh), so a line's busy mark and a
+     * save's answer can't be taken for another player's.
      */
-    volatile List<ServerPlayer> watching = List.of(), typing = List.of();
+    volatile ServerPlayer operator;
+    volatile long seqHigh;
     /** How near a player must be to get the monitor's picture, blocks. */
     public static final double MONITOR_RANGE = 24;
     final Map<UUID, Integer> eventsThisTick = new java.util.concurrent.ConcurrentHashMap<>();
@@ -79,6 +84,11 @@ public class ComputerElement extends TransparentNodeElement {
     /** Its power switch (Baughn: power on/off beside Reset). Off: it stops and its RAM is lost; on: a cold boot. */
     boolean switchedOn = true;
     final UUID[] mountedDisk = new UUID[2];
+    /** Drive sounds (todo #541): ticks each drive's motor keeps spinning, and the drives spinning as last synced. */
+    final int[] spinTicks = new int[2];
+    byte spinning;
+    /** How long a drive spins on after its last read or write (and after a disk goes in). */
+    static final int SPIN_ON_TICKS = 50, SPIN_INSERT_TICKS = 20;
     final Floppy[] floppies = new Floppy[2];
     final double[] levels = new double[BusChannel.COUNT];
 
@@ -117,6 +127,7 @@ public class ComputerElement extends TransparentNodeElement {
         runner = null;
         builtFrom = now;
         Machine m = new Machine();
+        m.hello = concat(HELLO, programOperatorLine(operator));
         boolean any = false;
         for (int s = 0; s < CHIP_SLOTS; s++) {
             ItemStack st = inventory.getItem(s);
@@ -203,8 +214,14 @@ public class ComputerElement extends TransparentNodeElement {
     @Override
     public void inventoryChange(Container inv) {
         super.inventoryChange(inv);
+        UUID[] before = mountedDisk.clone();
         if (!chipsNow().equals(builtFrom)) rebuild();
         else syncDisks();
+        for (int d = 0; d < 2; d++)
+            if (!java.util.Objects.equals(before[d], mountedDisk[d])) {
+                driveSound(mountedDisk[d] != null ? "eln:floppy_insert" : "eln:floppy_eject", 0.6f, 1f);
+                if (mountedDisk[d] != null) spinTicks[d] = Math.max(spinTicks[d], SPIN_INSERT_TICKS);
+            }
         needPublish();
     }
 
@@ -231,10 +248,35 @@ public class ComputerElement extends TransparentNodeElement {
             for (Packet p : runner.takePackets()) port.send(p);
             if (powered) machine.takeJoules(machine.ratedJoulesPerTick() * Math.min(1.0, runner.lastRan() / (double) runner.budget));
         }
+        driveSounds(runner.machine.floppy);
         watch();
         eventsThisTick.clear();
         Machine m = runner.machine;   // (halted is volatile)
         setStatus(!powered ? OFF : m.halted() ? HALTED : runner.running() || runner.lastRan() > 0 ? RUNNING : SLEEPING);
+    }
+
+    /** The drives' head steps as ticks (a seek's burst if several this tick), and their motors' spin for the client's whir. */
+    void driveSounds(mods.eln.robotics.computer.hw.FloppyController fc) {
+        byte spin = 0;
+        for (int d = 0; d < 2; d++) {
+            if (fc.takeAccess(d)) spinTicks[d] = Math.max(spinTicks[d], SPIN_ON_TICKS);
+            int n = fc.takeSteps(d);
+            if (n == 1) driveSound("eln:floppy_step", 0.25f, 0.95f + 0.1f * (float) Math.random());
+            else if (n > 1) driveSound("eln:floppy_seek", 0.25f, 0.95f + 0.1f * (float) Math.random());
+            if (spinTicks[d] > 0) {
+                spinTicks[d]--;
+                spin |= (byte) (1 << d);
+            }
+        }
+        if (spin != spinning) {
+            spinning = spin;
+            needPublish();
+        }
+    }
+
+    void driveSound(String event, float volume, float pitch) {
+        if (node.coordonate.world() instanceof net.minecraft.server.level.ServerLevel sl)
+            sl.playSound(null, node.coordonate.pos(), mods.eln.sound.ElnSounds.event(event), net.minecraft.sounds.SoundSource.BLOCKS, volume, pitch);
     }
 
     void setStatus(byte s) {
@@ -265,12 +307,7 @@ public class ComputerElement extends TransparentNodeElement {
     // ---- the terminal and its viewers
 
     List<ServerPlayer> viewers() {
-        List<ServerPlayer> l = new ArrayList<>();
-        MinecraftServer s = server();
-        if (s == null) return l;
-        for (ServerPlayer p : s.getPlayerList().getPlayers())
-            if (p.containerMenu instanceof ElnNodeMenu m && m.getNode() == node) l.add(p);
-        return l;
+        return ElnNodeMenu.viewers(node);
     }
 
     /** The viewers, and the players in the same level within MONITOR_RANGE of it (they see the monitor). */
@@ -293,24 +330,111 @@ public class ComputerElement extends TransparentNodeElement {
         List<ServerPlayer> gui = viewers(), v = audience(gui);
         synchronized (screen) {
             List<String> batch = screen.takeBatch();
-            java.util.Set<ServerPlayer> before = new java.util.HashSet<>(watching), opened = new java.util.HashSet<>(typing);
-            for (ServerPlayer p : v)
-                if (!before.contains(p) || batch == null || gui.contains(p) && !opened.contains(p)) sendScreen(p, screen.replay());
-                else if (!batch.isEmpty()) sendScreen(p, batch);
-            watching = List.copyOf(v);
+            java.util.Set<ServerPlayer> opened = new java.util.HashSet<>(typing);
+            ServerPlayer was = operator;
+            ServerPlayer op = was != null && gui.contains(was) ? was : null;
+            if (op == null) for (ServerPlayer p : gui) if (opened.contains(p)) {   // (who already had it open goes first)
+                op = p;
+                break;
+            }
+            if (op == null && !gui.isEmpty()) op = gui.get(0);
+            if (op != was) {
+                seqHigh = Math.max(seqHigh, screen.highestSeq());
+                // (Wire 2: the program hears who operates it, or that nobody does)
+                Runner r = runner;
+                byte[] line = programOperatorLine(op);
+                if (r != null) {
+                    r.toEditor(line);
+                    r.machine.hello = concat(HELLO, line);   // (after a reset the new program hears it too)
+                }
+            }
+            operator = op;
+            // the operator gets the scene (whole when they become it or open the screen again), then its batches
+            if (op != null) {
+                if (op != was || !opened.contains(op) || batch == null) sendScreen(op, screen.replay());
+                else if (!batch.isEmpty()) sendScreen(op, batch);
+            }
+            for (ServerPlayer p : gui)   // (who may type, told to each screen when it opens or the operator changes)
+                if (op != was || !opened.contains(p)) {
+                    sendScreen(p, List.of(operatorLine(p, op)));
+                    cellsSent.remove(p);   // (a watcher's screen draws cells: theirs come again below, now)
+                }
+            // everyone else watches: the composed cells, twice a second when something changed, at once for a newcomer
+            cellsSent.keySet().retainAll(v);
+            if (op != null) cellsSent.remove(op);
+            boolean due = tickCount++ % 10 == 0 && screen.version != cellsVersion;
+            boolean composed = false;
+            for (ServerPlayer p : v) {
+                if (p == op) continue;
+                boolean fresh = !cellsSent.containsKey(p);
+                if (!fresh && !due) continue;
+                if (!composed || cellsNow == null) {   // (once a tick for all of them)
+                    cellsNow = mods.eln.robotics.computer.screen.SceneCells.of(screen.scene);
+                    composed = true;
+                }
+                sendCells(p, mods.eln.robotics.computer.screen.CellsCodec.encode(cellsNow,
+                    cellsSent.computeIfAbsent(p, k -> new java.util.LinkedHashSet<>())));
+            }
+            if (due) cellsVersion = screen.version;
             typing = List.copyOf(gui);
         }
     }
 
+    /** Per watcher, the pixmaps (versions) their client has; the scene version their cells show; a tick count. */
+    private final java.util.Map<ServerPlayer, java.util.Set<Integer>> cellsSent = new java.util.HashMap<>();
+    private long cellsVersion = -1;
+    private int tickCount;
+    private mods.eln.robotics.computer.screen.SceneCells cellsNow;
+
+    void sendCells(ServerPlayer p, byte[] data) {
+        sendPacket(p, CELLS_ID, data);
+    }
+
+    /** What the program hears of the operator: (operator true "name") or (operator false ""), with its newline. */
+    static byte[] programOperatorLine(ServerPlayer op) {
+        return (mods.eln.robotics.computer.screen.Form.print(new mods.eln.robotics.computer.screen.Form.Symbol("operator"),
+            op != null, op == null ? "" : op.getName().getString()) + "\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    static byte[] concat(byte[] a, byte[] b) {
+        byte[] c = java.util.Arrays.copyOf(a, a.length + b.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    /** (operator true NEXT-SEQ) to the operator, (operator false "name") to the others. */
+    String operatorLine(ServerPlayer p, ServerPlayer op) {
+        if (p == op) return mods.eln.robotics.computer.screen.Form.print(new mods.eln.robotics.computer.screen.Form.Symbol("operator"), true, seqHigh + 1);
+        return mods.eln.robotics.computer.screen.Form.print(new mods.eln.robotics.computer.screen.Form.Symbol("operator"), false, op == null ? "" : op.getName().getString());
+    }
+
     void sendScreen(ServerPlayer p, List<String> lines) {
-        byte[] text = String.join("\n", lines).getBytes(java.nio.charset.StandardCharsets.UTF_8);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(text.length + 64);
+        // (in packets of about 256 KB: one big picture or file mustn't make one huge packet)
+        int from = 0, bytes = 0;
+        for (int k = 0; k < lines.size(); k++) {
+            bytes += lines.get(k).length() + 1;
+            if (bytes > 256 * 1024 && k > from) {
+                sendScreenPacket(p, lines.subList(from, k));
+                from = k;
+                bytes = lines.get(k).length() + 1;
+            }
+        }
+        if (from < lines.size()) sendScreenPacket(p, lines.subList(from, lines.size()));
+    }
+
+    private void sendScreenPacket(ServerPlayer p, List<String> lines) {
+        sendPacket(p, SCREEN_ID, String.join("\n", lines).getBytes(java.nio.charset.StandardCharsets.UTF_8));
+    }
+
+    /** A screen packet to one player: its kind, then the bytes with their length. */
+    private void sendPacket(ServerPlayer p, byte kind, byte[] data) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length + 64);
         DataOutputStream o = new DataOutputStream(bos);
         preparePacketForClient(o);
         try {
-            o.writeByte(SCREEN_ID);
-            o.writeInt(text.length);
-            o.write(text);
+            o.writeByte(kind);
+            o.writeInt(data.length);
+            o.write(data);
         } catch (IOException e) {
             return;
         }
@@ -333,17 +457,17 @@ public class ComputerElement extends TransparentNodeElement {
         Runner r = runner;
         if (r == null) return;
         if (player != null) {
-            if (!typing.contains(player)) return;
+            if (player != operator) return;   // (watchers only watch)
             if (eventsThisTick.merge(player.getUUID(), 1, Integer::sum) > EVENTS_PER_TICK) return;
         }
-        List<String> echo = new ArrayList<>(1);
         String ok;
         synchronized (screen) {
-            ok = screen.check(line, echo);
-            // (a player moved, stacked or activated a window: the other displays are told, now; the last report wins)
-            if (!echo.isEmpty()) for (ServerPlayer p : watching) if (p != player) sendScreen(p, echo);
+            ok = screen.check(line);   // (the operator's own moves: watchers see them in their next cells)
         }
         if (ok == null) return;
+        List<Object> parsed = mods.eln.robotics.computer.screen.Form.parse(ok);
+        String verb = parsed == null ? "" : mods.eln.robotics.computer.screen.Form.verb(parsed);
+        if (verb.equals("submit") || verb.equals("save") || verb.equals("stash")) seqHigh = Math.max(seqHigh, mods.eln.robotics.computer.screen.Form.num(parsed, 3, 0));
         if (ok.startsWith("(break ")) r.pressBreak();   // (the interrupt stops a running task; the event says whose tab)
         r.toEditor((ok + "\n").getBytes(java.nio.charset.StandardCharsets.UTF_8));
         r.kick();
@@ -361,9 +485,18 @@ public class ComputerElement extends TransparentNodeElement {
             }
             screen.console(console);
             screen.fromComputer(display);
+            List<String> told = screen.takeToComputer();
+            Runner tr = runner;
+            if (!told.isEmpty() && tr != null) {
+                tr.dropIfReset();   // (what was waiting for the program before a reset goes first; these are the new one's)
+                for (String e : told) tr.toEditor((e + "\n").getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            }
             List<String> batch = screen.takeBatch();
+            List<String> replies = screen.takeReplies();
+            ServerPlayer op = operator;
+            if (!replies.isEmpty() && op != null) sendScreen(op, replies);
             if (batch != null && batch.isEmpty()) return;
-            for (ServerPlayer p : watching) sendScreen(p, batch == null ? screen.replay() : batch);
+            if (op != null) sendScreen(op, batch == null ? screen.replay() : batch);   // (watchers get cells: watch())
             if (tracedAt != 0 && LOG.isDebugEnabled()) {
                 LOG.debug("screen sent {} ms after the event", (System.nanoTime() - tracedAt) / 1e6);
                 tracedAt = 0;
@@ -372,7 +505,10 @@ public class ComputerElement extends TransparentNodeElement {
     }
 
     /** A new runner, its screen output going to screenOutput. */
+    static final byte[] HELLO = (mods.eln.robotics.computer.screen.ScreenHost.hello() + "\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
+
     Runner newRunner(Machine m) {
+        m.hello = concat(HELLO, programOperatorLine(operator));
         Runner r = new Runner(m);
         r.screenOut = this::screenOutput;
         return r;
@@ -410,6 +546,9 @@ public class ComputerElement extends TransparentNodeElement {
     @Override
     public byte networkUnserialize(DataInputStream stream, ServerPlayer player) {
         byte id = super.networkUnserialize(stream, player);
+        // (a watcher's buttons do nothing while someone operates it: Baughn, one user at a time)
+        if (player != null && operator != null && player != operator
+            && (id == POWER_ID || id == RESET_ID || id == BREAK_ID || id == SET_ADDRESS_ID)) return id;
         try {
             switch (id) {
                 case SCREEN_EVENT_ID -> screenEvent(player, stream.readUTF());
@@ -494,6 +633,7 @@ public class ComputerElement extends TransparentNodeElement {
             stream.writeByte(port.address());
             stream.writeBoolean(port.bus() != null);
             stream.writeBoolean(switchedOn);
+            stream.writeByte(spinning);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -554,6 +694,11 @@ public class ComputerElement extends TransparentNodeElement {
     void unlist() {
         var l = node.coordonate.world();
         if (l != null) ScreenEventPayload.remove(l, node.coordonate.pos(), this);
+    }
+
+    /** The drives whose motors spin (bit 0 A, bit 1 B), as the client has it for the whir. */
+    public byte spinning() {
+        return spinning;
     }
 
     public byte status() {

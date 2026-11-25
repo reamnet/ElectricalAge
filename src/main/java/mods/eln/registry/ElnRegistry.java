@@ -134,6 +134,9 @@ public final class ElnRegistry {
         RECIPE_SERIALIZERS.register("cable_kit_to_coil", () -> mods.eln.node.voxel.CableKitRecipes.ToCoil.SERIALIZER);
     public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<mods.eln.item.electricalitem.BatteryPackRecipe>> BATTERY_PACK =
         RECIPE_SERIALIZERS.register("portable_battery_pack", () -> mods.eln.item.electricalitem.BatteryPackRecipe.SERIALIZER);
+    /** A Ground Radar and Radar Goggles make a Ground Radar w/Goggles, keeping its batteries. */
+    public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<mods.eln.transparentnode.groundradar.GogglesUpgradeRecipe>> RADAR_GOGGLES =
+        RECIPE_SERIALIZERS.register("ground_radar_goggles", () -> mods.eln.transparentnode.groundradar.GogglesUpgradeRecipe.SERIALIZER);
     /** Windings wound by hand (Baughn 2026-11-08): Copper Cable and rubber or leather; windings combined. */
     public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<mods.eln.node.voxel.HandWindingRecipe>> HAND_WINDING =
         RECIPE_SERIALIZERS.register("hand_winding", () -> mods.eln.node.voxel.HandWindingRecipe.SERIALIZER);
@@ -207,7 +210,10 @@ public final class ElnRegistry {
         ITEMS.registerItem("pipe_safety_valve", mods.eln.node.voxel.SafetyValveItem::new);
     /** Baughn 2026-11-10: a purge valve, gas only (beside a crude tank: its natural gas). */
     public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.node.voxel.SafetyValveItem> PIPE_PURGE_VALVE =
-        ITEMS.registerItem("pipe_purge_valve", p -> new mods.eln.node.voxel.SafetyValveItem(p, true));
+        ITEMS.registerItem("pipe_purge_valve", p -> new mods.eln.node.voxel.SafetyValveItem(p, mods.eln.node.voxel.SafetyValvePart.PURGE));
+    /** Refinery M2 (Baughn 2026-11-24): a breather, gas out and air in at the air's pressure (a still's receiver). */
+    public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.node.voxel.SafetyValveItem> PIPE_BREATHER_VALVE =
+        ITEMS.registerItem("pipe_breather_valve", p -> new mods.eln.node.voxel.SafetyValveItem(p, mods.eln.node.voxel.SafetyValvePart.BREATHER));
     /** Baughn 2026-10-27: pipe sensors, a 0-5 V signal of a run's pressure or temperature. */
     public static final net.neoforged.neoforge.registries.DeferredItem<mods.eln.node.voxel.PipeSensorItem> PIPE_PRESSURE_SENSOR =
         ITEMS.registerItem("pipe_pressure_sensor", p -> new mods.eln.node.voxel.PipeSensorItem(p, mods.eln.node.voxel.PipeSensorPart.PRESSURE));
@@ -426,6 +432,7 @@ public final class ElnRegistry {
         ALL_ITEMS.add(PIPE_ADAPTER);
         ALL_ITEMS.add(PIPE_SAFETY_VALVE);
         ALL_ITEMS.add(PIPE_PURGE_VALVE);
+        ALL_ITEMS.add(PIPE_BREATHER_VALVE);
         ALL_ITEMS.add(PIPE_PRESSURE_SENSOR);
         ALL_ITEMS.add(PIPE_TEMPERATURE_SENSOR);
         ALL_ITEMS.add(PIPE_QUALITY_SENSOR);

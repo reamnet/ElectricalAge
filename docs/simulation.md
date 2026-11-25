@@ -120,7 +120,9 @@ and the FE exporter. Tests: `api/ElementHostTest`, `MachineApiCases`, `Wp11Cases
 ## Failures (`src/main/java/mods/eln/sim/process/destruct/`)
 
 - `ValueWatchdog` subclasses (`ThermalLoadWatchDog`, `VoltageStateWatchDog`, `BipoleVoltageWatchdog`,
-  `ResistorPowerWatchdog`, `ShaftSpeedWatchdog` in `Mechanical.kt`) burn a 2 s budget by overflow; one-tick "joker".
+  `ResistorPowerWatchdog`, `ShaftSpeedWatchdog` in `Mechanical.kt`) burn a budget by overflow x seconds (default 2;
+  `ThermalLoadWatchDog`'s is its limit's own number of K s, over the reference, ~550 K s at 850 K, and `setBudget(K s)` sets another, as
+  the Still Pot's shell does); one-tick "joker".
   All are put on `slowProcessList` in content code.
 - Trip -> `IDestructable.fail(cause, value, severity)` -> `Failure` keeps the worst per device and calls
   `Simulator.queueDestruct`. End of tick: failures grouped by `FaultNetwork.of(node)` (nodes reachable via
@@ -149,7 +151,7 @@ prefix `""`, so keys are `name + suffix` and names must be unique within one ele
 `NbtResistor` `<name>R`; `ResistorSwitch` `<name>R`, `<name>State`; `VoltageSource` `<name>U`, `<name>Istate`;
 `Inductor` `<name>Istate`; `PowerSource` `<name>P/Umax/Imax`; `PowerSourceBipole` `P`, `Umax`, `Imax` (no name);
 `NbtBatteryProcess` `NBPQ`, `NBPlife` (no name); `NbtFurnaceProcess` `<name>Q`, `<name>gain`, + `Fire` `<name>fire`,
-`<name>fireLighting`; `RegulatorProcess` `<name>errorIntegrated`, `<name>target`; `NbtElectricalGateOutputProcess`
+`<name>fireLighting`, `<name>fireAir`, `<name>fireBed` (both default to `<name>fire`); `RegulatorProcess` `<name>errorIntegrated`, `<name>target`; `NbtElectricalGateOutputProcess`
 `<name>highImpedance`, `<name>U`; `NodeElectricalGateInputHysteresisProcess` `<name>state`. See persistence.md.
 
 ## Other simulators (pointers)
@@ -158,6 +160,23 @@ prefix `""`, so keys are `name + suffix` and names must be unique within one ele
   `Species`, `SpeciesRegistry`), stepped by `src/main/java/mods/eln/fluid/FluidWorld.java` as a slow process; devices
   join with their node's connectJob. Tests: `FluidCoreTest`, `FluidPropertyTest`, `MultiFluidTest`,
   `MultiFluidPropertyTest`. See content.md for pipes/oil.
+  A device joining, leaving or changing marks the world dirty; the next step (or query) rebuilds it in two parts.
+  `FluidWorld.plan(devices)` is pure topology from the devices' `fluidPorts/fluidJoins/fluidLinks/fluidVents/fluidFlows`:
+  the couplings (`FluidWorld.couples`, the one coupling rule: a port on the block in front of the other's face,
+  facing back, at the same spot `at`, on another node; placement asks it through `FluidPlacement.partners`), the pipe
+  runs (lumpable nodes coupled or joined), links, vents, flows and the network partition. It touches no contents and
+  makes no lumps or networks (pure as long as the devices' getters are; a heat exchanger slices itself on its first
+  `fluidLinks`). Its lists keep the devices' order, which `apply` builds in, so the networks and their sums come out
+  as before the split; `Plan.dump` is its canonical form, nodes named by `FluidNames` (level, block, voxel part id or
+  the node's place in its device), the same whatever order the devices joined in. `apply(plan)` has the side effects,
+  in this order: each run's lump written back into its pieces (not a run handed back for editing; a piece taken out
+  gets its share too and is in no new run, so a broken pipe's contents are deleted: Baughn 2026-11-25), `abandon()` on
+  every old network (its core's owed wall heat onto the nodes, `carryWall`; also in `reset`), new lumps summed from
+  their pieces and seeded with the max of their `slowSteps` and `stallNow` and the sum of their `wallCarry`, then the
+  networks, edges, vents and flows. Every network is rebuilt; `apply` marks where one whose part of the plan didn't
+  change could be kept. The GameTest harness checks every test's plan with the devices in their order, reversed and
+  shuffled, and that the built networks have the plan's runs and networks (`ElnGameTests.fluidTopology`); unit tests
+  in `FluidWorldRebuildTest`.
   Species (Baughn 2026-11-03: fluids are data): water (id 0) and air (1) are built in on `Water`'s numbers; others come
   from datapack JSON (`SpeciesLoader`, content.md). A node holds `mWater`, `mAir` and `extra[id - 2]`, plus energy.
   `Flash` splits each condensable species at T by Raoult within its miscibility group, from the node's whole

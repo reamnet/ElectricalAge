@@ -4,68 +4,199 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.sim.fluid.FluidDevice;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * Laying a routed pipe (notes/pipes/DESIGN.md section 4) on the server: right-click a port (a device's flange, or a
- * pipe's open end) with a pipe kit to start; right-click other blocks to add waypoints (the pipe passes through the
- * centre of the block in front of the face clicked); right-click a port to finish: the route is found, checked
- * against the kit's length and laid. Sneak-right-click takes back the last waypoint (or cancels). The planned route
- * shows as particles to the player.
+ * The pipe kit's side of RoutePlacer (Baughn 2026-11-11: one kit UX): where a click ends (a port: a device's flange or
+ * a pipe sensor's port; a point on an old pipe, for a branch; a point in the block in front of a surface, the pipe
+ * passing through it), how a pipe is routed through the middle of blocks, and laying it with a junction where it joins
+ * an old pipe (ROUTE, the pipe spec; pipes of any tier join, the junction taking the lower). The route's state and
+ * clicks are RoutePlacer's.
  */
 public final class PipePlacer {
     private PipePlacer() {
     }
 
-    /** A route being laid by a player. */
-    static final class Plan {
-        final int tier;
-        final PipeRouter.End start;
-        /** Where it starts on an old pipe (a branch: world voxels), or null. */
-        final long[] startJoin;
-        final List<PipeRouter.End> waypoints = new ArrayList<>();
-        final net.minecraft.resources.ResourceKey<Level> dim;
-
-        long touched;
-
-        Plan(int tier, PipeRouter.End start, long[] startJoin, net.minecraft.resources.ResourceKey<Level> dim) {
-            this.tier = tier;
-            this.start = start;
-            this.startJoin = startJoin;
-            this.dim = dim;
+    /** The pipe kit in RoutePlacer's one flow (a route's path: the router's points). */
+    static final RoutePlacer.Spec<List<long[]>> ROUTE = new RoutePlacer.Spec<>("pipe", "a port or pipe", 0x55C8FF, 0.8f, true, false) {
+        @Override
+        RoutePlacer.Click endAt(Level level, BlockPos pos, Direction face, net.minecraft.world.phys.Vec3 hit, int tier, boolean start, boolean click) {
+            FluidDevice.FluidPort fp = portNear(level, pos, face, hit);
+            // (a port coupled already, to a pipe's end or another device's flange, is one a new pipe couldn't join:
+            // AdventurAgent saw a second route to a tank's piped port "give up" instead of saying so)
+            if (fp != null && !mods.eln.fluid.FluidPlacement.partners(level, fp).isEmpty()) return RoutePlacer.Click.none(PORT_TAKEN);
+            PipeRouter.End port = fp == null ? null : endOf(pos, fp);
+            boolean device = false;
+            if (port == null) device = (port = devicePort(level, pos, hit)) != null;
+            if (device && portTaken(level, pos, hit)) return RoutePlacer.Click.none(PORT_TAKEN);
+            long[] join = port == null ? joinPoint(level, pos, hit) : null;
+            PipeRouter.End surface = port == null && join == null ? surfacePoint(RouteView.obstacles(level), pos, face, hit, PipePart.GRID[tier]) : null;
+            PipeRouter.End at = port != null ? port : join != null ? new PipeRouter.End(join[0], join[1], join[2], -1) : surface;
+            // (the preview says nothing before a start: its outline is enough)
+            if (at == null) return RoutePlacer.Click.none(click || !start ? "No room for a pipe there" : null);
+            return new RoutePlacer.Click(end(at), join, port != null, port != null, null);
         }
+
+        @Override
+        RoutePlacer.Routed<List<long[]>> route(RouteView view, int tier, CableSpec spec, CableRouter.End start, long[] startJoin, List<CableRouter.End> wps,
+                                               CableRouter.End end, long[] endJoin, long budgetMs) {
+            // (the two cubes are freed in either order alike: obstacles are boxes, so a box is blocked by what it overlaps
+            // outside both)
+            // (and through the old pipe itself near a join, JoinRun: a route running inside it is cut where it leaves it,
+            // and joins it there; todo #516)
+            JoinRun sj = startJoin == null ? null : JoinRun.pipe(view, startJoin);
+            JoinRun ej = endJoin == null ? null : JoinRun.pipe(view, endJoin);
+            RoutePlacer.Routed<List<long[]>> r = routeJoined(view, tier, start, startJoin, sj, wps, end, endJoin, ej, true, budgetMs);
+            // (back onto or across the old pipe away from its cut, as after a waypoint, which the freed voxels allowed:
+            // routed again without them, as before JoinRun; through the free cube round the join point it still can, and
+            // is refused, not laid through the old pipe)
+            if (crosses(r, sj, ej, tier)) {
+                r = routeJoined(view, tier, start, startJoin, sj, wps, end, endJoin, ej, false, budgetMs);
+                if (crosses(r, sj, ej, tier)) return new RoutePlacer.Routed<>("it crosses the pipe it joins", 0, null);
+            }
+            if (r.error() != null) return r;
+            // the junctions where the route meets the old pipes, checked now (the cut moves them off the click), so the
+            // preview and the click refuse alike, with the reason
+            for (long[] j : new long[][]{r.startJoin(), r.endJoin()}) {
+                // (the route passes through the joined pipe's block again, over or under the old pipe: it crosses it,
+                // as a cable route coming back across its cable; AdventurAgent read "doesn't end in the pipe's block")
+                if (j != null && piecesIn(r.path(), j) > 1) return new RoutePlacer.Routed<>("it crosses the pipe it joins", 0, null);
+                String err = j == null ? null : joinError(view, tier, r.path(), j);
+                if (err != null) return RoutePlacer.Routed.said("Can't join there: " + err);
+            }
+            return r;
+        }
+
+        @Override
+        String lay(Level level, int tier, CableSpec spec, RoutePlacer.Routed<List<long[]>> r, long[] startJoin, long[] endJoin,
+                   net.minecraft.world.entity.player.Player player) {
+            // (the joins where the route meets the old pipes: route() moves one to where the route leaves the old pipe)
+            List<long[]> joins = new ArrayList<>();
+            if (r.startJoin() != null) joins.add(r.startJoin());
+            if (r.endJoin() != null) joins.add(r.endJoin());
+            return layJoined(level, tier, r.path(), joins, player);
+        }
+
+        @Override
+        List<int[]> boxes(RoutePlacer.Routed<List<long[]>> r, int tier, CableSpec spec) {
+            List<int[]> bs = new ArrayList<>();
+            for (var e : PipeRouter.perBlock(r.path()).entrySet()) {
+                long bx = e.getKey().get(0), by = e.getKey().get(1), bz = e.getKey().get(2);
+                for (int[] pts : e.getValue())
+                    for (int[] b : new PipePart(tier, pts).boxes())
+                        bs.add(new int[]{(int) bx * 16 + b[0], (int) by * 16 + b[1], (int) bz * 16 + b[2], (int) bx * 16 + b[3], (int) by * 16 + b[4], (int) bz * 16 + b[5]});
+            }
+            return bs;
+        }
+
+        @Override
+        List<double[]> trace(RoutePlacer.Routed<List<long[]>> r) {
+            List<double[]> out = new ArrayList<>();
+            for (long[] q : r.path()) out.add(new double[]{q[0], q[1], q[2], 0, 0, 0});
+            return out;
+        }
+    };
+
+    /** One routing: free through the old pipe near the joins (free) or not, cut where it leaves them. */
+    static RoutePlacer.Routed<List<long[]>> routeJoined(RouteView view, int tier, CableRouter.End start, long[] startJoin, JoinRun sj,
+                                                         List<CableRouter.End> wps, CableRouter.End end, long[] endJoin, JoinRun ej, boolean free,
+                                                         long budgetMs) {
+        RouteView v = view;
+        if (free && sj != null) v = sj.freeing(v);
+        if (free && ej != null) v = ej.freeing(v);
+        // (the two cubes are freed in either order alike: obstacles are boxes, so a box is blocked by what it overlaps
+        // outside both)
+        PipeRouter.Space sp = RouteView.obstacles(v);
+        if (startJoin != null) sp = RouteView.freeAround(sp, startJoin, PipePart.JOIN_CLEAR);
+        if (endJoin != null) sp = RouteView.freeAround(sp, endJoin, PipePart.JOIN_CLEAR);
+        // (and it doesn't rest against the old pipe it joins, near the join: the soft support drew it along beside it)
+        if (sj != null || ej != null) {
+            RouteView rv = view;
+            if (sj != null) rv = sj.unresting(rv);
+            if (ej != null) rv = ej.unresting(rv);
+            PipeRouter.Space blocked = sp, rest = RouteView.obstacles(rv);
+            sp = new PipeRouter.Space() {
+                @Override
+                public boolean blocked(long x0, long y0, long z0, long x1, long y1, long z1) {
+                    return blocked.blocked(x0, y0, z0, x1, y1, z1);
+                }
+
+                @Override
+                public boolean rests(long x0, long y0, long z0, long x1, long y1, long z1) {
+                    return rest.blocked(x0, y0, z0, x1, y1, z1);
+                }
+            };
+        }
+        PipeRouter.Result r = PipeRouter.route(sp, PipePart.GRID[tier], end(start), ends(wps), end(end), budgetMs);
+        if (r.error != null) return new RoutePlacer.Routed<>(r.error, 0, null);
+        List<long[]> pts = r.points;
+        if (sj != null && pts != null) pts = sj.trimHead(pts);
+        if (ej != null && pts != null) pts = ej.trimTail(pts);
+        if (pts == null) return RoutePlacer.Routed.said(RoutePlacer.INSIDE);
+        long[] from = startJoin == null ? null : joinAt(pts.get(0)), to = endJoin == null ? null : joinAt(pts.get(pts.size() - 1));
+        return new RoutePlacer.Routed<>(null, new PipeRouter.Result(pts, null).length(), pts, from, to);
     }
 
-    static final Map<UUID, Plan> PLANS = new HashMap<>();
+    /** Does a route found pass through the old pipe at either join away from its cut (JoinRun.crosses)? */
+    static boolean crosses(RoutePlacer.Routed<List<long[]>> r, JoinRun sj, JoinRun ej, int tier) {
+        if (r.error() != null) return false;
+        int h = PipePart.GRID[tier] / 2;   // (a pipe's box: its centre line grown by half its bore)
+        boolean s = sj != null, e = ej != null;
+        return s && sj.crosses(r.path(), null, s, e, h, h, 0) || e && ej.crosses(r.path(), null, s, e, h, h, 0);
+    }
 
-    /** Each player tick (KitPreview): drop a route that lapsed, and say why: the cable kit's rules (Baughn 2026-11-11:
-     *  one kit UX), another dimension, another item in hand, a minute without a click, too far from its last point. */
-    static void checkLapse(ServerPlayer p, long now) {
-        Plan plan = PLANS.get(p.getUUID());
-        if (plan == null) return;
-        String why = null;
-        if (plan.dim != p.level().dimension()) why = "another dimension";
-        else if (!KitSupply.lays(KitSupply.held(p), true, plan.tier, null)) why = "another item in hand";
-        else if (now - plan.touched > CablePlacer.IDLE_TICKS) why = "a minute without a click";
-        else {
-            PipeRouter.End last = plan.waypoints.isEmpty() ? plan.start : plan.waypoints.get(plan.waypoints.size() - 1);
-            double dx = p.getX() * 16 - last.x(), dy = p.getY() * 16 - last.y(), dz = p.getZ() * 16 - last.z();
-            if (dx * dx + dy * dy + dz * dz > (double) KitItem.MAX * KitItem.MAX) why = "too far from it";
-        }
-        if (why == null) return;
-        PLANS.remove(p.getUUID());
-        p.sendOverlayMessage(Component.literal("Pipe route dropped (" + why + ")"));
+    /** How many pieces of the route lie in join j's block. */
+    static int piecesIn(List<long[]> pts, long[] j) {
+        List<int[]> mine = PipeRouter.perBlock(pts).get(List.of(Math.floorDiv(j[0], 16), Math.floorDiv(j[1], 16), Math.floorDiv(j[2], 16)));
+        return mine == null ? 0 : mine.size();
+    }
+
+    /** Why the route's piece in join j's block can't join the old pipe at j (VoxelNode.joinError, on the view), or null. */
+    static String joinError(RouteView view, int tier, List<long[]> pts, long[] j) {
+        BlockPos b = new BlockPos((int) Math.floorDiv(j[0], 16), (int) Math.floorDiv(j[1], 16), (int) Math.floorDiv(j[2], 16));
+        List<int[]> mine = PipeRouter.perBlock(pts).get(List.of((long) b.getX(), (long) b.getY(), (long) b.getZ()));
+        if (mine == null || mine.size() != 1) return "the route doesn't end in the pipe's block";   // (more than one: crosses, route())
+        RouteView.Voxels vx = view.voxels(b);
+        return VoxelNode.joinError(view.parts(b), vx == null ? null : vx.used(), new PipePart(tier, mine.get(0)), (int) (j[0] - b.getX() * 16L),
+            (int) (j[1] - b.getY() * 16L), (int) (j[2] - b.getZ() * 16L));
+    }
+
+    /**
+     * A route end on an old pipe as a join: the point, or null on a block's face plane (the route cut there, at the old
+     * pipe's end on the face: the two ends meet across the face as ports, no junction).
+     */
+    // (a cut at the old pipe's end inside a block is a join at its end, as clicking that end was: a junction with two
+    // arms, not a plain straight continuation; that would mean lengthening the old piece, its fluid node and id, instead
+    // of adding one)
+    static long[] joinAt(long[] p) {
+        for (int a = 0; a < 3; a++) if (Math.floorMod(p[a], 16) == 0) return null;
+        return p;
+    }
+
+    /** A face (3D value) by pipe direction (0..5 = -x +x -y +y -z +z, dirOf), and back: RoutePlacer's ends name faces. */
+    private static final int[] FACE_OF_DIR = {4, 5, 0, 1, 2, 3}, DIR_OF_FACE = {2, 3, 4, 5, 0, 1};
+
+    /** A pipe end as RoutePlacer's (attach -1, dir as a face), and back. */
+    static CableRouter.End end(PipeRouter.End e) {
+        return new CableRouter.End(e.x(), e.y(), e.z(), -1, e.dir() < 0 ? -1 : FACE_OF_DIR[e.dir()]);
+    }
+
+    static PipeRouter.End end(CableRouter.End e) {
+        return new PipeRouter.End(e.x(), e.y(), e.z(), e.dir() < 0 ? -1 : DIR_OF_FACE[e.dir()]);
+    }
+
+    static List<PipeRouter.End> ends(List<CableRouter.End> es) {
+        List<PipeRouter.End> out = new ArrayList<>(es.size());
+        for (CableRouter.End e : es) out.add(end(e));
+        return out;
     }
 
     /**
@@ -93,54 +224,12 @@ public final class PipePlacer {
     }
 
     public static PipeRouter.End surfacePointForTests(Level level, BlockPos pos, Direction face, net.minecraft.world.phys.Vec3 hit, int bore) {
-        return surfacePoint(space(level), pos, face, hit, bore);
+        return surfacePoint(RouteView.obstacles(level), pos, face, hit, bore);
     }
 
-    /** Forget a player's route (logout, death, server stop). */
+    /** Drop the player's route if it is a pipe's (tests: mock players share one UUID). */
     public static void forget(UUID player) {
-        PLANS.remove(player);
-    }
-
-    public static void forgetAll() {
-        PLANS.clear();
-    }
-
-    /** The world as the router sees it: solid blocks and other devices are in the way, and so are used voxels of
-     *  voxel nodes; air, replaceable blocks and liquids are free. */
-    public static PipeRouter.Space space(Level level) {
-        return space(RouteView.live(level));
-    }
-
-    /** What's in the way, read through a view of the world (live, or a snapshot for the preview thread). */
-    public static PipeRouter.Space space(RouteView view) {
-        return (x0, y0, z0, x1, y1, z1) -> {
-            for (long bx = Math.floorDiv(x0, 16); bx <= Math.floorDiv(x1 - 1, 16); bx++)
-                for (long by = Math.floorDiv(y0, 16); by <= Math.floorDiv(y1 - 1, 16); by++)
-                    for (long bz = Math.floorDiv(z0, 16); bz <= Math.floorDiv(z1 - 1, 16); bz++) {
-                        BlockPos p = new BlockPos((int) bx, (int) by, (int) bz);
-                        if (!view.loaded(p)) return true;
-                        BlockState s = view.state(p);
-                        if (s.isAir() || s.canBeReplaced() || s.getBlock() instanceof net.minecraft.world.level.block.LiquidBlock) continue;
-                        if (Mimic.allowed(s)) {   // (a stair, fence, slab: only its own voxels are in the way)
-                            int lx0 = (int) (x0 - bx * 16), ly0 = (int) (y0 - by * 16), lz0 = (int) (z0 - bz * 16);
-                            int lx1 = (int) (x1 - bx * 16), ly1 = (int) (y1 - by * 16), lz1 = (int) (z1 - bz * 16);
-                            for (int[] b : Mimic.boxes(s, view.shapes(), p))
-                                if (b[0] < lx1 && lx0 < b[3] && b[1] < ly1 && ly0 < b[4] && b[2] < lz1 && lz0 < b[5]) return true;
-                            continue;
-                        }
-                        if (s.getBlock() instanceof VoxelNodeBlock) {
-                            RouteView.Voxels v = view.voxels(p);
-                            if (v != null) {
-                                int lx0 = (int) (x0 - bx * 16), ly0 = (int) (y0 - by * 16), lz0 = (int) (z0 - bz * 16);
-                                int lx1 = (int) (x1 - bx * 16), ly1 = (int) (y1 - by * 16), lz1 = (int) (z1 - bz * 16);
-                                if (v.usedIn(lx0, ly0, lz0, lx1, ly1, lz1)) return true;
-                                continue;
-                            }
-                        }
-                        return true;
-                    }
-            return false;
-        };
+        RoutePlacer.forget(player, ROUTE);
     }
 
     /** The port on this block's face, if any (a device's flange, or a pipe's end on that face), as a routing end
@@ -154,15 +243,14 @@ public final class PipePlacer {
      * 2026-11-07), the one nearest the clicked point hit (world coordinates; null: the first).
      */
     static PipeRouter.End portAt(Level level, BlockPos pos, Direction face, net.minecraft.world.phys.Vec3 hit) {
-        PipeRouter.End best = null;
-        double bestD = Double.MAX_VALUE;
-        List<FluidDevice.FluidPort> ports = new ArrayList<>();
-        var n = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(pos, level));
-        if (n instanceof VoxelNode v) ports.addAll(v.fluidPorts());
-        // (a multiblock's ports name their own blocks: the 2x2x2 Large Boiler's, at its node or on its ghost blocks)
-        else if (n instanceof TransparentNode t && t.element instanceof mods.eln.oil.LargeBoilerElement b) ports.addAll(b.portsAt(pos.asLong()));
-        else if (n instanceof TransparentNode t && t.element instanceof FluidDevice d) ports.addAll(d.fluidPorts());
-        else if (n instanceof mods.eln.oil.LargeBoilerElement.FaceNode g) ports.addAll(g.fluidPorts());
+        FluidDevice.FluidPort p = portNear(level, pos, face, hit);
+        return p == null ? null : endOf(pos, p);
+    }
+
+    /** The port portAt picks on that face of the block (nearest hit), or null. */
+    static FluidDevice.FluidPort portNear(Level level, BlockPos pos, Direction face, net.minecraft.world.phys.Vec3 hit) {
+        List<FluidDevice.FluidPort> ports = mods.eln.fluid.FluidPlacement.portsAt(level, pos);
+        boolean voxel = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(new mods.eln.misc.Coordonate(pos, level)) instanceof VoxelNode;
         // (none on the face clicked, the click on the model inside the block rather than on its face: the side port
         // nearest the click, of any side. Baughn 2026-11-09: a tank box's blocks are its round shell, so a corner
         // block's side faces are empty air, and a click on the shell there hit a face of a step of it)
@@ -178,27 +266,34 @@ public final class PipePlacer {
         for (FluidDevice.FluidPort p : ports) onFace |= p.face() == face.get3DDataValue();
         // (only for devices: inside a voxel block a click on a pipe's body is a join or a waypoint, never its end on
         // another face, which already couples to the next block)
-        boolean anySide = !onFace && inside && !(n instanceof VoxelNode);
+        boolean anySide = !onFace && inside && !voxel;
+        FluidDevice.FluidPort best = null;
+        double bestD = Double.MAX_VALUE;
         for (FluidDevice.FluidPort p : ports) {
             if (anySide ? p.face() < 2 || p.face() > 5 : p.face() != face.get3DDataValue()) continue;
-            Direction pf = Direction.from3DDataValue(p.face());
-            int u = p.at() / 17, w = p.at() % 17;
-            long bx = pos.getX() * 16L, by = pos.getY() * 16L, bz = pos.getZ() * 16L;
-            long x, y, z;
-            switch (pf.getAxis()) {
-                case Y -> { x = bx + u; z = bz + w; y = by + (pf == Direction.UP ? 16 : 0); }
-                case Z -> { x = bx + u; y = by + w; z = bz + (pf == Direction.SOUTH ? 16 : 0); }
-                default -> { y = by + u; z = bz + w; x = bx + (pf == Direction.EAST ? 16 : 0); }
-            }
-            PipeRouter.End end = new PipeRouter.End(x, y, z, dirOf(pf));
-            if (hit == null) return end;
-            double d = Math.pow(x / 16.0 - hit.x, 2) + Math.pow(y / 16.0 - hit.y, 2) + Math.pow(z / 16.0 - hit.z, 2);
+            if (hit == null) return p;
+            PipeRouter.End e = endOf(pos, p);
+            double d = Math.pow(e.x() / 16.0 - hit.x, 2) + Math.pow(e.y() / 16.0 - hit.y, 2) + Math.pow(e.z() / 16.0 - hit.z, 2);
             if (d < bestD) {
                 bestD = d;
-                best = end;
+                best = p;
             }
         }
         return best;
+    }
+
+    /** Port p of the block at pos as a routing end leaving its face (world voxels). */
+    static PipeRouter.End endOf(BlockPos pos, FluidDevice.FluidPort p) {
+        Direction pf = Direction.from3DDataValue(p.face());
+        int u = p.at() / 17, w = p.at() % 17;
+        long bx = pos.getX() * 16L, by = pos.getY() * 16L, bz = pos.getZ() * 16L;
+        long x, y, z;
+        switch (pf.getAxis()) {
+            case Y -> { x = bx + u; z = bz + w; y = by + (pf == Direction.UP ? 16 : 0); }
+            case Z -> { x = bx + u; y = by + w; z = bz + (pf == Direction.SOUTH ? 16 : 0); }
+            default -> { y = by + u; z = bz + w; x = bx + (pf == Direction.EAST ? 16 : 0); }
+        }
+        return new PipeRouter.End(x, y, z, dirOf(pf));
     }
 
     /**
@@ -220,8 +315,8 @@ public final class PipePlacer {
         return el >= 0 && n.getElement(el) instanceof mods.eln.sixnode.pipetransmitter.PipeTransmitterElement t ? t : null;
     }
 
-    /** A pipe sensor device's port that already has a pipe: no second route starts or ends there (a lab test: clicking
-     *  the device twice laid a second pipe beside the first). */
+    /** A port that already has a pipe (a machine's flange coupled to a pipe end, a pipe sensor's port with its pipe): no
+     *  second route starts or ends there (a lab test: clicking the device twice laid a second pipe beside the first). */
     static final String PORT_TAKEN = "Its port already has a pipe";
 
     static boolean portTaken(Level level, BlockPos pos, net.minecraft.world.phys.Vec3 hit) {
@@ -231,7 +326,7 @@ public final class PipePlacer {
 
     /** Route from start to end (ports, or a device's port) and lay it (GameTests). Null if done, else why not. */
     public static String routeForTests(Level level, int tier, PipeRouter.End start, PipeRouter.End end) {
-        var r = PipeRouter.route(space(level), PipePart.GRID[tier], start, List.of(), end);
+        var r = PipeRouter.route(RouteView.obstacles(level), PipePart.GRID[tier], start, List.of(), end);
         return r.error != null ? r.error : lay(level, tier, r.points, null);
     }
 
@@ -241,7 +336,7 @@ public final class PipePlacer {
 
     /** Route from a port to join a pipe at join (world voxels) and lay it (GameTests). Null if done, else why not. */
     public static String routeAndJoinForTests(Level level, int tier, PipeRouter.End start, long[] join) {
-        var r = PipeRouter.route(spaceAround(space(level), join, PipePart.JOIN_CLEAR), PipePart.GRID[tier], start, List.of(),
+        var r = PipeRouter.route(RouteView.freeAround(RouteView.obstacles(level), join, PipePart.JOIN_CLEAR), PipePart.GRID[tier], start, List.of(),
             new PipeRouter.End(join[0], join[1], join[2], -1));
         if (r.error != null) return r.error;
         return layJoined(level, tier, r.points, join, null);
@@ -251,11 +346,7 @@ public final class PipePlacer {
     public static String layFailingForTests(Level level, int tier, List<long[]> points, int failAt) {
         List<BlockPos> at = new ArrayList<>();
         List<VoxelPart> parts = new ArrayList<>();
-        for (var e : PipeRouter.perBlock(points).entrySet())
-            for (int[] pts : e.getValue()) {
-                at.add(new BlockPos(e.getKey().get(0).intValue(), e.getKey().get(1).intValue(), e.getKey().get(2).intValue()));
-                parts.add(new PipePart(tier, pts));
-            }
+        pieceParts(tier, PipeRouter.perBlock(points), at, parts);
         return Laying.layFailingAtForTests(level, at, parts, failAt < 0 ? parts.size() + failAt : failAt);
     }
 
@@ -289,134 +380,20 @@ public final class PipePlacer {
         };
     }
 
-    /**
-     * A kit used on a block face: start, extend or finish a route, as the cable kit does (Baughn 2026-11-11: one kit UX).
-     * Start at a port, on an old pipe (a branch) or on any surface; click surfaces for waypoints; finish at a port, on a
-     * pipe, or by clicking the last waypoint again (the pipe ends capped there). Sneak-click takes back the last
-     * waypoint, or cancels. Returns false only for a sneak-click with no route (nothing to do).
-     */
-    public static boolean use(ServerPlayer player, ServerLevel level, BlockPos pos, Direction face, ItemStack kit, int tier,
-                              net.minecraft.world.phys.Vec3 hit) {
+    /** A kit used on a block face: start, extend or finish a route (RoutePlacer). Returns false only for a sneak-click with no route. */
+    public static boolean use(ServerPlayer player, ServerLevel level, BlockPos pos, Direction face, ItemStack kit, net.minecraft.world.phys.Vec3 hit) {
         return use(player, level, pos, face, KitSupply.of(kit), hit, player.isSecondaryUseActive());
     }
 
     /** The same, laid from a supply (a kit, or several taken as one); sneak: the click takes back a waypoint or cancels. */
     public static boolean use(ServerPlayer player, ServerLevel level, BlockPos pos, Direction face, KitSupply kit, net.minecraft.world.phys.Vec3 hit,
                               boolean sneak) {
-        int tier = kit.tier();
-        Plan plan = PLANS.get(player.getUUID());
-        long now = level.getGameTime();
-        if (plan != null && (plan.dim != level.dimension() || plan.tier != tier)) {
-            PLANS.remove(player.getUUID());
-            if (plan.tier != tier) player.sendOverlayMessage(Component.literal("Pipe route cancelled (another kind of pipe in hand)"));
-            plan = null;
-        }
-        if (plan != null) plan.touched = now;
-        PipeRouter.End port = portAt(level, pos, face, hit);
-        boolean device = false;
-        if (port == null) device = (port = devicePort(level, pos, hit)) != null;
-        if (sneak) return undo(player, level);
-        if (!CablePlacer.reachable(player, pos, hit)) {
-            KitPreview.note(player, "Out of reach");
-            return true;
-        }
-        if (device && portTaken(level, pos, hit)) {
-            player.sendOverlayMessage(Component.literal(PORT_TAKEN));
-            return true;
-        }
-        long[] join = port == null ? joinPoint(level, pos, hit) : null;
-        PipeRouter.End surface = port == null && join == null ? surfacePoint(space(level), pos, face, hit, PipePart.GRID[tier]) : null;
-        if (plan == null) {
-            PipeRouter.End start = port != null ? port : join != null ? new PipeRouter.End(join[0], join[1], join[2], -1) : surface;
-            if (start == null) {
-                player.sendOverlayMessage(Component.literal("No room for a pipe there"));
-                return true;
-            }
-            Plan p = new Plan(tier, start, join, level.dimension());
-            p.touched = now;
-            PLANS.put(player.getUUID(), p);
-            player.sendOverlayMessage(Component.literal((join != null ? "Pipe route started on the pipe" : "Pipe route started")
-                + ": click for waypoints, a port or pipe to finish, the last waypoint again to end it there; " + kit.undoHint() + " to undo"));
-            return true;
-        }
-        PipeRouter.End lastWp = plan.waypoints.isEmpty() ? null : plan.waypoints.get(plan.waypoints.size() - 1);
-        boolean again = surface != null && lastWp != null && surface.x() == lastWp.x() && surface.y() == lastWp.y() && surface.z() == lastWp.z();
-        if (port == null && join == null && !again) {
-            if (surface == null) {
-                player.sendOverlayMessage(Component.literal("No room for a pipe there"));
-                return true;
-            }
-            plan.waypoints.add(surface);
-            PipeRouter.Result r = route(level, plan, null);
-            if (r.error != null) {
-                plan.waypoints.remove(plan.waypoints.size() - 1);
-                KitPreview.note(player, "Can't reach that waypoint: " + r.error);
-            } else {
-                player.sendOverlayMessage(Component.literal(String.format("Waypoint %d: %.1f blocks so far (click it again to end the pipe there)",
-                    plan.waypoints.size(), r.length() / 16.0)));
-                show(player, level, r.points);
-            }
-            return true;
-        }
-        // finish: at a port, joining a pipe, or capped at the last waypoint
-        PipeRouter.End end = port != null ? port : join != null ? new PipeRouter.End(join[0], join[1], join[2], -1) : null;
-        PipeRouter.Result r = route(level, plan, end, join);
-        if (r.error != null) {
-            KitPreview.note(player, "No route: " + r.error);
-            return true;
-        }
-        int len = r.length();
-        boolean creative = player.isCreative();
-        if (!creative && kit.length() < len) {
-            player.sendOverlayMessage(Component.literal(String.format("This route takes %.1f blocks of pipe; the kit holds %.1f", len / 16.0, kit.length() / 16.0)));
-            show(player, level, r.points);
-            return true;
-        }
-        List<long[]> joins = new ArrayList<>();
-        if (plan.startJoin != null) joins.add(plan.startJoin);
-        if (join != null) joins.add(join);
-        String err = layJoined(level, plan.tier, r.points, joins, player);
-        if (err != null) {
-            KitPreview.note(player, "Can't lay it: " + err);
-            return true;
-        }
-        PLANS.remove(player.getUUID());
-        if (!creative) kit.take(len);
-        player.sendOverlayMessage(Component.literal(String.format("Laid %.1f blocks of pipe", len / 16.0)));
-        return true;
-    }
-
-    /** Take back the route's last waypoint, or cancel it if it has none; false if there is no route. */
-    public static boolean undo(ServerPlayer player, ServerLevel level) {
-        Plan plan = PLANS.get(player.getUUID());
-        if (plan == null) return false;
-        if (plan.waypoints.isEmpty()) {
-            PLANS.remove(player.getUUID());
-            KitPreview.note(player, "Pipe route cancelled");
-        } else {
-            plan.waypoints.remove(plan.waypoints.size() - 1);
-            // (on the note line: the preview's next line takes the action bar at once, and a waypoint on the way to the
-            // aim changes neither the route drawn nor its length; AdventurAgent read an Undo as doing nothing)
-            KitPreview.note(player, "Waypoint taken back (" + plan.waypoints.size() + " left)");
-            preview(player, level, plan, null);
-        }
-        return true;
-    }
-
-    /** Keep the player's pipe route from lapsing as idle (the Toolbag's radial is open). */
-    static void touch(UUID player, long now) {
-        Plan p = PLANS.get(player);
-        if (p != null) p.touched = now;
+        return RoutePlacer.use(player, level, pos, face, kit, hit, sneak);
     }
 
     /** Is a pipe route being laid by this player? */
     public static boolean active(UUID player) {
-        return PLANS.containsKey(player);
-    }
-
-    /** Drop the player's pipe route. */
-    static void drop(UUID player) {
-        PLANS.remove(player);
+        return RoutePlacer.active(player, ROUTE);
     }
 
     /** The point on the pipe under the crosshair where a route could join it (world voxels: a lattice point on its
@@ -441,27 +418,6 @@ public final class PipePlacer {
         return best;
     }
 
-    /** The space, but free around a junction point (the new pipe may meet the old one there). */
-    static PipeRouter.Space spaceAround(PipeRouter.Space s, long[] p, int h) {
-        return (x0, y0, z0, x1, y1, z1) -> {
-            if (x0 >= p[0] - h && x1 <= p[0] + h && y0 >= p[1] - h && y1 <= p[1] + h && z0 >= p[2] - h && z1 <= p[2] + h) return false;
-            // a box reaching into the cube: check only its part outside (axis by axis: enough for lattice steps)
-            if (x0 < p[0] + h && x1 > p[0] - h && y0 < p[1] + h && y1 > p[1] - h && z0 < p[2] + h && z1 > p[2] - h) {
-                long[][] parts = {{x0, Math.min(x1, p[0] - h)}, {Math.max(x0, p[0] + h), x1}};
-                boolean b = false;
-                for (long[] xr : parts) if (xr[0] < xr[1]) b |= s.blocked(xr[0], y0, z0, xr[1], y1, z1);
-                long cx0 = Math.max(x0, p[0] - h), cx1 = Math.min(x1, p[0] + h);
-                long[][] ys = {{y0, Math.min(y1, p[1] - h)}, {Math.max(y0, p[1] + h), y1}};
-                for (long[] yr : ys) if (yr[0] < yr[1]) b |= s.blocked(cx0, yr[0], z0, cx1, yr[1], z1);
-                long cy0 = Math.max(y0, p[1] - h), cy1 = Math.min(y1, p[1] + h);
-                long[][] zs = {{z0, Math.min(z1, p[2] - h)}, {Math.max(z0, p[2] + h), z1}};
-                for (long[] zr : zs) if (zr[0] < zr[1]) b |= s.blocked(cx0, cy0, zr[0], cx1, cy1, zr[1]);
-                return b;
-            }
-            return s.blocked(x0, y0, z0, x1, y1, z1);
-        };
-    }
-
     /** Lay a route that ends joining a pipe at join (world voxels): the last block's piece goes in as a junction. */
     public static String layJoined(Level level, int tier, List<long[]> points, long[] join, net.minecraft.world.entity.player.Player player) {
         return layJoined(level, tier, points, join == null ? List.of() : List.of(join), player);
@@ -469,54 +425,26 @@ public final class PipePlacer {
 
     /**
      * Lay a route whose ends may join old pipes (world voxel points: a start on a pipe, a finish on one): each join
-     * block's piece goes in as a junction. Every junction and every other piece is checked before anything is laid.
+     * block's piece goes in as a junction, in the same all-or-nothing lay as the other pieces (Laying: every junction
+     * and every other piece is checked before anything is laid).
      */
     public static String layJoined(Level level, int tier, List<long[]> points, List<long[]> joins, net.minecraft.world.entity.player.Player player) {
         var pieces = PipeRouter.perBlock(points);
+        List<Laying.Join> js = new ArrayList<>();
         List<BlockPos> jbs = new ArrayList<>();
-        List<int[]> jpieces = new ArrayList<>();
         for (long[] join : joins) {
             BlockPos jb = new BlockPos((int) Math.floorDiv(join[0], 16), (int) Math.floorDiv(join[1], 16), (int) Math.floorDiv(join[2], 16));
             if (jbs.contains(jb)) return "it starts and ends on the same pipe block";
             List<int[]> mine = pieces.remove(List.of((long) jb.getX(), (long) jb.getY(), (long) jb.getZ()));
-            if (mine == null || mine.size() != 1) return "the route doesn't end in the pipe's block";
-            if (!(level.getBlockEntity(jb) instanceof VoxelNodeEntity e) || !(e.getNode() instanceof VoxelNode n)) return "the pipe is gone";
-            // (check the junction before laying anything, so a refused join leaves no pipe behind)
-            String jerr = n.joinError(new PipePart(tier, mine.get(0)), (int) (join[0] - jb.getX() * 16L), (int) (join[1] - jb.getY() * 16L),
-                (int) (join[2] - jb.getZ() * 16L));
-            if (jerr != null) return jerr;
+            if (mine == null || mine.size() != 1) return "the route doesn't end in the pipe's block";   // (more than one: crosses, route())
             jbs.add(jb);
-            jpieces.add(mine.get(0));
+            js.add(new Laying.Join(jb, new PipePart(tier, mine.get(0)), (int) (join[0] - jb.getX() * 16L), (int) (join[1] - jb.getY() * 16L),
+                (int) (join[2] - jb.getZ() * 16L)));
         }
-        String err = lay(level, tier, pieces, player);
-        if (err != null) return err;
-        for (int k = 0; k < jbs.size(); k++) {
-            BlockPos jb = jbs.get(k);
-            long[] join = joins.get(k);
-            if (!(level.getBlockEntity(jb) instanceof VoxelNodeEntity e) || !(e.getNode() instanceof VoxelNode n)) return "the pipe is gone";
-            err = n.addJoined(new PipePart(tier, jpieces.get(k)), (int) (join[0] - jb.getX() * 16L), (int) (join[1] - jb.getY() * 16L),
-                (int) (join[2] - jb.getZ() * 16L));
-            if (err != null) return err;
-        }
-        return null;
-    }
-
-    static PipeRouter.Result route(Level level, Plan plan, PipeRouter.End end) {
-        return route(level, plan, end, null);
-    }
-
-    /** The plan's route to end (null: to its last waypoint), free round its start join and endJoin (or null). */
-    static PipeRouter.Result route(Level level, Plan plan, PipeRouter.End end, long[] endJoin) {
-        List<PipeRouter.End> wps = new ArrayList<>(plan.waypoints);
-        PipeRouter.End last = end;
-        if (last == null) {
-            if (wps.isEmpty()) return new PipeRouter.Result(List.of(), null);
-            last = wps.remove(wps.size() - 1);
-        }
-        PipeRouter.Space sp = space(level);
-        if (plan.startJoin != null) sp = spaceAround(sp, plan.startJoin, PipePart.JOIN_CLEAR);
-        if (endJoin != null) sp = spaceAround(sp, endJoin, PipePart.JOIN_CLEAR);
-        return PipeRouter.route(sp, PipePart.GRID[plan.tier], plan.start, wps, last);
+        List<BlockPos> at = new ArrayList<>();
+        List<VoxelPart> parts = new ArrayList<>();
+        pieceParts(tier, pieces, at, parts);
+        return Laying.lay(level, at, parts, js, player);   // (all or nothing, the junctions too)
     }
 
     /** Lay the route: one pipe part per block piece; all or nothing. */
@@ -527,30 +455,16 @@ public final class PipePlacer {
     static String lay(Level level, int tier, java.util.Map<List<Long>, List<int[]>> pieces, net.minecraft.world.entity.player.Player player) {
         List<BlockPos> at = new ArrayList<>();
         List<VoxelPart> parts = new ArrayList<>();
+        pieceParts(tier, pieces, at, parts);
+        return Laying.lay(level, at, parts, player);   // (all or nothing)
+    }
+
+    /** One pipe part per block piece, into at and parts (in the same order). */
+    static void pieceParts(int tier, java.util.Map<List<Long>, List<int[]>> pieces, List<BlockPos> at, List<VoxelPart> parts) {
         for (var e : pieces.entrySet())
             for (int[] pts : e.getValue()) {
                 at.add(new BlockPos(e.getKey().get(0).intValue(), e.getKey().get(1).intValue(), e.getKey().get(2).intValue()));
                 parts.add(new PipePart(tier, pts));
             }
-        return Laying.lay(level, at, parts, player);   // (all or nothing)
-    }
-
-    static void preview(ServerPlayer player, ServerLevel level, Plan plan, PipeRouter.End end) {
-        PipeRouter.Result r = route(level, plan, end);
-        if (r.error == null) show(player, level, r.points);
-    }
-
-    /** The route as particles, for this player only. */
-    static void show(ServerPlayer player, ServerLevel level, List<long[]> pts) {
-        var dust = new net.minecraft.core.particles.DustParticleOptions(0x55C8FF, 0.8f);
-        for (int i = 1; i < pts.size(); i++) {
-            long[] a = pts.get(i - 1), b = pts.get(i);
-            int n = (int) Math.max(1, (Math.abs(b[0] - a[0]) + Math.abs(b[1] - a[1]) + Math.abs(b[2] - a[2])) / 4);
-            for (int k = 0; k <= n; k++) {
-                double t = k / (double) n;
-                level.sendParticles(player, dust, true, false, (a[0] + (b[0] - a[0]) * t) / 16.0, (a[1] + (b[1] - a[1]) * t) / 16.0,
-                    (a[2] + (b[2] - a[2]) * t) / 16.0, 1, 0, 0, 0, 0);
-            }
-        }
     }
 }

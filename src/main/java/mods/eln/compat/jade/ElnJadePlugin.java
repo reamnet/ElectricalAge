@@ -31,7 +31,7 @@ import java.util.Map;
 public class ElnJadePlugin implements IWailaPlugin {
     static final Identifier UID = Identifier.fromNamespaceAndPath("eln", "node");
     /** Lines shown without details. */
-    static final int HEADLINE = 3;
+    public static final int HEADLINE = 3;
 
     /** The Machine API's machines at other mods' blocks. */
     static final Identifier MACHINE_UID = Identifier.fromNamespaceAndPath("eln", "machine");
@@ -120,6 +120,22 @@ public class ElnJadePlugin implements IWailaPlugin {
         return mods.eln.ghost.GhostBlock.owner(w, acc.getPosition());
     }
 
+    /**
+     * The blocks whose fluid warnings this block shows (FluidWorld records them at port blocks): itself, a multiblock's
+     * origin, and every port block of the device (a ghost cell or the origin of the Still Pot, whose ports are all on
+     * other cells, showed none).
+     */
+    static java.util.List<Long> alarmBlocks(BlockAccessor acc, mods.eln.node.transparent.TransparentNodeElement owner) {
+        java.util.List<Long> out = new java.util.ArrayList<>();
+        out.add(acc.getPosition().asLong());
+        var e = owner;
+        if (e == null && acc.getBlockEntity() instanceof NodeBlockEntity be && be.getNode() instanceof mods.eln.node.transparent.TransparentNode t) e = t.element;
+        if (owner != null) out.add(owner.node.coordonate.pos().asLong());
+        if (e instanceof mods.eln.sim.fluid.FluidDevice d)
+            for (var p : d.fluidPorts()) if (!out.contains(p.pos())) out.add(p.pos());
+        return out;
+    }
+
     enum Server implements IServerDataProvider<BlockAccessor> {
         INSTANCE;
 
@@ -144,6 +160,16 @@ public class ElnJadePlugin implements IWailaPlugin {
                 if (m != null) lines.putAll(m);
                 m = lines;
             }
+            // (first of all, in red: Baughn 1573807986227544245; AdventurAgent read past it in grey)
+            var at = alarmBlocks(acc, owner);
+            if (at.stream().anyMatch(mods.eln.fluid.FluidWorld::solverFailedAt))
+                tag.putString("elnAlarm", mods.eln.i18n.I18N.tr("SOLVER FAILED: CALL BAUGHN"));
+            else {
+                // (a network too heavy for the server thread, stepped in the background: said too, Baughn 1574029078598778991)
+                String heavy = null;
+                for (long q : at) if (heavy == null) heavy = mods.eln.fluid.FluidWorld.heavyAt(q);
+                if (heavy != null) tag.putString("elnNote", heavy);
+            }
             if (m == null || m.isEmpty()) return;
             if (owner != null ? !owner.thermalLoadList.isEmpty() : hasHeat(acc)) {   // (the ambient it cools towards: by biome, height, depth; Baughn 2026-10-26)
                 m = new java.util.LinkedHashMap<>(m);
@@ -167,6 +193,10 @@ public class ElnJadePlugin implements IWailaPlugin {
         public void appendTooltip(ITooltip tooltip, BlockAccessor acc, IPluginConfig config) {
             String title = acc.getServerData().getStringOr("elnTitle", "");
             if (!title.isEmpty()) tooltip.replace(snownee.jade.api.JadeIds.CORE_OBJECT_NAME, Component.literal(title));
+            String alarm = acc.getServerData().getStringOr("elnAlarm", "");
+            if (!alarm.isEmpty()) tooltip.add(Component.literal(alarm).withStyle(net.minecraft.ChatFormatting.RED, net.minecraft.ChatFormatting.BOLD));
+            String note = acc.getServerData().getStringOr("elnNote", "");
+            if (!note.isEmpty()) tooltip.add(Component.literal(note).withStyle(net.minecraft.ChatFormatting.YELLOW));
             var list = acc.getServerData().getListOrEmpty("elnProbe");
             boolean details = mods.eln.Eln.wailaEasyMode || acc.showDetails() || acc.getPlayer() != null && acc.getPlayer().isShiftKeyDown();
             int n = details ? list.size() : Math.min(HEADLINE, list.size());

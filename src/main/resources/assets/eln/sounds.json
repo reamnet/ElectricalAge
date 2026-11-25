@@ -1,7 +1,10 @@
 {
     "arcfurnace_loop": {
         "sounds": [
-            { "name": "eln:arcfurnace_loop", "stream": false }
+            {
+                "name": "eln:arcfurnace_loop",
+                "stream": false
+            }
         ]
     },
     "appliance_industrial_fan": {
@@ -607,6 +610,51 @@
         "sounds": [
             {
                 "name": "eln:appliance_box_fan",
+                "stream": false
+            }
+        ]
+    },
+    "floppy_spin": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "eln:floppy_spin",
+                "stream": false
+            }
+        ]
+    },
+    "floppy_step": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "eln:floppy_step",
+                "stream": false
+            }
+        ]
+    },
+    "floppy_seek": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "eln:floppy_seek",
+                "stream": false
+            }
+        ]
+    },
+    "floppy_insert": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "eln:floppy_insert",
+                "stream": false
+            }
+        ]
+    },
+    "floppy_eject": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "eln:floppy_eject",
                 "stream": false
             }
         ]

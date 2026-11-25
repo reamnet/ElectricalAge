@@ -342,13 +342,6 @@ public class HeatExchangerElement extends TransparentNodeElement implements Flui
         return group == null ? this : group.master();
     }
 
-    /** Placed facing the player, its ports made from that front; the wrench turns it (FluidPlacement). */
-    @Override
-    public void initializeFromThat(Direction front, net.minecraft.world.entity.LivingEntity entityLiving, net.minecraft.nbt.CompoundTag itemStackNbt) {
-        super.initializeFromThat(front, entityLiving, itemStackNbt);
-        remakePorts();
-    }
-
     @Override
     public Direction[] fronts() {
         // (one of a stack, or about to be: it stays as placed; turning would re-form the stack under it)
@@ -356,22 +349,13 @@ public class HeatExchangerElement extends TransparentNodeElement implements Flui
         return mods.eln.fluid.FluidPlacement.horizontal();
     }
 
-    @Override
-    public boolean wrenchTurn(net.minecraft.world.entity.player.Player player) {
-        return mods.eln.fluid.FluidPlacement.turn(this);
-    }
-
-    @Override
-    public void remakePorts() {
-        makePorts();
-    }
-
     /**
      * Ports on its two end faces (along its front's axis), both sides on each: A at the face's centre, B up high on it
      * (TankElement.sideSpot), each drawing at its height in the side (a stack's top row draws B's steam). Counterflow:
      * A in at the back end and out at the front, B in at the front and out at the back.
      */
-    void makePorts() {
+    @Override
+    public void remakePorts() {
         long at = node.coordonate.pos().asLong();
         double k = endK();
         List<FluidPort> out = new java.util.ArrayList<>();
@@ -404,7 +388,7 @@ public class HeatExchangerElement extends TransparentNodeElement implements Flui
     public void connectJob() {
         super.connectJob();
         if (a != null) {
-            makePorts();
+            remakePorts();
             FluidWorld.add(this);
             List<HeatExchangerElement> seeds = neighbours();
             seeds.add(this);
@@ -464,7 +448,7 @@ public class HeatExchangerElement extends TransparentNodeElement implements Flui
     public void initialize() {
         a = ownA = node(loadedA, ventedA);
         b = ownB = node(loadedB, ventedB);
-        makePorts();
+        remakePorts();
         connect();
     }
 
@@ -490,7 +474,7 @@ public class HeatExchangerElement extends TransparentNodeElement implements Flui
 
     @Override
     public String thermoMeterString(Direction side) {
-        return a == null ? "" : String.format("A %.0f °C, B %.0f °C", a.T() - Water.T0, b.T() - Water.T0);
+        return a == null ? "" : "A " + mods.eln.api.Meters.celsius(a.T() - Water.T0) + ", B " + mods.eln.api.Meters.celsius(b.T() - Water.T0);
     }
 
     @Override
@@ -558,9 +542,9 @@ public class HeatExchangerElement extends TransparentNodeElement implements Flui
         HeatExchangerElement h = head();
         // (not stepped yet, as just loaded: no inlet reading, so its sides' own temperatures)
         boolean read = h.tAin > 0;
-        info.put(I18N.tr("Stream A"), String.format("%.0f -> %.0f °C, %.2f bar of %s", (read ? h.tAin : a.T()) - Water.T0, (read ? h.tAout : a.T()) - Water.T0, a.P() / 1e5,
+        info.put(I18N.tr("Stream A"), String.format("%s -> %s, %.2f bar of %s", mods.eln.api.Meters.celsius((read ? h.tAin : a.T()) - Water.T0), mods.eln.api.Meters.celsius((read ? h.tAout : a.T()) - Water.T0), a.P() / 1e5,
             mods.eln.sim.fluid.EaUnits.contents(a)));
-        info.put(I18N.tr("Stream B"), String.format("%.0f -> %.0f °C, %.2f bar of %s", (read ? h.tBin : b.T()) - Water.T0, (read ? h.tBout : b.T()) - Water.T0, b.P() / 1e5,
+        info.put(I18N.tr("Stream B"), String.format("%s -> %s, %.2f bar of %s", mods.eln.api.Meters.celsius((read ? h.tBin : b.T()) - Water.T0), mods.eln.api.Meters.celsius((read ? h.tBout : b.T()) - Water.T0), b.P() / 1e5,
             mods.eln.sim.fluid.EaUnits.contents(b)));
         info.put(I18N.tr("A holds"), mods.eln.sim.fluid.EaUnits.composition(a));
         info.put(I18N.tr("B holds"), mods.eln.sim.fluid.EaUnits.composition(b));

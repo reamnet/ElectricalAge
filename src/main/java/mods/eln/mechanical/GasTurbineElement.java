@@ -86,7 +86,8 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
      * Fuel quality (refinery M1, Baughn 2026-11-15; sim.fluid.FuelQuality): what it burnt last, rated for its boiling
      * window (it loses 2 % of its power per % outside it), and how fouled it is (0..FOUL_MAX, that share of its power
      * gone): fuel over the engines' coking balance fouls it (heavy oil: ~10 % an hour at full power), cleaner fuel
-     * clears it again, wool cleans it at once. No damage. An old save loads clean.
+     * clears it again, wool cleans it at once. No damage. An old save loads clean. Liquid fuel that chokes it
+     * (FuelQuality.TURBINE_CHOKE) it doesn't take: choked(), live from its vessel, so no state is saved for it.
      */
     public FuelQuality.Rating fuel = FuelQuality.Rating.CLEAN;
     public double foul;
@@ -111,10 +112,13 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
             double need = wanted > 0 ? 1.2 * wanted - bank : 0;
             wanted = 0;
             if (need > 0) bank += fuelHeat(v, need);
-            fuelReady = fuelIn.feedId() >= 0 || gasHeat(v) > 0;
+            fuelReady = liquidReady(v) || gasHeat(v) > 0;
         }
         fuelIn.settle(dt);
     }
+
+    /** The exhaust it owes its pipe goes out over this long (s): longer than a background fluid step (CoreStep.MAX_SPAN). */
+    static final double EXHAUST_S = 2.0;
 
     @Override
     public void afterFluidStep(double dt) {
@@ -181,10 +185,34 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
         double hv = EaUnits.layerHeatingValue(v, id);
         if (hv <= 0) return got;
         FuelQuality.Rating q = FuelQuality.rate(v, id, FuelQuality.TURBINE_LO, FuelQuality.TURBINE_HI);
+        if (q.choked(FuelQuality.TURBINE_CHOKE)) return got;   // (it chokes the injectors: none taken)
         double liquid = EaUnits.drainLayer(v, id, (need - got) / hv) * hv, w = liquid / Math.max(1e-9, got + liquid);
         // (what it burns next: the liquid's rating by its share of the heat drawn; fuel gas is clean)
         if (liquid > 0) fuel = new FuelQuality.Rating(q.light() * w, q.heavy() * w, q.coking() * w);
         return got + liquid;
+    }
+
+    /** Its liquid fuel's rating for its window, or null if it holds none. */
+    FuelQuality.Rating liquidRating(FluidNode v) {
+        int id = fuelIn.feedId();
+        return v == null || id < 0 ? null : FuelQuality.rate(v, id, FuelQuality.TURBINE_LO, FuelQuality.TURBINE_HI);
+    }
+
+    /** Is there liquid fuel it can burn: some, and not so heavy it chokes it. */
+    private boolean liquidReady(FluidNode v) {
+        var q = liquidRating(v);
+        return q != null && !q.choked(FuelQuality.TURBINE_CHOKE);
+    }
+
+    /**
+     * Is it choked (FuelQuality.TURBINE_CHOKE; Baughn 2026-11-23): its liquid fuel has so much heavy oil or residue in it
+     * that it takes none, and it has no fuel gas to burn instead. It runs again once the fuel is diluted; piped full
+     * (its filling valve shuts at Vessels.FILL_LEVEL) there is no room to, and breaking it empties it.
+     */
+    public boolean choked() {
+        FluidNode v = fuelIn.vessel;
+        var q = liquidRating(v);
+        return q != null && q.choked(FuelQuality.TURBINE_CHOKE) && gasHeat(v) <= 0;
     }
 
     /** Its liquid fuel (mB), and its fuel gas (kg). */
@@ -201,7 +229,7 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
     /** Put mB of fuel straight into its vessel, as a bucket would (tests). */
     public void putFuel(net.minecraft.world.level.material.Fluid fluid, int mB) {
         fuelIn.put(fluid, mB, mods.eln.sim.Ambient.kelvin(node.coordonate));
-        fuelReady = fuelIn.vessel != null && (fuelIn.feedId() >= 0 || gasHeat(fuelIn.vessel) > 0);
+        fuelReady = fuelIn.vessel != null && (liquidReady(fuelIn.vessel) || gasHeat(fuelIn.vessel) > 0);
     }
 
     public double gate;
@@ -273,7 +301,9 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
                 exhaustOwed = 0;
                 exhaust.fill(0, Water.P_ATM, Tamb);
             }
-            exhaustFlow.rate = Math.max(0, exhaustOwed) / time;
+            // (what it owes, over EXHAUST_S: a rate that holds for a step of many ticks; all of it asked in one tick, a
+            // background step of k ticks took k times what was owed, and the next few nothing)
+            exhaustFlow.rate = Math.max(0, exhaustOwed) / EXHAUST_S;
             totalFuelJ += fuelJ;
             totalWork += work;
             meterFuel += fuelJ;
@@ -303,24 +333,8 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
         return ports;
     }
 
-    /** Placed facing the player, its ports made from that front; the wrench turns it (FluidPlacement). */
-    @Override
-    public void initializeFromThat(Direction front, net.minecraft.world.entity.LivingEntity entityLiving, net.minecraft.nbt.CompoundTag itemStackNbt) {
-        super.initializeFromThat(front, entityLiving, itemStackNbt);
-        remakePorts();
-    }
-
-    @Override
-    public Direction[] fronts() {
-        return mods.eln.fluid.FluidPlacement.horizontal();
-    }
-
     @Override
     public void remakePorts() {
-        makePorts();
-    }
-
-    void makePorts() {
         var exhaustPort = new FluidPort(exhaust, node.coordonate.pos().asLong(), front.back().toEnumFacing().get3DDataValue(), 0.5,
             mods.eln.node.voxel.PipePart.LARGE_END_K);   // (its exhaust: a large pipe's flange)
         ports = fuelIn.stub == null ? List.of(exhaustPort)
@@ -341,7 +355,7 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
     public void connectJob() {
         super.connectJob();
         if (exhaust != null) {
-            makePorts();
+            remakePorts();
             FluidWorld.add(this);
         }
     }
@@ -364,7 +378,7 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
         exhaustFlow = Flow.source(exhaust, 0.5, SpeciesRegistry.AIR, EXHAUST_T);
         flows = List.of(exhaustFlow);
         fuelIn.make(node.coordonate.y, node.coordonate.y + 1, mods.eln.sim.Ambient.kelvin(node.coordonate));
-        makePorts();
+        remakePorts();
         super.initialize();
     }
 
@@ -465,6 +479,7 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
             String wrong = fuelIn.blockedBy();
             return wrong == null ? I18N.tr("No fuel") : String.format(I18N.tr("No fuel: %s in its fuel vessel"), wrong);
         }
+        if (choked()) return I18N.tr("Choked: too much heavy oil or residue; dilute or break to empty");
         if (bank <= 0 && !fuelReady) return I18N.tr("Fuel gas under 1 atm: it needs pressure");
         if (!burning && rads < CUTOFF * RATED_RADS) return String.format(I18N.tr("Needs a starter: a Shaft Motor to spin it over %.0f rad/s"), CUTOFF * RATED_RADS);
         if (!burning) return I18N.tr("Fuel valve shut");
@@ -488,12 +503,14 @@ public class GasTurbineElement extends SimpleShaftElement implements FluidDevice
         if (fuelIn.vessel != null && fuelIn.feedId() >= 0) {
             var q = FuelQuality.rate(fuelIn.vessel, fuelIn.feedId(), FuelQuality.TURBINE_LO, FuelQuality.TURBINE_HI);
             double rate = FuelQuality.foulRate(q.coking(), FuelQuality.ENGINE_BALANCE);
-            info.put(I18N.tr("Fuel quality"), String.format("%s; %s; %.1f mPa s", FuelQuality.describe(q),
+            String visc = EaUnits.viscosityText(FuelQuality.layerViscosity(fuelIn.vessel, fuelIn.feedId()));
+            // (choked: no fouling clause, it burns none; a choking liquid beside fuel gas: it burns the gas only)
+            info.put(I18N.tr("Fuel quality"), q.choked(FuelQuality.TURBINE_CHOKE) ? FuelQuality.describe(q, FuelQuality.TURBINE_CHOKE) + (choked() ? "" : " " + I18N.tr("(burning gas only)")) + "; " + visc : String.format("%s; %s; %s", FuelQuality.describe(q, FuelQuality.TURBINE_CHOKE),
                 rate > 0 ? String.format(I18N.tr("fouls it ~%.0f%% an hour at full power (coking %.3f, clean under %.2f)"), FuelQuality.engineFoulPerHour(q.coking()) * 100, q.coking(), FuelQuality.ENGINE_BALANCE) : I18N.tr("burns clean"),
-                FuelQuality.layerViscosity(fuelIn.vessel, fuelIn.feedId()) * 1000));
+                visc));
         }
         if (foul > 0.01) info.put(I18N.tr("Fouling"), String.format(I18N.tr("%.0f%% fouled: %.0f%% power (clean fuel clears it slowly; right-click with wool to clean)"), foul * 100, (1 - foul) * 100));
-        info.put(I18N.tr("Exhaust"), exhaustPiped ? String.format("%.0f °C, piped", exhaust == null ? 0 : exhaust.T() - Water.T0) : I18N.tr("to the air"));
+        info.put(I18N.tr("Exhaust"), exhaustPiped ? mods.eln.api.Meters.celsius(exhaust == null ? 0 : exhaust.T() - Water.T0) + ", piped" : I18N.tr("to the air"));
         info.put(I18N.tr("Fuel valve"), tripped ? I18N.tr("tripped by overspeed") : String.format("%.0f%%%s", gate * 100, manual() ? I18N.tr(", by hand: no governor, no trip") : ""));
         return info;
     }

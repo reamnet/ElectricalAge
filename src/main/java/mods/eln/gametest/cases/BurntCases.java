@@ -19,7 +19,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public final class BurntCases {
         }
 
         public int ticks() {
-            return 200;
+            return 2400;   // (2 minutes: a stone furnace cools slowly)
         }
 
         HeatFurnaceElement fed(TestContext ctx, int x) {
@@ -88,20 +87,26 @@ public final class BurntCases {
         public void measure(TestContext ctx) {
             int coalBurnt = burnt.getInventory().getItem(HeatFurnaceContainer.combustibleId).getCount();
             ctx.line(String.format("burnt furnace: %.1f -> %.1f K over ambient, coal %d", HOT, burnt.thermalLoad.Tc, coalBurnt));
-            ctx.check("burnt heat furnace: cools towards ambient", burnt.thermalLoad.Tc < HOT * 0.75 && burnt.thermalLoad.Tc >= -1,
+            // (a stone furnace's mass, ~600 J/K, cools with a ~470 s time constant: ~23 % in these 2 minutes, Baughn 1573756878134185985)
+            ctx.check("burnt heat furnace: cools towards ambient", burnt.thermalLoad.Tc < HOT * 0.85 && burnt.thermalLoad.Tc >= -1,
                 String.format("T %.1f", burnt.thermalLoad.Tc));
             ctx.check("burnt heat furnace: takes no fuel", coalBurnt == 16, "coal " + coalBurnt);
             ctx.check("burnt heat furnace: no screen", !burnt.node.hasGui(Direction.XN), "");
             ctx.check("stone heat furnace: repaired with a Combustion Chamber",
                 ItemStack.isSameItem(part, Eln.findItemStack("Combustion Chamber")), String.valueOf(part));
 
-            FakePlayer fp = FakePlayerFactory.getMinecraft(ctx.level());
+            // (todo #554: what to repair it with and "Repaired." are on the action bar, not in the chat)
+            mods.eln.gametest.ListeningPlayer fp = ctx.listener();
+            boolean emptyHanded = Repair.onActivated(spare, fp);
+            ctx.check("a burnt furnace right-clicked empty-handed says what repairs it, on the action bar", !emptyHanded && fp.chat.isEmpty()
+                && fp.lastActionBar().startsWith("Burnt out") && fp.lastActionBar().contains("Combustion Chamber"), fp.actionBar + " chat " + fp.chat);
             ItemStack held = Eln.findItemStack("Combustion Chamber", 2);
             fp.setItemInHand(InteractionHand.MAIN_HAND, held);
             try {
                 boolean repaired = Repair.onActivated(spare, fp);
                 ctx.check("a right-click with a Combustion Chamber repairs it and uses one", repaired && !spare.isBurnt() && held.getCount() == 1,
                     "repaired " + repaired + ", burnt " + spare.isBurnt() + ", left " + held.getCount());
+                ctx.check("... and says so on the action bar", fp.chat.isEmpty() && fp.lastActionBar().equals("Repaired."), fp.actionBar + " chat " + fp.chat);
                 // (Baughn 2026-11-04, todo #218: repaired, a furnace stays off until the player relights it)
                 ctx.check("stone heat furnace: repaired, it declines fuel", !spare.getTakeFuel(), "");
                 boolean wasOn = fuel.burnerOn();
@@ -154,10 +159,10 @@ public final class BurntCases {
             ctx.check("burnt macerator: the copper stays in", in.is(Items.COPPER_INGOT) && !processed(macerator),
                 "in " + in + ", out " + macerator.getInventory().getItem(macerator.outSlotId));
             ctx.check("burnt macerator: no screen, no server menu", !macerator.node.hasGui(Direction.XN)
-                && NodeMenus.menu(0, FakePlayerFactory.getMinecraft(ctx.level()), macerator.node, Direction.XN) == null, "");
+                && NodeMenus.menu(0, ctx.player(), macerator.node, Direction.XN) == null, "");
 
             // the player's use path (MenusOpenCase opens a working one this way)
-            FakePlayer fp = FakePlayerFactory.getMinecraft(ctx.level());
+            FakePlayer fp = ctx.player();
             fp.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             Object[] opened = {null};
             NodeMenus.openedHook = (pl, m) -> opened[0] = m;

@@ -43,6 +43,8 @@ public class ElectricalCableElement extends SixNodeElement {
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
 
     int color;
+    /** Whether it joins only wires of its colour. 1.12 toggled it with the wrench; the toggle is gone (Baughn 2026-11-21:
+     *  obsolete, six-node cables are legacy), and a placed cable keeps what it saved, so old networks keep their joins. */
     int colorCare;
 
     public ElectricalCableElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
@@ -168,25 +170,8 @@ public class ElectricalCableElement extends SixNodeElement {
 	/*	World w = sixNode.coordonate.world();
 		boolean exist = WorldCompat.blockExists(w, 10000, 0, 0);
 		int id = w.getBlockId(10000, 0, 0);*/
-        ItemStack currentItemStack = entityPlayer.getMainHandItem();
-        //int i;
-        if (Utils.isPlayerUsingWrench(entityPlayer)) {
-            colorCare = colorCare ^ 1;
-            Utils.sendMessage(entityPlayer, "Wire color care " + colorCare);
-            sixNode.reconnect();
-        } else if (!Utils.isEmpty(currentItemStack)) {
-            Item item = currentItemStack.getItem();
-
-            GenericItemUsingDamageDescriptor gen = BrushDescriptor.getDescriptor(currentItemStack);
-            if (gen != null && gen instanceof BrushDescriptor) {
-                BrushDescriptor brush = (BrushDescriptor) gen;
-                int brushColor = brush.getColor(currentItemStack);
-                if (brushColor != color && brush.use(currentItemStack, entityPlayer)) {
-                    color = brushColor;
-                    sixNode.reconnect();
-                }
-            }
-        }
+        if (Utils.isPlayerUsingWrench(entityPlayer)) return true;   // (a wire has nothing to turn; the click is used, as on every device)
+        color = brushPaint(entityPlayer, color);
         return false;
     }
 }

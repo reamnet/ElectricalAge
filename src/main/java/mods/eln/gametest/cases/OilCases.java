@@ -78,6 +78,8 @@ public final class OilCases {
         cases.add(new StackedPlant());
         cases.add(new CompactTurbine("compact_turbine_full_power", 3000, 4000, true, 99, 1200));
         cases.add(new CompactTurbine("compact_turbine_short_of_heat", 1000, 4000, true, 99, 1200));
+        cases.add(new CompactTurbine("compact_turbine_shorted", 3000, 4000, false, 99, 1200).shortOhms(0.1));
+        cases.add(new CompactTurbine("compact_turbine_overloaded_not_shorted", 3000, 4000, false, 99, 1200).shortOhms(1.5));
         cases.add(new CompactTurbine("compact_turbine_no_load_bypass", 3000, 4000, false, 99, 1200));
         cases.add(new CompactTurbine("compact_turbine_vents_surplus", 6000, 4000, false, 99, 1200));
         cases.add(new CompactTurbine("compact_turbine_dry", 1000, 0, true, 99, 600));
@@ -274,7 +276,7 @@ public final class OilCases {
         public void measure(TestContext ctx) {
             ItemStack in = sep.getInventory().getItem(sep.inSlotId), out = sep.getInventory().getItem(sep.outSlotId);
             int crudeMb = sep.outlet.view.amount(mods.eln.fluid.NodeFluidView.LIQUID);
-            mods.eln.sim.ElectricalStackMachineProcess proc = Wp10aCases.field(sep, "slowRefreshProcess");
+            mods.eln.sim.ElectricalStackMachineProcess proc = TestContext.field(sep, "slowRefreshProcess");
             ctx.check("oil: separator used the tar sand and made sand", in.isEmpty() && out.is(net.minecraft.world.item.Items.SAND) && out.getCount() == 1,
                 "in " + in + ", out " + out + ", recipes " + mods.eln.Eln.separatorRecipes.getRecipes().size() + ", can " + proc.smeltCan()
                     + ", extra " + proc.extraCondition.getAsBoolean() + ", P " + proc.getPower() + ", state " + proc.processState());
@@ -493,14 +495,14 @@ public final class OilCases {
             // (a purge valve on the tank's top: the well's crude is live, its natural gas comes out in the tank; Baughn
             // 2026-11-10)
             PipeCases.lay(ctx, ctx.at(3, 2 + rise, 1), 0, 8, 0, 8, 8, 12, 8);
-            purgeErr = PipeCases.node(ctx, ctx.at(3, 2 + rise, 1)).addSafetyValveNear(0.5, 8 / 16.0, 0.5, true);
+            purgeErr = ctx.voxelByEntity(ctx.at(3, 2 + rise, 1)).addSafetyValveNear(0.5, 8 / 16.0, 0.5, true);
             // (routed as a player's pipe kit routes it: the flange is 6 px up, off the router's lattice)
             var level = ctx.level();
             var a = mods.eln.node.voxel.PipePlacer.portAtForTests(level, p, net.minecraft.core.Direction.EAST);
             var b = mods.eln.node.voxel.PipePlacer.portAtForTests(level, ctx.at(3, 1 + rise, 1), net.minecraft.core.Direction.WEST);
             if (a == null || b == null) err = "ports not found: " + a + " " + b;
             else {
-                var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(level), 4, a, java.util.List.of(), b);
+                var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(level), 4, a, java.util.List.of(), b);
                 err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(level, 0, r.points, null);
             }
             // (uphill: a full pump tank, more than the riser holds, as a pump on a lake keeps it supplied)
@@ -679,7 +681,7 @@ public final class OilCases {
                     var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
                     if (a == null || b == null || a.y() % 16 != at / 17) err = "ports: " + a + " " + b;
                     else {
-                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(ctx.level()), 4, a, java.util.List.of(), b);
                         err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
                     }
                     ((mods.eln.transparentnode.electricalmachine.OilSeparatorElement) west).putFluid(Oil.CRUDE.get(), 2000);
@@ -728,7 +730,7 @@ public final class OilCases {
                     var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
                     if (a == null || b == null || a.y() % 16 != at / 17) err = "ports: " + a + " " + b + " (want y " + at / 17 + ")";
                     else {
-                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(ctx.level()), 4, a, java.util.List.of(), b);
                         err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
                     }
                     if (out) ((mods.eln.transparentnode.electricalmachine.CompressorPortsElement) west).putLatex(false, 2000);
@@ -749,7 +751,7 @@ public final class OilCases {
                     var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
                     if (a == null || b == null || Math.floorMod(a.z(), 16) != at % 17) err = "ports: " + a + " " + b + " (want z " + at % 17 + ")";
                     else {
-                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(ctx.level()), 4, a, java.util.List.of(), b);
                         err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
                     }
                     switch (variant) {
@@ -779,7 +781,7 @@ public final class OilCases {
                     var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
                     if (a == null || b == null) err = "ports: " + a + " " + b;
                     else {
-                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(ctx.level()), 4, a, java.util.List.of(), b);
                         err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
                     }
                     // (sealed: 1000 mB at once would crush its air past the pump's head; and the pipe between holds a few hundred)
@@ -795,7 +797,7 @@ public final class OilCases {
                     var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
                     if (a == null || b == null) err = "ports: " + a + " " + b;
                     else {
-                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(ctx.level()), 4, a, java.util.List.of(), b);
                         err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
                     }
                     put(ctx, w, mods.eln.oil.Butadiene.SOURCE.get(), 6000);
@@ -809,7 +811,7 @@ public final class OilCases {
                     var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
                     if (a == null || b == null) err = "ports: " + a + " " + b;
                     else {
-                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(ctx.level()), 4, a, java.util.List.of(), b);
                         err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
                     }
                     put(ctx, w, Oil.Cut.DIESEL.source.get(), 6000);
@@ -823,7 +825,7 @@ public final class OilCases {
                     var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
                     if (a == null || b == null) err = "ports: " + a + " " + b;
                     else {
-                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(ctx.level()), 4, a, java.util.List.of(), b);
                         err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
                     }
                     put(ctx, w, Oil.CRUDE.get(), 6000);   // (cold residue barely flows in a pipe, by its species: crude shows the flange works)
@@ -835,7 +837,7 @@ public final class OilCases {
                     var b = mods.eln.node.voxel.PipePlacer.portAtForTests(ctx.level(), e, net.minecraft.core.Direction.WEST);
                     if (a == null || b == null) err = "ports: " + a + " " + b;
                     else {
-                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.PipePlacer.space(ctx.level()), 4, a, java.util.List.of(), b);
+                        var r = mods.eln.node.voxel.PipeRouter.route(mods.eln.node.voxel.RouteView.obstacles(ctx.level()), 4, a, java.util.List.of(), b);
                         err = r.error != null ? r.error : mods.eln.node.voxel.PipePlacer.lay(ctx.level(), 0, r.points, null);
                     }
                     ((mods.eln.transparentnode.resincollector.IndustrialResinCollectorElement) west).putLatex(2000);
@@ -953,7 +955,7 @@ public final class OilCases {
         public void measure(TestContext ctx) {
             for (int sub : new int[]{0, 4}) {
                 Object d = mods.eln.Eln.transparentNodeItem.getDescriptor(sub + (80 << 6));
-                String s = Batch1Cases.field(d, "runningSound");
+                String s = TestContext.field(d, "runningSound");
                 ctx.check("oil: the separator runs to its own sound (" + sub + ")", "eln:separator".equals(s), "" + s);
             }
             boolean asset = OilCases.class.getResource("/assets/eln/sounds/separator.ogg") != null;
@@ -1065,7 +1067,7 @@ public final class OilCases {
         int tick, litAt = -1, at63 = -1;
         mods.eln.sim.IProcess clock;
         /** The thermostat variant's furnaces: regulator (sub-id) and set point each, the hottest each got and its sum over the third minute. */
-        static final int[][] THERMOSTATS = {{0, 600}, {8, 600}, {0, 700}, {8, 700}};
+        static final int[][] THERMOSTATS = {{0, 600}, {8, 600}, {0, 700}, {8, 700}, {8, 300}};
         final mods.eln.transparentnode.FuelHeatFurnaceElement[] th = new mods.eln.transparentnode.FuelHeatFurnaceElement[THERMOSTATS.length];
         final double[] thMax = new double[THERMOSTATS.length], thSum = new double[THERMOSTATS.length];
 
@@ -1092,7 +1094,7 @@ public final class OilCases {
         }
 
         public int width() {
-            return variant.equals("thermostat") ? 9 : 7;
+            return variant.equals("thermostat") ? 11 : 7;
         }
 
         public int ticks() {
@@ -1284,6 +1286,9 @@ public final class OilCases {
                         String what = String.format("peak %.0f, mean %.0f over the third minute, burnt %s, %d ticks", thMax[i], thSum[i] / n, th[i].isBurnt(), tick);
                         ctx.check("fuel furnace: " + name + " never takes it over its setting (the burner's stored heat took it 230 over)", !th[i].isBurnt() && thMax[i] < set + 10, what);
                         ctx.check("fuel furnace: " + name + " holds it there", thSum[i] / n > set - 30 && thSum[i] / n < set + 5, what);
+                        // (the Analogic Regulator is a tuned PID: within 5 K where the burner can reach it (at 600 and 700 the
+                        // natural draught still holds it back in the third minute), Baughn 1573753560456499223)
+                        if (THERMOSTATS[i][0] == 8 && set == 300) ctx.check("fuel furnace: " + name + " holds it within 5 K", Math.abs(thSum[i] / n - set) <= 5, what);
                     }
                 }
                 case "inertia" -> {
@@ -1489,7 +1494,7 @@ public final class OilCases {
             double kg = 0;
             for (var n : new mods.eln.sim.fluid.FluidNode[]{t.vessel, a.getVessel()})
                 if (n != null) kg += n.liquid(id) + n.vapour(id);
-            for (var part : PipeCases.node(ctx, ctx.at(2, 1, 1)).parts)
+            for (var part : ctx.voxelByEntity(ctx.at(2, 1, 1)).parts)
                 if (part instanceof mods.eln.node.voxel.PipePart pp && pp.fluid != null) {
                     mods.eln.fluid.FluidWorld.writeBackOf(pp.fluid);
                     kg += pp.fluid.liquid(id) + pp.fluid.vapour(id);
@@ -2105,7 +2110,7 @@ public final class OilCases {
 
         public void measure(TestContext ctx) {
             mods.eln.Eln.simulator.removeSlowProcess(feed);
-            var run = PipeCases.node(ctx, stub);
+            var run = ctx.voxelByEntity(stub);
             var n = run == null ? null : mods.eln.fluid.FluidWorld.nodeFor(((mods.eln.node.voxel.PipePart) run.parts.get(0)).fluid);
             ctx.line("dry makeup stub: condenser " + (c == null ? "none" : c.getWaila()) + "; stub "
                 + (n == null ? "none" : String.format("%.4f bar, %.0f K, %.3g kg", n.P() / 1e5, n.T(), n.mass())));
@@ -2267,10 +2272,7 @@ public final class OilCases {
                 BlockPos src = pump.front == mods.eln.misc.Direction.ZN ? cable.north() : cable.south();
                 ctx.placeSix(Ids.six("Medium Voltage Cable"), cable);
                 var s = (mods.eln.sixnode.electricalsource.ElectricalSourceElement) ctx.placeSix(Wp11Cases.SOURCE, src);
-                s.networkUnserialize(ctx.stream(out -> {
-                    out.writeByte(mods.eln.sixnode.electricalsource.ElectricalSourceElement.setVoltageId);
-                    out.writeFloat((float) mods.eln.Eln.MVU);
-                }));
+                ctx.setVolts(s, mods.eln.Eln.MVU);
                 boilerAt = pp.west();
                 spot = mods.eln.oil.TankElement.sideSpot(5, mods.eln.oil.InlinePumpElement.LINE_Y);
             }
@@ -2579,7 +2581,7 @@ public final class OilCases {
             PipeCases.lay(ctx, ctx.at(1, 2, 1), 0, 8, 0, 8, 8, 8, 8, 16, 8, 8);
             PipeCases.lay(ctx, ctx.at(2, 2, 1), 0, 0, 8, 8, 16, 8, 8);
             PipeCases.lay(ctx, ctx.at(3, 2, 1), 0, 0, 8, 8, 16, 8, 8);
-            String err = PipeCases.node(ctx, ctx.at(3, 2, 1)).addJoined(new mods.eln.node.voxel.PipePart(0, new int[]{8, 8, 8, 8, 8, 16}), 8, 8, 8);
+            String err = ctx.voxelByEntity(ctx.at(3, 2, 1)).addJoined(new mods.eln.node.voxel.PipePart(0, new int[]{8, 8, 8, 8, 8, 16}), 8, 8, 8);
             if (err != null) throw new IllegalStateException("steam tee: " + err);
             PipeCases.lay(ctx, ctx.at(4, 2, 1), 0, 0, 8, 8, 8, 8, 8, 8, 0, 8);
             PipeCases.lay(ctx, ctx.at(3, 2, 2), 0, 8, 8, 0, 8, 8, 16);
@@ -2590,7 +2592,7 @@ public final class OilCases {
             // the busy one's, which goes on into the boiler's feed flange
             PipeCases.lay(ctx, ctx.at(3, 1, 2), 0, 16, 8, 8, 0, 8, 8);
             PipeCases.lay(ctx, ctx.at(2, 1, 2), 0, 16, 8, 8, 0, 8, 8);
-            err = PipeCases.node(ctx, ctx.at(2, 1, 2)).addJoined(new mods.eln.node.voxel.PipePart(0, new int[]{8, 8, 8, 8, 8, 16}), 8, 8, 8);
+            err = ctx.voxelByEntity(ctx.at(2, 1, 2)).addJoined(new mods.eln.node.voxel.PipePart(0, new int[]{8, 8, 8, 8, 8, 16}), 8, 8, 8);
             if (err != null) throw new IllegalStateException("condensate tee: " + err);
             PipeCases.lay(ctx, ctx.at(1, 1, 2), 0, 16, 8, 8, 8, 8, 8, 8, 8, 0);
             PipeCases.lay(ctx, ctx.at(3, 1, 5), 0, 16, 8, 8, 0, 8, 8);
@@ -3537,7 +3539,8 @@ public final class OilCases {
      * The compact steam turbine (Baughn 2026-10-27, the bootstrap option): heat put straight into its boiler, a 50 V
      * heater on its back as the load, or none. ETA 10%: 3 kW gives its 300 W, 1 kW a third of it; with no load the
      * bypass takes a stone heat furnace's 3 kW at a little over 150 C without venting; 6 kW vents; dry it stops and
-     * doesn't fail; from cold on 1 kW it makes power within 3 minutes.
+     * doesn't fail; from cold on 1 kW it makes power within 3 minutes. Shorted (0.1 ohm, a Ground Cable on its line) it says
+     * so rather than "short of heat"; 1.5 ohm, a heavy load at its current limit, isn't called shorted.
      */
     static final class CompactTurbine implements TestCase {
         final String id;
@@ -3546,6 +3549,8 @@ public final class OilCases {
         final int ticks;
         mods.eln.oil.CompactTurbineElement turbine;
         mods.eln.sim.IProcess fire;
+        mods.eln.sim.mna.component.Resistor shortR;
+        double shortOhms;
         double energy, heatGiven, peakC;
 
         CompactTurbine(String id, double heat, double water0, boolean loaded, double startC, int ticks) {
@@ -3555,6 +3560,11 @@ public final class OilCases {
             this.loaded = loaded;
             this.startC = startC;
             this.ticks = ticks;
+        }
+
+        CompactTurbine shortOhms(double r) {
+            shortOhms = r;
+            return this;
         }
 
         public String id() {
@@ -3579,6 +3589,10 @@ public final class OilCases {
                 load.front = mods.eln.misc.Direction.ZN;
                 load.reconnect();
             }
+            if (shortOhms > 0) {   // (0.1 ohm: a Ground Cable on its line; 1.5 ohm: a heavy load at its current limit)
+                shortR = new mods.eln.sim.mna.component.Resistor(turbine.load, null).setR(shortOhms);
+                mods.eln.Eln.simulator.addElectricalComponent(shortR);
+            }
             turbine.water = water0;
             turbine.boiler.Tc = startC - mods.eln.sim.PhysicalConstant.Tamb;
             mods.eln.Eln.simulator.addSlowProcess(fire = t -> {
@@ -3591,6 +3605,8 @@ public final class OilCases {
 
         public void measure(TestContext ctx) {
             mods.eln.Eln.simulator.removeSlowProcess(fire);
+            String state = turbine.state();
+            if (shortR != null) mods.eln.Eln.simulator.removeElectricalComponent(shortR);
             double p = turbine.powerOut, used = water0 - turbine.water, c = turbine.celsius();
             ctx.line(id + ": " + turbine.getWaila() + String.format("; %.0f J out of %.0f J heat, %.1f mB used, peak %.0f C", energy, heatGiven, used, peakC));
             ctx.check(id + ": not burnt", !turbine.isBurnt(), "");
@@ -3605,6 +3621,12 @@ public final class OilCases {
                     ctx.check(id + ": 1 kW of heat gives ~100 W", p > 80 && p < 110, String.format("%.0f W", p));
                     ctx.check(id + ": it says it is short of heat", turbine.state().contains("short of heat"), turbine.state());
                 }
+                case "compact_turbine_shorted" -> {
+                    ctx.check(id + ": shorted, it says so (not short of heat, which would send the player for chambers)",
+                        state.startsWith("shorted"), state);
+                }
+                case "compact_turbine_overloaded_not_shorted" -> ctx.check(id + ": 1.5 ohm at its current limit (~19 V) isn't called shorted",
+                    !state.startsWith("shorted"), state);
                 case "compact_turbine_no_load_bypass" -> {
                     ctx.check(id + ": no load, a stone furnace's 3 kW: it doesn't vent", turbine.ventW == 0 && peakC < 180, String.format("%.0f C peak", peakC));
                     ctx.check(id + ": the bypass takes it", turbine.bypassW > 2000, String.format("%.0f W", turbine.bypassW));
@@ -3882,7 +3904,7 @@ public final class OilCases {
                         out.writeByte(n.parts.indexOf(valve));
                         out.writeFloat(send[k]);
                         n.networkUnserialize(new java.io.DataInputStream(new java.io.ByteArrayInputStream(bos.toByteArray())),
-                            (net.minecraft.server.level.ServerPlayer) net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(ctx.level()));
+                            (net.minecraft.server.level.ServerPlayer) ctx.player());
                         got[k] = valve.setPa;
                     } catch (java.io.IOException e) {
                         got[k] = -1;
@@ -3952,7 +3974,7 @@ public final class OilCases {
             PipeCases.lay(ctx, ctx.at(1, 2, 1), 1, 8, 0, 8, 8, 8, 8, 16, 8, 8);   // up out of the boiler, then east
             PipeCases.lay(ctx, ctx.at(2, 2, 1), 1, 0, 8, 8, 16, 8, 8);
             PipeCases.lay(ctx, ctx.at(3, 2, 1), 1, 0, 8, 8, 8, 8, 8, 8, 0, 8);   // down into the turbine
-            valveNode = PipeCases.node(ctx, ctx.at(2, 2, 1));
+            valveNode = ctx.voxelByEntity(ctx.at(2, 2, 1));
             err = valveNode.addSafetyValveNear(0.5, 8 / 16.0, 0.5);
             for (var p : valveNode.parts) if (p instanceof mods.eln.node.voxel.SafetyValvePart sv) sv.setPa = 13e5;
             mods.eln.Eln.simulator.addSlowProcess(fire = dt -> {
@@ -4220,15 +4242,11 @@ public final class OilCases {
         }
 
         static ItemStack use(TestContext ctx, mods.eln.node.transparent.TransparentNodeElement e, ItemStack held) {
-            var p = Wp10bCases.player(ctx);
-            p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
-            p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
-            try {
+            ctx.player().setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+            return ctx.holding(held, p -> {
                 e.node.onBlockActivated(p, mods.eln.misc.Direction.YP, 0.5F, 1F, 0.5F);
                 return p.getMainHandItem().copy();
-            } finally {
-                p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            }
+            });
         }
 
         public void build(TestContext ctx) {
@@ -4465,7 +4483,7 @@ public final class OilCases {
         double ngIn(TestContext ctx) {
             int id = ng();
             double kg = tank.vessel.vapour(id) + flare.vessel.vapour(id);
-            for (var part : PipeCases.node(ctx, ctx.at(2, 1, 1)).parts)
+            for (var part : ctx.voxelByEntity(ctx.at(2, 1, 1)).parts)
                 if (part instanceof mods.eln.node.voxel.PipePart pp && pp.fluid != null) {
                     mods.eln.fluid.FluidWorld.writeBackOf(pp.fluid);
                     kg += pp.fluid.vapour(id);

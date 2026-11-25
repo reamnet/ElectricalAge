@@ -48,6 +48,7 @@ compressorb/compressorb.obj
 computer/computer.obj
 condenser200v/condenser200v.obj
 condenser50v/condenser50v.obj
+condensercoil/condensercoil.obj
 coveledstrip/coveledstrip.obj
 crystalcascadechandelier/crystalcascadechandelier.obj
 crystaltierchandelier/crystaltierchandelier.obj
@@ -115,6 +116,7 @@ gooseneckservicemast/gooseneckservicemast.obj
 grandempirechandelier/grandempirechandelier.obj
 grandhalochandelier/grandhalochandelier.obj
 gridconverter/gridconverter.obj
+ground_radar/ground_radar.obj
 groundcable/groundcable.obj
 gumdropsidewalklight/gumdropsidewalklight.obj
 halloweenbatlight/halloweenbatlight.obj
@@ -308,6 +310,7 @@ steelriser230/steelriser230.obj
 steelriser69/steelriser69.obj
 steeltransmission230/steeltransmission230.obj
 steeltransmission69/steeltransmission69.obj
+stillpot/stillpot.obj
 stonecache/stonecache.obj
 stonefurnace/stonefurnace.obj
 stonewallwashlight/stonewallwashlight.obj

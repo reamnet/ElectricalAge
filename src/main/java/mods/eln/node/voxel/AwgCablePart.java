@@ -124,7 +124,7 @@ public final class AwgCablePart extends VoxelPart {
         if (level instanceof ServerLevel server && !player.isSpectator() && player.getAbilities().mayBuild) {
             var spool = player.getMainHandItem();
             if (selection(server, player, spool) == null) {
-                SELECTIONS.put(player, new Selection(spool, server, null, null, server.getGameTime() + CablePlacer.IDLE_TICKS));
+                SELECTIONS.put(player, new Selection(spool, server, null, null, server.getGameTime() + RoutePlacer.IDLE_TICKS));
                 tell(player, "AWG route: sneak-right-click the first support face");
             } else {
                 SELECTIONS.remove(player);
@@ -176,7 +176,7 @@ public final class AwgCablePart extends VoxelPart {
         if (selected != null) {
             if (!canRouteIn(level, pos, mount, player)) return InteractionResult.FAIL;
             if (selected.start() == null) {
-                SELECTIONS.put(player, new Selection(spool, level, pos, mount, level.getGameTime() + CablePlacer.IDLE_TICKS));
+                SELECTIONS.put(player, new Selection(spool, level, pos, mount, level.getGameTime() + RoutePlacer.IDLE_TICKS));
                 tell(player, "AWG route start set. Sneak-right-click the destination support face");
             } else if (!selected.start().equals(pos) || selected.mount() != mount) {
                 String error;

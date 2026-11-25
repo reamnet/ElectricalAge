@@ -241,20 +241,33 @@ public class Utils {
         return header + plotAmpere(value);
     }
 
+    /**
+     * A temperature on the simulation's Tc scale (kelvin above PhysicalConstant.Tamb) in degrees Celsius, as
+     * Meters.celsius shows it: "85.0°C". Screens use this; meter lines the padded form below. An absolute temperature
+     * in °C goes to Meters.celsius, a difference to Meters.kelvin.
+     */
+    public static String plotCelsius(double relative) {
+        return mods.eln.api.Meters.celsius(relative + mods.eln.sim.PhysicalConstant.Tamb);
+    }
+
     public static String plotCelsius(String header, double value) {
-        value += mods.eln.sim.PhysicalConstant.Tref - mods.eln.sim.PhysicalConstant.TCelsius;
         if (!header.equals(""))
             header += " ";
-        return header + mods.eln.api.Meters.celsius(value) + " ";
+        return header + plotCelsius(value) + " ";
+    }
+
+    /**
+     * A share (1 is 100 %) as a whole percentage, "50%", rounded down so that only a full battery or tank reads "100%"
+     * (the form most of EA's text had already; 1.12's meters showed "50.0%").
+     */
+    public static String plotPercent(double value) {
+        return (long) Math.floor(value * 100.0 + 1e-9) + "%";
     }
 
     public static String plotPercent(String header, double value) {
         if (!header.equals(""))
             header += " ";
-        if (value >= 1.0)
-            return header + String.format("%3.0f", value * 100.0) + "%   ";
-        else
-            return header + String.format("%3.1f", value * 100.0) + "%   ";
+        return header + plotPercent(value) + "   ";
     }
 
     public static String plotEnergy(double value) {
@@ -345,6 +358,11 @@ public class Utils {
 
     public static double limit(double value, double min, double max) {
         return Math.max(Math.min(value, max), min);
+    }
+
+    /** value, or fallback when it is NaN or infinite (a saved value from a run that went non-finite). */
+    public static double finiteOr(double value, double fallback) {
+        return Double.isFinite(value) ? value : fallback;
     }
 
     public static void printFunction(FunctionTable func, double start, double end, double step) {
@@ -891,7 +909,7 @@ public class Utils {
         }
     }
 
-    /** Does the device's name already say its voltage ("48V Turbine")? Then a "Voltage" tooltip line repeats it (Baughn:
+    /** Does the device's name already say its voltage ("48V Steam Turbine")? Then a "Voltage" tooltip line repeats it (Baughn:
      *  pointless). */
     public static boolean nameShowsVoltage(String name, double u) {
         return name != null && java.util.regex.Pattern.compile("(^|\\D)" + Math.round(u) + "V\\b").matcher(name).find();

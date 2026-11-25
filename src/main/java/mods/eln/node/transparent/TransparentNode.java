@@ -89,6 +89,7 @@ public class TransparentNode extends Node implements mods.eln.bus.BusPeer, mods.
 
     @Override
     public void physicalSelfDestruction(float strength) {
+        if (!isDestructing() && element != null) element.onSelfDestruction();
         if (!mods.eln.transparentnode.cord.OutletWall.restore(this, false)) super.physicalSelfDestruction(strength);
     }
 

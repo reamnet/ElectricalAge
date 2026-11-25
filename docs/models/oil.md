@@ -16,7 +16,8 @@ dial, handwheel, bolt ring, composed preview); `Mc` is unchanged. Each script wr
 | model | parts | triangles | descriptor | replaces |
 |---|---|---|---|---|
 | electricheater50v / 200v | main | 708 / 814 | ElectricHeaterDescriptor (draws main/dissipator/body if present) | largerheostat |
-| boiler | main | 1236 | BoilerDescriptor (draws main/body/furnace if present) | electricfurnace |
+| boiler | main | 1332 | BoilerDescriptor (draws main/body/furnace if present) | electricfurnace |
+| largeboiler | main, level, needle (+ .txt origins) | ~3000 | BoilerDescriptor.twoByTwo (drawn full size, 0..32 px, from the origin block) | |
 | oilpump50v / 200v | main | 1426 / 1462 | OilPumpDescriptor (draws main) | compressora / compressorb |
 | tarsandseparator50v / 200v | main, rot1, rot2, oil (+ .txt origins) | ~1600 / ~1700 | OilSeparatorDescriptor (the oil, then MaceratorDescriptor's draw) | maceratora / maceratorb |
 
@@ -33,6 +34,21 @@ heat-collector base. Riveted horizontal drum (axis front-back) on red saddles, d
 gauge glass between brass cocks (water level), pressure gauge. Top: steam dome with the outlet flange, lever safety
 valve with its weight. z+ flank: feedwater inlet with a check valve and handwheel. Back head: manhole. The fittings
 face the boiler's front; when a heater is placed against that face they are hidden behind it.
+
+## Large Boiler (`LargeBoiler`, 2x2x2)
+Baughn (2026-11-23, todo #588): the drum is the device, not a boiler in a box, and no firebox (heaters outside feed
+it through its heat plates). A riveted drum along x (r 12, 20 sides) with dished heads and four seam bands, in two
+steel box-girder cradles (x 12.5 and 19.5: flanges, stiffeners, end plates, a stepped saddle and knee webs) across a
+low cast-iron skid. Six heat plates, one on each lower block face of the back and flanks (one row since Baughn
+2026-11-23: two rows looked bad and weren't useful), each with a heat-tinted shoe and a copper heat pipe (r 1.75,
+darksteel collars at the bends) up and in to the drum: the flank pipes beside the cradles' ends into its lower flank,
+the back ones into the back head, each through a darksteel flange. Crest: a steam dome over the
+rear blocks whose header runs across to a riser under each steam flange (stayed to the drum), and a safety-valve dome
+over the front (brass valve, lever and weight). Front head: manway with yoke, brass nameplate, gauge glass (part
+level, its column from y 16 so it takes the water cell's blue half) with the level transmitter's box and line down to
+the signal plate, and the pressure dial (part needle) on a siphon stalk. The feed flange's copper line climbs the
+front right corner through the check valve and turns back into the drum's flank; a blowdown cock at the back head's
+foot. No hitbox (its blocks are whole blocks).
 
 ## Oil pump (`OilPump`)
 Power on all four faces (floor terminal plate + junction box each). Wellhead at the bottom centre over the casing:

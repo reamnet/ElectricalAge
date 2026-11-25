@@ -17,7 +17,6 @@ import mods.eln.node.NodeBase;
 import mods.eln.node.NodeManager;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.transparent.TransparentNodeElement;
-import mods.eln.registry.ElnDeviceRegistry;
 import mods.eln.registry.batch.Wp11Content;
 import mods.eln.gametest.TestCase;
 import mods.eln.gametest.TestContext;
@@ -28,10 +27,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
-import java.lang.reflect.Field;
 import java.util.List;
+
+import static mods.eln.gametest.cases.Wp10aCases.rs;
+import static mods.eln.gametest.cases.Wp10aCases.off;
+import static mods.eln.gametest.TestContext.field;
 
 /**
  * Selftest cases of device batch Wp11 (registry/batch/Wp11Content). Feeds use an LVU electrical source and one LV
@@ -62,6 +63,7 @@ public final class Wp11Cases {
         cases.add(new TurbineIdleCase());
         cases.add(new PoleCase());
         cases.add(new PoleGearCase());
+        cases.add(new PoleLineOfSightCase());
         cases.add(new FrozenPoleCase());
         cases.add(new EnergyConverterCase());
         cases.add(new LegacyExporterCase());
@@ -71,40 +73,12 @@ public final class Wp11Cases {
 
     // ---- helpers ----
 
-    static double rs() {
-        return ElnDeviceRegistry.lowVoltageCableDescriptor.electricalRs;
-    }
-
-    static BlockPos off(BlockPos p, Direction d) {
-        int[] v = {0, 0, 0};
-        d.applyTo(v, 1);
-        return p.offset(v[0], v[1], v[2]);
-    }
-
-    @SuppressWarnings("unchecked")
-    static <T> T field(Object o, String name) {
-        for (Class<?> c = o.getClass(); c != null; c = c.getSuperclass()) {
-            try {
-                Field f = c.getDeclaredField(name);
-                f.setAccessible(true);
-                return (T) f.get(o);
-            } catch (NoSuchFieldException ignored) {
-                // superclass
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        throw new IllegalStateException("no field " + name + " in " + o.getClass());
-    }
 
     /** LVU source at `src` feeding an LV cable at `cable` (both on the floor). */
     static SixNodeElement feed(TestContext ctx, BlockPos cable, BlockPos src) {
         SixNodeElement c = ctx.placeSix(LV_CABLE, cable);
         ElectricalSourceElement s = (ElectricalSourceElement) ctx.placeSix(SOURCE, src);
-        s.networkUnserialize(ctx.stream(out -> {
-            out.writeByte(ElectricalSourceElement.setVoltageId);
-            out.writeFloat((float) U);
-        }));
+        ctx.setVolts(s, U);
         return c;
     }
 
@@ -282,7 +256,7 @@ public final class Wp11Cases {
         }
 
         static boolean fit(TestContext ctx, ElectricalPoleElement pole, ItemStack held, double px, double pz) {
-            var p = Wp9aCases.player(ctx);
+            var p = ctx.player();
             p.setPos(px, pole.coordonate().y, pz);
             p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
             try {
@@ -395,7 +369,7 @@ public final class Wp11Cases {
             EnergyConverterElnToOtherDescriptor d = Wp11Content.elnToOtherLvu;
             if (d == null) throw new IllegalStateException("energy converters disabled (ElnToOtherEnergyConverterEnable)");
             // front = player view inverse: yaw 90 (looking -X) -> front XP, towards the cable at x = 2
-            net.neoforged.neoforge.common.util.FakePlayer player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(ctx.world());
+            net.neoforged.neoforge.common.util.FakePlayer player = ctx.player();
             float yaw = player.getYRot(), pitch = player.getXRot();
             player.setYRot(90f);
             player.setXRot(0f);
@@ -615,7 +589,7 @@ public final class Wp11Cases {
         feed(ctx, ctx.at(2, 1, 1), ctx.at(3, 1, 1));
         EnergyConverterElnToOtherDescriptor d = Wp11Content.elnToOtherLvu;
         if (d == null) throw new IllegalStateException("energy converters disabled (ElnToOtherEnergyConverterEnable)");
-        net.neoforged.neoforge.common.util.FakePlayer player = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(ctx.world());
+        net.neoforged.neoforge.common.util.FakePlayer player = ctx.player();
         float yaw = player.getYRot(), pitch = player.getXRot();
         player.setYRot(90f);
         player.setXRot(0f);
@@ -745,4 +719,48 @@ public final class Wp11Cases {
             }
         }
     }
+    /**
+     * A span needs a clear line between the poles (AdventurAgent 1573709864033845248: one went straight through a stone
+     * wall; 1.12's check was a stub). Two poles 5 apart see each other; a stone wall between two others blocks it.
+     */
+    static final class PoleLineOfSightCase implements TestCase {
+        boolean clear, walled;
+
+        public String name() {
+            return "wp11 pole span needs line of sight";
+        }
+
+        public int width() {
+            return 11;
+        }
+
+        public int height() {
+            return 12;
+        }
+
+        public int depth() {
+            return 9;
+        }
+
+        public int floorDepth() {
+            return 9;   // (poles need a floor under both pairs)
+        }
+
+        public void build(TestContext ctx) {
+            var a = (mods.eln.gridnode.GridElement) ctx.placeTransparent(UTILITY_POLE, ctx.at(1, 1, 1));
+            var b = (mods.eln.gridnode.GridElement) ctx.placeTransparent(UTILITY_POLE, ctx.at(7, 1, 1));
+            clear = a.lineOfSight(b, Direction.XP, Direction.XN);
+            var c = (mods.eln.gridnode.GridElement) ctx.placeTransparent(UTILITY_POLE, ctx.at(1, 1, 4));
+            var d = (mods.eln.gridnode.GridElement) ctx.placeTransparent(UTILITY_POLE, ctx.at(7, 1, 4));
+            for (int y = 1; y <= 11; y++)
+                for (int z = 3; z <= 5; z++) ctx.level().setBlockAndUpdate(ctx.at(4, y, z), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+            walled = c.lineOfSight(d, Direction.XP, Direction.XN);
+        }
+
+        public void measure(TestContext ctx) {
+            ctx.check("poles: two poles with nothing between see each other", clear, "");
+            ctx.check("poles: a stone wall between two poles blocks the span", !walled, "");
+        }
+    }
+
 }

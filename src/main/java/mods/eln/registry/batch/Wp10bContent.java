@@ -30,7 +30,7 @@ import static mods.eln.i18n.I18N.*;
 import static mods.eln.registry.ElnDeviceRegistry.*;
 
 /**
- * Device batch Wp10b (1.12 port): transparent-node generators and thermal: solar, wind, water, turbine, heat furnace, fuel generators, dissipators, large rheostat, antennas, teleporter, turret.
+ * Device batch Wp10b (1.12 port): transparent-node generators and thermal: solar, wind, water, heat furnace, fuel generators, dissipators, large rheostat, antennas, teleporter, turret.
  * Called from ElnContentImpl (one line), after the core slice, in every lifecycle phase.
  * Sources: m1-exclude-wp10b.txt (delete lines to build them). Not yet ported registrations:
  * registry/pending/Wp10bPending.java (excluded). To port a device: move its register method (and the fields it
@@ -41,7 +41,7 @@ public class Wp10bContent implements ElnContent {
     @Override
     public void preInit() {
         registerHeatFurnace(3);
-        registerTurbineElectrical(4); // the two TurbineDescriptor sub-UIDs
+        registerTurbineElectrical(4); // ForkPatch retains functional legacy heat turbines and their saved IDs.
         registerElectricalAntenna(7);
         // registerSolarPanel(48): 26.x port, registered with the core in ElnDeviceRegistry.registerBatch1 (P1 multiblock check)
         registerWindTurbine(49);
@@ -107,7 +107,9 @@ public class Wp10bContent implements ElnContent {
                 // nominalCombustibleEnergy,
                 4, 500,// int combustionChamberMax (Baughn 2026-10-26: 4, was 2, with turbines by the expansion),double
                 // combustionChamberPower,
-                new ThermalLoadInitializerByPowerDrop(780, -100, 10, 2) // thermal
+                // thermal: C = 1 kW x heatingTao / 780 K. Baughn 1573756878134185985: a stone furnace's mass, ~600 J/K (was
+                // 10 s, ~13 J/K: four chambers heated it 190 K/s, past any regulator); a minute from cold to 250 C at full fire
+                new ThermalLoadInitializerByPowerDrop(780, -100, 468, 2)
             );
             desc.repairPart = "Combustion Chamber";   // (4 stone; Baughn: not a Machine Block, which cost more than the furnace)
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);

@@ -39,4 +39,17 @@ public class CompositionTest {
         String c = EaUnits.composition(n);
         assertTrue(c.matches("[0-9.]+ g air, 42\\.[0-9] B diesel, [0-9.]+ g steam, 56\\.[0-9] B water"), c);
     }
+
+    /** Tank readouts: both sides as volume, the fill's buckets rounded down so it doesn't read full early. */
+    @Test
+    void tankReadsAsVolumes() {
+        assertEquals("350 mB / 500 mB", EaUnits.tank(350, 500));
+        assertEquals("700 mB / 4.0 B", EaUnits.tank(700, 4000));
+        assertEquals("2.3 B / 4.0 B", EaUnits.tank(2351, 4000));
+        assertEquals("3.9 B / 4.0 B", EaUnits.tank(3999, 4000));
+        assertEquals("4.0 B / 4.0 B", EaUnits.tank(4001, 4000));
+        assertEquals("0 mB / 4.0 B", EaUnits.tank(0, 4000));
+        assertEquals("4.0 B / 4.0 B", EaUnits.tank(3999.99999, 4000));   // (a full tank's mass/rho rounding)
+        assertEquals("499 mB / 500 mB", EaUnits.tank(499.6, 500));
+    }
 }

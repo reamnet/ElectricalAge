@@ -76,7 +76,7 @@ public final class ForkPatchSolarRoofCases {
                 c.check("roof: return terminal is a real node in an uphill ghost",ground instanceof mods.eln.misc.GhostPowerNode && Eln.ghostManager.getGhost(offset)!=null && ((mods.eln.misc.GhostPowerNode)ground).getLoad()!=null,offset.toString());
             }
             SolarCases.checkLoadedCurve(c,panel,load);
-            SolarPannelSlowProcess slow=Batch1Cases.field(panel,"slowProcess");
+            SolarPannelSlowProcess slow=mods.eln.gametest.TestContext.field(panel,"slowProcess");
             c.check("roof: actual noon production follows pitched incidence",slow.getSolarLight()>.45 && slow.getSolarLight()<.9,"light "+slow.getSolarLight());
             if(d.canRotate) {
                 try {

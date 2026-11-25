@@ -149,7 +149,7 @@ object ForkPatchWireMachineCases {
                 repeat(7) { i->if(i%2==0) { cached.add(sample(true));uncached.add(sample(false)) }else { uncached.add(sample(false));cached.add(sample(true)) } }
                 fun rows(values:List<LongArray>)=values.joinToString(",","[","]") { it.joinToString(",","[","]") }
                 c.line("WIRE_MANUFACTURING_CACHE_DIAGNOSTIC {\"iterations\":1000,\"cached\":${rows(cached)},\"uncached\":${rows(uncached)}}")
-                c.check("wire machine: repeated readiness/options checks do not create work or rebuild stable LU",e.progressMeters==progress && e.acceptedJoules==joules && e.options()===choices && system.matrixVersion==version && Batch1Cases.field<Boolean>(system,"matrixValid"),"")
+                c.check("wire machine: repeated readiness/options checks do not create work or rebuild stable LU",e.progressMeters==progress && e.acceptedJoules==joules && e.options()===choices && system.matrixVersion==version && mods.eln.gametest.TestContext.field<Boolean>(system,"matrixValid"),"")
                 panel(c)
             }finally { clean() }
         }

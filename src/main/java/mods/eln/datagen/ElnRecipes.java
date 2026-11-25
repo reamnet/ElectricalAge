@@ -990,35 +990,41 @@ public final class ElnRecipes extends ElnRecipesBase {
     }
 
     public static void recipeTurbine() {
-        // 26.x (Baughn): the 50V/200V heat turbines are replaced by the small steam turbines (boiler + 50V/200V Steam
-        // Turbine); placed ones keep working, but they're no longer made
+        // 26.x (Baughn): the 48V/230V heat turbines gave way to the small steam turbines (boiler + 48V/230V Steam
+        // Turbine), and are removed (Baughn 2026-11-23)
+        // the shaft devices as what they are (Baughn 2026-11-25): a turbine is blade stages on a shaft (the Joint) in a
+        // casing, a generator a winding (Copper Coil) round a laminated core on the shaft; no motors in a generator
         addRecipe(findItemStack("Generator"),
-            "mmm",
-            "ama",
-            " ME",
-            'm', findItemStack("Advanced Electrical Motor"),
+            "cFc",
+            "cJc",
+            "IME",
+            'c', findItemStack("Copper Coil"),
+            'F', findItemStack("Average Ferromagnetic Core"),
+            'J', findItemStack("Joint"),
+            'I', "plateIron",
             'M', findItemStack("Advanced Machine Block"),
-            'a', firstExistingOre("ingotAluminum", "ingotIron"),
             'E', findItemStack("Copper Cable")
         );
+        // the HP turbine: four stages in an alloy casing that holds 20 bar
         addRecipe(findItemStack("Steam Turbine"),
-            " a ",
-            "aAa",
-            " M ",
-            'a', firstExistingOre("ingotAluminum", "ingotIron"),
-            'A', firstExistingOre("blockAluminum", "blockIron"),
+            "PBP",
+            "BJB",
+            "PMP",
+            'P', "plateAlloy",
+            'B', findItemStack("Turbine Blade Set"),
+            'J', findItemStack("Joint"),
             'M', findItemStack("Advanced Machine Block")
         );
         // Baughn 2026-10-29: the 8 kW generator (two 4 kW ones' worth, a bigger winding) and the small shaft motor
         addRecipe(findItemStack("8kW Generator"),
-            "mmm",
-            "GaG",
-            " ME",
-            'm', findItemStack("Advanced Electrical Motor"),
+            "cOc",
+            "GJG",
+            " M ",
+            'c', findItemStack("Copper Coil"),
+            'O', findItemStack("Optimal Ferromagnetic Core"),
             'G', findItemStack("Generator"),
-            'M', findItemStack("Advanced Machine Block"),
-            'a', firstExistingOre("ingotAluminum", "ingotIron"),
-            'E', findItemStack("Copper Cable")
+            'J', findItemStack("Joint"),
+            'M', findItemStack("Advanced Machine Block")
         );
         addRecipe(findItemStack("230V Shaft Motor"),
             " m ",
@@ -1078,13 +1084,14 @@ public final class ElnRecipes extends ElnRecipesBase {
             'B', stack(Items.IRON_BARS),
             'E', findItemStack("Copper Cable")
         );
+        // the LP turbine: more and bigger stages, a light iron casing (it runs under 1.5 bar); no HP turbine inside it
         addRecipe(findItemStack("LP Steam Turbine"),
-            "aAa",
-            "ASA",
-            "aMa",
-            'a', firstExistingOre("ingotAluminum", "ingotIron"),
-            'A', firstExistingOre("blockAluminum", "blockIron"),
-            'S', findItemStack("Steam Turbine"),
+            "BIB",
+            "BJB",
+            "BMB",
+            'B', findItemStack("Turbine Blade Set"),
+            'I', "plateIron",
+            'J', findItemStack("Joint"),
             'M', findItemStack("Advanced Machine Block")
         );
         addRecipe(findItemStack("Plant Steam Condenser"),
@@ -1103,22 +1110,33 @@ public final class ElnRecipes extends ElnRecipesBase {
             'c', findItemStack("Copper Thermal Cable"),
             'I', findItemStack("Iron Tank")
         );
-        // cheap on purpose (Baughn 2026-10-29): what a water slug costs
+        // two plates on a hub (Baughn 2026-11-25: four would be too dear with four to six in each turbine; one looks silly);
+        // still the cheap repair for water-stripped blades (Baughn 2026-10-29)
         addRecipe(findItemStack("Turbine Blade Set"),
-            "I I",
+            "P  ",
             " S ",
-            "I I",
-            'I', stack(Items.IRON_INGOT),
+            "  P",
+            'P', "plateIron",
             'S', stack(Items.STICK)
         );
+        addRecipe(findItemStack("Hot Blade Set"),
+            "T  ",
+            " A ",
+            "  T",
+            'T', findItemStack("Tungsten Ingot"),
+            'A', "plateAlloy"
+        );
+        // the gas turbine: a compressor (cold blades), a combustor, the hot section, and a starter motor
         addRecipe(findItemStack("Gas Turbine"),
-            "msH",
-            "sSs",
-            " M ",
-            'm', findItemStack("Advanced Electrical Motor"),
-            'H', findItemStack("Copper Thermal Cable"),
-            's', firstExistingOre("ingotSteel", "ingotIron"),
-            'S', firstExistingOre("blockSteel", "blockIron"),
+            "BCH",
+            "PJP",
+            "eM ",
+            'B', findItemStack("Turbine Blade Set"),
+            'C', findItemStack("Combustion Chamber"),
+            'H', findItemStack("Hot Blade Set"),
+            'P', "plateAlloy",
+            'J', findItemStack("Joint"),
+            'e', findItemStack("Electrical Motor"),
             'M', findItemStack("Advanced Machine Block")
         );
 
@@ -1616,6 +1634,24 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', stack(Items.CAULDRON),
             'M', findItemStack("Machine Block"),
             'H', findItemStack("230V Copper Heating Corp"));
+        // Radar Goggles (Baughn: glass panes, leather, a probe chip and two Advanced Chips)
+        addRecipe(findItemStack("Radar Goggles", 1),
+            "GLG",
+            "ACA",
+            'G', stack(net.minecraft.world.item.Items.GLASS_PANE),
+            'L', stack(net.minecraft.world.item.Items.LEATHER),
+            'A', findItemStack("Advanced Chip"),
+            'C', findItemStack("Electrical Probe Chip"));
+        // (the Ground Radar w/Goggles: GogglesUpgradeRecipe, which keeps the radar's batteries; its JSON is in main resources)
+        // the Ground Radar: a signal antenna over an iron sled, a probe chip to read the echoes, a machine block
+        addRecipe(findItemStack("Ground Radar", 1),
+            " A ",
+            "PEP",
+            "PMP",
+            'A', findItemStack("Signal Antenna"),
+            'P', findItemStack("Iron Plate"),
+            'E', findItemStack("Electrical Probe Chip"),
+            'M', findItemStack("Machine Block"));
         // the Steam Cracker: a firebox (an advanced machine block, alloy) with tungsten heaters (it runs hot), the drum an
         // iron tank
         addRecipe(findItemStack("Steam Cracker", 1),
@@ -2667,12 +2703,13 @@ public final class ElnRecipes extends ElnRecipesBase {
             'E', findItemStack("Copper Cable"),
             'm', findItemStack("Advanced Electrical Motor"));
         // the bootstrap turbine (Baughn 2026-10-27): cheaper than the 50V Steam Turbine and no boiler to buy; a bucket for
-        // its tank, copper plates for its condenser
+        // its tank, copper plates for its condenser. Any mod's copper plates (c:plates/copper), not only EA's own, so it
+        // can be made by hand in packs with hammers (Baughn 1573669111920066631: EA's plates need a powered Plate Machine)
         addRecipe(findItemStack("48V Compact Steam Turbine", 1),
             "CBC",
             "ImI",
             "IEI",
-            'C', "plateCopper",
+            'C', mods.eln.misc.OreDictTags.tag("plateCopper"),
             'B', stack(Items.BUCKET),
             'I', stack(Items.IRON_INGOT),
             'm', findItemStack("Electrical Motor"),
@@ -2817,6 +2854,24 @@ public final class ElnRecipes extends ElnRecipesBase {
             'B', findItemStack("Boiler"),
             't', findItemStack("Copper Thermal Cable"),
             'P', findItemStack("Alloy Plate"));
+
+        // the Still Pot (refinery M2): a copper kettle, its shell's thermal cable, a bucket for a sight glass
+        addRecipe(findItemStack("Still Pot", 1),
+            "PBP",
+            "PtP",
+            "PPP",
+            'B', stack(Items.BUCKET),
+            't', findItemStack("Copper Thermal Cable"),
+            'P', findItemStack("Copper Plate"));
+
+        // the Condenser Coil: a copper coil (copper cable) in an iron drum, a bucket for its sump
+        addRecipe(findItemStack("Condenser Coil", 1),
+            "PcP",
+            "PcP",
+            "PBP",
+            'B', stack(Items.BUCKET),
+            'c', findItemStack("Copper Thermal Cable"),
+            'P', findItemStack("Iron Plate"));
 
         addRecipe(findItemStack("48V Compressor", 1),
             "IRI",

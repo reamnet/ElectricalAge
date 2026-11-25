@@ -1,0 +1,107 @@
+{
+ "column": [
+  {
+   "text": "title",
+   "sample": "Ground Radar"
+  },
+  {
+   "row": [
+    {
+     "canvas": "top",
+     "width": 144,
+     "height": 144
+    },
+    {
+     "canvas": "side",
+     "width": 144,
+     "height": 144
+    }
+   ],
+   "fill": true
+  },
+  {
+   "row": [
+    {
+     "button": "up",
+     "sample": "▲"
+    },
+    {
+     "button": "down",
+     "sample": "▼"
+    },
+    {
+     "text": "depth",
+     "sample": "123 m down (Y -60), 456 m across, 12 m cells"
+    }
+   ],
+   "fill": true
+  },
+  {
+   "row": [
+    {
+     "slider": "range",
+     "sample": [
+      "Range: 144 m across"
+     ],
+     "fill": true
+    },
+    {
+     "slider": "detail",
+     "sample": [
+      "Detail: 4x"
+     ],
+     "fill": true
+    }
+   ],
+   "fill": true
+  },
+  {
+   "row": [
+    {
+     "text": "addrl",
+     "sample": "Bus address"
+    },
+    {
+     "field": "addr",
+     "chars": 4
+    },
+    {
+     "text": "busstate",
+     "sample": "No address (17 to 255)"
+    }
+   ],
+   "fill": true
+  },
+  {
+   "row": [
+    {
+     "slot": "0"
+    },
+    {
+     "slot": "1"
+    },
+    {
+     "button": "scan",
+     "sample": "Scan"
+    },
+    {
+     "button": "view",
+     "sample": "Enter view"
+    },
+    {
+     "text": "status",
+     "sample": "Scan 7.0 kJ, ~35 s. Batteries 100%, scanned 59 min ago"
+    }
+   ],
+   "fill": true
+  },
+  {
+   "text": "inventory",
+   "sample": "Inventory"
+  },
+  {
+   "inventory": true
+  }
+ ],
+ "gap": 4
+}

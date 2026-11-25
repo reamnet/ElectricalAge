@@ -275,6 +275,13 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     }
 
     /**
+     * Destroyed by a failure (NodeBase.physicalSelfDestruction: no break, nothing dropped): let go of what it owns outside
+     * its block, as a multiblock's ghost cells (a burst Still Pot left its seven ghosts behind). Default: nothing.
+     */
+    public void onSelfDestruction() {
+    }
+
+    /**
      * Lost its support (or a ghost of its group): broken like a block, with the break effects, and dropped with its
      * contents by the block entity's removal (onBreakElement). Baughn: devices vanished instead of dropping, because
      * physicalSelfDestruction (the failure path) drops nothing.
@@ -392,10 +399,12 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
 
     /**
      * The wrench key and a click turn the device a quarter turn, where it may turn (Baughn 2026-10-31: placing a
-     * machine had turned its neighbours, and nothing turned them back). True when it turned; most devices don't.
+     * machine had turned its neighbours, and nothing turned them back). True when it turned. A fluid device that
+     * implements FluidPlacement.Turnable turns by it; one with more to turn overrides this (an antenna's terminals, a
+     * shaft machine's shaft); most devices don't turn.
      */
     public boolean wrenchTurn(Player player) {
-        return false;
+        return mods.eln.fluid.FluidPlacement.turn(this);
     }
 
 

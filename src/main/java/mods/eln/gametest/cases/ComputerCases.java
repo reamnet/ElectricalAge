@@ -23,17 +23,11 @@ public final class ComputerCases {
         cases.add(new PausesWithoutPower());
         cases.add(new TalkInDataPackets());
         cases.add(new MonitorOnTop());
+        cases.add(new ResetsAfterRunningOutOfMemory());
     }
 
     /** The source behind the last computer powered() placed. */
     static ElectricalSourceElement lastSource;
-
-    static void volts(TestContext ctx, ElectricalSourceElement s, float v) {
-        s.networkUnserialize(ctx.stream(out -> {
-            out.writeByte(ElectricalSourceElement.setVoltageId);
-            out.writeFloat(v);
-        }));
-    }
 
     /** A computer at p with 50 V behind it (a low voltage cable, then a source). */
     static ComputerElement powered(TestContext ctx, BlockPos p) {
@@ -42,7 +36,7 @@ public final class ComputerCases {
         var back = c.front.back().toEnumFacing();
         ctx.placeSix(Wp10aCases.LV_CABLE, p.relative(back));
         ElectricalSourceElement s = (ElectricalSourceElement) ctx.placeSix(Wp11Cases.SOURCE, p.relative(back, 2));
-        volts(ctx, s, 50f);
+        ctx.setVolts(s, 50f);
         lastSource = s;
         return c;
     }
@@ -57,12 +51,17 @@ public final class ComputerCases {
         return c.screenText();
     }
 
-    /** A player's line submitted to the REPL (tab 1, line 2), as the screen sends it. */
-    static void submit(TestContext ctx, ComputerElement e, long seq, String text) {
+    /** A screen event from a player, as the screen sends it: (verb tab id ...). */
+    static void event(TestContext ctx, ComputerElement e, Object... parts) {
         e.networkUnserialize(ctx.stream(o -> {
             o.writeByte(ComputerElement.SCREEN_EVENT_ID);
-            o.writeUTF(mods.eln.robotics.computer.screen.Form.print(new mods.eln.robotics.computer.screen.Form.Symbol("submit"), 1L, 2L, seq, text));
+            o.writeUTF(mods.eln.robotics.computer.screen.Form.print(parts));
         }), null);
+    }
+
+    /** A player's line submitted to the REPL (tab 1, line 2), as the screen sends it. */
+    static void submit(TestContext ctx, ComputerElement e, long seq, String text) {
+        event(ctx, e, new mods.eln.robotics.computer.screen.Form.Symbol("submit"), 1L, 2L, seq, text);
     }
 
     static boolean replUp(ComputerElement e) {
@@ -132,6 +131,14 @@ public final class ComputerCases {
                 if (upAt > 0 && tick == upAt + 5) {
                     asleep = e.status();
                     submit(ctx, e, 1, "(* 6 7)");
+                    // (three ticks' worth of real time for its own thread, which the typing woke: a test server ticks as
+                    // fast as it can, and "by the next tick" then hung on the tests beside it; it failed the merge
+                    // queue's gate twice running, todo #576)
+                    try {
+                        Thread.sleep(150);
+                    } catch (InterruptedException x) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
                 if (upAt > 0 && tick == upAt + 6) nextTick = terminal(e);
                 if (upAt > 0 && tick == upAt + 35) afterTyping = terminal(e);
@@ -197,19 +204,26 @@ public final class ComputerCases {
                 // (one bus: the computer, the drive and the button, linked as a cable would)
                 if (e.port.bus() == null || e.port.bus() != d.port.bus()) mods.eln.bus.BusNet.link(e.port, d.port);
                 if (button.bus() == null || button.bus() != d.port.bus()) mods.eln.bus.BusNet.link(button, d.port);
-                if (tick == 100) {
+                // (pressed once the program says where the car is: the stdlib's compile at boot takes ~4 s of ticks)
+                if (pressAt < 0 && terminal != null && terminal.contains("at floor")) pressAt = tick + 10;
+                if (tick == pressAt) {
                     floorAtPress = s.carFloor(ctx);
                     button.send(new mods.eln.bus.Packet(mods.eln.bus.Packet.BROADCAST, 51, mods.eln.bus.PacketType.PRESS, 0, 0));
                 }
                 for (mods.eln.bus.Packet k; (k = button.poll()) != null; )
                     if (k.type() == mods.eln.bus.PacketType.POWER) lamp.add(k.value());
                 terminal = terminal(e);
+                if ((e.spinning() & 1) != 0) spun = true;   // (drive sounds: the client's whir follows this)
             });
         }
+
+        boolean spun;
+        int pressAt = -1;
 
         public void measure(TestContext ctx) {
             unwatch();
             mods.eln.bus.BusNet.detach(java.util.List.of(button));
+            ctx.check("elevator disk: drive A spun while the computer read its disk", spun, "");
             ctx.line("elevator: terminal " + terminal.replace("\n", "|") + " lamp " + lamp + " car " + s.carFloor(ctx));
             ctx.check("elevator disk: it ran at boot", terminal.contains("Running A:/main.janet") && terminal.contains("Elevator: drive 40, 3 floors"), terminal);
             ctx.check("elevator disk: the car stood at the bottom before the press", Math.abs(floorAtPress) < 1e-6, "" + floorAtPress);
@@ -332,9 +346,9 @@ public final class ComputerCases {
                     submit(ctx, e, 1, "(def x 99)");
                 }
                 if (upAt < 0) return;
-                if (tick == upAt + 10) volts(ctx, source, 0);
+                if (tick == upAt + 10) ctx.setVolts(source, 0);
                 if (tick == upAt + 25) cut = e.status();
-                if (tick == upAt + 26) volts(ctx, source, 50);
+                if (tick == upAt + 26) ctx.setVolts(source, 50);
                 if (tick == upAt + 45) submit(ctx, e, 2, "(+ x 1)");
                 if (tick == upAt + 75) after = terminal(e);
             });
@@ -350,11 +364,79 @@ public final class ComputerCases {
     }
 
     /**
+     * lashtear (2026-11-23): a two-chip computer ran out of memory saving a big file in Ed and halted; the player went
+     * on pressing Ctrl+S, and Reset didn't bring it back, only switching it off and on. Here a program takes memory
+     * until Janet runs out, 33 KB saves are sent while it is halted, and Reset must boot it to a REPL that answers.
+     */
+    static final class ResetsAfterRunningOutOfMemory extends BootsJanet {
+        int phase;
+        byte halted = -1;
+        String before = "", after = "";
+
+        @Override
+        public String id() {
+            return "computer_resets_after_running_out_of_memory";
+        }
+
+        @Override
+        public int ticks() {
+            return 900;
+        }
+
+        @Override
+        public void build(TestContext ctx) {
+            p = ctx.at(4, 1, 3);
+            ComputerElement c = powered(ctx, p);
+            c.getInventory().setItem(0, new ItemStack(Robotics.JANET_ROM.get()));
+            c.getInventory().setItem(1, new ItemStack(Robotics.RAM_CHIP.get()));
+            c.getInventory().setItem(2, new ItemStack(Robotics.RAM_CHIP.get()));
+            c.getInventory().setChanged();
+            java.util.List<Object> lines = new java.util.ArrayList<>();
+            for (int i = 0; i < 500; i++) lines.add(String.format("%-63d", i));
+            var save = new mods.eln.robotics.computer.screen.Form.Symbol("save");
+            mods.eln.Eln.simulator.addSlowProcess(watch = dt -> {
+                tick++;
+                ComputerElement e = at(ctx, p);
+                if (e == null) return;
+                if (phase == 0 && replUp(e)) {
+                    phase = 1;
+                    submit(ctx, e, 1, "(do (def hog @[]) (forever (array/push hog (buffer/new-filled 20000))))");
+                }
+                if (phase == 1 && e.status() == ComputerElement.HALTED) {
+                    phase = 2;
+                    halted = e.status();
+                    before = terminal(e);
+                    for (long k = 1; k <= 3; k++)   // (the player goes on: Ctrl+S, again and again)
+                        event(ctx, e, save, 1L, 2L, k, "0", java.util.List.of(java.util.List.of(0L, 1L, lines)));
+                    e.networkUnserialize(ctx.stream(o -> o.writeByte(ComputerElement.RESET_ID)), null);
+                }
+                if (phase == 2 && replUp(e) && !terminal(e).contains("hog")) {   // (the screen was emptied at the reset)
+                    phase = 3;
+                    upAt = tick;
+                    submit(ctx, e, 2, "(* 6 7)");
+                }
+                // (until it answers, not a fixed number of ticks later: on a loaded test server the reboot and the
+                // answer take longer, and a fixed look failed every queue run once the machine was busy)
+                if (phase == 3 && !after.contains("> (* 6 7)\n42\n")) after = terminal(e);
+            });
+        }
+
+        @Override
+        public void measure(TestContext ctx) {
+            mods.eln.Eln.simulator.removeSlowProcess(watch);
+            ctx.line("computer oom: before " + before.replace("\n", "|") + " after " + after.replace("\n", "|") + " phase " + phase);
+            ctx.check("computer oom: halted, saying it ran out of memory",
+                halted == ComputerElement.HALTED && before.contains("janet out of memory"), before);
+            ctx.check("computer oom: Reset boots it to a REPL that answers", after.contains("> (* 6 7)\n42\n"), after);
+        }
+    }
+
+    /**
      * Baughn (2026-11-18): a CRT monitor on the computer, in the block above (a ghost), and an 80 x 25 screen. Placed,
      * the ghost stands above it; Janet boots at 80 x 25 and says so; breaking the monitor breaks the computer.
      */
     static final class MonitorOnTop extends BootsJanet {
-        boolean ghostAbove, goneAfterBreak, shellMoved;
+        boolean ghostAbove, goneAfterBreak, shellMoved, read;
         String shellTitle = "";
         int sceneW, sceneH;
         String size = "";
@@ -389,7 +471,10 @@ public final class ComputerCases {
                         o.writeUTF("(moved 1 10 5 40 12)");
                     }), null);
                 }
-                if (tick == upAt + 30) {
+                // (once its answer is on the screen, 120 ticks at most: a test server ticks as fast as it can, and the
+                // answer, due "by tick 30", came later whenever the tests beside it made the ticks short)
+                if (!read && tick >= upAt + 30 && (terminal(e).contains("80 25") || tick >= upAt + 120)) {
+                    read = true;
                     size = terminal(e);
                     sceneW = e.screen.scene.w;
                     sceneH = e.screen.scene.h;

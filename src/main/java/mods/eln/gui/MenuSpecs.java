@@ -104,14 +104,14 @@ public final class MenuSpecs {
             filter(0, 184, 144, 64, mods.eln.node.voxel.CableItems::isElectrical, MEDIUM,
                 tr("Cable kit slot (optional)\nBase range is 32 blocks.\nEach block of cable\nincreases range by one.").split("\n"))).panel(220, 205, 8, 125));
         put(mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixDescriptor.class, d -> MenuSpec.of(
-            filter(mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixContainer.redId, 132, 8, 13, item(Items.REDSTONE), MEDIUM,
+            filter(mods.eln.powerprimitives.PowerCapacitorContainer.redId, 132, 8, 13, item(Items.REDSTONE), MEDIUM,
                 tr("Redstone slot"), tr("(Increases capacity)")),
-            descriptor(mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixContainer.dielectricId, 132 + 20, 8, 20, DielectricItem.class,
+            descriptor(mods.eln.powerprimitives.PowerCapacitorContainer.dielectricId, 132 + 20, 8, 20, DielectricItem.class,
                 MEDIUM, tr("Dielectric slot"), tr("(Increases maximum voltage)"))).panel(176, 112, 8, 30));
         put(mods.eln.sixnode.powerinductorsix.PowerInductorSixDescriptor.class, d -> MenuSpec.of(
-            descriptor(mods.eln.sixnode.powerinductorsix.PowerInductorSixContainer.cableId, 132, 8, 19, CopperCableDescriptor.class,
+            descriptor(mods.eln.powerprimitives.PowerInductorContainer.cableId, 132, 8, 19, CopperCableDescriptor.class,
                 MEDIUM, tr("Copper cable slot"), tr("(Increases inductance)")),
-            descriptor(mods.eln.sixnode.powerinductorsix.PowerInductorSixContainer.coreId, 132 + 20, 8, 1,
+            descriptor(mods.eln.powerprimitives.PowerInductorContainer.coreId, 132 + 20, 8, 1,
                 FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot"))).panel(176, 112, 8, 30));
         put(mods.eln.sixnode.variableinductor.VariableInductorDescriptor.class, d -> MenuSpec.of(
             descriptor(0, 132, 8, 1, FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot"))).panel(176, 112, 8, 30));
@@ -202,6 +202,9 @@ public final class MenuSpecs {
         put(mods.eln.transparentnode.battery.BatteryDescriptor.class, d -> MenuSpec.of(
             descriptor(0, 130, 40, 1, OverVoltageProtectionDescriptor.class, MEDIUM, tr("Overvoltage protection")),
             descriptor(1, 130, 60, 1, OverHeatingProtectionDescriptor.class, MEDIUM, tr("Overheating protection"))).publishing(1));
+        // the Ground Radar: two portable batteries (layout gui/ground_radar.json places them)
+        put(mods.eln.transparentnode.groundradar.GroundRadarDescriptor.class, d -> MenuSpec.of(
+            battery(0, 8, 8), battery(1, 26, 8)).publishing(1));
         put(mods.eln.transparentnode.eggincubator.EggIncubatorDescriptor.class, d -> MenuSpec.of(
             filter(mods.eln.transparentnode.eggincubator.EggIncubatorContainer.EggSlotId, 176 / 2 - 8, 7, 64, mods.eln.transparentnode.eggincubator.EggIncubatorElement::incubates,
                 MEDIUM, tr("Egg slot"))).publishing(1).panel(202, 111, 8, 29));
@@ -290,15 +293,16 @@ public final class MenuSpecs {
                 d.combustionChamberMax, CombustionChamber.class, MEDIUM, tr("Combustion chamber slot")),
             descriptor(mods.eln.transparentnode.heatfurnace.HeatFurnaceContainer.isolatorId, 8 + 36, 58, 1,
                 ThermalIsolatorElement.class, MEDIUM, tr("Thermal isolator slot"))).publishing(0));
+        // ("maximal" here, "maximum" on the six-node's: each keeps its own tooltip)
         put(mods.eln.transparentnode.powercapacitor.PowerCapacitorDescriptor.class, d -> MenuSpec.of(
-            filter(mods.eln.transparentnode.powercapacitor.PowerCapacitorContainer.redId, 132, 8, 13, item(Items.REDSTONE), MEDIUM,
+            filter(mods.eln.powerprimitives.PowerCapacitorContainer.redId, 132, 8, 13, item(Items.REDSTONE), MEDIUM,
                 tr("Redstone slot"), tr("(Increases capacity)")),
-            descriptor(mods.eln.transparentnode.powercapacitor.PowerCapacitorContainer.dielectricId, 132 + 20, 8, 20,
+            descriptor(mods.eln.powerprimitives.PowerCapacitorContainer.dielectricId, 132 + 20, 8, 20,
                 DielectricItem.class, MEDIUM, tr("Dielectric slot"), tr("(Increases maximal voltage)"))).panel(176, 112, 8, 30));
         put(mods.eln.transparentnode.powerinductor.PowerInductorDescriptor.class, d -> MenuSpec.of(
-            descriptor(mods.eln.transparentnode.powerinductor.PowerInductorContainer.cableId, 132, 8, 19, CopperCableDescriptor.class,
+            descriptor(mods.eln.powerprimitives.PowerInductorContainer.cableId, 132, 8, 19, CopperCableDescriptor.class,
                 MEDIUM, tr("Copper cable slot"), tr("(Increases inductance)")),
-            descriptor(mods.eln.transparentnode.powerinductor.PowerInductorContainer.coreId, 132 + 20, 8, 1,
+            descriptor(mods.eln.powerprimitives.PowerInductorContainer.coreId, 132 + 20, 8, 1,
                 FerromagneticCoreDescriptor.class, MEDIUM, tr("Ferromagnetic core slot"))).panel(176, 112, 8, 30));
         put(mods.eln.transparentnode.solarpanel.SolarPanelDescriptor.class, d -> !d.canRotate ? MenuSpec.SCREEN_ONLY : MenuSpec.of(
             descriptor(mods.eln.transparentnode.solarpanel.SolarPanelContainer.trackerSlotId, 176 / 2 - 20, 35, 1,

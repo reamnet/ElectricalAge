@@ -350,10 +350,10 @@ public final class WaterAir {
         if (near == null) return solve(mw, ma, U, V, 300);
         double T = near.T(), x = Math.log(near.vg());
         for (int it = 0; it < 12; it++) {
+            Network.checkClock();
             double vg = Math.exp(x);
             double[] r = residuals(mw, ma, U, V, T, vg);
-            double scaleU = Math.max(1, Math.abs(U)) * 1e-13;
-            if (Math.abs(r[0]) < scaleU + 1e-9 && Math.abs(r[1]) < 1e-13) return split(mw, ma, V, T, vg);
+            if (Math.abs(r[0]) < energyTol(Math.abs(mw) + Math.abs(ma), U) && Math.abs(r[1]) < 1e-13) return split(mw, ma, V, T, vg);
             double hT = 1e-6 * T, hx = 1e-7;
             double[] rT = residuals(mw, ma, U, V, T + hT, vg), rX = residuals(mw, ma, U, V, T, Math.exp(x + hx));
             double j11 = (rT[0] - r[0]) / hT, j21 = (rT[1] - r[1]) / hT, j12 = (rX[0] - r[0]) / hx, j22 = (rX[1] - r[1]) / hx;
@@ -377,6 +377,21 @@ public final class WaterAir {
         return solve(mw, ma, U, V, near.T());
     }
 
+    /**
+     * The solve's energy tolerance: 1e-13 max(1, |U|) plus 1e-9 J for a node over a gram; below that the 1e-9 J floor
+     * shrinks with the mass (and the 1 J one below 10 mg), with 1e-19 J left for an empty node. It was 1e-13 max(1, |U|) + 1e-9 J for every node: in a pocket of
+     * 4 ug of air under vacuum (2.8 uJ/K) behind a wall of 3 W/K, 1e-9 J is 4e-4 K, and Newton's correction to the
+     * node's energy (its wall heat's residual over the wall's slope, ~1e-9 J) fell inside it: the state never moved,
+     * its energy row stalled, and the network hit the sub-step cap every tick (a player's turbine plant, 2026-11-21;
+     * ReplayTest.vacuumPocketBehindAWallSteps).
+     */
+    static double energyTol(double mass, double U) {
+        // (the old tolerance for any node over a gram: MixFluid's scaled one, tried first, was up to 40x tighter for a few
+        // grams of steam, sent Dysnomia's 114-node plant from 8 to 42 ms a step, sub-stepping every step, and took
+        // Incognito to 16 TPS; MixFluid keeps its own)
+        return 1e-13 * Math.max(Math.min(1, 1e5 * mass), Math.abs(U)) + Math.min(1e-9, 1e-6 * mass) + 1e-19;
+    }
+
     /** Solve (water mw, air ma, internal energy U, volume V) for the split; tHint speeds the bracket. */
     public static Split solve(double mw, double ma, double U, double V, double tHint) {
         double lo = T_MIN, hi = T_MAX;
@@ -398,9 +413,10 @@ public final class WaterAir {
             b = Math.min(hi, t0 + w);
             fb = energyAt(mw, ma, V, b) - U;
         }
-        double t = 0.5 * (a + b), tol = 1e-13 * Math.max(1, Math.abs(U));
+        double t = 0.5 * (a + b), tol = energyTol(Math.abs(mw) + Math.abs(ma), U);
         int side = 0;
         for (int i = 0; i < 200 && b - a > 1e-11; i++) {
+            Network.checkClock();
             t = fb != fa ? b - fb * (b - a) / (fb - fa) : 0.5 * (a + b);
             if (!(t > a && t < b) || i % 8 == 7) t = 0.5 * (a + b);
             double f = energyAt(mw, ma, V, t) - U;

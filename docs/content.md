@@ -92,17 +92,70 @@ window (a species without a boiling point, residue, is too heavy for any window)
 2 % of its power per 1 % outside the window (the fuel burns all the same: the heat goes out of the exhaust). Fuel whose
 coking index is over the device's balance fouls it, up to 90 %, at `FOUL_PER_INDEX` x (index - balance) per 2 h of full
 power; under the balance it clears at the same law; engines foul and clear 4 times slower (`ENGINE_SLOWER`, Baughn
-2026-11-15: time to consider a fix); wool cleans it at once; nothing is damaged. Balances: furnace burner 0.05, engines 0.02 (diesel with over 7 % heavy oil or 1 % residue fouls an engine). The Gas Turbine's window is
+2026-11-15: time to consider a fix); wool cleans it at once; nothing is damaged. Balances: furnace burner 0.05, engines 0.02 (diesel with over 7 % heavy oil or 1 % residue fouls an engine). From
+a class's choke index (Baughn 2026-11-23; per class 2026-11-24: piston engines can't run heavy oil) the fuel chokes an engine: it
+takes none and gives no power until the fuel in its vessel is diluted (piped full there is no room to: breaking it
+empties it); no damage, nothing saved (the rule reads the
+vessel). `TURBINE_CHOKE` 0.18, the Gas Turbine's: crude (0.216) and diesel with over ~17 % residue choke it; heavy oil
+(0.15) doesn't. `PISTON_CHOKE` 0.05, the Fuel Generator's, from the Still Pot's tests: a sensibly run still's cuts
+(gasoline 0.000, diesel 0.022) don't choke it, a pot overfired at 25 kW (0.10-0.17), heavy oil and a heavy cut do; a
+15 kW overfired batch (0.03) only fouls it. The furnace burner never chokes. The Gas Turbine's window is
 330 to 720 K, so gasoline, diesel and heavy oil all give full power, and heavy oil fouls it by ~10 % an hour at full
-power (diesel clears 0.8 % an hour, gasoline 1.5 %). Jade on the turbine shows the rating, whether the fuel fouls, the
-fuel's viscosity, and the fouling. Saved as `foul`, `fuelLight`, `fuelHeavy`, `fuelCoking` (absent: clean). The Fuel
+power (diesel clears 0.8 % an hour, gasoline 1.5 %). Jade on the turbine shows the rating, whether the fuel fouls or chokes it, the
+fuel's viscosity (`EaUnits.viscosityText`), and the fouling; a choked turbine's Status says so. Saved as `foul`, `fuelLight`, `fuelHeavy`, `fuelCoking` (absent: clean). The Fuel
 Generator keeps its fuel in a 2000 mB vessel that breathes (a `DeviceInlet` as the turbine's; pipe on its top flange, or
 buckets as before) and burns as much per joule as its old two-bucket tank did; its window is 330 to 400 K (gasoline
-and naphtha), so diesel or residue in its gasoline derate it, and coking fuel fouls it by the engines' law. An old
+and naphtha), so diesel or residue in its gasoline derate it, coking fuel fouls it by the engines' law, and choking fuel stops it (its
+Jade State says "choked"; a start click is refused on the action bar). An old
 save's tank (`tankLevel` x 2000 mB of `tankFluid`) goes into the vessel; an unknown fluid name (1.7.10 saved "lava")
 becomes gasoline, as the old tank burnt every fuel alike. GameTests gas_turbine_off_spec_derates,
-gas_turbine_heavy_oil_fouls, gas_turbine_clean_fuel_clears, fuel_generator_gasoline, fuel_generator_piped, fuel_generator_off_spec_derates, fuel_generator_diesel_derates, fuel_generator_restarts_after_dilution,
+gas_turbine_heavy_oil_fouls, gas_turbine_crude_chokes, fuel_generator_residue_chokes, gas_turbine_clean_fuel_clears, fuel_generator_gasoline, fuel_generator_piped, fuel_generator_off_spec_derates, fuel_generator_diesel_derates, fuel_generator_restarts_after_dilution,
 fuel_generator_clean_fuel_clears, fuel_generator_old_save; unit test FuelQualityTest.
+
+The Still Pot (refinery M2, todo #591; `oil/StillPotElement`, model `cadmodels/StillPot`): a 2x2x2 kettle of 32 B for a
+16-24 B batch, heated through its shell from one heat face, the back of its lower right block (Baughn 2026-11-24: one
+is enough; its ghost cells `oil/GhostCells`, as the Large Boiler's), its
+vapour off the top of its rear left block to a condenser and receivers that breathe (the breather valve). Constants from
+the step-0 sketch (`sim/fluid/StillSketchTest`, gated: `-Psketch=still`): wall 60 W/K, shell 2800 J/K losing 2.5 W/K,
+shell limit 850 K (its watchdog trips from 840 K on a 20 K s budget, so a pot boiled down to residue under a big burner
+stops by 850 K). Front: the liquid's temperature as a signal on the origin (1 V a 100 °C), the bottoms drain low right,
+at a tank's low flange height with the pot's floor at its bottom edge (the vessel stands 3 px up, on its skid), so
+it drains out completely; a hot drain into a closed receiver pushes back with the receiver's own air, so the
+receiver needs a breather; the fill low on its left flank and the steam inlet low on its right flank (into the pot at their flanges'
+height, through check valves). Boiled too hard it boils over: before each step, outside the core's solve, E = 2 (F / 0.10 - 1) kg of
+its liquid (to 5) per kg of vapour moves into the vapour line (the node its vapour port couples to; a pipe run up to 30 % of it
+liquid, a vessel up to its free volume), every species by its share with its enthalpy
+(mass and energy exact), F the Souders-Brown factor of the smoothed vapour velocity over the node's cross-section; a
+medium burner stays under it, a pushed one puts residue in the product, which then fouls engines. The vapour port is
+an opening over the pot's top tenth (the charge never reaches it), so liquid in the vapour line runs back into the pot
+while vapour leaves. Its fill and steam stubs lump into the pipe on their flanges, and are linked into the pot only
+while something is coupled there: unpiped they add no node to its network. Lay the vapour
+line no higher than the condenser's inlet: a line that rises above it is one lumped run whose lowest point is the pot's
+flange, liquid in it can't reach the condenser and the vapour bubbles through it. A safety valve on its crown
+(Baughn 2026-11-24: a copper pot at 13 bar, seen in a client check with both receiver valves shut and the coil flooded
+over its gas breather, is unrealistic) relieves to the air at 0.5 bar gauge (`RELIEF_PA`, the fluid core's relief
+regulator, a pipe safety valve's jet and whistle; what it lets out is booked by species in `ventedKg`); past 2 bar gauge
+(`BURST_PA`) it bursts as a tank does. Jade: relieving (outlet blocked), boiling over, only residue left, under vacuum (below 0.9 bar); pressure, temperature, liquid (as a tank's),
+what boils off ("Boiling now", while vapour leaves), shell, contents, viscosity, the signal. Its fluid
+capability is on its origin block (ghost blocks expose none). A piped fill's float shuts it at the 24 B charge (as a
+bucket stops there).
+
+The Condenser Coil (`oil/CondenserCoilElement`, model `cadmodels/CondenserCoil`): a 1x1x2 drum of 2 B (node the lower
+block, a ghost cell above), vapour in at the top, gas out at the upper front (high), condensate out underneath (draw 0)
+and at the lower front (low); its coil passes 120 W/K from its contents to its shell, which gives it to thermal
+dissipators on its back and flanks (both blocks) and ~2 W/K to the air. It may stand on a pipe. Jade: vapour in,
+outlet, condensing and gas out (g/s, a second's mean), shell; "Vapour escaping, add cooling" over 60 °C while vapour
+comes in. GameTests `condenser_coil_body`, `still_pot_sensible_batch` (a furnace, two
+receivers switched through OpAmps and control valves by the pot's signal: gasoline cut 97.5 %; neither cut chokes a Fuel Generator), `still_pot_overfired_batch`
+(15 kW: it boils over, residue reaches the receiver and fouls a turbine; every gram of residue accounted for),
+`still_pot_calm`, `still_pot_overfire` (25 kW: its product chokes a Fuel Generator), `still_pot_residue`,
+`still_pot_body`, `still_pot_sparge_layers` (water under the oil), `still_pot_steam_sparge`,
+`still_pot_valves_shut_mid_boil` (both receivers shut: pressure rises, no stall), `still_pot_shut_in_relieves` (shut in
+completely under 10 kW: it holds at its relief setting, venting, no burst, no stall), `still_pot_hot_residue_drains` (6 B of hot
+residue drains out completely through a large pipe, cold loses ~2 %), `still_pot_second_pass` (the gasoline heart redistilled: 98 % or better), and the
+breather's `pipe_breather_valve_*`. No vacuum-trap test: the receivers' breather valves let air in, so a cooling
+pot can't pull its receivers into a vacuum (the pot's Jade warns if one is left unvented). Cost: the sensible batch's network has 12 active nodes (pot, coil, the two receivers and eight pipe runs)
+and takes ~3.2 ms a step (4.8 iterations, 9.6 solves), flash-bound at ~0.3 ms a node.
 
 ### Fluid species (`src/main/java/mods/eln/fluid/SpeciesLoader.java`)
 - Datapack JSON `data/<ns>/eln/fluid_species/<name>.json` defines species `<ns>:<name>` for the fluid core (fields in
@@ -174,8 +227,8 @@ type `data/eln/damage_type/scald.json` (steam jets) is tagged `bypasses_armor`.
   to vanilla. `compat/JeiPages` (no JEI classes) holds what the plugin `compat/jei/ElnJeiPlugin` shows beyond the
   game's recipes: the machine lists, resin, annealing and wire-drawing pages, information pages (ores, tar sand, oil
   and its cuts, the blown fuse, the data logger print, creative-only items; text `jei.eln.info.*`) and the items kept
-  out of the list (dead ends: old 50 V/200 V turbines, ferrite ingot, the cinnabar chain; other-tier fuses; pipe
-  sensor devices). JEI lists what the creative tabs list, so the fuel buckets are in the tab (`ElnRegistry.TAB_EXTRAS`).
+  out of the list (dead ends: ferrite ingot, the cinnabar chain, the old six-node power cables;
+  other-tier fuses; pipe sensor devices). JEI lists what the creative tabs list, so the fuel buckets are in the tab (`ElnRegistry.TAB_EXTRAS`).
   `gametest/cases/JeiAuditCases` (`jei_every_item_reachable`) grows the obtainable set from vanilla over all of it
   and names any listed item left out. A new item needs a recipe, a page, or a place in `hidden()`.
 
@@ -232,3 +285,5 @@ parts ([rendering.md](rendering.md)); it applies as soon as the file changes.
 - Removed: copper tools and armour (a4e409f4, vanilla has them); EA copper ore (a08d3985); EA copper ingot (vanilla
   ingot used everywhere) and the 50V/200V Condensators (771ed3aa, already obsolete in 1.12). The golden tests list
   these as intended differences (testing.md).
+- Legacy compatibility: the 48V/230V heat turbines remain functional and hidden from JEI in the ForkPatch port.
+  Original upstream removed them on 2026-11-23; this integration preserves their registered IDs and saved devices.

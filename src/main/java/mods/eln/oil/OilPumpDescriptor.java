@@ -14,9 +14,9 @@ import java.util.List;
  * power while its tank has room; the flow is power / energy per mB: lift (m g h at EA's fuel scale, tiny) plus 5% of
  * crude's heat value (the overhead), or a flat 20 J/mB for water. Placeholder model: the compressor's.
  */
-public class OilPumpDescriptor extends TransparentNodeDescriptor {
-    /** Real litres per game mB (design v2's litresPerMilliBucket, = Eln.fuelHeatValueFactor). */
-    public static final double LITRES_PER_MB = 6.75e-5;
+public class OilPumpDescriptor extends TransparentNodeDescriptor implements mods.eln.node.transparent.FrontDrawnRender.Drawn {
+    /** Real litres per game mB (EaUnits.LITRES_PER_MB, = Eln.fuelHeatValueFactor). */
+    public static final double LITRES_PER_MB = mods.eln.sim.fluid.EaUnits.LITRES_PER_MB;
     public static final double CRUDE_KG_PER_L = 0.85, WATER_KG_PER_L = 1.0;
     /** Crude's heat value per mB (38 MJ/L real), and the pumping overhead: 5% of it. */
     public static final double CRUDE_J_PER_MB = 38e6 * LITRES_PER_MB, OVERHEAD = 0.05;
@@ -31,7 +31,7 @@ public class OilPumpDescriptor extends TransparentNodeDescriptor {
     final Obj3D obj;
 
     public OilPumpDescriptor(String name, double nominalU, double nominalP, ElectricalCableDescriptor cable, String model) {
-        super(name, OilPumpElement.class, OilPumpRender.class);
+        super(name, OilPumpElement.class, mods.eln.node.transparent.FrontDrawnRender.class);
         this.nominalU = nominalU;
         this.nominalP = nominalP;
         this.resistorR = nominalU * nominalU / nominalP;
@@ -53,7 +53,8 @@ public class OilPumpDescriptor extends TransparentNodeDescriptor {
         return true;
     }
 
-    void draw() {
+    @Override
+    public void draw() {
         if (obj != null) {
             var main = obj.getPart("main");
             if (main != null) main.draw();

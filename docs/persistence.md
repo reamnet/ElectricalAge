@@ -290,6 +290,12 @@ the preset. The breaker saves `tripAmps` and the fuse holder `rating` (0: the ca
 - 26.x additions follow the same rule: e.g. `eln:transparent_node@5504` (`linear_servo_drive`, group 86), the blocks
   `eln:servo_rail`, `eln:station_marker` and the entity `eln:elevator_car` (`robotics/Robotics`; not yet in a release,
   so they may still change before shipping).
+- Removed devices keep their entry (and so their id and registry name) in `eln-ids.json`, unregistered, e.g. EA copper
+  ingot (`shared_item@513`, 2026-10-11), EA copper ore and the copper tools and armour. Never reuse such IDs or names.
+  A saved node of a removed device loads as a kept orphan (unknown `eid`, above), so it is written back unchanged;
+  vanilla drops its block and item stacks as unknown registry entries. The ForkPatch integration deliberately retains
+  working heat turbines at `transparent_node@257` / `@264`; unlike original upstream's 2026-11-23 removal, their old
+  nodes continue loading as devices, not orphans.
 - Block-entity alias: `eln:energy_converter_eln_to_other_entity` -> `eln:transparent_node` (`ElnRegistry`), for
   chunks saved while the exporter had its own BE type.
 

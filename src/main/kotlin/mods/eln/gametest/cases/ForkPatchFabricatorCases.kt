@@ -119,7 +119,7 @@ object ForkPatchFabricatorCases {
                 c.check("fabricator: half voltage accepts quarter power and only partial physical work", e.resistor.p in 249.9..250.1 && e.progressJoules in 400.0..600.0 && e.attempts == 0L && e.inventory.getItem(0).isEmpty, "${e.resistor.p}, ${e.progressJoules}")
                 val work = e.progressJoules; val paid = e.acceptedJoules; val system = e.power.subSystem!!; val version = system.matrixVersion
                 repeat(2000) { e.prepare() }
-                c.check("fabricator: readiness checks cannot create work or rebuild stable native LU", e.progressJoules == work && e.acceptedJoules == paid && system.matrixVersion == version && Batch1Cases.field<Boolean>(system, "matrixValid"), "")
+                c.check("fabricator: readiness checks cannot create work or rebuild stable native LU", e.progressJoules == work && e.acceptedJoules == paid && system.matrixVersion == version && mods.eln.gametest.TestContext.field<Boolean>(system, "matrixValid"), "")
                 panel(c, true)
             } finally { clean() }
         }
@@ -356,11 +356,11 @@ object ForkPatchFabricatorCases {
         }
         override fun measure(c: TestContext) {
             try {
-                val process = Batch1Cases.field<mods.eln.sim.ElectricalStackMachineProcess>(plate, "slowRefreshProcess")
+                val process = mods.eln.gametest.TestContext.field<mods.eln.sim.ElectricalStackMachineProcess>(plate, "slowRefreshProcess")
                 val work = process.processState(); val load = plate.electricalLoadList.first(); val system = load.subSystem!!; val version = system.matrixVersion
                 repeat(2000) { process.process(.05) }
                 c.check("plate machine: repeated readiness cannot pay or finish an inherited native recipe", work > 0 && work < 1 && process.processState() == work && plate.inventory.getItem(0).isEmpty && plate.inventory.getItem(plate.inSlotId).count == 1, "$work -> ${process.processState()}")
-                c.check("plate machine: unchanged readiness preserves native LU factors", system.matrixVersion == version && Batch1Cases.field<Boolean>(system, "matrixValid"), "")
+                c.check("plate machine: unchanged readiness preserves native LU factors", system.matrixVersion == version && mods.eln.gametest.TestContext.field<Boolean>(system, "matrixValid"), "")
             } finally { clean() }
         }
     }
@@ -377,7 +377,7 @@ object ForkPatchFabricatorCases {
             val descriptor = machine.descriptor as mods.eln.transparentnode.electricalmachine.ElectricalMachineDescriptor
             recipe = (if (lookup == 2244) Eln.compressorRecipes else descriptor.recipe).recipes.first()
             machine.inventory.setItem(machine.inSlotId, recipe.input.copy()); machine.inventory.setChanged()
-            process = Batch1Cases.field(machine, "slowRefreshProcess")
+            process = mods.eln.gametest.TestContext.field(machine, "slowRefreshProcess")
             val resistor = machine.electricalComponentList.filterIsInstance<Resistor>().first()
             val nominal = machine.machine.spec().nominalVolts()
             val source = VoltageSource("inherited machine supply", machine.electricalLoadList.first(), null).setU(sign * nominal * .1)
@@ -391,7 +391,7 @@ object ForkPatchFabricatorCases {
                 c.check("native machine: every inherited family/tier/polarity pays partial work from an independent accepted-step meter", work > 0 && work < recipe.energy && abs(work - paid) < 1e-5, "$lookup/$sign work=$work paid=$paid")
                 val system = machine.electricalLoadList.first().subSystem!!; val version = system.matrixVersion
                 repeat(2000) { process.process(.05) }
-                c.check("native machine: repeated readiness cannot advance any inherited recipe or rebuild stable LU", process.processState() * recipe.energy == work && machine.inventory.getItem(machine.inSlotId).count == recipe.input.count && machine.inventory.getItem(0).isEmpty && system.matrixVersion == version && Batch1Cases.field<Boolean>(system, "matrixValid"), "$lookup/$sign")
+                c.check("native machine: repeated readiness cannot advance any inherited recipe or rebuild stable LU", process.processState() * recipe.energy == work && machine.inventory.getItem(machine.inSlotId).count == recipe.input.count && machine.inventory.getItem(0).isEmpty && system.matrixVersion == version && mods.eln.gametest.TestContext.field<Boolean>(system, "matrixValid"), "$lookup/$sign")
             } finally { Eln.simulator.removeElectricalProcess(meter); clean() }
         }
     }

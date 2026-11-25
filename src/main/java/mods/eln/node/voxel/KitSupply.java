@@ -4,8 +4,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * What a route is laid from: a cable or pipe kit, or a Toolbag's kits of its chosen kind taken as one (ToolbagItem). The placers
- * (CablePlacer, PipePlacer), their preview (KitPreview) and their lapse checks ask the item in the main hand for one.
+ * What a route is laid from: a cable or pipe kit, or a Toolbag's kits of its chosen kind taken as one (ToolbagItem). The placer
+ * (RoutePlacer), its preview (KitPreview) and its lapse check ask the item in the main hand for one.
  */
 public interface KitSupply {
     /** A pipe (else a cable). */
@@ -27,9 +27,14 @@ public interface KitSupply {
 
     default ItemStack spool() { return ItemStack.EMPTY; }
 
-    /** What to sneak-click for to undo, in the placers' messages. */
-    default String undoHint() {
-        return "sneak-click";
+    /** The undo, as a sentence after a refusal: "Sneak-click to undo." (the Toolbag: "Sneak-click for Undo."). */
+    default String undoSentence() {
+        return "Sneak-click to undo.";
+    }
+
+    /** How to give up instead: "sneak-click to cancel" (the Toolbag: "sneak-click for Undo"). */
+    default String cancelClause() {
+        return "sneak-click to cancel";
     }
 
     /** One kit. */
@@ -88,10 +93,5 @@ public interface KitSupply {
             return awg(s, (mods.eln.sixnode.electricalcable.UtilityCableDescriptor) item.descriptor);
         if (s.getItem() instanceof ToolbagItem) return ToolbagItem.supply(s);
         return null;
-    }
-
-    /** Does supply s lay what a route of this kind was started with (pipe or cable, tier, spec)? */
-    static boolean lays(KitSupply s, boolean pipe, int tier, CableSpec spec) {
-        return s != null && s.pipe() == pipe && s.tier() == tier && java.util.Objects.equals(s.spec(), spec);
     }
 }

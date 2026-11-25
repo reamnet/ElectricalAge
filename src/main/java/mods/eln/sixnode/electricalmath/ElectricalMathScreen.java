@@ -130,8 +130,8 @@ public class ElectricalMathScreen extends ElnScreen {
     int statusColor() {
         String t = editor.buffer.text();
         if (t.isBlank()) return LABEL;
-        if (!editor.problems().isEmpty() || draft == null || !draft.isValid()) return 0xFFC02020;
-        return chips() >= ElectricalMathElement.chipsFor(draft.getOperatorCount()) ? 0xFF108F00 : 0xFFC02020;
+        if (!editor.problems().isEmpty() || draft == null || !draft.isValid()) return ERROR_TEXT_BRIGHT;
+        return chips() >= ElectricalMathElement.chipsFor(draft.getOperatorCount()) ? 0xFF108F00 : ERROR_TEXT_BRIGHT;
     }
 
     @Override
@@ -155,6 +155,7 @@ public class ElectricalMathScreen extends ElnScreen {
     /** Typing in the editor goes to the editor (the inventory key and the hotbar numbers don't act). */
     @Override
     public boolean keyPressed(KeyEvent event) {
+        if (editor != null && event.key() == com.mojang.blaze3d.platform.InputConstants.KEY_ESCAPE && editor.escape()) return true;   // (the find bar closes first)
         if (editor != null && editor.isFocused() && event.key() != com.mojang.blaze3d.platform.InputConstants.KEY_ESCAPE) {
             editor.keyPressed(event);
             return true;

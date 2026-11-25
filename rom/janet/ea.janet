@@ -33,6 +33,7 @@
 (def- line-waiters @{}) # tab -> the task waiting in getline for a line typed there
 (def- repl-tabs @{})   # tabs with a REPL (their line is element 2)
 (def- line-taken @{})  # tab -> the last submission a getline took there
+(def- minimized @{})   # windows minimised to icons, as last reported or asked
 
 (defn ticks "The computer's clock: game ticks it has run (20 a second)." [] (ea/ticks))
 (defn now "The computer's clock in seconds." [] (/ (ea/ticks) 20))
@@ -95,6 +96,9 @@
   (each f stop
     (drop-fiber f)
     (put tasks f nil)
+    # (a task waiting on it, a Shell's line among them, hears it stopped rather than waiting for good)
+    (when-let [j (get joiners f)]
+      (unless (index-of j stop) (array/push ready [j [:error "stopped by Break" f]])))
     (put joiners f nil))
   (def keep (filter |(not (index-of ($ 0) stop)) ready))
   (array/clear ready)
@@ -147,12 +151,14 @@
 # ---- the screen's channel (the display protocol: one Janet form per line, both ways; the handbook's "The Screen
 # Protocol"). Defined before the scheduler, which drains it.
 
+(defn- drop-front "Remove the first n bytes of buffer b, in place (no copy: a full channel made sends quadratic)." [b n]
+  (when (> n 0)
+    (buffer/blit b b 0 n)
+    (buffer/popn b n)))
+
 (defn- display-drain "Send what is waiting for the screen, as far as its channel has room." []
   (unless (empty? display-out)
-    (def n (ea/display-write display-out))
-    (def rest (buffer/slice display-out n))
-    (buffer/clear display-out)
-    (buffer/push display-out rest)))
+    (drop-front display-out (ea/display-write display-out))))
 
 (def- quote-str ea/quote)
 
@@ -198,7 +204,7 @@
 (defn- proc-stop "Stop every task of the process in tab t." [t]
   (def p (get procs t))
   (when p
-    (def stop (filter |(env-of? $ (p :env)) (keys tasks)))
+    (def stop (filter |(and (env-of? $ (p :env)) (not (get system $))) (keys tasks)))   # (a Shell's own line stays)
     (stop-tasks stop)
     (def keep (filter |(not (env-in? ($ 2) (p :env))) handlers))   # its bus/on handlers go with it
     (array/clear handlers)
@@ -209,6 +215,7 @@
   (proc-stop t)
   (def p (get procs t))
   (put procs t nil)
+  (put repl-tabs t nil)
   (def keep (filter |(not= t ($ 1)) outputs))
   (array/clear outputs)
   (array/concat outputs keep)
@@ -239,7 +246,22 @@
   (put win-handlers w @{:close (fn [] (put win-handlers w nil) (ui/send 'unwindow w))})
   (ui/send 'activate w))
 
+(var- screen-hello nil)      # the screen's hello (Wire 2): version, modes, pens, limits, key names
+(var- screen-operator nil)   # the name of the player operating the computer, or nil
+(def- screen-errors @[])   # the screen's last refusals (Wire 2's error messages), not printed: printing made more
+(defn ui/errors "The screen's last refusals, newest last: [error verb w id why] each (16 at most)." [] screen-errors)
+(defn ui/wire "The screen's hello: a struct of :version, :modes, :pens, :max-message ... :keys (nil before it came)." []
+  screen-hello)
+(defn ui/operator "The name of the player operating the computer now (the first with its screen open), or nil." []
+  screen-operator)
+
 (defn- screen-event [m]
+  (when (tuple? m)
+    (case (m 0)
+      'wire (set screen-hello (merge {:version (get m 1)} (struct ;(tuple/slice m 2))))
+      'operator (set screen-operator (if (get m 1) (get m 2)))
+      'error (do (array/push screen-errors m) (when (> (length screen-errors) 16) (array/remove screen-errors 0)))
+      nil))
   (when (and (tuple? m) (> (length m) 2) (number? (m 1)) (number? (m 2)))
     (def f (get ui-handlers [(m 1) (m 2)]))
     (case (m 0)
@@ -254,8 +276,11 @@
       'press (when f (spawn f))
       'select (when (and f (number? (get m 3))) (spawn f (m 3)))
       'key (when (and (struct? f) (f :key) (string? (get m 3))) (spawn (f :key) (m 3) (get m 4 0)))
+      'keyup (when (and (struct? f) (f :keyup) (string? (get m 3))) (spawn (f :keyup) (m 3) (get m 4 0)))
       'click (when (and (struct? f) (f :click) (number? (get m 3)) (number? (get m 4))) (spawn (f :click) (m 3) (m 4)))
       'save (when (and f (string? (get m 4)) (indexed? (get m 5))) (spawn f (get m 3 0) (m 4) (m 5)))
+      'stash (when-let [g (get ui-handlers [(m 1) (m 2) :stash])]
+               (when (and (string? (get m 4)) (indexed? (get m 5))) (spawn g (get m 3 0) (m 4) (m 5))))
       nil))
   (when (and (tuple? m) (> (length m) 1) (number? (m 1)))
     (def w (m 1))
@@ -266,6 +291,8 @@
       # (Wire: the window's close box; a window that says nothing about it ends its process)
       'closed (cond (and wh (wh :close)) (spawn (wh :close))
                     (get procs w) (proc-close w))
+      'minimized (put minimized w true)
+      'restored (put minimized w nil)
       'moved (when (and (number? (get m 4)) (number? (get m 5)))
                (put win-sizes w [(m 4) (m 5)])
                (when (and wh (wh :move)) (spawn (wh :move) (m 4) (m 5))))
@@ -281,18 +308,22 @@
   (when (and (tuple? m) (= 'pick (m 0)) (= 0 (get m 1)) (= "About Dynamo" (get m 3)))
     (about)))
 
+(var- display-scan 0)   # how far display-in is known to hold no newline (a long event isn't searched again each pass)
 (defn- screen-events "Read the screen's events and run their handlers as tasks." []
   (buffer/push display-in (ea/display-input))
+  (var start 0)
+  (var from display-scan)
   (forever
-    (def nl (string/find "\n" display-in))
+    (def nl (string/find "\n" display-in from))
     (unless nl (break))
-    (def line (string/slice display-in 0 nl))
-    (def rest (string/slice display-in (+ nl 1)))
-    (buffer/clear display-in)
-    (buffer/push display-in rest)
+    (def line (string/slice display-in start nl))
+    (set start (+ nl 1))
+    (set from start)
     (def [ok m] (protect (parse line)))
     (when ok   # (a bad event must not stop the scheduler: it says so on the console)
-      (try (screen-event m) ([e] (eprint "screen event " line ": " e))))))
+      (try (screen-event m) ([e] (eprint "screen event " line ": " e)))))
+  (drop-front display-in start)
+  (set display-scan (length display-in)))
 
 (defn- run []
   (forever
@@ -317,6 +348,10 @@
   (if (and n (<= 0 n 15)) n (error (string "no colour channel " c))))
 
 (defn bus/address "The computer's own address (set in its screen), and whether it is on a bus." [] (ea/address))
+(var- station-name nil)
+(defn bus/name "The name this computer gives on the bus (Prefs' station name), or nil." [] station-name)
+(defn bus/set-name "Set the name this computer gives on the bus (nil: none)." [name]
+  (set station-name (if (and name (not (empty? (string name)))) (string name))))
 
 (defn bus/send
   "Send a packet from this computer: target (0 everyone, 17-255 a device), type (:power, :write, ... or a number),
@@ -408,6 +443,10 @@
   (ea/disk-list (case path nil "A:/" :a "A:/" :b "B:/" :ram "RAM:/" path)))
 (defn disk/present? "Is there a readable disk in drive (:a or :b; the ramdisk :ram always is)?" [drive]
   (try (do (ea/disk-list (case drive :a "A:/" :b "B:/" :ram "RAM:/")) true) ([_] false)))
+(defn disk/stamp
+  "A number that changes when the disk in drive (:a, :b or :ram) goes in or out, or this computer writes to it. It
+  reads nothing from the disk: a program can look again only when it moved on (the desk does)."
+  [drive] (ea/disk-stamp drive))
 (defn disk/label "The floppy's label, or nil." [drive] (ea/disk-label drive))
 (defn disk/free "Bytes free on the floppy." [drive] (ea/disk-free drive))
 (defn disk/delete "Delete a file (or an empty directory)." [path] (ea/disk-delete path))
@@ -455,6 +494,13 @@
   (set ui/width (- w 2))
   (set ui/height (- h 3))
   (ui/send 'screen w h))
+(def ui/pen-sets "The pen sets for the desk, bar and frames (Prefs)." ["Grid Blue" "Amber" "Paper"])
+(defn ui/pens "Draw the desk, the bar and the window frames with pen set name (one of ui/pen-sets)." [name]
+  (unless (find |(= $ name) ui/pen-sets) (error (string "the pen sets are " (string/join ui/pen-sets ", "))))
+  (ui/send 'pens name))
+(defn ui/clock "The menu bar's clock: 24 or 12 hours." [hours]
+  (unless (or (= hours 12) (= hours 24)) (error "the clock has 12 or 24 hours"))
+  (ui/send 'clock hours))
 (def ui/standard "The usual window: close box, minimise and depth boxes, size handle, dragged by its title."
   [:close :iconify :depth :size :drag])
 
@@ -479,8 +525,9 @@
 (defn ui/back "Lower window w." [w] (ui/send 'back w))
 (defn ui/focus "Bring window w forward and give it the keyboard." [w] (ui/send 'activate w))
 (defn ui/title "The screen bar's title." [s] (ui/send 'title s))
-(defn ui/minimize "Minimise window w to an icon on the desk." [w] (ui/send 'minimize w))
-(defn ui/restore "Bring window w back from its icon." [w] (ui/send 'restore w))
+(defn ui/minimize "Minimise window w to an icon on the desk." [w] (put minimized w true) (ui/send 'minimize w))
+(defn ui/restore "Bring window w back from its icon." [w] (put minimized w nil) (ui/send 'restore w))
+(defn ui/minimized? "Is window w minimised to an icon?" [w] (truthy? (get minimized w)))
 (defn ui/pixmap
   "Make pixmap id (1-4095) from a picture: a struct {:w :h :palette [...] :data \"...\"} (pix/load reads one from a
   .pix file). Palette entries are dyes (:white ...) or \"#rrggbb\"; data has a character a dot, 0-9 then a-z into the
@@ -493,7 +540,7 @@
     (error (string path ": not a picture")))
   p)
 (defn ui/backdrop "The desk's picture: pixmap id (0: none)." [id] (ui/send 'backdrop id))
-(defn ui/icon "Window w's icon when it is minimised: pixmap id." [w id] (ui/send 'icon w id))
+(defn ui/icon "Window w's icon when it is minimised: pixmap id." [w id] (ui/send 'window-icon w id))
 (defn ui/image "Pixmap pic stretched over cells (x, y, cw, ch) of window w." [w id x y cw ch pic]
   (ui/send 'image w id x y cw ch pic))
 (defn ui/desk-icon
@@ -548,9 +595,10 @@
   A key calls (on-key key mods) as a task: key is the character typed, or a name (\"enter\" \"backspace\" \"tab\"
   \"delete\" \"left\" \"right\" \"up\" \"down\" \"home\" \"end\" \"pageup\" \"pagedown\" \"insert\" \"f1\" .. \"f12\"), or a letter
   with Ctrl or Alt held; mods adds 1 for Shift, 2 for Ctrl, 4 for Alt (0 for a typed character). A click calls (on-click x y), in cells from
-  the area's corner. Draw on it with ui/text and ui/box made after it."
-  [t id x y w h on-key &opt on-click]
-  (put ui-handlers [t id] {:key (bound on-key) :click (bound on-click)})
+  the area's corner. (on-keyup key mods), if given, hears a named key or a letter let go (games: keys held down).
+  Draw on it with ui/text and ui/box made after it."
+  [t id x y w h on-key &opt on-click on-keyup]
+  (put ui-handlers [t id] {:key (bound on-key) :click (bound on-click) :keyup (bound on-keyup)})
   (ui/send 'raw t id x y w h))
 (defn ui/remove "Remove an element." [t id]
   (put ui-handlers [t id] nil)
@@ -582,15 +630,68 @@
 
 (defn- core-names [] (ea/names root-env))
 
+# ---- the Shell's plain commands (for people who don't write Lisp yet). A line whose first word is
+# one of these, and which doesn't start with "(", runs it with the rest of the line's words; anything else is Janet.
+
+(defn path/resolve
+  "path made absolute against directory dir (\"A:/\" by default): \"x.janet\", \"../x\", \"/x\", \"B:\" and
+  \"B:/x/../y\" all work; a path ending in / stays a directory."
+  [path &opt dir]
+  (def p (string path))
+  (def cwd (or dir "A:/"))
+  (def colon (string/find ":" p))
+  (def [drive rest]
+    (cond
+      colon [(string/ascii-upper (string/slice p 0 colon)) (string "/" (string/slice p (+ colon 1)))]
+      (string/has-prefix? "/" p) [(string/slice cwd 0 (string/find ":" cwd)) p]
+      [(string/slice cwd 0 (string/find ":" cwd)) (string (string/slice cwd (+ 1 (string/find ":" cwd))) "/" p)]))
+  (def parts @[])
+  (each w (string/split "/" rest)
+    (cond (or (= w "") (= w ".")) nil
+          (= w "..") (unless (empty? parts) (array/pop parts))
+          (array/push parts w)))
+  (def dir? (or (empty? parts) (string/has-suffix? "/" p) (= p "..") (string/has-suffix? "/.." p) (= p ".")))
+  (string drive ":/" (string/join parts "/") (if (and dir? (not (empty? parts))) "/" "")))
+
+(defn- shell-path "path made absolute against the Shell's current directory." [env path]
+  (path/resolve path (or (env :cwd) "A:/")))
+
+(defn- shell-need [args n usage] (when (< (length args) n) (error (string "usage: " usage))))
+
+(def- shell-commands "The Shell's commands: name -> [usage help (fn [env args])] (filled in below, once edit and the rest exist)." @{})
+
+(defn- shell-words
+  "A line's words, with \"double quotes\" keeping spaces in one; nil when it is no command (or starts with \"(\")."
+  [text]
+  (def t (string/trim text))
+  (unless (or (empty? t) (string/has-prefix? "(" t))
+    (def words @[])
+    (var cur @"")
+    (var quoted false)
+    (each c t
+      (cond
+        (= c 34) (set quoted (not quoted))
+        (and (or (= c 32) (= c 9)) (not quoted)) (when (> (length cur) 0) (array/push words (string cur)) (set cur @""))
+        (buffer/push-byte cur c)))
+    (when (> (length cur) 0) (array/push words (string cur)))
+    (when (get shell-commands (first words)) words)))
+
+(defn- shell-run [env words]
+  (def [_ _ f] (get shell-commands (first words)))
+  (f env (array/slice words 1)))
+
 (defn- repl-tab
   "The REPL: tab 1, a log over an editable line. The line is edited on the player's client; Enter sends it, the OS
-  echoes it into the log, evaluates each form as a task, and prints the value."
+  echoes it into the log, evaluates each form as a task, and prints the value. A Shell command line (shell-commands)
+  runs that command instead."
   [env &opt t name]
   (default t 1)
   (put repl-tabs t true)
   (def p (parser/new))
   (ui/output env t 1)
-  (ui/window t 1 2 ui/width ui/height (or name "Shell"))
+  (if (= t 1)
+    (ui/window t 1 2 ui/width ui/height (or name "Shell"))
+    (ui/window t (+ 3 (* 2 (% t 6))) (+ 2 (% t 6)) (- ui/width 12) (- ui/height 6) (or name "Shell")))   # (beside the first)
   (ui/log t 1 0 0 :fill [:fill 1])
   (var taken false)
   (defn on-submit [text seq]
@@ -599,12 +700,24 @@
     (set taken true)
     (ui/busy t 2 seq true)
     (ui/append t 1 :gray (string (if (empty? (parser/state p :delimiters)) "> " "  ") text "\n"))
-    (parser/consume p (string text "\n"))
+    (def words (if (empty? (parser/state p :delimiters)) (shell-words text)))
+    (if words
+      (do   # a command: run as a task like a form, so Break stops it and it may wait for a line
+        (def task (spawn-in env shell-run env words))
+        (when (= t 1) (set repl-eval task))
+        (def res (yield [:join task]))
+        (when (= t 1) (set repl-eval nil))
+        (flush-outputs)
+        (match res
+          [:error e f] (buffer/push (env :err) (string (first words) ": " e "\n"))
+          _ nil))
+      (parser/consume p (string text "\n")))
     (while (parser/has-more p)
       (def form (parser/produce p))
-      (set repl-eval (spawn-in env eval-form form env))
-      (def res (yield [:join repl-eval]))
-      (set repl-eval nil)
+      (def task (spawn-in env eval-form form env))
+      (when (= t 1) (set repl-eval task))
+      (def res (yield [:join task]))
+      (when (= t 1) (set repl-eval nil))
       (flush-outputs)
       (match res
         [:ok v] (do (put env '_ @{:value v}) (buffer/push (env :out) (string/format "%q\n" v)))
@@ -687,6 +800,48 @@
   [name geometry f & args]
   (proc-start name geometry f ;args))
 
+(defn shell/new
+  "Another Shell window (the first is window 1): its own definitions, history and current directory. Returns its window."
+  []
+  (var n 2)
+  (while (find |(= (string "Shell " n) (get-in procs [$ :name])) (keys procs)) (++ n))
+  (def t (proc/new-tab (string "Shell " n)))
+  (def env (make-env root-env-of-os))
+  (put (get procs t) :env env)
+  (put env :cwd "A:/")
+  (repl-tab env t (string "Shell " n))
+  (ui/focus t)
+  t)
+
+# ---- Prefs: saved on the System disk as System/prefs.jdn, put back by the desk at every start
+
+(def prefs/defaults "Prefs as a computer starts without them." {:mode [80 25] :pens "Grid Blue" :clock 24 :name nil})
+
+(defn prefs/file "Where the prefs are kept: System/prefs.jdn on the disk holding the System directory, or nil." []
+  (find |(disk/exists? (string $ "backdrop.pix")) ["A:/System/" "B:/System/"]))
+
+(defn prefs/load "The saved prefs over the defaults (the defaults if none are saved or they don't read)." []
+  (def dir (prefs/file))
+  (def saved (when dir (try (parse (slurp (string dir "prefs.jdn"))) ([_] nil))))
+  (merge prefs/defaults (if (dictionary? saved) saved {})))
+
+(defn prefs/apply
+  "Put prefs p into effect: the text mode, the pens, the clock, the station name. What doesn't read (a hand-edited
+  prefs.jdn) is left as it is."
+  [p]
+  (def mode (get p :mode))
+  (when (and (indexed? mode) (= 2 (length mode)))
+    (def [w h] mode)
+    (unless (and (= w ui/screen-width) (= h ui/screen-height)) (try (ui/mode w h) ([_] nil))))
+  (try (ui/pens (get p :pens "Grid Blue")) ([_] nil))
+  (try (ui/clock (get p :clock 24)) ([_] nil))
+  (def n (get p :name))
+  (bus/set-name (if (bytes? n) n)))
+
+(defn prefs/save "Save prefs p on the System disk (an error says why it couldn't)." [p]
+  (def dir (or (prefs/file) (error "no System disk in a drive")))
+  (spit (string dir "prefs.jdn") (string/format "%j" (table/to-struct (merge prefs/defaults p)))))
+
 # ---- applications: a directory NAME.app holding main.janet and icon.pix (Baughn 1572655325104832613)
 
 (defn app/dir "The application directory of this task's process (\"A:/Calculator.app/\"), or nil." []
@@ -734,6 +889,12 @@
       (spawn-in env run-file (string dir "main.janet"))
       (ui/focus t)
       t)))
+
+(defn guide
+  "Open the System disk's manual in Guide, the hypertext reader (its icon on the desk does the same)."
+  []
+  (def dir (find |(string/has-suffix? "Guide.app/" $) (array/concat (app/list :a) (app/list :b) (app/list :ram))))
+  (if dir (app/launch dir) (error "no Guide on the disks (it comes on the System disk)")))
 
 (defn proc/list "The processes: [tab name tasks] each." []
   (seq [[t p] :pairs procs] [t (p :name) (length (filter |(env-of? $ (p :env)) (keys tasks)))]))
@@ -783,33 +944,119 @@
   (array/concat out (array/slice lines at))
   (string/join out "\n"))
 
-(defn edit
-  "Open a file in an editor tab (a new file if there is none). The player edits it on their own client; Ctrl+S saves
-  (refused once if the file changed on the disk meanwhile), Run runs the saved file as a process, Close closes."
-  [path]
+(defn- ed-file
+  "Ed in window t on path: an editor element over the window, its path above it, menus. The text lives on the players'
+  clients (Ctrl+S, or the menu's Save, sends hunks against a revision; refused if the file changed on the disk meanwhile).
+  On the client that picks them, Save, Run and Close save first, Save As... sends its changes to be kept aside (stash)
+  and writes them only under the new name, and Find..., Find next and Go to line... act on its editor (Wire: an editor
+  window's own items)."
+  [t path]
+  (var path path)
+  (defn stamp-of [p]
+    (def r (path/resolve p))
+    (try (disk/stamp (case (string/slice r 0 (string/find ":" r)) "A" :a "B" :b "RAM" :ram)) ([_] nil)))
+  (var stamp (stamp-of path))   # the drive's stamp when base was read or written: the same, and the file is still base
   (def text (if (disk/exists? path) (string (slurp path)) ""))
   (when (> (length text) 32768) (error (string path " is too big to edit (32 KB at most)")))
-  (def t (proc/new-tab (last (string/split "/" path))))
   (var rev (revision text))
-  (ui/text t 1 0 0 :light-gray (string path " (Ctrl+S saves)"))
-  (ui/button t 2 -13 0 6 "Run" (fn [] (proc/start (last (string/split "/" path)) run-file path)))
-  (ui/button t 3 -6 0 6 "Close" (fn [] (proc/close t)))
+  (var base text)       # the text at rev, as last opened or saved
+  (var stashed nil)     # the picking display's text for Save As
+  (var unsaved false)   # the last save was refused or failed: Close and Run ask first
+  (var asks 0)
+  (var asking nil)      # the line asking for a name now, or nil
+  (defn name-of [p] (last (string/split "/" p)))
+  (defn heading [colour s] (ui/text t 1 0 0 colour (string/format "%-60s" s)))
+  (defn open-text [p txt]
+    (set path p)
+    (set stamp (stamp-of p))
+    (set base txt)
+    (set rev (revision txt))
+    (heading :light-gray p)
+    (ui/send 'window t 0 0 0 0 (name-of p) ui/standard)   # (open already: only its title changes)
+    (ui/send 'editor t 4 0 1 :fill :fill (if (string/has-suffix? ".janet" p) :janet :plain) p rev txt))
+  (defn ask-path
+    "A line over the path's row asking for a file name; (f path) when one is typed (an empty line cancels)."
+    [prompt f]
+    (ui/remove t 1)
+    (when asking (ui/remove t asking) (put ui-handlers [t asking] nil))   # (one asked at a time: the last one goes)
+    (++ asks)
+    (def id (+ 100 (% asks 100)))   # (a new line each time: a display keeps what was typed in a line it knew)
+    (set asking id)
+    (ui/line t id 0 0 :fill (string prompt " ")
+             (fn [answer _]
+               (ui/remove t id)
+               (put ui-handlers [t id] nil)
+               (set asking nil)
+               (heading :light-gray path)
+               (def a (string/trim answer))
+               (when (empty? a) (set stashed nil))   # (cancelled: a later Save As starts afresh)
+               (unless (empty? a) (f (path/resolve a (string/slice path 0 (+ 1 (or (last (string/find-all "/" path)) 0))))))))
+    (ui/focus t))
+  (ui/remove t 2)
+  (ui/remove t 3)
   (put ui-handlers [t 4]
-       (fn [seq base hunks]
+       (fn [seq b hunks]
          (try
            (do
-             (def now (if (disk/exists? path) (string (slurp path)) ""))
-             (if (not= base (revision now))
-               (ui/send 'conflict t 4 seq (revision now) now)
+             # (nothing written to the drive since base: the file is base, and isn't read again; a 32 KB file read and
+             # hashed for each save ran a two-chip computer out of memory, lashtear)
+             (def same (and stamp (= stamp (stamp-of path))))
+             (def now (cond same base (disk/exists? path) (string (slurp path)) ""))
+             (def now-rev (if same rev (revision now)))
+             (if (not= b now-rev)
+               (do (set unsaved true) (ui/send 'conflict t 4 seq now-rev now))
                (do
                  (def new (apply-hunks now hunks))
                  (spit path new)
+                 (set stamp (stamp-of path))
+                 (set base new)
                  (set rev (revision new))
+                 (set unsaved false)
+                 (heading :light-gray path)
                  (ui/send 'saved t 4 seq rev))))
-           ([err] (ui/text t 1 0 0 :red (string path ": " err))))))
-  (ui/send 'editor t 4 0 1 :fill :fill :janet path rev text)
+           ([err] (set unsaved true) (heading :red (string path ": " err))))))
+  (put ui-handlers [t 4 :stash]
+       (fn [seq b hunks]
+         (set stashed (try (if (= b rev) (apply-hunks base hunks)) ([_] nil)))
+         (unless stashed (heading :red "The file changed on the disk meanwhile: save it, then Save As"))))
+  # (the third word of an item says what the screen does with the editor first: Wire 2's actions, not labels)
+  (ui/menus t [["Project" ["New..." "n" :name 4] ["Open..." "o" :name 4] nil ["Save" "s" :save 4] ["Save As..." "a" :save-as 4]
+                nil ["Run" "r" :save 4] nil ["Close" "q" :save 4]]
+               ["Edit" ["Find..." "f" :find 4] ["Find next" "g" :find-next 4] ["Go to line..." "l" :go-to-line 4]]]
+            (fn [menu item]
+              (case item
+                "New..." (ask-path "New file:" (fn [p] (ed-file (proc/new-tab (name-of p)) p)))
+                "Open..." (ask-path "Open:" (fn [p] (ed-file (proc/new-tab (name-of p)) p)))
+                "Save As..." (ask-path "Save as:" (fn [p]
+                                                    # (the picking display's text, kept aside; unchanged: the file's)
+                                                    (def txt (or stashed base))
+                                                    (set stashed nil)
+                                                    (try (do (spit p txt) (open-text p txt) (set unsaved false))
+                                                      ([e] (heading :red (string p ": " e))))))
+                "Run" (if unsaved
+                        (ui/ask t 7 "Not saved" "Your changes aren't on the disk. Run the file as it is there?" ["Run" "Cancel"]
+                                (fn [i] (when (= i 0) (proc/start (name-of path) run-file path))))
+                        (proc/start (name-of path) run-file path))
+                "Close" (if unsaved
+                          (ui/ask t 7 "Not saved" "Your changes aren't on the disk. Close and lose them?" ["Close" "Keep editing"]
+                                  (fn [i] (when (= i 0) (proc/close t))))
+                          (proc/close t))
+                nil)))
+  (open-text path text)
   (ui/focus t)
   t)
+
+(defn edit
+  "Open a file in Ed, the editor, in a window of its own (a new file if there is none): menus Project (New, Open, Save,
+  Save As, Run, Close) and Edit (Find, Find next, Go to line); Ctrl+S saves, Ctrl+F finds, Ctrl+G goes to a line."
+  [path]
+  (def t (proc/new-tab (last (string/split "/" path))))
+  (ed-file t path))
+
+(defn ed/here
+  "Make this process's window Ed on path (Ed.app's main.janet)."
+  [path]
+  (ed-file (proc/tab) path))
 
 (defn files
   "A tab listing a floppy's files (default A:/): pick one to edit it, or a directory to go into it."
@@ -827,6 +1074,72 @@
   (show dir)
   (ui/focus t)
   t)
+
+# ---- the Shell's commands
+
+(merge-into shell-commands
+  {"dir" ["dir [path]" "list a directory"
+           (fn [env args]
+             (def d (shell-path env (or (first args) ".")))
+             (def d (if (string/has-suffix? "/" d) d (string d "/")))
+             (def names (disk/list d))
+             (print d "  (" (length names) (if (= 1 (length names)) " entry)" " entries)"))
+             (def w (+ 2 (max 12 ;(map length names))))
+             (def per (max 1 (math/floor (/ (- ui/width 2) w))))
+             (var col 0)
+             (each n names
+               (prin (string/format (string "%-" w "s") n))
+               (++ col)
+               (when (= col per) (print) (set col 0)))
+             (when (> col 0) (print)))]
+    "cd" ["cd path" "change the current directory (cd .. goes up, cd B: changes drive)"
+          (fn [env args]
+            (def d (shell-path env (or (first args) "/")))
+            (def d (if (string/has-suffix? "/" d) d (string d "/")))
+            (disk/list d)   # (an error if there is no such directory)
+            (put env :cwd d)
+            (print d))]
+    "type" ["type file" "print a file"
+            (fn [env args] (shell-need args 1 "type file") (print (slurp (shell-path env (first args)))))]
+    "copy" ["copy from to" "copy a file (to a directory: under the same name)"
+            (fn [env args]
+              (shell-need args 2 "copy from to")
+              (def from (shell-path env (args 0)))
+              (var to (shell-path env (args 1)))
+              (when (and (not (string/has-suffix? "/" to)) (try (do (disk/list (string to "/")) true) ([_] false)))
+                (set to (string to "/")))   # (a directory named without its slash)
+              (when (string/has-suffix? "/" to) (set to (string to (last (string/split "/" from)))))
+              (spit to (slurp from))
+              (print "copied " from " to " to))]
+    "delete" ["delete file" "delete a file or an empty directory"
+              (fn [env args] (shell-need args 1 "delete file") (def p (shell-path env (args 0))) (disk/delete p) (print "deleted " p))]
+    "rename" ["rename from to" "rename or move a file on its disk"
+              (fn [env args] (shell-need args 2 "rename from to")
+                (disk/rename (shell-path env (args 0)) (shell-path env (args 1))) (print "renamed"))]
+    "makedir" ["makedir name" "make a directory"
+               (fn [env args] (shell-need args 1 "makedir name") (def p (shell-path env (args 0))) (disk/mkdir p) (print "made " p))]
+    "ed" ["ed file" "edit a file in Ed"
+          (fn [env args] (shell-need args 1 "ed file") (edit (shell-path env (args 0))))]
+    "run" ["run file" "run a Janet file as a process, in a window of its own"
+           (fn [env args] (shell-need args 1 "run file") (def p (shell-path env (args 0)))
+             (proc/start (last (string/split "/" p)) run-file p))]
+    "format" ["format drive [label]" "erase a disk (asks first)"
+              (fn [env args]
+                (shell-need args 1 "format drive [label]")
+                (def d (string/ascii-lower (string/trimr (args 0) ":")))
+                (def drive (case d "a" :a "b" :b "ram" :ram (error (string "no drive " (args 0)))))
+                (def answer (string/trim (getline (string "Erase everything on " (string/ascii-upper d) ":? Type yes: "))))
+                (if (= answer "yes") (do (disk/format drive (get args 1)) (print "formatted " (string/ascii-upper d) ":"))
+                  (print "not formatted")))]
+    "help" ["help" "list these commands"
+            (fn [env args]
+              (print "Shell commands (anything else, and any line starting with \"(\", is Janet):")
+              (each k (sort (keys shell-commands))
+                (def [usage what] (get shell-commands k))
+                (print (string/format "  %-22s %s" usage what)))
+              (print "The manual: the Guide icon on the desk, or (guide).")
+              (print "The current directory: " (or (env :cwd) "A:/") " (the commands' paths start there; Janet's own file")
+              (print "functions, slurp and spit among them, take whole paths such as \"RAM:/notes.txt\")."))]})
 
 # ---- the inspector: processes, tasks, their stacks, locals and values, Smalltalk-style (Baughn)
 
@@ -934,6 +1247,7 @@
   (set root-env-of-os (curenv))
   (def env (make-env (curenv)))
   (set repl-env env)
+  (put env :cwd "A:/")
   (ui/send 'screen ui/screen-width ui/screen-height)
   (ui/title "GCC Field Computer   Kernel ROM 1.4")
   (repl-tab env)

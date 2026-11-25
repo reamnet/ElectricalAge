@@ -189,7 +189,7 @@ object ForkPatchCordCases {
             val link=cord(e);val system=e.power.subSystem!!;val version=system.matrixVersion;val work=e.progressJoules
             c.check("cord: real half-voltage sag and cord/contact losses reach native processing",e.resistor.p in 240.0..250.0 && work in 400.0..600.0 && abs(work-paid)<1e-5 && link.conductor.p>0 && o.contact.p>0,"work=$work paid=$paid linkLoss=${link.conductor.p}")
             repeat(2000) { link.poll();e.prepare();o.wirelessPower.refresh() }
-            c.check("cord: stable physical polls cannot create paid work or rebuild native LU",e.progressJoules==work && system.matrixVersion==version && Batch1Cases.field<Boolean>(system,"matrixValid"),"")
+            c.check("cord: stable physical polls cannot create paid work or rebuild native LU",e.progressJoules==work && system.matrixVersion==version && mods.eln.gametest.TestContext.field<Boolean>(system,"matrixValid"),"")
         }finally { Eln.simulator.removeElectricalProcess(meter);clean() } }
     }
     private class StripChain: Base() {

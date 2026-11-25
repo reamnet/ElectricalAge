@@ -233,7 +233,7 @@ public final class RubberCases {
             c.check("resin collector: an old save loads", legacy.isEmpty(), legacy);
             c.check("resin collector: an old save's full tank and its part mB are in the basin, every kg", Math.abs(latexMb(v) - 4000.5) < 0.05, st);
             c.check("resin collector: ... with air over it, at the air's pressure", v.liquidVolume() / v.volume < 0.96 && Math.abs(v.P() - mods.eln.sim.fluid.Water.P_ATM) < 2000, st);
-            c.check("resin collector: ... it is full, and says so", !d.outlet.room(1) && String.valueOf(d.getWaila()).contains("4001 / 4000 mB"), st);
+            c.check("resin collector: ... it is full, and says so", !d.outlet.room(1) && String.valueOf(d.getWaila()).contains("4.0 B / 4.0 B"), st);
         }
     }
 
@@ -453,7 +453,7 @@ public final class RubberCases {
                         rubber >= 2 && Math.abs(CollectorBasinCase.latexMb(vi) + 250 * rubber - 1500) < 0.5 && Math.abs(CollectorBasinCase.latexMb(vo) - 4000) < 0.5, st);
                     c.check("compressor: ... with air over them, at the air's pressure", vo.liquidVolume() / vo.volume < 0.96 && Math.abs(vo.P() - mods.eln.sim.fluid.Water.P_ATM) < 2000
                         && Math.abs(vi.P() - mods.eln.sim.fluid.Water.P_ATM) < 2000, st);
-                    c.check("compressor: ... its OUT vessel is full", !d.outlet.room(mods.eln.oil.Latex.MB_PER_RUBBER) && String.valueOf(d.getWaila()).contains("4000 / 4000 mB"), st);
+                    c.check("compressor: ... its OUT vessel is full", !d.outlet.room(mods.eln.oil.Latex.MB_PER_RUBBER) && String.valueOf(d.getWaila()).contains("4.0 B / 4.0 B"), st);
                 }
             }
         }
@@ -800,16 +800,16 @@ public final class RubberCases {
         public void build(TestContext c) {
             a = c.at(1, 1, 1);
             for (BlockPos p : new BlockPos[]{a, c.at(2, 1, 1)}) PipeCases.lay(c, p, 0, 0, 8, 8, 16, 8, 8);
-            var f = PipeCases.node(c, a).parts.get(0) instanceof mods.eln.node.voxel.PipePart pp ? pp.fluid : null;
+            var f = c.voxelByEntity(a).parts.get(0) instanceof mods.eln.node.voxel.PipePart pp ? pp.fluid : null;
             int id = mods.eln.sim.fluid.SpeciesRegistry.get().id("eln:butadiene");
             f.fill(0, 1, 293.15);
             mods.eln.sim.fluid.EaUnits.add(f, id, 0.3 * f.volume * 615, 293.15, false);   // (a third full of liquid, no air)
             f.update();
-            mods.eln.fluid.FluidWorld.changed(PipeCases.node(c, a));
+            mods.eln.fluid.FluidWorld.changed(c.voxelByEntity(a));
         }
 
         public void measure(TestContext c) {
-            var f = ((mods.eln.node.voxel.PipePart) PipeCases.node(c, a).parts.get(0)).fluid;
+            var f = ((mods.eln.node.voxel.PipePart) c.voxelByEntity(a).parts.get(0)).fluid;
             int id = mods.eln.sim.fluid.SpeciesRegistry.get().id("eln:butadiene");
             double p = f.P(), liq = f.liquid(id), vap = f.vapour(id);
             String st = String.format("P %.3g Pa, T %.1f K, liquid %.3g kg, vapour %.3g kg", p, f.T(), liq, vap);

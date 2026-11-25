@@ -22,6 +22,10 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
 ## Baughn's decisions
 
 - Keep the 1.12 OBJ models; a remodel is a separate later project.
+- The computer's screen protocol is Wire 2 (2026-11-24, after a review; the handbook's Wire page): compatibility with
+  Wire 1 broken on purpose; a computer has one operator (the first player with its screen open), everyone else
+  watches composed cells; refused saves stay refused (no overwrite); block-transfer registers on the screen channel;
+  a canonical text subset with a C parser (rom/common/wire.c, also on the Applications floppy); menu actions as tags.
 - Macerator: vanilla ore blocks (and EA lead/tungsten ore) -> raw chunks about like Fortune II (iron/gold 1-3,
   copper 3-8); a raw chunk -> one dust, 20% chance of two. 1.12 gave two dust per ore. EA lead and tungsten ores drop
   raw pieces like iron ore (`OreDropCases`).
@@ -298,8 +302,8 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   right flank; 1.8 bar shut-off, 0.04 m^3/s free flow, power = flow x rise / 0.9 + 20 W idling. One feeds two Big
   burners: at full speed ~1.5 bar, 20 g/s, 2.8 kW; at 55 % ~0.45 bar, 11 g/s, 0.47 kW. Measured on one Boiler, two Big
   burners and an HP turbine (2.71 kW electric by natural draught): 7.58 kW electric - 2.77 kW = 4.81 kW net, or
-  4.18 - 0.47 = 3.71 kW net slowed; the 16 kW plant with four blowers 15.77 - 5.05 = 10.72 kW net. Stand-in model,
-  render and icon (the Inline Pump's); placeholder recipe. GameTests `air_blower_blocked_outlet_stalls`,
+  4.18 - 0.47 = 3.71 kW net slowed; the 16 kW plant with four blowers 15.77 - 5.05 = 10.72 kW net. Its own CAD model
+  (AirBlower) and icon; placeholder recipe. GameTests `air_blower_blocked_outlet_stalls`,
   `hp_plant_furnace_fired_blowers`, `hp_plant_midgame_one_blower`, `_low`, `hp_plant_full_blowers_16kw`.
 - Fuel heat furnace as a combustion chamber (todo #504/#503; Baughn 2026-11-17: the burner must feel its exhaust's
   back-pressure for the Air Blower to be realistic; flanges on the sides or back, not the front). Its flue's node is
@@ -359,6 +363,14 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   run under it to the air above its set pressure (1.1 bar to start, the safety valve's slider), shuts as the liquid
   reaches its outlet, and lets nothing back in (a gas-only, one-way vent: `Network.Edge.gasOnly`).
   `pipe_purge_valve_bleeds_the_gas`, `pipe_purge_valve_keeps_the_liquid`.
+- Pipe Breather Valve (refinery M2, Baughn 2026-11-24: a third item on the safety valve's part): a purge valve's float
+  out and a vacuum breaker in, at the air's pressure +-300 Pa (FlareStackElement's tip pair), no setting, no whistle or
+  jet (shapeless: purge valve + iron bars; green cap). A still's receiver fills and drains at 1 atm behind it; a purge
+  valve there pulls the still under vacuum and holds the product in the condenser. Natural gas leaves through it too
+  (Baughn: "a good way to lose natural gas"; the tooltip says to pipe it to a flare or a gas tank). Fit it on top of a
+  pipe or a tank stub: on a side it draws half way up, and liquid there shuts it. Saves: the part's `"breather"` flag
+  (absent on safety and purge valves, which save as before). `pipe_breather_valve_fills`, `_keeps_liquid`,
+  `_pulls_air`, `_saves`.
 - Tanks need no floor (Baughn 2026-11-10): a tank, lone or a box, stays when the block under it goes, so a pipe can
   run to its underside port (it used to break). `tank_stands_without_a_floor`.
 - Tank sight glass (Baughn 2026-11-03: "a viewglass"): a 3 px window in brass on the tank's front (was a 1.5 px slit
@@ -426,7 +438,7 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   batteries/condensators and `#eln:battery_belt_items`; right-click opens them, sneak-right-click wears it. An EA item
   battery standing for its contents (charged whole; gives only from what can discharge). Worn, it joins the player's
   item energy (ItemEnergyInventoryProcess) and shows a HUD bar (client BeltHud; `BatteryBeltItem.hudAbove` for a mod's bar
-  above it). `battery_belt_pockets_and_charge`.
+  above it). The bar is the bike's battery bar (`EaGauge.chargeBar`, todo #555): green over half, amber, red at a fifth. `battery_belt_pockets_and_charge`.
 - DC-DC converter (Baughn 2026-10-27): connects to nothing (no masks, no loads) unless both winding slots and the core
   slot are filled (1.12 kept its sides connected through high-impedance loads); its screen frames the primary slot green
   and the secondary yellow, as the model's marks. `wp10a_transformer_connects_only_when_complete`.
@@ -453,6 +465,13 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   wins the crosshair over the pipe end at its port, a second route to a piped port is refused, each kind carries a
   coloured plate with a letter (P, T, Q), Jade's headline is reading, volts and full scale, and its own items are out of
   JEI. `pipe_transmitter_*`.
+- Lead-acid battery curve (Baughn 2026-11-22: "a more accurate lead-acid voltage curve ... float/absorption
+  included"; `BatteryProcess.LEAD_ACID`): per 2 V cell 1.95 V at 10 % to 2.12 V at 92 %, rising to 2.40 V at full (a
+  48 V battery: 48 V near 34 %, float 54 V settles at 97 %, absorption 57.6 V fills it). 1.12 kept storing charge past
+  full until the EMF reached 1.3 x nominal and the battery was destroyed; now charge past full gasses, as heat, and only
+  1.4 x nominal across the terminals burns it at once; a held voltage over absorption drives a small gassing current
+  (an overpotential that builds and decays, `BatteryProcess.GAS_R`), so it warms and burns only over ~65 V. The overvoltage chip stops charging at full; the single-use
+  battery keeps 1.12's curve; the never-applied IMax is gone. `BatteryCurveCases`.
 - Battery protection chips (Baughn 2026-10-27, after a protected, nearly empty battery burnt on a 50 V bus): the
   overheating chip is a charge limiter, run every electrical step (BatteryInventoryProcess.Step): charging held to the
   rated current (electricalStdI) by the cut switch's resistance, tapering to none as it nears the cut; the cut is at
@@ -465,12 +484,15 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   clock time, so after the first day it only grew and `daytime>0.5` stayed true. `wp9c_signal_processor`.
 - Plates in EA recipes (Baughn 2026-10-27): crafting recipes and pipe kits take `eln:high_quality_plates/<metal>`
   (OreDictTags.recipeTag), which holds EA's own plates, instead of `c:plates/<metal>` or the exact item; a modpack can
-  add plates to it. EA's plates say so in their tooltip. `recipes_take_high_quality_plates`.
-- 50V Compact Steam Turbine (new, Baughn 2026-10-27: the bootstrap option, eln:transparent_node@5284): heat on its left
+  add plates to it. EA's plates say so in their tooltip. `recipes_take_high_quality_plates`. Exception: the 48V Compact
+  Steam Turbine takes any `c:plates/copper`, so the bootstrap generator can be made by hand in packs with hammers
+  (Baughn 1573669111920066631).
+- 48V Compact Steam Turbine (new, Baughn 2026-10-27: the bootstrap option, eln:transparent_node@5284): heat on its left
   flank, water by bucket / top flange (float valve) / capability, 50 V front and back, no settings. 10% of the heat
   (Baughn) up to 300 W, so a stone heat furnace with 4 chambers runs it at full; governor from 105 to 140 C, bypass to
   its built-in condenser over 150 C (3.5 kW, costs fuel), safety valve over 180 C (costs water); 3% makeup water.
-  Dry it stops without failing. `compact_turbine_*`.
+  Dry it stops without failing. Shorted (at its current limit under 12 V: a Ground Cable on its line) its state says so,
+  not "short of heat" (AdventurAgent's handbook replay, 2026-11-21). `compact_turbine_*`.
 - Pipe Control Valve (signal 0-50 V on its actuator's top) and Pipe Throttle Valve (slider screen), kinds of ValvePart
   (Baughn 2026-10-26). `pipe_throttle_and_control_valves`.
 - 50V/200V steam turbines take water damage: over 10% of the inlet liquid while the shaft turns above 20% speed burns them out (`FailureCause.WATER`, repairable; the repair drains the inlet). Baughn 2026-10-26; `oil_steam_turbine_floods`. A casing drain throws away 0.5% of the inlet volume a second in liquid water (Baughn 2026-10-29: condensate must get out, slugs stay fatal).
@@ -483,7 +505,8 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
 - Failure: one per network of connected nodes per tick, the worst; the rest are relieved
   (`sim/Simulator.java`, `sim/process/destruct/FaultNetwork.java`; `BurnChainCases`).
 - Removed: copper tools and armour, EA copper ore and copper ingot (vanilla copper), 50V/200V condensators, the
-  50V/200V heat turbines (replaced by steam turbines with built-in generators), the Modbus TCP server.
+  50V/200V heat turbines (replaced by steam turbines with built-in generators; uncraftable from 2026-10-14, then taken
+  out of the code on 2026-11-23, Baughn: none were left on the server), the Modbus TCP server.
 - New in 26.x: oil (lakes, tar sand, pumps, heaters, boiler, column, flare stack), pipes and the fluid core, steam
   turbines, voxel cables (see voxel-cables.md), cable kits, chisel, item capabilities on machines (`ItemCapabilityCases`).
 - Lamp sockets remove monsters that appear within 9 blocks only while lit (Baughn 2026-10-27; 1.12 did it for every
@@ -579,6 +602,56 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   wrench key (C) with such a device in hand turns its placement preview the same way, and the click places it as shown.
   The chosen turn is kept per player for that kind of device until changed (or logout), not reset after placing.
   `WrenchSkipsCase`, `TurnBeforePlacingCase`.
+- One wrench turn (todo #556, Baughn 2026-11-21): every device turns by the shared helpers
+  (`SixNodeElement.onBlockActivatedRotate`, `TransparentNodeElement.wrenchTurn`, `FluidPlacement.Turnable`), and a
+  wrench click on a device is used. Before, the wind turbine's click went on to the held item (a six-node cable's
+  wrench toggled colour care, now removed; the click is still used). A socket that only looks right one way up (the sconce) still turns by half turns
+  (`SixNodeElement.wrenchStep`), and the Modbus RTU still turns only on a floor or ceiling, as in 1.12.
+  `wrench_turn_*`.
+- One way to write a quantity (todo #553, Baughn 2026-11-21): screens, Jade, tooltips and item names format volts,
+  watts, joules and temperatures as the meters do (Meters: "230V", "1.50kW", "85.0°C", no space before the unit) and
+  percent as a whole number, rounded down (`Utils.plotPercent`, "50%"; only full reads "100%"; 1.12's meters showed "50.0%"). A power tier reads "48V",
+  "230V", "400V", "11kV" (`CableSpec.voltsLabel`) in cable kit and winding names, the toolbag ring and the wire
+  drawing and pole screens; the pole screen's line voltage lost its two decimals. Power sliders (teleporter, turret,
+  energy converter, heat furnace) read "5.00kW", not "5000W". Tank lines in Jade switch to buckets at a bucket of
+  capacity (`EaUnits.tank`, "700 mB / 4.0 B", the fill rounded down so a tank short of full doesn't read full). Temperatures over
+  999 °C read "1.00k°C", as the meters already did.
+- Device refusals on the action bar (todo #554, Baughn 2026-11-21): placement refusals, the pole spans' and pole gear's
+  messages, a burnt device's repair hint, mode toggles (electrical tools, flashlight), the brush
+  being dry and the resin pot's reading go to the action bar instead of the chat, as most devices' messages already
+  did; a cable kit on a pole says so on the route note line. Meter readings, the wireless analyser's report, the
+  unloadable-device notices, the pole transformer's foot warning, the toolbag shears breaking and debug output stay
+  in the chat. `burnt_heat_furnace_cools_and_burns_nothing`.
+- Engines choke on crude and residue (refinery M1b, todo #590, Baughn 2026-11-23: off-spec fuel loses power at once,
+  fouls over a threshold and chokes the engine past a further one, "set such that any halfway sensible distillery does
+  not trigger it, but it can be triggered if the distillery is built badly and/or run completely uncontrolled"). Fuel
+  whose coking index reaches its class's choke chokes it: no fuel taken,
+  no power, no damage, until the fuel in the vessel is diluted; piped full (the filling valve shuts at 90 %) or with
+  under a bucket free there is no room to, and breaking the engine empties it (a drain or purge is the owner's call). The rule is
+  live on the vessel, so nothing new is saved. The furnace burner never chokes. By class (Baughn 2026-11-24: piston
+  engines can't run heavy oil at all): `TURBINE_CHOKE` 0.18 for the Gas Turbine, between heavy oil (0.15), which it
+  burns and fouls on since M1, and dead crude (0.216), so crude and diesel with over ~17 % residue choke it and no fuel
+  that worked before does; `PISTON_CHOKE` 0.05 for the Fuel Generator, calibrated from the Still Pot's GameTests: a
+  sensible still's cuts (gasoline 0.000, diesel 0.022) pass, a pot overfired at 25 kW (0.10-0.17), heavy oil and a
+  heavy cut choke it, a 15 kW overfired batch (0.03) only fouls it. Jade: the turbine's Status and
+  the generator's State say "choked" and the fix; a refused start click says why on the action bar.
+  `gas_turbine_crude_chokes` (was `gas_turbine_crude_derated`), `fuel_generator_residue_chokes`, `still_pot_overfire`, `still_pot_sensible_batch`, `FuelQualityTest.theChoke`, `thePistonChoke`.
+- Viscosity shown (design item 6 A, todo #590): Jade on pipes, tanks and pipe sensors, and the engines' fuel quality,
+  give the liquid's viscosity in words, with mPa s under 1 Pa s and the ratio to the game's water (whose 0.25 mPa s
+  is what flow compares against): "thick heavy oil, 199 mPa s, 800x water; heat or dilute" (bands by Neon: thin
+  under 15x, syrupy, thick from 200x, tarry from 5000x; the engines' lines without the fix, as engines ignore it). A
+  thick liquid's line is third, in the headline, so cold residue that won't flow says why without sneaking. None for water or gas (`EaUnits.viscosity`, `putViscosity`).
+  The pipe sensors gained the line, not a viscosity signal. `pipe_jade_viscosity`, `FuelQualityTest.viscosityForPlayers`.
+- A broken pipe's contents are deleted (Baughn 2026-11-25: the extreme pressures players see are most likely the pipe
+  deletion behaviour squeezing a piece's fluid into its neighbours). Breaking a piece (mining it, the shears, an
+  explosion, a junction going with its arms) deletes its share of its run, by volume, every species and its energy;
+  the pieces left keep theirs at the same pressure and temperature. A straight run already did so (a rebuild writes
+  the old run's lump into every piece it had, then sums the new runs from the pieces left), but a junction left with
+  one arm gave that arm all its contents: a run of water at 10 bar went to 4600 bar and burst on the next step, steam
+  at 7.7 bar to 10 bar. The commonest case was a pipe extended from another's end inside a block (a two-armed junction)
+  with either arm broken. Now the junction's contents go with it (`VoxelNode.pruneJunctions`). A burst pipe vents and
+  stays; breaking it afterwards deletes only what is left in it. Tanks are unchanged (they will drop as items).
+  `pipe_break_deletes_*`, `pipe_junction_goes_with_its_arms`, `pipe_junction_prune_keeps_run_water`.
 
 ### Multi-fluid pipes (2026-11-03)
 - Baughn: EA pipes carry oil "the complex way": fluids are data (datapack species JSON), Raoult mixing within a
@@ -605,7 +678,14 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
 ## Behaviour changes vs 1.12
 
 - Meters, probes and power sockets no longer burn at their (former slot) cable's voltage: those watchdogs are off.
-- Fires lag their setting (coal ~3 min, oil ~20 s), go out below 15%, take time to relight (`sim/Fire.java`, `FireTest`).
+- Fires lag their setting (oil ~20 s; an oil flame goes out below 15%), take time to relight (`sim/Fire.java`, `FireTest`). A coal fire
+  (the stone heat furnace, Baughn 1573753560456499223) has an air valve, 5 s, and a hot bed that spreads towards it over
+  ~3 min and cools over 300 s with the air shut; it burns at the lesser (plus 3 % of its bed past a shut damper), so a
+  regulator cuts it in seconds and a hot bed answers at once; a shut fire smoulders until its bed is down to embers, and
+  a firebox over ~350 C lights fresh coal at once. The stone furnace has a stone furnace's mass, ~600 J/K (was ~13 J/K,
+  which four chambers heated 190 K/s past any regulator). With an Analogic Regulator the stone and fuel heat furnaces run
+  a tuned PID (`RegulatorProcess.setPid`: derivative on the measurement, no windup, gains per furnace); with a regulator
+  the stone furnace has no 10 % command floor. `FurnaceControlCases`, `RegulatorPidTest`.
 - Battery wear divided by `batteryLifeFactor` (default 25), doubled every 10 C above ambient, up to 4x at low charge.
 - Burnt devices (Baughn: they kept their temperature, made their sounds and opened their GUI) keep only
   their thermal loads in the simulation: they cool to ambient and do nothing else, make no working sound or
@@ -624,7 +704,7 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   | Stone Heat Furnace, Fuel Heat Furnace | Machine Block | Combustion Chamber (4 stone) |
   | 50V / 200V Electric Heater | Cheap Chip (overvoltage), Machine Block (overheat) | its 50V / 200V Copper Heating Corp |
   | Large Rheostat | Machine Block | Power Resistor |
-  | Other machines that overheat (thermal dissipators, smelter, boiler, column base, compact steam turbine, heat turbines) | Machine Block | Copper Thermal Cable |
+  | Other machines that overheat (thermal dissipators, smelter, boiler, column base, compact steam turbine) | Machine Block | Copper Thermal Cable |
   | Machines on overvoltage (macerator, compressor, magnetizer, plate machine, exporter, pumps, ...) | Cheap Chip | unchanged |
   | Electronics, transformers, capacitors, shaft machines, cables, batteries, HV gear | by kind | unchanged |
 - The FE exporter is a transparent node: it burns out in place and can be repaired instead of vanishing; old
@@ -687,6 +767,17 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   uncovers in proportion and passes only 5 % as much heat into steam as into water, so the shell runs hot and, boiled
   dry, burns out (`BoilerElement.heatingShare`). Heat goes in on the back and flanks only. The gauge glass shows the
   fill and the dial the water temperature (0..300 C) (`boiler_phase_signal`).
+- Large Boiler (2x2x2, new in 26.x): heat goes in on the six faces of its lower blocks' back and flanks only (Baughn
+  2026-11-23: two rows of thermal connectors looked bad and weren't useful; it had twelve, the upper blocks' too). On
+  natural draught its six Fuel Heat Furnaces put about 42 kW into the water, enough for an HP turbine at about two
+  thirds of its rating (`large_boiler_2x2_natural_6_furnaces`; ten furnaces on twelve faces reached 70 kW); four on a
+  1.6 bar air main still run one at full rating (`large_boiler_2x2_hp_plant_20bar`), and `large_boiler_2x2_body`
+  checks that no upper face connects.
+- Still Pot (refinery M2, todo #591, new in 26.x; Baughn 2026-11-24: batch first, the pot is the refinery's first rung,
+  entrainment yes): a 2x2x2 kettle for batch distillation (its ghost cells `oil/GhostCells`, shared with the Large
+  Boiler). One heat face (Baughn 2026-11-24: "one heat face should be sufficient"), the back of its lower right block;
+  the fill low on its left flank, the steam inlet low on its right flank; the front holds the temperature signal and the
+  bottoms drain. A recharge into a hot pot boils over: intended (Baughn). See docs/content.md.
 - Submersible pumps, 50V (100 W) and 200V (400 W) (Baughn 2026-10-25): placed in a water source (transparent-node
   blocks are waterloggable now, as six nodes were), they push the water they stand in up a pipe from the flange on
   top: 3.5 turbines' worth of feedwater (57 / 230 mB/s), falling to nothing at 3 bar against the pipe. Power on the
@@ -717,6 +808,12 @@ deferred or still open. Subsystem detail lives in the other pages; this is the "
   beside the others (`BenchTest.slowConsumersShareAWeakLine`).
 
 ## Bugs fixed
+
+- Temperatures read 20 °C off in five places (found by the unit consolidation, 2026-11-21): the tank's and the linear
+  servo drive's thermometer lines added the 20 °C reference to a temperature already in °C, the turbine's dT added it
+  to a difference (it reads in kelvin now), and the thermal cable, dissipator and heat furnace tooltips showed limits
+  on the simulation's Tc scale as if in °C (1.12 did the same). The transformer screen's "turns ratio is x %% off"
+  showed the literal "%%".
 
 - Shafts stored mass^2 x 0.25 J per rad/s (linear in speed): a line's inertia grew with the square of its total mass,
   and a joule bought as much speed at 10 rad/s as at 800. Now E = 1/2 I w^2, I summed over the blocks, each sized by
@@ -791,6 +888,10 @@ In the port:
   reinforced deepslate, command blocks) and budding amethyst: in the shaft they end it as bedrock does, around it they
   are skipped. A finished or waiting miner looks for work once a second (1.12: every tick, rescanning its whole layer).
   Test `autominer_refuses_unbreakable_blocks`.
+- The Auto Miner's monitor: 1.12 drew an ore scanner's picture in the left part of its screen (needing an Ore Scanner in a
+  hidden slot); 26.x shows four quarters (Baughn 2026-11-24): its stats in a frame (Y, pipes left, silk touch), XZ, the
+  Ground Radar's slice at its mining height (48 m), and XY and YZ, the cone's cuts from the miner to bedrock with the pipe
+  and the drill head marked; made every 5 s while a player is within 24 blocks. Test `ground_radar_miner_view`.
 - The Hub's screen was a fixed picture (slot 3 on top, 0 right, 2 bottom, 1 left), which is the hub as seen on a
   wall, or on a floor by a player facing east. For a player facing south over a floor hub it was a quarter turn off:
   the left and right slots were the north and south sides, the top and bottom ones east and west (AdventurAgent). The
@@ -1113,3 +1214,26 @@ on the next save. Such a node now follows NodeManager's existing logged orphan p
 whole raw node for repair or a later version, without simulating it or refunding an untrusted ledger.
 `AwgPersistenceTest` covers malformed geometry, missing run version, NaN heat, unknown wire, and
 length mismatch, alongside a valid paid part, through repeated load/save cycles.
+
+- **Wire colour care toggle removed** (Baughn 2026-11-21: obsolete). The wrench no longer toggles whether a six-node
+  cable joins only wires of its own colour; a placed cable keeps the setting it saved, so existing networks are unchanged.
+- **Pole spans need a line of sight** (2026-11-21, AdventurAgent: a span went straight through a stone wall). 1.12's
+  `validLOS` was a stub that always said yes. `GridElement.lineOfSight` now walks the straight line between each pair
+  of cable points and refuses a span when a block that collides is in the way (the two poles and their ghosts don't
+  count; the sag isn't checked; unloaded chunks count as clear). Spans strung before stay. `wp11_pole_span_needs_line_of_sight`.
+- **48V/230V heat turbines retained in this ForkPatch integration.** Original upstream removed them on 2026-11-23
+  because they were uncraftable and absent from its server. This port keeps the working descriptors, models,
+  sounds and IDs `transparent_node@257` / `@264` for existing saves. They remain hidden from JEI as before; the
+  powered `wp10b_turbine` case and normal save/load checks remain active. Upstream's removed-device orphan cases
+  do not describe these still-supported IDs here.
+- Pipe valves pass what stands at their own place in the run (Baughn 2026-11-24: "unrealistic plumbing"): on a level
+  run the bottom of the bore at the valve, so liquid along the bottom goes through; on an upright run the valve's own
+  height. They drew half way up each piece of pipe before and after them (since valves came in, 2026-10-18), so a run
+  with a riser before the valve had to fill half full before a drop passed. Existing builds: a valve on a level line
+  now passes condensate lying in the line (a steam line's valve passes its condensate first, as a real one would).
+  `pipe_valve_passes_liquid_at_its_place`.
+- A tank's high side flange draws at its own height, its centre (Baughn 2026-11-24: "unrealistic plumbing"); it drew at
+  its top edge (1dd694ee9, 2026-11-10: "gas rises to its top"), so liquid piped into it stood in the pipe. It still gives
+  gas until the liquid reaches it. Existing builds: a tank's high flange now gives liquid once the tank is 75 % full (was
+  81 %), and liquid piped into it runs in down to its centre. The low flange keeps its bottom edge.
+  `tank_high_flange_takes_liquid`.

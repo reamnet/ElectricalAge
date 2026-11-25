@@ -149,29 +149,8 @@ public class PlantCondenserElement extends TransparentNodeElement implements Flu
         if (motor != null && motorShare > 0) motor.takeShaftPower(pumpW, dt);
     }
 
-    /** Placed facing the player, its ports made from that front; the wrench turns it (FluidPlacement). */
-    @Override
-    public void initializeFromThat(Direction front, net.minecraft.world.entity.LivingEntity entityLiving, net.minecraft.nbt.CompoundTag itemStackNbt) {
-        super.initializeFromThat(front, entityLiving, itemStackNbt);
-        remakePorts();
-    }
-
-    @Override
-    public Direction[] fronts() {
-        return new Direction[]{Direction.XN, Direction.XP, Direction.ZN, Direction.ZP};
-    }
-
-    @Override
-    public boolean wrenchTurn(net.minecraft.world.entity.player.Player player) {
-        return mods.eln.fluid.FluidPlacement.turn(this);
-    }
-
     @Override
     public void remakePorts() {
-        makePorts();
-    }
-
-    void makePorts() {
         long at = node.coordonate.pos().asLong();
         int back = front.back().toEnumFacing().get3DDataValue(), right = front.right().toEnumFacing().get3DDataValue(),
             fr = front.toEnumFacing().get3DDataValue(), left = front.left().toEnumFacing().get3DDataValue();
@@ -190,7 +169,7 @@ public class PlantCondenserElement extends TransparentNodeElement implements Flu
     public void connectJob() {
         super.connectJob();
         if (v.vessel != null) {
-            makePorts();
+            remakePorts();
             FluidWorld.add(this);
         }
         findMotor();
@@ -213,7 +192,7 @@ public class PlantCondenserElement extends TransparentNodeElement implements Flu
         } else tubes.fill(0, Water.P_ATM, mods.eln.sim.Ambient.kelvin(c));
         tubesLink = new FluidDevice.Link(v.vessel, 0.5, tubes, 0.5, 0);
         tubesLink.conductance = TUBES_UA;
-        makePorts();
+        remakePorts();
         connect();
     }
 
@@ -281,15 +260,15 @@ public class PlantCondenserElement extends TransparentNodeElement implements Flu
         var n = v.vessel;
         if (n != null) {
             // (Baughn 2026-11-14: the level in the headline, 100 % where its tubes drown; the contents are details)
-            info.put(I18N.tr("Water level"), String.format(I18N.tr("%.0f%% of what drowns its tubes (%.0f mB)%s"), v.floodShare() / PlantCondenserDescriptor.FLOOD * 100,
-                n.mLiquid() / EaUnits.KG_PER_MB_WATER, v.floodShare() > PlantCondenserDescriptor.FLOOD ? I18N.tr(": FLOODING") : ""));
+            info.put(I18N.tr("Water level"), String.format(I18N.tr("%.0f%% of what drowns its tubes (%s)%s"), v.floodShare() / PlantCondenserDescriptor.FLOOD * 100,
+                EaUnits.volume(n.mLiquid() / EaUnits.KG_PER_MB_WATER), v.floodShare() > PlantCondenserDescriptor.FLOOD ? I18N.tr(": FLOODING") : ""));
             info.put(I18N.tr("Pressure"), String.format("%.2f bar of %s", n.P() / 1e5, EaUnits.contents(n)));
-            info.put(I18N.tr("Temperature"), String.format("%.0f °C", n.T() - Water.T0));
+            info.put(I18N.tr("Temperature"), mods.eln.api.Meters.celsius(n.T() - Water.T0));
             info.put(I18N.tr("Contents"), EaUnits.composition(n));
         }
         info.put(I18N.tr("Heat rejected"), Utils.plotPower("", v.heatW) + I18N.tr(" by its shell, ") + Utils.plotPower("", tubesW) + I18N.tr(" to its cooling water"));
         info.put(I18N.tr("Motor"), motor == null ? I18N.tr("none: put a Shaft Motor against its side")
-            : String.format("%.0f%% speed, pumping %.0f mB/s, %.0f W off its shaft", motorShare * 100, v.pumped, pumpW));
+            : String.format("%.0f%% speed, pumping %.0f mB/s, %s off its shaft", motorShare * 100, v.pumped, mods.eln.api.Meters.watts(pumpW)));
         if (v.pump != null) info.put(I18N.tr("Pump outlet"), v.outletStatus());
         return info;
     }

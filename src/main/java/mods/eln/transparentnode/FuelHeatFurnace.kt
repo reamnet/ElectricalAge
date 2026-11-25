@@ -113,6 +113,11 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         val MainSwitchToggleEvent: Byte = 1
         val SetManualControlValueEvent: Byte = 2
         val SetTemperatureEvent: Byte = 3
+        /** The Analogic Regulator's PID (per kelvin; see RegulatorProcess.setPid), tuned in OilCases' thermostat variant. */
+        const val PID_KP = 0.01
+        const val PID_KI = 6e-4
+        const val PID_KD = 0.02
+        const val PID_TF = 2.0
         /** The most a burner cokes: it still fires a tenth. */
         const val COKE_MAX = mods.eln.sim.fluid.FuelQuality.FOUL_MAX
         /**
@@ -494,7 +499,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         val kg = mods.eln.sim.fluid.EaUnits.drainLiquid(v, (bank + hot * nominal * DROWN_FLASH_S) / WATER_BOIL_J_PER_KG)
         if (kg > 0) flue.addSteam(kg)   // (up its stack, or its flue's pipe)
         steamedKg += kg
-        fire.level = 0.0
+        fire.set(0.0)
         bank = 0.0
         delivered = 0.0   // (the water quenches the burner)
         mainSwitch = false
@@ -662,6 +667,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         override fun setCmd(cmd: Double) {
             heaterControlValue = Math.max(0.0, cmd)
         }
+
     }
 
     private val thermalWatchdog = ThermalLoadWatchDog()
@@ -911,7 +917,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         setTemperature = ClientValues.finite(nbt.getDoubleOr("setTemperature", 0.0), 0.0)
         actualHeatPower = nbt.getDoubleOr("actualHeatPower", 0.0)
         delivered = nbt.getDoubleOr("burnerW", actualHeatPower)
-        if (nbt.contains("fire")) fire.read(nbt, "") else fire.level = heaterControlValue
+        if (nbt.contains("fire")) fire.read(nbt, "") else fire.set(heaterControlValue)
         flue.read(nbt)
         coke = nbt.getDoubleOr("coke", 0.0)
     }
@@ -939,7 +945,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         val v = vessel
         if (v != null) {
             val mb = fuelMb()
-            info.put(I18N.tr("Fuel tank"), if (mb < 0.5) I18N.tr("empty") else String.format("%.0f / %.0f mB: %s", mb, TANK_MB, mods.eln.sim.fluid.EaUnits.composition(v)))
+            info.put(I18N.tr("Fuel tank"), if (mb < 0.5) I18N.tr("empty") else mods.eln.sim.fluid.EaUnits.tank(mb, TANK_MB) + ": " + mods.eln.sim.fluid.EaUnits.composition(v))
             if (atBurner == mods.eln.sim.fluid.SpeciesRegistry.WATER) info.put(I18N.tr("Burner"), I18N.tr("water at the burner: the fire is out; drain it to relight"))
         }
         if (coke > 0.01 && atBurner != mods.eln.sim.fluid.SpeciesRegistry.WATER) info.put(I18N.tr("Burner"), String.format(I18N.tr("%.0f%% coked: fires %.0f%% (right-click with wool to clean)"), coke * 100, (1 - coke) * 100))
@@ -973,7 +979,9 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         if (!regulatorStack.isEmpty && !externalControlled) {
             val regulator = Utils.getItemObject(regulatorStack) as IRegulatorDescriptor
             val held = heaterControlValue   // (an on/off regulator starts off: a loaded furnace keeps what it was at)
-            regulator.applyTo(controlProcess, 500.0, 20.0, 0.2, 0.1)
+            // (the Analogic Regulator: a PID tuned for this furnace, Baughn 1573753560456499223)
+            if (regulator.type == RegulatorType.Analog) controlProcess.setPid(PID_KP, PID_KI, PID_KD, PID_TF)
+            else regulator.applyTo(controlProcess, 500.0, 20.0, 0.2, 0.1)
             heaterControlValue = held
         } else {
             controlProcess.setManual()
