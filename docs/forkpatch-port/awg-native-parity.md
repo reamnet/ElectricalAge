@@ -30,3 +30,20 @@ validation of its replacement.
 | Slabs, stairs and decorative hosts | Rejected where they require micro-planes or replacing a host | Extend the AWG save geometry and verify host restoration on every rollback path before enabling |
 | Grounded and wall branches, machine connectors | Existing centered floor taps and centered machine connections remain available | Native off-center and non-floor taps need endpoint-specific split, port and damage ownership tests. Sagged spans also need a split operation that preserves the sampled curve |
 | Historical placement | Ordinary offhand six-node and older sneak routing still available | Retire the redundant centered router only after the shared path covers its tested shapes |
+
+## Full-block outer knuckles
+
+AWG uses the native outer-turn search and its emitted full-block knuckle mesh.
+A knuckle owns an ideal zero-volt MNA connection between its two explicit
+ports. Adjoining paid edges opt into those ports in their saved endpoint masks.
+Removing or disconnecting the knuckle releases its connection and references
+without removing the arms or charging for decorative geometry. Each arm keeps
+its own wire length, resistance, temperature and failure state. The knuckle
+stores a descriptor and edge position and owns no recoverable wire.
+
+Floor-to-wall, wall-to-ceiling and wall-to-wall exterior edges have paired
+native geometry fixtures. The floor-to-wall power fixture checks opening the
+load by removing only the knuckle and keeping a parallel load powered.
+Inside-block outer wraps on steps or slabs still need a representation that
+maps the native extensions to paid edges and restores any replaced host on
+rollback. Client mesh bounds and packet round trips are covered headlessly.

@@ -57,6 +57,12 @@ public final class AwgNativeOuterCase implements TestCase {
         var spool = wire.newItemStack();
         wire.setRemainingLengthMeters(spool, 2.125);
         var supply = KitSupply.awg(spool, wire);
+        level.setBlockAndUpdate(cornerPos, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        var stale = AwgCablePart.layNative(level, supply, route, null, null, null, -1);
+        ctx.check(label + " stale preview refuses a newly obstructed knuckle without payment",
+            stale != null && wire.getRemainingLengthMeters(spool) == 2.125
+                && level.isEmptyBlock(support.relative(first)), String.valueOf(stale));
+        level.removeBlock(cornerPos, false);
         var before = Eln.simulator.counts();
         var failed = AwgCablePart.layNative(level, supply, route, null, null, null, 2);
         ctx.check(label + " rollback after the knuckle removes new nodes and loads without payment",
