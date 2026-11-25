@@ -53,8 +53,10 @@ public class SixNodeItem extends Item implements IDescriptorItem {
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         Level world = ctx.getLevel();
-        if (ctx.getPlayer() != null && ctx.getHand() == InteractionHand.MAIN_HAND
-            && AwgCablePart.supportsSpool(descriptor)) {
+        boolean utilitySpool = AwgCablePart.supportsSpool(descriptor);
+        if (utilitySpool && ctx.getHand() == InteractionHand.OFF_HAND
+            && ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown()) return InteractionResult.FAIL;
+        if (ctx.getPlayer() != null && ctx.getHand() == InteractionHand.MAIN_HAND && utilitySpool) {
             if (world.isClientSide()) return InteractionResult.SUCCESS;
             if (world instanceof ServerLevel level && ctx.getPlayer() instanceof ServerPlayer player) {
                 if (player.isSpectator() || !player.getAbilities().mayBuild
