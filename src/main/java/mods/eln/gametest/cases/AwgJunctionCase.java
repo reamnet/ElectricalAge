@@ -132,7 +132,12 @@ final class AwgJunctionCase implements TestCase {
                     throw new IllegalStateException(e);
                 }
             }
+            var dropArea = new AABB(branchEnd).inflate(0.5);
+            var existing = ctx.level().getEntitiesOfClass(ItemEntity.class, dropArea);
             remove(ctx, branchEnd);
+            var refunds = ctx.level().getEntitiesOfClass(ItemEntity.class, dropArea).stream()
+                .filter(entity -> !existing.contains(entity)).map(ItemEntity::getItem).toList();
+            checkRefund(ctx, refunds);
         });
     }
 
@@ -222,10 +227,12 @@ final class AwgJunctionCase implements TestCase {
     @Override public void measure(TestContext ctx) {
         check(ctx, Math.abs(Wp9aCases.current(straight)) > 0.5 && branchCurrent() < 1e-6,
             "removing the branch leaves the straight load powered");
+    }
+
+    private void checkRefund(TestContext ctx, java.util.List<ItemStack> refunds) {
         if (mixed) {
-            var drops = ctx.level().getEntitiesOfClass(ItemEntity.class, new AABB(branchEnd).inflate(0.5));
-            var tag = ItemNbt.get(drops.getFirst().getItem());
-            check(ctx, drops.size() == 1 && tag.getStringOr("wireScrapMaterial", "").equals("Aluminum")
+            var tag = refunds.size() == 1 ? ItemNbt.get(refunds.getFirst()) : null;
+            check(ctx, tag != null && tag.getStringOr("wireScrapMaterial", "").equals("Aluminum")
                 && tag.getDoubleOr("wireScrapMeters", -1) == 1
                 && tag.getDoubleOr("wireScrapMassKg", -1) == WirePhysics.INSTANCE.massKg(
                     branchWire.getMaterial(), branchWire.getConductorAreaMm2(), 1)
@@ -233,9 +240,9 @@ final class AwgJunctionCase implements TestCase {
                 "damaged aluminum refunds exactly its recoverable mass as scrap");
             return;
         }
-        double refunded = ctx.level().getEntitiesOfClass(ItemEntity.class, new AABB(branchEnd).inflate(0.5)).stream()
-            .map(ItemEntity::getItem).filter(s -> s.is(wire.parentItem)).mapToDouble(wire::getRemainingLengthMeters).sum();
-        check(ctx, refunded == 1.0 && branchWire.getRemainingLengthMeters(spool) + refunded + 5.5 + 1.0 == 9.125,
+        double refunded = refunds.stream().filter(s -> s.is(wire.parentItem))
+            .mapToDouble(wire::getRemainingLengthMeters).sum();
+        check(ctx, refunds.size() == 1 && refunded == 1.0 && branchWire.getRemainingLengthMeters(spool) + refunded + 5.5 + 1.0 == 9.125,
             "refund, inventory, fused loss and remaining wire account for all 9.125 m");
     }
 }
