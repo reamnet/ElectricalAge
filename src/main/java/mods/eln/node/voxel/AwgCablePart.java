@@ -296,7 +296,7 @@ public final class AwgCablePart extends VoxelPart {
         for (var existing : wires) {
             if (existing.outerEnds != 0) return "AWG knuckle arms cannot be tapped";
             if (existing.cornerEnd >= 0) return "AWG face transitions cannot be tapped";
-            if (existing.geometry.hang2 != null) return "AWG sagged sections cannot be tapped";
+            if (!existing.isStraightAt(point)) return "AWG taps need a straight section outside the sampled sag";
             if (!CablePlacer.supported(level, pos, existing.geometry)) return "AWG junction support changed";
             var state = existing.run;
             if (state == null || state.getConductorMelted()) return "AWG junction needs live conductor";
@@ -309,6 +309,11 @@ public final class AwgCablePart extends VoxelPart {
             System.arraycopy(point, 0, secondPoints, 0, 3);
             var first = new AwgCablePart(existing.wire, face, firstPoints);
             var second = new AwgCablePart(existing.wire, face, secondPoints);
+            if (existing.geometry.hang2 != null) {
+                int splitAt = first.geometry.length() * 8;
+                first.geometry.hang2 = hangSlice(existing.geometry.hang2, 0, splitAt);
+                second.geometry.hang2 = hangSlice(existing.geometry.hang2, splitAt, existing.geometry.length() * 8);
+            }
             var detached = AwgCableRun.Companion.load(existing.wire, state.save(), new VoltageState(), new VoltageState());
             var split = detached.split(first.geometry.length(), new VoltageState());
             first.saved = split.getFirst().save();
@@ -476,13 +481,41 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     CableRouter.End tapEnd(ServerLevel level, BlockPos pos, Vec3 hit, long[][] join) {
-        if (geometry.isKnuckle() || outerEnds != 0 || cornerEnd >= 0 || geometry.hang2 != null
+        if (geometry.isKnuckle() || outerEnds != 0 || cornerEnd >= 0
             || run == null || run.getConductorMelted() || !CablePlacer.supported(level, pos, geometry)) return null;
         int[] local = CablePlacer.nearestTap(geometry, hit.x - pos.getX(), hit.y - pos.getY(), hit.z - pos.getZ());
-        if (local == null) return null;
+        if (local == null || !isStraightAt(local)) return null;
         long[] point = {pos.getX() * 16L + local[0], pos.getY() * 16L + local[1], pos.getZ() * 16L + local[2]};
         join[0] = point;
         return new CableRouter.End(point[0], point[1], point[2], geometry.face, -1);
+    }
+
+    private boolean isStraightAt(int[] point) {
+        if (geometry.hang2 == null) return true;
+        var start = geometry.points;
+        int at = (Math.abs(start[0] - point[0]) + Math.abs(start[1] - point[1])
+            + Math.abs(start[2] - point[2])) * 8;
+        int[] samples = geometry.hang2;
+        for (int i = 0; i < samples.length; i += 3 + 9 * samples[i + 2])
+            if (samples[i] <= at && at <= samples[i + 1]) return false;
+        return true;
+    }
+
+    /** Keep complete native sample ranges on one side of a straight split and rebase their arc offsets. */
+    static int[] hangSlice(int[] samples, int from, int to) {
+        int[] slice = new int[samples.length];
+        int used = 0;
+        for (int i = 0; i < samples.length;) {
+            int size = 3 + 9 * samples[i + 2];
+            if (samples[i] >= from && samples[i + 1] <= to) {
+                System.arraycopy(samples, i, slice, used, size);
+                slice[used] -= from;
+                slice[used + 1] -= from;
+                used += size;
+            }
+            i += size;
+        }
+        return used == 0 ? null : java.util.Arrays.copyOf(slice, used);
     }
 
     private static int[] localTap(BlockPos pos, long[] point) {

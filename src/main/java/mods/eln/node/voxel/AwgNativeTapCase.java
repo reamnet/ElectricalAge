@@ -52,7 +52,9 @@ public final class AwgNativeTapCase implements TestCase {
         if (placed != null) return;
         try {
             Reload.node(level, center, tag -> {
-                var state = tag.getCompoundOrEmpty("p0").getCompoundOrEmpty("run");
+                var part = tag.getCompoundOrEmpty("p0");
+                if (mount == Direction.UP) part.putIntArray("hang2", ceilingSamples());
+                var state = part.getCompoundOrEmpty("run");
                 state.putDouble("joules", 400);
                 state.putDouble("exposure", .125);
                 return tag;
@@ -65,6 +67,12 @@ public final class AwgNativeTapCase implements TestCase {
         double originalExposure = original.activeRun().getInsulationExposure();
         ctx.check(mount + " fixture loads warm, exposed conductor",
             Math.abs(originalHeat - 400) < 1e-8 && originalExposure == .125, originalHeat + " J / " + originalExposure);
+        if (mount == Direction.UP) {
+            var sampled = end(center, mount, 12);
+            var sampledHit = new Vec3(sampled.x() / 16.0, sampled.y() / 16.0 - 1.0 / 16, sampled.z() / 16.0);
+            ctx.check("clicks over displaced ceiling samples cannot make a phantom tap",
+                original.tapEnd(level, center, sampledHit, new long[1][]) == null, "");
+        }
         var target = end(center, mount, 4);
         var hit = new Vec3(target.x() / 16.0, target.y() / 16.0, target.z() / 16.0)
             .subtract(mount.getStepX() / 16.0, mount.getStepY() / 16.0, mount.getStepZ() / 16.0);
@@ -96,6 +104,16 @@ public final class AwgNativeTapCase implements TestCase {
         ctx.check(mount + " asymmetric split preserves heat, paid length and insulation exposure",
             arms.size() == 3 && Arrays.equals(paid, new int[]{4, 12}) && Math.abs(inheritedHeat - originalHeat) < 1e-8,
             Arrays.toString(paid) + " / " + inheritedHeat + " J");
+        if (mount == Direction.UP) {
+            int[] before = ceilingSamples();
+            int[] expected = before.clone();
+            expected[0] -= 32;
+            expected[1] -= 32;
+            var sampled = inherited.stream().filter(p -> length(p) == 12).findFirst().orElseThrow();
+            ctx.check("straight landing tap keeps all native sample positions and orientations",
+                Arrays.equals(sampled.visual().hang2, expected)
+                    && inherited.stream().filter(p -> length(p) == 4).allMatch(p -> p.visual().hang2 == null), "");
+        }
         try {
             ctx.check(mount + " three arms retain their full state across node reload", Reload.node(level, center).tagsEqual(), "");
         } catch (ReflectiveOperationException e) {
@@ -150,6 +168,14 @@ public final class AwgNativeTapCase implements TestCase {
                 Eln.simulator.removeElectricalLoad(rail);
             }
         });
+    }
+
+    private static int[] ceilingSamples() {
+        // Native hang2 layout: arc range, point count, then position, normal and tangent.
+        return new int[]{64, 128, 3,
+            64, 128, 64, 0, -64, 0, 64, 0, 0,
+            96, 120, 64, 0, -64, 0, 64, 0, 0,
+            128, 128, 64, 0, -64, 0, 64, 0, 0};
     }
 
     private static int length(AwgCablePart part) {
