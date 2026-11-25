@@ -106,3 +106,32 @@ No actual client rendering has been launched or visually inspected in this workt
 - Strict electrical samples agree to <1e-9 A: e.g. load 11.603565784842 A, feeder 11.603565784255 A, second 11.603565784255 A while chunks absent. No simulator physics change was needed.
 - Terminal object identities remain unchanged after every actual reload; after removal their MNA membership and connected-component references are empty. This is scoped resource evidence, not an assertion that all global object counts must vanish.
 - Next: full build/root test baseline, then full GameTest suite. Preserve test outputs and record actual failures, including any beyond the historical three.
+
+## Final missing rollback invariant
+- Added explicit stale-funding confirmation to existing AwgNativeRouteCase: after a valid cached six-meter preview, shorten the live spool to 5.9375 m; confirm must keep every route endpoint empty, retain the session and preserve the reduced spool exactly. Restore funding and confirm normally. This complements existing underfunded-preview and stale-obstruction checks without duplicating routing geometry work.
+- Full root/build currently running against previously compiled main outputs; do not compile this new GameTest edit until root test JVM exits. Full GameTest run will compile and exercise it.
+
+## Wider regression in progress
+- Current HEAD `2817ed508`; branch remains `local/gpt-awg-reliability`. Commits: `1e2e7291d`, `182adb885`, `11a7839cd`, `2817ed508`.
+- `./gradlew build :test` with isolated Gradle home is running (log `/tmp/awg-reliability-full-build.log`), full unfiltered root suite; no failures reported yet. Subproject/API compilation has passed so far.
+- Uncommitted changes: stale-spool confirmation assertion in AwgNativeRouteCase and progress document only.
+- Exact next actions: await root test exit; run focused `runGameTestServer -PelnGameTests=awg_native_kit_session`; commit verified funding assertion; run unfiltered `runGameTestServer`, inspect failures and AWG results, finalize report. No main compilation while current root JVM runs.
+
+## Ownership and recovery audit conclusion
+- `AwgCablePart` shares reference-counted terminals by world-space endpoint AND an explicit channel. Same-plane endpoints, marked inner corners and opted-in outer ports use distinct channel identities; visual crossings alone do not join interiors. A knuckle owns its zero-volt VoltageSource; each paid arm retains its own AwgCableRun/resistor, thermal energy and ledger.
+- `VoxelNode.connectJob` attaches AWG parts and tracks them in activeAwg; disconnect releases the knuckle source or run, then both terminal references. Last-user release removes the MNA load and point-map entry. Actual chunk unload deliberately calls neither path; dimension/node retirement does. The repeated test exercises retained identities and final real removal rather than treating intentionally resident simulation objects as leaks.
+- Malformed run validation happens during part reading before terminal acquisition; inactive malformed-part tags remain owned by the voxel node for recovery. Existing persistence/orphan tests cover this; no recovery code was replaced.
+- Placement checks/debits a copy of the live spool, applies splits before installation and undoes them on failure. Existing forced-failure, blocked tap and repeated-confirmation fixtures cover state/material preservation. New stale-funding assertion specifically checks confirmation against changed inventory.
+- No AWG electrical/thermal solver or save schema changes were needed. No geometry features, registry IDs/specifications, pinned dependencies, historical snapshots or Qwen worktree files were changed.
+
+## Parallel regression isolation
+- Full root suite remains active after >13 minutes, with progress observed from Janet CPU stdlib to fluid-core tests and no reported failures.
+- To continue server verification safely, `/tmp/eln-awg-isolated-game.gradle` now sets EVERY project's buildDirectory to its own `build/awg-isolated-game` and every dev run directory under that build output. `--project-cache-dir /home/matthew/.cache/eln-awg-game-project` isolates project task state too. These are external local runtime settings, not tracked/pinned configuration changes.
+- This avoids compiling changed main classes into outputs used by the active root test JVM. Primary `build/classes` and primary subproject outputs remain untouched by the isolated server run.
+- Focused funding test running in isolation: `./gradlew --project-cache-dir /home/matthew/.cache/eln-awg-game-project -I /tmp/eln-awg-isolated-game.gradle runGameTestServer -PelnGameTests=awg_native_kit_session`, log `/tmp/awg-reliability-funding.log`.
+- Exact next actions: await focused funding result and root result independently; commit funding assertion if verified; run unfiltered GameTests with the same isolated output setup. Do not run a primary-output main compilation while root JVM remains active.
+
+## Stale funding verified
+- Isolated `awg_native_kit_session` run: exit 0, 2/2 required tests passed, 2m38s including cold isolated output compilation. New changed-spool assertion PASS, existing stale obstruction/rollback/replayed confirmation/branch placement assertions PASS.
+- Full root build remains active in primary outputs, no reported failures yet.
+- Next: full GameTest run in isolated outputs (no filters), then reconcile both final results.

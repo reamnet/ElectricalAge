@@ -65,6 +65,14 @@ public final class AwgNativeRouteCase implements TestCase {
             CablePlacer.waypoints(player.getUUID()) == 2 && wire.getRemainingLengthMeters(spool) == 12.125
                 && ctx.level().isEmptyBlock(start.above()), "");
         ctx.level().removeBlock(obstruction, false);
+        plan.awgPreview = new CablePlacer.AwgPreview(aim, null, java.util.List.of(end(pivot)), bent);
+        wire.setRemainingLengthMeters(spool, 5.9375);
+        click(player, end);
+        ctx.check("a spool shortened after preview cannot fund confirmation or install a partial route",
+            CablePlacer.waypoints(player.getUUID()) == 2 && wire.getRemainingLengthMeters(spool) == 5.9375
+                && ctx.level().isEmptyBlock(start.above()) && ctx.level().isEmptyBlock(pivot.above())
+                && ctx.level().isEmptyBlock(end.above()), "");
+        wire.setRemainingLengthMeters(spool, 12.125);
         click(player, end);
         ctx.check("repeat click confirms the displayed route and charges exactly six meters",
             !CablePlacer.active(player.getUUID()) && wire.getRemainingLengthMeters(spool) == 6.125
