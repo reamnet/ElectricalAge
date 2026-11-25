@@ -63,3 +63,20 @@ No actual client rendering has been launched or visually inspected in this workt
 - Preview generation fix and both new lifecycle unit tests pass. No registry IDs, specifications, goldens or routing geometry changed.
 - Focused GameTest command now running: `./gradlew runGameTestServer -PelnGameTests=awg_actual_chunk_lifecycle,awg_voxel_mixed_metal_junction,awg_voxel_world_three_way_junction,awg_catalog_copper,awg_catalog_aluminum,awg_catalog_high_voltage` with isolated cache, log `/tmp/awg-reliability-gametest.log`.
 - Next: inspect runtime results, fix fixture issues if any, then expand regression execution. Do not compile main classes until this GameTest process exits.
+
+## First GameTest results and fixture correction
+- Focused six-case server run: exit 1. Mod loads successfully here; supplied historical construct-mod blocker is obsolete for this commit.
+- Copper (42), aluminum (18), high-voltage (10), homogeneous and mixed-metal junction cases PASS, including their persistence/cleanup checks.
+- New lifecycle fixture FAILS its required actual eviction observation; electrical continuity and terminal identity checks pass, but these do not establish chunk eviction.
+- Investigation of current Minecraft ServerChunkCache/ChunkMap source: a FULL-ticket neighbour keeps target generation data resident through the dependency halo; absence as FULL is not the same as actual block-entity eviction. Radius-zero tickets did not provide independent adjacent eviction.
+- Fixture corrected to release BOTH circuit chunk tickets, then require actual removed anchor + absent target chunk and absent source chunk. This is meaningful actual cross-boundary unload/reload coverage, but NOT partial eviction with an adjacent chunk remaining resident. That requested scenario remains a harness/ticket-topology limitation.
+- Re-run: `./gradlew runGameTestServer -PelnGameTests=awg_actual_chunk_lifecycle`, log `/tmp/awg-reliability-chunk.log`. Pending.
+- First run measured 11.611313 A through the loaded cable/resistor at the attempted unload checkpoint and 11.611277 A after attempted reload (thermal evolution). These are loaded-chunk measurements, not eviction results.
+- Current commit `1e2e7291d`; uncommitted CableCases registration and AwgChunkLifecycleCase. No main compilation while game JVM active.
+
+## Actual eviction verified
+- Corrected single lifecycle GameTest: exit 0, 2/2 required tests passed (includes harness automatic case), 55s Gradle run. Actual target AND source chunk eviction observed; original anchor removed; fresh anchor after reload resolves the identical AWG part and terminal objects. Post-reload removal retires the node/run.
+- Measurements: 11.611424493 A before eviction; 11.611313275 A while both chunks absent; 11.611277232 A after reload; 11.611216983 A before removal. Heating is allowed to continue while absent; temperature-dependent resistance explains drift.
+- Material: 2.125 m spool becomes exactly 0.125 m for two 1 m conductors.
+- Assertion wording corrected to describe terminal identity rather than imply total global MNA counts. No snapshot/deserialization is used for eviction.
+- Partial eviction with an immediately adjacent resident chunk remains unverified. Corners/sags/melted/insulation-damaged parts have existing save/reload tests, but have NOT yet been put through this actual eviction fixture.
