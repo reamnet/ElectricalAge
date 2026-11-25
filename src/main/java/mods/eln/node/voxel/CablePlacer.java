@@ -33,6 +33,7 @@ public final class CablePlacer {
         CableSpec spec;
         mods.eln.sixnode.electricalcable.UtilityCableDescriptor wire;
         ItemStack spool;
+        AwgPreview awgPreview;
 
         boolean matches(KitSupply kit) {
             return KitSupply.lays(kit, false, tier, spec) && wire == kit.wire()
@@ -50,6 +51,12 @@ public final class CablePlacer {
             this.start = start;
             this.startJoin = startJoin;
             this.dim = dim;
+        }
+    }
+
+    record AwgPreview(CableRouter.End end, long[] join, List<CableRouter.End> waypoints, CableRouter.Result route) {
+        boolean matches(CableRouter.End target, long[] targetJoin, List<CableRouter.End> pivots) {
+            return end.equals(target) && java.util.Arrays.equals(join, targetJoin) && waypoints.equals(pivots);
         }
     }
 
@@ -581,7 +588,9 @@ public final class CablePlacer {
         // finish: at a device, a cable, or the last waypoint
         CableRouter.End end = again ? plan.waypoints.remove(plan.waypoints.size() - 1) : at;
         long tRoute = System.nanoTime();
-        CableRouter.Result r = route(level, plan, end, join[0]);
+        var preview = plan.awgPreview;
+        CableRouter.Result r = preview != null && preview.matches(end, join[0], plan.waypoints)
+            ? preview.route() : route(level, plan, end, join[0]);
         KitPreview.slow("click route (server thread)", tRoute, (plan.startJoin != null ? "from a cable, " : "") + Router.LAST_EXPANSIONS.get() + " expansions");
         if (r.error != null) {
             if (again) plan.waypoints.add(end);
@@ -599,7 +608,11 @@ public final class CablePlacer {
         String err = plan.wire == null ? lay(level, tier, spec, r.steps, player)
             : AwgCablePart.layNative(level, kit, r, plan.startJoin, join[0], player, -1);
         if (err != null) {
-            if (again && plan.wire != null) plan.waypoints.add(end);
+            if (plan.wire != null) {
+                if (again) plan.waypoints.add(end);
+                plan.awgPreview = null;
+                KitPreview.invalidate(player.getUUID());
+            }
             KitPreview.note(player, "Can't lay it: " + err);
             return true;
         }

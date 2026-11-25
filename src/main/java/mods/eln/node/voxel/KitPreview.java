@@ -38,6 +38,12 @@ public final class KitPreview {
         SNAPS.remove(player);
     }
 
+    static void invalidate(UUID player) {
+        LAST.remove(player);
+        SNAPS.remove(player);
+        GEN.merge(player, 1L, Long::sum);
+    }
+
     public static void tick(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post e) {
         if (!(e.getEntity() instanceof ServerPlayer p) || !(p.level() instanceof ServerLevel level)) return;
         CablePlacer.checkLapse(p, level.getGameTime());   // (every tick: Baughn found the outline slow at 4 ticks)
@@ -116,6 +122,7 @@ public final class KitPreview {
                     if (GEN.getOrDefault(id, 0L) != gen || p.hasDisconnected() || p.level() != level
                         || CablePlacer.PLANS.get(id) != plan || !plan.matches(KitSupply.held(p))) return;
                     var answer = awgAnswer(level, plan, at, endJoin, have, route, p);
+                    plan.awgPreview = answer.ok() ? new CablePlacer.AwgPreview(at, endJoin, pivots, route) : null;
                     send(p, answer.ok(), answer.boxes(), false, debug);
                     p.sendOverlayMessage(net.minecraft.network.chat.Component.literal(answer.message()));
                 });

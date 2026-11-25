@@ -106,3 +106,30 @@ In route mode, select the top of the floor support and the face of the wall supp
 The transaction charges both centerlines and treats voxel mesh overlap as free. Both support faces must be solid at the corner. An unsupported face, obstruction or failed placement rejects the whole route. Removing either corner arm opens the joint and recovers only that arm's paid length.
 
 The same explicit joint also supports a wall and ceiling in either selection order. Select a ceiling underside and a wall face in route mode. The ceiling leg must approach the wall squarely, and the wall leg must descend from the shared corner. Outer wraps and wall-to-wall transitions still require separate routing rules.
+
+## Native kit controls for utility spools
+
+All registered single-conductor copper and aluminum spools work directly in the
+native cable kit session. Hold a spool in the main hand and right-click a
+supported face. Aim at another face to see the native route outline. Green means
+the displayed route is supported and the spool can pay for it. Right-click to add
+a waypoint and right-click the last waypoint again to lay the route. Clicking a
+compatible machine connector or a centered floor wire tap finishes the route
+directly, as with a native kit.
+
+Sneak-right-click during a session to remove the last waypoint or cancel an
+empty session. Switching spools, changing dimensions, leaving the game or
+letting the session expire also drops the unfinished route. No conductor is
+debited until placement succeeds.
+
+For six-node placement, put the spool in the offhand, leave the main hand empty,
+and right-click a support face. The previous AWG controls remain available when
+a native session is inactive. Sneak-right-click a floor for a single centered
+segment, or sneak-right-click in air and then select the two support faces
+while sneaking. Remove voxel wire with shears.
+
+The native router supplies the path. The AWG placement check rejects unsupported
+spans, outer wraps and native geometry that cannot be represented as paid AWG
+edges. Supported inner corners keep the explicit electrical joint. Route length
+is the centerline distance at 16 voxels per meter, so a surface click's exact
+snapped position can affect the charge. Saved AWG runs use the existing format.

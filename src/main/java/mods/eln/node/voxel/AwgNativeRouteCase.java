@@ -57,6 +57,14 @@ public final class AwgNativeRouteCase implements TestCase {
         click(player, end);
         ctx.check("click adds the second waypoint without payment",
             CablePlacer.waypoints(player.getUUID()) == 2 && wire.getRemainingLengthMeters(spool) == 12.125, "");
+        plan.awgPreview = new CablePlacer.AwgPreview(aim, null, java.util.List.of(end(pivot)), bent);
+        var obstruction = ctx.at(2, 1, 1);
+        ctx.level().setBlockAndUpdate(obstruction, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        click(player, end);
+        ctx.check("a route obstructed after the preview cannot be confirmed or silently rerouted",
+            CablePlacer.waypoints(player.getUUID()) == 2 && wire.getRemainingLengthMeters(spool) == 12.125
+                && ctx.level().isEmptyBlock(start.above()), "");
+        ctx.level().removeBlock(obstruction, false);
         click(player, end);
         ctx.check("repeat click confirms the displayed route and charges exactly six meters",
             !CablePlacer.active(player.getUUID()) && wire.getRemainingLengthMeters(spool) == 6.125
@@ -67,6 +75,14 @@ public final class AwgNativeRouteCase implements TestCase {
         ctx.check("replayed click and cancellation cannot spend materials again",
             !CablePlacer.active(player.getUUID()) && wire.getRemainingLengthMeters(spool) == 6.125, "");
         player.setShiftKeyDown(false);
+        var branchStart = ctx.at(2, 0, 4);
+        var junction = ctx.at(2, 1, 1);
+        click(player, branchStart);
+        click(player, junction, Vec3.atLowerCornerOf(junction).add(.5, 1.0 / 16, .5));
+        ctx.check("clicking an existing wire attaches a real three-way junction without buying old wire",
+            !CablePlacer.active(player.getUUID()) && wire.getRemainingLengthMeters(spool) == 3.125
+                && AwgCablePart.at(ctx.level(), junction).size() == 3,
+            "spool: " + wire.getRemainingLengthMeters(spool));
         CablePlacer.forget(player.getUUID());
     }
 
@@ -77,6 +93,10 @@ public final class AwgNativeRouteCase implements TestCase {
 
     private static void click(FakePlayer player, BlockPos support) {
         var hit = Vec3.atLowerCornerOf(support).add(0.5, 1, 0.5);
+        click(player, support, hit);
+    }
+
+    private static void click(FakePlayer player, BlockPos support, Vec3 hit) {
         player.snapTo(hit.x, hit.y, hit.z, 0, 90);
         player.getMainHandItem().useOn(new UseOnContext(player, InteractionHand.MAIN_HAND,
             new BlockHitResult(hit, Direction.UP, support, false)));
