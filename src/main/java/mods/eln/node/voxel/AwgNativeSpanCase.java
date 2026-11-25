@@ -64,6 +64,15 @@ public final class AwgNativeSpanCase implements TestCase {
         ctx.check("installed span bounds match the planned bounds",
             java.util.Arrays.equals(part.boxes().getFirst(), planned.parts().get(1).boxes().getFirst()), "");
         try {
+            var bytes = new java.io.ByteArrayOutputStream();
+            part.serialize(new java.io.DataOutputStream(bytes));
+            var client = AwgCablePart.deserialize(new java.io.DataInputStream(new java.io.ByteArrayInputStream(bytes.toByteArray())));
+            ctx.check("native sag samples survive the AWG client packet",
+                part.visual().hang2 != null && java.util.Arrays.equals(part.visual().hang2, client.visual().hang2), "");
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException(e);
+        }
+        try {
             ctx.check("gap piece reloads as a paid one-meter run", Reload.node(level, middle).tagsEqual(), "");
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(e);

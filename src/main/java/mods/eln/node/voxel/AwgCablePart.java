@@ -569,6 +569,20 @@ public final class AwgCablePart extends VoxelPart {
                             Player player, int failAt) {
         var layout = nativeLayout(level, kit.wire(), route, startJoin, endJoin, player);
         if (layout.error() != null) return layout.error();
+        var space = CablePlacer.space(level);
+        if (startJoin != null) space = CablePlacer.around(space, startJoin);
+        if (endJoin != null) space = CablePlacer.around(space, endJoin);
+        var hung = CableHang.laid(space, routeKind(kit.wire()), route.steps);
+        if (!hung.hangs().isEmpty()) {
+            for (int i = 0; i < layout.parts().size(); i++) {
+                var pos = layout.positions().get(i);
+                var part = layout.parts().get(i);
+                var piece = new CableRouter.Piece(pos.getX(), pos.getY(), pos.getZ(),
+                    part.geometry.face, part.geometry.points);
+                var samples = CableHang.encode(piece, hung.route(), hung.hangs());
+                if (samples != null) part.setHang(samples);
+            }
+        }
         return lay(level, layout.positions(), layout.parts(), route.length(), kit.spool(), player, failAt, layout.splits());
     }
 
@@ -738,6 +752,7 @@ public final class AwgCablePart extends VoxelPart {
             tag.putInt("cornerEnd", cornerEnd);
             tag.putInt("cornerFace", cornerFace);
         }
+        if (geometry.hang2 != null) tag.putIntArray("hang2", geometry.hang2);
         tag.put("run", run == null ? saved.copy() : run.save());
     }
 
@@ -754,6 +769,8 @@ public final class AwgCablePart extends VoxelPart {
         try {
             if (tag.contains("cornerEnd") || tag.contains("cornerFace"))
                 part.markCorner(tag.getIntOr("cornerEnd", -1), tag.getIntOr("cornerFace", -1));
+            if (tag.contains("hang2"))
+                part.setHang(tag.getIntArray("hang2").orElseThrow());
             AwgCableRun.Companion.load(wire, state, new VoltageState(), new VoltageState());
         } catch (IllegalArgumentException | IllegalStateException | java.util.NoSuchElementException e) {
             return null;
@@ -763,13 +780,41 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     @Override public void serialize(DataOutputStream out) throws IOException {
-        out.writeByte(0x80 | geometry.face);
+        boolean hung = geometry.hang2 != null;
+        out.writeByte(0x80 | (hung ? 0x40 : 0) | geometry.face);
         out.writeShort(wire.parentItemDamage);
         for (int coordinate : geometry.points) out.writeByte(coordinate);
-        if (cornerEnd >= 0) {
+        if (hung) {
+            out.writeByte(cornerEnd + 1);
+            if (cornerEnd >= 0) out.writeByte(cornerFace);
+            out.writeShort(geometry.hang2.length);
+            for (int v : geometry.hang2) out.writeShort(v);
+        } else if (cornerEnd >= 0) {
             out.writeByte(cornerEnd);
             out.writeByte(cornerFace);
         }
+    }
+
+    /** Bounds-check the native sampled mesh before saving or rendering it. */
+    private void setHang(int[] values) {
+        if (values.length < 21 || values.length > 2048) throw new IllegalArgumentException("Invalid AWG span mesh");
+        int last = 0;
+        for (int i = 0; i < values.length;) {
+            if (values.length - i < 3) throw new IllegalArgumentException("Truncated AWG span mesh");
+            int from = values[i], to = values[i + 1], count = values[i + 2];
+            if (from < last || to <= from || to > geometry.length() * 8
+                || count < 2 || count > (values.length - i - 3) / 9)
+                throw new IllegalArgumentException("Invalid AWG span samples");
+            last = to;
+            i += 3;
+            for (int point = 0; point < count; point++)
+                for (int axis = 0; axis < 9; axis++) {
+                    int max = axis < 3 ? 512 : 64;
+                    int value = values[i++];
+                    if (value < -max || value > max) throw new IllegalArgumentException("Invalid AWG span coordinate");
+                }
+        }
+        geometry.hang2 = values;
     }
 
     static AwgCablePart deserialize(DataInputStream in) throws IOException {
@@ -782,8 +827,16 @@ public final class AwgCablePart extends VoxelPart {
             if (wire == null) throw new IOException("Unknown AWG wire descriptor");
             int[] coordinates = new int[6];
             for (int i = 0; i < coordinates.length; i++) coordinates[i] = in.readUnsignedByte();
-            var part = new AwgCablePart(wire, header & 0x7f, coordinates);
-            if (in.available() == 2) part.markCorner(in.readUnsignedByte(), in.readUnsignedByte());
+            var part = new AwgCablePart(wire, header & 0x3f, coordinates);
+            if ((header & 0xc0) == 0xc0) {
+                int corner = in.readUnsignedByte();
+                if (corner > 0) part.markCorner(corner - 1, in.readUnsignedByte());
+                int count = in.readUnsignedShort();
+                if (count > 2048 || in.available() != count * 2) throw new IOException("Invalid AWG span payload");
+                int[] values = new int[count];
+                for (int i = 0; i < count; i++) values[i] = in.readShort();
+                part.setHang(values);
+            } else if (in.available() == 2) part.markCorner(in.readUnsignedByte(), in.readUnsignedByte());
             else if (in.available() != 0) throw new IOException("Invalid AWG corner payload");
             return part;
         } catch (IllegalArgumentException e) {
