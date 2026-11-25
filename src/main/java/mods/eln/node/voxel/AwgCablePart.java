@@ -79,6 +79,10 @@ public final class AwgCablePart extends VoxelPart {
         return varying == 1;
     }
 
+    static RouteKind routeKind(UtilityCableDescriptor wire) {
+        return RouteKind.cable("awg", width(wire), height(wire)).withAir(RouteKind.NO_AIR);
+    }
+
     static int width(UtilityCableDescriptor wire) {
         return Math.max(1, (int) Math.ceil(wire.render.width * 16));
     }

@@ -110,7 +110,7 @@ public final class KitPreview {
                 var space = CablePlacer.space(view);
                 if (startJoin != null) space = CablePlacer.around(space, startJoin);
                 if (endJoin != null) space = CablePlacer.around(space, endJoin);
-                var route = CableRouter.route(space, AwgCablePart.width(wire), AwgCablePart.height(wire),
+                var route = CableRouter.route(space, AwgCablePart.routeKind(wire),
                     start, pivots, at, PREVIEW_BUDGET_MS);
                 server.execute(() -> {
                     if (GEN.getOrDefault(id, 0L) != gen || p.hasDisconnected() || p.level() != level
@@ -220,6 +220,8 @@ public final class KitPreview {
         double meters = route.length() / 16.0;
         if (have < route.length())
             return new Answer(false, boxes, String.format("Route needs %.2f m; spool holds %.2f m", meters, have / 16.0));
+        if (!player.isCreative() && AwgWireLength.purchase(plan.wire, plan.spool.copy(), route.length()) == null)
+            return new Answer(false, boxes, "The spool cannot pay for this route");
         return new Answer(true, boxes, String.format("Route: %.2f m of AWG wire", meters));
     }
 

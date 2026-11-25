@@ -36,6 +36,7 @@ final class AwgTransitionCase implements TestCase {
     private final Direction flatMount;
     private final int wireId;
     private final String variant;
+    private final boolean nativeRoute;
     private static final Direction WALL = Direction.NORTH;
     private UtilityCableDescriptor wire;
     private FakePlayer player;
@@ -52,6 +53,15 @@ final class AwgTransitionCase implements TestCase {
     }
 
     AwgTransitionCase(boolean reverse, Direction flatMount, int wireId, String variant) {
+        this(reverse, flatMount, wireId, variant, false);
+    }
+
+    AwgTransitionCase(Direction flatMount) {
+        this(false, flatMount, 2200, "native", true);
+    }
+
+    private AwgTransitionCase(boolean reverse, Direction flatMount, int wireId, String variant, boolean nativeRoute) {
+        this.nativeRoute = nativeRoute;
         this.wireId = wireId;
         this.variant = variant;
         this.reverse = reverse;
@@ -86,30 +96,46 @@ final class AwgTransitionCase implements TestCase {
         player = FakePlayerFactory.get(ctx.level(), new GameProfile(
             UUID.nameUUIDFromBytes(id().getBytes(StandardCharsets.UTF_8)), "eln_awg_transition"));
         player.setGameMode(GameType.SURVIVAL);
-        player.setShiftKeyDown(true);
+        player.setShiftKeyDown(!nativeRoute);
         wire = (UtilityCableDescriptor) Eln.sixNodeItem.getDescriptor(wireId);
         spool = wire.newItemStack();
         wire.setRemainingLengthMeters(spool, 7.125);
         player.setItemInHand(InteractionHand.MAIN_HAND, spool);
-        var counts = Eln.simulator.counts();
-        var rejected = AwgCablePart.transitionFailingAtForTests(ctx.level(), flatEnd, flatMount, wallEnd, WALL, spool, 4);
-        ctx.check("cross-face rollback removes the corner and releases its loads", "forced".equals(rejected)
-            && untouched(ctx, flatEnd, wallEnd, 7.125) && Arrays.equals(counts, Eln.simulator.counts()), "");
+        if (nativeRoute) {
+            clickDevice(sourcePos, Direction.NORTH, flatMount);
+            ctx.check("source connector starts native route", mods.eln.node.voxel.CablePlacer.active(player.getUUID()), "");
+            wire.setRemainingLengthMeters(spool, 5.9375);
+            clickDevice(loadPos, rise.getOpposite(), WALL);
+            ctx.check("underfunded native transition leaves the circuit and spool unchanged",
+                untouched(ctx, flatEnd, wallEnd, 5.9375), "");
+            wire.setRemainingLengthMeters(spool, 7.125);
+            clickDevice(loadPos, rise.getOpposite(), WALL);
+            ctx.check("native router transitions between powered connectors for six paid meters",
+                !mods.eln.node.voxel.CablePlacer.active(player.getUUID())
+                    && wire.getRemainingLengthMeters(spool) == 1.125
+                    && AwgCablePart.at(ctx.level(), corner).size() == 2,
+                "spool: " + wire.getRemainingLengthMeters(spool));
+        } else {
+            var counts = Eln.simulator.counts();
+            var rejected = AwgCablePart.transitionFailingAtForTests(ctx.level(), flatEnd, flatMount, wallEnd, WALL, spool, 4);
+            ctx.check("cross-face rollback removes the corner and releases its loads", "forced".equals(rejected)
+                && untouched(ctx, flatEnd, wallEnd, 7.125) && Arrays.equals(counts, Eln.simulator.counts()), "");
 
-        spool.use(ctx.level(), player, InteractionHand.MAIN_HAND);
-        ctx.check("first transition endpoint selected", (reverse ? click(wallEnd, WALL) : click(flatEnd, flatMount))
-            == InteractionResult.SUCCESS, "");
-        var unsupported = corner.relative(rise).relative(WALL);
-        ctx.level().removeBlock(unsupported, false);
-        ctx.check("missing wall support refuses a whole transition", finish(flatEnd, wallEnd) == InteractionResult.FAIL
-            && untouched(ctx, flatEnd, wallEnd, 7.125), "");
-        ctx.floor(unsupported);
-        wire.setRemainingLengthMeters(spool, 5.9375);
-        ctx.check("insufficient wire refuses a whole transition", finish(flatEnd, wallEnd) == InteractionResult.FAIL
-            && untouched(ctx, flatEnd, wallEnd, 5.9375), "");
-        wire.setRemainingLengthMeters(spool, 7.125);
-        ctx.check("transition debits six meters for six independent parts", finish(flatEnd, wallEnd) == InteractionResult.SUCCESS
-            && wire.getRemainingLengthMeters(spool) == 1.125 && AwgCablePart.at(ctx.level(), corner).size() == 2, "");
+            spool.use(ctx.level(), player, InteractionHand.MAIN_HAND);
+            ctx.check("first transition endpoint selected", (reverse ? click(wallEnd, WALL) : click(flatEnd, flatMount))
+                == InteractionResult.SUCCESS, "");
+            var unsupported = corner.relative(rise).relative(WALL);
+            ctx.level().removeBlock(unsupported, false);
+            ctx.check("missing wall support refuses a whole transition", finish(flatEnd, wallEnd) == InteractionResult.FAIL
+                && untouched(ctx, flatEnd, wallEnd, 7.125), "");
+            ctx.floor(unsupported);
+            wire.setRemainingLengthMeters(spool, 5.9375);
+            ctx.check("insufficient wire refuses a whole transition", finish(flatEnd, wallEnd) == InteractionResult.FAIL
+                && untouched(ctx, flatEnd, wallEnd, 5.9375), "");
+            wire.setRemainingLengthMeters(spool, 7.125);
+            ctx.check("transition debits six meters for six independent parts", finish(flatEnd, wallEnd) == InteractionResult.SUCCESS
+                && wire.getRemainingLengthMeters(spool) == 1.125 && AwgCablePart.at(ctx.level(), corner).size() == 2, "");
+        }
         ctx.check("inner corner emits the existing voxel cable mesh",
             !VoxelGeometry.of(new ArrayList<>(AwgCablePart.at(ctx.level(), corner))).isEmpty(), "");
 
@@ -145,6 +171,14 @@ final class AwgTransitionCase implements TestCase {
         load.getInventory().setItem(0, Wp9aCases.coal(24));
         load.getInventory().setChanged();
         ctx.placeSix(Wp9aCases.GROUND, ground, side);
+    }
+
+    private void clickDevice(BlockPos pos, Direction face, Direction mount) {
+        var hit = Vec3.atCenterOf(pos)
+            .add(face.getStepX() * .5 + mount.getStepX() * .4, face.getStepY() * .5 + mount.getStepY() * .4,
+                face.getStepZ() * .5 + mount.getStepZ() * .4);
+        player.snapTo(hit.x, pos.getY(), hit.z, 0, 0);
+        spool.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(hit, face, pos, false)));
     }
 
     private InteractionResult finish(BlockPos flatEnd, BlockPos wallEnd) {

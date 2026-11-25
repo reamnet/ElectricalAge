@@ -49,6 +49,8 @@ public final class CableCases {
         cases.add(new AwgWallBendCase(net.minecraft.core.Direction.UP));
         cases.add(new AwgTransitionCase(false));
         cases.add(new AwgTransitionCase(true));
+        cases.add(new AwgTransitionCase(net.minecraft.core.Direction.DOWN));
+        cases.add(new AwgTransitionCase(net.minecraft.core.Direction.UP));
         cases.add(new AwgTransitionCase(false, net.minecraft.core.Direction.UP));
         cases.add(new AwgTransitionCase(true, net.minecraft.core.Direction.UP));
         cases.add(new AwgCatalogCase(UtilityCableMaterial.COPPER, false, 42));

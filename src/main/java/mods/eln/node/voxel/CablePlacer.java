@@ -39,9 +39,6 @@ public final class CablePlacer {
                 && (wire == null || spool == kit.spool());
         }
 
-        int width() { return wire == null ? tierOf(tier, spec).width() : AwgCablePart.width(wire); }
-        int height() { return wire == null ? tierOf(tier, spec).height() : AwgCablePart.height(wire); }
-
         final CableRouter.End start;
         final long[] startJoin;
         final List<CableRouter.End> waypoints = new ArrayList<>();
@@ -686,7 +683,10 @@ public final class CablePlacer {
         CableRouter.Space s = space(level);
         if (plan.startJoin != null) s = around(s, plan.startJoin);
         if (endJoin != null) s = around(s, endJoin);
-        return CableRouter.route(s, plan.width(), plan.height(), plan.start, wps, last);
+        if (plan.wire != null)
+            return CableRouter.route(s, AwgCablePart.routeKind(plan.wire), plan.start, wps, last, PipeRouter.TIME_BUDGET_MS);
+        var tier = tierOf(plan.tier, plan.spec);
+        return CableRouter.route(s, tier.width(), tier.height(), plan.start, wps, last);
     }
 
     /** How many blocks of burnt cable one repair click mends at most (the burnt run, followed from the clicked piece). */
