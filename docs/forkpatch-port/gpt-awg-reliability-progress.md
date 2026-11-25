@@ -94,3 +94,15 @@ No actual client rendering has been launched or visually inspected in this workt
 - KitOutline decoder/clear tests are headless; LevelEvent teardown and dimension event hooks compile, but real client visuals and dimension/disconnect flows are still manual checks.
 - Repeated chunk fixture now seeds a 60 C powered run with exposure 0.375 through the save schema, plus a separate fused run; each actual eviction/reload checks elevated heat, unchanged exposure, fused electrical inactivity and owned terminal identity. Final removal checks owned loads leave MNA and release component references.
 - Three-cycle focused GameTest running; `/tmp/awg-reliability-cycles.log`. Await result before committing fixture expansion.
+
+## Repeat-cycle diagnostic
+- Three-cycle run and instrumented re-run both exit 1 solely on strict current equality measured after the simulator tick. All actual evictions, damage/heat/fused-state checks, terminal identity checks and final owned-load cleanup PASS.
+- Instrumented example: load 11.602606412 A, feeder 11.602606413 A, hot second edge 11.604042363 A. The hot edge's slow thermal process restamps resistance AFTER MNA solves; reading V/R after that stamp compares new resistance against previous electrical voltages. This is a measurement phase issue, not evidence of a current imbalance during the solve.
+- Correcting fixture measurement by adding an electrical process sampler (Simulator runs these immediately after `mna.step()`, before slow thermal restamping). Keep strict 1e-6 A current equality; no tolerance weakened. Sampler explicitly removed in fixture cleanup.
+- Next: rerun focused lifecycle, then full root/build and full GameTest regression. Current commit `11a7839cd`; uncommitted fixture expansion only plus this log.
+
+## Three actual eviction cycles verified
+- Phase-correct focused lifecycle run: exit 0, 2/2 required tests pass, 54s (`/tmp/awg-reliability-cycles-sampled.log`). Three target block entities actually unload; both chunk sides absent each cycle. Heat >30 C, insulation exposure exactly 0.375 and separate fused state survive every cycle.
+- Strict electrical samples agree to <1e-9 A: e.g. load 11.603565784842 A, feeder 11.603565784255 A, second 11.603565784255 A while chunks absent. No simulator physics change was needed.
+- Terminal object identities remain unchanged after every actual reload; after removal their MNA membership and connected-component references are empty. This is scoped resource evidence, not an assertion that all global object counts must vanish.
+- Next: full build/root test baseline, then full GameTest suite. Preserve test outputs and record actual failures, including any beyond the historical three.
