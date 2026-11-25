@@ -297,6 +297,7 @@ public final class AwgCablePart extends VoxelPart {
             if (existing.outerEnds != 0) return "AWG knuckle arms cannot be tapped";
             if (existing.cornerEnd >= 0) return "AWG face transitions cannot be tapped";
             if (existing.geometry.hang2 != null) return "AWG sagged sections cannot be tapped";
+            if (!CablePlacer.supported(level, pos, existing.geometry)) return "AWG junction support changed";
             var state = existing.run;
             if (state == null || state.getConductorMelted()) return "AWG junction needs live conductor";
             if (existing.hasPointEnd(point)) continue;

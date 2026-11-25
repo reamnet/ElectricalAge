@@ -47,3 +47,24 @@ load by removing only the knuckle and keeping a parallel load powered.
 Inside-block outer wraps on steps or slabs still need a representation that
 maps the native extensions to paid edges and restores any replaced host on
 rollback. Client mesh bounds and packet round trips are covered headlessly.
+
+## Partial mounting planes and off-center taps
+
+The shared native pieces can now retain their actual mounting plane on an
+imitated slab. Collision and restoration use the native Mimic and Laying
+paths. Tests compare the native kit and AWG slab bounds and check rollback,
+reload and exact removal refunds.
+
+Supported straight edges on floors, walls and ceilings now use the same
+native lattice snap as generic cable taps. The AWG ledger splits by the
+actual distance on the edge and distributes stored heat and insulation
+exposure. Sagged runs and explicitly marked corner arms remain ineligible
+for taps. The former need a split of their sampled mesh, and the latter
+need their connector endpoint ownership carried through a split.
+
+Stair climbs and inside-block outer wraps can contain native visual
+extensions or stubs whose geometric length differs from the paid
+centerline. They remain rejected until the native piece conversion returns
+enough source-segment information to associate those shapes with paid
+conductors without adding wire or refunds. A partial slab surface alone
+does not remove that limitation.

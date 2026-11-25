@@ -5,6 +5,9 @@ import mods.eln.gametest.Reload;
 import mods.eln.gametest.TestCase;
 import mods.eln.gametest.TestContext;
 import mods.eln.sixnode.electricalcable.UtilityCableDescriptor;
+import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.component.VoltageSource;
+import mods.eln.sim.mna.state.VoltageState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +24,7 @@ public final class AwgNativeTapCase implements TestCase {
     @Override public int height() { return 5; }
     @Override public int depth() { return 10; }
     @Override public int floorDepth() { return 10; }
+    @Override public int ticks() { return 85; }
 
     @Override public void build(TestContext ctx) {
         exercise(ctx, ctx.at(3, 2, 2), Direction.NORTH, Direction.UP);
@@ -97,14 +101,55 @@ public final class AwgNativeTapCase implements TestCase {
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(e);
         }
-        var node = (VoxelNode) ((VoxelNodeEntity) level.getBlockEntity(center)).getNode();
-        var newArm = AwgCablePart.at(level, center).stream()
-            .filter(p -> p.activeRun().getInsulationExposure() == 0).findFirst().orElseThrow();
-        node.removePart(node.parts.indexOf(newArm), true);
-        var drops = level.getEntitiesOfClass(ItemEntity.class, new AABB(center));
-        ctx.check(mount + " removing the tap returns only the paid half meter and leaves the trunk",
-            AwgCablePart.at(level, center).size() == 2 && drops.size() == 1
-                && wire.getRemainingLengthMeters(drops.getFirst().getItem()) == .5, "");
+        var sourceEnd = new VoltageState[1];
+        var trunkEnd = new VoltageState[1];
+        var branchEnd = new VoltageState[1];
+        AwgCablePart.at(level, center.west(2)).getFirst().liveLink((x, y) -> sourceEnd[0] = x);
+        AwgCablePart.at(level, center.east(2)).getFirst().liveLink((x, y) -> trunkEnd[0] = y);
+        AwgCablePart.at(level, shoulder).getFirst().liveLink((x, y) -> branchEnd[0] = x);
+        var rail = new VoltageState();
+        Eln.simulator.addElectricalLoad(rail);
+        var ground = new VoltageSource("AWG tap ground", rail, null).setU(0);
+        var source = new VoltageSource("AWG tap source", sourceEnd[0], rail).setU(12);
+        var trunkLoad = new Resistor(trunkEnd[0], rail).setR(1);
+        var branchLoad = new Resistor(branchEnd[0], rail).setR(2);
+        var components = List.of(ground, source, trunkLoad, branchLoad);
+        components.forEach(Eln.simulator::addElectricalComponent);
+        ctx.after(25, () -> {
+            var node = (VoxelNode) ((VoxelNodeEntity) level.getBlockEntity(center)).getNode();
+            var newArm = AwgCablePart.at(level, center).stream()
+                .filter(p -> p.activeRun().getInsulationExposure() == 0).findFirst().orElseThrow();
+            double branchAmps = Math.abs(branchLoad.getCurrent());
+            double trunkAmps = Math.abs(trunkLoad.getCurrent());
+            var conductors = AwgCablePart.at(level, center);
+            var currents = conductors.stream().mapToDouble(p -> Math.abs(p.activeRun().getCurrentAmps())).sorted().toArray();
+            ctx.check(mount + " off-center tee carries distinct branch currents and matching voltage drops",
+                branchAmps > 5 && trunkAmps > 10
+                    && Math.abs(currents[0] - branchAmps) < 1e-6 && Math.abs(currents[1] - trunkAmps) < 1e-6
+                    && Math.abs(currents[2] - trunkAmps - branchAmps) < 1e-6
+                    && conductors.stream().allMatch(p -> {
+                        var run = p.activeRun();
+                        return Math.abs(Math.abs(run.getVoltageDrop()) - Math.abs(run.getCurrentAmps())
+                            * wire.resistanceOhms(length(p) / 16.0, run.getTemperatureCelsius())) < 1e-5;
+                    }), trunkAmps + " A / " + branchAmps + " A");
+            node.removePart(node.parts.indexOf(newArm), true);
+            var drops = level.getEntitiesOfClass(ItemEntity.class, new AABB(center));
+            ctx.check(mount + " removing the tap returns only the paid half meter and leaves the trunk",
+                AwgCablePart.at(level, center).size() == 2 && drops.size() == 1
+                    && wire.getRemainingLengthMeters(drops.getFirst().getItem()) == .5, "");
+        });
+        ctx.after(45, () -> {
+            try {
+                ctx.check(mount + " removing the tap opens its load without opening the trunk",
+                    Math.abs(branchLoad.getCurrent()) < 1e-6 && Math.abs(trunkLoad.getCurrent()) > 10, "");
+            } finally {
+                for (var component : components) {
+                    Eln.simulator.removeElectricalComponent(component);
+                    component.breakConnection();
+                }
+                Eln.simulator.removeElectricalLoad(rail);
+            }
+        });
     }
 
     private static int length(AwgCablePart part) {
