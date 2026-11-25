@@ -294,8 +294,7 @@ public final class AwgCablePart extends VoxelPart {
             && p.geometry.passes(point[0], point[1], point[2])).toList();
         if (wires.isEmpty() || wires.size() > 2 || !arm.hasPointEnd(point)) return "AWG junction is occupied";
         for (var existing : wires) {
-            if (existing.outerEnds != 0) return "AWG knuckle arms cannot be tapped";
-            if (existing.cornerEnd >= 0) return "AWG face transitions cannot be tapped";
+            if (existing.isCornerPort(point)) return "Tap a conductor arm away from the corner port";
             if (!existing.isStraightAt(point)) return "AWG taps need a straight section outside the sampled sag";
             if (!CablePlacer.supported(level, pos, existing.geometry)) return "AWG junction support changed";
             var state = existing.run;
@@ -309,6 +308,8 @@ public final class AwgCablePart extends VoxelPart {
             System.arraycopy(point, 0, secondPoints, 0, 3);
             var first = new AwgCablePart(existing.wire, face, firstPoints);
             var second = new AwgCablePart(existing.wire, face, secondPoints);
+            existing.copyCornerOwnership(first, 0);
+            existing.copyCornerOwnership(second, 1);
             if (existing.geometry.hang2 != null) {
                 int splitAt = first.geometry.length() * 8;
                 first.geometry.hang2 = hangSlice(existing.geometry.hang2, 0, splitAt);
@@ -481,13 +482,25 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     CableRouter.End tapEnd(ServerLevel level, BlockPos pos, Vec3 hit, long[][] join) {
-        if (geometry.isKnuckle() || outerEnds != 0 || cornerEnd >= 0
-            || run == null || run.getConductorMelted() || !CablePlacer.supported(level, pos, geometry)) return null;
+        if (geometry.isKnuckle() || run == null || run.getConductorMelted() || !CablePlacer.supported(level, pos, geometry)) return null;
         int[] local = CablePlacer.nearestTap(geometry, hit.x - pos.getX(), hit.y - pos.getY(), hit.z - pos.getZ());
-        if (local == null || !isStraightAt(local)) return null;
+        if (local == null || isCornerPort(local) || !isStraightAt(local)) return null;
         long[] point = {pos.getX() * 16L + local[0], pos.getY() * 16L + local[1], pos.getZ() * 16L + local[2]};
         join[0] = point;
         return new CableRouter.End(point[0], point[1], point[2], geometry.face, -1);
+    }
+
+    private boolean isCornerPort(int[] point) {
+        for (int end = 0; end < 2; end++)
+            if ((end == cornerEnd || (outerEnds & (1 << end)) != 0)
+                && sameEndpoint(geometry.points, end * 3, point, 0)) return true;
+        return false;
+    }
+
+    /** The child retaining the old physical endpoint retains that endpoint's connection namespace. */
+    private void copyCornerOwnership(AwgCablePart child, int oldEnd) {
+        if (cornerEnd == oldEnd) child.markCorner(oldEnd, cornerFace);
+        child.setOuterEnds(outerEnds & (1 << oldEnd));
     }
 
     private boolean isStraightAt(int[] point) {
@@ -502,7 +515,7 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     /** Keep complete native sample ranges on one side of a straight split and rebase their arc offsets. */
-    static int[] hangSlice(int[] samples, int from, int to) {
+    private static int[] hangSlice(int[] samples, int from, int to) {
         int[] slice = new int[samples.length];
         int used = 0;
         for (int i = 0; i < samples.length;) {

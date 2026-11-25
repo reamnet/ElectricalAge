@@ -91,6 +91,63 @@ public final class AwgNativeOuterCase implements TestCase {
             throw new IllegalStateException(e);
         }
         if (power) checkPower(ctx, support, first, second, cornerPos, wire);
+        if (first == Direction.EAST && second == Direction.DOWN)
+            checkArmTap(ctx, support, cornerPos, wire, supply);
+    }
+
+    private void checkArmTap(TestContext ctx, BlockPos support, BlockPos corner, UtilityCableDescriptor wire,
+                             KitSupply supply) {
+        var level = ctx.level();
+        var armPos = support.east();
+        var shoulder = armPos.south();
+        ctx.floor(support.south());
+        var original = AwgCablePart.at(level, armPos).getFirst();
+        long x = armPos.getX() * 16L, y = armPos.getY() * 16L + 4, z = armPos.getZ() * 16L + 8;
+        long[][] join = new long[1][];
+        var tap = original.tapEnd(level, armPos, new net.minecraft.world.phys.Vec3(x / 16.0 + 1.0 / 16,
+            y / 16.0, z / 16.0), join);
+        ctx.check("native snap selects the supported arm away from its knuckle port",
+            tap != null && tap.y() == y, String.valueOf(tap));
+        if (tap == null) return;
+
+        var end = new CableRouter.End(x, y, z + 16, Direction.WEST.get3DDataValue(), -1);
+        var route = CableRouter.route(CablePlacer.around(CablePlacer.space(level), join[0]),
+            AwgCablePart.routeKind(wire), end, List.of(), tap, 1500);
+        if (route.error != null) {
+            ctx.check("knuckle arm tap route exists", false, route.error);
+            return;
+        }
+        var failed = AwgCablePart.layNative(level, supply, route, null, join[0], null, 1);
+        ctx.check("failed arm tap restores its original connector ownership",
+            "forced".equals(failed) && AwgCablePart.at(level, armPos).equals(List.of(original))
+                && wire.getRemainingLengthMeters(supply.spool()) == 1.125, String.valueOf(failed));
+        var placed = AwgCablePart.layNative(level, supply, route, null, join[0], null, -1);
+        ctx.check("branching an outer arm pays one new meter", placed == null
+            && wire.getRemainingLengthMeters(supply.spool()) == .125, String.valueOf(placed));
+        if (placed != null) return;
+        var arms = AwgCablePart.at(level, armPos);
+        var cornerStates = new VoltageState[2];
+        AwgCablePart.at(level, corner).getFirst().liveLink((a, b) -> { cornerStates[0] = a; cornerStates[1] = b; });
+        int[] connected = {0};
+        for (var arm : arms) arm.liveLink((a, b) -> {
+            if (a == cornerStates[0] || a == cornerStates[1] || b == cornerStates[0] || b == cornerStates[1]) connected[0]++;
+        });
+        ctx.check("exactly the original corner-side child still touches the knuckle", arms.size() == 3 && connected[0] == 1, "");
+        try {
+            ctx.check("split corner-side child and original knuckle survive reload",
+                Reload.node(level, armPos).tagsEqual() && Reload.node(level, corner).tagsEqual(), "");
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(e);
+        }
+        var node = (VoxelNode) ((VoxelNodeEntity) level.getBlockEntity(armPos)).getNode();
+        var branch = AwgCablePart.at(level, armPos).stream().filter(p -> p.visual().points[2] != p.visual().points[5])
+            .findFirst().orElseThrow();
+        node.removePart(node.parts.indexOf(branch), true);
+        var drops = level.getEntitiesOfClass(ItemEntity.class, new AABB(armPos));
+        ctx.check("corner arm branch removal leaves two trunk pieces and recovers only the half meter removed",
+            AwgCablePart.at(level, armPos).size() == 2 && AwgCablePart.at(level, corner).size() == 1
+                && drops.size() == 1 && wire.getRemainingLengthMeters(drops.getFirst().getItem()) == .5, "");
+        remove(ctx, shoulder);
     }
 
     private void checkPower(TestContext ctx, BlockPos support, Direction first, Direction second, BlockPos corner,
