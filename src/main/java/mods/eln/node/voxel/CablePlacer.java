@@ -270,25 +270,16 @@ public final class CablePlacer {
                 long[] best = null;
                 int bestFace = -1;
                 double bd = Double.MAX_VALUE;
-                // (inside the block, never on its faces: a branch from a point on a face looked, from either block, like
-                // a plain corner, and got no sleeve; AdventurAgent)
-                for (CablePart c : cands)
-                for (int a = 2; a <= 14; a += 2)
-                    for (int b = 2; b <= 14; b += 2) {
-                        int[] q = new int[3];
-                        int nx = CablePart.normalAxis(c.face);
-                        int[] o = VoxelGeometry.others(nx);
-                        q[nx] = c.points[nx];
-                        q[o[0]] = a;
-                        q[o[1]] = b;
-                        if (!c.passes(q[0], q[1], q[2])) continue;
-                        double d = sq(q[0] - hx * 16) + sq(q[1] - hy * 16) + sq(q[2] - hz * 16);
-                        if (d < bd) {
-                            bd = d;
-                            best = new long[]{pos.getX() * 16L + q[0], pos.getY() * 16L + q[1], pos.getZ() * 16L + q[2]};
-                            bestFace = c.face;
-                        }
+                for (CablePart c : cands) {
+                    int[] point = nearestTap(c, hx, hy, hz);
+                    if (point == null) continue;
+                    double distance = tapDistance(point, hx, hy, hz);
+                    if (distance < bd) {
+                        bd = distance;
+                        best = new long[]{pos.getX() * 16L + point[0], pos.getY() * 16L + point[1], pos.getZ() * 16L + point[2]};
+                        bestFace = c.face;
                     }
+                }
                 if (best == null) return null;
                 join[0] = best;
                 return new CableRouter.End(best[0], best[1], best[2], bestFace, -1);
@@ -349,6 +340,32 @@ public final class CablePlacer {
 
     /** The end at the hosted device in slot el (0..5: centred on that face) of v: the edge of its face nearest the block-local
      *  point h that has a connector; null if it has none. */
+    /** The nearest point on a cable on the native lattice, inside its block face. */
+    static int[] nearestTap(CablePart cable, double x, double y, double z) {
+        int normal = CablePart.normalAxis(cable.face);
+        int[] axes = VoxelGeometry.others(normal);
+        int[] point = new int[3];
+        point[normal] = cable.points[normal];
+        int[] nearest = null;
+        double best = Double.MAX_VALUE;
+        for (int a = CableRouter.LATTICE; a < 16; a += CableRouter.LATTICE)
+            for (int b = CableRouter.LATTICE; b < 16; b += CableRouter.LATTICE) {
+                point[axes[0]] = a;
+                point[axes[1]] = b;
+                if (!cable.passes(point[0], point[1], point[2])) continue;
+                double distance = tapDistance(point, x, y, z);
+                if (distance < best) {
+                    best = distance;
+                    nearest = point.clone();
+                }
+            }
+        return nearest;
+    }
+
+    private static double tapDistance(int[] point, double x, double y, double z) {
+        return sq(point[0] - x * 16) + sq(point[1] - y * 16) + sq(point[2] - z * 16);
+    }
+
     static CableRouter.End endForSupply(Level level, BlockPos pos, Direction face, Vec3 hit, boolean start,
                                         long[][] join, KitSupply supply) {
         if (supply.wire() != null && level instanceof ServerLevel server) {
@@ -356,7 +373,7 @@ public final class CablePlacer {
             if (node instanceof VoxelNode voxel) {
                 int index = voxel.partAt(hit.x - pos.getX(), hit.y - pos.getY(), hit.z - pos.getZ());
                 if (index >= 0 && voxel.parts.get(index) instanceof AwgCablePart wire)
-                    return wire.tapEnd(server, pos, join);
+                    return wire.tapEnd(server, pos, hit, join);
             }
         }
         var end = endAt(level, pos, face, hit, start, join, supply.tier());

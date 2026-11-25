@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.phys.Vec3;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -282,21 +283,31 @@ public final class AwgCablePart extends VoxelPart {
         void undo() { node.replaceAwgParts(node.parts.indexOf(halves.getFirst()), 2, List.of(original)); }
     }
 
-    /** Validate one explicit center tap, with at most three non-overlapping incident arms. */
     private static String planTap(ServerLevel level, BlockPos pos, AwgCablePart arm, List<Split> splits) {
-        var wires = at(level, pos).stream().filter(AwgCablePart::passesCenter).toList();
-        if (wires.isEmpty() || wires.size() > 2 || !arm.hasEnd(8, 8)) return "AWG junction is occupied";
+        return planTap(level, pos, arm, new int[]{8, 0, 8}, splits);
+    }
+
+    /** Split a paid run at the shared native tap point, with at most three incident arms. */
+    private static String planTap(ServerLevel level, BlockPos pos, AwgCablePart arm, int[] point, List<Split> splits) {
+        int face = arm.geometry.face;
+        var wires = at(level, pos).stream().filter(p -> p.geometry.face == face
+            && p.geometry.passes(point[0], point[1], point[2])).toList();
+        if (wires.isEmpty() || wires.size() > 2 || !arm.hasPointEnd(point)) return "AWG junction is occupied";
         for (var existing : wires) {
             if (existing.outerEnds != 0) return "AWG knuckle arms cannot be tapped";
             if (existing.cornerEnd >= 0) return "AWG face transitions cannot be tapped";
             if (existing.geometry.hang2 != null) return "AWG sagged sections cannot be tapped";
             var state = existing.run;
             if (state == null || state.getConductorMelted()) return "AWG junction needs live conductor";
-            if (existing.hasEnd(8, 8)) continue;
-            if (wires.size() != 1 || (existing.x0 == existing.x1) == (arm.x0 == arm.x1))
+            if (existing.hasPointEnd(point)) continue;
+            if (wires.size() != 1 || CableRouter.axis(existing.direction()) == CableRouter.axis(arm.direction()))
                 return "AWG tap must approach the side of a straight run";
-            var first = new AwgCablePart(existing.wire, existing.x0, existing.z0, 8, 8);
-            var second = new AwgCablePart(existing.wire, 8, 8, existing.x1, existing.z1);
+            int[] firstPoints = existing.geometry.points.clone();
+            int[] secondPoints = existing.geometry.points.clone();
+            System.arraycopy(point, 0, firstPoints, 3, 3);
+            System.arraycopy(point, 0, secondPoints, 0, 3);
+            var first = new AwgCablePart(existing.wire, face, firstPoints);
+            var second = new AwgCablePart(existing.wire, face, secondPoints);
             var detached = AwgCableRun.Companion.load(existing.wire, state.save(), new VoltageState(), new VoltageState());
             var split = detached.split(first.geometry.length(), new VoltageState());
             first.saved = split.getFirst().save();
@@ -463,12 +474,19 @@ public final class AwgCablePart extends VoxelPart {
         return new RouteLayout(positions, parts, splits, Laying.check(level, positions, parts, replaced));
     }
 
-    CableRouter.End tapEnd(ServerLevel level, BlockPos pos, long[][] join) {
-        if (!passesCenter() || geometry.hang2 != null || run == null || run.getConductorMelted()
-            || !canRouteIn(level, pos, Direction.DOWN, null)) return null;
-        long[] point = {pos.getX() * 16L + 8, pos.getY() * 16L, pos.getZ() * 16L + 8};
+    CableRouter.End tapEnd(ServerLevel level, BlockPos pos, Vec3 hit, long[][] join) {
+        if (geometry.isKnuckle() || outerEnds != 0 || cornerEnd >= 0 || geometry.hang2 != null
+            || run == null || run.getConductorMelted() || !CablePlacer.supported(level, pos, geometry)) return null;
+        int[] local = CablePlacer.nearestTap(geometry, hit.x - pos.getX(), hit.y - pos.getY(), hit.z - pos.getZ());
+        if (local == null) return null;
+        long[] point = {pos.getX() * 16L + local[0], pos.getY() * 16L + local[1], pos.getZ() * 16L + local[2]};
         join[0] = point;
-        return new CableRouter.End(point[0], point[1], point[2], 0, -1);
+        return new CableRouter.End(point[0], point[1], point[2], geometry.face, -1);
+    }
+
+    private static int[] localTap(BlockPos pos, long[] point) {
+        return new int[]{Math.toIntExact(point[0] - pos.getX() * 16L),
+            Math.toIntExact(point[1] - pos.getY() * 16L), Math.toIntExact(point[2] - pos.getZ() * 16L)};
     }
 
     /**
@@ -557,14 +575,19 @@ public final class AwgCablePart extends VoxelPart {
             }
             for (int i = 3; i < points.length; i += 3) {
                 int[] ends = java.util.Arrays.copyOfRange(points, i - 3, i + 3);
-                if (!valid(piece.face(), ends) || !CablePart.utilityGeometry(wire.name, piece.face(), ends, kind.width(), kind.height()).valid())
+                AwgCablePart part;
+                try {
+                    part = new AwgCablePart(wire, piece.face(), ends);
+                } catch (IllegalArgumentException e) {
                     return RouteLayout.rejected("AWG wire needs a clear planar edge");
-                var part = new AwgCablePart(wire, piece.face(), ends);
+                }
                 if (!parts.isEmpty()) {
                     var previous = parts.getLast();
                     if (previous.geometry.face >= 0 && previous.geometry.face != part.geometry.face) {
                         if (!positions.getLast().equals(pos) || previous.cornerEnd >= 0
-                            || !sameEndpoint(previous.geometry.points, 3, ends, 0))
+                            || !sameEndpoint(previous.geometry.points, 3, ends, 0)
+                            || !previous.canMarkCorner(1, part.geometry.face)
+                            || !part.canMarkCorner(0, previous.geometry.face))
                             return RouteLayout.rejected("AWG face changes need a supported inner corner");
                         previous.markCorner(1, part.geometry.face);
                         part.markCorner(0, previous.geometry.face);
@@ -589,11 +612,11 @@ public final class AwgCablePart extends VoxelPart {
                 return RouteLayout.rejected("AWG knuckle needs two matching paid conductor ends");
         }
         var splits = new java.util.ArrayList<Split>();
-        String error = startJoin == null ? null : planTap(level, positions.getFirst(), parts.getFirst(), splits);
+        String error = startJoin == null ? null : planTap(level, positions.getFirst(), parts.getFirst(), localTap(positions.getFirst(), startJoin), splits);
         if (error == null && endJoin != null) {
             if (startJoin != null && positions.getFirst().equals(positions.getLast()))
                 return RouteLayout.rejected("AWG wire cannot tap the same block twice");
-            error = planTap(level, positions.getLast(), parts.getLast(), splits);
+            error = planTap(level, positions.getLast(), parts.getLast(), localTap(positions.getLast(), endJoin), splits);
         }
         if (error != null) return RouteLayout.rejected(error);
         for (int i = 0; i < parts.size(); i++) {
@@ -699,11 +722,14 @@ public final class AwgCablePart extends VoxelPart {
         return a[i] == b[j] && a[i + 1] == b[j + 1] && a[i + 2] == b[j + 2];
     }
 
+    private boolean canMarkCorner(int end, int otherFace) {
+        return end >= 0 && end <= 1 && otherFace >= 0 && otherFace <= 5
+            && CablePart.normalAxis(otherFace) != CablePart.normalAxis(geometry.face)
+            && geometry.points[end * 3 + CablePart.normalAxis(otherFace)] == CablePart.plane(otherFace);
+    }
+
     private void markCorner(int end, int otherFace) {
-        if (end < 0 || end > 1 || otherFace < 0 || otherFace > 5
-            || CablePart.normalAxis(otherFace) == CablePart.normalAxis(geometry.face)
-            || geometry.points[end * 3 + CablePart.normalAxis(otherFace)] != CablePart.plane(otherFace))
-            throw new IllegalArgumentException("Invalid AWG corner");
+        if (!canMarkCorner(end, otherFace)) throw new IllegalArgumentException("Invalid AWG corner");
         cornerEnd = end;
         cornerFace = otherFace;
     }
@@ -714,8 +740,9 @@ public final class AwgCablePart extends VoxelPart {
         return p[1] != p[4] ? 0 : 2;
     }
 
-    private boolean hasEnd(int x, int z) {
-        return x == x0 && z == z0 || x == x1 && z == z1;
+    private boolean hasPointEnd(int[] point) {
+        return !geometry.isKnuckle()
+            && (sameEndpoint(geometry.points, 0, point, 0) || sameEndpoint(geometry.points, 3, point, 0));
     }
 
     ElectricalLoad terminal(Direction exit, Direction mount) {
