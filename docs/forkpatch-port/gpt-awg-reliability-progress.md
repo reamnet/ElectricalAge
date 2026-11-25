@@ -1,9 +1,19 @@
 # AWG reliability progress
 
 ## Current checkpoint
+- Task: completed feasible automated hardening, audit and regression verification; manual and extended-shape limits remain below.
+- Branch/worktree: `local/gpt-awg-reliability`, ElectricalAge-gpt-awg-reliability only.
+- Verified code HEAD: `75468da24`; initial HEAD `7b91ee884`. Five verified code/test commits; final documentation commit follows this checkpoint. No push or merge.
+- Last verified action: full unfiltered GameTests completed, 1,995 total, 1,992 passed and exactly three historical failures. All 39 AWG cases passed.
+- Full build/root: exit 0, root 1,284 tests / zero failures/errors / five skips. CAD 18 tests and fluidcore 102 tests (two skips), zero failures/errors. Final assemble exit 0.
+- No running test/client JVMs from this task. Uncommitted before final report commit: this document only.
+- Next actions for merger: review these commits, resolve baseline golden/JEI discrepancies through the project's separate approved process, and execute the manual checklist. No further code changes are proposed here.
+- Limits: normal ticket dependencies prevented adjacent-only physical eviction; repeated BOTH-chunk eviction is verified. Corner/sag/branched/faulted-network-specific actual eviction and live client visuals remain unverified. Historical mod-load blocker does not occur here.
+
+## Initial checkpoint
 - Task: establish existing AWG coverage and baseline, then harden electrical ownership, lifecycle, rollback and preview cleanup without changing routing geometry.
 - Worktree: ElectricalAge-gpt-awg-reliability; branch `local/gpt-awg-reliability`.
-- Initial/current commit: `7b91ee884`.
+- Initial commit: `7b91ee884`.
 - Initial Git status: clean. No unrelated WIP in this worktree.
 - Read: supplied AGENTS.md, CLAUDE.md, docs/testing.md.
 - Last verified action: initial Git inspection (exit 0).
@@ -12,7 +22,7 @@
 - Constraints: no Qwen worktree changes, no golden/registry/dependency changes, no pushes; preserve existing AWG geometry.
 - Blockers: historical mod-load blocker in supplied instructions requires current verification; GameTest padding forces chunks, so genuine unload needs an isolated location and observed unload events.
 
-## Next actions
+## Initial next actions
 1. Read latest AWG parity audit and relevant code/test commits; map completed coverage.
 2. Run mctest doctor and baseline build/root AWG tests with required Java environment.
 3. Inspect world chunk events and electrical registration ownership; add focused integration coverage for missing invariants.
@@ -135,3 +145,73 @@ No actual client rendering has been launched or visually inspected in this workt
 - Isolated `awg_native_kit_session` run: exit 0, 2/2 required tests passed, 2m38s including cold isolated output compilation. New changed-spool assertion PASS, existing stale obstruction/rollback/replayed confirmation/branch placement assertions PASS.
 - Full root build remains active in primary outputs, no reported failures yet.
 - Next: full GameTest run in isolated outputs (no filters), then reconcile both final results.
+
+## Active final runs (recovery checkpoint)
+- Code HEAD `75468da24`; code changes committed, progress file may be updated while runs finish.
+- Primary full root/build: exec session 70838, log `/tmp/awg-reliability-full-build.log`; still active, no reported failures. Do not compile changed classes into primary outputs while it runs.
+- Isolated full GameTest suite: exec session 2034, log `/tmp/awg-reliability-full-gametest.log`; running all cases, first EA batch has 50 tests. Command has NO elnGameTests filter. Same isolated init/project-cache-dir/Gradle home as successful funding run.
+- Poll sessions independently with write_stdin; inspect only new/tail results, not startup audits. Once done, parse root XML counts and full GameTest failure names, check AWG cases, update final report, review Git diff/status and commit documentation. No pushes.
+
+## Full build/root result
+- `./gradlew build :test` (primary outputs, isolated Gradle home): exit 0, BUILD SUCCESSFUL in 21m01s. Full unfiltered root tests and build checks passed. Session 70838 finished; primary outputs no longer in use by that test JVM.
+- Full GameTest suite still active in isolated outputs (session 2034), through at least batch 17. Golden descriptors and golden slots failures observed so far; do not assume final failure list until process exits.
+
+## Final artifact assembled
+- `./gradlew assemble` (primary outputs, after root JVM exit): exit 0, BUILD SUCCESSFUL in 26s. Includes final stale-funding GameTest assertion in the jar; no need to rerun unchanged unit behavior for this test-only addition.
+- Broad root result: 205 suites / 1,284 tests / 0 failures / 0 errors / 5 skips. CAD: 18 tests, no failures/errors/skips. Fluidcore: 102 tests, no failures/errors, 2 skips.
+- Full GameTest tracker contains 1,995 cases; at checkpoint >1,300 passed, two known golden failures, remainder active/pending. Final total/failure list still pending.
+
+## Powered circuit measurements
+Existing quantitative world fixtures were reused rather than duplicated. Representative first-check samples from the focused run:
+
+| Circuit | Straight load | Branch load | Half-meter branch drop | Derived branch resistance | Derived branch Joule power |
+| --- | --- | --- | --- | --- | --- |
+| Copper-only tee | 1.172056 A | 11.473765 A | 0.0298974 V | ~0.00260572 ohm | ~0.34303 W |
+| Copper trunk / large aluminum branch | 1.171823 A | 11.595151 A | 0.00487237 V | ~0.000420207 ohm | ~0.05650 W |
+
+- Fixture asserts KCL per arm and V/I against each descriptor's length/temperature resistance, preserves heat through node save/load, fuses one preheated branch, and leaves the parallel branch powered after removal. Its exact scrap/material refunds pass.
+- Repeated actual-eviction fixture uses electrical-phase samples (strict 1e-6 A equality); seeded 60 C heat remains >30 C, exposure stays exactly 0.375, and a separate melted conductor stays at zero current. This tests retained state while simulation continues; it does not freeze temperature while unloaded.
+
+## Final regression report
+
+| Check | Result |
+| --- | --- |
+| Focused AWG + preview unit tests | 39 tests, zero failures, exit 0 |
+| Full `build :test` | exit 0, 21m01s; root 1,284 tests / 5 skips / zero failures or errors |
+| CAD / fluidcore subprojects | 18 / 102 tests; zero failures/errors, 0 / 2 skips |
+| Final `assemble` | exit 0, 26s; includes final code/test HEAD |
+| Focused actual eviction (three cycles) | exit 0; both chunks genuinely absent, fresh block entities on reload, state/terminal/current/retirement assertions pass |
+| Focused stale-funding confirmation | exit 0; 2/2 required cases including harness default |
+| Full unfiltered GameTests | 1,995 total, 1,992 passed, 3 failed; server exit 3, Gradle exit 1; 19.10 min test time / 19m47s Gradle time |
+| AWG within full GameTests | all 39 cases pass; no AWG FAIL lines; 38 ordinary persistence summaries plus explicit remote lifecycle/removal checks in actual-eviction case |
+| Catalog | all 70 single-conductor identities and original material/area/rating resistance behavior pass (42 copper, 18 aluminum, 10 high-voltage) |
+
+Full GameTest failures, confirmed rather than assumed:
+1. `golden_descriptors`: new descriptor IDs absent from historical inventory snapshot (first reported six_node@2176).
+2. `golden_slots`: Hub cable-slot acceptance includes new cable items beyond historical snapshot.
+3. `jei_every_item_reachable`: 1 unreachable item of 880 listed, 2,424 ways.
+
+No golden snapshots, skips or assertions were weakened. No additional failure appeared. Logs remain at the paths recorded above, especially `/tmp/awg-reliability-full-build.log` and `/tmp/awg-reliability-full-gametest.log`.
+
+### Issues and scope
+- Fixed stale preview generation reuse after forget/reconnect, stale world-space outline retention at client level teardown, missing preview invalidation on dimension changes, and unchecked malformed preview packet headers/bounds.
+- No new AWG electrical/thermal physics or ownership defect was established. Current comparison after thermal restamping was a test measurement-phase error; electrical-phase sampling retained the strict 1e-6 A invariant and passed to <1e-9 A.
+- Preserved EA's deliberate unloaded-chunk simulation contract. Actual unload keeps circuits powered; node/dimension retirement releases them. Changing this to disconnect on chunk unload would be a global behavior change and was not done.
+- New tests: two queued-preview lifecycle unit tests, three outline codec/teardown unit tests, one powered actual-eviction GameTest with three cycles and heat/exposure/melted-state/resource assertions, and a stale-inventory confirmation assertion in the existing native session case.
+- Material/rollback: exact two-meter debit in the eviction fixture; changed 5.9375 m spool cannot buy cached six-meter route; existing interrupted/partial/blocked-route rollback, split/refund, malformed/orphan preservation and independent-branch removal cases pass in full regression.
+- Preview: packet/bounds/cleanup tests and existing headless native geometry tests pass. No live client was launched or visually inspected. Manual checklist above remains required for green ghost appearance and real dimension/disconnect user flows.
+
+### Commits
+1. `1e2e7291d` Keep queued route previews stale across player reconnects.
+2. `182adb885` Exercise powered AWG conductors through actual chunk eviction.
+3. `11a7839cd` Clear route previews when leaving a client world.
+4. `2817ed508` Check AWG damage and terminal cleanup over repeated chunk evictions.
+5. `75468da24` Verify AWG confirmation rechecks the live spool balance.
+6. Final documentation commit contains this report (inspect Git HEAD for its hash).
+
+### Remaining risks before merging
+- Full regression remains red on the three confirmed historical golden/JEI cases; reconcile separately without weakening historical evidence.
+- Actual adjacent-only physical eviction was not achieved with normal FULL-ticket dependencies. BOTH-chunk eviction is proven; independent adjacent residency is not.
+- Actual eviction of corner/knuckle, sagged, branched and insulation-faulted network combinations is not explicitly exercised. Their existing powered ownership, geometry, save/load, rollback and removal cases pass, but that is weaker than testing each shape through physical eviction.
+- Live preview appearance and actual client dimension/disconnect flows require manual validation. No GPU/audio/multi-client/online-auth claims are made.
+- No Qwen worktree, geometry features, cable types, registry identities, electrical specs, save schema, dependency pins or historical snapshots were changed. No push or merge performed.
