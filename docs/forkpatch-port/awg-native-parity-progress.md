@@ -1,14 +1,14 @@
 # Native AWG parity follow-up
 
 ## Current implementation checkpoint
-- Follow-up implementation and full verification complete in isolated local/awg-upstream-integration worktree. Code commits9ded03df1 (lamp/meter) and706fa16bf (explicit native/legacy spool menu), source clean; final documentation pending commit/push.
+- Follow-up implementation, full verification and push complete in isolated local/awg-upstream-integration worktree. Code9ded03df1 (lamp/meter),706fa16bf (mode menu) and reportingf71bd96cb pushed to origin/local/awg-upstream-integration; final reporting-only checkpoint follows.
 - Ordinary rated bulbs no longer use farming tint; all18 classifications tested, actual farming remains pink. Powered native MultiMeter/Thermometer/AllMeter clicks now read AWG before/after reload.
 - All70 Cu/Al variants offer per-spool C/tool radial Native voxel / Legacy six-node. Optional inventory NBT flag, strict matching-held-spool packet30, existing legacy backend, stale route/preview cleanup. Real Cu/Al main-hand legacy and native placements have exact1m/2m payment.
 - Focused units59/59 and server78/78 pass. Full build/root exit0,18m13s: root1370/0fail/6skip, CAD18/0fail, fluidcore104/0fail/2skip.
 - Full server session15349 FINISHED:2103/2106 pass, exactly historical golden_descriptors/golden_slots/jei_every_item_reachable, Gradle exit1/server exit3,16m17s. All51 AWG cases and three actual chunk evictions observed. No active test JVM.
 - Fresh JAR build/libs/eln-26.3-0.1.0-port.jar SHA256 4494585ba54d87fb63e1de0d220889a6ed2bc176d31a8365af28693fe6b711ec; companion .jar.sha256 written.32 relevant packaged classes match verified compiled output.
 - Final checks pass:934 registry mappings and specifications unchanged; no generated/assets/golden/pin changes; diff checks clean; source feature7b91ee884/reliability573af9324 unchanged. No Qwen worktree changes.
-- Report: awg-lamp-meter-placement-followup.md. Exact next: commit reporting, push origin local/awg-upstream-integration (authorized), verify remote, record push outcome and deliver JAR with C-menu instructions. No main/feature/develop merge. No live GUI/rendering claim.
+- Report: awg-lamp-meter-placement-followup.md. No coding/testing work pending. Next user action: install fresh JAR, hold Cu/Al spool, press configured tool key (default C), choose placement mode. Branch push succeeded; final checkpoint also pushed and remote matched HEAD. No main/feature/develop merge. No live GUI/rendering claim.
 
 - Worktree: ElectricalAge-awg-upstream-integration, branch local/awg-upstream-integration.
 - Baseline: 2c6b81655; clean at start. Latest verified integration: 2091/2094 full server (three historical failures), root 1368 with no failures; final focused 67/67. No need to repeat startup integration audit.
@@ -156,3 +156,7 @@
 - Full server2103/2106; exactly historical3 failures, all51 AWG IDs present/pass, three actual evictions. Full build1370 root/18 CAD/104 fluidcore with0 failures. No source changes since706fa16bf.
 - Fresh JAR SHA256 4494585ba54d87fb63e1de0d220889a6ed2bc176d31a8365af28693fe6b711ec;32 relevant Java/Kotlin packaged classes byte-equal verified outputs. All934 mappings and descriptor parameters unchanged; generated/resources/goldens/pins untouched.
 - Follow-up report and menu instructions finalized. Next authorized action: commit report/checkpoint and push same fork development branch, no merge to protected/source branches.
+
+## Follow-up push completed
+- git push origin local/awg-upstream-integration exit0: remote fast-forward e033d0805 -> f71bd96cb, containing verified fixes/menu/report. This final reporting-only checkpoint is also pushed; final tip is git rev-parse HEAD / confirmed remote ref.
+- No main/develop/feature update, no other-worktree edits, no unfinished source changes. Deliver fresh JAR/checksum and C-menu instructions. All follow-up implementation/testing complete; no live graphical claim.

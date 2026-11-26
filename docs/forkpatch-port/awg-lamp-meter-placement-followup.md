@@ -34,6 +34,6 @@ SHA-256: `4494585ba54d87fb63e1de0d220889a6ed2bc176d31a8365af28693fe6b711ec`.
 Companion checksum: `build/libs/eln-26.3-0.1.0-port.jar.sha256`.
 The JAR contains byte-identical verified compiled output for32 relevant classes. This supersedes the earlier e0cc... parity JAR.
 
-Destination: `reamnet/ElectricalAge:local/awg-upstream-integration`; main/develop/feature branches remain unchanged. Final push confirmation is recorded in the progress checkpoint and delivery response.
+Destination: `reamnet/ElectricalAge:local/awg-upstream-integration`; main/develop/feature branches remain unchanged. Verified fixes/menu/report were pushed successfully through f71bd96cb; the final reporting-only checkpoint is pushed to the same branch. The delivery response confirms its final tip.
 
 No live GUI or graphical colour inspection is claimed. Automated checks prove technology selection and actual server meter/placement behavior. The menu reuses RadialMenu; no separate routing, placement or rendering engine was introduced.
