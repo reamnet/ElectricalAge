@@ -160,3 +160,17 @@
 ## Follow-up push completed
 - git push origin local/awg-upstream-integration exit0: remote fast-forward e033d0805 -> f71bd96cb, containing verified fixes/menu/report. This final reporting-only checkpoint is also pushed; final tip is git rev-parse HEAD / confirmed remote ref.
 - No main/develop/feature update, no other-worktree edits, no unfinished source changes. Deliver fresh JAR/checksum and C-menu instructions. All follow-up implementation/testing complete; no live graphical claim.
+
+## Pole selection and bare-wire appearance follow-up
+- Base b34d43a6e, isolated integration branch; initially clean. User reports unselectable elevated primary/secondary pole connections, fixed-width/uncoloured spans and missing bare six-node textures.
+- Confirmed bare descriptor references absent sprites/currentcable.png; native node cap also resets tint. Fix existing native renderer through small hooks, retaining geometry/accounting.
+- Pending: pole owned-ghost selection/secondary rack coverage, descriptor-driven span appearance, focused/full tests and fresh JAR. No gameplay/visual verification claimed for these fixes yet.
+
+## Bare six-node texture verification
+- Replaced absent sprites/currentcable.png with existing neutral sprites/white.png. Utility renderer applies copper/aluminum tint; native junction API retains default white cap, optional preservation used only for bare intact utility wire. No save/physics/registry changes.
+- Existing focused AWG units exit0 (/tmp/awg-bare-texture-test.log). New render regression initially failed because test passed null to Kotlin non-null renderer constructor; fixture corrected to exercise shared tint emission without a world. New focused units exit0,59s (/tmp/awg-bare-texture-regression2.log).
+- Catalog GameTests now check real legacy texture resources for every70 descriptor; session25932 /tmp/awg-bare-texture-game.log pending.
+- New user request: placeable insulators. Original ForkPatch source located read-only in ELN1.21.1ForkPatch/src/main/kotlin/mods/eln/utility/insulator/{LineInsulator.kt,LineInsulatorClient.kt}; source IDs8043..8052 (800/3200/12500/69000/230000V line/feed). Not present in integration tree. Must adapt native GridElement circuit keys (target HV0/HV1/HV2, source HV_SINGLE), native model hitboxes, all six mounts, recipes/models/manifest and GUI. Source assets live assets/eln/model/lineinsulator*. Do not touch similarly named Qwen worktrees or integrate their unverified code.
+- Next: finish catalog tests and commit texture fix independently; then pole selection/span styling and standalone insulator port, with focused verification before full regression/assemble/push.
+
+- Catalog server3/3 exit0,28s (/tmp/awg-bare-texture-game.log), all70 actual descriptors have valid legacy textures; material electrical/drop/reload/refund checks preserved. Focused root48 tests/0 failures including new headless native cap tint/white texture check. No live GPU verification. Texture fix ready for independent commit.

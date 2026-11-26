@@ -60,6 +60,13 @@ final class AwgCatalogCase implements TestCase {
         ctx.check("every catalog item is recognized, with intact historical identity", catalog.size() == expected
             && catalog.stream().allMatch(w -> AwgCablePart.supportsSpool(w)
                 && Eln.sixNodeItem.getDescriptor(w.parentItemDamage) == w && !w.newItemStack().isEmpty()), "" + catalog.size());
+        for (var wire : catalog) {
+            var texture = wire.render.cableTexture;
+            ctx.check("legacy cable texture exists: " + wire.name,
+                AwgCatalogCase.class.getResource("/assets/" + texture.getNamespace() + "/" + texture.getPath()) != null, texture.toString());
+            if (!wire.getInsulated()) ctx.check("bare six-node cable uses a neutral material-tinted texture",
+                texture.getPath().equals("sprites/white.png"), texture.toString());
+        }
         if (highVoltage) {
             var classes = catalog.stream().collect(Collectors.groupingBy(UtilityCableDescriptor::getConductorAreaMm2,
                 Collectors.mapping(UtilityCableDescriptor::getInsulationVoltageRating, Collectors.toSet())));

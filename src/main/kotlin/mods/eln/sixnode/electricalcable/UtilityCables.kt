@@ -143,7 +143,7 @@ object UtilityCables {
     private fun make(id: Int,m: UtilityCableMaterial,s: Spec,insulated: Boolean,melted: Boolean,hv: Boolean): UtilityCableDescriptor {
         val label=if(melted) { if(hv)"${s.volts.toInt()}V Melted" else "Melted" } else if(insulated)"${s.volts.toInt()}V" else "Bare"
         val width=when { s.area<=.5->.65f;s.area<=2.5->.95f;s.area<=10->1.25f;s.area<=35->1.75f;s.area<=120->2.35f;else->3.25f }
-        val render=CableRenderDescriptor("eln",if(melted)"sprites/cable_melted.png" else if(insulated)"sprites/cable.png" else "sprites/currentcable.png",width,maxOf(.65f,width-.3f))
+        val render=CableRenderDescriptor("eln",if(melted)"sprites/cable_melted.png" else if(insulated)"sprites/cable.png" else "sprites/white.png",width,maxOf(.65f,width-.3f))
         val d=UtilityCableDescriptor(s.label,m,s.area,s.amps,insulated,if(insulated)s.volts else 0.0,melted,if(insulated || melted)s.jacketC else 180.0,I18N.TR_NAME(I18N.Type.NONE,"${m.label} ${s.label} Cable $label"),render)
         val nominal=maxOf(50.0,s.volts);val power=nominal*s.amps
         d.setPhysicalConstantLikeNormalCable(nominal,power,d.resistanceOhms()*s.amps/nominal,maxOf(nominal*1.5,d.insulationVoltageRating),power*1.1,20.0,d.meltTemperatureCelsius,-100.0,Eln.cableHeatingTime,Eln.cableThermalConductionTao)

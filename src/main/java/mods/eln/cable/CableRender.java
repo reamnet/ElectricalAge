@@ -717,12 +717,16 @@ public class CableRender {
     }
 
     public static void drawNode(CableRenderDescriptor cable, LRDUMask connection, CableRenderType connectionType) {
+        drawNode(cable, connection, connectionType, true);
+    }
+
+    public static void drawNode(CableRenderDescriptor cable, LRDUMask connection, CableRenderType connectionType, boolean resetTint) {
         if ((connection.mask == 0 || ((connection.get(LRDU.Left) || connection.get(LRDU.Right)) && (connection.get(LRDU.Down) || connection.get(LRDU.Up))) || connection.mask == 1 || connection.mask == 2 || connection.mask == 4 || connection.mask == 8)) {
             float widthDiv2 = cable.widthDiv2 + 1.0f / 16.0f;
             float height = cable.height + 1.0f / 16.0f;
             float tx = 0.75f;
             float ty = 0.5f;
-            GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+            if (resetTint) GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
             //	Utils.bindTextureByName(ClientProxy.CABLENODE_PNG);
             GL11.glBegin(GL11.GL_QUAD_STRIP);
             GL11.glNormal3f(0f, 1f, 0f);

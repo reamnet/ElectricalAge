@@ -5,6 +5,19 @@ import mods.eln.gl.GL11
 import java.io.DataInputStream
 
 class UtilityCableRender(e: SixNodeEntity,side: Direction,private val d: SixNodeDescriptor): ElectricalCableRender(e,side,d) {
+    override fun preserveNodeTint() = (d as UtilityCableDescriptor).let { !it.insulated && !it.melted }
+    override fun applyCableTint() {
+        if (!preserveNodeTint()) { super.applyCableTint(); return }
+        applyBareTint((d as UtilityCableDescriptor).material)
+    }
+    companion object {
+        @JvmStatic fun applyBareTint(material: UtilityCableMaterial) {
+            when (material) {
+                UtilityCableMaterial.COPPER -> GL11.glColor3f(0xb8 / 255f, 0x73 / 255f, 0x45 / 255f)
+                UtilityCableMaterial.ALUMINUM -> GL11.glColor3f(0xae / 255f, 0xb7 / 255f, 0xbd / 255f)
+            }
+        }
+    }
     var temperature=20f;private set
     var paletteIndex=0;private set
     override fun publishUnserialize(s: DataInputStream) { super.publishUnserialize(s);temperature=s.readFloat();paletteIndex=s.readUnsignedByte().coerceAtMost((d as UtilityCableDescriptor).colorPalettes.lastIndex) }

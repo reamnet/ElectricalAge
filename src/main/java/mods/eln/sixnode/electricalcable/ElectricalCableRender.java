@@ -33,11 +33,15 @@ public class ElectricalCableRender extends SixNodeElementRender {
 
     @Override
     public void draw() {
-        Utils.setGlColorFromDye(color, 1.0f);
+        applyCableTint();
         UtilsClient.bindTexture(descriptor.render.cableTexture);
         glListCall();
         GL11.glColor3f(1f, 1f, 1f);
     }
+
+    protected void applyCableTint() { Utils.setGlColorFromDye(color, 1.0f); }
+
+    protected boolean preserveNodeTint() { return false; }
 
     /**
      * Burnt through (26.x): each connected arm keeps only its outer part, charred at the cut, with the copper core
@@ -115,7 +119,8 @@ public class ElectricalCableRender extends SixNodeElementRender {
         listKnuckle = ct.knuckle.clone();
         CableRender.drawCable(descriptor.render, connectedSide, ct);
         CableRender.drawKnuckles(descriptor.render, ct);
-        CableRender.drawNode(descriptor.render, connectedSide, ct);
+        if (preserveNodeTint()) applyCableTint();
+        CableRender.drawNode(descriptor.render, connectedSide, ct, !preserveNodeTint());
     }
 
     /**
