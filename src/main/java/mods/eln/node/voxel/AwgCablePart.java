@@ -598,8 +598,10 @@ public final class AwgCablePart extends VoxelPart {
     /** Translate the native route once for both preview and placement. Unsupported geometry has no paid edge. */
     static RouteLayout nativeLayout(ServerLevel level, UtilityCableDescriptor wire, CableRouter.Result route,
                                     long[] startJoin, long[] endJoin, Player player) {
-        if (route.length() <= 0 || route.length() > MAX_ROUTE_BLOCKS * 16)
-            return RouteLayout.rejected("AWG routes need up to 64 m of conductor");
+        // The shared router bounds search work; the live spool bounds paid length.
+        // MAX_ROUTE_BLOCKS belongs only to the older direct placement helpers.
+        if (route.length() <= 0)
+            return RouteLayout.rejected("AWG routes need a positive conductor length");
         var space = CablePlacer.space(level);
         if (startJoin != null) space = CablePlacer.around(space, startJoin);
         if (endJoin != null) space = CablePlacer.around(space, endJoin);

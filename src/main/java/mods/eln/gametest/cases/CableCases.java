@@ -41,6 +41,7 @@ public final class CableCases {
         cases.add(new mods.eln.node.voxel.AwgNativeWallCase());
         cases.add(new mods.eln.node.voxel.AwgNativeOuterCase());
         cases.add(new mods.eln.node.voxel.AwgNativeSlabCase());
+        cases.add(new mods.eln.node.voxel.AwgNativeLengthCase());
         cases.add(new mods.eln.node.voxel.AwgNativeTapCase());
         cases.add(new AwgChunkLifecycleCase());
         cases.add(new AwgWorldCase(false));

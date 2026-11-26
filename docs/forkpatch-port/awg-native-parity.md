@@ -1,5 +1,11 @@
 # Native voxel and AWG routing parity
 
+For the current post-upstream architecture and remaining differences, see
+[the native adapter follow-up audit](awg-native-parity-followup.md). The sections below
+record earlier implementation stages. Actual straight powered chunk eviction/reload
+coverage is recorded in `gpt-awg-reliability-progress.md`; shape-specific and visual
+validation limits still apply.
+
 The audit starts at `20e69f93c`. Both items already share the native session,
 router, preview packet and outline renderer. AWG has a second, older placement
 mode that constructs centered routes directly and remains available during
