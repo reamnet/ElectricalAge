@@ -19,9 +19,11 @@ import net.minecraft.world.phys.Vec3
 /** Real outline rays and block clicks, through the shared native ghost forwarding path. */
 object GridSelectionCases {
     @JvmStatic fun cases(): List<TestCase> = TransmissionKind.entries.map { Selection(it,null) } +
-        listOf(DistributionKind.SINGLE,DistributionKind.THREE,DistributionKind.SECONDARY).map { Selection(null,it) }
-    private class Selection(val tower: TransmissionKind?,val wooden: DistributionKind?): TestCase {
-        override fun id()="grid_pole_selection_${tower?.name?.lowercase() ?: wooden!!.name.lowercase()}"
+        listOf(DistributionKind.SINGLE,DistributionKind.THREE,DistributionKind.SECONDARY).map { Selection(null,it) } + listOf(90f,180f,270f).flatMap { yaw ->
+            listOf(Selection(TransmissionKind.POLE_69,null,yaw),Selection(null,DistributionKind.THREE,yaw))
+        }
+    private class Selection(val tower: TransmissionKind?,val wooden: DistributionKind?,val yaw: Float=0f): TestCase {
+        override fun id()="grid_pole_selection_${tower?.name?.lowercase() ?: wooden!!.name.lowercase()}"+(if(yaw==0f)"" else "_yaw_${yaw.toInt()}")
         override fun width()=32
         override fun height()=28
         override fun depth()=16
@@ -30,8 +32,8 @@ object GridSelectionCases {
         lateinit var b: GridElement
         override fun build(c: TestContext) {
             val id=tower?.id ?: DistributionPoles.id(wooden!!)
-            a=c.placeTransparent(id,c.at(6,1,7)) as GridElement
-            b=c.placeTransparent(id,c.at(20,1,7)) as GridElement
+            a=c.placeByPlayer(id,c.at(6,1,7),yaw) as GridElement
+            b=c.placeByPlayer(id,c.at(20,1,7),yaw) as GridElement
             if(wooden!=DistributionKind.SECONDARY) {
                 select(a,32);select(b,32)
                 val native=OverheadCableItem.make(3,40)
@@ -53,7 +55,7 @@ object GridSelectionCases {
             // Upgrade an actual old owned clearance on reload, without altering a neighbouring build.
             val shaft=a.coordonate().pos().above(2)
             c.level().setBlock(shaft,Eln.ghostBlock.defaultBlockState().setValue(BlockMeta.META,GhostBlock.tClearance),2)
-            val foreign=a.coordonate().pos().offset(1,5,0)
+            val foreign=BlockPos.containing(a.renderedGridCablePoint(40,0).add(Vec3.atCenterOf(a.coordonate().pos())))
             Eln.ghostManager.removeGhost(Coordonate(foreign,c.level()))
             c.level().setBlock(foreign,Blocks.STONE.defaultBlockState(),2)
             val at=a.coordonate().pos();Reload.node(c.level(),at)

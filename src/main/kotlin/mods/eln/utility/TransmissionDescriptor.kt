@@ -22,9 +22,8 @@ class TransmissionDescriptor(val kind: TransmissionKind) : GridDescriptor(kind.t
             // Reserve its complete swept envelope at placement; linking never overwrites blocks.
             for (x in -arm..arm) for (z in -arm..arm) for (y in kind.height-2..kind.height)
                 if (x != 0 || z != 0) addElement(x,y,z,Eln.ghostBlock,GhostBlock.tSelectableClearance)
-            // The service rack reaches outside the shaft, below the primary crossarm.
-            for((x,z) in listOf(-1 to 0,1 to 0,0 to -1,0 to 1))
-                addElement(x,5,z,Eln.ghostBlock,GhostBlock.tSelectableClearance)
+            // Native mounting rotates this rack cell; leave the lamp-head cells free.
+            addElement(0,5,-1,Eln.ghostBlock,GhostBlock.tSelectableClearance)
         }
     }
     override fun rotationIsFixed() = true

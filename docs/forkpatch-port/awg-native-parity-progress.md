@@ -219,3 +219,33 @@
 - Focused root43/43 exit0,59s (/tmp/awg-span-style-unit.log). Combined pole/panel/insulator/style server24/24 exit0,32s (/tmp/awg-span-style-game1.log). Final paired native/style and four tower saved-mesh cases6/6 exit0,54s (/tmp/awg-span-style-native-game.log).
 - Native emitted mesh measurements cover all70 AWG descriptors: width/descriptor-width ratio constant, bare Cu RGBb87345 and Al RGBaeb7bd, insulation native texture, unchanged14m refunds. Smallest/largest AWG visual width ratio5; native overhead small/large mesh ratio2. Appearance/status cache invariants pass, old unversioned packet still reads; malformed/truncated radius/material/alpha rejected. Native geometry algorithm untouched.
 - Next independently commit style milestone, then full build :test, unfiltered GameTests, final datagen idempotence, fresh assemble/SHA256, report and authorized push to origin/local/awg-upstream-integration. No source changes during running JVMs. No live client graphical claim.
+
+## Full follow-up regression started
+- Stable implementation HEAD26a653e7b; independent commits c44ddf3e4 (six-node texture/tint), bb2dadb8d (ten insulators),0c9749ab5 (native ghost pole selection),26a653e7b (span thickness/metal). No implementation WIP.
+- Full build :test active session32856 /tmp/awg-poles-insulators-full-build.log. After exit verify root/CAD/fluidcore XML counts, then full unfiltered runGameTestServer. Expected registered total2120 (prior2106 +6 insulator +7 pole selection +1 appearance), but inspect actual results rather than assume historical failure set.
+- Then final runClientData twice/hash compare, assemble/hash JAR, final review/reporting commit and authorized push same development branch. Do not merge into feature/develop/main.
+
+## Full build and root regression passed
+- build :test exit0,18m34s (/tmp/awg-poles-insulators-full-build.log).
+- build/test-results/test: tests=1373, failures=0, errors=0, skipped=6
+- cad/build/test-results/test: tests=18, failures=0, errors=0, skipped=0
+- fluidcore/build/test-results/test: tests=104, failures=0, errors=0, skipped=2
+- Remote same development branch verified still b34d43a6e; normal fast-forward publication available. Starting unfiltered runGameTestServer next; no other test/build/client JVM remains active.
+- Full unfiltered server active session70629 /tmp/awg-poles-insulators-full-game.log. Source HEAD26a653e7b; only two reporting documents uncommitted. After exit inspect all failures/actual total and real evictions, then final datagen/clean commit/assemble and authorized fast-forward push. Build stamps use git describe and dirty state; assemble from a clean committed reporting checkpoint before delivery, inspect eln-build.properties.
+
+## Full server caught a real reservation regression — fix required
+- Full initial server session70629 still active (/tmp/awg-poles-insulators-full-game.log). Besides historical golden_descriptors/golden_slots, eight forkpatch_pole_lamp_*_powered tests fail only native temporary-light creation at head. Electrical watts/brightness and packets pass.
+- Cause inspected: new rack reserves all four cardinal cells at y5, but lamp head is local(-1.15,5.2,0), occupying x-1/y5. LightBlockEntity.addLight correctly refuses non-air ghost reservations. Actual service rack is local z-1/y5, and native GhostGroup.newRotate(front) already rotates its footprint. Small fix: reserve ONLY local(0,5,-1), rotated by existing native placement; leave lamp-head cell air. Do not alter LightBlockEntity or weaken powered-light tests.
+- Wait full initial suite completion to identify every regression before source changes/compilation. Then change DistributionPoleDescriptor and TransmissionDescriptor rack additions; add paired pole yaw90/180/270 coverage for one wooden/one steel type, using placeByPlayer helper (restores shared yaw). Update foreign-cell fixture to actual service endpoint cell so migration preservation remains meaningful.
+- Rerun all existing powered pole-lamp tests plus selection/style/panel/insulator checks. Independently commit verified fix; repeat full server after stable. Root1373/CAD18/fluid104 passed before this footprint-only correction; decide appropriate final root rerun, accurately record commit/test relationship. Final JAR/push blocked on resolving these new failures, not historical baseline alone.
+
+## Correcting the verified lamp regression
+- Initial full server was deliberately stopped after10m23s (Gradle exit1/server SIGTERM143), with eight diagnosed new light-position failures and historical golden pair observed. This was an incomplete failing run, NOT a certified full baseline. No other worktree/JVM touched; exact integration/run DevLaunch JVM terminated and awaited exit before compilation.
+- Updated plan: fail fast on diagnosed regression, fix before spending further time in long fluid batches, then rerun complete stable suite.
+- Applied smallest fix: one native-front-rotated rack reservation local(0,5,-1), not four cardinal cells. Native lamp-head cells remain available; no lighting code changed. Added six paired wooden/steel yaw cases90/180/270 and made foreign-block migration fixture target the actual rack cell. Existing powered lamp assertions untouched.
+- Next run focused root/grid units and full existing pole lamp +tower/selection/insulator/panel/style server IDs (/tmp/awg-rack-final-case-ids); commit fix after success. Then final full root/server regression, datagen/clean assembly/push.
+
+## Rack correction verified
+- Focused root43/43 exit0,57s (/tmp/awg-rack-fix-unit.log). Expanded server116/116 exit0,41s (/tmp/awg-rack-fix-game.log), including every existing lamp on/off/head-light test, all tower packet/payment/reload checks, thirteen actual-ray pole selection orientations, panel/insulator/style coverage. No lamp code or assertions changed.
+- Exact correction: single local rack cell rotated by native mounting, preserving default lamp-head air cells. All prior eight new failures now pass. Six new yaw cases raise expected full registered total2126; inspect actual complete result.
+- Next commit fix independently and repeat complete build/root and unfiltered server on corrected stable source, then final datagen/clean assembly/authorized push.
