@@ -31,6 +31,7 @@ public class GhostBlock extends Block {
     public static final int tFloor = 1;
     public static final int tLadder = 2;
 
+    public static final int tSelectableClearance = 14; // Interactive multiblock reservation, still non-solid.
     public static final int tFlatSolar = 13; // Fixed flat arrays: source half-height owner collision.
     public static final int tBatteryFloor = 7;
     public static final int tClearance = 8; // 3..7 retain the native cabinet/battery shapes.
@@ -73,6 +74,12 @@ public class GhostBlock extends Block {
             default:
                 return Shapes.block();
         }
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        if (state.getValue(BlockMeta.META) == tSelectableClearance) return Shapes.empty();
+        return super.getCollisionShape(state, level, pos, context);
     }
 
     /** A machine's other blocks break as the machine does: fast with a pickaxe (BreakTool). */

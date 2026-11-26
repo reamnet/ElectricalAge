@@ -17,7 +17,7 @@ class LineInsulatorDescriptor(val voltage: InsulatorVoltage,val feed: Boolean): 
     private val model=requireNotNull(Eln.obj.getObj(voltage.model))
     init {
         if(voltage.length>1)ghostGroup=mods.eln.ghost.GhostGroup().apply {
-            for(x in 1 until kotlin.math.ceil(voltage.length+.03).toInt())addElement(x,0,0,Eln.ghostBlock,mods.eln.ghost.GhostBlock.tClearance)
+            for(x in 1 until kotlin.math.ceil(voltage.length+.03).toInt())addElement(x,0,0,Eln.ghostBlock,mods.eln.ghost.GhostBlock.tSelectableClearance)
         }
     }
     override fun getFrontType()=TransparentNode.FrontType.BlockSide

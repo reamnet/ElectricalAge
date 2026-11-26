@@ -16,12 +16,15 @@ class TransmissionDescriptor(val kind: TransmissionKind) : GridDescriptor(kind.t
     private val model = requireNotNull(Eln.obj.getObj(kind.model))
     init {
         ghostGroup = GhostGroup().apply {
-            for (y in 1..kind.height) addElement(0,y,0,Eln.ghostBlock,GhostBlock.tClearance)
+            for (y in 1..kind.height) addElement(0,y,0,Eln.ghostBlock,GhostBlock.tSelectableClearance)
             val arm = kotlin.math.ceil(kind.spread).toInt()
             // A primary span can turn the crossarm independently of the service front.
             // Reserve its complete swept envelope at placement; linking never overwrites blocks.
             for (x in -arm..arm) for (z in -arm..arm) for (y in kind.height-2..kind.height)
-                if (x != 0 || z != 0) addElement(x,y,z,Eln.ghostBlock,GhostBlock.tClearance)
+                if (x != 0 || z != 0) addElement(x,y,z,Eln.ghostBlock,GhostBlock.tSelectableClearance)
+            // The service rack reaches outside the shaft, below the primary crossarm.
+            for((x,z) in listOf(-1 to 0,1 to 0,0 to -1,0 to 1))
+                addElement(x,5,z,Eln.ghostBlock,GhostBlock.tSelectableClearance)
         }
     }
     override fun rotationIsFixed() = true

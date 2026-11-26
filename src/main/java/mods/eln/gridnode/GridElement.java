@@ -35,11 +35,13 @@ abstract public class GridElement extends TransparentNodeElement {
     public final int connectRange;
     private float idealRenderingAngle;
     private boolean gridConnecting;
+    private final GridGhosts.Repair ghostRepair=new GridGhosts.Repair(this);
     private final SpanAmbientSample spanAmbient=new SpanAmbientSample();
     public double spanAmbientCelsius() { return spanAmbient.sample(coordonate().world().getGameTime(),()->mods.eln.sim.Ambient.relative(coordonate())+20.0); }
 
     public GridElement(TransparentNode node, TransparentNodeDescriptor descriptor, int range) {
         super(node, descriptor); desc = (GridDescriptor)descriptor; connectRange = range;
+        slowProcessList.add(ghostRepair);
     }
     public boolean gridReady() {
         var veto = mods.eln.node.NodeBase.simulationVeto;
@@ -122,6 +124,7 @@ abstract public class GridElement extends TransparentNodeElement {
         for (GridLink link : new HashSet<>(gridLinksBooting)) link.connect();
         gridLinksBooting.clear();
         updateIdealRenderAngle();
+        ghostRepair.initialize();
     }
 
     @Override

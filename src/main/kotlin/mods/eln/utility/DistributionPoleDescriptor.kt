@@ -15,8 +15,11 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
     private val twinFixture by lazy { requireNotNull(Eln.obj.getObj("utilitytwinled")) }
     init {
         ghostGroup=GhostGroup().apply {
-            for(y in 1..if(kind.underground) { if(kind.light)5 else 1 } else 7)addElement(0,y,0,Eln.ghostBlock,if(kind.underground && y==1)GhostBlock.tCube else GhostBlock.tClearance)
-            if(!kind.lvOnly && !kind.underground)for(y in 6..7)for(x in -1..1)for(z in -1..1)if(x!=0 || z!=0)addElement(x,y,z,Eln.ghostBlock,GhostBlock.tClearance)
+            for(y in 1..if(kind.underground) { if(kind.light)5 else 1 } else 7)addElement(0,y,0,Eln.ghostBlock,if(kind.underground) { if(y==1)GhostBlock.tCube else GhostBlock.tClearance } else GhostBlock.tSelectableClearance)
+            if(!kind.lvOnly && !kind.underground)for(y in 6..7)for(x in -1..1)for(z in -1..1)if(x!=0 || z!=0)addElement(x,y,z,Eln.ghostBlock,GhostBlock.tSelectableClearance)
+            // The service rack reaches outside the shaft, below the primary crossarm.
+            if(!kind.underground)for((x,z) in listOf(-1 to 0,1 to 0,0 to -1,0 to 1))
+                addElement(x,5,z,Eln.ghostBlock,GhostBlock.tSelectableClearance)
         }
     }
     override fun rotationIsFixed()=true
