@@ -47,7 +47,7 @@ Fresh assembled mod JAR (local build artifact, not committed binary):
 SHA-256: `e0cc93dbb16af38baedc64b678a46a6dec8309ae7d449ff40c88bbcb1bb0befb`.
 Companion: `build/libs/eln-26.3-0.1.0-port.jar.sha256`.
 
-No live client/GPU rendering claim is made. The development branch is ready for the authorized push; final remote confirmation is recorded in the progress checkpoint and delivery response.
+No live client/GPU rendering claim is made. The development branch was successfully pushed to the fork through reporting commit b1f0cbd7e; the final reporting-only checkpoint is pushed to the same branch. The final remote tip is confirmed in the delivery response.
 
 ## Preserved contracts and limits
 

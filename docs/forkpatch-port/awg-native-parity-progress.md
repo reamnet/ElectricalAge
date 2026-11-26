@@ -7,7 +7,7 @@
 - Full unfiltered server session14612 FINISHED: 2102/2105 passed, Gradle exit1/server exit3,16m24s. Exactly historical golden_descriptors/golden_slots/jei_every_item_reachable. All50 AWG cases and all11 new cases pass; three actual physical chunk evictions observed. No active test JVM.
 - Fresh JAR build/libs/eln-26.3-0.1.0-port.jar SHA256 e0cc93dbb16af38baedc64b678a46a6dec8309ae7d449ff40c88bbcb1bb0befb; companion .jar.sha256.32 relevant class files match verified outputs.
 - Final policy checks pass: all934 registry mappings and all70 descriptor specs unchanged; no historical golden/generated/dependency changes; all4264 resource hashes unchanged; source feature7b91ee884 and reliability573af9324 untouched; diff --check passes.
-- Report: awg-native-implementation-results.md. Only reporting changes pending commit. Exact next: commit report/checkpoint, push origin local/awg-upstream-integration without force, verify remote ref, record push outcome and deliver JAR/report. No implementation changes pending for this session.
+- Report: awg-native-implementation-results.md. All verified code/reporting pushed successfully through b1f0cbd7e to origin/local/awg-upstream-integration. This final checkpoint records the actual push; its commit is also pushed. No implementation/testing work remains for this session. Next: user review/JAR validation; follow documented remaining parity limits without a replacement engine.
 - Remaining limits: explicit compatibility controls retained; pure-decoration-only hosts without paid owner and displaced sag taps fail closed. No exhaustive shape/cross-section/live GPU validation claim. No Qwen worktree edits/merges.
 
 - Worktree: ElectricalAge-awg-upstream-integration, branch local/awg-upstream-integration.
@@ -104,3 +104,8 @@
 - runGameTestServer unfiltered: 2102/2105, historical3 only, Gradle exit1 / server exit3,16m24s. All50 AWG IDs (including11 added since prior full baseline) explicitly observed. All3 physical chunk evictions observed. Log /tmp/awg-native-parity-full-game.log.
 - Artifact contains byte-identical current verified class files for 32 relevant classes; SHA256 unchanged after datagen. All934 registry objects equal baseline; existing descriptor/physics/run/length code, golden JSON, generated assets and pins untouched. Diff checks pass. Source refs unchanged and upstream/reliability/Arc ancestors preserved.
 - Final report prepared. Next action authorized: reporting commit and fork integration-branch push, with remote verification. No feature/develop/main merge.
+
+## Push completed
+- `git push -u origin local/awg-upstream-integration`: exit0, fork remote https://github.com/reamnet/ElectricalAge.git fast-forwarded 2c6b81655 -> b1f0cbd7e with all verified implementation/reporting history.
+- Final reporting-only checkpoint follows that successful push and is pushed to the same branch. Use git rev-parse HEAD / the remote ref for the final tip. No force push or main/develop/feature merge/update. No active JVM; local tree clean after checkpoint commit.
+- Deliverable JAR/hash and complete test results are in awg-native-implementation-results.md. Full suite has the historical3 failures and no new failed cases. Remaining unsupported pure-decoration-owner/sag-tap cases are explicit; no live graphical claim.
