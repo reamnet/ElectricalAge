@@ -1,6 +1,16 @@
 # AWG upstream integration progress
 
 ## Current checkpoint
+- COMPLETE: isolated branch `local/awg-upstream-integration`; worktree `/home/matthew/projects/electrical-age-port/ElectricalAge-awg-upstream-integration`.
+- Verified code HEAD `30a70b894` (pole guidance follow-up); upstream merge `a869d0b19`, original upstream `2be56a18c59d1dd129bdb81d7ebee32ac0eb4c71`, LOCAL feature base `7b91ee88416f5e4410a8e58eff744cdced523342`.
+- All six reliability commits through `573af9324`, original upstream tip and Arc Furnace `125a5dc14` verified ancestors. Source feature and reliability refs unchanged; no Qwen integration or other-worktree edits.
+- Full build/root: exit 0, root 1,368 / 0 failures / 6 skips; CAD 18 passing; fluidcore 104 / 0 failures / 2 skips. Full server: 2,091/2,094, same three historical failing cases, Gradle exit 1 / server exit 3.
+- Final pole-message compile exit 0 (57s); focused server rerun 67/67, exit 0 (35s), all 66 explicitly selected IDs observed plus harness. Log `/tmp/awg-integration-final-focused-game.log`. No active JVMs from these runs.
+- Twice datagen byte-identical across all 4,264 files; final hashes remain identical after follow-up. All 928 original registry mappings unchanged, six deliberate additions. Historical snapshot JSON and dependency/wrapper pins unchanged. `git diff --check` passes.
+- Final report: `docs/forkpatch-port/awg-upstream-integration-report.md`; per-commit matrix covers all 229 upstream commits. Final documentation commit follows this code HEAD; use `git rev-parse HEAD` for final branch tip.
+- Exact next step: user review/approval to fast-forward feature branch from recorded base to integration, in its own clean worktree. Do not push or update feature/develop without approval. Remaining historical failures/manual client QA/chunk-shape limitations are in report. No further implementation pending.
+
+## Initial workspace checkpoint
 - Task: audit original upstream delta, integrate compatible updates and six reliability commits, verify without changing source worktrees.
 - Integration branch: `local/awg-upstream-integration`.
 - Integration worktree: `/home/matthew/projects/electrical-age-port/ElectricalAge-awg-upstream-integration`.
@@ -91,3 +101,30 @@
 - All 928 existing manifest mappings remain identical; six deliberate additions. No AWG/Arc generated path changed; no historical snapshot JSON or dependency/wrapper pin changed. Generated shaft recipe changes reviewed against upstream c62c880c3/a2eeebfbb intent (component stages/windings and common plate tags, replacing numbered old alternatives).
 - Detailed matrix covers all 229 upstream commits; per-commit full-regression status remains pending. Compatible author changes retained with common ancestry; partial exclusions are explicit for legacy heat retirement and optional IPN annotation/dependency.
 - Next: commit merge with these focused checks, run `build :test` unfiltered, then full `runGameTestServer` without filters and without concurrent CPU-heavy tests (upstream fluid budget now uses real wall time). Record actual new totals/failure names; fix any new regressions and reverify relevant scope.
+
+## Verified merge and full regression start
+- Upstream merge committed as `a869d0b19`. All 229 original commits retain attribution and ancestry. Six reliability commits are exact ancestors; no cherry-pick duplicates.
+- A matrix-update script had a syntax error before the merge commit; underlying tests had already passed. Corrected the reporting script and reran the registry/snapshot/ancestry/observed-case checks after the commit: all pass. Matrix status updates remain uncommitted pending full regression.
+- Current full root command is session 55619, `/tmp/awg-integration-full-root.log`. The focused Arc/legacy/LOS pass was 27 explicitly requested cases plus one harness case; all IDs observed, no silent selector omissions.
+- Pinned dependency versions/wrapper unchanged. build.gradle changes are upstream test/sketch/preview run options only; optional IPN compile dependency/annotation deliberately excluded.
+
+## Full root build result
+- Full unfiltered `./gradlew build :test`: exit 0, BUILD SUCCESSFUL in 18m18s. Session 55619 exited; no unit test JVM remains active.
+- User asked to continue; resumed directly from active checkpoint and completed root exit inspection, without restarting the audit.
+- Next run: unfiltered `./gradlew runGameTestServer` with isolated Gradle home, no case filter or budget overrides. Log `/tmp/awg-integration-full-game.log`. Wait for actual total/failure list; previous baseline is only a comparison, not an assumption.
+
+## Full server run in progress / final review
+- Full root build results: root 1,368 tests / 0 failures / 6 skips; CAD 18 / 0 failures; fluidcore 104 / 0 failures / 2 skips.
+- Unfiltered server session 82598 remains active, log `/tmp/awg-integration-full-game.log`, 2,094 cases. Reached batch 30; only golden_descriptors and golden_slots failures observed so far. No concurrent build/test jobs.
+- Final review found a small omitted upstream UX guard in GridElement: cable kits used on pole ghosts should explain that spans need Overhead Cable. Restore this after server exits, retaining port multi-wire behavior; extend PoleLineOfSightCase to assert handled activation, note, unchanged kit length and no links. No loaded classes edited during run.
+- Current code HEAD a869d0b19; only matrix and this checkpoint uncommitted. Next: finish full server, record exact result, targeted pole-message fix/test, final policy/ancestry/registry audit and documentation commit. Do not push or update feature/develop.
+
+## Full unfiltered server result
+- `runGameTestServer`: Gradle exit 1 (server exit 3), 2,094 total / 2,091 passing / 3 failing, 17m21s. Same historical failure names: golden_descriptors, golden_slots, jei_every_item_reachable. JEI reports nibble_memory_chip as its one unreachable item; no new failing cases. Log `/tmp/awg-integration-full-game.log`.
+- JVM exited before source edits. Restored upstream pole-ghost cable-kit refusal message without changing multi-wire policy. Extended existing LOS fixture with handled-message, exact material preservation and no-link assertions. Next compile/focused server verification, final diff audit and commit.
+
+## Final verified follow-up and policy audit
+- Code follow-up `30a70b894`: upstream pole-kit guidance restored with unchanged multi-conductor handling; exact note/material/no-link regression passed.
+- `compileJava compileTestJava`: exit 0, 57s. Final focused AWG/join/battery/shaft/pole server: 67/67 including harness, exit 0, 35s. All selected IDs explicitly observed. Full suite was run before this small UX follow-up; no broad rerun claimed for that snapshot.
+- Final policy audit passes: 928 original mapping objects equal; six additions; original upstream/reliability-six/Arc ancestors; source refs unchanged; historical golden JSON unchanged; no dependency/wrapper pin changes; generated hashes remain equal to first/second datagen.
+- Completed per-commit matrix and review report. No push, feature/develop update, Qwen change or other-worktree modification performed.
