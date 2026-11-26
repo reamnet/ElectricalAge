@@ -1,13 +1,14 @@
 # Native AWG parity follow-up
 
 ## Current implementation checkpoint
-- Branch/worktree: local/awg-upstream-integration / ElectricalAge-awg-upstream-integration ONLY. User authorizes final verified push to origin branch, no main/feature/develop merge.
-- Current verified HEAD 57a3e9ee0: priority1 f61ef755c native decoration ownership and both-end corners; priority2 native offset-terminal bridge with reconnect symmetry. Paired stair/slab/offset fixtures pass with exact accounting and powered reload checks.
-- Latest focused server 74/74 exit0; unit42 exit0. Prior full baseline2091/2094, three historical failures. No golden/dependency/registry changes.
-- Pending priority3 source changes: virtual/merged atomic split plans, 4th-arm and same-block double taps, native visual inheritance on cuts, multi-original collision exclusions. New AwgNativeRepeatTapCase rows (native/AWG fourth arm and two cuts/loop).
-- Current run session26444, /tmp/awg-parity-repeat-game1.log. Await exit before class edits. Then fix genuine failures, broader focused verification, commit priority3.
-- Next priority4: safely consolidate legacy reach validation/control cleanup without deleting compatibility controls. Then full build/root tests, full server sequentially, fresh JAR, final review and push verified local branch.
-- No other worktree edits or Qwen geometry merges.
+- Implementation and verification complete on local/awg-upstream-integration / ElectricalAge-awg-upstream-integration ONLY. Verified codeHEAD958effa59; final reporting commits follow. User authorizes push to origin same branch, no main/develop/feature merge.
+- Verified milestones: f61ef755c decorative native geometry/paid ownership; 57a3e9ee0 offset terminal connections/reconnect; a039d7359 repeated junction cuts; acc2c1f6d native session/reach cleanup; 958effa59 malformed geometry data and loaded fourth-arm regressions.
+- Full build :test exit0 in18m24s: root1368/0fail/6skip, CAD18/0fail, fluidcore104/0fail/2skip. Both datagen exits0,4264 files identical to each other/prior baseline including caches.
+- Full unfiltered server session14612 FINISHED: 2102/2105 passed, Gradle exit1/server exit3,16m24s. Exactly historical golden_descriptors/golden_slots/jei_every_item_reachable. All50 AWG cases and all11 new cases pass; three actual physical chunk evictions observed. No active test JVM.
+- Fresh JAR build/libs/eln-26.3-0.1.0-port.jar SHA256 e0cc93dbb16af38baedc64b678a46a6dec8309ae7d449ff40c88bbcb1bb0befb; companion .jar.sha256.32 relevant class files match verified outputs.
+- Final policy checks pass: all934 registry mappings and all70 descriptor specs unchanged; no historical golden/generated/dependency changes; all4264 resource hashes unchanged; source feature7b91ee884 and reliability573af9324 untouched; diff --check passes.
+- Report: awg-native-implementation-results.md. Only reporting changes pending commit. Exact next: commit report/checkpoint, push origin local/awg-upstream-integration without force, verify remote ref, record push outcome and deliver JAR/report. No implementation changes pending for this session.
+- Remaining limits: explicit compatibility controls retained; pure-decoration-only hosts without paid owner and displaced sag taps fail closed. No exhaustive shape/cross-section/live GPU validation claim. No Qwen worktree edits/merges.
 
 - Worktree: ElectricalAge-awg-upstream-integration, branch local/awg-upstream-integration.
 - Baseline: 2c6b81655; clean at start. Latest verified integration: 2091/2094 full server (three historical failures), root 1368 with no failures; final focused 67/67. No need to repeat startup integration audit.
@@ -78,3 +79,28 @@
 - Strengthened fourth-arm fixture with real 1/2/3-ohm parallel loads. Electrical sample: source21.17368128110 A = trunk11.47781110043 A + other loads9.69587018067 A, within1e-6 A; removal opens only its own parallel load and preserves the other load/trunk.
 - Targeted stair/slab/fourth-arm/same-host loop server 5/5 including harness, exit0,47s (`/tmp/awg-parity-final-regressions.log`). No class edits remain pending after test-only verification commit.
 - Next: full `build :test` (fresh JAR), then full unfiltered server sequentially with no concurrent heavy jobs; verify actual failure baseline, generated/registry/snapshot invariants, produce final report and push verified branch to fork.
+
+## Full regression/artifact checkpoint
+- Full build session11127 remains in root :test, active worker; no reported failure yet. No parallel server/build jobs.
+- Fresh mod JAR assembled at build/libs/eln-26.3-0.1.0-port.jar (38 MiB), SHA-256 e0cc93dbb16af38baedc64b678a46a6dec8309ae7d449ff40c88bbcb1bb0befb. Companion .jar.sha256 written. Artifact provisional until final gates; no source changes since958effa59.
+- Final report prepared at awg-native-implementation-results.md; update actual full-test results and push status only after completion.
+
+## Full build passed
+- `./gradlew build :test`: exit0,18m24s, `/tmp/awg-native-parity-full-build.log`.
+- build/test-results/test: 1368 tests / 0 failures / 0 errors / 6 skips
+- cad/build/test-results/test: 18 tests / 0 failures / 0 errors / 0 skips
+- fluidcore/build/test-results/test: 104 tests / 0 failures / 0 errors / 2 skips
+- Next: two sequential datagen runs/hash verification, then unfiltered GameTests with no competing jobs.
+
+## Data generation passed / full server start
+- Both runClientData exits0 (24s/22s); strict SHA-256 equality for4264 files across both and original integration baseline, no exclusions.
+- Starting unfiltered `./gradlew runGameTestServer`; log `/tmp/awg-native-parity-full-game.log`. No parallel build/data/client jobs and no filters/budget overrides. CodeHEAD958effa59.
+
+## Full server checkpoint
+- Session14612 remains active, batch26 (long upstream fluid plants); 2105 total, 1332 passed, 2 failures observed, 16 active. Only golden_descriptors/golden_slots reported so far; final result not yet known.
+- No source edits since958effa59 and no parallel heavy jobs. Await completion, then final report/policy audit/JAR byte/hash verification and authorized fork-branch push.
+
+## Full server and final review passed
+- runGameTestServer unfiltered: 2102/2105, historical3 only, Gradle exit1 / server exit3,16m24s. All50 AWG IDs (including11 added since prior full baseline) explicitly observed. All3 physical chunk evictions observed. Log /tmp/awg-native-parity-full-game.log.
+- Artifact contains byte-identical current verified class files for 32 relevant classes; SHA256 unchanged after datagen. All934 registry objects equal baseline; existing descriptor/physics/run/length code, golden JSON, generated assets and pins untouched. Diff checks pass. Source refs unchanged and upstream/reliability/Arc ancestors preserved.
+- Final report prepared. Next action authorized: reporting commit and fork integration-branch push, with remote verification. No feature/develop/main merge.

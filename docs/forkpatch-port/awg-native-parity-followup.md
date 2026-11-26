@@ -1,5 +1,8 @@
 # Native versus AWG adapter audit
 
+Implementation after this audit is recorded in [native AWG implementation results](awg-native-implementation-results.md).
+The conversion, terminal and repeated-tap entries below describe the audit baseline, not the implemented milestone status.
+
 Audit base: `2c6b81655`, after original develop and AWG reliability integration. This supersedes the older starting-state tables in `awg-native-parity.md`; those tables describe stages of development, not current architecture.
 
 The reference is native cable functionality. AWG is a descriptor-specific electrical/material backend of the native placement path, not a second routing engine. No Qwen geometry branch was integrated or edited during this audit.
