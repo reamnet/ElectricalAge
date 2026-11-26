@@ -282,24 +282,27 @@ public final class AwgCablePart extends VoxelPart {
 
     private record Split(VoxelNode node, AwgCablePart original, List<AwgCablePart> halves) {
         void apply() { node.replaceAwgParts(node.parts.indexOf(original), 1, halves); }
-        void undo() { node.replaceAwgParts(node.parts.indexOf(halves.getFirst()), 2, List.of(original)); }
+        void undo() { node.replaceAwgParts(node.parts.indexOf(halves.getFirst()), halves.size(), List.of(original)); }
     }
 
     private static String planTap(ServerLevel level, BlockPos pos, AwgCablePart arm, List<Split> splits) {
         return planTap(level, pos, arm, new int[]{8, 0, 8}, splits);
     }
 
-    /** Split a paid run at the shared native tap point, with at most three incident arms. */
+    /** Plan native endpoint joins and paid-edge cuts without mutating the live conductor. */
     private static String planTap(ServerLevel level, BlockPos pos, AwgCablePart arm, int[] point, List<Split> splits) {
         int face = arm.geometry.face;
-        var wires = at(level, pos).stream().filter(p -> p.geometry.face == face
-            && p.geometry.passes(point[0], point[1], point[2])).toList();
-        if (wires.isEmpty() || wires.size() > 2 || !arm.hasPointEnd(point)) return "AWG junction is occupied";
+        var wires = at(level, pos).stream().flatMap(p -> {
+            var split = splits.stream().filter(s -> s.original() == p).findFirst();
+            return split.map(s -> s.halves().stream()).orElseGet(() -> java.util.stream.Stream.of(p));
+        }).filter(p -> p.geometry.face == face && p.geometry.passes(point[0], point[1], point[2])).toList();
+        if (wires.isEmpty() || !arm.hasPointEnd(point)) return "AWG junction is occupied";
         for (var existing : wires) {
             if (existing.isCornerPort(point)) return "Tap a conductor arm away from the corner port";
             if (!existing.isStraightAt(point)) return "AWG taps need a straight section outside the sampled sag";
             if (!CablePlacer.supported(level, pos, existing.geometry)) return "AWG junction support changed";
-            var state = existing.run;
+            var state = existing.run != null ? existing.run : existing.saved == null ? null
+                : AwgCableRun.Companion.load(existing.wire, existing.saved, new VoltageState(), new VoltageState());
             if (state == null || state.getConductorMelted()) return "AWG junction needs live conductor";
             if (existing.hasPointEnd(point)) continue;
             if (wires.size() != 1 || CableRouter.axis(existing.direction()) == CableRouter.axis(arm.direction()))
@@ -312,6 +315,7 @@ public final class AwgCablePart extends VoxelPart {
             var second = new AwgCablePart(existing.wire, face, secondPoints);
             existing.copyCornerOwnership(first, 0);
             existing.copyCornerOwnership(second, 1);
+            existing.splitNativeVisuals(first, second, point);
             if (existing.geometry.hang2 != null) {
                 int splitAt = first.geometry.length() * 8;
                 first.geometry.hang2 = hangSlice(existing.geometry.hang2, 0, splitAt);
@@ -322,7 +326,14 @@ public final class AwgCablePart extends VoxelPart {
             first.saved = split.getFirst().save();
             second.saved = split.getSecond().save();
             var node = (VoxelNode) ((VoxelNodeEntity) level.getBlockEntity(pos)).getNode();
-            splits.add(new Split(node, existing, List.of(first, second)));
+            var prior = splits.stream().filter(s -> s.halves().contains(existing)).findFirst().orElse(null);
+            if (prior == null) splits.add(new Split(node, existing, List.of(first, second)));
+            else {
+                var children = new java.util.ArrayList<>(prior.halves());
+                int index = children.indexOf(existing);
+                children.remove(index); children.addAll(index, List.of(first, second));
+                splits.set(splits.indexOf(prior), new Split(prior.node(), prior.original(), List.copyOf(children)));
+            }
         }
         return null;
     }
@@ -478,8 +489,8 @@ public final class AwgCablePart extends VoxelPart {
         String error = tapStart ? planTap(level, start, parts.getFirst(), splits) : null;
         if (error == null && tapEnd) error = planTap(level, end, parts.getLast(), splits);
         if (error != null) return RouteLayout.rejected(error);
-        var replaced = new HashMap<BlockPos, AwgCablePart>();
-        for (var split : splits) replaced.put(split.node().coordonate.pos(), split.original());
+        var replaced = new HashMap<BlockPos, java.util.Set<VoxelPart>>();
+        for (var split : splits) replaced.computeIfAbsent(split.node().coordonate.pos(), p -> new java.util.HashSet<>()).add(split.original());
         return new RouteLayout(positions, parts, splits, Laying.check(level, positions, parts, replaced));
     }
 
@@ -503,6 +514,27 @@ public final class AwgCablePart extends VoxelPart {
     private void copyCornerOwnership(AwgCablePart child, int oldEnd) {
         if (cornerAt(oldEnd) >= 0) child.markCorner(oldEnd, cornerAt(oldEnd));
         child.setOuterEnds(outerEnds & (1 << oldEnd));
+    }
+
+    private void splitNativeVisuals(AwgCablePart first, AwgCablePart second, int[] point) {
+        if (nativeVisuals == null) return;
+        var a = new java.util.ArrayList<CablePart>();
+        var b = new java.util.ArrayList<CablePart>();
+        int axis = CableRouter.axis(direction()), cut = point[axis];
+        for (var visual : nativeVisuals) {
+            int[] line = visual.points;
+            boolean collinear = visual.face == geometry.face && line[axis] != line[axis + 3];
+            for (int k = 0; k < 3; k++) if (k != axis && (line[k] != point[k] || line[k + 3] != point[k])) collinear = false;
+            if (collinear && cut > Math.min(line[axis], line[axis + 3]) && cut < Math.max(line[axis], line[axis + 3])) {
+                int[] left = line.clone(), right = line.clone();
+                System.arraycopy(point, 0, left, 3, 3); System.arraycopy(point, 0, right, 0, 3);
+                a.add(CablePart.utilityGeometry(wire.name, visual.face, left, width(wire), height(wire)));
+                b.add(CablePart.utilityGeometry(wire.name, visual.face, right, width(wire), height(wire)));
+            } else if (visualOverlap(first.geometry, visual.face, line) >= visualOverlap(second.geometry, visual.face, line)) a.add(visual);
+            else b.add(visual);
+        }
+        first.nativeVisuals = a.isEmpty() ? null : List.copyOf(a);
+        second.nativeVisuals = b.isEmpty() ? null : List.copyOf(b);
     }
 
     private boolean isStraightAt(int[] point) {
@@ -666,8 +698,6 @@ public final class AwgCablePart extends VoxelPart {
         var splits = new java.util.ArrayList<Split>();
         String error = startJoin == null ? null : planTap(level, positions.getFirst(), parts.getFirst(), localTap(positions.getFirst(), startJoin), splits);
         if (error == null && endJoin != null) {
-            if (startJoin != null && positions.getFirst().equals(positions.getLast()))
-                return RouteLayout.rejected("AWG wire cannot tap the same block twice");
             error = planTap(level, positions.getLast(), parts.getLast(), localTap(positions.getLast(), endJoin), splits);
         }
         if (error != null) return RouteLayout.rejected(error);
@@ -676,8 +706,8 @@ public final class AwgCablePart extends VoxelPart {
             if (at(level, positions.get(i)).stream().anyMatch(parts.get(i)::joins))
                 return RouteLayout.rejected("Select the existing AWG wire as a route endpoint to tap it");
         }
-        var replaced = new HashMap<BlockPos, AwgCablePart>();
-        for (var split : splits) replaced.put(split.node().coordonate.pos(), split.original());
+        var replaced = new HashMap<BlockPos, java.util.Set<VoxelPart>>();
+        for (var split : splits) replaced.computeIfAbsent(split.node().coordonate.pos(), p -> new java.util.HashSet<>()).add(split.original());
         return new RouteLayout(positions, parts, splits, Laying.check(level, positions, parts, replaced));
     }
 

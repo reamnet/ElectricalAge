@@ -23,7 +23,7 @@ final class Laying {
     }
 
     static String check(Level level, List<BlockPos> at, List<? extends VoxelPart> parts,
-                        java.util.Map<BlockPos, AwgCablePart> replaced) {
+                        java.util.Map<BlockPos, java.util.Set<VoxelPart>> replaced) {
         for (int i = 0; i < parts.size(); i++) {
             VoxelPart part = parts.get(i);
             BlockPos bp = at.get(i);
@@ -38,7 +38,7 @@ final class Laying {
                         if (overlap(hb, pb)) return "the " + s.getBlock().getName().getString() + " is in the way at " + bp.toShortString();
             } else if (existing == null && !(s.isAir() || s.canBeReplaced())) return "a block is in the way at " + bp.toShortString();
             if (existing != null) {
-                String why = existing.canAdd(part, replaced.get(bp));
+                String why = existing.canAddExcluding(part, replaced.getOrDefault(bp, java.util.Set.of()));
                 if (why != null) return why + " at " + bp.toShortString();
             }
             // the route's own other parts in this block

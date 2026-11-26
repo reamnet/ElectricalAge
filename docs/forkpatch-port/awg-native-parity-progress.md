@@ -1,5 +1,14 @@
 # Native AWG parity follow-up
 
+## Current implementation checkpoint
+- Branch/worktree: local/awg-upstream-integration / ElectricalAge-awg-upstream-integration ONLY. User authorizes final verified push to origin branch, no main/feature/develop merge.
+- Current verified HEAD 57a3e9ee0: priority1 f61ef755c native decoration ownership and both-end corners; priority2 native offset-terminal bridge with reconnect symmetry. Paired stair/slab/offset fixtures pass with exact accounting and powered reload checks.
+- Latest focused server 74/74 exit0; unit42 exit0. Prior full baseline2091/2094, three historical failures. No golden/dependency/registry changes.
+- Pending priority3 source changes: virtual/merged atomic split plans, 4th-arm and same-block double taps, native visual inheritance on cuts, multi-original collision exclusions. New AwgNativeRepeatTapCase rows (native/AWG fourth arm and two cuts/loop).
+- Current run session26444, /tmp/awg-parity-repeat-game1.log. Await exit before class edits. Then fix genuine failures, broader focused verification, commit priority3.
+- Next priority4: safely consolidate legacy reach validation/control cleanup without deleting compatibility controls. Then full build/root tests, full server sequentially, fresh JAR, final review and push verified local branch.
+- No other worktree edits or Qwen geometry merges.
+
 - Worktree: ElectricalAge-awg-upstream-integration, branch local/awg-upstream-integration.
 - Baseline: 2c6b81655; clean at start. Latest verified integration: 2091/2094 full server (three historical failures), root 1368 with no failures; final focused 67/67. No need to repeat startup integration audit.
 - Scope: reuse native infrastructure; no independent geometry engine, no Qwen worktree edits or unverified geometry integration.
@@ -47,3 +56,13 @@
 - Expanded focused server 74/74, exit 0, 53s (`/tmp/awg-parity-terminal-game4.log`): six paired terminal offsets in-host and across a block boundary, reload and each-node reconnect invariance, plus prior AWG/native decorative/join/battery/shaft fixtures. No crash or new failures.
 - Offset current about 11.7648 A in-host / 11.7723 A across, quantitatively includes native source Rs=0.01152 ohm and descriptor-specific paid wire R; per-arm current equal within 1e-6 A. Exact wire debit and state/geometry round trips pass.
 - Next: commit terminal bridge and fixture cleanup; implement repeated native taps and multi-cut atomic split plans.
+
+## Priority 3 in progress
+- Atomic virtual split plans now allow fourth-arm joins and two cuts in the same original paid edge; one replacement/undo owns all children. Multi-original collision exclusion remains scoped to exactly the planned replaced parts. Native visual segments inherited/sliced on paid splits.
+- First repeated-tap server exit1: installation, rollback, heat/exposure/length conservation, native parity, powered I-V, reload and partial removal passed; loop KCL assertion sampled after thermal restamping. Moved the strict 1e-6 A KCL observation to simulator electrical phase (same convention as prior AWG reliability), not a tolerance relaxation.
+- Current session69410, `/tmp/awg-parity-repeat-game2.log`, expanded all focused cases plus new milestone fixtures. Await exit before further class edits. Pending priority4 shared reach/legacy selection cleanup, final full build/unit/server and fresh JAR/push.
+
+## Priority 3 verified
+- Expanded focused server 77/77, exit0, `/tmp/awg-parity-repeat-game2.log`. Native and AWG fourth-arm and same-host double-cut loop fixtures pass with atomic rollback, exact new-wire payment, conserved 400 J/exposure/one-meter original ledger, reload/reconnect and powered partial removal.
+- Electrical-phase loop currents: load11.63436436084 A = original middle9.48090514781 A + new loop2.15345921303 A (within 1e-6 A). All conductor voltage drops agree with descriptor length/temperature resistance.
+- Next commit this milestone, finish safe legacy control/reach consolidation and strengthen negative visual packet checks; then full regression/build/push. Keep explicit legacy compatibility functions rather than silently deleting saved-world-era workflows.
