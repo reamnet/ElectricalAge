@@ -72,3 +72,9 @@
 - Existing shared-session fixture now starts from a legacy selection and verifies native session takes ownership and clears it. Historical underfunded fourth-arm check retained unchanged, label clarified to distinguish insufficient funds from the removed junction-degree restriction.
 - Focused server 77/77, exit0, 1m (`/tmp/awg-parity-controls-game.log`), all new milestone fixtures plus original AWG/join/battery/shaft cases pass.
 - Next commit control cleanup, add negative coverage for new optional geometry payload/save fields and strengthen loaded fourth-arm check, then final full build/unit/server sequentially, fresh JAR/hash, policy review and verified push.
+
+## Final targeted validation before full regression
+- Added negative checks for malformed optional native visual NBT, invalid second-corner ownership, every truncated native geometry packet prefix and oversized visual count. New fields fail closed; legacy formats remain covered by existing tests.
+- Strengthened fourth-arm fixture with real 1/2/3-ohm parallel loads. Electrical sample: source21.17368128110 A = trunk11.47781110043 A + other loads9.69587018067 A, within1e-6 A; removal opens only its own parallel load and preserves the other load/trunk.
+- Targeted stair/slab/fourth-arm/same-host loop server 5/5 including harness, exit0,47s (`/tmp/awg-parity-final-regressions.log`). No class edits remain pending after test-only verification commit.
+- Next: full `build :test` (fresh JAR), then full unfiltered server sequentially with no concurrent heavy jobs; verify actual failure baseline, generated/registry/snapshot invariants, produce final report and push verified branch to fork.

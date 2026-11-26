@@ -83,9 +83,20 @@ public final class AwgNativeRepeatTapCase implements TestCase {
         var source = new VoltageSource("AWG repeated tap", sourceEnd[0], null).setU(12);
         var load = new Resistor(loadEnd[0], null).setR(1);
         Eln.simulator.addElectricalComponent(source); Eln.simulator.addElectricalComponent(load);
+        var branchLoads = new ArrayList<Resistor>();
+        if (!loop) for (var pos : List.of(center.south(), center.north())) {
+            var terminal = new VoltageState[1];
+            AwgCablePart.at(ctx.level(), pos).getFirst().liveLink((a, b) -> terminal[0] = a);
+            var branchLoad = new Resistor(terminal[0], null).setR(branchLoads.isEmpty() ? 2 : 3);
+            branchLoads.add(branchLoad); Eln.simulator.addElectricalComponent(branchLoad);
+        }
         double[] sample = new double[3];
         mods.eln.sim.IProcess sampleCurrents = dt -> {
-            if (!loop) return;
+            if (!loop) {
+                sample[0] = Math.abs(source.getCurrent()); sample[1] = Math.abs(load.getCurrent());
+                sample[2] = branchLoads.stream().mapToDouble(p -> Math.abs(p.getCurrent())).sum();
+                return;
+            }
             var middle = AwgCablePart.at(ctx.level(), center).stream().filter(p -> p.geometry.length() == 8 && p.activeRun().getInsulationExposure() > 0).findFirst().orElseThrow();
             var branch = AwgCablePart.at(ctx.level(), center).stream().filter(p -> added.contains(key(center, p))).findFirst().orElseThrow();
             sample[0] = Math.abs(load.getCurrent()); sample[1] = Math.abs(middle.activeRun().getCurrentAmps()); sample[2] = Math.abs(branch.activeRun().getCurrentAmps());
@@ -102,13 +113,23 @@ public final class AwgNativeRepeatTapCase implements TestCase {
             if (loop) {
                 ctx.check("same-host loop splits current without merging paid edges", sample[2] > .1
                     && Math.abs(sample[1] + sample[2] - sample[0]) < 1e-6, Arrays.toString(sample));
-            } else ctx.check("four incident arms share one owned junction", AwgCablePart.at(ctx.level(), center).size() == 4, "");
+            } else {
+                ctx.check("four incident arms share one owned junction", AwgCablePart.at(ctx.level(), center).size() == 4, "");
+                ctx.check("four-way parallel loads obey Kirchhoff current balance", branchLoads.get(0).getCurrent() > 5 && branchLoads.get(1).getCurrent() > 3
+                    && Math.abs(sample[0] - sample[1] - sample[2]) < 1e-6, Arrays.toString(sample));
+            }
             var remove = AwgCablePart.at(ctx.level(), center).stream().filter(p -> added.contains(key(center, p))).findFirst().orElseThrow();
             var node = ctx.voxelAt(center); node.removePart(node.parts.indexOf(remove), true);
         });
         ctx.after(40, () -> {
-            try { ctx.check("removing one added arm leaves the original powered trunk", Math.abs(load.getCurrent()) > 10, "I=" + load.getCurrent()); }
-            finally { Eln.simulator.removeElectricalComponent(source); Eln.simulator.removeElectricalComponent(load); source.breakConnection(); load.breakConnection(); }
+            try {
+                ctx.check("removing one added arm leaves the original powered trunk", Math.abs(load.getCurrent()) > 10, "I=" + load.getCurrent());
+                if (!loop) ctx.check("four-way removal opens only its own parallel load", Math.abs(branchLoads.get(0).getCurrent()) < 1e-6
+                    && Math.abs(branchLoads.get(1).getCurrent()) > 3, "");
+            } finally {
+                Eln.simulator.removeElectricalComponent(source); Eln.simulator.removeElectricalComponent(load); source.breakConnection(); load.breakConnection();
+                for (var branchLoad : branchLoads) { Eln.simulator.removeElectricalComponent(branchLoad); branchLoad.breakConnection(); }
+            }
         });
     }
     private static CompoundTag save(AwgCablePart p) { var tag = new CompoundTag(); p.write(tag); return tag; }

@@ -84,6 +84,29 @@ public final class AwgNativeDecorCase implements TestCase {
                 var bytes = new ByteArrayOutputStream(); part.serialize(new DataOutputStream(bytes));
                 var client = AwgCablePart.deserialize(new DataInputStream(new ByteArrayInputStream(bytes.toByteArray())));
                 ctx.check("client retains native visual bounds", boxes(part.boxes()).equals(boxes(client.boxes())), "");
+                var tag = new net.minecraft.nbt.CompoundTag(); part.write(tag);
+                if (tag.contains("nativeVisuals")) {
+                    var bad = tag.copy(); bad.putIntArray("nativeVisuals", new int[]{0, 0, 0});
+                    ctx.check("malformed optional native visual save is rejected", AwgCablePart.read(bad) == null, "");
+                }
+                if (tag.contains("secondCornerFace")) {
+                    var bad = tag.copy(); bad.putInt("secondCornerFace", 6);
+                    ctx.check("malformed second corner ownership is rejected", AwgCablePart.read(bad) == null, "");
+                }
+                byte[] packet = bytes.toByteArray();
+                if ((packet[0] & 0xff) == 0x9e) {
+                    boolean rejected = true;
+                    for (int length = 0; length < packet.length; length++) {
+                        try { AwgCablePart.deserialize(new DataInputStream(new ByteArrayInputStream(Arrays.copyOf(packet, length)))); rejected = false; }
+                        catch (IOException expected) { }
+                    }
+                    byte[] malformed = packet.clone();
+                    int baseLength = ((packet[1] & 0xff) << 8) | (packet[2] & 0xff);
+                    malformed[baseLength + 4] = (byte) 255;
+                    try { AwgCablePart.deserialize(new DataInputStream(new ByteArrayInputStream(malformed))); rejected = false; }
+                    catch (IOException expected) { }
+                    ctx.check("truncated and oversized native geometry packets are rejected", rejected, "");
+                }
             }
         } catch (ReflectiveOperationException | IOException e) { throw new IllegalStateException(e); }
         var from = new VoltageState[1]; var to = new VoltageState[1];
