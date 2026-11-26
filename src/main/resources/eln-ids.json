@@ -3977,6 +3977,66 @@
   "kind": "transparent_node",
   "name": "three_pole_solid_state_relay"
  },
+ "eln:transparent_node@8043": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "800 V Line Insulator",
+  "kind": "transparent_node",
+  "name": "800_v_line_insulator"
+ },
+ "eln:transparent_node@8044": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "800 V Cable Feed Insulator",
+  "kind": "transparent_node",
+  "name": "800_v_cable_feed_insulator"
+ },
+ "eln:transparent_node@8045": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "3.2 kV Line Insulator",
+  "kind": "transparent_node",
+  "name": "3.2_kv_line_insulator"
+ },
+ "eln:transparent_node@8046": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "3.2 kV Cable Feed Insulator",
+  "kind": "transparent_node",
+  "name": "3.2_kv_cable_feed_insulator"
+ },
+ "eln:transparent_node@8047": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "12.5 kV Line Insulator",
+  "kind": "transparent_node",
+  "name": "12.5_kv_line_insulator"
+ },
+ "eln:transparent_node@8048": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "12.5 kV Cable Feed Insulator",
+  "kind": "transparent_node",
+  "name": "12.5_kv_cable_feed_insulator"
+ },
+ "eln:transparent_node@8049": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "69 kV Line Insulator",
+  "kind": "transparent_node",
+  "name": "69_kv_line_insulator"
+ },
+ "eln:transparent_node@8050": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "69 kV Cable Feed Insulator",
+  "kind": "transparent_node",
+  "name": "69_kv_cable_feed_insulator"
+ },
+ "eln:transparent_node@8051": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "230 kV Line Insulator",
+  "kind": "transparent_node",
+  "name": "230_kv_line_insulator"
+ },
+ "eln:transparent_node@8052": {
+  "descriptor": "LineInsulatorDescriptor",
+  "display": "230 kV Cable Feed Insulator",
+  "kind": "transparent_node",
+  "name": "230_kv_cable_feed_insulator"
+ },
  "eln:transparent_node@8064": {
   "descriptor": "LoadBankDescriptor",
   "display": "Programmable Load Bank",

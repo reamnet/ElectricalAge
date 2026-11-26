@@ -399,3 +399,8 @@ wirelesssignalrepeater/wirelesssignalrepeater.obj
 wirelesssignalrx/wirelesssignalrx.obj
 wirelesssignaltx/wirelesssignaltx.obj
 xrayscanner/xrayscanner.obj
+lineinsulator800/lineinsulator800.obj
+lineinsulator3200/lineinsulator3200.obj
+lineinsulator12500/lineinsulator12500.obj
+lineinsulator69000/lineinsulator69000.obj
+lineinsulator230000/lineinsulator230000.obj

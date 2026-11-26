@@ -76,6 +76,7 @@ public final class ElnRecipes extends ElnRecipesBase {
         run("recipeForkPatchSolar", ElnRecipes::recipeForkPatchSolar);
         run("recipeForkPatchOffgrid", ElnRecipes::recipeForkPatchOffgrid);
         run("recipeForkPatchStandby", ElnRecipes::recipeForkPatchStandby);
+        run("recipeForkPatchInsulators", ElnRecipes::recipeForkPatchInsulators);
         run("recipeForkPatchUps", ElnRecipes::recipeForkPatchUps);
         run("recipeForkPatchGraphite", ElnRecipes::recipeForkPatchGraphite);
         run("recipeForkPatchArcClay", ElnRecipes::recipeForkPatchArcClay);
@@ -1391,6 +1392,16 @@ public final class ElnRecipes extends ElnRecipesBase {
             'A', findItemStack("Analogic Regulator"),
             'C', findItemStack("Copper Cable"),
             'M', findItemStack("Advanced Electrical Motor"));
+    }
+
+    public static void recipeForkPatchInsulators() {
+        var tiers=mods.eln.utility.insulator.InsulatorVoltage.values();
+        for (int i=0;i<tiers.length;i++) {
+            var v=tiers[i];
+            if(i==0)addRecipe(findItemStack(v.getLineName())," C ","CIC"," P ",'C',vanilla("white_terracotta"),'I',stack(Items.IRON_NUGGET),'P',findItemStack("Iron Plate"));
+            else addRecipe(findItemStack(v.getLineName()),"ICI","PBP",'I',findItemStack("Iron Plate"),'C',(v.getVolts()>=69000?stack(Blocks.QUARTZ_BLOCK):vanilla("white_terracotta")),'P',stack(Items.IRON_INGOT),'B',findItemStack(tiers[i-1].getLineName()));
+            addShapelessRecipe(findItemStack(v.getFeedName()),findItemStack(v.getLineName()),findItemStack("Copper Cable"),stack(Items.IRON_NUGGET));
+        }
     }
 
     public static void recipeForkPatchUps() {

@@ -39,6 +39,7 @@ final class ClientScreens {
         ElnScreens.register(mods.eln.transparentnode.fabricator.FabricatorDescriptor.class, mods.eln.transparentnode.fabricator.FabricatorScreen::new);
         ElnScreens.register(mods.eln.transparentnode.converter.VariableDcDcDescriptor.class, mods.eln.transparentnode.converter.VariableDcDcScreen::new);
         ElnScreens.register(mods.eln.transparentnode.renewable.RenewableDescriptor.class, mods.eln.transparentnode.renewable.SolarScreen::new);
+        ElnScreens.register(mods.eln.utility.insulator.LineInsulatorDescriptor.class,mods.eln.utility.insulator.LineInsulatorScreen::new);
         ElnScreens.register(mods.eln.utility.TransmissionDescriptor.class, mods.eln.utility.TransmissionScreen::new);
         ElnScreens.register(mods.eln.transparentnode.festive.ChristmasTreeDescriptor.class,mods.eln.transparentnode.festive.StringLightsScreen::new);
         ElnScreens.register(mods.eln.transparentnode.festive.HolidayCandleDescriptor.class,mods.eln.transparentnode.festive.StringLightsScreen::new);

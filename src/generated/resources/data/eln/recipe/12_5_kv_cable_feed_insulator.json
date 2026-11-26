@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "eln:12.5_kv_line_insulator",
+    "eln:copper_cable",
+    "minecraft:iron_nugget"
+  ],
+  "result": {
+    "id": "eln:12.5_kv_cable_feed_insulator"
+  }
+}

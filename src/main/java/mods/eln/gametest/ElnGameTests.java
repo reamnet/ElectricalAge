@@ -61,6 +61,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ForkPatchBundleSpanCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchDistributionCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchTransmissionCases.cases());
+        l.addAll(mods.eln.gametest.cases.ForkPatchInsulatorCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchTransmissionLampCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchPoleTransformerCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchPoleLampCases.cases());

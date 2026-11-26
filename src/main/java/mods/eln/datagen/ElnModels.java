@@ -181,7 +181,8 @@ public class ElnModels implements DataProvider {
             boolean equipmentGui = d instanceof mods.eln.transparentnode.kitchen.KitchenDescriptor
                 || d instanceof mods.eln.transparentnode.laundry.MatterMachineDescriptor
                 || d instanceof mods.eln.transparentnode.fan.FanDescriptor;
-            boolean gridGui = d instanceof mods.eln.utility.GridSourceTransformerDescriptor;
+            boolean gridGui = d instanceof mods.eln.utility.GridSourceTransformerDescriptor
+                || d instanceof mods.eln.utility.insulator.LineInsulatorDescriptor;
             String texture = itemTexture(name, item);
             if (item instanceof mods.eln.node.transparent.TransparentNodeItem ti && ti.descriptor instanceof mods.eln.transparentnode.energyconverter.EnergyConverterElnToOtherDescriptor) {
                 model = converterModel(name);

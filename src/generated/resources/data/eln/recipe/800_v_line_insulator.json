@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:white_terracotta",
+    "I": "minecraft:iron_nugget",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " C ",
+    "CIC",
+    " P "
+  ],
+  "result": {
+    "id": "eln:800_v_line_insulator"
+  }
+}

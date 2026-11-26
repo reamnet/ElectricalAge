@@ -150,6 +150,7 @@ public final class MenuSpecs {
         put(mods.eln.transparentnode.laundry.MatterMachineDescriptor.class,mods.eln.transparentnode.laundry.MatterMachineMenus::spec);
         put(mods.eln.utility.GridSourceTransformerDescriptor.class,d->MenuSpec.of().publishing(1).panel(240,166,8,84));
         put(mods.eln.utility.SubstationDescriptor.class,d->MenuSpec.of().publishing(1).panel(240,266,8,184));
+        put(mods.eln.utility.insulator.LineInsulatorDescriptor.class,d->MenuSpec.of().publishing(1).panel(244,208,8,126));
         put(mods.eln.utility.TransmissionDescriptor.class,d->MenuSpec.of().publishing(1).panel(240,230,8,148));
         put(mods.eln.utility.DistributionPoleDescriptor.class,d->(d.getKind().getTwinLight()?MenuSpec.of(
             filter(0,16,332,1,stack->false,MEDIUM,tr("Recover former transformer")),

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:3.2_kv_line_insulator",
+    "C": "minecraft:white_terracotta",
+    "I": "eln:iron_plate",
+    "P": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "ICI",
+    "PBP"
+  ],
+  "result": {
+    "id": "eln:12.5_kv_line_insulator"
+  }
+}

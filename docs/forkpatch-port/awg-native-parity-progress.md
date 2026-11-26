@@ -173,4 +173,27 @@
 - New user request: placeable insulators. Original ForkPatch source located read-only in ELN1.21.1ForkPatch/src/main/kotlin/mods/eln/utility/insulator/{LineInsulator.kt,LineInsulatorClient.kt}; source IDs8043..8052 (800/3200/12500/69000/230000V line/feed). Not present in integration tree. Must adapt native GridElement circuit keys (target HV0/HV1/HV2, source HV_SINGLE), native model hitboxes, all six mounts, recipes/models/manifest and GUI. Source assets live assets/eln/model/lineinsulator*. Do not touch similarly named Qwen worktrees or integrate their unverified code.
 - Next: finish catalog tests and commit texture fix independently; then pole selection/span styling and standalone insulator port, with focused verification before full regression/assemble/push.
 
-- Catalog server3/3 exit0,28s (/tmp/awg-bare-texture-game.log), all70 actual descriptors have valid legacy textures; material electrical/drop/reload/refund checks preserved. Focused root48 tests/0 failures including new headless native cap tint/white texture check. No live GPU verification. Texture fix ready for independent commit.
+- Catalog server4/4 (three catalog scenarios + harness) exit0,28s (/tmp/awg-bare-texture-game.log), all70 actual descriptors have valid legacy textures; material electrical/drop/reload/refund checks preserved. Focused root35 tests/0 failures including new headless native cap tint/white texture check. No live GPU verification. Texture fix ready for independent commit.
+
+## Standalone insulator port in progress
+- Texture fix independently committed c44ddf3e4. Correct focused root total35/0 (prior checkpoint typo48 corrected).
+- Original source five voltage tiers/two mount types adapted to native GridElement/GridRender, existing six-face mount selection, native block model geometry, ElnScreen/MenuSpec GUI. Ten source IDs8043..8052 added without changing existing934 mappings. Original OBJ/MTLs copied from read-only ForkPatch source, never Qwen trees.
+- Initial compile found two source API differences (inventory getter and render descriptor field), corrected; compileKotlin compileJava exit0,1m01s (/tmp/awg-insulator-compile2.log). Recipes and six new GameTests added afterward; first focused run session46317 /tmp/awg-insulator-game1.log pending.
+- Pending test-fixture review: feed test should check e.getElectricalLoad(front,LRDU.Left), not front.inverse (source intentionally excludes outer clamp face); use 2AWG bare conductor for powered tests. Must correct if observed. Datagen twice, focused suite/full regression, fresh JAR, commits/push still required.
+- Earlier pole selectable ghosts/secondary-rack coverage and descriptor-sized/material-coloured spans remain unfinished. Do not report those fixed.
+
+## Insulator focused server verified
+- Fixed source/26.3 API mismatches; vanilla recipe ingredient uses existing vanilla("white_terracotta") helper. Added five OBJ index entries after mod-load caught missing model registration. Initial powered fixtures requested a nonexistent structure; now reuse existing32x28x16 native pole fixture without changing assertions.
+- Focused server7/7 exit0,36s (/tmp/awg-insulator-game4.log): six new scenarios + harness. All60 type/mount combinations and their ordinary harness persistence passed. Five powered tiers measure Kirchhoff/Ohm current and voltage drop over exact12m paid AWG span, repeated clicks preserve28/40m balance, circuit locking and one-link reload pass.
+- Datagen1 session67743 /tmp/awg-insulator-datagen1.log active; next verify generated delta, hash tree, rerun datagen, root/focused regression, inspect diff/commit insulator port. Original source attribution b7444a7b8a0c5e072b1fd35eed2b74a282c3348c.
+
+## Insulator data generation verified
+- Datagen initially caught missing flat item icon. Insulators now reuse existing native 3D model GUI item path (same special renderer as grid converters), with its existing neutral particle material; no invented bitmap or missing-icon fallback. Ten items retain their actual source meshes in hand/inventory.
+- Successful runClientData exit0,48s (/tmp/awg-insulator-datagen3.log), repeat exit0,24s (/tmp/awg-insulator-datagen4.log). All4314 generated files byte-identical across these two runs, including tracked caches. Delta is ten insulator families +20 translation keys +cache indexes; all934 old registry mappings checked identical, exactly10 new.
+- Restored original230kV insulator collision envelope through native shapeAt override; shorter mounts use native model hitboxes. Added headless native draw emissions and actual support removal/one-time12m refund checks to focused server fixture.
+- Focused root units session33623 /tmp/awg-insulator-unit.log active; next rerun focused7 server on final code, review diff and independently commit port before continuing pole/span follow-up.
+
+## Insulator port ready for independent commit
+- Final focused root51/51 exit0,56s (/tmp/awg-insulator-unit.log). Final server7/7 exit0 (/tmp/awg-insulator-game5.log), now also validates all10 native mesh emissions and real support-block removal at every tier after reload: endpoint disappears, opposite pole disconnects and precisely12m returns once.
+- Two successful datagen runs byte-identical4314 files. Existing934 mappings and all70 AWG specifications unchanged. Source IDs8043..8052 added; no historical snapshots or dependency pins changed. No live client visual claim.
+- Next: independently commit insulator source/models/recipes/generated files, then fix pole selectable clearance and descriptor-driven span styling. Full suite/assemble/push deferred until final source stabilizes.

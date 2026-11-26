@@ -45,6 +45,7 @@ public final class ClientRenders {
         ElnRenders.transparent(mods.eln.transparentnode.switchgear.SwitchgearDescriptor.class,mods.eln.transparentnode.switchgear.SwitchgearRender::new);
         ElnRenders.transparent(mods.eln.utility.DistributionPoleDescriptor.class,mods.eln.utility.DistributionPoleRender::new);
         ElnRenders.transparent(mods.eln.utility.TransmissionDescriptor.class,mods.eln.utility.TransmissionRender::new);
+        ElnRenders.transparent(mods.eln.utility.insulator.LineInsulatorDescriptor.class,mods.eln.utility.insulator.LineInsulatorRender::new);
         // generated from the 1.12 descriptors' RenderClass (eln/port: super(name, XElement.class, XRender.class))
         ElnRenders.six(mods.eln.signalinductor.SignalInductorDescriptor.class, mods.eln.signalinductor.SignalInductorRender::new);
         ElnRenders.six(mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor.class, mods.eln.sixnode.TreeResinCollector.TreeResinCollectorRender::new);
