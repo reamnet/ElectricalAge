@@ -1,12 +1,14 @@
 # Native AWG parity follow-up
 
 ## Current implementation checkpoint
-- Follow-up active in isolated local/awg-upstream-integration worktree. Pushed prior parity tip e033d0805; new verified lamp/meter fix HEAD9ded03df1 (not yet pushed).
-- Lamp/meter fix: rated bulb visual technology classification and all18 rating/legacy tests; actual powered MultiMeter/Thermometer/AllMeter clicks before/after reload. Focused units52 pass, powered server7/7 pass.
-- User additionally requests copper/aluminum placement-mode menu. Uncommitted implementation: existing C/tool radial with Native voxel / Legacy six-node, per-spool optional NBT flag, strict matching held-spool packet30, existing legacy backend dispatch, stale session/preview cleanup, tooltip key hint. All70 support unchanged defaults; KitSupply excludes selected legacy mode.
-- Menu initial server4/4 passed exit0,48s; isolated fixture now uses its own player to avoid changing shared game mode. Assemble + focused lamp/AWG/radial/preview units passed exit0,51s (59 tests,0fail). Current broader focused server session46141 /tmp/awg-mode-final-focused-game.log includes all prior AWG/join/battery/shaft plus menu (78 total expected). Await exit before class edits/compilation.
-- Exact next: fix any failures, broad AWG/shared routing GameTests + focused lamp/AWG units, assemble fresh JAR and record new hash, commit verified menu, update report and push same development branch (authorized; no main/feature/develop merge). No other worktree changes.
-- Last full suite on prior parity code: root1368/0fail; server2102/2105 with historical3 only. Do not claim that old full run covers the new follow-up; record actual focused verification scope. Prior artifact hash e0cc... is superseded when fresh JAR built.
+- Follow-up implementation and full verification complete in isolated local/awg-upstream-integration worktree. Code commits9ded03df1 (lamp/meter) and706fa16bf (explicit native/legacy spool menu), source clean; final documentation pending commit/push.
+- Ordinary rated bulbs no longer use farming tint; all18 classifications tested, actual farming remains pink. Powered native MultiMeter/Thermometer/AllMeter clicks now read AWG before/after reload.
+- All70 Cu/Al variants offer per-spool C/tool radial Native voxel / Legacy six-node. Optional inventory NBT flag, strict matching-held-spool packet30, existing legacy backend, stale route/preview cleanup. Real Cu/Al main-hand legacy and native placements have exact1m/2m payment.
+- Focused units59/59 and server78/78 pass. Full build/root exit0,18m13s: root1370/0fail/6skip, CAD18/0fail, fluidcore104/0fail/2skip.
+- Full server session15349 FINISHED:2103/2106 pass, exactly historical golden_descriptors/golden_slots/jei_every_item_reachable, Gradle exit1/server exit3,16m17s. All51 AWG cases and three actual chunk evictions observed. No active test JVM.
+- Fresh JAR build/libs/eln-26.3-0.1.0-port.jar SHA256 4494585ba54d87fb63e1de0d220889a6ed2bc176d31a8365af28693fe6b711ec; companion .jar.sha256 written.32 relevant packaged classes match verified compiled output.
+- Final checks pass:934 registry mappings and specifications unchanged; no generated/assets/golden/pin changes; diff checks clean; source feature7b91ee884/reliability573af9324 unchanged. No Qwen worktree changes.
+- Report: awg-lamp-meter-placement-followup.md. Exact next: commit reporting, push origin local/awg-upstream-integration (authorized), verify remote, record push outcome and deliver JAR with C-menu instructions. No main/feature/develop merge. No live GUI/rendering claim.
 
 - Worktree: ElectricalAge-awg-upstream-integration, branch local/awg-upstream-integration.
 - Baseline: 2c6b81655; clean at start. Latest verified integration: 2091/2094 full server (three historical failures), root 1368 with no failures; final focused 67/67. No need to repeat startup integration audit.
@@ -135,3 +137,22 @@
 - Assemble + focused lamp/AWG/radial/preview units59/59 exit0,51s (/tmp/awg-mode-final-unit-build.log).
 - Controls: hold an intact single-conductor copper/aluminum spool, open tool menu (default C), select Native voxel cable or Legacy six-node cable. Choice persists on spool copies/save data. Legacy uses original per-block element and one-meter debit; native retains existing routed-length debit. Esc cancels menu choice; mode change cancels stale route/preview, never pays cable.
 - No live GUI/visual inspection claimed. Next commit menu independently, full build/root then full unfiltered server sequentially; assemble/hash final JAR and push verified follow-up commits to same development branch.
+
+## Full follow-up regression start
+- Verified menu committed706fa16bf; lamp/meter fix9ded03df1. All source changes committed. Full build :test session3496, /tmp/awg-mode-full-build.log. No parallel heavy jobs. After exit run full unfiltered server, verify new total (prior2105 plus one new menu case), artifact hash and policy; push verified branch.
+
+## Full follow-up build passed
+- build :test exit0,18m13s, /tmp/awg-mode-full-build.log.
+- build/test-results/test: 1370 tests / 0 failures / 0 errors / 6 skips
+- cad/build/test-results/test: 18 tests / 0 failures / 0 errors / 0 skips
+- fluidcore/build/test-results/test: 104 tests / 0 failures / 0 errors / 2 skips
+- Starting full runGameTestServer with no filters/budget overrides, /tmp/awg-mode-full-game.log. No other JVM from tests/build remains active. CodeHEAD706fa16bf.
+
+## Full follow-up server checkpoint
+- Session15349 active at long batch26; 2106 total / 1330 passed / 2 failures observed / 19 active. Only historical golden_descriptors/golden_slots so far. No source changes or competing heavy jobs.
+- Root1370 + CAD18 + fluidcore104 previously passed; next finish server, verify new artifact hash, update follow-up report and push9ded03df1 +706fa16bf/reporting to origin same branch.
+
+## Full follow-up verification completed
+- Full server2103/2106; exactly historical3 failures, all51 AWG IDs present/pass, three actual evictions. Full build1370 root/18 CAD/104 fluidcore with0 failures. No source changes since706fa16bf.
+- Fresh JAR SHA256 4494585ba54d87fb63e1de0d220889a6ed2bc176d31a8365af28693fe6b711ec;32 relevant Java/Kotlin packaged classes byte-equal verified outputs. All934 mappings and descriptor parameters unchanged; generated/resources/goldens/pins untouched.
+- Follow-up report and menu instructions finalized. Next authorized action: commit report/checkpoint and push same fork development branch, no merge to protected/source branches.
