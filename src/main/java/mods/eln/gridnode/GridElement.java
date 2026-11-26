@@ -67,7 +67,14 @@ abstract public class GridElement extends TransparentNodeElement {
         var item=GenericItemBlockUsingDamageDescriptor.getDescriptor(stack);
         boolean bare = OverheadCableItem.is(stack);
         ElectricalCableDescriptor cable = item instanceof ElectricalCableDescriptor c ? c : null;
-        if (!bare && cable == null) return false;
+        if (!bare && cable == null) {
+            if (mods.eln.node.voxel.CableItems.descriptor(stack) != null) {
+                if (player instanceof net.minecraft.server.level.ServerPlayer sp)
+                    mods.eln.node.voxel.KitPreview.note(sp, "Lines between poles take Overhead Cable, made on a wire drawing machine, not cable kits");
+                return true;
+            }
+            return false;
+        }
         UUID id=player.getUUID();
         int terminal=selectedGridTerminal(side);
         if (!allowsNewGridLinks() || gridLoads(terminal).isEmpty() || (!bare && (!acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || !GridCablePlan.acceptsChannels(cable,gridLoads(terminal).size())))) {

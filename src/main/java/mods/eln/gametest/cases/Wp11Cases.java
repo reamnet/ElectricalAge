@@ -755,6 +755,18 @@ public final class Wp11Cases {
             for (int y = 1; y <= 11; y++)
                 for (int z = 3; z <= 5; z++) ctx.level().setBlockAndUpdate(ctx.at(4, y, z), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
             walled = c.lineOfSight(d, Direction.XP, Direction.XN);
+            var kit = mods.eln.node.voxel.CableKitItem.kit(4, mods.eln.node.voxel.CableSpec.preset(4), 256);
+            mods.eln.node.voxel.KitPreview.clearNoteForTests(ctx.player().getUUID());
+            try {
+                boolean handled = ctx.holding(kit, p -> a.onBlockActivated(p, Direction.XP, 0.5F, 0.5F, 0.5F));
+                ctx.check("poles: kits explain how to make an overhead span", handled &&
+                    "Lines between poles take Overhead Cable, made on a wire drawing machine, not cable kits".equals(
+                        mods.eln.node.voxel.KitPreview.lastNoteForTests(ctx.player().getUUID())), "");
+                ctx.check("poles: refusing a kit preserves material and connections",
+                    mods.eln.node.voxel.CableItems.voxels(kit) == 256 && a.gridLinkList.isEmpty() && b.gridLinkList.isEmpty(), "");
+            } finally {
+                mods.eln.node.voxel.KitPreview.clearNoteForTests(ctx.player().getUUID());
+            }
         }
 
         public void measure(TestContext ctx) {
