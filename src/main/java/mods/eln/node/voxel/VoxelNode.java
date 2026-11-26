@@ -1666,11 +1666,71 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
         } finally {
             CableLinks.endPass(outer);
         }
+        connectAwgDevices();
+        // A device reconnect must also rebuild the independently owned AWG ends beside it.
+        for (Direction dir : Direction.values())
+            if (getNeighbor(dir) instanceof VoxelNode peer && peer.isAdded()) peer.connectAwgDevices();
         mods.eln.transparentnode.cord.OutletWiring.connect(this);
         // only blocks with pipes in the fluid world (it steps every device every tick)
         if (hasFluid()) FluidWorld.add(this);
         else FluidWorld.remove(this);
         linksRecorded = true;
+    }
+
+    /** AWG uses the same device End/Pin metadata as native cables, with its independently owned endpoint loads. */
+    private void connectAwgDevices() {
+        if (activeAwg.isEmpty() || !(isAdded() || isConnecting())) return;
+        for (var part : activeAwg) for (var contact : part.contacts()) {
+            int[] point = {contact.x(), contact.y(), contact.z()};
+            for (var end : ends())
+                if (end.elSide >= 0 && end.at(point)
+                    && Direction.fromInt(end.elSide).toEnumFacing().get3DDataValue() == contact.mount())
+                    linkAwgTerminal(contact.load(), end.load, end.mask, null, null);
+            for (int i = 6; i < SLOTS; i++) if (sideElementList[i] != null
+                && sideElementList[i].side.toEnumFacing().get3DDataValue() == contact.mount())
+                for (var pin : pins(sideElementList[i])) if (contact.at(pin.tip))
+                    linkAwgTerminal(contact.load(), pin.load, pin.mask, null, null);
+            int axis = CablePart.normalAxis(contact.out());
+            if (point[axis] != CablePart.plane(contact.out())) continue;
+            Direction dir = Direction.fromEnumFacing(net.minecraft.core.Direction.from3DDataValue(contact.out()));
+            var other = getNeighbor(dir);
+            if (other == null || !(other.isAdded() || other.isConnecting())) continue;
+            int[] mirrored = shifted(point, dir, 1);
+            if (other instanceof VoxelNode voxel) {
+                for (var end : voxel.ends())
+                    if (end.elSide >= 0 && end.out == (contact.out() ^ 1) && end.at(mirrored)
+                        && Direction.fromInt(end.elSide).toEnumFacing().get3DDataValue() == contact.mount())
+                        linkAwgTerminal(contact.load(), end.load, end.mask, dir, other);
+                for (int i = 6; i < SLOTS; i++) if (voxel.sideElementList[i] != null
+                    && voxel.sideElementList[i].side.toEnumFacing().get3DDataValue() == contact.mount())
+                    for (var pin : pins(voxel.sideElementList[i])) if (java.util.Arrays.equals(pin.tip, mirrored))
+                        linkAwgTerminal(contact.load(), pin.load, pin.mask, dir, other);
+            } else if (other instanceof mods.eln.node.FacePins facePins && !dir.toEnumFacing().getAxis().isVertical()) {
+                var forward = dir.toEnumFacing();
+                int lx = forward.getStepZ(), lz = -forward.getStepX();
+                for (var pin : facePins.facePins(dir.getInverse())) {
+                    int mount = dir.getInverse().applyLRDU(pin.lrdu()).toEnumFacing().get3DDataValue();
+                    int along = 8 + pin.leftward() * (lx != 0 ? lx : lz);
+                    if (mount == contact.mount() && point[CablePart.normalAxis(mount)] == CablePart.plane(mount)
+                        && (lx != 0 ? contact.x() : contact.z()) == along)
+                        linkAwgTerminal(contact.load(), pin.load(), pin.mask(), dir, other);
+                }
+            }
+        }
+    }
+
+    private void linkAwgTerminal(ElectricalLoad load, ElectricalLoad terminal, int mask, Direction dir, mods.eln.node.NodeBase other) {
+        if (terminal == null || !compareConnectionMask(maskElectricalPower, mask) || load == terminal) return;
+        for (var connection : elementLinksE) if (connection.joins(load, terminal)) return;
+        for (var connection : nodeConnectionList)
+            if (connection.electrical() != null && connection.electrical().joins(load, terminal)) return;
+        if (other == null) { link(load, terminal, null, null, maskElectricalPower, mask); return; }
+        for (var electrical : mods.eln.sixnode.electricalcable.CableConnections.create(load, maskElectricalPower, terminal, mask)) {
+            Eln.simulator.addElectricalComponent(electrical);
+            var connection = new mods.eln.node.NodeConnection(this, dir, LRDU.Up, other, dir.getInverse(), LRDU.Up, electrical, null);
+            nodeConnectionList.add(connection);
+            other.nodeConnectionList.add(connection);
+        }
     }
 
     /** Build voxel cables' connections from their joints (routing phase 3b; config [cables] linksBuild). */
@@ -2493,6 +2553,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
      * link, the others an electrical one (kept by both nodes, dropped when either disconnects; never twice).
      */
     public void connectPeerPins(Direction dir, mods.eln.node.NodeBase other) {
+        connectAwgDevices();
         if (!(other instanceof mods.eln.node.FacePins fp) || isDestructing()) return;
         var fwd = dir.toEnumFacing();
         if (fwd.getAxis().isVertical()) return;   // (positions are on side faces)

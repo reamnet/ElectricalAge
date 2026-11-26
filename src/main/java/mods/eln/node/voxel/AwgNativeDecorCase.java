@@ -104,6 +104,7 @@ public final class AwgNativeDecorCase implements TestCase {
                     .allMatch(p -> Math.abs(Math.abs(p.activeRun().getCurrentAmps()) - current) < 1e-6), "I=" + current);
             } finally {
                 Eln.simulator.removeElectricalComponent(load); Eln.simulator.removeElectricalComponent(source);
+                load.breakConnection(); source.breakConnection();
                 for (var pos : hosts.keySet()) {
                     var node = ctx.voxelAt(pos);
                     for (int i = node.parts.size() - 1; i >= 0; i--) node.removePart(i, true);

@@ -44,6 +44,10 @@ public final class CableCases {
         cases.add(new mods.eln.node.voxel.AwgNativeLengthCase());
         cases.add(new mods.eln.node.voxel.AwgNativeDecorCase());
         cases.add(new mods.eln.node.voxel.AwgNativeDecorCase(true));
+        for (int offset : new int[]{-2, 0, 2}) {
+            cases.add(new mods.eln.node.voxel.AwgNativeTerminalCase(offset));
+            cases.add(new mods.eln.node.voxel.AwgNativeTerminalCase(offset, true));
+        }
         cases.add(new mods.eln.node.voxel.AwgNativeTapCase());
         cases.add(new AwgChunkLifecycleCase());
         cases.add(new AwgWorldCase(false));

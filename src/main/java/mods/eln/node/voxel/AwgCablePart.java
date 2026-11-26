@@ -865,6 +865,25 @@ public final class AwgCablePart extends VoxelPart {
             && (sameEndpoint(geometry.points, 0, point, 0) || sameEndpoint(geometry.points, 3, point, 0));
     }
 
+    record Contact(int x, int y, int z, int out, int mount, ElectricalLoad load) {
+        boolean at(int[] p) { return x == p[0] && y == p[1] && z == p[2]; }
+    }
+
+    /** Explicit conductor ends, independent of legacy centered edge addressing. */
+    List<Contact> contacts() {
+        if (geometry.isKnuckle() || from == null) return List.of();
+        var contacts = new java.util.ArrayList<Contact>();
+        int d = CableRouter.dirOf(new long[]{geometry.points[0], geometry.points[1], geometry.points[2]},
+            new long[]{geometry.points[3], geometry.points[4], geometry.points[5]});
+        for (int end = 0; end < 2; end++) {
+            if (cornerAt(end) >= 0 || (outerEnds & (1 << end)) != 0) continue;
+            int i = end * 3;
+            contacts.add(new Contact(geometry.points[i], geometry.points[i + 1], geometry.points[i + 2],
+                end == 0 ? CableRouter.reverse(d) : d, geometry.face, end == 0 ? from.load : to.load));
+        }
+        return contacts;
+    }
+
     ElectricalLoad terminal(Direction exit, Direction mount) {
         if (geometry.face != mount.get3DDataValue() || exit.getAxis() == mount.getAxis()
             || geometry.points[CablePart.normalAxis(geometry.face)] != CablePart.plane(geometry.face)) return null;

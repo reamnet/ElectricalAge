@@ -303,7 +303,7 @@ public final class CableRouter {
     }
 
     /** The axis direction from a to b (a straight step), or -1. */
-    private static int dirOf(long[] a, long[] b) {
+    static int dirOf(long[] a, long[] b) {
         int d = -1;
         for (int k = 0; k < 3; k++) {
             if (a[k] == b[k]) continue;

@@ -64,7 +64,7 @@ public final class VoxelDeviceCases {
     }
 
     /** A voxel block at p (empty). */
-    static VoxelNode block(TestContext c, BlockPos p) {
+    public static VoxelNode block(TestContext c, BlockPos p) {
         return CableCases.ChipsPackedCase.block(c, p);
     }
 
