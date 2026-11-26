@@ -34,7 +34,7 @@ public abstract class GridRender extends TransparentNodeElementRender {
     private final mods.eln.anim.Spin[] haloPhase = {new mods.eln.anim.Spin(90, 0.01).speed(1).randomPhase(),
         new mods.eln.anim.Spin(90 / 1.6180339887, 0.01).speed(1).randomPhase(), new mods.eln.anim.Spin(90 / 2.4142135624, 0.01).speed(1).randomPhase()};
     private float idealRenderingAngle;
-    private record Wire(Vec3 start, Vec3 end, boolean halo) { }
+    private record Wire(Vec3 start, Vec3 end, boolean halo, GridCableAppearance appearance) { }
     private java.util.List<Wire> geometry = java.util.List.of();
     private int spanGeometryRevision;
     private net.minecraft.world.phys.AABB spanBounds;
@@ -64,6 +64,7 @@ public abstract class GridRender extends TransparentNodeElementRender {
             UtilsClient.bindTexture(cableTexture);
             glDisable(GL_CULL_FACE);
             for (Catenary catenary : catenaries) catenary.draw();
+            glColor4f(1f, 1f, 1f, 1f);
             drawHalo();
         } finally { glPopAttrib(); }
     }
@@ -134,6 +135,8 @@ public abstract class GridRender extends TransparentNodeElementRender {
         try {
             idealRenderingAngle = stream.readFloat();
             int linkCount = stream.readInt();
+            boolean styled = linkCount == GridCableAppearance.PACKET_VERSION;
+            if (styled) linkCount = stream.readInt();
             if (linkCount<0 || linkCount>4096) throw new IOException("Invalid grid span count");
             java.util.List<Wire> incoming = new ArrayList<>();
             for (int i=0;i<linkCount;i++) {
@@ -146,6 +149,7 @@ public abstract class GridRender extends TransparentNodeElementRender {
                     ends[wire] = readVec(stream);
                 }
                 boolean halo = stream.readBoolean();
+                GridCableAppearance appearance = styled ? GridCableAppearance.read(stream) : GridCableAppearance.LEGACY;
                 if (wires == 2) {
                     double straight = starts[0].vectorTo(ends[0]).normalize().dot(starts[1].vectorTo(ends[1]).normalize());
                     double cross = starts[0].vectorTo(ends[1]).normalize().dot(starts[1].vectorTo(ends[0]).normalize());
@@ -155,7 +159,7 @@ public abstract class GridRender extends TransparentNodeElementRender {
                         ends[1] = end;
                     }
                 }
-                for (int wire = 0; wire < wires; wire++) incoming.add(new Wire(starts[wire], ends[wire], halo));
+                for (int wire = 0; wire < wires; wire++) incoming.add(new Wire(starts[wire], ends[wire], halo, appearance));
             }
             // Live voltage/status updates reuse the native display lists when spans have not changed.
             if (!incoming.equals(geometry)) {
@@ -163,9 +167,9 @@ public abstract class GridRender extends TransparentNodeElementRender {
                 for (Catenary old : haloCatenaries) old.destroy();
                 haloCatenaries.clear();
                 for (Wire wire : incoming) {
-                    replacement.add(new Catenary(wire.start(), wire.end(), CABLE_WIDTH));
+                    replacement.add(new Catenary(wire.start(), wire.end(), wire.appearance().radius(), wire.appearance()));
                     if (wire.halo()) for (int k = 0; k < HALO_LAYERS; k++)
-                        haloCatenaries.add(new Catenary(wire.start(), wire.end(), haloWidth(k)));
+                        haloCatenaries.add(new Catenary(wire.start(), wire.end(), haloWidth(k) + wire.appearance().radius() - CABLE_WIDTH));
                 }
                 for (Catenary old:catenaries) old.destroy();
                 catenaries=replacement;geometry=java.util.List.copyOf(incoming);spanGeometryRevision++;
@@ -215,13 +219,17 @@ public abstract class GridRender extends TransparentNodeElementRender {
             1, 0, // 8
         };
         private final double cableWidth;
+        private final GridCableAppearance appearance;
 
         // TODO: Lighting and such should not be the same across the entire cable.
         // Probably need make physical "cable" blocks, to make minecraft cooperate.
         // The individual blocks should do the rendering.
         // ...later. Much later.
-        Catenary(Vec3 start, Vec3 end, double width) {
+        Catenary(Vec3 start, Vec3 end, double width) { this(start,end,width,null); }
+
+        Catenary(Vec3 start, Vec3 end, double width, GridCableAppearance appearance) {
             this.cableWidth = width;
+            this.appearance = appearance;
             // These are the central vertices of the catenary.
             Vec3[] catenary = getConnectionCatenary(start, end);
 
@@ -345,6 +353,11 @@ public abstract class GridRender extends TransparentNodeElementRender {
         }
 
         public void draw() {
+            if (appearance != null) {
+                UtilsClient.bindTexture(appearance.metal() ? Identifier.fromNamespaceAndPath("eln", "sprites/white.png") : cableTexture);
+                int tint = appearance.tint();
+                glColor4f(((tint >>> 16) & 255)/255f, ((tint >>> 8) & 255)/255f, (tint & 255)/255f, 1f);
+            }
             glCallList(list);
         }
 

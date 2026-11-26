@@ -317,6 +317,7 @@ abstract public class GridElement extends TransparentNodeElement {
             // There's a finite number of starting points, and a potentially unlimited number of endpoints...
             // But until we get protocol buffers or something, simple remains good.
             // So we'll just send pairs, even if there's some duplication.
+            stream.writeInt(GridCableAppearance.PACKET_VERSION);
             stream.writeInt(ourLinks.size());
             for (GridLink link : ourLinks) {
                 GridElement target = link.getOtherElement(this);
@@ -331,6 +332,7 @@ abstract public class GridElement extends TransparentNodeElement {
                 }
                 // the stasis halo: either pole anchored (Baughn 2026-11-08)
                 stream.writeBoolean(timeExempt() || target.timeExempt());
+                GridCableAppearance.of(link.cableStack()).write(stream);
             }
         } catch (IOException e) {
             e.printStackTrace();
