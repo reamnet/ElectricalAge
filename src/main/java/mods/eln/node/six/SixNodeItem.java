@@ -41,8 +41,20 @@ public class SixNodeItem extends Item implements IDescriptorItem {
     }
 
     @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, net.minecraft.world.item.component.TooltipDisplay display,
+                                java.util.function.Consumer<net.minecraft.network.chat.Component> out, net.minecraft.world.item.TooltipFlag flag) {
+        super.appendHoverText(stack, context, display, out, flag);
+        if (mods.eln.node.voxel.AwgPlacementMode.supports(stack)) {
+            out.accept(net.minecraft.network.chat.Component.literal("Placement: " + mods.eln.node.voxel.AwgPlacementMode.label(
+                mods.eln.node.voxel.AwgPlacementMode.legacy(stack))));
+            out.accept(net.minecraft.network.chat.Component.literal("Change placement: ").append(net.minecraft.network.chat.Component.keybind("key.eln.wrench")));
+        }
+    }
+
+    @Override
     public InteractionResult use(Level level, Player player, net.minecraft.world.InteractionHand hand) {
-        if (player.isShiftKeyDown() && AwgCablePart.supportsSpool(descriptor)) {
+        if (player.isShiftKeyDown() && AwgCablePart.supportsSpool(descriptor)
+            && !mods.eln.node.voxel.AwgPlacementMode.legacy(player.getItemInHand(hand))) {
             if (hand == InteractionHand.MAIN_HAND && player instanceof ServerPlayer server
                 && CablePlacer.undo(server)) return InteractionResult.SUCCESS;
             return AwgCablePart.toggleRouting(level, player, hand);
@@ -53,7 +65,8 @@ public class SixNodeItem extends Item implements IDescriptorItem {
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         Level world = ctx.getLevel();
-        boolean utilitySpool = AwgCablePart.supportsSpool(descriptor);
+        boolean utilitySpool = AwgCablePart.supportsSpool(descriptor)
+            && !mods.eln.node.voxel.AwgPlacementMode.legacy(ctx.getItemInHand());
         if (utilitySpool && ctx.getHand() == InteractionHand.OFF_HAND
             && ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown()) return InteractionResult.FAIL;
         if (ctx.getPlayer() != null && ctx.getHand() == InteractionHand.MAIN_HAND && utilitySpool) {

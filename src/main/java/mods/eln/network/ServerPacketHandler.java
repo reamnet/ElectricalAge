@@ -42,6 +42,11 @@ public final class ServerPacketHandler {
                 mods.eln.node.voxel.ChiselItem.applyBrush(player, stream.readByte(), stream.readByte());
                 return;
             }
+            if (type == Eln.packetAwgPlacementMode) {
+                if (stream.available() != 3) return;
+                mods.eln.node.voxel.AwgPlacementMode.apply(player, stream.readUnsignedShort(), stream.readUnsignedByte());
+                return;
+            }
             if (type == Eln.packetToolbagChoice) {
                 mods.eln.node.voxel.ToolbagItem.choice(player, stream);
                 return;

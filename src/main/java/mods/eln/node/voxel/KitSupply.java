@@ -89,7 +89,7 @@ public interface KitSupply {
         ItemStack s = p.getMainHandItem();
         if (s.getItem() instanceof CableKitItem || s.getItem() instanceof PipeKitItem) return of(s);
         if (s.getItem() instanceof mods.eln.node.six.SixNodeItem item
-            && AwgCablePart.supportsSpool(item.descriptor))
+            && AwgCablePart.supportsSpool(item.descriptor) && !AwgPlacementMode.legacy(s))
             return awg(s, (mods.eln.sixnode.electricalcable.UtilityCableDescriptor) item.descriptor);
         if (s.getItem() instanceof ToolbagItem) return ToolbagItem.supply(s);
         return null;

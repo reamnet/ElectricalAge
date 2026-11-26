@@ -1,14 +1,12 @@
 # Native AWG parity follow-up
 
 ## Current implementation checkpoint
-- Implementation and verification complete on local/awg-upstream-integration / ElectricalAge-awg-upstream-integration ONLY. Verified codeHEAD958effa59; final reporting commits follow. User authorizes push to origin same branch, no main/develop/feature merge.
-- Verified milestones: f61ef755c decorative native geometry/paid ownership; 57a3e9ee0 offset terminal connections/reconnect; a039d7359 repeated junction cuts; acc2c1f6d native session/reach cleanup; 958effa59 malformed geometry data and loaded fourth-arm regressions.
-- Full build :test exit0 in18m24s: root1368/0fail/6skip, CAD18/0fail, fluidcore104/0fail/2skip. Both datagen exits0,4264 files identical to each other/prior baseline including caches.
-- Full unfiltered server session14612 FINISHED: 2102/2105 passed, Gradle exit1/server exit3,16m24s. Exactly historical golden_descriptors/golden_slots/jei_every_item_reachable. All50 AWG cases and all11 new cases pass; three actual physical chunk evictions observed. No active test JVM.
-- Fresh JAR build/libs/eln-26.3-0.1.0-port.jar SHA256 e0cc93dbb16af38baedc64b678a46a6dec8309ae7d449ff40c88bbcb1bb0befb; companion .jar.sha256.32 relevant class files match verified outputs.
-- Final policy checks pass: all934 registry mappings and all70 descriptor specs unchanged; no historical golden/generated/dependency changes; all4264 resource hashes unchanged; source feature7b91ee884 and reliability573af9324 untouched; diff --check passes.
-- Report: awg-native-implementation-results.md. All verified code/reporting pushed successfully through b1f0cbd7e to origin/local/awg-upstream-integration. This final checkpoint records the actual push; its commit is also pushed. No implementation/testing work remains for this session. Next: user review/JAR validation; follow documented remaining parity limits without a replacement engine.
-- Remaining limits: explicit compatibility controls retained; pure-decoration-only hosts without paid owner and displaced sag taps fail closed. No exhaustive shape/cross-section/live GPU validation claim. No Qwen worktree edits/merges.
+- Follow-up active in isolated local/awg-upstream-integration worktree. Pushed prior parity tip e033d0805; new verified lamp/meter fix HEAD9ded03df1 (not yet pushed).
+- Lamp/meter fix: rated bulb visual technology classification and all18 rating/legacy tests; actual powered MultiMeter/Thermometer/AllMeter clicks before/after reload. Focused units52 pass, powered server7/7 pass.
+- User additionally requests copper/aluminum placement-mode menu. Uncommitted implementation: existing C/tool radial with Native voxel / Legacy six-node, per-spool optional NBT flag, strict matching held-spool packet30, existing legacy backend dispatch, stale session/preview cleanup, tooltip key hint. All70 support unchanged defaults; KitSupply excludes selected legacy mode.
+- Menu initial server4/4 passed exit0,48s; isolated fixture now uses its own player to avoid changing shared game mode. Assemble + focused lamp/AWG/radial/preview units passed exit0,51s (59 tests,0fail). Current broader focused server session46141 /tmp/awg-mode-final-focused-game.log includes all prior AWG/join/battery/shaft plus menu (78 total expected). Await exit before class edits/compilation.
+- Exact next: fix any failures, broad AWG/shared routing GameTests + focused lamp/AWG units, assemble fresh JAR and record new hash, commit verified menu, update report and push same development branch (authorized; no main/feature/develop merge). No other worktree changes.
+- Last full suite on prior parity code: root1368/0fail; server2102/2105 with historical3 only. Do not claim that old full run covers the new follow-up; record actual focused verification scope. Prior artifact hash e0cc... is superseded when fresh JAR built.
 
 - Worktree: ElectricalAge-awg-upstream-integration, branch local/awg-upstream-integration.
 - Baseline: 2c6b81655; clean at start. Latest verified integration: 2091/2094 full server (three historical failures), root 1368 with no failures; final focused 67/67. No need to repeat startup integration audit.
@@ -121,3 +119,19 @@
 - AWG meters use actual endpoint voltage, independent current and absolute temperature; ordinary native click handling and side fallback now include AWG parts. Powered real MultiMeter/Thermometer/AllMeter clicks validated before/after reload at six terminal configurations.
 - Focused units 52 tests, exit0,1m08s, /tmp/awg-lamp-meter-unit.log. Powered server7/7, exit0,29s, /tmp/awg-lamp-meter-game.log. No live visual rendering claim.
 - User additionally requests explicit copper/aluminum placement-mode menu. Next reuse existing tool radial key (C), per-spool native/legacy-six-node mode, existing legacy placement backend, strict held-spool packet validation and mode-change session cleanup.
+
+## Spool menu implementation checkpoint
+- Menu reuses RadialMenu and wrench/tool key, no independent UI/control engine. Native default; legacy uses original per-block UtilityCableElement placement/accounting, even when six-node elements are hosted in converted voxel blocks. Existing explicit sneak compatibility routing preserved for native mode.
+- New optional utilityLegacyPlacement stack field; no registry, electrical or saved placed-wire fields changed. Mode packets validate size/mode/held descriptor and player permissions, never modify paid length/UID. Changes clear native route, preview generation/outline and compatibility selection.
+- Compile exit0,1m14s. New all70 mode/packet/actual Cu+Al placement GameTest in session99660.
+
+## Menu focused verification checkpoint
+- Initial mode/native-session/meter server4/4 exit0,48s (/tmp/awg-placement-mode-game1.log). All70 defaults/persistence/accounting, strict malformed/stale packet rejection, session cancellation and real Cu/Al legacy/native placement passed.
+- Fixture updated to use its own survival-mode player, leaving shared harness state untouched. Assemble/focused units exit0,51s (/tmp/awg-mode-final-unit-build.log).
+- Broader server session46141 active (/tmp/awg-mode-final-focused-game.log). Next commit verified menu after observing all expected IDs, then full root/server regression sequentially and final JAR/push.
+
+## Explicit placement menu verified
+- Broader focused server78/78 exit0,38s (/tmp/awg-mode-final-focused-game.log), including all51 AWG cases plus native joins/battery/shaft and harness. Independent mode fixture uses its own player.
+- Assemble + focused lamp/AWG/radial/preview units59/59 exit0,51s (/tmp/awg-mode-final-unit-build.log).
+- Controls: hold an intact single-conductor copper/aluminum spool, open tool menu (default C), select Native voxel cable or Legacy six-node cable. Choice persists on spool copies/save data. Legacy uses original per-block element and one-meter debit; native retains existing routed-length debit. Esc cancels menu choice; mode change cancels stale route/preview, never pays cable.
+- No live GUI/visual inspection claimed. Next commit menu independently, full build/root then full unfiltered server sequentially; assemble/hash final JAR and push verified follow-up commits to same development branch.

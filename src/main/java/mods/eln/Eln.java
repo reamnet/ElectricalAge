@@ -141,6 +141,8 @@ public class Eln {
     public static final byte packetToolbagRadial = 28;
     /** 26.x, client -> server: the Toolbag radial's choice (action, kind: ToolbagItem.choice). */
     public static final byte packetToolbagChoice = 29;
+    /** Client -> server: held AWG spool identity and placement mode from the tool radial. */
+    public static final byte packetAwgPlacementMode = 30;
 
     // Voltage / power levels: real-world values (Baughn 2026-11-06: 48 V, 230 V, 400 V and 11 kV replace 1.12's 50, 200,
     // 800 and 3200 V; signals are 0-5 V instead of 0-50 V). Cable resistances follow from U and P, so power limits stay.

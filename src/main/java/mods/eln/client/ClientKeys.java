@@ -68,6 +68,11 @@ public final class ClientKeys {
             mc.gui.setScreen(ChiselRadial.create(mc.player.getMainHandItem(), WRENCH, down));
             return;
         }
+        if ((down || clicked) && !wrenchDown && mc.gui.screen() == null && mc.player != null
+            && mods.eln.node.voxel.AwgPlacementMode.supports(mc.player.getMainHandItem())) {
+            mc.gui.setScreen(AwgPlacementRadial.create(mc.player.getMainHandItem(), WRENCH, down));
+            return;
+        }
         // (a tap shorter than a tick: down and up, so the server sees the press; it turns a device in hand before placing)
         if (clicked && !down && !wrenchDown && mc.gui.screen() == null) syncWrench(true);
         syncWrench(down);
