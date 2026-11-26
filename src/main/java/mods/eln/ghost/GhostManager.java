@@ -159,6 +159,21 @@ public class GhostManager {
         } else return true;
     }
 
+    /** Restore a purely decorative reservation without waking adjacent chunks or replacing saved nodes. */
+    public boolean createGhostIfAir(Coordonate at, Coordonate observer, int uuid, int meta) {
+        if (meta < 0 || meta > 15 || !(at.world() instanceof net.minecraft.server.level.ServerLevel world)) return false;
+        if (!world.getServer().isSameThread()) throw new IllegalStateException("Ghost repair requires the server thread");
+        var chunk = world.getChunkSource().getChunkNow(at.x >> 4, at.z >> 4);
+        if (chunk == null || !chunk.getBlockState(at.pos()).isAir() || ghostTable.containsKey(at)) return false;
+        if (NodeManager.instance != null && (NodeManager.instance.getNodeFromCoordonate(at) != null || NodeManager.instance.hasOrphanAt(at))) return false;
+        var state = Eln.ghostBlock.defaultBlockState().setValue(mods.eln.compat.BlockMeta.META, meta);
+        // No removeBlock: even air variants can otherwise notify neighbours. Collision remains empty.
+        if (!world.setBlock(at.pos(), state, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE)) return false;
+        Coordonate key = new Coordonate(at);
+        ghostTable.put(key, new GhostElement(key, observer, uuid));
+        return true;
+    }
+
     public void createGhost(Coordonate coordonate, Coordonate observerCoordonate, int UUID) {
         createGhost(coordonate, observerCoordonate, UUID, Eln.ghostBlock, GhostBlock.tCube);
     }

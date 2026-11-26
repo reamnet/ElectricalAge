@@ -47,9 +47,9 @@ object GridGhosts {
             val ghost=Eln.ghostManager.getGhost(at)
             if(ghost?.observatorCoordonate==owner) {
                 if(state.block===Eln.ghostBlock && state.getValue(BlockMeta.META)==GhostBlock.tClearance)
-                    world.setBlock(pos,state.setValue(BlockMeta.META,cell.meta),Block.UPDATE_CLIENTS)
+                    world.setBlock(pos,state.setValue(BlockMeta.META,cell.meta),Block.UPDATE_CLIENTS or Block.UPDATE_KNOWN_SHAPE)
             }else if(ghost==null && state.isAir) {
-                Eln.ghostManager.createGhost(at,owner,descriptor.ghostGroupUuid,Eln.ghostBlock,cell.meta)
+                if(!Eln.ghostManager.createGhostIfAir(at,owner,descriptor.ghostGroupUuid,cell.meta))complete=false
             }
         }
         return complete
