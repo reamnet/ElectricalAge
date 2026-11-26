@@ -185,9 +185,9 @@ public final class VoxelGeometry {
                 int argb = pipe.burst ? rgb(0.55f, 0.35f, 0.25f) : 0xFFFFFFFF;
                 pipe(m, pipe, PIPE[pipe.tier], argb, adapters);
             } else if (part instanceof AwgCablePart awg) {
-                var visual = awg.visual();
                 int bare = awg.bareTint();
-                cable(m, visual, bare == 0 ? insulation(visual) : bare, cableBoxes);
+                for (var visual : awg.visuals())
+                    cable(m, visual, bare == 0 ? insulation(visual) : bare, cableBoxes);
             } else if (part instanceof CablePart c) {
                 // (insulation: a power cable's spec colour (Baughn 2026-11-06), else black; burnt: the char sprite)
                 // (the field bus: violet, as real Profibus cable is)

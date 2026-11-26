@@ -50,6 +50,8 @@ public final class AwgCablePart extends VoxelPart {
     private Terminal from, to;
     private int cornerEnd = -1;
     private int cornerFace = -1;
+    private int secondCornerFace = -1;
+    private List<CablePart> nativeVisuals;
     private int outerEnds;
     private mods.eln.sim.mna.component.VoltageSource outerJoint;
 
@@ -492,14 +494,14 @@ public final class AwgCablePart extends VoxelPart {
 
     private boolean isCornerPort(int[] point) {
         for (int end = 0; end < 2; end++)
-            if ((end == cornerEnd || (outerEnds & (1 << end)) != 0)
+            if ((cornerAt(end) >= 0 || (outerEnds & (1 << end)) != 0)
                 && sameEndpoint(geometry.points, end * 3, point, 0)) return true;
         return false;
     }
 
     /** The child retaining the old physical endpoint retains that endpoint's connection namespace. */
     private void copyCornerOwnership(AwgCablePart child, int oldEnd) {
-        if (cornerEnd == oldEnd) child.markCorner(oldEnd, cornerFace);
+        if (cornerAt(oldEnd) >= 0) child.markCorner(oldEnd, cornerAt(oldEnd));
         child.setOuterEnds(outerEnds & (1 << oldEnd));
     }
 
@@ -611,7 +613,7 @@ public final class AwgCablePart extends VoxelPart {
         var positions = new java.util.ArrayList<BlockPos>();
         var parts = new java.util.ArrayList<AwgCablePart>();
         int voxels = 0;
-        for (var piece : CableRouter.pieces(route.steps, kind.width(), kind.height())) {
+        for (var piece : CableRouter.centerlinePieces(route.steps, kind.width(), kind.height())) {
             var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
             if (!canHostNative(level, pos, piece.face() < 0 ? null : Direction.from3DDataValue(piece.face()), player))
                 return RouteLayout.rejected("AWG wire needs a clear, loaded block at " + pos.toShortString());
@@ -633,8 +635,7 @@ public final class AwgCablePart extends VoxelPart {
                 if (!parts.isEmpty()) {
                     var previous = parts.getLast();
                     if (previous.geometry.face >= 0 && previous.geometry.face != part.geometry.face) {
-                        if (!positions.getLast().equals(pos) || previous.cornerEnd >= 0
-                            || !sameEndpoint(previous.geometry.points, 3, ends, 0)
+                        if (!sameWorldEndpoint(previous, positions.getLast(), 1, part, pos, 0)
                             || !previous.canMarkCorner(1, part.geometry.face)
                             || !part.canMarkCorner(0, previous.geometry.face))
                             return RouteLayout.rejected("AWG face changes need a supported inner corner");
@@ -650,8 +651,10 @@ public final class AwgCablePart extends VoxelPart {
         if (parts.isEmpty() || voxels != route.length())
             return RouteLayout.rejected("AWG wire cannot follow decorative extensions");
         long knuckles = parts.stream().filter(p -> p.geometry.isKnuckle()).count();
-        if (knuckles != route.steps.stream().filter(CableRouter.Step::outer).count())
-            return RouteLayout.rejected("AWG outer wraps need a native full-block knuckle");
+        if (knuckles != CableRouter.pieces(route.steps, kind.width(), kind.height()).stream().filter(p -> p.face() < 0).count())
+            return RouteLayout.rejected("AWG corner geometry mismatch");
+        var visualError = bindNativeVisuals(route.steps, kind, positions, parts);
+        if (visualError != null) return RouteLayout.rejected(visualError);
         for (int i = 0; i < parts.size(); i++) {
             var part = parts.get(i);
             if (!part.geometry.isKnuckle()) continue;
@@ -679,7 +682,7 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     private boolean bindOuter(BlockPos pos, AwgCablePart arm, BlockPos armPos, int end) {
-        if (arm.geometry.isKnuckle() || arm.cornerEnd == end) return false;
+        if (arm.geometry.isKnuckle() || arm.cornerAt(end) >= 0) return false;
         int exit = arm.outerExit(end);
         if (exit < 0 || !armPos.relative(Direction.from3DDataValue(exit)).equals(pos)) return false;
         Point endpoint = arm.point(armPos, end, true);
@@ -751,13 +754,80 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     @Override public String kind() { return KIND; }
-    @Override public List<int[]> boxes() { return geometry.boxes(); }
+    @Override public List<int[]> boxes() {
+        return visuals().stream().flatMap(p -> p.boxes().stream()).toList();
+    }
+
+    List<CablePart> visuals() { return nativeVisuals == null ? List.of(geometry) : nativeVisuals; }
+
+    private static boolean sameWorldEndpoint(AwgCablePart a, BlockPos pa, int ea, AwgCablePart b, BlockPos pb, int eb) {
+        for (int axis = 0; axis < 3; axis++) {
+            int[] ba = {pa.getX(), pa.getY(), pa.getZ()}, bb = {pb.getX(), pb.getY(), pb.getZ()};
+            if (ba[axis] * 16L + a.geometry.points[ea * 3 + axis] != bb[axis] * 16L + b.geometry.points[eb * 3 + axis]) return false;
+        }
+        return true;
+    }
+
+    /** Assign the native converter's visual segments to paid edges in the same host; visuals own no wire or loads. */
+    private static String bindNativeVisuals(List<CableRouter.Step> steps, RouteKind kind,
+                                            List<BlockPos> positions, List<AwgCablePart> parts) {
+        var assigned = new java.util.ArrayList<java.util.ArrayList<CablePart>>();
+        for (var p : parts) assigned.add(new java.util.ArrayList<>());
+        for (var piece : CableRouter.pieces(steps, kind.width(), kind.height())) {
+            var pos = new BlockPos((int) piece.bx(), (int) piece.by(), (int) piece.bz());
+            if (piece.face() < 0) continue;
+            for (int j = 3; j < piece.points().length; j += 3) {
+                int[] line = java.util.Arrays.copyOfRange(piece.points(), j - 3, j + 3);
+                int best = -1, score = -1;
+                for (int i = 0; i < parts.size(); i++) {
+                    var p = parts.get(i);
+                    if (!positions.get(i).equals(pos) || p.geometry.isKnuckle()) continue;
+                    int overlap = visualOverlap(p.geometry, piece.face(), line);
+                    if (overlap > score) { best = i; score = overlap; }
+                }
+                if (best < 0) return "Native decorative piece has no paid owner";
+                var owner = parts.get(best);
+                var visual = CablePart.utilityGeometry(owner.wire.name, piece.face(), line, kind.width(), kind.height());
+                if (!visual.valid()) return "Invalid native decorative geometry";
+                assigned.get(best).add(visual);
+            }
+        }
+        for (int i = 0; i < parts.size(); i++) {
+            var p = parts.get(i);
+            if (p.geometry.isKnuckle()) continue;
+            var visual = assigned.get(i);
+            if (visual.isEmpty()) return "Native paid edge has no visual geometry";
+            if (visual.size() != 1 || visual.getFirst().face != p.geometry.face
+                || !java.util.Arrays.equals(visual.getFirst().points, p.geometry.points)) p.nativeVisuals = List.copyOf(visual);
+        }
+        return null;
+    }
+
+    private static int visualOverlap(CablePart paid, int face, int[] visual) {
+        int[] p = paid.points;
+        int axis = -1;
+        for (int a = 0; a < 3; a++) if (p[a] != p[a + 3]) axis = a;
+        if (face == paid.face && axis >= 0) {
+            boolean aligned = true;
+            for (int a = 0; a < 3; a++) if (a != axis && (p[a] != visual[a] || p[a] != visual[a + 3])) aligned = false;
+            if (aligned) {
+                int overlap = Math.min(Math.max(p[axis], p[axis + 3]), Math.max(visual[axis], visual[axis + 3]))
+                    - Math.max(Math.min(p[axis], p[axis + 3]), Math.min(visual[axis], visual[axis + 3]));
+                if (overlap > 0) return overlap;
+            }
+        }
+        for (int i = 0; i < 6; i += 3) for (int j = 0; j < 6; j += 3)
+            if (sameEndpoint(p, i, visual, j)) return 0;
+        return -1;
+    }
 
     boolean joins(AwgCablePart other) {
         if (geometry.isKnuckle() || other.geometry.isKnuckle()) return false;
         if (geometry.face != other.geometry.face) {
-            return cornerFace == other.geometry.face && other.cornerFace == geometry.face
-                && sameEndpoint(geometry.points, cornerEnd * 3, other.geometry.points, other.cornerEnd * 3);
+            for (int i = 0; i < 2; i++) for (int j = 0; j < 2; j++)
+                if (cornerAt(i) == other.geometry.face && other.cornerAt(j) == geometry.face
+                    && sameEndpoint(geometry.points, i * 3, other.geometry.points, j * 3)) return true;
+            return false;
         }
         if (CableRouter.axis(direction()) == CableRouter.axis(other.direction())) return false;
         int[] a = geometry.points, b = other.geometry.points;
@@ -773,15 +843,16 @@ public final class AwgCablePart extends VoxelPart {
 
     private boolean canMarkCorner(int end, int otherFace) {
         return end >= 0 && end <= 1 && otherFace >= 0 && otherFace <= 5
-            && CablePart.normalAxis(otherFace) != CablePart.normalAxis(geometry.face)
-            && geometry.points[end * 3 + CablePart.normalAxis(otherFace)] == CablePart.plane(otherFace);
+            && CablePart.normalAxis(otherFace) != CablePart.normalAxis(geometry.face);
     }
 
     private void markCorner(int end, int otherFace) {
         if (!canMarkCorner(end, otherFace)) throw new IllegalArgumentException("Invalid AWG corner");
-        cornerEnd = end;
-        cornerFace = otherFace;
+        if (cornerEnd >= 0 && cornerEnd != end) secondCornerFace = otherFace;
+        else { cornerEnd = end; cornerFace = otherFace; }
     }
+
+    private int cornerAt(int end) { return end == cornerEnd ? cornerFace : secondCornerFace; }
 
     private int direction() {
         var p = geometry.points;
@@ -803,8 +874,8 @@ public final class AwgCablePart extends VoxelPart {
         var p = geometry.points;
         // The terminal must leave the block in the cable's direction, at the center of the legacy edge.
         if (p[boundary] == p[boundary + 3]) return null;
-        if ((outerEnds & 1) == 0 && cornerEnd != 0 && from != null && p[boundary] == plane && p[across] == 8) return from.load;
-        return (outerEnds & 2) == 0 && cornerEnd != 1 && to != null && p[boundary + 3] == plane && p[across + 3] == 8 ? to.load : null;
+        if ((outerEnds & 1) == 0 && cornerAt(0) < 0 && from != null && p[boundary] == plane && p[across] == 8) return from.load;
+        return (outerEnds & 2) == 0 && cornerAt(1) < 0 && to != null && p[boundary + 3] == plane && p[across + 3] == 8 ? to.load : null;
     }
 
     private Point point(BlockPos pos, int end) {
@@ -814,7 +885,7 @@ public final class AwgCablePart extends VoxelPart {
     private Point point(BlockPos pos, int end, boolean outer) {
         var p = geometry.points;
         int i = geometry.isKnuckle() ? 0 : end * 3;
-        int channel = end == cornerEnd ? 8 + ((1 << geometry.face) | (1 << cornerFace)) : geometry.face;
+        int channel = cornerAt(end) >= 0 ? 8 + ((1 << geometry.face) | (1 << cornerAt(end))) : geometry.face;
         if (geometry.isKnuckle()) {
             var ports = geometry.cablePorts();
             channel = outerChannel(ports.get(1 - end).face(), CableRouter.reverse(ports.get(end).face()));
@@ -919,6 +990,15 @@ public final class AwgCablePart extends VoxelPart {
             tag.putInt("cornerEnd", cornerEnd);
             tag.putInt("cornerFace", cornerFace);
         }
+        if (secondCornerFace >= 0) tag.putInt("secondCornerFace", secondCornerFace);
+        if (nativeVisuals != null) {
+            int[] visual = new int[nativeVisuals.size() * 7];
+            for (int i = 0; i < nativeVisuals.size(); i++) {
+                visual[i * 7] = nativeVisuals.get(i).face;
+                System.arraycopy(nativeVisuals.get(i).points, 0, visual, i * 7 + 1, 6);
+            }
+            tag.putIntArray("nativeVisuals", visual);
+        }
         if (geometry.hang2 != null) tag.putIntArray("hang2", geometry.hang2);
         tag.put("run", run == null ? saved.copy() : run.save());
     }
@@ -941,6 +1021,11 @@ public final class AwgCablePart extends VoxelPart {
             if (state.getCompoundOrEmpty("length").getIntOr("routeVoxels", -1) != part.geometry.length()) return null;
             if (tag.contains("cornerEnd") || tag.contains("cornerFace"))
                 part.markCorner(tag.getIntOr("cornerEnd", -1), tag.getIntOr("cornerFace", -1));
+            if (tag.contains("secondCornerFace")) {
+                if (part.cornerEnd < 0) return null;
+                part.markCorner(1 - part.cornerEnd, tag.getIntOr("secondCornerFace", -1));
+            }
+            if (tag.contains("nativeVisuals")) part.setNativeVisuals(tag.getIntArray("nativeVisuals").orElseThrow());
             part.setOuterEnds(tag.getIntOr("outerEnds", 0));
             if (tag.contains("hang2"))
                 part.setHang(tag.getIntArray("hang2").orElseThrow());
@@ -953,6 +1038,21 @@ public final class AwgCablePart extends VoxelPart {
     }
 
     @Override public void serialize(DataOutputStream out) throws IOException {
+        if (nativeVisuals == null && secondCornerFace < 0) { serializeBase(out); return; }
+        var bytes = new java.io.ByteArrayOutputStream();
+        serializeBase(new DataOutputStream(bytes));
+        out.writeByte(0x9e);
+        out.writeShort(bytes.size());
+        out.write(bytes.toByteArray());
+        out.writeByte(secondCornerFace + 1);
+        out.writeByte(nativeVisuals == null ? 0 : nativeVisuals.size());
+        if (nativeVisuals != null) for (var visual : nativeVisuals) {
+            out.writeByte(visual.face);
+            for (int v : visual.points) out.writeByte(v);
+        }
+    }
+
+    private void serializeBase(DataOutputStream out) throws IOException {
         if (geometry.isKnuckle()) {
             out.writeByte(0x9f);
             out.writeShort(wire.parentItemDamage);
@@ -1000,7 +1100,7 @@ public final class AwgCablePart extends VoxelPart {
     private void setOuterEnds(int mask) {
         if (mask < 0 || mask > 3) throw new IllegalArgumentException("Invalid AWG outer end mask");
         for (int end = 0; end < 2; end++)
-            if ((mask & (1 << end)) != 0 && (cornerEnd == end || outerExit(end) < 0))
+            if ((mask & (1 << end)) != 0 && (cornerAt(end) >= 0 || outerExit(end) < 0))
                 throw new IllegalArgumentException("Invalid AWG outer endpoint");
         outerEnds = mask;
     }
@@ -1009,6 +1109,26 @@ public final class AwgCablePart extends VoxelPart {
         try {
             int size = in.available();
             int header = in.readUnsignedByte();
+            if (header == 0x9e) {
+                int length = in.readUnsignedShort();
+                if (length < 9 || length > in.available() - 2) throw new IOException("Invalid AWG native geometry payload");
+                byte[] base = in.readNBytes(length);
+                if ((base[0] & 0xff) == 0x9e) throw new IOException("Nested AWG native geometry payload");
+                var part = deserialize(new DataInputStream(new java.io.ByteArrayInputStream(base)));
+                int second = in.readUnsignedByte();
+                if (second > 0) {
+                    if (part.cornerEnd < 0) throw new IOException("Missing AWG primary corner");
+                    part.markCorner(1 - part.cornerEnd, second - 1);
+                }
+                int count = in.readUnsignedByte();
+                if (count > 16 || in.available() != count * 7) throw new IOException("Invalid AWG native visual count");
+                if (count > 0) {
+                    int[] visual = new int[count * 7];
+                    for (int i = 0; i < visual.length; i++) visual[i] = in.readUnsignedByte();
+                    part.setNativeVisuals(visual);
+                }
+                return part;
+            }
             if (size == 4)
                 return new AwgCablePart(wire(LEGACY_WIRE_ID), header, in.readUnsignedByte(), in.readUnsignedByte(), in.readUnsignedByte());
             var wire = wire((header & 0x80) != 0 ? in.readUnsignedShort() : LEGACY_WIRE_ID);
@@ -1037,6 +1157,23 @@ public final class AwgCablePart extends VoxelPart {
         } catch (IllegalArgumentException e) {
             throw new IOException("Invalid AWG part", e);
         }
+    }
+
+    private void setNativeVisuals(int[] encoded) {
+        if (geometry.isKnuckle() || encoded.length == 0 || encoded.length > 16 * 7 || encoded.length % 7 != 0)
+            throw new IllegalArgumentException("Invalid AWG native visuals");
+        var visuals = new java.util.ArrayList<CablePart>();
+        for (int i = 0; i < encoded.length; i += 7) {
+            int face = encoded[i];
+            int[] line = java.util.Arrays.copyOfRange(encoded, i + 1, i + 7);
+            for (int v : line) if (v < 0 || v > 16) throw new IllegalArgumentException("Invalid native visual point");
+            if (face < 0 || face > 5 || visualOverlap(geometry, face, line) < 0)
+                throw new IllegalArgumentException("Unowned native visual");
+            var visual = CablePart.utilityGeometry(wire.name, face, line, width(wire), height(wire));
+            if (!visual.valid()) throw new IllegalArgumentException("Invalid native visual");
+            visuals.add(visual);
+        }
+        nativeVisuals = List.copyOf(visuals);
     }
 
     CablePart visual() { return geometry; }

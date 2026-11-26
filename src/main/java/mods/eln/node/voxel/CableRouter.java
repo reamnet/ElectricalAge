@@ -131,6 +131,15 @@ public final class CableRouter {
      * fills the corner (Baughn: a voxel was missing there; it only touched along an edge).
      */
     public static List<Piece> pieces(List<Step> steps, int width, int height) {
+        return pieces(steps, width, height, true);
+    }
+
+    /** The same block/face partition before visual corner fills; only these segments consume conductor. */
+    static List<Piece> centerlinePieces(List<Step> steps, int width, int height) {
+        return pieces(steps, width, height, false);
+    }
+
+    private static List<Piece> pieces(List<Step> steps, int width, int height, boolean decorate) {
         List<Piece> out = new ArrayList<>();
         Gap gap = null;   // (an outer corner inside a block still to fill)
         int[] inner = null;   // (the faces of an inner corner the next run leaves from)
@@ -168,9 +177,11 @@ public final class CableRouter {
                 && Math.floorMod(new long[]{b.x, b.y, b.z}[axis(a.attach)], 16) == 0)) {
                 // round a step inside a block (or across one block face): no knuckle, the faces just change, and the run
                 // that stays in its block past the corner reaches over it
-                gap = new Gap(new long[]{b.x, b.y, b.z}, a.attach, b.attach, height);
-                if (gap.fillBefore(poly, curKey)) gap = null;
-                else alongEdge(poly, curKey, a.attach, b.attach, width);
+                if (decorate) {
+                    gap = new Gap(new long[]{b.x, b.y, b.z}, a.attach, b.attach, height);
+                    if (gap.fillBefore(poly, curKey)) gap = null;
+                    else alongEdge(poly, curKey, a.attach, b.attach, width);
+                }
                 flush(out, curKey, poly);
                 curKey = null;
                 poly = null;
@@ -190,7 +201,7 @@ public final class CableRouter {
             if (a.attach != b.attach) {   // inner corner: same point, new face
                 // (a run along the corner's edge, which only a stretch through the air allows, reaches on as round an
                 // outer corner: a one-voxel cable dropping off a ceiling met its run along the floor at an edge only)
-                long[] on = alongEdge(poly, curKey, a.attach, b.attach, width);
+                long[] on = decorate ? alongEdge(poly, curKey, a.attach, b.attach, width) : null;
                 flush(out, curKey, poly);
                 // (at a block boundary the run can't reach on: a short piece on its face in the next block does)
                 if (on != null) stub(out, poly.get(poly.size() - 1), on, a.attach);
@@ -211,7 +222,7 @@ public final class CableRouter {
                 poly.add(new long[]{a.x, a.y, a.z});
             }
             poly.add(new long[]{b.x, b.y, b.z});
-            if (inner != null && poly.size() == 2) alongEdgeStart(poly, curKey, inner[0], inner[1], width);
+            if (decorate && inner != null && poly.size() == 2) alongEdgeStart(poly, curKey, inner[0], inner[1], width);
             inner = null;
             if (gap != null && poly.size() == 2) {
                 if (!gap.fillAfter(poly, curKey)) {
