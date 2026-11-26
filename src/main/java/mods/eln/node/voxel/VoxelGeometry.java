@@ -547,15 +547,28 @@ public final class VoxelGeometry {
             if (i > 0) s[i] = s[i - 1] + Math.sqrt(sq3(p[i], p[i - 1]));
         }
         double half = width / 2;
+        // Straight boxes allocate the extra voxel of an odd width to the positive
+        // across axis. Carry that same offset through every ring, including rings
+        // shared by different blocks. Reversing the tangent also reverses bb, so
+        // choose the sign in block axes rather than in the direction of travel.
+        double[][] origins = new double[n][3];
+        for (int i = 0; i < n; i++) {
+            double[] across = bb[i];
+            int axis = 0;
+            for (int j = 1; j < 3; j++)
+                if (Math.abs(across[j]) > Math.abs(across[axis])) axis = j;
+            double offset = Math.copySign(half - Math.floor(half), across[axis]);
+            for (int j = 0; j < 3; j++) origins[i][j] = p[i][j] + offset * across[j];
+        }
         Mesh mesh = new Mesh(null);
         List<float[]> uvs = new ArrayList<>();
         // corners: (across c, height h) at node i
         java.util.function.BiFunction<Integer, double[], double[]> at = (i, ch) -> new double[]{
-            p[i][0] + bb[i][0] * ch[0] + nn[i][0] * ch[1], p[i][1] + bb[i][1] * ch[0] + nn[i][1] * ch[1], p[i][2] + bb[i][2] * ch[0] + nn[i][2] * ch[1]};
+            origins[i][0] + bb[i][0] * ch[0] + nn[i][0] * ch[1], origins[i][1] + bb[i][1] * ch[0] + nn[i][1] * ch[1], origins[i][2] + bb[i][2] * ch[0] + nn[i][2] * ch[1]};
         double[][] ring = {{-half, 0}, {half, 0}, {half, height}, {-half, height}};
         for (int i = 0; i + 1 < n; i++) {
-            double[] mid = {(p[i][0] + p[i + 1][0]) / 2 + (nn[i][0] + nn[i + 1][0]) * height / 4, (p[i][1] + p[i + 1][1]) / 2 + (nn[i][1] + nn[i + 1][1]) * height / 4,
-                (p[i][2] + p[i + 1][2]) / 2 + (nn[i][2] + nn[i + 1][2]) * height / 4};
+            double[] mid = {(origins[i][0] + origins[i + 1][0]) / 2 + (nn[i][0] + nn[i + 1][0]) * height / 4, (origins[i][1] + origins[i + 1][1]) / 2 + (nn[i][1] + nn[i + 1][1]) * height / 4,
+                (origins[i][2] + origins[i + 1][2]) / 2 + (nn[i][2] + nn[i + 1][2]) * height / 4};
             for (int e = 0; e < 4; e++) {
                 double[] c0 = ring[e], c1 = ring[(e + 1) % 4];
                 double[][] q = {at.apply(i, c0), at.apply(i + 1, c0), at.apply(i + 1, c1), at.apply(i, c1)};
@@ -581,7 +594,7 @@ public final class VoxelGeometry {
                 uv[2 * k] = (float) clamp01(0.25 + ring[k][0] / 32);
                 uv[2 * k + 1] = (float) clamp01(0.5 - (height - ring[k][1]) / 16);
             }
-            double[] inside = end == 0 ? p[Math.min(n - 1, 1)] : p[Math.max(0, n - 2)];
+            double[] inside = end == 0 ? origins[1] : origins[n - 2];
             double[] c = {inside[0] + nn[i][0] * height / 2, inside[1] + nn[i][1] * height / 2, inside[2] + nn[i][2] * height / 2};
             addQuad(mesh, uvs, q, uv, c);
         }
