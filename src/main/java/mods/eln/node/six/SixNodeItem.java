@@ -64,6 +64,7 @@ public class SixNodeItem extends Item implements IDescriptorItem {
                     || !level.mayInteract(player, ctx.getClickedPos())) return InteractionResult.FAIL;
                 boolean sneak = player.isShiftKeyDown();
                 if (sneak && !CablePlacer.active(player.getUUID())) return AwgCablePart.useSpool(ctx);
+                if (!sneak) AwgCablePart.forgetLegacyRouting(player);
                 CablePlacer.use(player, level, ctx.getClickedPos(), ctx.getClickedFace(),
                     KitSupply.held(player), ctx.getClickLocation(), sneak);
                 return InteractionResult.SUCCESS;

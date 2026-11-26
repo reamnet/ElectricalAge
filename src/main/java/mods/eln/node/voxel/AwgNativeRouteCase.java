@@ -36,7 +36,11 @@ public final class AwgNativeRouteCase implements TestCase {
         var start = ctx.at(1, 0, 1);
         var pivot = ctx.at(4, 0, 1);
         var end = ctx.at(4, 0, 4);
+        player.setShiftKeyDown(true);
+        spool.use(ctx.level(), player, InteractionHand.MAIN_HAND);
+        player.setShiftKeyDown(false);
         click(player, start);
+        ctx.check("native placement clears the older explicit routing selection", !AwgCablePart.forgetLegacyRouting(player), "");
         var plan = RoutePlacer.PLANS.get(player.getUUID());
         ctx.check("normal click starts a shared session with the original spool", plan != null && plan.wire == wire, "");
         var aim = end(end);

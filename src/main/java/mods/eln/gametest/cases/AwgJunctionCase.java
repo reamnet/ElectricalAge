@@ -178,7 +178,7 @@ final class AwgJunctionCase implements TestCase {
         var north = ctx.at(2, 1, 1);
         begin(ctx, north);
         check(ctx, click(center, true) == InteractionResult.FAIL && branchWire.getRemainingLengthMeters(spool) == 1.625
-            && ctx.level().isEmptyBlock(north), "a fourth arm is refused");
+            && ctx.level().isEmptyBlock(north), "an underfunded fourth arm is refused without charging");
         spool.use(ctx.level(), player, InteractionHand.MAIN_HAND);
     }
 

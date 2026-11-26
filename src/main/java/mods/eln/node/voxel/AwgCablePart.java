@@ -136,6 +136,9 @@ public final class AwgCablePart extends VoxelPart {
         return InteractionResult.SUCCESS;
     }
 
+    /** A normal native placement supersedes the explicit older compatibility selection. */
+    public static boolean forgetLegacyRouting(Player player) { return SELECTIONS.remove(player) != null; }
+
     private static Selection selection(ServerLevel level, Player player, ItemStack spool) {
         var selected = SELECTIONS.get(player);
         if (selected != null && (selected.spool() != spool || selected.level() != level || level.getGameTime() >= selected.expires())) {
@@ -172,8 +175,7 @@ public final class AwgCablePart extends VoxelPart {
         var hit = ctx.getClickLocation();
         if (player.isSpectator() || !player.getAbilities().mayBuild || player.getMainHandItem() != spool
             || !level.hasChunkAt(floor) || !level.mayInteract(player, floor) || !level.mayInteract(player, pos)
-            || !new net.minecraft.world.phys.AABB(floor).inflate(0.01).contains(hit)
-            || !(player.getEyePosition().distanceTo(hit) <= player.blockInteractionRange())) return InteractionResult.FAIL;
+            || !CablePlacer.reachable(player, floor, hit)) return InteractionResult.FAIL;
 
         if (selected != null) {
             if (!canRouteIn(level, pos, mount, player)) return InteractionResult.FAIL;
