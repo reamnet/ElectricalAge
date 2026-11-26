@@ -1,6 +1,6 @@
 # Pole connections, wire appearance and placeable insulators
 
-Implementation and regression verification are complete on `local/awg-upstream-integration`. Clean packaging and authorized publication follow the reporting commit. Base: `b34d43a6e49d8626e85e97fdbce65679e1ebe827`. No other worktree was modified.
+Implementation and regression verification are complete on `local/awg-upstream-integration`. Clean packaging and authorized publication were verified; the final reporting checkpoint receives a metadata-only rebuild to keep its JAR stamp current. Base: `b34d43a6e49d8626e85e97fdbce65679e1ebe827`. No other worktree was modified.
 
 ## Changes
 
@@ -52,9 +52,9 @@ Logs: `/tmp/awg-poles-insulators-final-build.log`, `/tmp/awg-poles-insulators-fi
 
 ## Delivery
 
-Fresh artifact: `build/libs/eln-26.3-0.1.0-port.jar`; authoritative SHA-256 companion: `build/libs/eln-26.3-0.1.0-port.jar.sha256`. Assembly must follow a clean reporting commit because `eln-build.properties` includes the Git commit used for client/server version matching. Verify packaged main classes and the new resources against build outputs before pushing.
+Fresh artifact: `build/libs/eln-26.3-0.1.0-port.jar`; authoritative SHA-256 companion: `build/libs/eln-26.3-0.1.0-port.jar.sha256`. Assembly must follow a clean reporting commit because `eln-build.properties` includes the Git commit used for client/server version matching. Packaging verified all3,760 main classes, all15 new model resources, all50 new generated resources, the registry manifest, model index and neutral wire texture against their verified outputs. The final build stamp is checked against clean `git describe`; the checksum companion and `/tmp/awg-final-delivery.json` record the exact final artifact.
 
-Publication is an ordinary fast-forward to `origin/local/awg-upstream-integration`, already authorized by the user. No merge into `feature/awg-voxel-cables`, `develop` or `main` is performed. The progress checkpoint records completion of the push and final metadata-only artifact rebuild if needed. All implementation commits are listed above; there is no implementation WIP.
+Implementation and report publication succeeded as an ordinary fast-forward through `ea184b7d9cfa6fbaf20ba70b8303664ca3d366e6` on `origin/local/awg-upstream-integration`; the remote ref was verified. This final reporting checkpoint is also rebuilt from a clean tree and pushed to that same branch. No merge into `feature/awg-voxel-cables`, `develop` or `main` is performed. The progress checkpoint records completion of the push and final metadata-only artifact rebuild if needed. All implementation commits are listed above; there is no implementation WIP.
 
 Remaining acceptance work is live Minecraft visual/manual verification and the three documented historical failures. No graphical rendering or real multiplayer client connection is claimed from headless tests.
 
