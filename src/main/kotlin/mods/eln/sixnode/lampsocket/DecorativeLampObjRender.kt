@@ -26,13 +26,7 @@ class DecorativeLampObjRender(val style: DecorativeLampStyle) : LampSocketObjRen
         render.front.glRotateOnX()
         GL11.glRotatef(-90f,1f,0f,0f)
         val bulb = render.lampDescriptor
-        val technology = when {
-            bulb == null -> "led"
-            bulb.vegetableGrowRate > 0 -> "farming"
-            bulb.type == mods.eln.item.LampDescriptor.Type.LED -> "led"
-            bulb.type == mods.eln.item.LampDescriptor.Type.eco -> "fluorescent"
-            else -> "incandescent"
-        }
+        val technology = SourceLampLife.visualTechnology(bulb)
         drawModel(render.light.toInt(),fixture.bulbCount,technology,fixture.aim,fixture.fanAngle,fixture.suspension.drop)
     }
     private fun swivel(aim: LightAim,head: Int,draw: ()->Unit)=matrix {

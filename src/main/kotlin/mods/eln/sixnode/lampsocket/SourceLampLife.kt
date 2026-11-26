@@ -10,6 +10,18 @@ object SourceLampLife {
     val technologies=listOf("incandescent","carbon","fluorescent","farming","led","halogen")
     val defaults=doubleArrayOf(24.0,12.0,168.0,48.0,672.0,96.0)
     @JvmStatic fun technology(d:LampDescriptor):Int=RatedLampBulbs.ratings.indexOfFirst{it.id==d.parentItemDamage}.let{if(it<0)-1 else it/3}
+    /** Growth is not a technology tag: ordinary rated bulbs also help plants grow. */
+    @JvmStatic fun visualTechnology(d:LampDescriptor?):String {
+        if(d==null)return "led"
+        val rated=technology(d)
+        if(rated>=0)return technologies[rated]
+        return when {
+            d.type==LampDescriptor.Type.LED -> "led"
+            d.type==LampDescriptor.Type.eco -> "fluorescent"
+            d.vegetableGrowRate>0 -> "farming"
+            else -> "incandescent"
+        }
+    }
     @JvmStatic fun source(d:LampDescriptor)=technology(d)>=0
     @JvmStatic fun hours(d:LampDescriptor):Double {val t=technology(d);return if(t<0)d.nominalLife/3600.0 else mods.eln.ElnConfig.sourceLampHours(t)}
     @JvmStatic fun infinite(d:LampDescriptor):Boolean {val t=technology(d);return if(t<0)d.type==LampDescriptor.Type.LED&&mods.eln.Eln.ledLampInfiniteLife else mods.eln.ElnConfig.sourceLampInfinite(t)}

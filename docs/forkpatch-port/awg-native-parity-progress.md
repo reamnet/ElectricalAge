@@ -109,3 +109,15 @@
 - `git push -u origin local/awg-upstream-integration`: exit0, fork remote https://github.com/reamnet/ElectricalAge.git fast-forwarded 2c6b81655 -> b1f0cbd7e with all verified implementation/reporting history.
 - Final reporting-only checkpoint follows that successful push and is pushed to the same branch. Use git rev-parse HEAD / the remote ref for the final tip. No force push or main/develop/feature merge/update. No active JVM; local tree clean after checkpoint commit.
 - Deliverable JAR/hash and complete test results are in awg-native-implementation-results.md. Full suite has the historical3 failures and no new failed cases. Remaining unsupported pure-decoration-owner/sag-tap cases are explicit; no live graphical claim.
+
+## Lamp tint and meter follow-up (November26)
+- Start clean at pushed e033d0805, same isolated integration worktree. User reports pink bulbs and unreadable new voxel/AWG cable meters; continue fixes, no new parity audit.
+- Verified cause: VoxelNode meter dispatch/side fallback omit AwgCablePart. Add explicit AWG endpoint/current and absolute-temperature readings while reusing native meter interaction/formatters.
+- Verified colour classification defect: DecorativeLampObjRender classifies any vegetableGrowRate>0 as farming; every rated bulb has positive growth values. Use registered rated technology first, with legacy type/growth fallback. Preserve actual farming/holiday colours.
+- Next: implement targeted tests for all18 rated bulb technologies and actual powered AWG meter clicks before/after reload; compile/focused tests and fresh JAR. Prior full baseline2102/2105 historical3 only. No active JVM.
+
+## Lamp/meter fixes verified
+- Rated bulbs now resolve SourceLampLife visual technology before legacy growth/type fallback; decorative fixtures and work-light packets reuse it. All18 technology identities and legacy defaults tested; actual farming stays pink. No growth/life/electrical parameters changed.
+- AWG meters use actual endpoint voltage, independent current and absolute temperature; ordinary native click handling and side fallback now include AWG parts. Powered real MultiMeter/Thermometer/AllMeter clicks validated before/after reload at six terminal configurations.
+- Focused units 52 tests, exit0,1m08s, /tmp/awg-lamp-meter-unit.log. Powered server7/7, exit0,29s, /tmp/awg-lamp-meter-game.log. No live visual rendering claim.
+- User additionally requests explicit copper/aluminum placement-mode menu. Next reuse existing tool radial key (C), per-spool native/legacy-six-node mode, existing legacy placement backend, strict held-spool packet validation and mode-change session cleanup.

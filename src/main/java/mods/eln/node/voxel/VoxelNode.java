@@ -3051,6 +3051,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     /** The multimeter on a part: its cable's voltage and current, or its pipe run's pressure and contents (the run's
      *  lump: the piece's own node is only written back after each step). */
     public String multiMeterString(int part) {
+        if (part >= 0 && part < parts.size() && parts.get(part) instanceof AwgCablePart awg) return awg.multiMeterString();
         CableNet.Conductor k = conductorOf(part);
         if (k != null && k.load != null)
             return k.d.signalWire ? mods.eln.misc.Utils.plotSignal(k.load.getU(), k.load.getI()) : mods.eln.misc.Utils.plotUIP(k.load.getU(), k.load.getI());
@@ -3062,6 +3063,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
 
     /** The thermometer on a part: its cable's or its pipe run's temperature. */
     public String thermoMeterString(int part) {
+        if (part >= 0 && part < parts.size() && parts.get(part) instanceof AwgCablePart awg) return awg.thermoMeterString();
         CableNet.Conductor k = conductorOf(part);
         if (k != null && k.thermal != null) return mods.eln.misc.Utils.plotCelsius("T", k.thermal.Tc);
         PipePart pipe = pipeOf(part);
@@ -3085,6 +3087,7 @@ public class VoxelNode extends mods.eln.node.six.SixNode implements FluidDevice 
     private int firstPart() {
         for (CableNet.Conductor k : cables.live())
             if (!k.parts.isEmpty()) return parts.indexOf(k.parts.get(0));
+        for (int i = 0; i < parts.size(); i++) if (parts.get(i) instanceof AwgCablePart) return i;
         for (int i = 0; i < parts.size(); i++) if (parts.get(i) instanceof PipePart pp && pp.fluid != null) return i;
         return -1;
     }

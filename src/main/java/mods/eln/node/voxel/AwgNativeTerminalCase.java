@@ -85,6 +85,26 @@ public final class AwgNativeTerminalCase implements TestCase {
             ctx.check("offset terminal current follows AWG and native source resistance", Math.abs(current - 12 / (1 + resistance + sourceResistance + 1e-6)) < .001,
                 "I=" + current + " wire R=" + resistance + " source Rs=" + sourceResistance);
             ctx.check("offset pin feeds each conductor exactly once", parts.stream().allMatch(p -> Math.abs(Math.abs(p.activeRun().getCurrentAmps()) - current) < 1e-6), "");
+            var node = ctx.voxelAt(endpoints.get(1));
+            var cable = AwgCablePart.at(ctx.level(), endpoints.get(1)).getLast();
+            int index = node.parts.indexOf(cable);
+            var listener = ctx.listener();
+            var box = cable.boxes().getFirst();
+            float x = (box[0] + box[3]) / 32f, y = (box[1] + box[4]) / 32f, z = (box[2] + box[5]) / 32f;
+            for (String tool : List.of("MultiMeter", "Thermometer", "AllMeter")) {
+                listener.chat.clear();
+                listener.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, Eln.findItemStack(tool));
+                boolean handled = node.onBlockActivated(listener, Direction.YN, x, y, z);
+                String reading = String.join(" ", listener.chat);
+                ctx.check("powered AWG click gives a " + tool + " reading", handled && !reading.isEmpty(), reading);
+                if (!tool.equals("Thermometer")) ctx.check("AWG meter reports its actual conductor current",
+                    reading.contains(mods.eln.misc.Utils.plotAmpere("I", cable.activeRun().getCurrentAmps()).trim()), reading);
+                if (!tool.equals("MultiMeter")) ctx.check("AWG thermometer reports absolute conductor temperature",
+                    reading.contains(mods.eln.api.Meters.celsius(cable.activeRun().getTemperatureCelsius())), reading);
+            }
+            listener.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.ItemStack.EMPTY);
+            ctx.check("AWG meters also support callers without a hit", !node.multiMeterString(Direction.YN).isEmpty()
+                && !node.thermoMeterString(Direction.YN).isEmpty() && !node.multiMeterString(index).isEmpty(), "");
         };
         attach.run();
         ctx.after(15, () -> {

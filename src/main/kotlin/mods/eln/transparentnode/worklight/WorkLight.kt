@@ -131,5 +131,5 @@ class WorkLightElement(node:TransparentNode,d:TransparentNodeDescriptor):FuelGen
             on = false
         }
     }
-    override fun networkSerialize(s:DataOutputStream){super.networkSerialize(s);s.writeDouble(tankLevel);s.writeBoolean(wireless);s.writeUTF(channel);s.writeInt(brightness);s.writeInt(bulbCount);s.writeUTF(bulb?.let{SourceLampLife.technology(it).takeIf{v->v>=0}?.let{t->SourceLampLife.technologies[t]}}?:"led");s.writeDouble(operatingVoltage);aim.write(s)}
+    override fun networkSerialize(s:DataOutputStream){super.networkSerialize(s);s.writeDouble(tankLevel);s.writeBoolean(wireless);s.writeUTF(channel);s.writeInt(brightness);s.writeInt(bulbCount);s.writeUTF(SourceLampLife.visualTechnology(bulb));s.writeDouble(operatingVoltage);aim.write(s)}
 }

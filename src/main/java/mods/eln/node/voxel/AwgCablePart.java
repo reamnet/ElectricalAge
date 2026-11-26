@@ -1008,6 +1008,17 @@ public final class AwgCablePart extends VoxelPart {
 
     public AwgCableRun activeRun() { return run; }
 
+    /** Native tool readings use the selected conductor's endpoint voltage and independent current. */
+    String multiMeterString() {
+        if (from == null) return "";
+        double current = run != null ? run.getCurrentAmps() : outerJoint == null ? 0 : outerJoint.getCurrent();
+        return mods.eln.misc.Utils.plotUIP(from.load.getU(), current);
+    }
+
+    String thermoMeterString() {
+        return run == null ? "" : mods.eln.api.Meters.celsius(run.getTemperatureCelsius()) + "  ";
+    }
+
     void nameTerminals(BlockPos pos, Map<Object, String> names) {
         names.put(from.load, "AWG " + point(pos, 0));
         names.put(to.load, "AWG " + point(pos, 1));
