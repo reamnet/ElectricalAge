@@ -79,6 +79,10 @@ abstract public class GridElement extends TransparentNodeElement {
         }
         UUID id=player.getUUID();
         int terminal=selectedGridTerminal(side), fallback=terminal;
+        if (this instanceof AimedGridTerminals target) {
+            fallback=target.gridTerminalAt(side,new Vec3(x-.5,y-.5,z-.5));
+            terminal=player.isShiftKeyDown() ? fallback : target.gridBundleFor(fallback);
+        }
         if (this instanceof mods.eln.utility.DistributionPoleElement pole && !player.isShiftKeyDown() && y >= 1) {
             Vec3 hit = new Vec3(x - .5, y - .5, z - .5);
             fallback = pole.aimedSingleTerminal(hit);

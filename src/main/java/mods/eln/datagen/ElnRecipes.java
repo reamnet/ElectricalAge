@@ -1466,6 +1466,22 @@ public final class ElnRecipes extends ElnRecipesBase {
                     'I', ingot, 'B', findItemStack("Large " + metal.getLabel() + " Busbar"));
             }
         }
+        addRecipe(findItemStack("Busbar Support Insulator")," I "," G ","III",'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE);
+        addRecipe(findItemStack("Substation Vertical Insulator Stack")," S "," S ","III",'I',Items.IRON_INGOT,'S',findItemStack("Busbar Support Insulator"));
+        addRecipe(findItemStack("Steel Equipment Support Frame"),"PPP","I I","I I",'P',"ingotSteel",'I',Blocks.IRON_BARS);
+        addRecipe(findItemStack("Substation Horizontal Bracket"),"I ","PP","I ",'I',Items.IRON_INGOT,'P',"ingotSteel");
+        addRecipe(findItemStack("Steel Substation Gantry Section"),"IFI","I I","IFI",'F',findItemStack("Steel Equipment Support Frame"),'I',"ingotSteel");
+        addRecipe(findItemStack("Substation Transformer Foundation"),"PPP","BBB","BBB",'P',"ingotSteel",'B',Blocks.STONE_BRICKS);
+        addRecipe(findItemStack("Small Single Phase Substation Disconnect"),"CLC","ISI","FFF",'C',Items.COPPER_INGOT,
+            'L',Blocks.LEVER,'I',findItemStack("Busbar Support Insulator"),'S',findItemStack("Substation Horizontal Bracket"),'F',"ingotSteel");
+        addRecipe(findItemStack("Large Single Phase Substation Disconnect"),"CLC","ISI","PFP",'C',Blocks.COPPER_BLOCK.weathering().unaffected(),
+            'L',Blocks.LEVER,'I',findItemStack("Substation Vertical Insulator Stack"),
+            'S',findItemStack("Small Single Phase Substation Disconnect"),'F',findItemStack("Steel Equipment Support Frame"),'P',"ingotSteel");
+        addRecipe(findItemStack("Three Phase Gang Substation Disconnect"),"DDD"," B ","PFP",'D',findItemStack("Large Single Phase Substation Disconnect"),
+            'B',Blocks.LEVER,'P',"ingotSteel",'F',findItemStack("Steel Equipment Support Frame"));
+        addRecipe(findItemStack("Transmission Gang Substation Disconnect"),"III","CGC","FBF",'I',findItemStack("230 kV Line Insulator"),
+            'C',Blocks.COPPER_BLOCK.weathering().unaffected(),'G',findItemStack("Three Phase Gang Substation Disconnect"),
+            'F',findItemStack("Steel Substation Gantry Section"),'B',findItemStack("Substation Transformer Foundation"));
         addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
         int mastIndex=0;
         for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK)) {

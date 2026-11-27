@@ -5800,5 +5800,65 @@
   "display": "Transmission Aluminum Busbar",
   "kind": "transparent_node",
   "name": "transmission_aluminum_busbar"
+ },
+ "eln:transparent_node@14088": {
+  "descriptor": "SubstationSupportDescriptor",
+  "display": "Busbar Support Insulator",
+  "kind": "transparent_node",
+  "name": "busbar_support_insulator"
+ },
+ "eln:transparent_node@14089": {
+  "descriptor": "SubstationSupportDescriptor",
+  "display": "Substation Vertical Insulator Stack",
+  "kind": "transparent_node",
+  "name": "substation_vertical_insulator_stack"
+ },
+ "eln:transparent_node@14090": {
+  "descriptor": "SubstationSupportDescriptor",
+  "display": "Steel Equipment Support Frame",
+  "kind": "transparent_node",
+  "name": "steel_equipment_support_frame"
+ },
+ "eln:transparent_node@14091": {
+  "descriptor": "SubstationSupportDescriptor",
+  "display": "Substation Horizontal Bracket",
+  "kind": "transparent_node",
+  "name": "substation_horizontal_bracket"
+ },
+ "eln:transparent_node@14092": {
+  "descriptor": "SubstationSupportDescriptor",
+  "display": "Steel Substation Gantry Section",
+  "kind": "transparent_node",
+  "name": "steel_substation_gantry_section"
+ },
+ "eln:transparent_node@14093": {
+  "descriptor": "SubstationSupportDescriptor",
+  "display": "Substation Transformer Foundation",
+  "kind": "transparent_node",
+  "name": "substation_transformer_foundation"
+ },
+ "eln:transparent_node@14096": {
+  "descriptor": "ModularDisconnectDescriptor",
+  "display": "Small Single Phase Substation Disconnect",
+  "kind": "transparent_node",
+  "name": "small_single_phase_substation_disconnect"
+ },
+ "eln:transparent_node@14097": {
+  "descriptor": "ModularDisconnectDescriptor",
+  "display": "Large Single Phase Substation Disconnect",
+  "kind": "transparent_node",
+  "name": "large_single_phase_substation_disconnect"
+ },
+ "eln:transparent_node@14098": {
+  "descriptor": "ModularDisconnectDescriptor",
+  "display": "Three Phase Gang Substation Disconnect",
+  "kind": "transparent_node",
+  "name": "three_phase_gang_substation_disconnect"
+ },
+ "eln:transparent_node@14099": {
+  "descriptor": "ModularDisconnectDescriptor",
+  "display": "Transmission Gang Substation Disconnect",
+  "kind": "transparent_node",
+  "name": "transmission_gang_substation_disconnect"
  }
 }

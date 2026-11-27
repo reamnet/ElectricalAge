@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "F": "#c:ingots/steel",
+    "I": "eln:busbar_support_insulator",
+    "L": "minecraft:lever",
+    "S": "eln:substation_horizontal_bracket"
+  },
+  "pattern": [
+    "CLC",
+    "ISI",
+    "FFF"
+  ],
+  "result": {
+    "id": "eln:small_single_phase_substation_disconnect"
+  }
+}

@@ -71,13 +71,19 @@ class BusbarDescriptor(
             maxOf(middle.z, rim.z) + if (end.z == 0.0) h else 0.0)
     }
 
-    override fun shapeAt(entity: TransparentNodeEntity, collision: Boolean) = shapes[
-        (entity.elementRender as? BusbarRender)?.arms ?: ((entity.node as? TransparentNode)?.element as? BusbarElement)?.arms ?: 0
-    ]
+    private val mountingStem = AABB(-.065,-.5,-.065,.065,-size.width*.57,.065)
+    override fun shapeAt(entity: TransparentNodeEntity, collision: Boolean): net.minecraft.world.phys.shapes.VoxelShape {
+        val render = entity.elementRender as? BusbarRender
+        val element = (entity.node as? TransparentNode)?.element as? BusbarElement
+        val shape = shapes[render?.arms ?: element?.arms ?: 0]
+        return if (render?.supported ?: element?.supported ?: false)
+            Shapes.or(shape,Shapes.create(mountingStem.move(.5,.5,.5))) else shape
+    }
 
-    fun drawBusbar(mask: Int, phase: Int) = SubstationStock.draw {
+    fun drawBusbar(mask: Int, phase: Int, supported: Boolean = false) = SubstationStock.draw {
         val h = size.width / 2
         box(hub, metal)
+        if (supported) box(mountingStem, 0x6d777c)
         for (dir in Direction.values()) if (mask and (1 shl dir.int) != 0) box(arm(dir), metal)
         // The centre splice remains visible on a through run and marks its circuit.
         val marker = when (phase) { 0 -> 0xd75246; 1 -> 0xe7b842; else -> 0x4a88cf }
@@ -109,6 +115,12 @@ class BusbarElement(node: TransparentNode, descriptor: TransparentNodeDescriptor
     val heat = WireThermalLoad("rigidBusHeat", WireThermalPhysics(bar.material, bar.size.areaMm2))
     var phase = 0
         private set
+
+    val supported: Boolean get() {
+        if (node.coordonate == null) return false
+        val beneath = (node.getNeighbor(Direction.YN) as? TransparentNode)?.element?.descriptor as? SubstationSupportDescriptor
+        return beneath?.kind in listOf(SubstationSupportKind.SUPPORT,SubstationSupportKind.STACK)
+    }
 
     val arms: Int get() = Direction.values().fold(0) { mask, side ->
         if (node.lrduCubeMask.get(side, LRDU.Down)) mask or (1 shl side.int) else mask
@@ -174,6 +186,7 @@ class BusbarElement(node: TransparentNode, descriptor: TransparentNodeDescriptor
         super.networkSerialize(out)
         out.writeByte(arms)
         out.writeByte(phase)
+        out.writeBoolean(supported)
     }
 }
 
@@ -181,14 +194,17 @@ class BusbarRender(entity: TransparentNodeEntity, descriptor: TransparentNodeDes
     var arms = 0
         private set
     private var phase = 0
+    var supported = false
+        private set
     override fun networkUnserialize(input: DataInputStream) {
         super.networkUnserialize(input)
         arms = input.readUnsignedByte().coerceIn(0, 63)
         phase = input.readUnsignedByte().coerceIn(0, 2)
+        supported = input.readBoolean()
     }
     override fun draw() {
         drawCables()
-        (transparentNodedescriptor as BusbarDescriptor).drawBusbar(arms, phase)
+        (transparentNodedescriptor as BusbarDescriptor).drawBusbar(arms, phase,supported)
     }
 }
 

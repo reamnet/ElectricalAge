@@ -8,7 +8,6 @@ import mods.eln.gridnode.GridLink
 import mods.eln.gridnode.OverheadCableItem
 import mods.eln.misc.Coordonate
 import mods.eln.misc.Direction
-import mods.eln.node.transparent.TransparentNodeItem
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.utility.TransmissionElement
@@ -18,6 +17,9 @@ import mods.eln.utility.modular.BusbarElement
 import mods.eln.utility.modular.Busbars
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.Vec3
 
 class ModularDirectFeedCase : TestCase {
     override fun id() = "modular_69kv_insulator_busbar_feed"
@@ -38,14 +40,18 @@ class ModularDirectFeedCase : TestCase {
         check(bar.selectPhase(1))
         val descriptor = requireNotNull(Eln.transparentNodeItem.getDescriptor(8050))
         val item=descriptor.newItemStack()
-        insulator=(item.item as TransparentNodeItem).placeAt(item,c.player(),c.level(),c.at(18,9,8),Direction.XP)!!
-            .element as LineInsulatorElement
+        val p=c.player()
+        val pos=bar.coordonate().pos()
+        val hit=BlockHitResult(Vec3.atCenterOf(pos).add(-.17,0.0,0.0),net.minecraft.core.Direction.WEST,pos,false)
+        p.setItemInHand(InteractionHand.MAIN_HAND,item)
+        try { check(item.useOn(UseOnContext(p,InteractionHand.MAIN_HAND,hit)).consumesAction()) }
+        finally { p.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY) }
+        insulator=GridLink.getElementFromCoordinate(Coordonate(pos.west(),c.level())) as LineInsulatorElement
         c.check("the mounting face forms one physical phase B joint",
             insulator.gridPhase(32)==1 && bar.node.nodeConnectionList.size==1 && bar.arms==(1 shl Direction.XN.int),"")
         tower=c.placeTransparent(TransmissionKind.POLE_69.id,c.at(6,1,8)) as TransmissionElement
         check(tower.selectTerminal(32))
         val wire=OverheadCableItem.make(6,60)
-        val p=c.player()
         p.setItemInHand(InteractionHand.MAIN_HAND,wire)
         fun connect() {
             tower.onBlockActivated(p,Direction.XP,.5f,.5f,.5f)

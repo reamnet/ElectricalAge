@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:substation_transformer_foundation",
+    "C": "minecraft:copper_block",
+    "F": "eln:steel_substation_gantry_section",
+    "G": "eln:three_phase_gang_substation_disconnect",
+    "I": "eln:230_kv_line_insulator"
+  },
+  "pattern": [
+    "III",
+    "CGC",
+    "FBF"
+  ],
+  "result": {
+    "id": "eln:transmission_gang_substation_disconnect"
+  }
+}

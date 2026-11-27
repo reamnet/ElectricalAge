@@ -35,6 +35,7 @@ object ScadaLink {
             is BreakerPanelElement->e.remoteCircuit(circuit,closed)
             is HouseServiceElement->e.setRemoteDisconnect(!closed)
             is DistributionPoleElement->e.unit.switch(closed)
+            is mods.eln.utility.modular.ModularDisconnectElement->e.setClosed(closed)
             is SwitchgearElement->{e.unit.setEnabled(closed);true}
             is IndustrialElement->{e.unit.setEnabled(closed);true}
             is PadTransformerElement->{e.unit.setEnabled(closed);true}

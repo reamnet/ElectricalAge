@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:stone_bricks",
+    "P": "#c:ingots/steel"
+  },
+  "pattern": [
+    "PPP",
+    "BBB",
+    "BBB"
+  ],
+  "result": {
+    "id": "eln:substation_transformer_foundation"
+  }
+}

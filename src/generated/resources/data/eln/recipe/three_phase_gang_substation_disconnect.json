@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:lever",
+    "D": "eln:large_single_phase_substation_disconnect",
+    "F": "eln:steel_equipment_support_frame",
+    "P": "#c:ingots/steel"
+  },
+  "pattern": [
+    "DDD",
+    " B ",
+    "PFP"
+  ],
+  "result": {
+    "id": "eln:three_phase_gang_substation_disconnect"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_transparent",
+  "textures": {
+    "particle": "eln:item/busbar_support_insulator"
+  }
+}

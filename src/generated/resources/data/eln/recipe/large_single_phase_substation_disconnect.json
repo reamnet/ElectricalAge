@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:copper_block",
+    "F": "eln:steel_equipment_support_frame",
+    "I": "eln:substation_vertical_insulator_stack",
+    "L": "minecraft:lever",
+    "P": "#c:ingots/steel",
+    "S": "eln:small_single_phase_substation_disconnect"
+  },
+  "pattern": [
+    "CLC",
+    "ISI",
+    "PFP"
+  ],
+  "result": {
+    "id": "eln:large_single_phase_substation_disconnect"
+  }
+}
