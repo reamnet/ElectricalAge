@@ -104,6 +104,15 @@ class LayoutTest {
             """).problems().size());
     }
 
+    @Test
+    void largeSteamTurbineKeepsBothSlotsVisibleInAShortWindow() throws IOException {
+        Path dir = Path.of(System.getProperty("eln.guiDir", "src/main/resources/assets/eln/gui"));
+        var layout = lay(Files.readString(dir.resolve("large_steam_turbine.json")));
+        assertTrue(layout.height() <= 240, "panel height " + layout.height());
+        assertNotNull(layout.get("slot", "0"));
+        assertNotNull(layout.get("slot", "1"));
+    }
+
     /** Every layout shipped in assets/eln/gui must be sound with the fixed-width measure. */
     @Test
     void everyShippedLayoutIsSound() throws IOException {

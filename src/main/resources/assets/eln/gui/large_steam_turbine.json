@@ -39,16 +39,19 @@
    "fill": true
   },
   {
-   "text": "valve",
-   "sample": "Steam valve may open: 100%"
-  },
-  {
    "row": [
     {
      "slot": "0"
     },
     {
      "slot": "1"
+    },
+    {
+     "space": 4
+    },
+    {
+     "text": "valve",
+     "sample": "Steam valve may open: 100%"
     },
     {
      "space": 0,
@@ -65,5 +68,5 @@
    "inventory": true
   }
  ],
- "gap": 4
+ "gap": 1
 }
