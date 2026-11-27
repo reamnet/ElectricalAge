@@ -1,4 +1,8 @@
 {
+    "click": {
+        "category": "block",
+        "sounds": [{"name": "eln:click", "stream": false}]
+    },
     "arcfurnace_loop": {
         "sounds": [
             {
