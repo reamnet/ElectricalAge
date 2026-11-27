@@ -49,6 +49,7 @@ object ForkPatchBundleSpanCases {
             super.build(c);val d=wire();stack=d.creativeStack();d.setRemainingLengthMeters(stack,12.75)
             stack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,net.minecraft.network.chat.Component.literal("Jacket ledger"))
             click(c,stack);link=a.gridLinkList.single()
+            checkCoveredSpan(c,link,d)
             val heat=link.thermalLoads()[0];heat.integrateEnergy(heat.physics.sensibleEnthalpy(140.0))
         }
         override fun measure(c: TestContext) {
@@ -59,6 +60,7 @@ object ForkPatchBundleSpanCases {
             val ap=a.node.coordonate.pos();val bp=b.node.coordonate.pos();Reload.node(c.level(),ap);Reload.node(c.level(),bp)
             a=GridLink.getElementFromCoordinate(Coordonate(ap,c.level())) as HouseServiceElement;b=GridLink.getElementFromCoordinate(Coordonate(bp,c.level())) as HouseServiceElement;link=a.gridLinkList.single()
             c.check("bundle: canonical node reload keeps each core's energy and length",a.gridLinkList.size==1 && b.gridLinkList.single()===link && link.thermalLoads().indices.all { kotlin.math.abs(link.thermalLoads()[it].storedJoules-saved[it])<1e-7 && link.thermalLoads()[it].physics.meters==4.0 },"")
+            checkCoveredSpan(c,link,d)
             val refund=link.onBreakElement();val damaged=GenericItemBlockUsingDamageDescriptor.getDescriptor(refund) as? UtilityCableDescriptor
             val mass=damaged?.let { WirePhysics.massKg(it.material,it.totalConductorAreaMm2,it.getRemainingLengthMeters(refund)) }
             c.check("bundle: damaged refund preserves jacket length, full metal mass, components and single ownership",damaged?.melted==true && damaged.getRemainingLengthMeters(refund)==4.0 && mass==WirePhysics.massKg(d.material,d.totalConductorAreaMm2,4.0) && refund.hoverName.string=="Jacket ledger" && link.onBreakElement().isEmpty,"")

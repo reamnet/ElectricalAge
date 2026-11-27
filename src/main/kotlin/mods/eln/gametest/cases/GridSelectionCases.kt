@@ -66,6 +66,7 @@ object GridSelectionCases {
                     service.getTerminal(a) == 50 && service.getTerminal(b) == 50 &&
                         a.gridLoads(50).toSet().size == 3 && a.gridLoads(50).none { it in a.gridLoads(52) } &&
                         wire.getRemainingLengthMeters(stack) == 58.0, "$material $gauge")
+                checkCoveredSpan(c,service,wire)
                 c.check("service refund matches the paid descriptor and all core metres",
                     wire.getRemainingLengthMeters(service.onBreakElement()) == 42.0 && service.onBreakElement().isEmpty, "")
             }
@@ -115,6 +116,7 @@ object GridSelectionCases {
             c.check("reload upgrades only owned old pole ghosts",c.level().getBlockState(shaft).getValue(BlockMeta.META)==GhostBlock.tSelectableClearance,"")
             c.check("ghost migration preserves neighbouring builds",c.level().getBlockState(foreign).block===Blocks.STONE,"")
             c.check("reload retains the independent paid connections once",a.gridLinkList.size==expected && b.gridLinkList.size==expected,"")
+            checkCoveredSpan(c,a.gridLinkList.single { it.getTerminal(a)==40 },service)
         }
         private fun wire(insulated: Boolean)=UtilityCables.all.first { it.sizeLabel=="2 AWG" && it.insulated==insulated && !it.melted && it.material==if(insulated)UtilityCableMaterial.COPPER else UtilityCableMaterial.ALUMINUM }
         private fun select(e: GridElement,t: Int) {

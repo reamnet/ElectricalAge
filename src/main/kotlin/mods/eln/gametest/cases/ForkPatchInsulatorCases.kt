@@ -6,6 +6,9 @@ import mods.eln.gridnode.GridLink
 import mods.eln.misc.*
 import mods.eln.node.transparent.TransparentNodeItem
 import mods.eln.sixnode.electricalcable.*
+import mods.eln.utility.DistributionKind
+import mods.eln.utility.DistributionPoleElement
+import mods.eln.utility.DistributionPoles
 import mods.eln.utility.insulator.*
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.InteractionHand
@@ -56,6 +59,35 @@ object ForkPatchInsulatorCases {
         lateinit var wire: UtilityCableDescriptor
         override fun build(c: TestContext) {
             a=place(c,v,true,3,2,3,Direction.YN);b=place(c,v,false,15,2,3,Direction.YN)
+            val volts=when(v) { InsulatorVoltage.LOW->600.0;InsulatorVoltage.MEDIUM->5000.0
+                InsulatorVoltage.DISTRIBUTION->20000.0;else->150000.0 }
+            val material=if(v==InsulatorVoltage.LOW)UtilityCableMaterial.ALUMINUM else UtilityCableMaterial.COPPER
+            val covered=UtilityCables.all.first { it.sizeLabel=="2 AWG" && it.actsAsSingleConductor &&
+                !it.melted && it.insulated && it.material==material && it.insulationVoltageRating==volts }
+            check(GridLink.addLink(a,b,32,32,covered,12))
+            checkCoveredSpan(c,a.gridLinkList.single(),covered)
+            val remote=b.coordonate()
+            Reload.node(c.level(),remote.pos())
+            b=GridLink.getElementFromCoordinate(remote) as LineInsulatorElement
+            val restoredCovered=b.gridLinkList.single()
+            checkCoveredSpan(c,restoredCovered,covered)
+            val refund=restoredCovered.onBreakElement()
+            c.check("jacketed span reload preserves the original spool and exact length",
+                refund.item===covered.parentItem && covered.getRemainingLengthMeters(refund)==12.0,"")
+
+            if (v==InsulatorVoltage.LOW) {
+                val polePos=c.at(24,1,9)
+                c.level().setBlockAndUpdate(polePos.below(),Blocks.STONE.defaultBlockState())
+                val pole=c.placeTransparent(DistributionPoles.id(DistributionKind.SECONDARY),polePos) as DistributionPoleElement
+                check(b.selectCircuit(40))
+                val length=kotlin.math.ceil(pole.coordonate().trueDistanceTo(b.coordonate())).toInt()
+                check(GridLink.addLink(pole,b,40,40,covered,length))
+                val mixed=b.gridLinkList.single()
+                checkCoveredSpan(c,mixed,covered)
+                c.check("compatible pole-to-insulator secondary refunds the same gauge",mixed.onBreakElement().item===covered.parentItem,"")
+                check(b.selectCircuit(32))
+            }
+
             wire=UtilityCables.all.first { it.sizeLabel=="2 AWG" && it.actsAsSingleConductor && !it.melted && !it.insulated && it.material==UtilityCableMaterial.COPPER }
             val stack=wire.newItemStack().also { wire.setRemainingLengthMeters(it,40.0) }
             c.player().setItemInHand(InteractionHand.MAIN_HAND,stack)

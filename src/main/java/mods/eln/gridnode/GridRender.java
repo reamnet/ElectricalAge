@@ -20,6 +20,7 @@ import static mods.eln.gl.GL11.*;
  */
 public abstract class GridRender extends TransparentNodeElementRender {
     private final GridDescriptor descriptor;
+    private static final Identifier SOLID_TEXTURE = Identifier.fromNamespaceAndPath("eln", "sprites/white.png");
     private final Identifier cableTexture;
     private ArrayList<Catenary> catenaries = new ArrayList<Catenary>();
     /**
@@ -135,7 +136,8 @@ public abstract class GridRender extends TransparentNodeElementRender {
         try {
             idealRenderingAngle = stream.readFloat();
             int linkCount = stream.readInt();
-            boolean styled = linkCount == GridCableAppearance.PACKET_VERSION;
+            boolean previousVersion = linkCount == GridCableAppearance.PREVIOUS_PACKET_VERSION;
+            boolean styled = previousVersion || linkCount == GridCableAppearance.PACKET_VERSION;
             if (styled) linkCount = stream.readInt();
             if (linkCount<0 || linkCount>4096) throw new IOException("Invalid grid span count");
             java.util.List<Wire> incoming = new ArrayList<>();
@@ -149,7 +151,7 @@ public abstract class GridRender extends TransparentNodeElementRender {
                     ends[wire] = readVec(stream);
                 }
                 boolean halo = stream.readBoolean();
-                GridCableAppearance appearance = styled ? GridCableAppearance.read(stream) : GridCableAppearance.LEGACY;
+                GridCableAppearance appearance = styled ? GridCableAppearance.read(stream, previousVersion) : GridCableAppearance.LEGACY;
                 if (wires == 2) {
                     double straight = starts[0].vectorTo(ends[0]).normalize().dot(starts[1].vectorTo(ends[1]).normalize());
                     double cross = starts[0].vectorTo(ends[1]).normalize().dot(starts[1].vectorTo(ends[0]).normalize());
@@ -167,9 +169,12 @@ public abstract class GridRender extends TransparentNodeElementRender {
                 for (Catenary old : haloCatenaries) old.destroy();
                 haloCatenaries.clear();
                 for (Wire wire : incoming) {
-                    replacement.add(new Catenary(wire.start(), wire.end(), wire.appearance().radius(), wire.appearance()));
+                    double width = wire.appearance().outsideRadius();
+                    replacement.add(new Catenary(wire.start(), wire.end(), width, wire.appearance()));
+                    // The AWG half-width reaches sqrt(2) times as far at its square corners.
+                    double envelope = wire.appearance().usesAwgGeometry() ? Math.sqrt(2) * width : width;
                     if (wire.halo()) for (int k = 0; k < HALO_LAYERS; k++)
-                        haloCatenaries.add(new Catenary(wire.start(), wire.end(), haloWidth(k) + wire.appearance().radius() - CABLE_WIDTH));
+                        haloCatenaries.add(new Catenary(wire.start(), wire.end(), haloWidth(k) + envelope - CABLE_WIDTH));
                 }
                 for (Catenary old:catenaries) old.destroy();
                 catenaries=replacement;geometry=java.util.List.copyOf(incoming);spanGeometryRevision++;
@@ -237,7 +242,9 @@ public abstract class GridRender extends TransparentNodeElementRender {
             glNewList(list, GL_COMPILE);
             glBegin(GL_TRIANGLES);
 
-            if (start.x == end.x && start.z == end.z) {
+            if (appearance != null && appearance.usesAwgGeometry()) {
+                drawAwg(start, end, catenary);
+            } else if (start.x == end.x && start.z == end.z) {
                 // Poles right on top of each other? No catenaries here.
                 drawBox(spread(start, end), spread(end, start));
             } else {
@@ -255,6 +262,86 @@ public abstract class GridRender extends TransparentNodeElementRender {
             }
             glEnd();
             glEndList();
+        }
+
+        private void drawAwg(Vec3 start, Vec3 end, Vec3[] catenary) {
+            if (start.distanceToSqr(end) < 1e-12) return;
+            boolean jacketed = appearance.surface() == GridCableAppearance.Surface.JACKET;
+            ArrayList<Vec3> points = new ArrayList<>();
+            points.add(start);
+            if (start.x != end.x || start.z != end.z)
+                for (int i = 0; i < catenary.length - 1; i++)
+                    points.add(catenary[i]);
+            points.add(end);
+            if (jacketed) {
+                // Keep stripped tips short, even when the first or last sag segment is short.
+                points.add(1, strippedEnd(points.getFirst(), points.get(1)));
+                points.add(points.size() - 1, strippedEnd(points.getLast(), points.get(points.size() - 2)));
+            }
+
+            // Adjacent faces share both the center and the cross section at every sample.
+            Vec3[] previous = awgSection(points, 0, appearance.radius());
+            setTint(appearance.tint());
+            triangle(previous[0], previous[3], previous[1]);
+            triangle(previous[0], previous[2], previous[3]);
+            for (int i = 1; i < points.size(); i++) {
+                boolean covered = jacketed && i > 1 && i < points.size() - 1;
+                double width = covered ? cableWidth : appearance.radius();
+                Vec3[] next = awgSection(points, i, width);
+                if (jacketed && (i == 2 || i == points.size() - 1)) {
+                    Vec3[] joint = awgSection(points, i - 1, width);
+                    setTint(GridCableAppearance.JACKET);
+                    joinSections(previous, joint);
+                    previous = joint;
+                }
+                setTint(covered ? GridCableAppearance.JACKET : appearance.tint());
+                joinSections(previous, next);
+                previous = next;
+            }
+            triangle(previous[0], previous[1], previous[3]);
+            triangle(previous[0], previous[3], previous[2]);
+        }
+
+        private Vec3 strippedEnd(Vec3 terminal, Vec3 sample) {
+            Vec3 delta = sample.subtract(terminal);
+            double fraction = Math.min(.4, .075 / delta.length());
+            return terminal.add(delta.scale(fraction));
+        }
+
+        private Vec3[] awgSection(java.util.List<Vec3> points, int i, double width) {
+            Vec3 center = points.get(i);
+            Vec3 tangent = points.get(Math.min(i + 1, points.size() - 1))
+                .subtract(points.get(Math.max(i - 1, 0))).normalize();
+            Vec3 horizontal = new Vec3(-tangent.z, 0, tangent.x);
+            Vec3 right = (horizontal.lengthSqr() < 1e-12 ? new Vec3(1, 0, 0) : horizontal.normalize()).scale(width);
+            Vec3 up = tangent.cross(right).normalize().scale(width);
+            Vec3 corner = center.add(right);
+            Vec3 opposite = center.subtract(right);
+            return new Vec3[]{corner.add(up), opposite.add(up), corner.subtract(up), opposite.subtract(up)};
+        }
+
+        private static final int[] RING = {0, 1, 3, 2};
+
+        private void joinSections(Vec3[] a, Vec3[] b) {
+            for (int i = 0; i < RING.length; i++) {
+                int p = RING[i];
+                int q = RING[(i + 1) % RING.length];
+                triangle(a[p], a[q], b[q]);
+                triangle(a[p], b[q], b[p]);
+            }
+        }
+
+        private void triangle(Vec3 a, Vec3 b, Vec3 c) {
+            Vec3 normal = b.subtract(a).cross(c.subtract(a));
+            double inverseLength = 1 / normal.length();
+            glNormal3f((float)(normal.x * inverseLength), (float)(normal.y * inverseLength), (float)(normal.z * inverseLength));
+            glVertex3f((float)a.x, (float)a.y, (float)a.z);
+            glVertex3f((float)b.x, (float)b.y, (float)b.z);
+            glVertex3f((float)c.x, (float)c.y, (float)c.z);
+        }
+
+        private void setTint(int tint) {
+            glColor4f(((tint >>> 16) & 255)/255f, ((tint >>> 8) & 255)/255f, (tint & 255)/255f, 1f);
         }
 
         private void drawBox(Vec3[] from, Vec3[] to) {
@@ -354,9 +441,8 @@ public abstract class GridRender extends TransparentNodeElementRender {
 
         public void draw() {
             if (appearance != null) {
-                UtilsClient.bindTexture(appearance.metal() ? Identifier.fromNamespaceAndPath("eln", "sprites/white.png") : cableTexture);
-                int tint = appearance.tint();
-                glColor4f(((tint >>> 16) & 255)/255f, ((tint >>> 8) & 255)/255f, (tint & 255)/255f, 1f);
+                UtilsClient.bindTexture(appearance.surface() == GridCableAppearance.Surface.LEGACY_TEXTURE ? cableTexture : SOLID_TEXTURE);
+                if (!appearance.usesAwgGeometry()) setTint(appearance.tint());
             }
             glCallList(list);
         }
