@@ -178,6 +178,8 @@ public class Wp9bContent implements ElnContent {
     }
 
     public static void registerElectricalVuMeter(int id) {
+        sixNodeItem.addDescriptor((id << 6) + 9,
+            new ElectricalVuMeterDescriptor(TR_NAME(Type.NONE, "Multicolor LED vuMeter"), "Led", false));
         int subId, completId;
         String name;
         ElectricalVuMeterDescriptor desc;

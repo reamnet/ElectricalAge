@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": "eln:wireless_button",
+    "M": "minecraft:quartz",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " M ",
+    "MLM",
+    " P "
+  ],
+  "result": {
+    "id": "eln:wireless_paddle_button"
+  }
+}

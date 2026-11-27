@@ -109,6 +109,7 @@ public final class ElnGameTests {
         mods.eln.gametest.cases.LogicTruthCases.addTo(l);
         mods.eln.gametest.cases.ChipMoreCases.addTo(l);
         mods.eln.gametest.cases.WirelessMoreCases.addTo(l);
+        l.add(new mods.eln.sixnode.electricalvumeter.MulticolorVuMeterCase());
         mods.eln.gametest.cases.Wp10aCases.addTo(l);
         mods.eln.gametest.cases.Wp10bCases.addTo(l);
         mods.eln.gametest.cases.WorldSensorCases.addTo(l);

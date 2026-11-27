@@ -58,8 +58,7 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
             if (timeout > 0) {
                 if (timeout - time < 0) {
                     if (state) {
-                        state = false;
-                        needPublish();
+                        changeState(false);
                     }
                 }
                 timeout -= time;
@@ -108,10 +107,18 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
         if (Utils.isPlayerUsingWrench(entityPlayer))
             return false;
 
-        state = !state;
+        changeState(descriptor.isWallControl() && descriptor.autoReset || !state);
         if (state && autoResetProcess != null) autoResetProcess.reset();
-        needPublish();
         return true;
+    }
+
+    private void changeState(boolean on) {
+        state = on;
+        if (descriptor.isWallControl()) {
+            play(new mods.eln.sound.SoundCommand("eln:click").smallRange()
+                .mulBlockAttenuation(0).mulVolume(.28f, state ? 1.15f : .95f));
+        }
+        needPublish();
     }
 
     @Override
@@ -140,7 +147,7 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
 
         super.readFromNBT(nbt);
         channel = nbt.getStringOr("channel", "");
-        state = nbt.getBooleanOr("state", false);
+        state = !(descriptor.isWallControl() && descriptor.autoReset) && nbt.getBooleanOr("state", false);
 
         WirelessSignalTxElement.channelRegister(this);
     }

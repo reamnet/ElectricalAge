@@ -180,7 +180,8 @@ public class ElnModels implements DataProvider {
             Object d = item instanceof IDescriptorItem di ? di.getEaDescriptor() : null;
             boolean equipmentGui = d instanceof mods.eln.transparentnode.kitchen.KitchenDescriptor
                 || d instanceof mods.eln.transparentnode.laundry.MatterMachineDescriptor
-                || d instanceof mods.eln.transparentnode.fan.FanDescriptor;
+                || d instanceof mods.eln.transparentnode.fan.FanDescriptor
+                || d instanceof mods.eln.sixnode.wirelesssignal.source.WirelessSignalSourceDescriptor source && source.isWallControl();
             boolean gridGui = d instanceof mods.eln.utility.GridSourceTransformerDescriptor
                 || d instanceof mods.eln.utility.insulator.LineInsulatorDescriptor;
             String texture = itemTexture(name, item);

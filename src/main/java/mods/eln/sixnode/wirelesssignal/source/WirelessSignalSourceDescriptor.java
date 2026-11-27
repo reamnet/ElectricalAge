@@ -13,6 +13,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class WirelessSignalSourceDescriptor extends SixNodeDescriptor {
 
+    public boolean isWallControl() {
+        return render instanceof WallWirelessModel;
+    }
+
+    public static WirelessSignalSourceDescriptor wallControl(String name, int range, boolean paddle, boolean momentary) {
+        var descriptor = new WirelessSignalSourceDescriptor(name, new WallWirelessModel(paddle), range, momentary);
+        descriptor.setPlaceDirection(new mods.eln.misc.Direction[]{
+            mods.eln.misc.Direction.XN, mods.eln.misc.Direction.XP,
+            mods.eln.misc.Direction.ZN, mods.eln.misc.Direction.ZP});
+        return descriptor;
+    }
+
     int range;
     public boolean autoReset;
     ElectricalGateSourceRenderObj render;
@@ -49,7 +61,7 @@ public class WirelessSignalSourceDescriptor extends SixNodeDescriptor {
 
     @Override
     public void drawItem(boolean entity) {
-        GL11.glScalef(1.5f, 1.5f, 1.5f);
+        if (!isWallControl()) GL11.glScalef(1.5f, 1.5f, 1.5f);
         draw(0f, 1f, null);
 
     }

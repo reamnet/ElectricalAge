@@ -312,6 +312,12 @@ public class Wp9cContent implements ElnContent {
     }
 
     public static void registerElectricalGateSource(int id) {
+        String[] wallNames = {"Wireless Paddle Switch", "Wireless Toggle Switch",
+            "Wireless Paddle Button", "Wireless Toggle Button"};
+        for (int i = 0; i < wallNames.length; i++) {
+            sixNodeItem.addDescriptor((id << 6) + 20 + i, WirelessSignalSourceDescriptor.wallControl(
+                TR_NAME(Type.NONE, wallNames[i]), wirelessTxRange, i % 2 == 0, i >= 2));
+        }
         int subId, completId;
         String name;
 

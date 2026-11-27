@@ -1217,6 +1217,30 @@
   "kind": "six_node",
   "name": "wireless_switch"
  },
+ "eln:six_node@6103": {
+  "descriptor": "WirelessSignalSourceDescriptor",
+  "display": "Wireless Toggle Button",
+  "kind": "six_node",
+  "name": "wireless_toggle_button"
+ },
+ "eln:six_node@6102": {
+  "descriptor": "WirelessSignalSourceDescriptor",
+  "display": "Wireless Paddle Button",
+  "kind": "six_node",
+  "name": "wireless_paddle_button"
+ },
+ "eln:six_node@6101": {
+  "descriptor": "WirelessSignalSourceDescriptor",
+  "display": "Wireless Toggle Switch",
+  "kind": "six_node",
+  "name": "wireless_toggle_switch"
+ },
+ "eln:six_node@6100": {
+  "descriptor": "WirelessSignalSourceDescriptor",
+  "display": "Wireless Paddle Switch",
+  "kind": "six_node",
+  "name": "wireless_paddle_switch"
+ },
  "eln:six_node@6144": {
   "descriptor": "DiodeDescriptor",
   "display": "10A Diode",
@@ -1384,6 +1408,12 @@
   "display": "LED vuMeter",
   "kind": "six_node",
   "name": "led_vumeter"
+ },
+ "eln:six_node@6537": {
+  "descriptor": "ElectricalVuMeterDescriptor",
+  "display": "Multicolor LED vuMeter",
+  "kind": "six_node",
+  "name": "multicolor_led_vumeter"
  },
  "eln:six_node@6592": {
   "descriptor": "ElectricalAlarmDescriptor",

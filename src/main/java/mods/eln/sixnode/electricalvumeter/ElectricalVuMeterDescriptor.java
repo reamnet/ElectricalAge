@@ -68,15 +68,17 @@ public class ElectricalVuMeterDescriptor extends SixNodeDescriptor {
         switch (objType) {
             case LedOnOff:
                 main.draw();
-                boolean s = factor > 0.5;
-                Color c = UtilsClient.ledOnOffColorC(s);
+                boolean lit = onOffOnly || factor > .005f;
+                Color c = onOffOnly ? UtilsClient.ledOnOffColorC(factor > .5f)
+                    : lit ? Color.getHSBColor(factor, 1f, 1f) : new Color(.5f, .5f, .5f);
                 GL11.glColor3f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f);
                 UtilsClient.drawLight(led);
                 //Utils.enableBilinear();
-                if (entity != null)
-                    UtilsClient.drawHalo(halo, c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, entity, false);
-                else
-                    UtilsClient.drawLight(halo);
+                if (lit) {
+                    if (entity != null)
+                        UtilsClient.drawHalo(halo, c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, entity, false);
+                    else UtilsClient.drawLight(halo);
+                }
                 //Utils.disableBilinear();
                 break;
             case Rot:

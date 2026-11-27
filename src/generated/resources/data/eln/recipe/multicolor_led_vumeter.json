@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "minecraft:planks"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": "minecraft:redstone",
+    "S": "eln:signal_cable",
+    "W": "#minecraft:planks"
+  },
+  "pattern": [
+    " W ",
+    "WRW",
+    " S "
+  ],
+  "result": {
+    "id": "eln:multicolor_led_vumeter"
+  }
+}

@@ -404,3 +404,5 @@ lineinsulator3200/lineinsulator3200.obj
 lineinsulator12500/lineinsulator12500.obj
 lineinsulator69000/lineinsulator69000.obj
 lineinsulator230000/lineinsulator230000.obj
+wirelesspaddleswitch/wirelesspaddleswitch.obj
+wirelesstoggleswitch/wirelesstoggleswitch.obj

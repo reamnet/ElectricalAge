@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": "eln:wireless_switch",
+    "M": "minecraft:iron_nugget",
+    "P": "eln:iron_plate"
+  },
+  "pattern": [
+    " M ",
+    "MLM",
+    " P "
+  ],
+  "result": {
+    "id": "eln:wireless_toggle_switch"
+  }
+}

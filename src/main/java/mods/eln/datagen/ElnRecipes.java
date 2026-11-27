@@ -3137,6 +3137,8 @@ public final class ElnRecipes extends ElnRecipesBase {
                 'r', dye(1),
                 'S', findItemStack("Signal Cable"));
         }
+        addRecipe(findItemStack("Multicolor LED vuMeter"), " W ", "WRW", " S ",
+            'W', "plankWood", 'R', stack(Items.REDSTONE), 'S', findItemStack("Signal Cable"));
         for (int idx = 0; idx < 4; idx++) {
             addRecipe(findItemStack("LED vuMeter", 1),
                 " W ",
@@ -3262,6 +3264,14 @@ public final class ElnRecipes extends ElnRecipesBase {
             'r', "itemRubber",
             'I', stack(Items.IRON_INGOT),
             'R', stack(Items.REDSTONE));
+
+        for (String style : new String[]{"Paddle", "Toggle"}) {
+            for (String action : new String[]{"Switch", "Button"}) {
+                addRecipe(findItemStack("Wireless " + style + " " + action), " M ", "MLM", " P ",
+                    'M', stack(style.equals("Paddle") ? Items.QUARTZ : Items.IRON_NUGGET),
+                    'L', findItemStack("Wireless " + action), 'P', findItemStack("Iron Plate"));
+            }
+        }
 
         addRecipe(findItemStack("Wireless Switch", 3),
             " a ",

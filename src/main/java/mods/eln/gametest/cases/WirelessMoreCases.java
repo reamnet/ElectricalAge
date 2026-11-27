@@ -25,6 +25,10 @@ public final class WirelessMoreCases {
     public static void addTo(List<TestCase> cases) {
         cases.add(new SourceCase("Wireless Switch", true));
         cases.add(new SourceCase("Wireless Button", false));
+        for (String style : List.of("Paddle", "Toggle")) {
+            cases.add(new SourceCase("Wireless " + style + " Switch", true));
+            cases.add(new SourceCase("Wireless " + style + " Button", false));
+        }
         cases.add(new RepeaterCase());
     }
 
@@ -70,9 +74,19 @@ public final class WirelessMoreCases {
 
         public void build(TestContext ctx) {
             String ch = "eln selftest " + device + " " + System.nanoTime();
-            SixNodeElement src = six(ctx, Ids.six(device), ctx.at(0, 1, 1));
+            var position = ctx.at(0, 1, 1);
+            boolean wall = device.contains("Paddle") || device.contains("Toggle");
+            SixNodeElement src;
+            if (wall) {
+                ctx.floor(position.north());
+                src = ctx.placeSix(Ids.six(device), position, mods.eln.misc.Direction.ZN);
+            } else {
+                src = six(ctx, Ids.six(device), position);
+            }
             channel(ctx, src, WirelessSignalSourceElement.setChannelId, ch);
             Wp9aCases.use(ctx, src, ItemStack.EMPTY);
+            if (wall) ctx.check("wall control publishes an active pulse after the click",
+                ((WirelessSignalSourceElement) src).getValue() > .9, device);
             rx = rx(ctx, ctx.at(3, 1, 1), ch);
         }
 

@@ -1,4 +1,4 @@
-// 26.3	2026-11-26T21:46:36.406579846	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-26T21:50:53.690307564	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -493,6 +493,7 @@ d86da4cbdb60c57deceee290e0bc95d1a5e17ce2 data/eln/advancement/recipes/misc/moder
 f5bb44fa55e3da53b55af497e7b3b9304fac427e data/eln/advancement/recipes/misc/multicolor_christmas_string_lights.json
 a01298ec8e541c6feab50f4e82db1222a81ec47b data/eln/advancement/recipes/misc/multicolor_deck_globe_string_lights.json
 0c4018766645b80208a8f77c1261cfdda79d118d data/eln/advancement/recipes/misc/multicolor_fairy_lights_on_green_wire.json
+60a84a4eaf8cd82c90e49045bfedc9fa720ae589 data/eln/advancement/recipes/misc/multicolor_led_vumeter.json
 5f60e6a82288cbdc568e258e697358216c6189ff data/eln/advancement/recipes/misc/multicolor_party_wash_light.json
 c212ab04301e827265d0e3361f91fb4211732103 data/eln/advancement/recipes/misc/multimeter.json
 a6ef80c26ea8732834a5244d79489b7a32f4b32b data/eln/advancement/recipes/misc/mushroom_walkway_light.json
@@ -766,10 +767,14 @@ c87859e4e4005ff548002d8a8fbe1fbec6d2539b data/eln/advancement/recipes/misc/wire_
 1bfaaf8fc2dfdb68971b17c546361d7a9ab1a025 data/eln/advancement/recipes/misc/wire_snips.json
 afa486babb76c44ae3518be8dedbab4a38596d42 data/eln/advancement/recipes/misc/wireless_analyser.json
 d9136945c9ca7ee9877abb74f871d8bd194f8105 data/eln/advancement/recipes/misc/wireless_button.json
+5241ec461aaa944f857061ca783b853872cac2ca data/eln/advancement/recipes/misc/wireless_paddle_button.json
+e18f810e068a47a9d05e5961dbe9fbb8c504269e data/eln/advancement/recipes/misc/wireless_paddle_switch.json
 a7c4d98bb61c1f2c0c89818c55e4b8dbf9c4feb5 data/eln/advancement/recipes/misc/wireless_signal_receiver.json
 84c090ae9caccefc4704bee133faa782e2e361e8 data/eln/advancement/recipes/misc/wireless_signal_repeater.json
 ccafd42c326caca27ed5482a65beb3adccfdfe44 data/eln/advancement/recipes/misc/wireless_signal_transmitter.json
 04bb3f018383fea849e2f12d8241de21a4e59cac data/eln/advancement/recipes/misc/wireless_switch.json
+654e651d8212dc89f37b50b6349b19255cc7b09d data/eln/advancement/recipes/misc/wireless_toggle_button.json
+342b5db5bcf9f15522d86200306f22e026abb0af data/eln/advancement/recipes/misc/wireless_toggle_switch.json
 a8f1b3c688cd59274fcedf0e6b88746f923ab6be data/eln/advancement/recipes/misc/wrench.json
 711dfaf02c2d5a8770ab0c640a52639ad764630d data/eln/advancement/recipes/misc/x_ray_scanner.json
 e46ace98665bbeee9e00c278a1a7d497e969c14a data/eln/advancement/recipes/misc/xnor_chip.json
@@ -1269,6 +1274,7 @@ b937a3eff0a8f08a2d43f6bc97d126a15a5689fa data/eln/recipe/monster_filter.json
 24cacc633be4f3d04d06b2b328099c6685c5231e data/eln/recipe/multicolor_christmas_string_lights.json
 2e51d8d3a5245a014c7b9019570bb2b86c7867cf data/eln/recipe/multicolor_deck_globe_string_lights.json
 7802de08062fbc22a0440d4a29813f52a1816399 data/eln/recipe/multicolor_fairy_lights_on_green_wire.json
+e78d41db2622e8ac36422c8f165d619941d2f7d4 data/eln/recipe/multicolor_led_vumeter.json
 63440da394dcffe0fef71e82a0f7e2aca76d1fba data/eln/recipe/multicolor_party_wash_light.json
 8d83f9c1dee7864768cf6ca50fb939e1a46589e2 data/eln/recipe/multimeter.json
 0f03e108a6487142dbc0b24592a6f8d4c5386e15 data/eln/recipe/mushroom_walkway_light.json
@@ -1542,10 +1548,14 @@ f53101aadc360204fef8fbf7f982178aeb4c44b0 data/eln/recipe/wire_roller.json
 e50ab6a1cfd1732c084ccabff8d3605b1a452a00 data/eln/recipe/wire_snips.json
 0d5e60a659bdc098e7501d88ccc4bbce32cf920c data/eln/recipe/wireless_analyser.json
 413fb989065bf14dae491c0ef8284db59175f6f6 data/eln/recipe/wireless_button.json
+340ab24dad5c60caf190d9a31125e7185d605601 data/eln/recipe/wireless_paddle_button.json
+6e2c9e74028d65d4016732f2a9b82cb9e0cf180c data/eln/recipe/wireless_paddle_switch.json
 ee218e366e10d4332393345631c21c46e9f20e14 data/eln/recipe/wireless_signal_receiver.json
 21900a1baee6de70835762cc869f361c66bc962c data/eln/recipe/wireless_signal_repeater.json
 110a74a295869e6598f07c9a0591811c90a8469c data/eln/recipe/wireless_signal_transmitter.json
 2aa80bdf0ced9790038afef366d4fb061b32b44f data/eln/recipe/wireless_switch.json
+1199ab542911a807483f84facd4ce4b7c2838eec data/eln/recipe/wireless_toggle_button.json
+728946cb7366629076daaac863a592e5798742fc data/eln/recipe/wireless_toggle_switch.json
 70a6fa520a0520df820571a179a523681a424518 data/eln/recipe/wrench.json
 2f2f8a4598e0d3be079b4f9bf6f62ea4d4c88856 data/eln/recipe/x_ray_scanner.json
 02eb92669440cbf1416a7b736c662a893dbbaf87 data/eln/recipe/xnor_chip.json
