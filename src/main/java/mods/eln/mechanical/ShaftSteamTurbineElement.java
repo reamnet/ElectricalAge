@@ -44,7 +44,7 @@ import java.util.Map;
  * manual control duplicates the safeties): an overdriven shaft races to its burst speed. Water in the
  * inlet strips its blades (repaired with a Turbine Blade Set); over BURST_PA its casing bursts.
  */
-public class ShaftSteamTurbineElement extends SimpleShaftElement implements FluidDevice, mods.eln.fluid.FluidPlacement.Turnable {
+public class ShaftSteamTurbineElement extends SimpleShaftElement implements FluidDevice, mods.eln.fluid.FluidPlacement.Turnable, mods.eln.oil.GhostCells.Host {
     /** Shaft power at its rating (W), the rating (saturated steam, venting to air), the casing's burst (Pa). */
     public static final double NOMINAL_P = SteamTurbineSpec.HP.nominalP, NOMINAL_PA = SteamTurbineSpec.HP.nominalPa, BURST_PA = SteamTurbineSpec.HP.burstPa;
     /** Work per kg out of the ideal (isentropic) expansion: a big multi-stage turbine does better than the 50V/200V. */
@@ -63,6 +63,8 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
     /** Inlet and exhaust: two seconds of nominal steam at ~10 bar (kg/m^3), and the ports (m^3: an alloy pipe's end). */
     public static final double TARGET_MAX_BAR = SteamTurbineSpec.HP.targetMaxBar;
 
+    public static final int BLADE_SLOT = 1;
+    private final mods.eln.oil.GhostCells portCells = new mods.eln.oil.GhostCells();
     final SteamTurbineDescriptor desc;
     /** Its ratings (HP or LP). */
     public final SteamTurbineSpec spec;
@@ -82,7 +84,8 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         super(node, d);
         desc = (SteamTurbineDescriptor) d;
         spec = desc.spec();
-        controls = new SteamValveControl(this, () -> this.inlet == null ? 0 : this.inlet.P(), spec.nominalPa / 1e5, spec.targetMaxBar);
+        controls = new SteamValveControl(this, () -> this.inlet == null ? 0 : this.inlet.P(), spec.nominalPa / 1e5,
+            spec.targetMaxBar, desc.getLargeLayout() ? 2 : 1);
         slowProcessList.add(new NodePeriodicPublishProcess(node, 2, 1));
         slowProcessList.add(controls.pressure);
         slowProcessList.add(new Run());
@@ -95,7 +98,7 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
 
     @Override
     public double getShaftInertia() {
-        return ShaftNetworkKt.inertiaOf(desc().spec().h, desc().spec().nominalP, RATED_RADS);
+        return ShaftNetworkKt.inertiaOf(desc().spec().h, desc().spec().nominalP, desc().spec().ratedRads);
     }
 
     /** Steam (kg/s) at its rating. */
@@ -173,9 +176,9 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         // governor: 5 % droop, a short valve lag; a trip shuts it over TRIP until back under rated speed
         // (manual control, Baughn 2026-10-29: the valve is the player's; no governor, no trip: their safeties)
         boolean manual = controls.isManual();
-        if (manual || rads < RATED_RADS) tripped = false;
-        else if (rads > TRIP * RATED_RADS) tripped = true;
-        double target = manual ? 1 : tripped ? 0 : Math.max(0, Math.min(1, (RATED_RADS * (1 + DROOP) - rads) / (DROOP * RATED_RADS)));
+        if (manual || rads < spec.ratedRads) tripped = false;
+        else if (rads > TRIP * spec.ratedRads) tripped = true;
+        double target = manual ? 1 : tripped ? 0 : Math.max(0, Math.min(1, (spec.ratedRads * (1 + DROOP) - rads) / (DROOP * spec.ratedRads)));
         // the governor asks for a share of rated flow, so its valve opens less on an inlet over its rated pressure
         // (else its gain grew with the pressure: an LP on ten times its rating overshot past 850 rad/s)
         double p = inlet.P();
@@ -187,8 +190,16 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         // ten times its rating leaked 2 g/s through a shut governor and crept to its trip; AdventurAgent 2026-10-29)
         // A throttle at 0 % is its stop valve, shut tight: no leak (Baughn 2026-11-10).
         double limit = controls.limit();
-        turbine.open = tripped || limit <= 0 ? 0 : LEAK * Math.min(1, spec.nominalPa / Math.max(1, p)) + (1 - LEAK) * open;
+        // The larger rotor keeps the seal leakage of the small stage, not 27 times its idle flow.
+        double leak = desc.getLargeLayout() ? LEAK / 27 : LEAK;
+        turbine.open = tripped || limit <= 0 || (desc.getLargeLayout() && blade() == null) ? 0
+            : leak * Math.min(1, spec.nominalPa / Math.max(1, p)) + (1 - leak) * open;
         turbine.drop = Water.isentropicDrop(inlet.T(), inlet.pVapour(), exhaustPa());
+        if (desc.getLargeLayout()) {
+            double angle = (rads - spec.ratedRads) / (spec.ratedRads * 1.1) * Math.PI / 2;
+            // The fluid solver removes the same efficiency-adjusted work that it offers to the shaft.
+            turbine.drop *= Math.pow(Math.max(0, Math.cos(angle)), 3);
+        }
         // nothing piped to the exhaust: it goes into the air
         exhaustPiped = false;
         for (var e : FluidWorld.edgesOf(exhaust)) exhaustPiped |= e != turbine.edge && (exhaustVent == null || e != exhaustVent.edge);
@@ -203,15 +214,18 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         double rads = getShaft().getRads();
         // the work onto the shaft, under its torque limit; what the shaft can't take goes back into the steam
         double offered = Math.max(0, turbine.edge.workJ);
-        double work = getShaft().drive(offered / time, time, 2 * spec.nominalP / RATED_RADS);
+        double work = getShaft().drive(offered / time, time, 2 * spec.nominalP / spec.ratedRads);
         unspent = offered - work;
-        double r = rads / RATED_RADS;
-        double windage = Math.min(getShaft().getEnergy(), WINDAGE * spec.nominalP * r * r * r * time);
+        double r = rads / spec.ratedRads;
+        // Legacy output is 27 times larger, but its 200 rad/s casing does not run at the small HP stage's speed.
+        double dragRating = desc.getLargeLayout() ? 3 * SteamTurbineSpec.HP.nominalP : spec.nominalP;
+        double windage = Math.min(getShaft().getEnergy(), WINDAGE * dragRating * r * r * r * time);
         getShaft().setEnergy(getShaft().getEnergy() - windage);
         totalWindage += windage;
         double got = Math.max(0, turbine.edge.fVapour + turbine.edge.fLiquid) * time;   // (its steam: the air in it makes no work)
         totalKg += got;
         totalWork += work;
+        if (desc.getLargeLayout() && work > 0) wearBlade(time);
         totalInJ += Math.max(0, turbine.edge.fEnthalpy) * time;
         carryOver(time);
         // meters
@@ -222,6 +236,26 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
             steamKgPerS = meterKg / meterTime;
             shaftW = meterJ / meterTime;
             meterKg = meterJ = meterTime = 0;
+            needPublish();
+        }
+    }
+
+    private TurbineBladeItem blade() {
+        var stack = controls.inventory.getItem(BLADE_SLOT);
+        var blade = TurbineBladeItem.Companion.getDescriptor(stack);
+        return blade != null && blade.getCondition(stack) > 0 ? blade : null;
+    }
+
+    private void wearBlade(double time) {
+        var blade = blade();
+        if (blade == null || blade.getInfiniteLifeEnabled()) return;
+        var stack = controls.inventory.getItem(BLADE_SLOT);
+        // ForkPatch's plain steam has temperature factor 0.15 and no corrosiveness.
+        double wear = (1 + 0.15 * 2 / blade.getTemperatureResistance()) * time / (blade.getNominalLifeInHours() * 3600);
+        double condition = blade.getCondition(stack) - wear;
+        if (condition > 0) blade.setCondition(stack, condition);
+        else {
+            controls.inventory.setItem(BLADE_SLOT, ItemStack.EMPTY);
             needPublish();
         }
     }
@@ -277,7 +311,7 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
             if (inlet.P() > spec.burstPa)
                 new Failure(ShaftSteamTurbineElement.this).pressureVessel(() -> inlet.energy - inlet.mWater * Water.uLiquid(Water.TB))
                     .fail(FailureCause.OVERPRESSURE, inlet.P());
-            else if (!spec.wetBraking && rads > WATER_SPEED * RATED_RADS && wetShare() > WATER_MAX)
+            else if (!spec.wetBraking && rads > WATER_SPEED * spec.ratedRads && wetShare() > WATER_MAX)
                 new Failure(ShaftSteamTurbineElement.this).fail(FailureCause.WATER, wetShare());
             else if (spec.wetBraking) wet(rads, time);
         }
@@ -285,7 +319,7 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
 
     /** An LP turbine's wet steam this step (spec.wetBraking): braking, knocking, and its blades if it lasts. */
     void wet(double rads, double time) {
-        double w = wetShare(), r = rads / RATED_RADS;
+        double w = wetShare(), r = rads / spec.ratedRads;
         brakeW = 0;
         if (r > WATER_SPEED && w > WET_START) {
             brakeW = WET_BRAKE * spec.nominalP * Math.min(1, w / WATER_MAX) * r;
@@ -385,13 +419,25 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         return ports;
     }
 
+    @Override
+    public boolean thermalFace(int x, int y, int z, Direction side) {
+        return false;
+    }
+
+    @Override
+    public ThermalLoad shell() {
+        return null;
+    }
+
     /** Its ports, from where it faces now (a turned turbine's exhaust moves with it). */
     @Override
     public void remakePorts() {
         long pos = node.coordonate.pos().asLong();
-        ports = List.of(new FluidPort(inlet, pos, 1, 1.0, spec.portK),   // the inlet on top
+        long inletPos = desc.getLargeLayout() ? node.coordonate.pos().above(2).asLong() : pos;
+        long exhaustPos = desc.getLargeLayout() ? node.coordonate.pos().above().relative(exhaustSide().toEnumFacing()).asLong() : pos;
+        ports = List.of(new FluidPort(inlet, inletPos, 1, 1.0, spec.portK),   // the inlet on top
             // the exhaust behind: made for a large alloy pipe (low-pressure steam, to an LP turbine or a condenser)
-            new FluidPort(exhaust, pos, exhaustSide().toEnumFacing().get3DDataValue(), 0.5, mods.eln.node.voxel.PipePart.LARGE_END_K));
+            new FluidPort(exhaust, exhaustPos, exhaustSide().toEnumFacing().get3DDataValue(), 0.5, mods.eln.node.voxel.PipePart.LARGE_END_K));
     }
 
     @Override
@@ -430,7 +476,7 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
     public void initialize() {
         controls.computeInventory();
         var c = node.coordonate;
-        double volume = spec.nominalKgPerS * 2 / spec.inletRho;
+        double volume = desc.getLargeLayout() ? SteamTurbineSpec.LARGE_BUFFER_VOLUME : spec.nominalKgPerS * 2 / spec.inletRho;
         inlet = new FluidNode(volume, c.y, 1.0, false);
         exhaust = new FluidNode(volume, c.y, 1.0, false);
         double T = mods.eln.sim.Ambient.kelvin(c);
@@ -440,6 +486,13 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         exhaustVent = new FluidDevice.Vent(exhaust, 0.5, mods.eln.node.voxel.PipePart.LARGE_END_K);
         remakePorts();
         super.initialize();
+        if (desc.getLargeLayout()) portCells.make(this, List.of(new int[]{0, 2, 0}, new int[]{1, 1, 0}));
+    }
+
+    @Override
+    public void onBreakElement() {
+        portCells.drop();
+        super.onBreakElement();
     }
 
     private static void load(FluidNode n, double[] saved, double T) {
@@ -482,6 +535,16 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
             controls.serialize(stream);
             stream.writeFloat(tripped ? 0 : (float) Math.min(gate, controls.limit));   // (the governor valve's stem)
             stream.writeBoolean(brakeW > 0);   // (wet steam knocking)
+            if (desc.getLargeLayout()) {
+                var installed = blade();
+                stream.writeByte(installed == null ? -1 : switch (installed.getTierName()) {
+                    case "iron" -> 0;
+                    case "steel" -> 1;
+                    case "alloy" -> 2;
+                    case "tungsten" -> 3;
+                    default -> -1;
+                });
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -521,6 +584,7 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
     public String status() {
         double rads = getShaft().getRads();
         if (tripped) return I18N.tr("Tripped: overspeed");
+        if (desc.getLargeLayout() && blade() == null) return I18N.tr("Install a turbine blade");
         if (brakeW > 0) return I18N.tr("Braking: wet steam");
         if (spec.wetBraking && exhaustPiped && exhaustPa() > 3 * spec.ratedExhaustPa)
             return String.format(I18N.tr("Low vacuum: %.2f bar behind it"), exhaustPa() / 1e5);
@@ -528,7 +592,7 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
             return String.format(I18N.tr("Venting to air: put a condenser at its %s side"), compass(exhaustSide()));
         if (inlet == null || steamKgPerS < 1e-4) return controls.limit <= 0.001 ? I18N.tr("Shut: its valve is closed") : I18N.tr("No steam at its inlet");
         if (controls.isManual()) return I18N.tr("Manual control: no governor or trip");
-        if (rads > RATED_RADS) return I18N.tr("Governing: speed held, valve easing");
+        if (rads > spec.ratedRads) return I18N.tr("Governing: speed held, valve easing");
         return I18N.tr("Running");
     }
 
@@ -545,7 +609,8 @@ public class ShaftSteamTurbineElement extends SimpleShaftElement implements Flui
         if (wetShare() > 0.01) info.put(I18N.tr("Water in its way"), String.format("%.0f%%%s", wetShare() * 100,
             brakeW > 0 ? ", braking " + mods.eln.api.Meters.watts(brakeW) : ""));
         info.put(I18N.tr("Steam valve"), tripped ? I18N.tr("tripped by overspeed") : Utils.plotPercent(Math.min(gate, controls.limit)));
-        info.put(I18N.tr("Governor"), controls.isManual() ? I18N.tr("off: manual control, no overspeed trip") : I18N.tr("automatic, trips over 880 rad/s"));
+        info.put(I18N.tr("Governor"), controls.isManual() ? I18N.tr("off: manual control, no overspeed trip")
+            : String.format(I18N.tr("automatic, trips over %.0f rad/s"), spec.ratedRads * TRIP));
         info.put(I18N.tr("Control"), controls.controlExternal ? String.format("external, %.0f%%", controls.limit * 100)
             : controls.hasRegulator() ? String.format("holds %.1f bar at the inlet", controls.targetBar) : String.format("throttle %.0f%%", controls.throttle * 100));
         return info;

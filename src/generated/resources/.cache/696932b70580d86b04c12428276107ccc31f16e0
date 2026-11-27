@@ -1,4 +1,4 @@
-// 26.3	2026-11-26T23:40:14.984146867	eln-global/EA models
+// 26.3	2026-11-27T11:09:45.336530219	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/12.5_kv_cable_feed_insulator.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/12.5_kv_line_insulator.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
@@ -163,8 +163,10 @@ f129897addd25f967e19a97a4f915b341261ab7a assets/eln/blockstates/cinnabar_ore.jso
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/joint.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/joint_hub.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/large_boiler.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/large_generator.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/large_rheostat.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/large_standby_gasoline_generator.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/large_steam_turbine.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/large_watermill_3_2kv.json
 c2bee1c6fc75056694c923c1c2dcff8af9479337 assets/eln/blockstates/lead_ore.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/life_oriented_battery.json
@@ -901,8 +903,10 @@ ddfd8ed2bdcafbca54e67237e525a57e085c7254 assets/eln/items/joint_hub.json
 7945c5d61f21bc796a14080a3afaa19717ae0ddc assets/eln/items/lapis_dust.json
 7b7d13e1cbb345a4ae89c5755954a41100bdcc46 assets/eln/items/large_area_floodlight.json
 0b85c5ff994534e6237b71e9657f4f08c1338a38 assets/eln/items/large_boiler.json
+21c16a6e84bc74df3957b64c46f78b9d1dfd957f assets/eln/items/large_generator.json
 6fa5f36f2359eef09ec258cef8df2b9ecadc5541 assets/eln/items/large_rheostat.json
 f3e4369c2d4d1fac99f31e2eed15fe5fd6bf0ce8 assets/eln/items/large_standby_gasoline_generator.json
+cafdd25f5dffcc4f436ea0c1514a9a410f69063a assets/eln/items/large_steam_turbine.json
 ec3a3c4f2a33fada02f318dfb527e4d51c373e9e assets/eln/items/large_watermill_3_2kv.json
 27581d3e46e0fbfd3d4b0766eae144d72acf35c0 assets/eln/items/lead_clutch_plate.json
 39375cf9931032f368d740c01525801b78cb4282 assets/eln/items/lead_dust.json
@@ -2126,10 +2130,14 @@ a08c6f26657d88d6a492331743ff23fc938638ad assets/eln/models/item/lapis_dust.json
 58debc0cdc99f27e0b8f9ba68da80a0ec1fa6293 assets/eln/models/item/large_area_floodlight.json
 d138a91656a57a6acd3a1a346d2fb264769787f1 assets/eln/models/item/large_area_floodlight_3d.json
 fd34f77ef873717b6f096a511d9b6e179f128783 assets/eln/models/item/large_boiler.json
+dffff606055c97a1d6e63f278589c32cff9f0c7d assets/eln/models/item/large_generator.json
+cb6e83ba8c3fd584e9c3901d7d436f90acda7f5d assets/eln/models/item/large_generator_3d.json
 5445ae3a259c6d779aa9c67f0696d3845ccb939d assets/eln/models/item/large_rheostat.json
 6632e98585cc4a531dcba433bf0654ecd4a8d013 assets/eln/models/item/large_rheostat_3d.json
 076e6a3e4059459aa946420ff4997c236f21dc5b assets/eln/models/item/large_standby_gasoline_generator.json
 fa601b4ffdc3a069d6ddf726ce6b647b76ef94db assets/eln/models/item/large_standby_gasoline_generator_3d.json
+e3794d513141190baa442a177ccccfd77a88b8f4 assets/eln/models/item/large_steam_turbine.json
+fded79d874616b3a3d4a2dd2dd4a5c603cd4ce33 assets/eln/models/item/large_steam_turbine_3d.json
 0daa0b3b4fce9552828d53f0d64f7f0a6cc2963e assets/eln/models/item/large_watermill_3_2kv.json
 e6e880392d87670a714bef6f1922fe6970b42953 assets/eln/models/item/large_watermill_3_2kv_3d.json
 904268fd7b8aff6204329db9d29910b9a8adac15 assets/eln/models/item/lead_clutch_plate.json

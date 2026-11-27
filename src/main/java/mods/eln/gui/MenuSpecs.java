@@ -282,6 +282,11 @@ public final class MenuSpecs {
         put(mods.eln.oil.SteamGeneratorDescriptor.class, d -> MenuSpec.of(
             descriptor(mods.eln.oil.SteamGeneratorElement.REGULATOR_SLOT, 8, 58, 1, IRegulatorDescriptor.class, MEDIUM, tr("Regulator slot"),
                 tr("Holds a target inlet pressure"))).publishing(0));
+        put(mods.eln.mechanical.LargeSteamTurbineDescriptor.class, d -> MenuSpec.of(
+            descriptor(mods.eln.oil.SteamValveControl.REGULATOR_SLOT, 8, 58, 1, IRegulatorDescriptor.class, MEDIUM, tr("Regulator slot"),
+                tr("Holds a target inlet pressure")),
+            descriptor(mods.eln.mechanical.ShaftSteamTurbineElement.BLADE_SLOT, 27, 58, 1, mods.eln.mechanical.TurbineBladeItem.class,
+                MEDIUM, tr("Turbine blade"))).publishing(0));
         put(mods.eln.mechanical.SteamTurbineDescriptor.class, d -> MenuSpec.of(
             descriptor(mods.eln.oil.SteamValveControl.REGULATOR_SLOT, 8, 58, 1, IRegulatorDescriptor.class, MEDIUM, tr("Regulator slot"),
                 tr("Holds a target inlet pressure"))).publishing(0));

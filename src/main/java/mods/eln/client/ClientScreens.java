@@ -98,6 +98,7 @@ final class ClientScreens {
         layout("transparentnode.heatfurnace.HeatFurnaceDescriptor", "heat_furnace");
         layout("oil.SteamGeneratorDescriptor", "steam_turbine");
         layout("mechanical.SteamTurbineDescriptor", "shaft_steam_turbine");
+        layout("mechanical.LargeSteamTurbineDescriptor", "large_steam_turbine");
         layout("transparentnode.FuelHeatFurnaceDescriptor", "fuel_heat_furnace");
         layout("oil.ElectricHeaterDescriptor", "electric_heater");
         mods.eln.client.gui.ElnLayouts.register(mods.eln.sixnode.lampsocket.LampSocketDescriptor.class,

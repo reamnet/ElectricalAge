@@ -1006,6 +1006,25 @@ public final class ElnRecipes extends ElnRecipesBase {
             'M', findItemStack("Advanced Machine Block"),
             'E', findItemStack("Copper Cable")
         );
+        addRecipe(findItemStack("Large Steam Turbine"),
+            "TTT",
+            "RMR",
+            "SAS",
+            'T', findItemStack("Turbine Blade Set"),
+            'R', findItemStack("Reinforced Shaft"),
+            'M', findItemStack("Copper Thermal Cable"),
+            'S', firstExistingOre("ingotAluminum", "ingotSteel"),
+            'A', findItemStack("Advanced Machine Block"));
+        // ForkPatch used its retired High Current Cable item here. Native Copper Cable is the bulk-current ingredient.
+        addRecipe(findItemStack("Large Generator"),
+            "CMC",
+            "RWR",
+            "CHC",
+            'C', findItemStack("Motor Cowling"),
+            'M', findItemStack("Advanced Machine Block"),
+            'R', findItemStack("Reinforced Shaft"),
+            'W', findItemStack("Heavy Winding"),
+            'H', findItemStack("Copper Cable"));
         addRecipe(findItemStack("Fixed Shaft"),
             "iBi",
             " c ",

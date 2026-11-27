@@ -55,11 +55,15 @@ public final class SteamValveControl {
     };
 
     public SteamValveControl(TransparentNodeElement element, DoubleSupplier inletPa, double defaultTargetBar, double targetMaxBar) {
+        this(element, inletPa, defaultTargetBar, targetMaxBar, 1);
+    }
+
+    public SteamValveControl(TransparentNodeElement element, DoubleSupplier inletPa, double defaultTargetBar, double targetMaxBar, int slots) {
         this.element = element;
         this.inletPa = inletPa;
         this.targetBar = defaultTargetBar;
         this.targetMaxBar = targetMaxBar;
-        inventory = new TransparentNodeElementInventory(1, 1, element);
+        inventory = new TransparentNodeElementInventory(slots, 1, element);
     }
 
     /** Under manual control (no governor, no trip): manual mode, or external control. */

@@ -30,7 +30,7 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 
 
-class GeneratorDescriptor(
+class GeneratorDescriptor @JvmOverloads constructor(
     name: String,
     obj: Obj3D,
     cable: ElectricalCableDescriptor,
@@ -39,6 +39,7 @@ class GeneratorDescriptor(
     powerOutPerDeltaU: Float,
     nominalP: Float,
     thermalLoadInitializer: ThermalLoadInitializer,
+    large: Boolean = false,
     ) :
     SimpleShaftDescriptor(name, GeneratorElement::class, null) {
 
@@ -50,11 +51,14 @@ class GeneratorDescriptor(
     val nominalP = nominalP
     val nominalU = nominalU
     val generationEfficiency = 0.95
+    /** ForkPatch's field regulator limits generation to 150% of rated current. */
+    val currentLimit = if (large) 1.5 * nominalP / nominalU else Double.POSITIVE_INFINITY
     /** Steady temperature at nominal output, as a fraction of the thermal warm limit. */
     val nominalHeatFraction = 0.65
-    // (no single shaft loop: GeneratorRender plays MachineSounds)
+    override val sound = if (large) "eln:generator" else null
 
     init {
+        if (large) useLargeLayout()
         // WP16b: sized from the heat the generator really makes at nominal output (loss P(1/eff - 1) plus the
         // drag share), so that it sits at nominalHeatFraction of its warm limit there and overheats only on
         // overload (~1.6 x nominal). 1.7.10 sized it at P(1 - eff) but heated it with 1/20 of its loss.
@@ -76,8 +80,10 @@ class GeneratorDescriptor(
     }
 
     override val obj = obj
-    override val static = arrayOf(obj.getPart("main")).requireNoNulls()
-    override val rotating = arrayOf(obj.getPart("rotor")).requireNoNulls()
+    override val static = if (large) arrayOf(obj.getPart("Cowl"), obj.getPart("Stand")).requireNoNulls()
+        else arrayOf(obj.getPart("main")).requireNoNulls()
+    override val rotating = arrayOf(obj.getPart(if (large) "Shaft" else "rotor")).requireNoNulls()
+    val lights = if (large) Array(7) { requireNotNull(obj.getPart("LED_$it")) } else emptyArray()
 
     override fun addInformation(stack: ItemStack, player: Player?, list: MutableList<String>, par4: Boolean) {
         list.add("Converts mechanical energy into electricity, or (badly) vice versa.")
@@ -85,22 +91,34 @@ class GeneratorDescriptor(
         list.add(Utils.plotVolt("  Voltage out: ", nominalU.toDouble()))
         list.add(Utils.plotPower("  Power out: ", nominalP.toDouble()))
         list.add(Utils.plotRads("  Rads: ", nominalRads.toDouble()))
-        list.add(Utils.plotRads("Max rads:  ", absoluteMaximumShaftSpeed))
+        list.add(Utils.plotRads("Max rads:  ", shaftSpeedLimit))
     }
 }
 
 class GeneratorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
     val entity = entity
 
-    override val cableRender = Eln.stdCableRender800V
     val desc = desc_ as GeneratorDescriptor
+    override val cableRender = if (desc.largeLayout) Eln.stdCableRender3200V else Eln.stdCableRender800V
     /** Current over nominal, either way (motor or generator): the electrical hum's loudness. */
     val load = SlewLimiter(1f)
 
     init {
         // hum by current, rotor tones and air by speed: running up as a motor, it chirps (jrddunbr)
-        MachineSounds.electric(coordonate(), { rads / desc.nominalRads }, { load.position.toDouble() }, 1f, 0f, 1f)
-            .forEach { addLoopedSound(it) }
+        if (!desc.largeLayout) MachineSounds.electric(coordonate(), { rads / desc.nominalRads },
+            { load.position.toDouble() }, 1f, 0f, 1f).forEach { addLoopedSound(it) }
+    }
+
+    override fun draw() {
+        draw {
+            for ((i, led) in desc.lights.withIndex()) {
+                val on = load.position * desc.lights.size > i
+                if (on) mods.eln.gl.GL11.glColor4f(0.3f, 1f, 0.25f, 1f)
+                else mods.eln.gl.GL11.glColor4f(0.35f, 0.35f, 0.35f, 1f)
+                led.draw()
+            }
+            mods.eln.gl.GL11.glColor4f(1f, 1f, 1f, 1f)
+        }
     }
 
     override fun refresh(deltaT: Float) {
@@ -109,7 +127,7 @@ class GeneratorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescr
     }
 
     override fun getCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
-        if (lrdu == LRDU.Down && side == front) return Eln.stdCableRender800V
+        if (lrdu == LRDU.Down && side == front) return cableRender
         return null
     }
 
@@ -117,6 +135,7 @@ class GeneratorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescr
         super.networkUnserialize(stream)
         val power = stream.readDouble()
         load.target = Math.min(1.0, Math.abs(power / desc.nominalP)).toFloat()
+        if (desc.largeLayout) volumeSetting.target = if (rads > 0.05) 0.05f + load.target / 4 else 0f
     }
 }
 
@@ -177,8 +196,10 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
             // Motoring is deliberately uncapped (Baughn 2026-10-09): a stalled motor on a stiff supply draws k (U - E) and
             // overheats; inrush protection is the player's job.
             val th = positiveLoad.getSubSystem().getTh(positiveLoad, electricalPowerSource)
-            val Ut = DroopLaw.terminalU(th, targetU, desc.powerOutPerDeltaU.toDouble())
-            electricalPowerSource.setU(Ut)
+            val droopU = DroopLaw.terminalU(th, targetU, desc.powerOutPerDeltaU.toDouble())
+            val u = if (desc.largeLayout && !th.isHighImpedance && th.R > 0 && droopU > th.U)
+                Math.min(droopU, th.U + desc.currentLimit * th.R) else droopU
+            electricalPowerSource.setU(u)
         }
 
         override fun rootSystemPreStepProcess() {

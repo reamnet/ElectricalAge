@@ -26,15 +26,28 @@ abstract class SimpleShaftDescriptor(name: String, elm: KClass<out TransparentNo
     // If you set this you should also set volumeSetting in render.
     // (Otherwise it'll stick to 100% volume.)
     internal open val sound: String? = null
+    var largeLayout = false
+        protected set
+    val shaftSpeedLimit: Double get() = if (largeLayout) 250.0 else absoluteMaximumShaftSpeed
+
+    protected fun useLargeLayout() {
+        largeLayout = true
+        val group = mods.eln.ghost.GhostGroup()
+        for (x in -1..1) for (y in 0..2) for (z in -1..1) {
+            if (y == 0 && (x != 0 || z == 0)) continue
+            group.addElement(x, y, z)
+        }
+        setGhostGroup(group)
+    }
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
     }
     open fun draw(angle: Double) {
-        drawModel(angle)
+        drawModel(angle) { it.draw() }
     }
 
-    private fun drawModel(angle: Double) {
+    protected fun drawModel(angle: Double, drawRotating: (Obj3D.Obj3DPart) -> Unit) {
         for (part in static) {
             part.draw()
         }
@@ -42,14 +55,15 @@ abstract class SimpleShaftDescriptor(name: String, elm: KClass<out TransparentNo
             assert(rotating.size > 0)
             // (about the shaft line through the rotor's origin, from its NAME.txt: docs/models/shaft.md)
             val r = rotating[0]
-            val ox = r.getFloat("originX").toDouble()
-            val oy = r.getFloat("originY").toDouble()
-            val oz = r.getFloat("originZ").toDouble()
+            val centre = if (largeLayout) r.boundingBox().centre() else null
+            val ox = centre?.x ?: r.getFloat("originX").toDouble()
+            val oy = centre?.y ?: r.getFloat("originY").toDouble()
+            val oz = centre?.z ?: r.getFloat("originZ").toDouble()
             GL11.glTranslated(ox, oy, oz)
             GL11.glRotatef(((angle * 360).toDouble() / 2.0 / Math.PI).toFloat(), 0f, 0f, 1f)
             GL11.glTranslated(-ox, -oy, -oz)
             for (part in rotating) {
-                part.draw()
+                drawRotating(part)
             }
         }
     }
@@ -106,7 +120,10 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     val volumeSetting = SlewLimiter(0.5f)
 
     inner private class ShaftSoundLooper(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
-        override fun getPitch() = Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat()
+        override fun getPitch(): Float {
+            val pitch = Math.max(0.05, rads / desc.shaftSpeedLimit).toFloat()
+            return if (desc.largeLayout && desc is GeneratorDescriptor) pitch * 2 else pitch
+        }
         override fun getVolume() = volumeSetting.position
     }
 
@@ -136,13 +153,17 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     /**
      * But, optionally, do some more drawing in the block context.
      */
-    fun draw(extra: () -> Unit) {
+    fun draw(model: (Double) -> Unit = desc::draw, extra: () -> Unit) {
         preserveMatrix {
             front.glRotateXnRef()
+            if (desc.largeLayout) {
+                GL11.glTranslatef(0f, 1f, 0f)
+                GL11.glScalef(3f, 3f, 3f)
+            }
             if (front == Direction.XP || front == Direction.ZP)
-                desc.draw(angle)
+                model(angle)
             else
-                desc.draw(-angle);
+                model(-angle)
 
             extra()
         }
@@ -192,15 +213,38 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
 
     init {
         val exp = Failure(this).rotating { shaft.energy }
-        slowProcessList.add(createShaftWatchdog(this).set(exp));
+        slowProcessList.add(mods.eln.sim.process.destruct.ShaftSpeedWatchdog(this,
+            (desc_ as SimpleShaftDescriptor).shaftSpeedLimit).set(exp))
     }
 
     override val shaftConnectivity: Array<Direction>
         get() = arrayOf(front.left(), front.right())
 
+    override fun shaftPort(side: Direction): Coordonate {
+        val at = Coordonate(coordonate())
+        if ((transparentNodeDescriptor as SimpleShaftDescriptor).largeLayout) {
+            at.move(Direction.YP)
+            at.move(side)
+        }
+        return at
+    }
+
     override fun initialize() {
+        if ((transparentNodeDescriptor as SimpleShaftDescriptor).largeLayout) {
+            for (side in shaftConnectivity) {
+                val at = shaftPort(side)
+                val existing = mods.eln.node.NodeManager.instance.getNodeFromCoordonate(at)
+                if (existing == null || existing is ShaftPortNode)
+                    ShaftPortNode(this).onBlockPlacedBy(at, front, null, null)
+            }
+        }
         reconnect()
         shaft.connectShaft(this)
+    }
+
+    override fun unload() {
+        shaft.disconnectShaft(this)
+        super.unload()
     }
 
     override fun onBreakElement() {
@@ -214,6 +258,7 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
      * following its front.
      */
     override fun wrenchTurn(player: net.minecraft.world.entity.player.Player?): Boolean {
+        if ((transparentNodeDescriptor as SimpleShaftDescriptor).largeLayout) return false
         val rads = shaft.rads
         shaft.disconnectShaft(this)
         shaft.rads = rads

@@ -1895,6 +1895,18 @@
   "kind": "transparent_node",
   "name": "lp_steam_turbine"
  },
+ "eln:transparent_node@278": {
+  "descriptor": "LargeSteamTurbineDescriptor",
+  "display": "Large Steam Turbine",
+  "kind": "transparent_node",
+  "name": "large_steam_turbine"
+ },
+ "eln:transparent_node@280": {
+  "descriptor": "GeneratorDescriptor",
+  "display": "Large Generator",
+  "kind": "transparent_node",
+  "name": "large_generator"
+ },
  "eln:transparent_node@285": {
   "descriptor": "FixedShaftDescriptor",
   "display": "Fixed Shaft",

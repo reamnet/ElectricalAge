@@ -60,6 +60,10 @@ public final class Wp11Cases {
     public static void addTo(List<TestCase> cases) {
         cases.add(new ShaftNetworkCase());
         cases.add(new FixedShaftCase());
+        cases.add(new LargeGeneratorCase(270));
+        cases.add(new LargeGeneratorCase(0));
+        cases.add(new LargeSteamStationCase());
+        cases.add(new LargeSteamChunkCase());
         cases.add(new GeneratorCase());
         cases.add(new TurbineIdleCase());
         cases.add(new PoleCase());

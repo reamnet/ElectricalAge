@@ -1,4 +1,4 @@
-// 26.3	2026-11-26T23:40:15.005693667	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-27T11:09:45.353936127	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -440,8 +440,11 @@ ff770d82fed48e779e22e4fd14615d03adb00d06 data/eln/advancement/recipes/misc/joint
 746e26c3a386dcf58808ffe9db25160095f077ec data/eln/advancement/recipes/misc/lantern_cage_foyer_chandelier.json
 cf83270a6d80fe4075a9a1944b0c85167d4c04bc data/eln/advancement/recipes/misc/large_area_floodlight.json
 b3db93ddba7c3ed67cbd9545b7a8d0f85142bbc8 data/eln/advancement/recipes/misc/large_boiler.json
+e34b1f48022cba7528ac602a2fad0a5b0af72401 data/eln/advancement/recipes/misc/large_generator.json
 e1474de512f11c17eefe20ef125d348a17f44813 data/eln/advancement/recipes/misc/large_rheostat.json
 137626f9f8bf9e6e56e22027e740ecaca997f437 data/eln/advancement/recipes/misc/large_standby_gasoline_generator.json
+c039ecd2106bc71f9893bb705a9ac59af97c0992 data/eln/advancement/recipes/misc/large_steam_turbine.json
+81bd2c48b3a7a6f90dd19eda170ccba597265011 data/eln/advancement/recipes/misc/large_steam_turbine_2.json
 aedf0a33550f951b24aa25484b4c05bb452646dc data/eln/advancement/recipes/misc/large_watermill_3_2kv.json
 f9eecaaafd39936d273aad3bb16293a5d0e72e61 data/eln/advancement/recipes/misc/lead_clutch_plate.json
 e6084bcb87beb312c3c7e54af126352353824e7b data/eln/advancement/recipes/misc/lead_fuse.json
@@ -1226,8 +1229,11 @@ b90ec63e04d89ed1c2d7121a7a74ae912a6cc9f5 data/eln/recipe/lamp_socket_b_projector
 a132fd6e27ce06ec98637534e8002820305ef47b data/eln/recipe/lantern_cage_foyer_chandelier.json
 e9531c8d92c2b3f6d2d111840be81ea5a2f13055 data/eln/recipe/large_area_floodlight.json
 753a066f008b0ccbdc8bbc3cc500c5548c687766 data/eln/recipe/large_boiler.json
+2847f54a37b679a49b9aae922051790372014996 data/eln/recipe/large_generator.json
 f85c8f50ce0422ca92a56a52d510ab5341f9ccb7 data/eln/recipe/large_rheostat.json
 330e8a111fa7bf7de32091f7b93fda44334b4bbf data/eln/recipe/large_standby_gasoline_generator.json
+abda571dab43e4ee5bbf1983e88b1852a02475f9 data/eln/recipe/large_steam_turbine.json
+a9ef62d2da456e4ba27756a2c7be0b0fb1c77804 data/eln/recipe/large_steam_turbine_2.json
 26df1b2b26ca43585ac53c653d00dbf9e91cb643 data/eln/recipe/large_watermill_3_2kv.json
 34539fb2f17bcf8aa9d2660d8ba75fe81d6aaec9 data/eln/recipe/lead_clutch_plate.json
 67db7e1f6d6d5d98f1f2f0f15c9aa50c4b014b8d data/eln/recipe/lead_fuse.json

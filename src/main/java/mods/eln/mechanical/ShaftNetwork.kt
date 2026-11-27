@@ -181,20 +181,19 @@ class ShaftNetwork() : INBTTReady {
     }
 
     private fun getNeighbours(from: ShaftElement): ArrayList<ShaftNeighbour> {
-        val c = Coordonate()
+        val nodes = NodeManager.instance!!
         val ret = ArrayList<ShaftNeighbour>(6)
         for (dir in from.shaftConnectivity) {
-            c.copyFrom(from.coordonate())
-            c.move(dir)
-            val to = NodeManager.instance!!.getTransparentNodeFromCoordinate(c)
-            if (to is ShaftElement) {
-                for (dir2 in to.shaftConnectivity) {
-                    if (dir2.inverse == dir) {
-                        ret.add(ShaftNeighbour(dir, to))
-                        break
-                    }
-                }
-            }
+            val target = Coordonate(from.shaftPort(dir))
+            target.move(dir)
+            val to = when (val neighbour = nodes.getNodeFromCoordonate(target)) {
+                is ShaftPortNode -> neighbour.owner.takeIf { nodes.getTransparentNodeFromCoordinate(it.coordonate()) === it }
+                is mods.eln.node.transparent.TransparentNode -> neighbour.element as? ShaftElement
+                else -> null
+            } ?: continue
+            val facing = dir.inverse
+            if (to !== from && facing in to.shaftConnectivity && to.shaftPort(facing) == target)
+                ret.add(ShaftNeighbour(dir, to))
         }
         return ret
     }
@@ -214,6 +213,7 @@ interface ShaftElement {
     /** Moment of inertia (kg m^2); see inertiaOf. */
     val shaftInertia: Double
     val shaftConnectivity: Array<Direction>
+    fun shaftPort(side: Direction): Coordonate = coordonate()
     val isFixed: Boolean get() = false
     fun coordonate(): Coordonate
 

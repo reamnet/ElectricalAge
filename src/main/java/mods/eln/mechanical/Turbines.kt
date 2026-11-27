@@ -21,11 +21,13 @@ import java.io.DataOutputStream
  * The shaft Steam Turbine (ShaftSteamTurbineElement): steam by EA pipe in on top and out of its back, work onto the
  * shaft (Baughn 2026-10-29). Models: mods.eln.cad.models.ShaftTurbines (`main`, `rotor`, `valve`: the governor valve).
  */
-class SteamTurbineDescriptor(baseName: String, obj: Obj3D, val spec: SteamTurbineSpec) :
+open class SteamTurbineDescriptor(baseName: String, obj: Obj3D, val spec: SteamTurbineSpec) :
     SimpleShaftDescriptor(baseName, ShaftSteamTurbineElement::class, null) {
     override val obj = obj
-    override val static = arrayOf(obj.getPart("main"))
-    override val rotating = arrayOf(obj.getPart("rotor"))
+    override val static = if (spec == SteamTurbineSpec.LARGE) arrayOf(obj.getPart("Cowl"), obj.getPart("Stand")).requireNoNulls()
+        else arrayOf(obj.getPart("main"))
+    override val rotating = if (spec == SteamTurbineSpec.LARGE) arrayOf(obj.getPart("Shaft"), obj.getPart("Fan")).requireNoNulls()
+        else arrayOf(obj.getPart("rotor"))
 
     fun spec() = spec
 
@@ -44,12 +46,41 @@ class SteamTurbineDescriptor(baseName: String, obj: Obj3D, val spec: SteamTurbin
             list.add("more with a vacuum behind it. Generators on the shaft take the power.")
             list.add("Water in the steam strips its blades.")
         }
-        list.add(Utils.plotRads("Automatic: governor full open to ", ShaftSteamTurbineElement.RATED_RADS) + ", shut at +5%; trips over +10%.")
+        list.add(Utils.plotRads("Automatic: governor full open to ", spec.ratedRads) + ", shut at +5%; trips over +10%.")
         list.add("Manual or external control turns the governor and the overspeed trip off: your own safeties then.")
         list.add("Its screen: throttle, or a regulator holding the inlet pressure; a signal on its front for external control.")
         list.add(String.format("Its casing bursts over %.0f bar.", spec.burstPa / 1e5))
-        list.add("Placed with its shaft along your view; it turns its exhaust toward a condenser or pipe beside it.")
+        if (largeLayout) {
+            list.add("Fits in three blocks of height. The shaft couplings are one block above its base.")
+            list.add("Install a turbine blade. Steam enters the top and exhausts through the raised rear port.")
+        } else list.add("Placed with its shaft along your view; it turns its exhaust toward a condenser or pipe beside it.")
         if (!spec.wetBraking) list.add("Might want a boiler with that.")   // (Baughn)
+    }
+}
+
+class LargeSteamTurbineDescriptor(baseName: String, obj: Obj3D) :
+    SteamTurbineDescriptor(baseName, obj, SteamTurbineSpec.LARGE) {
+    override val sound = "eln:steam_turbine"
+
+    init { useLargeLayout() }
+
+    fun drawBlade(angle: Double, tier: Int) {
+        val tint = when (tier) {
+            0 -> 0xd8d8d8
+            1 -> 0xa8b0b8
+            2 -> 0xc8a860
+            3 -> 0x4a4a5a
+            else -> null
+        }
+        drawModel(angle) { part ->
+            if (tint != null) {
+                if (part === rotating[1]) {
+                    mods.eln.gl.GL11.glColor3f((tint shr 16) / 255f, (tint shr 8 and 255) / 255f, (tint and 255) / 255f)
+                }
+                part.draw()
+                mods.eln.gl.GL11.glColor3f(1f, 1f, 1f)
+            }
+        }
     }
 }
 
@@ -62,18 +93,20 @@ class SteamTurbineRender(entity: TransparentNodeEntity, desc: TransparentNodeDes
     override val cableRender = Eln.stdCableRenderSignal
     val controls = mods.eln.oil.SteamValveControl.Render(this, (desc as SteamTurbineDescriptor).spec.targetMaxBar)
     private val sdesc = desc as SteamTurbineDescriptor
+    private var bladeTier = -1
     val valve = SlewLimiter(0.5f)
     var wet = false
 
     init {
-        mods.eln.sound.MachineSounds.turbine(coordonate(), { rads / ShaftSteamTurbineElement.RATED_RADS }, { volumeSetting.position.toDouble() }, false, 1f)
-            .forEach { addLoopedSound(it) }
+        if (!sdesc.largeLayout) mods.eln.sound.MachineSounds.turbine(coordonate(), { rads / sdesc.spec.ratedRads },
+            { volumeSetting.position.toDouble() }, false, 1f).forEach { addLoopedSound(it) }
     }
 
     override fun controls() = controls
 
     override fun draw() {
-        draw { sdesc.drawValve(valve.position) }
+        if (sdesc is LargeSteamTurbineDescriptor) draw({ sdesc.drawBlade(it, bladeTier) }) {}
+        else draw { sdesc.drawValve(valve.position) }
     }
 
     override fun refresh(deltaT: Float) {
@@ -87,6 +120,7 @@ class SteamTurbineRender(entity: TransparentNodeEntity, desc: TransparentNodeDes
         controls.read(stream)
         valve.target = stream.readFloat()
         wet = stream.readBoolean()
+        if (sdesc.largeLayout) bladeTier = stream.readByte().toInt()
     }
 }
 
