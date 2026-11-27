@@ -1895,6 +1895,12 @@
   "kind": "transparent_node",
   "name": "lp_steam_turbine"
  },
+ "eln:transparent_node@285": {
+  "descriptor": "FixedShaftDescriptor",
+  "display": "Fixed Shaft",
+  "kind": "transparent_node",
+  "name": "fixed_shaft"
+ },
  "eln:transparent_node@3073": {
   "descriptor": "SolarPanelDescriptor",
   "display": "Small Solar Panel",
@@ -2458,6 +2464,12 @@
   "display": "Heavy Winding",
   "kind": "shared_item",
   "name": "heavy_winding"
+ },
+ "eln:shared_item@1156": {
+  "descriptor": "GenericItemUsingDamageDescriptor",
+  "display": "Reinforced Shaft",
+  "kind": "shared_item",
+  "name": "reinforced_shaft"
  },
  "eln:shared_item@7872": {
   "descriptor": "WireScrapDescriptor",

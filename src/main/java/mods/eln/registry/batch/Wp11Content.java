@@ -138,6 +138,12 @@ public class Wp11Content implements ElnContent {
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
         {
+            // ForkPatch sub-ID 18 is the native LP Steam Turbine in 26.3.
+            subId = 29;
+            var desc = new mods.eln.mechanical.FixedShaftDescriptor(TR_NAME(Type.NONE, "Fixed Shaft"), obj.getObj("fixedshaft"));
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
             subId = 11;
             GasTurbineDescriptor desc = new GasTurbineDescriptor(
                 TR_NAME(Type.NONE, "Gas Turbine"),

@@ -1,4 +1,4 @@
-// 26.3	2026-11-26T21:49:01.599740596	eln-global/EA models
+// 26.3	2026-11-26T23:40:14.984146867	eln-global/EA models
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/12.5_kv_cable_feed_insulator.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/12.5_kv_line_insulator.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/120_240v_secondary_street_light_pole.json
@@ -132,6 +132,7 @@ f129897addd25f967e19a97a4f915b341261ab7a assets/eln/blockstates/cinnabar_ore.jso
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/fire_alarm_pull_station.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/fire_alarm_smoke_detector.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/fire_alarm_strobe.json
+6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/fixed_shaft.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/flare_stack.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/flat_electric_cooktop.json
 6719e14649cd80daf80c1cbbe11a89ab2dc4f395 assets/eln/blockstates/flywheel.json
@@ -807,6 +808,7 @@ df8166913ac446416c7b084ed00f3dc92623f781 assets/eln/items/fire_alarm_horn_strobe
 7a447df09533516a6dd1dcc4f12b7b373fbf6102 assets/eln/items/fire_alarm_pull_station.json
 670ba5208ad0dfe1396d95003896ca12f6208671 assets/eln/items/fire_alarm_smoke_detector.json
 e6cba7973b7b49edde853fd723c21abf0f1d4f09 assets/eln/items/fire_alarm_strobe.json
+6b723e0859d32b1bda0a09a2d61fec759d54f39d assets/eln/items/fixed_shaft.json
 ddc607965cfb890c82537469702f0e1b834bcfe4 assets/eln/items/flare_stack.json
 f6a6c31fa8fe539e6f413a7597005003dbba41a3 assets/eln/items/flat_electric_cooktop.json
 2a95d3003f54ea1bc6db84d8c4c2ec039bc769c1 assets/eln/items/flat_lamp_socket.json
@@ -1063,6 +1065,7 @@ df5bc8820e4f88e4896f0574a827ed2fc9141676 assets/eln/items/recessed_led_channel.j
 bae9dca6e3c95a2105471e125019ac19ad43290e assets/eln/items/red_brush.json
 ae5e6050354c00a90433e9c0fae07b7f80ffd5a2 assets/eln/items/red_handle_service_disconnect.json
 b876ffedc606f386d6683a01dc43e69e36cf2d15 assets/eln/items/redstone_to_voltage_converter.json
+62e036b1133989f58bf1814e8a98157aa2d1a24a assets/eln/items/reinforced_shaft.json
 d87898d7bbdcfad341b6d5f784911e5010f589e1 assets/eln/items/removed_from_mod_copper_thermal_cable.json
 1251fc7d3385b2104e01f577015f535f110ffc31 assets/eln/items/replicator_spawn_egg.json
 af05a08ab588d849947d2f0c32b416ed49a5de6f assets/eln/items/rheostat.json
@@ -1976,6 +1979,8 @@ b261fee37f16b5ad9bbec15f0582ebd178cd9b19 assets/eln/models/item/fire_alarm_pull_
 ce17ca2ea3f1a2d99175f31085331980194bff9d assets/eln/models/item/fire_alarm_smoke_detector_3d.json
 af008e19bab95c57078583a11141b376baef3153 assets/eln/models/item/fire_alarm_strobe.json
 dab40a3071dc4f36742c28a7f020e5d9edd6b85b assets/eln/models/item/fire_alarm_strobe_3d.json
+fc652440973c81edb003529935faffc510b35159 assets/eln/models/item/fixed_shaft.json
+c4573fc1d9a18c8ee2e819a641ab9806905e0058 assets/eln/models/item/fixed_shaft_3d.json
 75c673d420b03ed94d828ecfded20dbbc949b0d2 assets/eln/models/item/flare_stack.json
 dd44d453ef3d82832c3d61b1ae566d9a53deb3f7 assets/eln/models/item/flat_electric_cooktop_3d.json
 93d8fcdda08d24ff11c965e098b40cecee5c53c3 assets/eln/models/item/flat_lamp_socket.json
@@ -2373,6 +2378,7 @@ f9a2672370ffe68ab38900598a90753be5095f88 assets/eln/models/item/red_handle_servi
 efe7f38b9fcdd953b171a3c9fc47b7a1aaf8418c assets/eln/models/item/red_handle_service_disconnect_3d.json
 ddb49e46a183fe91ae30ed41a6f0f9ea7c2d32a5 assets/eln/models/item/redstone_to_voltage_converter.json
 9bee73d4bb46fb195135cc692a62c427740abee6 assets/eln/models/item/redstone_to_voltage_converter_3d.json
+0aa441de73354b8613b725e2fd830f688be0b14e assets/eln/models/item/reinforced_shaft.json
 b0100b52061090269ab1d500aba102ea33c25f58 assets/eln/models/item/removed_from_mod_copper_thermal_cable.json
 561484327a6852277b0463d28b1f1e55274f4dfc assets/eln/models/item/replicator_spawn_egg.json
 0db103849461fcb63edfedae8db0333ae6402e70 assets/eln/models/item/rheostat.json

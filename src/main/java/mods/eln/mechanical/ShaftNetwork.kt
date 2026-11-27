@@ -30,9 +30,11 @@ fun inertiaOf(h: Double, power: Double, rads: Double = nominalShaftRads) = 2 * h
  */
 class ShaftNetwork() : INBTTReady {
     val elements = HashSet<ShaftElement>()
+    private var fixed = false
 
     constructor(first: ShaftElement) : this() {
         elements.add(first)
+        fixed = first.isFixed
     }
 
     // Aggregate properties of the (current) shaft:
@@ -46,6 +48,7 @@ class ShaftNetwork() : INBTTReady {
             return Math.max(sum, minimumInertia)
         }
     var rads = 0.0
+        set(value) { field = if (fixed) 0.0 else value }
     var radsLastPublished = rads
 
     /**
@@ -69,7 +72,7 @@ class ShaftNetwork() : INBTTReady {
      * 0 rad/s a jump in speed). Returns the energy it took (J).
      */
     fun drive(power: Double, time: Double, maxTorque: Double): Double {
-        if (power <= 0 || time <= 0) return 0.0
+        if (fixed || power <= 0 || time <= 0) return 0.0
         val i = inertia
         val wTorque = rads + maxTorque / i * time
         val eTorque = 0.5 * i * wTorque * wTorque - energy
@@ -89,7 +92,9 @@ class ShaftNetwork() : INBTTReady {
         // flywheel at rest drags it down as a clutch would
         val i1 = inertia
         val i2 = other.inertia
-        rads = (i1 * rads + i2 * other.rads) / (i1 + i2)
+        val mergedRads = (i1 * rads + i2 * other.rads) / (i1 + i2)
+        fixed = fixed || other.fixed
+        rads = mergedRads
 
         assert(other != this)
         for (element in other.elements) {
@@ -97,6 +102,7 @@ class ShaftNetwork() : INBTTReady {
             element.shaft = this
         }
         other.elements.clear()
+        other.fixed = false
     }
 
     /**
@@ -142,6 +148,8 @@ class ShaftNetwork() : INBTTReady {
      * Yes, this makes breaking a shaft block O(n). Not a problem right now.
      */
     internal fun rebuildNetwork() {
+        val splitRads = rads
+        fixed = false
         val unseen = HashSet<ShaftElement>(elements)
         val queue = HashSet<ShaftElement>()
         var shaft = this;
@@ -155,6 +163,7 @@ class ShaftNetwork() : INBTTReady {
                 val next = queue.iterator().next()
                 queue.remove(next);
                 shaft.elements.add(next);
+                shaft.fixed = shaft.fixed || next.isFixed
                 next.shaft = shaft
                 val neighbours = getNeighbours(next)
                 for (neighbour in neighbours) {
@@ -166,8 +175,8 @@ class ShaftNetwork() : INBTTReady {
             }
             // We ran out of network. Any elements remaining in unseen should thus form a new network, turning as
             // fast as the shaft did (they started at 0 rad/s: a cut spinning shaft stopped dead past the cut; AGE 4fd31c68)
+            shaft.rads = splitRads
             shaft = ShaftNetwork()
-            shaft.rads = rads
         }
     }
 
@@ -205,6 +214,7 @@ interface ShaftElement {
     /** Moment of inertia (kg m^2); see inertiaOf. */
     val shaftInertia: Double
     val shaftConnectivity: Array<Direction>
+    val isFixed: Boolean get() = false
     fun coordonate(): Coordonate
 
     fun initialize() {

@@ -172,6 +172,7 @@ public final class ClientRenders {
         ElnRenders.transparent(mods.eln.transparentnode.FuelHeatFurnaceDescriptor.class, mods.eln.transparentnode.FuelHeatFurnaceRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.LargeRheostatDescriptor.class, mods.eln.transparentnode.LargeRheostatRender::new);
         ElnRenders.transparent(mods.eln.mechanical.StraightJointDescriptor.class, mods.eln.mechanical.ShaftRender::new);
+        ElnRenders.transparent(mods.eln.mechanical.FixedShaftDescriptor.class, mods.eln.mechanical.ShaftRender::new);
         ElnRenders.transparent(mods.eln.mechanical.FlywheelDescriptor.class, mods.eln.mechanical.ShaftRender::new);
         ElnRenders.transparent(mods.eln.mechanical.JointHubDescriptor.class, mods.eln.mechanical.JointHubRender::new);
         ElnRenders.transparent(mods.eln.mechanical.TachometerDescriptor.class, mods.eln.mechanical.TachometerRender::new);

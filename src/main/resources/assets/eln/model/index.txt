@@ -353,6 +353,7 @@ trimlesspotlight/trimlesspotlight.obj
 turbine50v/turbine50v.obj
 turbineb/turbineb.obj
 turbinebblue/turbinebblue.obj
+turbinesteam/fixedshaft.obj
 turbinesteam/flywheel.obj
 turbinesteam/gasturbine.obj
 turbinesteam/generator.obj

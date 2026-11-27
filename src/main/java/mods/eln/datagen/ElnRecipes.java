@@ -1006,6 +1006,20 @@ public final class ElnRecipes extends ElnRecipesBase {
             'M', findItemStack("Advanced Machine Block"),
             'E', findItemStack("Copper Cable")
         );
+        addRecipe(findItemStack("Fixed Shaft"),
+            "iBi",
+            " c ",
+            'i', "ingotIron",
+            'B', stack(Blocks.IRON_BLOCK),
+            'c', findItemStack("Machine Block"));
+        addRecipe(findItemStack("Reinforced Shaft"),
+            " s ",
+            "sFs",
+            "AMA",
+            's', firstExistingOre("ingotSteel", "ingotAlloy"),
+            'F', findItemStack("Fixed Shaft"),
+            'A', findItemStack("Advanced Machine Block"),
+            'M', firstExistingOre("blockSteel", "blockIron"));
         // the HP turbine: four stages in an alloy casing that holds 20 bar
         addRecipe(findItemStack("Steam Turbine"),
             "PBP",

@@ -59,6 +59,7 @@ public final class Wp11Cases {
 
     public static void addTo(List<TestCase> cases) {
         cases.add(new ShaftNetworkCase());
+        cases.add(new FixedShaftCase());
         cases.add(new GeneratorCase());
         cases.add(new TurbineIdleCase());
         cases.add(new PoleCase());
@@ -127,6 +128,32 @@ public final class Wp11Cases {
             ctx.checkValue("wp11 shaft speed [rad/s] (no drag in passive parts: 100 kept)", s.getRads(), 100.0);
             ctx.checkValue("wp11 shaft energy [J] (1/2 I w^2)", s.getEnergy(), 0.5 * i * 100.0 * 100.0);
         }
+    }
+
+    static final class FixedShaftCase implements TestCase {
+        public String name() {
+            return "forkpatch_fixed_shaft_locks_and_releases";
+        }
+
+        public void build(TestContext ctx) {
+            var flywheelPos = ctx.at(3, 1, 1);
+            var flywheel = ctx.placeTransparent(FLYWHEEL, flywheelPos);
+            var anchorPos = off(flywheelPos, flywheel.front.left());
+            shaft(flywheel).setRads(250);
+            var anchor = ctx.placeTransparent(Ids.transparent("Fixed Shaft"), anchorPos);
+            var locked = shaft(flywheel);
+            ctx.check("fixed shaft joins the flywheel", locked == shaft(anchor), locked.getElements().toString());
+            ctx.checkValue("fixed shaft brakes the network to zero", locked.getRads(), 0);
+            ctx.checkValue("a locked network takes no drive energy", locked.drive(1000, 1, 100), 0);
+            ctx.checkValue("a locked network stays still", locked.getEnergy(), 0);
+            ctx.level().destroyBlock(anchorPos, false);
+            ctx.check("fixed shaft detaches on removal", shaft(flywheel).getElements().size() == 1,
+                shaft(flywheel).getElements().toString());
+            ctx.checkValue("released shaft takes drive energy", shaft(flywheel).drive(1000, 1, 100), 1000);
+            ctx.checkValue("drive energy is stored in the released shaft", shaft(flywheel).getEnergy(), 1000);
+        }
+
+        public void measure(TestContext ctx) {}
     }
 
     /**

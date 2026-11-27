@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/steel"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:storage_blocks/steel"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:storage_blocks/steel"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": "eln:advanced_machine_block",
+    "F": "eln:fixed_shaft",
+    "M": "#c:storage_blocks/steel",
+    "s": "#c:ingots/steel"
+  },
+  "pattern": [
+    " s ",
+    "sFs",
+    "AMA"
+  ],
+  "result": {
+    "id": "eln:reinforced_shaft"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/iron"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:iron_block",
+    "c": "eln:machine_block",
+    "i": "#c:ingots/iron"
+  },
+  "pattern": [
+    "iBi",
+    " c "
+  ],
+  "result": {
+    "id": "eln:fixed_shaft"
+  }
+}

@@ -1,4 +1,4 @@
-// 26.3	2026-11-26T21:50:53.690307564	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-26T23:40:15.005693667	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -355,6 +355,7 @@ e6626b81782dcf21944212f0e22b7ebca4a2ce5b data/eln/advancement/recipes/misc/fast_
 c318e8ba3b500db8c60e4cb56383625e58cb8eb8 data/eln/advancement/recipes/misc/fire_alarm_pull_station.json
 3b49963675a884d9f6859d3929f5fca82a2e5d59 data/eln/advancement/recipes/misc/fire_alarm_smoke_detector.json
 437a91c611e5efefbe3f2ceadf98421e175bdd73 data/eln/advancement/recipes/misc/fire_alarm_strobe.json
+301a0a1c07f173b5f0e6d4fb2bd8570896b358eb data/eln/advancement/recipes/misc/fixed_shaft.json
 a7ff3268fc3ae3ad11defa593f5a837359306cab data/eln/advancement/recipes/misc/flare_stack.json
 e1b91ea583c22bf1ab38a734ea06e95d1cac36c0 data/eln/advancement/recipes/misc/flat_electric_cooktop.json
 154a4ef09cc9ac5d53ce9cf792a69f016610ce11 data/eln/advancement/recipes/misc/flat_lamp_socket.json
@@ -567,6 +568,10 @@ a82a39875c9118cb3b9bc6722a8db1a8794a519c data/eln/advancement/recipes/misc/reces
 1e879bd3da5eabb33eb0f2ee6f2b3c1d9d9e9588 data/eln/advancement/recipes/misc/red_brush.json
 60de5e25544bc07dae23b4a7d152a3ee43b9d3f6 data/eln/advancement/recipes/misc/red_handle_service_disconnect.json
 f7528c010eae2ecb1d9b8df30858589d7a331a88 data/eln/advancement/recipes/misc/redstone_to_voltage_converter.json
+4a429ee279e4a87cd7c0e9d20e1421c4097a4698 data/eln/advancement/recipes/misc/reinforced_shaft.json
+d5fac7fc99109b31ed0708dcb1d249d0ad981815 data/eln/advancement/recipes/misc/reinforced_shaft_2.json
+1043318457f42bf2dd2845fc372c11e3f3292f25 data/eln/advancement/recipes/misc/reinforced_shaft_3.json
+5b67474c6e2051b7aac5d3cae86a7005a493ecb9 data/eln/advancement/recipes/misc/reinforced_shaft_4.json
 ca7cfdd304c9a3c3e92938e08f882f303d2159ee data/eln/advancement/recipes/misc/rheostat.json
 756cda9979b715dfdbcb744accbfa92136fd22bb data/eln/advancement/recipes/misc/robust_lamp_socket.json
 fcf873c0faf080b7fe59a7808d4f0ba5f2f6830e data/eln/advancement/recipes/misc/round_canopy_parking_lot_light.json
@@ -1136,6 +1141,7 @@ c69701fc0715e23ae06919546a43dbd77b2991b2 data/eln/recipe/field_bus_cable.json
 f2eeb09bb5fdbb4f7cbb53726408272c51b5d406 data/eln/recipe/fire_alarm_pull_station.json
 1bc4357b3a86dfb0dd0f6e06526283fd8d905393 data/eln/recipe/fire_alarm_smoke_detector.json
 a2cd039e4580f27d7cc76de02b4eeb2872f69f93 data/eln/recipe/fire_alarm_strobe.json
+d6e22df07da634d82935ed9e3a3619d69836cb31 data/eln/recipe/fixed_shaft.json
 cb117cca2d60183ceb605b7c516744be0b07ec15 data/eln/recipe/flare_stack.json
 4eb13891c0130d886ca097d76297b7b0eccbf420 data/eln/recipe/flat_electric_cooktop.json
 566930bc1d495eba2162396b25dc0a79d0919023 data/eln/recipe/flat_lamp_socket.json
@@ -1348,6 +1354,10 @@ b778a497869d0bcec080f684461640c857c017be data/eln/recipe/recessed_led_channel.js
 00d438d0450731bc201193aef8acef83c879d8d9 data/eln/recipe/red_brush.json
 cd9af7097473c7fae168d254e0dff78353e1aca5 data/eln/recipe/red_handle_service_disconnect.json
 9c5c6e47e7f3d04b13fc71c6b5ddfc3182ee73e2 data/eln/recipe/redstone_to_voltage_converter.json
+63dae59d609b92436f6e50d477166a0a3197f3cf data/eln/recipe/reinforced_shaft.json
+a6c615dbbec0b9571acd817dc6824e5bc1502048 data/eln/recipe/reinforced_shaft_2.json
+caea29b555006f08a73a28eea609e60f57e6894a data/eln/recipe/reinforced_shaft_3.json
+c32451b7b5e051350defef1bdb46d8dbd1e37e19 data/eln/recipe/reinforced_shaft_4.json
 d8732e9aa7d5b669948f47f5e99893da8e957c5e data/eln/recipe/rheostat.json
 523703af721f00a1c538f3d0517b58c5d417367a data/eln/recipe/robust_lamp_socket.json
 af6ddbe70defc44738d39c6f9807b93aff72d235 data/eln/recipe/round_canopy_parking_lot_light.json

@@ -1306,6 +1306,10 @@ public class Wp12aContent implements ElnContent {
      * All four tiers ported (iron + steel 2026-11-18, alloy + tungsten 2026-11-19); the turbine consumers themselves are not ported.
      */
     public static void registerTurbineBlade(int id) {
+        // ForkPatch's 7742 is occupied by Radar Goggles in 26.3.
+        sharedItem.addElement(4 + (id << 6), new GenericItemUsingDamageDescriptor(
+            TR_NAME(Type.NONE, "Reinforced Shaft")
+        ));
         sharedItemStackOne.addElement(0 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
             TR_NAME(Type.NONE, "Iron Turbine Blade"), "iron", 0.8, 0.8, "Suitable for mild, clean fuels"));
         sharedItemStackOne.addElement(1 + (id << 6), new mods.eln.mechanical.TurbineBladeItem(
