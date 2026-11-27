@@ -70,7 +70,9 @@ class GridSpanAppearanceCase: TestCase {
                         val expectedWidth=2*(if(tint==metal)radius else radius*1.18+.002)
                         c.check("emitted half-width follows the source dimensions",kotlin.math.abs(z.max()-z.min()-expectedWidth)<1e-5,wire.name)
                     }
-                    c.check("conductor emitted a complete sag mesh",verticesByTint.values.sumOf { it.size }>=16*24,wire.name)
+                    // Sixteen tubes and two end caps, plus two stripped sections and two shoulders.
+                    val triangles=16*8+4+if(wire.insulated)4*8 else 0
+                    c.check("conductor emitted every sag section and termination",verticesByTint.values.sumOf { it.size }==triangles*4,wire.name)
                 }finally { GlFrame.close();GlFrame.beginRenderFrame() }
                 val link=a.gridLinkList.single();val refund=link.onBreakElement()
                 c.check("appearance publication preserves exact paid material",refund.item===wire.parentItem && wire.getRemainingLengthMeters(refund)==14.0 && link.onBreakElement().isEmpty,wire.name)
