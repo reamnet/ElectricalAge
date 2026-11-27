@@ -24,3 +24,9 @@ Eight working busbars are registered at IDs 14080–14087. The four profiles use
 The powered test delivered 49.9909 A at the far branch and 599.9011 V on the vertical branch. The adjacent unmatched phase stayed deenergized. The same test verified exact spool payment, paid material identity, client arm publication, node reload and removal of a single branch. All four focused server tests passed with exit 0, including the AWG span catalog and three-phase distribution interaction. Two data runs wrote 49 files and then zero. All 959 original manifest records match their baseline values. Logs are `/tmp/eln-modular-busbar-model.log` for the first successful data pass and `/tmp/eln-modular-busbar-fit.log` for the second data pass and passing tests.
 
 Next verify direct feed insulators on a rigid busbar and check the installed models in a live client. The standalone switching, conversion, protection and support equipment remain pending.
+
+## Direct feed milestone
+
+A feed insulator can use a busbar's face as its mounting surface. It latches the bar's explicit phase and uses one native rigid contact. Its outer clamp still uses the normal paid grid span. Line-only insulators retain their existing placement. Legacy installations retain the original unbound circuitry.
+
+In the 69 kV focused fixture, an ordinary tower and the mounted feed insulator rejected a wrong-phase attempt before consumption, accepted the phase B bare span, powered the rigid load at 6.9000 A and left phase A deenergized. Node reload restored one rigid contact and one overhead span. All 11 focused tests passed with Gradle exit 0, including all five existing insulator voltage families, AWG appearance and existing wooden phase bundles. Log `/tmp/eln-modular-insulator.log`. Next capture the client geometry and verify the independent equipment devices.

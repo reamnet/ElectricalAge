@@ -65,6 +65,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.GridSelectionCases.cases());
         l.add(new mods.eln.gametest.cases.GridSpanAppearanceCase());
         l.add(new mods.eln.gametest.cases.ModularBusbarCase());
+        l.add(new mods.eln.gametest.cases.ModularDirectFeedCase());
         l.add(new mods.eln.gametest.cases.GridGhostRepairCase());
         l.addAll(mods.eln.gametest.cases.ForkPatchTransmissionLampCases.cases());
         l.addAll(mods.eln.gametest.cases.ForkPatchPoleTransformerCases.cases());

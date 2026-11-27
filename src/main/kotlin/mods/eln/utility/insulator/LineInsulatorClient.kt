@@ -7,6 +7,7 @@ import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.transparent.*
 import mods.eln.registry.ElnDeviceRegistry
+import mods.eln.utility.modular.BusbarDescriptor
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.Level
 import java.io.DataInputStream
@@ -25,7 +26,9 @@ class LineInsulatorDescriptor(val voltage: InsulatorVoltage,val feed: Boolean): 
     override fun rotationIsFixed()=true
     fun supported(world: Level,pos: BlockPos,front: Direction): Boolean {
         val support=pos.relative(front.toEnumFacing())
-        return world.getBlockState(support).isFaceSturdy(world,support,front.inverse.toEnumFacing())
+        val state=world.getBlockState(support)
+        if(feed && (state.block as? TransparentNodeBlock)?.descriptor is BusbarDescriptor)return true
+        return state.isFaceSturdy(world,support,front.inverse.toEnumFacing())
     }
     override fun checkCanPlace(coord: Coordonate?,front: Direction): String? {
         if(coord!=null && !supported(coord.world(),coord.pos(),front))return tr("Insulators need a solid mounting face")

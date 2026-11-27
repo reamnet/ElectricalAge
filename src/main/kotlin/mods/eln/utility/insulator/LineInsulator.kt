@@ -10,6 +10,8 @@ import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.utility.modular.BusbarElement
+import mods.eln.utility.modular.RigidBusPort
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.player.Player
@@ -26,19 +28,33 @@ enum class InsulatorVoltage(val volts: Int,val length: Double,val radius: Double
     fun title(feed: Boolean)=if(feed)feedName else lineName
 }
 
-class LineInsulatorElement(node: TransparentNode,descriptor: TransparentNodeDescriptor): GridElement(node,descriptor,(descriptor as LineInsulatorDescriptor).voltage.range) {
+class LineInsulatorElement(node: TransparentNode,descriptor: TransparentNodeDescriptor): GridElement(node,descriptor,(descriptor as LineInsulatorDescriptor).voltage.range), RigidBusPort {
     val insulator=descriptor as LineInsulatorDescriptor
     val bus=NbtElectricalLoad("insulatorBus").apply { rs=.00001 }
     var terminal=32;private set
+    private var mountedPhase: Int? = null
+    override fun initialize() {
+        if (insulator.feed && mountedPhase == null)
+            mountedPhase = ((node.getNeighbor(front) as? TransparentNode)?.element as? BusbarElement)?.phase
+        super.initialize()
+    }
+    override fun rigidPhase(side: Direction) = mountedPhase.takeIf { side == front }
+    override fun gridPhase(terminal: Int) = mountedPhase.takeIf { terminal == 32 }
     init { electricalLoadList.add(bus);slowProcessList.add(NodePeriodicPublishProcess(node,1.0,.5)) }
     override fun getGridElectricalLoad(side: Direction)=bus
     override fun gridLoads(terminal: Int): List<ElectricalLoad> = if(terminal in 0..5 || terminal==this.terminal)listOf(bus) else emptyList()
     override fun selectedGridTerminal(side: Direction)=terminal
-        override fun gridCircuitKey(terminal: Int)=if(terminal<6)"LEGACY" else if(terminal==32)"HV_SINGLE" else when(terminal) { 40->"SERVICE_L1";41->"SERVICE_L2";42->"SERVICE_240";else->"INVALID" }
+    override fun gridCircuitKey(terminal: Int)=if(terminal<6)"LEGACY" else if(terminal==32)
+        mountedPhase?.let { "HV$it" } ?: "HV_SINGLE"
+        else when(terminal) { 40->"SERVICE_L1";41->"SERVICE_L2";42->"SERVICE_240";else->"INVALID" }
     override fun renderWireCount(terminal: Int)=1
     override fun renderedGridCablePoint(terminal: Int,wire: Int)=front.rotateFromXN(gridCablePoint(terminal,wire))
     override fun gridCablePoint(terminal: Int,wire: Int)=Vec3(-.5+insulator.voltage.length,0.0,0.0)
-    override fun getElectricalLoad(side: Direction,lrdu: LRDU)=if(insulator.feed && side!=front.getInverse())bus else null
+    override fun getElectricalLoad(side: Direction,lrdu: LRDU)=when {
+        !insulator.feed -> null
+        mountedPhase!=null -> bus.takeIf { side==front && lrdu==LRDU.Down }
+        else -> bus.takeIf { side!=front.inverse }
+    }
     override fun getConnectionMask(side: Direction,lrdu: LRDU)=if(getElectricalLoad(side,lrdu)!=null)NodeBase.maskElectricalPower else 0
     override fun getThermalLoad(side: Direction,lrdu: LRDU)=null
     override fun onNeighborBlockChange() {
@@ -48,15 +64,24 @@ class LineInsulatorElement(node: TransparentNode,descriptor: TransparentNodeDesc
         if(world.chunkSource.getChunkNow(pos.x shr 4,pos.z shr 4)!=null && !insulator.supported(world,coordonate().pos(),front))selfDestroy()
     }
     fun selectCircuit(value: Int): Boolean {
-        if(insulator.voltage!=InsulatorVoltage.LOW || value !in listOf(32,40,41,42) || gridLinkList.isNotEmpty())return false
+        if(mountedPhase!=null || insulator.voltage!=InsulatorVoltage.LOW || value !in listOf(32,40,41,42) || gridLinkList.isNotEmpty())return false
         terminal=value;needPublish();return true
     }
-    override fun hasGui()=insulator.voltage==InsulatorVoltage.LOW
+    override fun hasGui()=mountedPhase==null && insulator.voltage==InsulatorVoltage.LOW
     override fun multiMeterString(side: Direction)=Utils.plotUIP(bus.u,bus.i)
     override fun thermoMeterString(side: Direction)=""
-    override fun getWaila()=linkedMapOf(tr("Circuit") to circuitLabel(terminal),tr("Voltage") to Utils.plotVolt("",bus.u),tr("Current") to Utils.plotAmpere("",bus.i))
-    private fun read(tag: CompoundTag) { terminal=tag.getIntOr("insulatorCircuit",32).takeIf { insulator.voltage==InsulatorVoltage.LOW && it in listOf(32,40,41,42) } ?: 32 }
-    override fun writeToNBT(tag: CompoundTag) { super.writeToNBT(tag);tag.putInt("insulatorCircuit",terminal) }
+    override fun getWaila()=linkedMapOf(tr("Circuit") to (mountedPhase?.let { tr("Busbar phase: %1$", "ABC"[it].toString()) } ?: circuitLabel(terminal)),tr("Voltage") to Utils.plotVolt("",bus.u),tr("Current") to Utils.plotAmpere("",bus.i))
+    private fun read(tag: CompoundTag) {
+        mountedPhase=tag.getIntOr("mountedBusbarPhase",-1).takeIf { insulator.feed && it in 0..2 }
+        terminal=tag.getIntOr("insulatorCircuit",32).takeIf {
+            mountedPhase==null && insulator.voltage==InsulatorVoltage.LOW && it in listOf(32,40,41,42)
+        } ?: 32
+    }
+    override fun writeToNBT(tag: CompoundTag) {
+        super.writeToNBT(tag)
+        tag.putInt("insulatorCircuit",terminal)
+        mountedPhase?.let { tag.putInt("mountedBusbarPhase",it) }
+    }
     override fun readFromNBT(tag: CompoundTag) { super.readFromNBT(tag);read(tag) }
     override fun getItemStackNBT()=CompoundTag().apply { putInt("insulatorCircuit",terminal) }
     override fun readItemStackNBT(tag: CompoundTag?) { if(tag!=null)read(tag) }
