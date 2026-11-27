@@ -38,6 +38,11 @@ public class GhostElement implements INBTTReady {
 
     public boolean onBlockActivated(Player entityPlayer, Direction side, float vx, float vy, float vz) {
         GhostObserver observer = Eln.ghostManager.getObserver(observatorCoordonate);
+        if (observer instanceof mods.eln.utility.DistributionPoleElement)
+            return observer.ghostBlockActivated(UUID, entityPlayer, side,
+                vx + elementCoordonate.x - observatorCoordonate.x,
+                vy + elementCoordonate.y - observatorCoordonate.y,
+                vz + elementCoordonate.z - observatorCoordonate.z);
         if (observer != null) return observer.ghostBlockActivated(UUID, entityPlayer, side, vx, vy, vz);
         return false;
     }

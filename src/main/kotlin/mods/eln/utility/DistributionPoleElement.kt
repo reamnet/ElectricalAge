@@ -50,6 +50,21 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     override fun acceptsSavedGridTerminal(t: Int)=(!kind.twinLight || t==50 || t in 40..42) && super.acceptsSavedGridTerminal(t)
     override fun allowsNewGridLinks()=!kind.underground
     override fun selectedGridTerminal(side: Direction)=terminal
+    /** Find the nearest insulator, including protected outputs and individual service conductors. */
+    fun aimedSingleTerminal(hit: Vec3): Int =
+        terminals().filter { gridLoads(it).size == 1 }
+            .minByOrNull { renderedGridCablePoint(it, 0).distanceToSqr(hit) } ?: terminal
+
+    fun aimedBundle(single: Int): Int {
+        val bundle = when (single) {
+            in 32..34 -> 52
+            in 36..38 -> 53
+            in 40..42 -> 50
+            else -> return single
+        }
+        return if (gridLoads(bundle).size > 1) bundle else single
+    }
+
     fun terminals()=buildList {
         if(!kind.lvOnly) { repeat(kind.phases) { add(32+it) };if(kind.phases==3)add(52);if(kind.protectedLine) { repeat(kind.outputPhases) { add(36+it) };if(kind.phases==3 && !kind.singlePhaseTap)add(53) } }
         add(50);addAll(40..42)

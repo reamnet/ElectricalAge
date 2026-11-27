@@ -18,10 +18,62 @@ import net.minecraft.world.phys.Vec3
 
 /** Real outline rays and block clicks, through the shared native ghost forwarding path. */
 object GridSelectionCases {
-    @JvmStatic fun cases(): List<TestCase> = TransmissionKind.entries.map { Selection(it,null) } +
+    @JvmStatic fun cases(): List<TestCase> = TransmissionKind.entries.map { Selection(it,null) } + listOf(Automatic(false), Automatic(true)) +
         listOf(DistributionKind.SINGLE,DistributionKind.THREE,DistributionKind.SECONDARY).map { Selection(null,it) } + listOf(90f,180f,270f).flatMap { yaw ->
             listOf(Selection(TransmissionKind.POLE_69,null,yaw),Selection(null,DistributionKind.THREE,yaw))
         }
+    private class Automatic(val reverse: Boolean): TestCase {
+        override fun id() = "grid_distribution_automatic_" + if (reverse) "reverse" else "forward"
+        override fun width() = 32
+        override fun height() = 28
+        override fun depth() = 16
+        override fun floorDepth() = 16
+        override fun build(c: TestContext) {
+            val id = DistributionPoles.id(DistributionKind.THREE)
+            val a = c.placeByPlayer(id, c.at(6,1,7), 0f) as DistributionPoleElement
+            val b = c.placeByPlayer(id, c.at(20,1,7), 180f) as DistributionPoleElement
+            val (first, last) = if (reverse) b to a else a to b
+            fun click(pole: DistributionPoleElement, terminal: Int, stack: ItemStack) {
+                val point = pole.renderedGridCablePoint(terminal, 0).add(Vec3.atCenterOf(pole.coordonate().pos()))
+                val pos = BlockPos.containing(point)
+                c.check("attachment lies in its owned selectable ghost", GhostBlock.owner(c.level(),pos) === pole, "$terminal $pos")
+                val hit = net.minecraft.world.phys.BlockHitResult(point, net.minecraft.core.Direction.UP, pos, false)
+                val player = c.player()
+                val sneaking = player.isShiftKeyDown
+                player.setShiftKeyDown(false)
+                player.setItemInHand(InteractionHand.MAIN_HAND, stack)
+                try { c.level().getBlockState(pos).useItemOn(stack,c.level(),player,InteractionHand.MAIN_HAND,hit) }
+                finally { player.setShiftKeyDown(sneaking); player.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY) }
+            }
+            val bare = OverheadCableItem.make(3, 100)
+            click(first, 33, bare); click(last, 33, bare)
+            val primary = a.gridLinkList.single()
+            c.check("upper hits install all three independent phases and pay for 42 m",
+                primary.getTerminal(a) == 52 && primary.getTerminal(b) == 52 &&
+                    a.gridLoads(52).toSet().size == 3 && b.gridLoads(52).toSet().size == 3 &&
+                    OverheadCableItem.blocks(bare) == 58, "")
+            click(first, 41, bare); click(last, 41, bare)
+            c.check("bare overhead wire cannot attach to the service rack", a.gridLinkList.size == 1 && OverheadCableItem.blocks(bare) == 58, "")
+            for ((material, gauge) in listOf(UtilityCableMaterial.COPPER to "14 AWG", UtilityCableMaterial.ALUMINUM to "2 AWG")) {
+                val wire = UtilityCables.all.first { it.material == material && it.sizeLabel == gauge && it.insulated && !it.melted }
+                val stack = wire.newItemStack().also { wire.setRemainingLengthMeters(it, 41.0) }
+                click(first, 41, stack); click(last, 41, stack)
+                c.check("underfunded service bundle is atomic", a.gridLinkList.size == 1 && wire.getRemainingLengthMeters(stack) == 41.0, "")
+                wire.setRemainingLengthMeters(stack, 100.0)
+                click(first, 41, stack); click(last, 41, stack)
+                val service = a.gridLinkList.single { it !== primary }
+                c.check("rack hits install the independent service bundle alongside primary",
+                    service.getTerminal(a) == 50 && service.getTerminal(b) == 50 &&
+                        a.gridLoads(50).toSet().size == 3 && a.gridLoads(50).none { it in a.gridLoads(52) } &&
+                        wire.getRemainingLengthMeters(stack) == 58.0, "$material $gauge")
+                c.check("service refund matches the paid descriptor and all core metres",
+                    wire.getRemainingLengthMeters(service.onBreakElement()) == 42.0 && service.onBreakElement().isEmpty, "")
+            }
+            c.check("primary refund covers each of its three phase conductors", OverheadCableItem.blocks(primary.onBreakElement()) == 42, "")
+        }
+        override fun measure(c: TestContext) {}
+    }
+
     private class Selection(val tower: TransmissionKind?,val wooden: DistributionKind?,val yaw: Float=0f): TestCase {
         override fun id()="grid_pole_selection_${tower?.name?.lowercase() ?: wooden!!.name.lowercase()}"+(if(yaw==0f)"" else "_yaw_${yaw.toInt()}")
         override fun width()=32
@@ -75,8 +127,10 @@ object GridSelectionCases {
             c.check("player outline ray selects the actual primary/secondary equipment",GhostBlock.owner(c.level(),hit.blockPos)===e,"$t/$hit")
             c.check("selectable reservation keeps its former empty walking collision",c.level().getBlockState(hit.blockPos).getCollisionShape(c.level(),hit.blockPos).isEmpty,"")
             c.player().setItemInHand(InteractionHand.MAIN_HAND,stack)
+            val sneaking = c.player().isShiftKeyDown
+            c.player().setShiftKeyDown(true)
             try { c.level().getBlockState(hit.blockPos).useItemOn(stack,c.level(),c.player(),InteractionHand.MAIN_HAND,hit) }
-            finally { c.player().setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY) }
+            finally { c.player().setShiftKeyDown(sneaking); c.player().setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY) }
         }
         override fun measure(c: TestContext) { }
     }

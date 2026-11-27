@@ -27,7 +27,7 @@ abstract public class GridElement extends TransparentNodeElement {
     /**
      * The last place any given player tried to link two instance nodes.
      */
-    private record Pending(Coordonate coordinate, int terminal, Direction side) { }
+    private record Pending(Coordonate coordinate, int terminal, Direction side, int fallback) { }
     private static final HashMap<UUID, Pending> pending = new HashMap<>();
     public final HashSet<GridLink> gridLinkList = new HashSet<>();
     public final HashSet<GridLink> gridLinksBooting = new HashSet<>();
@@ -78,22 +78,38 @@ abstract public class GridElement extends TransparentNodeElement {
             return false;
         }
         UUID id=player.getUUID();
-        int terminal=selectedGridTerminal(side);
-        if (!allowsNewGridLinks() || gridLoads(terminal).isEmpty() || (!bare && (!acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || !GridCablePlan.acceptsChannels(cable,gridLoads(terminal).size())))) {
-            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Select an overhead grid terminal and intact power cable")));pending.remove(id);return true;
+        int terminal=selectedGridTerminal(side), fallback=terminal;
+        if (this instanceof mods.eln.utility.DistributionPoleElement pole && !player.isShiftKeyDown() && y >= 1) {
+            Vec3 hit = new Vec3(x - .5, y - .5, z - .5);
+            fallback = pole.aimedSingleTerminal(hit);
+            terminal = pole.aimedBundle(fallback);
         }
         var first=pending.get(id);
         GridElement other=first==null || first.coordinate().dimention != coordonate().dimention ? null :GridLink.getElementFromCoordinate(first.coordinate());
+        int remote = other == null ? -1 : first.terminal();
+        if (other != null) {
+            if (other.gridLoads(remote).size() == 1) terminal = fallback;
+            if (gridLoads(terminal).size() == 1) remote = first.fallback();
+        }
+        if (bare && ((this instanceof mods.eln.utility.DistributionPoleElement && GridCablePolicy.isService(terminal))
+            || (other instanceof mods.eln.utility.DistributionPoleElement && GridCablePolicy.isService(remote)))) {
+            pending.remove(id);
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("120/240 V service spans require insulated power cable")));
+            return true;
+        }
+        if (!allowsNewGridLinks() || gridLoads(terminal).isEmpty() || (!bare && (!acceptsGridCable(cable) || !GridCablePolicy.acceptsTerminal(cable,terminal) || !GridCablePlan.acceptsChannels(cable,gridLoads(terminal).size())))) {
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Select an overhead grid terminal and intact power cable")));pending.remove(id);return true;
+        }
         if (other==this) { pending.remove(id);player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Cancelled connection")));return true; }
         if (other==null) {
-            pending.put(id,new Pending(coordonate(),terminal,side));player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Setting starting point")));return true;
+            pending.put(id,new Pending(coordonate(),terminal,side,fallback));player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Setting starting point")));return true;
         }
         pending.remove(id);
         if (bare) {
             try {
-                if (!canConnect(other) || !lineOfSight(other, side, first.side()))
+                if (!canConnect(other) || !lineOfSight(other, terminal, remote))
                     throw new IllegalArgumentException(mods.eln.i18n.I18N.tr("Cannot connect these two objects"));
-                int cost = GridLink.addBareLink(other, this, first.terminal(), terminal, stack);
+                int cost = GridLink.addBareLink(other, this, remote, terminal, stack);
                 if (cost > 0) {
                     if (!player.isCreative()) OverheadCableItem.take(stack, cost);
                     player.getInventory().setChanged();
@@ -109,9 +125,9 @@ abstract public class GridElement extends TransparentNodeElement {
         boolean enough=utility==null?stack.getCount()>=length:stack.getCount()==1 && (player.isCreative() || utility.getRemainingLengthMeters(stack)+1e-6>=length);
         if (!enough) { player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("You need %1$ units of cable",length)));return true; }
         try {
-            if (!canConnect(other) || !lineOfSight(other, side, first.side())) throw new IllegalArgumentException(mods.eln.i18n.I18N.tr("Cannot connect these two objects"));
+            if (!canConnect(other) || !lineOfSight(other, terminal, remote)) throw new IllegalArgumentException(mods.eln.i18n.I18N.tr("Cannot connect these two objects"));
             ItemStack paid=utility==null?stack.copyWithCount(length):utility.segment(stack,(double)length);
-            if (GridLink.addLink(other,this,first.terminal(),terminal,cable,length,paid)) {
+            if (GridLink.addLink(other,this,remote,terminal,cable,length,paid)) {
                 if(utility==null)stack.shrink(length);else if(!player.isCreative())utility.consume(stack,(double)length);player.getInventory().setChanged();player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Added connection")));
             } else player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(mods.eln.i18n.I18N.tr("Already connected")));
         } catch (IllegalArgumentException ex) { player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(ex.getMessage())); }
@@ -199,9 +215,12 @@ abstract public class GridElement extends TransparentNodeElement {
 
     /** Check every rendered conductor against blocks, excluding the poles and their ghosts. */
     public boolean lineOfSight(GridElement other, Direction mySide, Direction otherSide) {
+        return lineOfSight(other, selectedGridTerminal(mySide), other.selectedGridTerminal(otherSide));
+    }
+
+    private boolean lineOfSight(GridElement other, int mine, int theirs) {
         net.minecraft.world.level.Level level = coordonate().world();
         if (level == null) return true;
-        int mine = selectedGridTerminal(mySide), theirs = other.selectedGridTerminal(otherSide);
         for (int i = 0; i < Math.min(renderWireCount(mine), other.renderWireCount(theirs)); i++) {
             Vec3 a = centre(this).add(renderedGridCablePoint(mine, i));
             Vec3 b = centre(other).add(other.renderedGridCablePoint(theirs, i));
