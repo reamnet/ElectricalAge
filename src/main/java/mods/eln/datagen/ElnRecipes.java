@@ -1452,6 +1452,20 @@ public final class ElnRecipes extends ElnRecipesBase {
         for (var kind : mods.eln.utility.TransmissionKind.values()) if (kind.getRiser())
             addShapelessRecipe(findItemStack(kind.getTitle()),findItemStack(kind.getVolts()>100000?"230 kV Steel Transmission Tower":"69 kV Steel Transmission Pole"),findItemStack("Copper Cable"),findItemStack("Copper Cable"),findItemStack("Copper Cable"));
         mods.eln.utility.DistributionPoles.recipes((out,args)->{addShapelessRecipe(out,args);return kotlin.Unit.INSTANCE;});
+        for (var size : mods.eln.utility.modular.BusbarSize.values()) {
+            String grade = size.name().toLowerCase(java.util.Locale.ROOT);
+            grade = Character.toUpperCase(grade.charAt(0)) + grade.substring(1);
+            for (var metal : mods.eln.sixnode.electricalcable.UtilityCableMaterial.values()) {
+                var ingot = metal == mods.eln.sixnode.electricalcable.UtilityCableMaterial.COPPER
+                    ? Items.COPPER_INGOT : "ingotAluminum";
+                var title = grade + " " + metal.getLabel() + " Busbar";
+                if (size.ordinal() == 0) addRecipe(findItemStack(title), "MMM", 'M', ingot);
+                if (size.ordinal() == 1) addRecipe(findItemStack(title), "MMM", "MMM", 'M', ingot);
+                if (size.ordinal() == 2) addRecipe(findItemStack(title), "MMM", "MMM", "MMM", 'M', ingot);
+                if (size.ordinal() == 3) addRecipe(findItemStack(title), "III", "BBB", "III",
+                    'I', ingot, 'B', findItemStack("Large " + metal.getLabel() + " Busbar"));
+            }
+        }
         addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
         int mastIndex=0;
         for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK)) {

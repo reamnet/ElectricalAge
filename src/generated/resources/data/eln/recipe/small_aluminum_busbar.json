@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "M": "#c:ingots/aluminum"
+  },
+  "pattern": [
+    "MMM"
+  ],
+  "result": {
+    "id": "eln:small_aluminum_busbar"
+  }
+}

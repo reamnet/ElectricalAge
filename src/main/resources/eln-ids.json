@@ -5752,5 +5752,53 @@
   "display": "Condenser Coil",
   "kind": "transparent_node",
   "name": "condenser_coil"
+ },
+ "eln:transparent_node@14080": {
+  "descriptor": "BusbarDescriptor",
+  "display": "Small Copper Busbar",
+  "kind": "transparent_node",
+  "name": "small_copper_busbar"
+ },
+ "eln:transparent_node@14081": {
+  "descriptor": "BusbarDescriptor",
+  "display": "Small Aluminum Busbar",
+  "kind": "transparent_node",
+  "name": "small_aluminum_busbar"
+ },
+ "eln:transparent_node@14082": {
+  "descriptor": "BusbarDescriptor",
+  "display": "Medium Copper Busbar",
+  "kind": "transparent_node",
+  "name": "medium_copper_busbar"
+ },
+ "eln:transparent_node@14083": {
+  "descriptor": "BusbarDescriptor",
+  "display": "Medium Aluminum Busbar",
+  "kind": "transparent_node",
+  "name": "medium_aluminum_busbar"
+ },
+ "eln:transparent_node@14084": {
+  "descriptor": "BusbarDescriptor",
+  "display": "Large Copper Busbar",
+  "kind": "transparent_node",
+  "name": "large_copper_busbar"
+ },
+ "eln:transparent_node@14085": {
+  "descriptor": "BusbarDescriptor",
+  "display": "Large Aluminum Busbar",
+  "kind": "transparent_node",
+  "name": "large_aluminum_busbar"
+ },
+ "eln:transparent_node@14086": {
+  "descriptor": "BusbarDescriptor",
+  "display": "Transmission Copper Busbar",
+  "kind": "transparent_node",
+  "name": "transmission_copper_busbar"
+ },
+ "eln:transparent_node@14087": {
+  "descriptor": "BusbarDescriptor",
+  "display": "Transmission Aluminum Busbar",
+  "kind": "transparent_node",
+  "name": "transmission_aluminum_busbar"
  }
 }

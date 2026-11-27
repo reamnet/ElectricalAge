@@ -137,6 +137,7 @@ public final class ElnDeviceRegistry {
         transparentNodeItem.addDescriptor(mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor.ID,new mods.eln.transparentnode.utilitylight.StepDownUnitDescriptor());
         for(var kind: mods.eln.transparentnode.switchgear.SwitchgearKind.values())transparentNodeItem.addDescriptor((125<<6)+kind.getSubId(),new mods.eln.transparentnode.switchgear.SwitchgearDescriptor(kind));
         mods.eln.utility.DistributionPoles.register();
+        mods.eln.utility.modular.Busbars.register();
         for (var voltage : mods.eln.utility.insulator.InsulatorVoltage.values()) for (boolean feed : new boolean[]{false,true})
             transparentNodeItem.addDescriptor(8043 + voltage.ordinal()*2 + (feed?1:0),new mods.eln.utility.insulator.LineInsulatorDescriptor(voltage,feed));
         for (var kind : mods.eln.utility.TransmissionKind.values()) transparentNodeItem.addDescriptor(kind.getId(),new mods.eln.utility.TransmissionDescriptor(kind));

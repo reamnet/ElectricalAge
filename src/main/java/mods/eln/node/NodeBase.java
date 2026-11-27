@@ -263,6 +263,7 @@ public abstract class NodeBase {
 
     public static void tryConnectTwoNode(NodeBase nodeA, Direction directionA, LRDU lrduA, NodeBase nodeB, Direction directionB, LRDU lrduB) {
         if (!mods.eln.transparentnode.cord.OutletWiring.permits(nodeA, nodeB)) return;
+        if (!mods.eln.utility.modular.RigidBusConnections.permits(nodeA,directionA,lrduA,nodeB,directionB,lrduB)) return;
         if (!mods.eln.utility.WideMeterWiring.permits(nodeA,directionA,lrduA,nodeB,directionB,lrduB)) return;
         if (compareConnectionMask(nodeA.getSideConnectionMask(directionA, lrduA), nodeB.getSideConnectionMask(directionB, lrduB))) {
             ElectricalConnection eCon = null;
@@ -415,6 +416,7 @@ public abstract class NodeBase {
     }
 
     private void visualPair(Direction directionA, LRDU lrduA, NodeBase nodeB, Direction directionB, LRDU lrduB) {
+        if (!mods.eln.utility.modular.RigidBusConnections.permits(this,directionA,lrduA,nodeB,directionB,lrduB)) return;
         if (compareConnectionMask(getSideConnectionMask(directionA, lrduA), nodeB.getSideConnectionMask(directionB, lrduB))) {
             lrduCubeMask.set(directionA, lrduA, true);
             newConnectionAt(directionA, lrduA);

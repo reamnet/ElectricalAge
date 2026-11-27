@@ -13,6 +13,7 @@ public final class ClientRenders {
     public static void registerAll() {
         ElnRenders.transparent(mods.eln.utility.GridSourceTransformerDescriptor.class,mods.eln.utility.GridSourceTransformerRender::new);
         ElnRenders.transparent(mods.eln.utility.SubstationDescriptor.class,mods.eln.utility.SubstationRender::new);
+        ElnRenders.transparent(mods.eln.utility.modular.BusbarDescriptor.class,mods.eln.utility.modular.BusbarRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.kitchen.KitchenDescriptor.class,mods.eln.transparentnode.kitchen.KitchenRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.laundry.MatterMachineDescriptor.class,mods.eln.transparentnode.laundry.MatterMachineRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.fan.FanDescriptor.class,mods.eln.transparentnode.fan.FanRender::new);

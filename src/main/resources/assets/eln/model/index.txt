@@ -407,3 +407,4 @@ lineinsulator69000/lineinsulator69000.obj
 lineinsulator230000/lineinsulator230000.obj
 wirelesspaddleswitch/wirelesspaddleswitch.obj
 wirelesstoggleswitch/wirelesstoggleswitch.obj
+substation_stock/substation_stock.obj

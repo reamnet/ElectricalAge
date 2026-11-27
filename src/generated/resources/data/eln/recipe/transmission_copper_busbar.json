@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:large_copper_busbar",
+    "I": "minecraft:copper_ingot"
+  },
+  "pattern": [
+    "III",
+    "BBB",
+    "III"
+  ],
+  "result": {
+    "id": "eln:transmission_copper_busbar"
+  }
+}
