@@ -36,9 +36,9 @@ First large-machine validation compiled and generated assets, then exposed missi
 
 Pressure validation found that a wide-open cold turbine can bleed the boiler down toward atmospheric pressure before the station is useful. A later unassisted test ran the furnaces at maximum heat with a cold flow restriction and overheated its boiler. The current full-chain case therefore enables native regulators on its furnaces and turbine and explicitly accounts for the controlled starting spin in its energy balance. This is the expected next run to inspect, along with the true remote chunk eviction test. Logs are in `/tmp/eln-steam-station-validation.log`. Once these pass, run both datagen passes, the unfiltered suite and `build`, then launch the local visual check. Source asset paths for this port are the 1.21.1 `model/turbinesteam` OBJ set, `textures/blocks` machine icons, and the original generator and steam-turbine sound events.
 
-Actual server chunk eviction passed across two chunk columns. The old generator block entity was removed and replaced. The same simulator shaft and its owner supplied 976 W before eviction, 859 W while the chunks were absent and 799 W after reload. Its output decreased as the test flywheel discharged. Removing the machine then removed both owned port nodes and left the joint independent. CPU-side publication drew 1,280 vertices for the empty turbine and 3,792 for the generator with complete packet decoding.
+Actual server chunk eviction passed across two chunk columns. The old generator block entity was removed and replaced. The same simulator shaft and its owner supplied 976 W before eviction, 859 W while the chunks were absent and 799 W after reload. Its output decreased as the shaft spent its stored kinetic energy. Removing the machine then removed both owned port nodes and left the joint independent. CPU-side publication drew 1,280 vertices for the empty turbine and 3,792 for the generator with complete packet decoding.
 
-The regulated open-loop test put 392 kJ onto the shaft before exhausting its initial fill. A rated fill of 32,000 game mB is 2.16 kg in the native fluid model. The current test feeds a pressurized water reservoir through a real alloy pipe and the boiler's native float valve. The large turbine also now avoids multiplying the small stage's closed-valve leakage and high-speed parasitic loss by its full 27-times capacity. Full-chain rerun `/tmp/eln-steam-station-fed-retry.log`. The isolated build and root, CAD and fluidcore test run was started separately in `/tmp/eln-steam-units-build.log`; run the incremental build again for the final code.
+The regulated open-loop test put 392 kJ onto the shaft before exhausting its initial fill. A rated fill of 32,000 game mB is 2.16 kg in the native fluid model. The current test feeds a pressurized water reservoir through a real alloy pipe and the boiler's native float valve. The large turbine also now avoids multiplying the small stage's closed-valve leakage and high-speed parasitic loss by its full 27-times capacity. Full-chain rerun `/tmp/eln-steam-station-fed-retry.log`. An isolated pre-feed build was superseded by the final build listed below.
 
 ## Placement and operation
 
@@ -51,15 +51,7 @@ The regulated open-loop test put 392 kJ onto the shaft before exhausting its ini
 
 The six-furnace plant passed with pressurized feedwater, native furnace control and the turbine's regulated inlet at 8 bar. It moved 10.16 kg of steam through the turbine while the float valve maintained 31.9 buckets in the boiler. During the run the furnaces transferred 35.72 MJ of heat, the turbine delivered 2.674 MJ of shaft work, and the electrical load received 985.8 kJ. This exceeds the 897.4 kJ initial shaft energy even before accounting for the energy still in the shaft. The plant ended at 185 rad/s, 3.67 kW at the shaft, and 1.367 kW at the load without a fault. The blade remained installed and wore to 96.98 percent. All 17 saved nodes round-tripped. See `/tmp/eln-steam-station-fed-retry.log` (exit 0).
 
-Next two ordinary datagen passes and canonical JAR, then an unfiltered GameTest run, the incremental all-units build, and live client placement and menu checks. The focused pressure fixture starts with hot water, an external pressurized **water** supply and 170 rad/s of initial mechanical energy. It never injects steam into the turbine or adds shaft energy after startup.
-
-## Release verification
-
-The shaft construction commit is `1ea307aca`. The machine commit `d74d1eca7b2b546ee8525a9a57a3d647143cb1cf` was pushed and confirmed at `origin/local/awg-upstream-integration`. Both ordinary `runClientData` passes returned 0 and printed zero writes. The hashes of all 4,385 generated files, including cache metadata, were byte-for-byte identical.
-
-The canonical production JAR was created with `./gradlew :jar` and verified by `sha256sum -c` (exit 0). SHA-256 is `e974efac7975584d7430b11e1f0a5738e6fb20a25b230802f36e5423bd035671`. It is at `/home/matthew/projects/electrical-age-port/ElectricalAge-awg-upstream-integration/build/libs/eln-26.3-0.1.0-port.jar`.
-
-The unfiltered server is now running with the same built code in an isolated game directory. Results go to `/tmp/eln-steam-full.log` and `/tmp/eln-steam-full.exit`. The earlier isolated build has yet to finish the root unit task. Once it exits, rerun `build :test :cad:test :fluidcore:test` with the final committed code in the same isolated Gradle output directory and check its exit. The desktop client is launching through `tools/mctest/mctest client start`. Next verify inventory icons, placed models, orientation and the blade menu on a fresh singleplayer world. Save screenshot evidence and update this report before the final push.
+The focused pressure fixture starts with hot water, an external pressurized **water** supply and 170 rad/s of initial mechanical energy. It never injects steam into the turbine or adds shaft energy after startup.
 
 ## Live client verification
 
@@ -71,6 +63,26 @@ Evidence is in `tools/mctest/shots/large-steam/` in the integration worktree. Th
 
 ## Compact menu follow-up
 
-The full live check exposed clipping at 854×480 with GUI scale 2. The follow-up puts valve status on the same row as the two slots and tightens the vertical spacing. The unchanged layout engine measures 233 GUI pixels high with zero overlaps. A dedicated `LayoutTest` assertion guards the 240-pixel budget and checks both slots remain visible. The final isolated build is in `/tmp/eln-steam-final-units-build.log`. The earlier unit run used the pre-feed tuning and was stopped so it would not delay the exact final run. The original unfiltered server is completing on `d74d1eca7`. After it exits, rebuild the JAR and run a fresh unfiltered server against the new layout. Reopen the saved manual fixture in the compact live window, verify throttle and blade state, and record exact final results.
+The full live check exposed clipping at 854×480 with GUI scale 2. The follow-up puts valve status on the same row as the two slots and tightens the vertical spacing. The unchanged layout engine measures 233 GUI pixels high with zero overlaps. A dedicated `LayoutTest` assertion guards the 240-pixel budget and checks both slots remain visible. The full unit build passed the new layout test.
 
-The compact menu was checked in the real 854×480 NeoForge framebuffer at GUI scale 2. After quitting and reopening the saved world, an ordinary right-click on the manual turbine's upper shell reopened the screen. Its Tungsten Turbine Blade remained installed and both throttle and valve readings remained at 0 percent. The title, both controls, both slots and inventory fit in the captured frame. See `tools/mctest/shots/large-steam/compact-854x480-reloaded.png`. The exact final build and unfiltered rerun remain in progress.
+The compact menu was checked in the real 854×480 NeoForge framebuffer at GUI scale 2. After quitting and reopening the saved world, an ordinary right-click on the manual turbine's upper shell reopened the screen. Its Tungsten Turbine Blade remained installed and both throttle and valve readings remained at 0 percent. The title, both controls, both slots and inventory fit in the captured frame. See `tools/mctest/shots/large-steam/compact-854x480-reloaded.png`.
+
+## Release verification
+
+| Check | Result |
+| --- | --- |
+| Root unit tests | 1,405 passed, 6 skipped, 0 failed across 1,411 tests. The compact menu regression passed. |
+| CAD tests | 18 passed. Gradle reused the unchanged test outputs. |
+| Fluidcore tests | 102 passed, 2 skipped, 0 failed across 104 tests. Gradle reused the unchanged test outputs. |
+| Unfiltered GameTests | 2,137 of 2,140 passed on both full runs. The Minecraft server returned 3 and Gradle returned 1 for the same three baseline failures. |
+| Final datagen | Both `runClientData` calls returned 0 and wrote zero files. All 4,385 file hashes matched. |
+| Registry and recipes | All 955 preexisting mappings were unchanged, including the 100 AWG records. JEI found a survival recipe path for all four new items. The sole unreachable item was the existing `nibble_memory_chip`. |
+| Production JAR | `./gradlew :jar` and `sha256sum -c` returned 0. |
+
+The baseline at `592778111` passed 2,131 of 2,135 GameTests. The three failures that remained in the two final runs were `golden_descriptors`, `golden_slots` and `jei_every_item_reachable`. The baseline also failed `awg_voxel_ceiling_to_wall_large_aluminum`, which passed both steam-port runs. The steam port does not change AWG geometry or historical golden snapshots.
+
+The implementation commits are `1ea307aca` for the shaft components, `d74d1eca7` for the large machines and `0a29ee4a7` for the compact menu. They were pushed to `origin/local/awg-upstream-integration`. Final logs are `/tmp/eln-steam-final-full.log`, `/tmp/eln-steam-final-units-build.log` and `/tmp/eln-steam-final-datagen-{1,2}.log`. The local client stopped through the ordinary save path, and its temporary options and resource pack were restored.
+
+Production JAR `/home/matthew/projects/electrical-age-port/ElectricalAge-awg-upstream-integration/build/libs/eln-26.3-0.1.0-port.jar`
+
+SHA-256 `a1dbb9f5ab225469ebf862841f66bb226f935d7ab7114151872cba75ba0f55ce`
