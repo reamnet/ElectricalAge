@@ -190,6 +190,58 @@ public class Wp12aContent implements ElnContent {
                 highVoltageCableDescriptor);
             sharedItem.addElement(completId, element);
         }
+        {
+            // eln:shared_item@76 (source ItemRegistration.kt subId 12: V480, 3600/4800 W, very-high-voltage cable;
+            // the source's own icon name, kept verbatim: the 1.12 set drew it from the "800 V" texture)
+            subId = 12;
+            completId = subId + (id << 6);
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 480V Tungsten Heating Element"),
+                480,// electricalNominalU (the source's V480; 26.x has no 480 V constant)
+                3600.0,// electricalNominalP
+                4800.0,// electricalMaximalP
+                veryHighVoltageCableDescriptor);
+            element.setDefaultIcon("small800vtungstenheatingelement");
+            sharedItem.addElement(completId, element);
+        }
+        {
+            // eln:shared_item@77 (source ItemRegistration.kt subId 13: V480, 4812/6015 W, very-high-voltage cable;
+            // the source's own icon name, kept verbatim: the 1.12 set drew it from the "800 V" texture)
+            subId = 13;
+            completId = subId + (id << 6);
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "480V Tungsten Heating Element"),
+                480,// electricalNominalU (the source's V480; 26.x has no 480 V constant)
+                4812.0,// electricalNominalP
+                6015.0,// electricalMaximalP
+                veryHighVoltageCableDescriptor);
+            element.setDefaultIcon("800vtungstenheatingelement");
+            sharedItem.addElement(completId, element);
+        }
+        {
+            // eln:shared_item@78 (source ItemRegistration.kt subId 14: V480, 4000/6000 W, very-high-voltage cable;
+            // the source's own icon name, kept verbatim)
+            subId = 14;
+            completId = subId + (id << 6);
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 480V Heavy Tungsten Heating Element"),
+                480,// electricalNominalU (the source's V480; 26.x has no 480 V constant)
+                4000.0,// electricalNominalP
+                6000.0,// electricalMaximalP
+                veryHighVoltageCableDescriptor);
+            element.setDefaultIcon("small3.2kvtungstenheatingelement");
+            sharedItem.addElement(completId, element);
+        }
+        {
+            // eln:shared_item@79 (source ItemRegistration.kt subId 15: V480, 12000/15000 W, very-high-voltage cable;
+            // the source's own icon name, kept verbatim: the 1.12 set drew it from the "3.2 kV" texture)
+            subId = 15;
+            completId = subId + (id << 6);
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "480V Heavy Tungsten Heating Element"),
+                480,// electricalNominalU (the source's V480; 26.x has no 480 V constant)
+                12000.0,// electricalNominalP
+                15000.0,// electricalMaximalP
+                veryHighVoltageCableDescriptor);
+            element.setDefaultIcon("3.2kvtungstenheatingelement");
+            sharedItem.addElement(completId, element);
+        }
 
     }
 
@@ -652,6 +704,26 @@ public class Wp12aContent implements ElnContent {
 
             descriptor = new ElectricalDrillDescriptor(name,// iconId, name,
                 3, 6000 // double operationTime,double operationEnergy
+            );
+            sharedItem.addElement(completId, descriptor);
+        }
+        {
+            subId = 3;
+            completId = subId + (id << 6);
+            name = TR_NAME(Type.NONE, "Turbo Electrical Drill");
+
+            descriptor = new ElectricalDrillDescriptor(name,// iconId, name,
+                1.0, 10000.0 // double operationTime,double operationEnergy
+            );
+            sharedItem.addElement(completId, descriptor);
+        }
+        {
+            subId = 4;
+            completId = subId + (id << 6);
+            name = TR_NAME(Type.NONE, "Irresponsible Electrical Drill");
+
+            descriptor = new ElectricalDrillDescriptor(name,// iconId, name,
+                0.1, 20000.0 // double operationTime,double operationEnergy
             );
             sharedItem.addElement(completId, descriptor);
         }

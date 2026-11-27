@@ -521,6 +521,30 @@
   "kind": "shared_item",
   "name": "200v_tungsten_heating_corp"
  },
+ "eln:shared_item@76": {
+  "descriptor": "HeatingCorpElement",
+  "display": "Small 480V Tungsten Heating Element",
+  "kind": "shared_item",
+  "name": "small_480v_tungsten_heating_element"
+ },
+ "eln:shared_item@77": {
+  "descriptor": "HeatingCorpElement",
+  "display": "480V Tungsten Heating Element",
+  "kind": "shared_item",
+  "name": "480v_tungsten_heating_element"
+ },
+ "eln:shared_item@78": {
+  "descriptor": "HeatingCorpElement",
+  "display": "Small 480V Heavy Tungsten Heating Element",
+  "kind": "shared_item",
+  "name": "small_480v_heavy_tungsten_heating_element"
+ },
+ "eln:shared_item@79": {
+  "descriptor": "HeatingCorpElement",
+  "display": "480V Heavy Tungsten Heating Element",
+  "kind": "shared_item",
+  "name": "480v_heavy_tungsten_heating_element"
+ },
  "eln:shared_item@7616": {
   "descriptor": "BrushDescriptor",
   "display": "Black Brush",
@@ -826,6 +850,18 @@
   "display": "Fast Electrical Drill",
   "kind": "shared_item",
   "name": "fast_electrical_drill"
+ },
+ "eln:shared_item@963": {
+  "descriptor": "ElectricalDrillDescriptor",
+  "display": "Turbo Electrical Drill",
+  "kind": "shared_item",
+  "name": "turbo_electrical_drill"
+ },
+ "eln:shared_item@964": {
+  "descriptor": "ElectricalDrillDescriptor",
+  "display": "Irresponsible Electrical Drill",
+  "kind": "shared_item",
+  "name": "irresponsible_electrical_drill"
  },
  "eln:shared_item_stack_one@7744": {
   "descriptor": "ElectricalLampItem",

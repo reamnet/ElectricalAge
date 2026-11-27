@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "#c:circuits/advanced",
+    "D": "eln:synthetic_diamond",
+    "F": "eln:fast_electrical_drill",
+    "R": "eln:graphite_rod"
+  },
+  "pattern": [
+    "RCR",
+    " F ",
+    " D "
+  ],
+  "result": {
+    "id": "eln:turbo_electrical_drill"
+  }
+}

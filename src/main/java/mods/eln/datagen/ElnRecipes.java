@@ -1752,6 +1752,22 @@ public final class ElnRecipes extends ElnRecipesBase {
         addRecipe(findItemStack("230V Tungsten Heating Corp"),
             "CC",
             'C', findItemStack("Small 230V Tungsten Heating Corp"));
+        // the source's next step in the chain: two of the large 230 V element (its "240 V" tier)
+        addRecipe(findItemStack("Small 480V Tungsten Heating Element"),
+            "CC",
+            'C', findItemStack("230V Tungsten Heating Corp"));
+        // the source's chain continues: two of the Small 480 V element (source recipe 480v_tungsten_heating_element.json)
+        addRecipe(findItemStack("480V Tungsten Heating Element"),
+            "CC",
+            'C', findItemStack("Small 480V Tungsten Heating Element"));
+        // the source's next step: two of the 480 V element (source recipe small_480v_heavy_tungsten_heating_element.json)
+        addRecipe(findItemStack("Small 480V Heavy Tungsten Heating Element"),
+            "CC",
+            'C', findItemStack("480V Tungsten Heating Element"));
+        // the source's next step: two of the Small 480 V Heavy element (source recipe 480v_heavy_tungsten_heating_element.json)
+        addRecipe(findItemStack("480V Heavy Tungsten Heating Element"),
+            "CC",
+            'C', findItemStack("Small 480V Heavy Tungsten Heating Element"));
     }
 
     public static void recipeRegulatorItem() {
@@ -2077,6 +2093,26 @@ public final class ElnRecipes extends ElnRecipesBase {
             'C', dictAdvancedChip,
             'M', findItemStack("Advanced Electrical Motor"),
             'P', stack(Items.DIAMOND_PICKAXE));
+
+        // ForkPatch 1.21.1 CraftingRecipes.kt:1661-1668: Turbo Electrical Drill (fast drill + advanced chip +
+        // graphite rod + synthetic diamond); the 1.12 advancedChip dictionary entry is Eln.dictAdvancedChip.
+        addRecipe(findItemStack("Turbo Electrical Drill"),
+            "RCR",
+            " F ",
+            " D ",
+            'F', findItemStack("Fast Electrical Drill"),
+            'C', dictAdvancedChip,
+            'R', findItemStack("Graphite Rod"),
+            'D', findItemStack("Synthetic Diamond"));
+
+        // ForkPatch 1.21.1 CraftingRecipes.kt:1667-1672: Irresponsible Electrical Drill (the turbo drill ringed by
+        // eight synthetic diamonds).
+        addRecipe(findItemStack("Irresponsible Electrical Drill"),
+            "DDD",
+            "DFD",
+            "DDD",
+            'F', findItemStack("Turbo Electrical Drill"),
+            'D', findItemStack("Synthetic Diamond"));
 
     }
 
