@@ -73,6 +73,7 @@ public final class ElnGameTests {
         l.add(new mods.eln.gametest.cases.ModularRecloserCases(true));
         l.addAll(mods.eln.gametest.cases.ModularYardCases.cases());
         l.add(new mods.eln.gametest.cases.ModularBusbarBurnCase());
+        l.add(new mods.eln.gametest.cases.ModularChunkCase());
         l.add(new mods.eln.gametest.cases.ModularGangLinkCase());
         l.add(new mods.eln.gametest.cases.GridGhostRepairCase());
         l.addAll(mods.eln.gametest.cases.ForkPatchTransmissionLampCases.cases());

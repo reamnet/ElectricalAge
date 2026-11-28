@@ -33,8 +33,11 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.io.DataInputStream
 import java.io.DataOutputStream
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.ceil
+
+private fun formatRatio(value: Double) = String.format(Locale.ROOT, "%.4f", value)
 
 internal val yardVoltages=listOf(230,400,800,3200,11000,12500,69000,230000)
 
@@ -252,7 +255,7 @@ class ModularTransformerElement(node: TransparentNode, descriptor: TransparentNo
     override fun hasGui()=true
     override fun multiMeterString(side: Direction)=Utils.plotUIP(outputs[0].u,outputs[0].i)
     override fun thermoMeterString(side: Direction)=Utils.plotCelsius("Oil",oilC)
-    override fun getWaila()=linkedMapOf(tr("Winding ratio") to Utils.plotValue(ratio,""),
+    override fun getWaila()=linkedMapOf(tr("Winding ratio") to formatRatio(ratio),
         tr("Oil temperature") to Utils.plotCelsius("",oilC),tr("Supply") to
             if(tripped)tr("Protection tripped") else if(energized)tr("Enabled") else tr("Disabled"))
 
@@ -333,14 +336,14 @@ class ModularTransformerScreen(menu: ElnNodeMenu,inv: Inventory,title: Component
         button(127,25,113,{tr("Secondary %1$ V",view.secondary)},{view.clientSendId(81)})
         button(8,50,113,{tr("Windings: %1$",view.phases)},{view.clientSendId(82)})
         button(127,50,113,{tr("Tap step: %1$",view.tap)},{view.clientSendId(83)})
-        button(8,75,113,{tr("Rating: %1$%%",view.rating)},{view.clientSendId(84)})
+        button(8,75,113,{tr("Rating: %1$%",view.rating)},{view.clientSendId(84)})
         button(127,75,113,{tr("Oil trip: %1$ C",view.limit)},{view.clientSendId(85)})
         button(8,101,232,{if(view.tripped)tr("Reset protection") else if(view.energized)tr("Disable windings") else tr("Enable windings")},
             {view.clientSendId(86)})
     }
     override fun extractDevice(g: GuiGraphicsExtractor,mx: Int,my: Int,seconds: Float) {
         val ratio=if(view.primary>0)view.secondary.toDouble()/view.primary*(1+view.tap*.0125) else 0.0
-        label(g,8,129,tr("Ratio %1$   Output %2$",Utils.plotValue(ratio,""),Utils.plotVolt("",view.volts)))
+        label(g,8,129,tr("Ratio %1$   Output %2$",formatRatio(ratio),Utils.plotVolt("",view.volts)))
         label(g,8,142,Utils.plotCelsius("Oil",view.oil))
     }
 }
