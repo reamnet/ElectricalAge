@@ -5860,5 +5860,23 @@
   "display": "Transmission Gang Substation Disconnect",
   "kind": "transparent_node",
   "name": "transmission_gang_substation_disconnect"
+ },
+ "eln:transparent_node@14104": {
+  "descriptor": "ModularTransformerDescriptor",
+  "display": "Configurable Distribution Substation Transformer",
+  "kind": "transparent_node",
+  "name": "configurable_distribution_substation_transformer"
+ },
+ "eln:transparent_node@14105": {
+  "descriptor": "ModularTransformerDescriptor",
+  "display": "Configurable Medium Power Transformer",
+  "kind": "transparent_node",
+  "name": "configurable_medium_power_transformer"
+ },
+ "eln:transparent_node@14106": {
+  "descriptor": "ModularTransformerDescriptor",
+  "display": "Configurable Transmission Transformer",
+  "kind": "transparent_node",
+  "name": "configurable_transmission_transformer"
  }
 }

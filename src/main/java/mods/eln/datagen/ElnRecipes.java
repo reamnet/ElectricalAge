@@ -1482,6 +1482,17 @@ public final class ElnRecipes extends ElnRecipesBase {
         addRecipe(findItemStack("Transmission Gang Substation Disconnect"),"III","CGC","FBF",'I',findItemStack("230 kV Line Insulator"),
             'C',Blocks.COPPER_BLOCK.weathering().unaffected(),'G',findItemStack("Three Phase Gang Substation Disconnect"),
             'F',findItemStack("Steel Substation Gantry Section"),'B',findItemStack("Substation Transformer Foundation"));
+        addRecipe(findItemStack("Configurable Distribution Substation Transformer"),"ICI","DFD","BBB",
+            'I',findItemStack("Busbar Support Insulator"),'C',findItemStack("Optimal Ferromagnetic Core"),
+            'D',findItemStack("Copper Cable"),'F',findItemStack("Machine Block"),'B',findItemStack("Substation Transformer Foundation"));
+        addRecipe(findItemStack("Configurable Medium Power Transformer"),"IQI","DTD","BFB",
+            'I',findItemStack("69 kV Line Insulator"),'Q',findItemStack("Optimal Ferromagnetic Core"),
+            'D',Blocks.COPPER_BLOCK.weathering().unaffected(),'T',findItemStack("Configurable Distribution Substation Transformer"),
+            'B',findItemStack("Steel Equipment Support Frame"),'F',findItemStack("Substation Transformer Foundation"));
+        addRecipe(findItemStack("Configurable Transmission Transformer"),"IQI","DTD","GFG",
+            'I',findItemStack("230 kV Line Insulator"),'Q',findItemStack("Optimal Ferromagnetic Core"),
+            'D',Blocks.COPPER_BLOCK.weathering().unaffected(),'T',findItemStack("Configurable Medium Power Transformer"),
+            'G',findItemStack("Steel Substation Gantry Section"),'F',findItemStack("Substation Transformer Foundation"));
         addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
         int mastIndex=0;
         for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK)) {

@@ -42,7 +42,7 @@ enum class ModularDisconnectKind(val title: String, val phases: Int, val voltage
 }
 
 /** Grid ports are ordered by circuit phase, independently of the device's facing. */
-internal class EquipmentTerminals(val phases: Int, private val x: Double, private val y: Double, private val spacing: Double) {
+internal class EquipmentTerminals(val phases: Int, private val x: Double, private val y: Double, private val spacing: Double, private val outputY: Double = y) {
     private val inputs = List(phases) { 32 + it }
     private val outputs = List(phases) { 36 + it }
     private val singles = inputs + outputs
@@ -57,7 +57,7 @@ internal class EquipmentTerminals(val phases: Int, private val x: Double, privat
         else -> null
     }
     fun point(terminal: Int, wire: Int): Vec3 =
-        Vec3(if (bank(terminal)==0) -x else x, y, lane(phase(terminal) ?: wire))
+        Vec3(if (bank(terminal)==0) -x else x, if (bank(terminal)==0) y else outputY, lane(phase(terminal) ?: wire))
     fun lane(phase: Int) = (phase-(phases-1)*.5)*spacing
     fun closest(hit: Vec3, front: Direction) =
         singles.minBy { front.rotateFromXN(point(it,0)).distanceToSqr(hit) }

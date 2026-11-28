@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:copper_block",
+    "F": "eln:substation_transformer_foundation",
+    "G": "eln:steel_substation_gantry_section",
+    "I": "eln:230_kv_line_insulator",
+    "Q": "eln:optimal_ferromagnetic_core",
+    "T": "eln:configurable_medium_power_transformer"
+  },
+  "pattern": [
+    "IQI",
+    "DTD",
+    "GFG"
+  ],
+  "result": {
+    "id": "eln:configurable_transmission_transformer"
+  }
+}

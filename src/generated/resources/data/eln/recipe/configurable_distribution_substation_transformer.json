@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "eln:substation_transformer_foundation",
+    "C": "eln:optimal_ferromagnetic_core",
+    "D": "eln:copper_cable",
+    "F": "eln:machine_block",
+    "I": "eln:busbar_support_insulator"
+  },
+  "pattern": [
+    "ICI",
+    "DFD",
+    "BBB"
+  ],
+  "result": {
+    "id": "eln:configurable_distribution_substation_transformer"
+  }
+}

@@ -100,7 +100,36 @@ def steelwork():
             parts.append(solid((-x,h-.28,z-.05),(x,h-.234,z+.05),(196,124,63)))
         write_sprite(name,parts,16)
 
+def transformers():
+    for i,name in enumerate(["configurable_distribution_substation_transformer",
+                             "configurable_medium_power_transformer","configurable_transmission_transformer"]):
+        width=.42+i*.05
+        tank_y=.21+i*.08
+        paint=(107,133,142)
+        parts=[
+            ((-width-.09,-.46,-width),(width+.09,-.35,width),(60,80,93)),
+            ((-width,-.34,-width+.07),(width,tank_y,width-.07),paint),
+            ((-width-.03,tank_y,-width+.03),(width+.03,tank_y+.046,width-.03),(129,152,156)),
+        ]
+        for z in [-width,width-.09]:
+            for fin in range(6):
+                x=-width+.095+fin*width*.29
+                parts.append(((x,-.30,z),(x+.047,tank_y-.045,z+.099),(132,151,157)))
+        for bank,h in [(-1,.59+i*.09),(1,.42+i*.09)]:
+            for z in [-width*.53,0,width*.53]:
+                x=bank*width*.76
+                parts.append(((x-.044,tank_y,z-.043),(x+.044,h,z+.043),(146,176,171)))
+                for rib in range(4):
+                    y=tank_y+(h-tank_y)*(.17+.23*rib)
+                    parts.append(((x-.076,y,z-.073),(x+.076,y+.035,z+.073),(116,157,158)))
+                parts.append(((x-.052,h-.026,z-.051),(x+.052,h+.028,z+.051),(182,142,86)))
+        if i:
+            parts.append(((-width*.44,tank_y+.09,-.105),(width*.46,tank_y+.29,.105),(122,150,160)))
+            parts.append(((.08,-.13,width),(.26,.06,width+.024),(62,85,91)))
+        write_sprite(name,parts,18)
+
 
 if __name__ == "__main__":
     busbars()
     steelwork()
+    transformers()

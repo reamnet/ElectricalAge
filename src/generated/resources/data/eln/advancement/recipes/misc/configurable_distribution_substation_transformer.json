@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ingredient": {
+      "conditions": {
+        "items": [
+          {
+            "items": "eln:busbar_support_insulator"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "eln:configurable_distribution_substation_transformer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ingredient"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "eln:configurable_distribution_substation_transformer"
+    ]
+  }
+}

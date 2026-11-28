@@ -1,0 +1,6 @@
+{
+  "parent": "eln:item/device_transparent",
+  "textures": {
+    "particle": "eln:item/configurable_distribution_substation_transformer"
+  }
+}

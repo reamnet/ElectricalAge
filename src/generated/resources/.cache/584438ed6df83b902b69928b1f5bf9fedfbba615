@@ -1,4 +1,4 @@
-// 26.3	2026-11-27T18:58:59.821325696	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-27T19:01:36.609430455	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -282,7 +282,10 @@ cb22534cd11f41a4fdee43d96afe0c8f4f502418 data/eln/advancement/recipes/misc/clutc
 083b94981390838b2cfffae637313aade05199db data/eln/advancement/recipes/misc/compact_side_entry_service_mast.json
 d4c81ae7f5e3497a7a7df59ab504d6bf97689420 data/eln/advancement/recipes/misc/computer.json
 f3d550ab21bc57e43c5e943ceec6d7aff7f10e52 data/eln/advancement/recipes/misc/condenser_coil.json
+2415549a2289db3e5d7f53a0172a19a89b6d1917 data/eln/advancement/recipes/misc/configurable_distribution_substation_transformer.json
+6748a09df669a541c57b5be60ef969e850502895 data/eln/advancement/recipes/misc/configurable_medium_power_transformer.json
 a7d17767a5dbba27b8cc1a46625e6e20c8a94f1d data/eln/advancement/recipes/misc/configurable_summing_unit.json
+f6797c816baba8122bb7add19d3047da57d607d3 data/eln/advancement/recipes/misc/configurable_transmission_transformer.json
 bdec91984c6084d4e7819043b06effcf89f1b20c data/eln/advancement/recipes/misc/copper_cable.json
 5eb4ee8965014ee021608a06d43ef73b666fa2c3 data/eln/advancement/recipes/misc/copper_clutch_plate.json
 a4bc5c8521cddcafc66204673564d0f12cd4a473 data/eln/advancement/recipes/misc/copper_coil.json
@@ -1089,7 +1092,10 @@ fca1fc277c3832899b240bf7f4a391e50b6d08a4 data/eln/recipe/classic_box_fan.json
 2c1b2da92db115ded11ac17d16c7c0345ea9dacd data/eln/recipe/compact_side_entry_service_mast.json
 81d16accfbdaa70b2add90905cf05acadc836c9d data/eln/recipe/computer.json
 02d72ce08660eccaad8a0ef8f6cb772b25f12925 data/eln/recipe/condenser_coil.json
+2050a0f50c733317edcccf076c4dd06be5968c15 data/eln/recipe/configurable_distribution_substation_transformer.json
+79dd18db03607ed4e99115b6738ffe4583856c26 data/eln/recipe/configurable_medium_power_transformer.json
 e6d592a04e3a3543405fc3038e0c4d99be342217 data/eln/recipe/configurable_summing_unit.json
+feaef4ced57d72c097cb9a59aae8d2da4c908311 data/eln/recipe/configurable_transmission_transformer.json
 59b6b7cda71498662dc4759287863f6959474cf3 data/eln/recipe/copper_cable.json
 22d1f636d41860d379fc37b96c23c1f9e80eafce data/eln/recipe/copper_clutch_plate.json
 b99487bebe5fb5db55128da9327d630d8b0b2ade data/eln/recipe/copper_coil.json
