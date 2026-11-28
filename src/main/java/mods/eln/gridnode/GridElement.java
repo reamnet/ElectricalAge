@@ -78,6 +78,12 @@ abstract public class GridElement extends TransparentNodeElement {
             return false;
         }
         UUID id=player.getUUID();
+        if (this instanceof mods.eln.utility.modular.RigidEquipment) {
+            pending.remove(id);
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(
+                mods.eln.i18n.I18N.tr("Use rigid busbars on this equipment. Attach overhead wires to feed insulators.")));
+            return true;
+        }
         int terminal=selectedGridTerminal(side), fallback=terminal;
         if (this instanceof AimedGridTerminals target) {
             fallback=target.gridTerminalAt(side,new Vec3(x-.5,y-.5,z-.5));

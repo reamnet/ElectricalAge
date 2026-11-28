@@ -36,6 +36,16 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
     }
 
     @Override
+    public InteractionResult use(Level level, Player player, net.minecraft.world.InteractionHand hand) {
+        if (descriptor instanceof mods.eln.utility.modular.BusbarDescriptor bar && player.isShiftKeyDown()
+            && hand == net.minecraft.world.InteractionHand.MAIN_HAND) {
+            if (!level.isClientSide()) bar.cycleItemPhase(player);
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
     public InteractionResult useOn(UseOnContext ctx) {
         if (descriptor instanceof mods.eln.transparentnode.festive.FairyLightsDescriptor) return mods.eln.transparentnode.festive.FairyLightPlacement.INSTANCE.use(this,ctx);
         var recessed = mods.eln.transparentnode.cord.OutletWall.use(this, ctx);

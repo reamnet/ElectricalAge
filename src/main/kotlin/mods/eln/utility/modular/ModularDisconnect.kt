@@ -90,10 +90,7 @@ class ModularDisconnectDescriptor(val kind: ModularDisconnectKind) : GridDescrip
 
     override fun rotationIsFixed() = true
     override fun isFloor(below: net.minecraft.world.level.block.Block) =
-        (below as? mods.eln.node.transparent.TransparentNodeBlock)?.descriptor.let {
-            (it as? SubstationSupportDescriptor)?.kind in listOf(SubstationSupportKind.BASE,
-                SubstationSupportKind.FRAME,SubstationSupportKind.GANTRY) || super.isFloor(below)
-        }
+        SubstationSupports.equipmentFloor(below) || super.isFloor(below)
     fun drawEquipment(front: Direction, open: Double) {
         glPushMatrix()
         try {
@@ -152,9 +149,9 @@ class ModularDisconnectDescriptor(val kind: ModularDisconnectKind) : GridDescrip
 }
 
 class ModularDisconnectElement(node: TransparentNode, descriptor: TransparentNodeDescriptor) :
-    GridElement(node,descriptor,192), AimedGridTerminals {
+    RigidEquipment(node,descriptor), AimedGridTerminals {
     private val spec=descriptor as ModularDisconnectDescriptor
-    private val terms=spec.terminals
+    internal override val terms=spec.terminals
     private val kind=spec.kind
     val inputs=List(kind.phases) { NbtElectricalLoad("yardSwitchIn$it").apply { rs=.00001 } }
     val outputs=List(kind.phases) { NbtElectricalLoad("yardSwitchOut$it").apply { rs=.00001 } }

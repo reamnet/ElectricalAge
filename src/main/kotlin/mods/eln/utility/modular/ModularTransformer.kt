@@ -68,9 +68,7 @@ class ModularTransformerDescriptor(val kind: ModularTransformerKind) :
     }
     override fun rotationIsFixed()=true
     override fun isFloor(below: net.minecraft.world.level.block.Block) =
-        (below as? TransparentNodeBlock)?.descriptor.let {
-            (it as? SubstationSupportDescriptor)?.kind==SubstationSupportKind.BASE || super.isFloor(below)
-        }
+        SubstationSupports.equipmentFloor(below) || super.isFloor(below)
 
     fun drawMachine(front: Direction, phases: Int, tripped: Boolean, fanAngle: Double) {
         glPushMatrix()
@@ -148,7 +146,7 @@ class ModularTransformerDescriptor(val kind: ModularTransformerKind) :
 }
 
 class ModularTransformerElement(node: TransparentNode, descriptor: TransparentNodeDescriptor) :
-    GridElement(node,descriptor,192), AimedGridTerminals {
+    RigidEquipment(node,descriptor), AimedGridTerminals {
     private val spec=descriptor as ModularTransformerDescriptor
     private val kind=spec.kind
     private val inventory=TransparentNodeElementInventory(0,1,this)
@@ -160,7 +158,7 @@ class ModularTransformerElement(node: TransparentNode, descriptor: TransparentNo
     private val losses=winding.zip(outputs,::Resistor)
     private val protection=SubstationProtection()
     private val oil=NbtThermalLoad("yardOil",0.0,65.0/(kind.kva*8),1.0,kind.kva*650.0)
-    private val terms get()=spec.terminals(phases)
+    internal override val terms get()=spec.terminals(phases)
 
     var primary=kind.highVolts
         private set
@@ -223,9 +221,12 @@ class ModularTransformerElement(node: TransparentNode, descriptor: TransparentNo
         if(p !in kind.tiers || s !in kind.tiers || s.toDouble()/p !in .02..50.0 ||
             windings !in listOf(1,3) || tapStep !in -4..4 || capacity !in listOf(50,75,100) || temperature !in listOf(90,110,130))
             return false
-        if(windings!=phases && (gridLinkList.isNotEmpty() || gridLinksBooting.isNotEmpty()))return false
+        if (windings != phases && (gridLinkList.isNotEmpty() || gridLinksBooting.isNotEmpty() ||
+                node.nodeConnectionList.isNotEmpty())) return false
+        val reconnect = primary != p || secondary != s || phases != windings
         primary=p;secondary=s;phases=windings;tap=tapStep;ratingPercent=capacity;oilLimit=temperature
         applyWindings()
+        if (reconnect && node.isAdded) node.reconnect()
         needPublish()
         return true
     }
@@ -239,6 +240,8 @@ class ModularTransformerElement(node: TransparentNode, descriptor: TransparentNo
         needPublish()
         return true
     }
+
+    override fun requiredBusbarVoltage(terminal: Int) = if (terms.bank(terminal) == 0) primary else secondary
 
     override fun gridTerminalAt(side: Direction,point: Vec3)=terms.closest(point,front)
     override fun gridBundleFor(terminal: Int)=terms.bundle(terminal)

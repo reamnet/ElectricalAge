@@ -60,10 +60,7 @@ class ModularRecloserDescriptor(val kind: ModularRecloserKind) :
 
     override fun rotationIsFixed()=true
     override fun isFloor(below: net.minecraft.world.level.block.Block) =
-        (below as? TransparentNodeBlock)?.descriptor.let {
-            (it as? SubstationSupportDescriptor)?.kind in listOf(SubstationSupportKind.FRAME,
-                SubstationSupportKind.BASE,SubstationSupportKind.GANTRY) || super.isFloor(below)
-        }
+        SubstationSupports.equipmentFloor(below) || super.isFloor(below)
 
     fun drawRecloser(front: Direction,closed: Boolean,locked: Boolean) {
         glPushMatrix()
@@ -122,10 +119,10 @@ class ModularRecloserDescriptor(val kind: ModularRecloserKind) :
 }
 
 class ModularRecloserElement(node: TransparentNode, descriptor: TransparentNodeDescriptor) :
-    GridElement(node,descriptor,192), AimedGridTerminals {
+    RigidEquipment(node,descriptor), AimedGridTerminals {
     private val spec=descriptor as ModularRecloserDescriptor
     private val kind=spec.kind
-    private val terms=spec.terminals
+    internal override val terms=spec.terminals
     private val inventory=TransparentNodeElementInventory(0,1,this)
     override fun getInventory()=inventory
     val inputs=List(kind.phases){NbtElectricalLoad("yardRecloserIn$it").apply { rs=.00001 }}

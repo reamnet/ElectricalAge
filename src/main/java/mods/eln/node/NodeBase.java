@@ -370,6 +370,7 @@ public abstract class NodeBase {
             }
         }
 
+        mods.eln.utility.modular.RigidBusConnections.connect(this);
         mods.eln.utility.WideMeterWiring.connect(this);
         mods.eln.transparentnode.cord.OutletWiring.connect(this);
     }

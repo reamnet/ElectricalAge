@@ -2,6 +2,7 @@ package mods.eln.utility.modular
 
 import mods.eln.Eln
 import mods.eln.gl.GL11.*
+import mods.eln.generic.ItemNbt
 import mods.eln.gridnode.GridDescriptor
 import mods.eln.gridnode.GridElement
 import mods.eln.gridnode.GridLink
@@ -61,6 +62,8 @@ class BusbarDescriptor(
 
     override fun rotationIsFixed() = true
     override fun mustHaveFloor() = false
+    override fun blockProperties(p: net.minecraft.world.level.block.state.BlockBehaviour.Properties) =
+        super.blockProperties(p).dynamicShape()
 
     private fun arm(side: Direction): AABB {
         val end = Vec3.atLowerCornerOf(side.toEnumFacing().unitVec3i)
@@ -76,20 +79,53 @@ class BusbarDescriptor(
             maxOf(middle.z, rim.z) + if (end.z == 0.0) h else 0.0)
     }
 
-    private val mountingStem = AABB(-.065,-.5,-.065,.065,-size.width*.57,.065)
+    private fun mountingStem(side: Direction): AABB {
+        val radius = minOf(.065, size.width * .4)
+        val inward = side.toEnumFacing().unitVec3i
+        val reach = .5 - size.width * .57
+        val center = Vec3.atLowerCornerOf(inward).scale(.5 - reach / 2)
+        return AABB.ofSize(center,
+            if (inward.x != 0) reach else 2 * radius,
+            if (inward.y != 0) reach else 2 * radius,
+            if (inward.z != 0) reach else 2 * radius)
+    }
     override fun shapeAt(entity: TransparentNodeEntity, collision: Boolean): net.minecraft.world.phys.shapes.VoxelShape {
         val render = entity.elementRender as? BusbarRender
         val element = (entity.node as? TransparentNode)?.element as? BusbarElement
-        val shape = shapes[render?.arms ?: element?.arms ?: 0]
-        return if (render?.supported ?: element?.supported ?: false)
-            Shapes.or(shape,Shapes.create(mountingStem.move(.5,.5,.5))) else shape
+        var shape = shapes[render?.arms ?: element?.arms ?: 0]
+        val supports = render?.supports ?: element?.supports ?: 0
+        for (side in Direction.values()) if (supports and (1 shl side.int) != 0)
+            shape = Shapes.or(shape, Shapes.create(mountingStem(side).move(.5, .5, .5)))
+        return shape
     }
 
-    fun drawBusbar(mask: Int, phase: Int, supported: Boolean = false) = SubstationStock.draw {
+    fun drawBusbar(mask: Int, phase: Int, supports: Int = 0, contacts: Map<Direction, Vec3> = emptyMap()) = SubstationStock.draw {
         val h = size.width / 2
         box(hub, metal)
-        if (supported) box(mountingStem, 0x6d777c)
+        for (side in Direction.values()) if (supports and (1 shl side.int) != 0)
+            box(mountingStem(side), 0x6d777c)
         for (dir in Direction.values()) if (mask and (1 shl dir.int) != 0) box(arm(dir), metal)
+        for ((side, clamp) in contacts) {
+            val axis = Vec3.atLowerCornerOf(side.toEnumFacing().unitVec3i)
+            val rim = axis.scale(.5)
+            val depth = clamp.dot(axis)
+            // The offset is taken in the reserved cell, while the stock arm stays on the modular grid.
+            val turn = axis.scale(minOf(depth, .66))
+            val offset = clamp.subtract(axis.scale(depth))
+            val corner = turn.add(offset.x, 0.0, 0.0)
+            val bend = corner.add(0.0, offset.y, 0.0)
+            val aligned = bend.add(0.0, 0.0, offset.z)
+            val radius = minOf(h, .085)
+            fun section(a: Vec3, b: Vec3) {
+                if (a.distanceToSqr(b) < 1e-10) return
+                box(AABB(a,b).inflate(radius), metal)
+            }
+            section(rim, turn)
+            section(turn, corner)
+            section(corner, bend)
+            section(bend, aligned)
+            section(aligned, clamp)
+        }
         // The centre splice remains visible on a through run and marks its circuit.
         val marker = when (phase) { 0 -> 0xd75246; 1 -> 0xe7b842; else -> 0x4a88cf }
         box(-h*.8, hub.maxY, -h*.8, h*.8, hub.maxY+.023, h*.8, marker)
@@ -106,9 +142,20 @@ class BusbarDescriptor(
         } finally { glPopMatrix() }
     }
 
+    fun cycleItemPhase(player: Player) {
+        val stack = player.mainHandItem
+        val phase = (itemPhase(stack) + 1) % 3
+        ItemNbt.edit(stack) { it.putInt("rigidPhase", phase) }
+        player.inventory.setChanged()
+        player.sendOverlayMessage(Component.literal(tr("Busbar phase: %1$", "ABC"[phase].toString())))
+    }
+
+    private fun itemPhase(stack: ItemStack) = (ItemNbt.get(stack)?.getIntOr("rigidPhase", 0) ?: 0).coerceIn(0, 2)
+
     override fun addInformation(stack: ItemStack, player: Player?, list: MutableList<String>, advanced: Boolean) {
         list.add(tr("Rated voltage: %1$ V. Rated current: %2$ A", size.volts, ratedAmps))
-        list.add(tr("One conductor. Sneak-use with an empty hand to change phase before connecting."))
+        list.add(tr("Busbar phase: %1$", "ABC"[itemPhase(stack)].toString()))
+        list.add(tr("Sneak-use in the air to change the phase before placing this busbar."))
     }
 }
 
@@ -122,10 +169,15 @@ class BusbarElement(node: TransparentNode, descriptor: TransparentNodeDescriptor
         private set
     private var failureQueued = false
 
-    val supported: Boolean get() {
-        if (node.coordonate == null) return false
-        val beneath = (node.getNeighbor(Direction.YN) as? TransparentNode)?.element?.descriptor as? SubstationSupportDescriptor
-        return beneath?.kind in listOf(SubstationSupportKind.SUPPORT,SubstationSupportKind.STACK)
+    val supported get() = supports != 0
+
+    val supports: Int get() {
+        if (node.coordonate == null) return 0
+        return Direction.values().fold(0) { mask, side ->
+            val support = (node.getNeighbor(side) as? TransparentNode)?.element as? SubstationSupportElement
+            if ((support?.descriptor as? SubstationSupportDescriptor)?.kind?.isInsulator == true &&
+                support.front == side) mask or (1 shl side.int) else mask
+        }
     }
 
     val arms: Int get() = Direction.values().fold(0) { mask, side ->
@@ -205,7 +257,15 @@ class BusbarElement(node: TransparentNode, descriptor: TransparentNodeDescriptor
         super.networkSerialize(out)
         out.writeByte(arms)
         out.writeByte(phase)
-        out.writeBoolean(supported)
+        out.writeByte(supports)
+        val contacts = node.nodeConnectionList.filterIsInstance<EquipmentJoint>()
+        out.writeByte(contacts.size)
+        for (joint in contacts) {
+            out.writeByte(joint.approach.int)
+            out.writeFloat(joint.point.x.toFloat())
+            out.writeFloat(joint.point.y.toFloat())
+            out.writeFloat(joint.point.z.toFloat())
+        }
     }
 }
 
@@ -213,17 +273,25 @@ class BusbarRender(entity: TransparentNodeEntity, descriptor: TransparentNodeDes
     var arms = 0
         private set
     private var phase = 0
-    var supported = false
+    var supports = 0
         private set
+    private var contacts = emptyMap<Direction, Vec3>()
     override fun networkUnserialize(input: DataInputStream) {
         super.networkUnserialize(input)
         arms = input.readUnsignedByte().coerceIn(0, 63)
         phase = input.readUnsignedByte().coerceIn(0, 2)
-        supported = input.readBoolean()
+        supports = input.readUnsignedByte()
+        contacts = buildMap {
+            repeat(input.readUnsignedByte()) {
+                val side = Direction.fromInt(input.readUnsignedByte())
+                val point = Vec3(input.readFloat().toDouble(), input.readFloat().toDouble(), input.readFloat().toDouble())
+                if (side != null) put(side, point)
+            }
+        }
     }
     override fun draw() {
         drawCables()
-        (transparentNodedescriptor as BusbarDescriptor).drawBusbar(arms, phase,supported)
+        (transparentNodedescriptor as BusbarDescriptor).drawBusbar(arms, phase, supports, contacts)
     }
 }
 
