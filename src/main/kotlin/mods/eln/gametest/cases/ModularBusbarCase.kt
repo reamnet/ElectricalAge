@@ -8,7 +8,6 @@ import mods.eln.gridnode.GridLink
 import mods.eln.misc.Coordonate
 import mods.eln.misc.Direction
 import mods.eln.node.transparent.TransparentNodeEntity
-import mods.eln.node.transparent.TransparentNodeItem
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sixnode.electricalcable.UtilityCableMaterial
@@ -19,7 +18,7 @@ import mods.eln.utility.modular.BusbarRender
 import mods.eln.utility.modular.Busbars
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.block.Blocks
+import net.minecraft.core.Direction as Face
 
 class ModularBusbarCase : TestCase {
     override fun id() = "modular_busbar_junction_and_feed"
@@ -29,6 +28,7 @@ class ModularBusbarCase : TestCase {
     override fun ticks() = 60
 
     private lateinit var feed: LineInsulatorElement
+    private lateinit var mounted: LineInsulatorElement
     private lateinit var left: BusbarElement
     private lateinit var centre: BusbarElement
     private lateinit var right: BusbarElement
@@ -58,10 +58,9 @@ class ModularBusbarCase : TestCase {
             listOf(left,right,east,top).all { it.node.nodeConnectionList.single().electrical()!=null },"")
 
         val at = c.at(3,3,7)
-        c.level().setBlockAndUpdate(at.below(), Blocks.STONE.defaultBlockState())
-        val desc = requireNotNull(Eln.transparentNodeItem.getDescriptor(8048))
-        val place = desc.newItemStack()
-        feed = (place.item as TransparentNodeItem).placeAt(place,c.player(),c.level(),at,Direction.YN)!!.element as LineInsulatorElement
+        c.floor(at.below())
+        feed = place(c, 8048, at.below(), Face.UP) as LineInsulatorElement
+        mounted = place(c, 8044, left.coordonate().pos(), Face.WEST) as LineInsulatorElement
         val wire = UtilityCables.all.first { it.sizeLabel=="2 AWG" && it.material==UtilityCableMaterial.COPPER &&
             it.insulated && it.insulationVoltageRating==20000.0 }
         val spool = wire.newItemStack().also { wire.setRemainingLengthMeters(it,20.0) }
@@ -70,10 +69,14 @@ class ModularBusbarCase : TestCase {
         try {
             feed.onBlockActivated(player,Direction.YP,.5f,.5f,.5f)
             left.onBlockActivated(player,Direction.YP,.5f,.5f,.5f)
+            c.check("a suspended wire cannot bypass the feed insulator by attaching to a bar",
+                left.gridLinkList.isEmpty() && wire.getRemainingLengthMeters(spool) == 20.0, "")
+            feed.onBlockActivated(player,Direction.YP,.5f,.5f,.5f)
+            mounted.onBlockActivated(player,Direction.YP,.5f,.5f,.5f)
         } finally { player.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY) }
-        val span = left.gridLinkList.single()
+        val span = mounted.gridLinkList.single()
         c.check("real grid interaction pays for one wire and preserves the selected descriptor",
-            wire.getRemainingLengthMeters(spool)==17.0 && span.cableStack().item===wire.parentItem,"")
+            wire.getRemainingLengthMeters(spool)==18.0 && span.cableStack().item===wire.parentItem,"")
         paidOhms = span.rs()
         source = VoltageSource("modular yard supply",feed.bus,null).apply { u=600.0 }
         load = Resistor(right.load,null).apply { r=12.0 }
@@ -83,7 +86,7 @@ class ModularBusbarCase : TestCase {
 
     override fun measure(c: TestContext) {
         try {
-            val expected = 600 / (12 + paidOhms + feed.bus.rs + 2*left.load.rs + 2*centre.load.rs + right.load.rs)
+            val expected = 600 / (12 + paidOhms + feed.bus.rs + 2*mounted.bus.rs + 2*left.load.rs + 2*centre.load.rs + right.load.rs)
             c.checkValue("supply reaches the far busbar through the paid span and native contact resistances",expected,load.i)
             c.checkValue("the vertical branch is live",centre.load.u,top.load.u)
             c.check("different phase remains unenergized",kotlin.math.abs(otherPhase.load.u)<1e-6,"")

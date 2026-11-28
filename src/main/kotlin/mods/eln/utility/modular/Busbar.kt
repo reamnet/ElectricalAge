@@ -210,7 +210,7 @@ class BusbarElement(node: TransparentNode, descriptor: TransparentNodeDescriptor
         })
     }
 
-    override fun allowsNewGridLinks() = !isBurnt
+    override fun allowsNewGridLinks() = false
     override fun rigidPhase(side: Direction) = phase
     override fun getGridElectricalLoad(side: Direction) = load
     override fun selectedGridTerminal(side: Direction) = 32 + phase
