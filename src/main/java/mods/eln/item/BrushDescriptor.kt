@@ -31,6 +31,8 @@ class BrushDescriptor(name: String) : GenericItemUsingDamageDescriptor(name) {
 
     private fun getLife(stack: ItemStack?) = stack?.let { ItemNbt.get(it) }?.getIntOr("life", 0) ?: 32
 
+    fun hasPaint(stack: ItemStack, player: Player) = player.isCreative || getLife(stack) > 0
+
     /** R5: the paint left as the item bar (1.12 faded in a "dry" overlay instead); a full or empty brush has none. */
     override fun itemBar(stack: ItemStack): Double {
         val life = getLife(stack)
@@ -60,7 +62,7 @@ class BrushDescriptor(name: String) : GenericItemUsingDamageDescriptor(name) {
     fun use(stack: ItemStack, entityPlayer: Player): Boolean {
         val creative = entityPlayer.isCreative
         var life = getLife(stack)
-        return if (creative || life != 0) {
+        return if (hasPaint(stack, entityPlayer)) {
             if (!creative) {
                 --life
                 setLife(stack, life)

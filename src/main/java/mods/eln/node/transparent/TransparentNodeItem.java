@@ -36,16 +36,6 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, net.minecraft.world.InteractionHand hand) {
-        if (descriptor instanceof mods.eln.utility.modular.BusbarDescriptor bar && player.isShiftKeyDown()
-            && hand == net.minecraft.world.InteractionHand.MAIN_HAND) {
-            if (!level.isClientSide()) bar.cycleItemPhase(player);
-            return InteractionResult.SUCCESS;
-        }
-        return InteractionResult.PASS;
-    }
-
-    @Override
     public InteractionResult useOn(UseOnContext ctx) {
         if (descriptor instanceof mods.eln.transparentnode.festive.FairyLightsDescriptor) return mods.eln.transparentnode.festive.FairyLightPlacement.INSTANCE.use(this,ctx);
         var recessed = mods.eln.transparentnode.cord.OutletWall.use(this, ctx);
@@ -54,7 +44,12 @@ public class TransparentNodeItem extends Item implements IDescriptorItem {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         BlockPos pos = ctx.getClickedPos().relative(ctx.getClickedFace());
         Direction direction = Direction.fromIntMinecraftSide(ctx.getClickedFace().get3DDataValue()).getInverse();
-        boolean ok = placeAt(ctx.getItemInHand(), ctx.getPlayer(), world, pos, direction) != null;
+        ItemStack held = ctx.getItemInHand();
+        Player player = ctx.getPlayer();
+        boolean ok = descriptor instanceof mods.eln.utility.modular.BusbarDescriptor bar
+            && player != null && ctx.getHand() == net.minecraft.world.InteractionHand.MAIN_HAND
+            ? bar.placeWithBrush(this, held, player, world, pos, direction)
+            : placeAt(held, player, world, pos, direction) != null;
         if (ok && ctx.getPlayer() != null && (!ctx.getPlayer().isCreative() || (mods.eln.generic.ItemNbt.get(ctx.getItemInHand()) != null && mods.eln.generic.ItemNbt.get(ctx.getItemInHand()).contains("carriedAppliance")))) ctx.getItemInHand().shrink(1);
         return ok ? InteractionResult.SUCCESS : InteractionResult.FAIL;
     }

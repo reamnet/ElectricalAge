@@ -260,7 +260,9 @@ class ModularRecloserRender(entity: TransparentNodeEntity,descriptor: Transparen
     }
     override fun draw() {
         drawCables()
-        (transparentNodedescriptor as ModularRecloserDescriptor).drawRecloser(front,closed,locked)
+        val equipment = transparentNodedescriptor as ModularRecloserDescriptor
+        equipment.drawRecloser(front,closed,locked)
+        RigidEquipment.drawSockets(equipment, equipment.terminals, front)
     }
 }
 

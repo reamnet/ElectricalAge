@@ -56,14 +56,13 @@ class ModularConstructionCase : TestCase {
 }
 
 internal fun place(c: TestContext, id: Int, against: BlockPos, face: Direction,
-                   phase: Int = 0): mods.eln.node.transparent.TransparentNodeElement {
+                   prepare: (ItemStack) -> Unit = {}): mods.eln.node.transparent.TransparentNodeElement {
     val player = c.player()
     val stack = requireNotNull(Eln.transparentNodeItem.getDescriptor(id)).newItemStack()
+    prepare(stack)
     player.setItemInHand(InteractionHand.MAIN_HAND, stack)
     val before = player.isShiftKeyDown
     try {
-        player.setShiftKeyDown(true)
-        repeat(phase) { stack.item.use(c.level(), player, InteractionHand.MAIN_HAND) }
         player.setShiftKeyDown(false)
         val point = Vec3.atCenterOf(against).add(Vec3.atLowerCornerOf(face.unitVec3i).scale(.5))
         val hit = BlockHitResult(point, face, against, false)

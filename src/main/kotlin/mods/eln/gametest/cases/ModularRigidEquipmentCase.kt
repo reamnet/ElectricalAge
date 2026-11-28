@@ -9,12 +9,16 @@ import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.utility.modular.*
 import net.minecraft.core.Direction
+import net.minecraft.world.level.ClipContext
+import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 import kotlin.math.abs
 
-class ModularRigidEquipmentCase(private val variant: Int) : TestCase {
+class ModularRigidEquipmentCase(private val variant: Int, private val rotation: Int) : TestCase {
     private val ids = ModularDisconnectKind.entries.map { it.id } + ModularTransformerKind.entries.map { it.id } +
         ModularRecloserKind.entries.map { it.id }
-    override fun id() = "modular_rigid_terminal_placement_${ids[variant]}"
+    override fun id() = "modular_rigid_terminal_placement_${ids[variant]}" +
+        if (rotation == variant % 4) "" else "_r$rotation"
     override fun width() = 24
     override fun depth() = 24
     override fun height() = 20
@@ -31,16 +35,22 @@ class ModularRigidEquipmentCase(private val variant: Int) : TestCase {
     override fun build(c: TestContext) {
         val p = c.player()
         val yaw = p.yRot
-        p.yRot = (variant % 4) * 90f
+        p.yRot = rotation * 90f
         try {
             device = place(c, ids[variant], c.at(8, 0, 8), Direction.UP) as RigidEquipment
         } finally { p.yRot = yaw }
-        val size = Busbars.FIRST_ID + 6
+        val size = Busbars.FIRST_ID
         fun bank(first: Int): List<BusbarElement> = List(device.terms.phases) { phase ->
             val choices = device.rigidContacts().filter { it.terminal == first + phase }
-            val contact = choices[variant % choices.size]
+            val contact = choices[rotation % choices.size]
             val face = contact.approach.toEnumFacing().opposite
-            val bar = place(c, size + (phase % 2), contact.cell.relative(face.opposite), face, phase) as BusbarElement
+            val mount = contact.cell.relative(face.opposite)
+            val target = Vec3.atCenterOf(mount)
+            val eye = target.add(Vec3.atLowerCornerOf(face.unitVec3i).scale(2.0))
+            val hit = c.level().clip(ClipContext(eye, target, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, p))
+            c.check("phase $phase socket is reachable by the player's ray",
+                hit.type == HitResult.Type.BLOCK && hit.blockPos == mount && hit.direction == face, hit.toString())
+            val bar = place(c, size + (phase % 2), hit.blockPos, hit.direction) as BusbarElement
             val joint = bar.node.nodeConnectionList.filterIsInstance<EquipmentJoint>().single()
             c.check("phase $phase has a native electrical joint at the visible clamp",
                 joint.electrical().joins(bar.load, device.gridLoads(contact.terminal).single()) &&
@@ -100,6 +110,8 @@ class ModularRigidEquipmentCase(private val variant: Int) : TestCase {
     }
 
     companion object {
-        @JvmStatic fun cases(): List<TestCase> = (0 until 10).map(::ModularRigidEquipmentCase)
+        @JvmStatic fun cases(): List<TestCase> = (0 until 10).flatMap { variant ->
+            (0 until 4).map { ModularRigidEquipmentCase(variant, it) }
+        }
     }
 }

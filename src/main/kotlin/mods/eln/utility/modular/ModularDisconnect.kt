@@ -249,7 +249,9 @@ class ModularDisconnectRender(entity: TransparentNodeEntity, descriptor: Transpa
     }
     override fun draw() {
         drawCables()
-        (transparentNodedescriptor as ModularDisconnectDescriptor).drawEquipment(front,open)
+        val equipment = transparentNodedescriptor as ModularDisconnectDescriptor
+        equipment.drawEquipment(front,open)
+        RigidEquipment.drawSockets(equipment, equipment.terminals, front)
     }
 }
 

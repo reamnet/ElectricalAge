@@ -221,6 +221,7 @@ public class ElnLang extends LanguageProvider {
     }
 
     static String descriptorName(Object d) {
+        if (d instanceof mods.eln.utility.modular.BusbarDescriptor b) return b.getRatedName();
         if (d instanceof mods.eln.transparentnode.cord.OutletDescriptor o && o.getRating() == mods.eln.transparentnode.cord.CordRating.V120 && !o.getStrip()) return "120 V Wall Outlet";
         if (d instanceof mods.eln.generic.GenericItemUsingDamageDescriptor g) return g.name;
         if (d instanceof mods.eln.generic.GenericItemBlockUsingDamageDescriptor g) return g.name;

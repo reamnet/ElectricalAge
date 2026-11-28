@@ -36,8 +36,11 @@ class ModularDirectFeedCase : TestCase {
 
     override fun build(c: TestContext) {
         // Mount on the end face rather than using legacy wall-cable edge terminals.
-        bar = c.placeTransparent(Busbars.FIRST_ID + 4,c.at(19,9,8)) as BusbarElement
-        check(bar.selectPhase(1))
+        val base = c.at(19,8,8)
+        c.floor(base)
+        bar = place(c, Busbars.FIRST_ID, base, net.minecraft.core.Direction.UP) {
+            mods.eln.generic.ItemNbt.edit(it) { tag -> tag.putInt("rigidPhase",1) }
+        } as BusbarElement
         val descriptor = requireNotNull(Eln.transparentNodeItem.getDescriptor(8050))
         val item=descriptor.newItemStack()
         val p=c.player()

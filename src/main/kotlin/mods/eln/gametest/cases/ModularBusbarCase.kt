@@ -44,7 +44,7 @@ class ModularBusbarCase : TestCase {
             c.placeTransparent(Busbars.FIRST_ID + offset, c.at(x,y,z)) as BusbarElement
 
         otherPhase = bar(7,3,8)
-        check(otherPhase.selectPhase(1))
+        paint(c, otherPhase, "Yellow Brush")
         centre = bar(7,3,7)
         left = bar(6,3,7)
         right = bar(8,3,7,3)
@@ -53,7 +53,6 @@ class ModularBusbarCase : TestCase {
         c.check("four native face joints meet without connecting a different phase",
             Integer.bitCount(centre.arms)==4 && centre.node.nodeConnectionList.size==4 &&
                 otherPhase.arms==0 && otherPhase.node.nodeConnectionList.isEmpty(),"")
-        c.check("connected phase adjustments are refused", !centre.selectPhase(2), "")
         c.check("all exposed branches are electrically conductive",
             listOf(left,right,east,top).all { it.node.nodeConnectionList.single().electrical()!=null },"")
 
@@ -106,5 +105,28 @@ class ModularBusbarCase : TestCase {
         c.level().removeBlock(east.coordonate().pos(),false)
         c.check("removing one neighbour retracts only that branch",Integer.bitCount(restored.arms)==3 &&
             restored.node.nodeConnectionList.size==3,"")
+    }
+}
+
+internal fun paint(c: TestContext, bar: BusbarElement, brush: String): ItemStack {
+    val stack = Eln.findItemStack(brush, 1)
+    check(!stack.isEmpty)
+    useBar(c, bar, stack)
+    return stack
+}
+
+internal fun useBar(c: TestContext, bar: BusbarElement, stack: ItemStack, sneak: Boolean = false) {
+    val player = c.player()
+    val pos = bar.coordonate().pos()
+    val hit = net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(pos).add(0.0,.06,0.0), Face.UP, pos, false)
+    val held = player.mainHandItem
+    val shifted = player.isShiftKeyDown
+    try {
+        player.setItemInHand(InteractionHand.MAIN_HAND,stack)
+        player.setShiftKeyDown(sneak)
+        check(player.gameMode.useItemOn(player,c.level(),stack,InteractionHand.MAIN_HAND,hit).consumesAction())
+    } finally {
+        player.setShiftKeyDown(shifted)
+        player.setItemInHand(InteractionHand.MAIN_HAND,held)
     }
 }

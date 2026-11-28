@@ -443,6 +443,18 @@ public abstract class NodeBase {
         dropConnections();
     }
 
+    /** Detach a single joint while leaving the node and all of its other ports in the simulation. */
+    public void removeConnection(NodeConnection c) {
+        if (!nodeConnectionList.remove(c)) return;
+        c.N1.nodeConnectionList.remove(c);
+        c.N2.nodeConnectionList.remove(c);
+        c.N1.lrduCubeMask.set(c.dir1, c.lrdu1, false);
+        c.N2.lrduCubeMask.set(c.dir2, c.lrdu2, false);
+        c.N1.setNeedPublish(true);
+        c.N2.setNeedPublish(true);
+        c.destroy();
+    }
+
     /** Remove every NodeConnection of this node, on both ends. */
     protected void dropConnections() {
         for (NodeConnection c : nodeConnectionList) {
@@ -561,6 +573,7 @@ public abstract class NodeBase {
         disconnectJob();
 
         isAdded = false;
+        mods.eln.utility.modular.RigidBusConnections.disconnected(this);
     }
 
     public boolean nodeAutoSave() {

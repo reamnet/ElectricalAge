@@ -241,7 +241,7 @@ class ModularTransformerElement(node: TransparentNode, descriptor: TransparentNo
         return true
     }
 
-    override fun requiredBusbarVoltage(terminal: Int) = if (terms.bank(terminal) == 0) primary else secondary
+    internal fun bankVoltage(terminal: Int) = if (terms.bank(terminal) == 0) primary else secondary
 
     override fun gridTerminalAt(side: Direction,point: Vec3)=terms.closest(point,front)
     override fun gridBundleFor(terminal: Int)=terms.bundle(terminal)
@@ -330,7 +330,9 @@ class ModularTransformerRender(entity: TransparentNodeEntity, descriptor: Transp
     }
     override fun draw() {
         drawCables()
-        (transparentNodedescriptor as ModularTransformerDescriptor).drawMachine(front,phases,tripped,fan)
+        val equipment = transparentNodedescriptor as ModularTransformerDescriptor
+        equipment.drawMachine(front,phases,tripped,fan)
+        RigidEquipment.drawSockets(equipment, equipment.terminals(phases), front)
     }
 }
 
