@@ -325,7 +325,7 @@ class ModularTransformerRender(entity: TransparentNodeEntity, descriptor: Transp
     }
 }
 
-class ModularTransformerScreen(menu: ElnNodeMenu,inv: Inventory,title: Component,render: Any): ElnScreen(menu,inv,title,248,254) {
+class ModularTransformerScreen(menu: ElnNodeMenu,inv: Inventory,title: Component,render: Any): ElnScreen(menu,inv,title,248,162) {
     private val view=render as ModularTransformerRender
     override fun init() {
         super.init()

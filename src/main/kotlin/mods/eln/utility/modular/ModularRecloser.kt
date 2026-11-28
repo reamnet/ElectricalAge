@@ -267,7 +267,7 @@ class ModularRecloserRender(entity: TransparentNodeEntity,descriptor: Transparen
     }
 }
 
-class ModularRecloserScreen(menu: ElnNodeMenu,inv: Inventory,title: Component,render: Any) : ElnScreen(menu,inv,title,248,269) {
+class ModularRecloserScreen(menu: ElnNodeMenu,inv: Inventory,title: Component,render: Any) : ElnScreen(menu,inv,title,248,179) {
     private val view=render as ModularRecloserRender
     override fun init() {
         super.init()
