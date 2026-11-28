@@ -6,6 +6,8 @@ import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Coordonate
 import mods.eln.misc.Direction
 import mods.eln.node.transparent.TransparentNodeBlock
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import mods.eln.misc.LRDU
 import mods.eln.node.transparent.TransparentNode
@@ -13,6 +15,7 @@ import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElement
 import mods.eln.node.transparent.TransparentNodeElementRender
 import mods.eln.node.transparent.TransparentNodeEntity
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
@@ -120,6 +123,18 @@ class SubstationSupportDescriptor(val kind: SubstationSupportKind) :
 
     override fun getFrontType() = if (kind == SubstationSupportKind.BRACKET || kind.isInsulator)
         TransparentNode.FrontType.BlockSide else super.getFrontType()
+
+    override fun getFrontFromPlace(side: Direction, entityLiving: LivingEntity?): Direction {
+        if (kind == SubstationSupportKind.GANTRY && !side.isY) return side
+        return super.getFrontFromPlace(side, entityLiving)
+    }
+
+    override fun mountingFront(world: Level, pos: BlockPos, proposed: Direction): Direction {
+        if (kind != SubstationSupportKind.GANTRY && kind != SubstationSupportKind.FRAME) return proposed
+        val below = world.getBlockEntity(pos.below()) as? TransparentNodeEntity ?: return proposed
+        val element = (below.node as? TransparentNode)?.element as? SubstationSupportElement
+        return below.front()?.takeIf { element?.descriptor === this } ?: proposed
+    }
 
     // The model's negative X plate is the mounting face. Item placement supplies the inward normal.
     override fun mustHaveFloor() = false
