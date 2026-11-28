@@ -7,7 +7,6 @@ import mods.eln.ghost.GhostGroup
 import mods.eln.gl.GL11.*
 import mods.eln.gridnode.AimedGridTerminals
 import mods.eln.gridnode.GridDescriptor
-import mods.eln.gridnode.GridElement
 import mods.eln.gridnode.GridRender
 import mods.eln.gui.ElnNodeMenu
 import mods.eln.i18n.I18N.tr

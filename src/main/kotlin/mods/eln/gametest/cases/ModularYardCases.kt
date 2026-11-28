@@ -23,10 +23,10 @@ object ModularYardCases {
     @JvmStatic fun cases(): List<TestCase> = listOf(Yard(0),Yard(1),Yard(2),DoubleBus(),Yard(0,1),Yard(0,2))
 
     private abstract class Fixture : TestCase {
-        override fun width() = 48
+        override fun width() = 32
         override fun height() = 28
         override fun depth() = 32
-        override fun floorDepth() = 48
+        override fun floorDepth() = 32
         override fun ticks() = 135
         protected val components=ArrayList<Component>()
         fun put(c: TestContext,id: Int,x: Int,y: Int,z: Int) = c.placeTransparent(id,c.at(x,y,z)) as GridElement
@@ -74,9 +74,9 @@ object ModularYardCases {
             }
             val tower=put(c,poleId,4,1,8)
             val knife = c.placeByPlayer(listOf(ModularDisconnectKind.SMALL,ModularDisconnectKind.GANG,
-                ModularDisconnectKind.TRANSMISSION)[tier].id, c.at(16,1,8), 270f) as ModularDisconnectElement
-            transformer = c.placeByPlayer(ModularTransformerKind.entries[tier].id, c.at(24,1,8), 270f) as ModularTransformerElement
-            protection = c.placeByPlayer(ModularRecloserKind.entries[tier].id, c.at(33,1,8), 270f) as ModularRecloserElement
+                ModularDisconnectKind.TRANSMISSION)[tier].id, c.at(12,1,8), 270f) as ModularDisconnectElement
+            transformer = c.placeByPlayer(ModularTransformerKind.entries[tier].id, c.at(20,1,8), 270f) as ModularTransformerElement
+            protection = c.placeByPlayer(ModularRecloserKind.entries[tier].id, c.at(27,1,8), 270f) as ModularRecloserElement
             val highBar = Busbars.FIRST_ID + (tier + 1) * 2
             val lowBar = Busbars.FIRST_ID + tier * 2
             fun contact(e: RigidEquipment, terminal: Int) =
@@ -101,7 +101,7 @@ object ModularYardCases {
                 return last
             }
 
-            val incoming = run(contact(knife,32), c.at(10,2,8), highBar)
+            val incoming = run(contact(knife,32), c.at(7,2,8), highBar)
             val feed = place(c, listOf(8048,8050,8052)[tier], incoming.coordonate().pos(), Face.UP) as GridElement
             join(tower,feed,32,32)
             run(contact(knife,36),contact(transformer,32).cell,highBar)

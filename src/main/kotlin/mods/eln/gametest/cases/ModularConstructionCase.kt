@@ -17,7 +17,7 @@ class ModularConstructionCase : TestCase {
     override fun id() = "modular_player_structural_placement"
     override fun width() = 32
     override fun depth() = 32
-    override fun height() = 16
+    override fun height() = 28
     override fun floorDepth() = 32
     override fun ticks() = 30
 

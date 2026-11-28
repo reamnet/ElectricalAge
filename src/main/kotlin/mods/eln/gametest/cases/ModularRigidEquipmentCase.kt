@@ -15,10 +15,10 @@ class ModularRigidEquipmentCase(private val variant: Int) : TestCase {
     private val ids = ModularDisconnectKind.entries.map { it.id } + ModularTransformerKind.entries.map { it.id } +
         ModularRecloserKind.entries.map { it.id }
     override fun id() = "modular_rigid_terminal_placement_${ids[variant]}"
-    override fun width() = 18
-    override fun depth() = 18
-    override fun height() = 18
-    override fun floorDepth() = 18
+    override fun width() = 24
+    override fun depth() = 24
+    override fun height() = 20
+    override fun floorDepth() = 24
     override fun ticks() = 55
 
     private lateinit var device: RigidEquipment
