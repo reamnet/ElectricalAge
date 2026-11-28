@@ -1493,6 +1493,16 @@ public final class ElnRecipes extends ElnRecipesBase {
             'I',findItemStack("230 kV Line Insulator"),'Q',findItemStack("Optimal Ferromagnetic Core"),
             'D',Blocks.COPPER_BLOCK.weathering().unaffected(),'T',findItemStack("Configurable Medium Power Transformer"),
             'G',findItemStack("Steel Substation Gantry Section"),'F',findItemStack("Substation Transformer Foundation"));
+        addRecipe(findItemStack("Single Phase Substation Recloser"),"ICI","DRD","FPF",
+            'I',findItemStack("12.5 kV Line Insulator"),'C',Items.COMPARATOR,'D',findItemStack("Copper Cable"),
+            'R',findItemStack("Small Single Phase Substation Disconnect"),'F',"ingotSteel",'P',findItemStack("Steel Equipment Support Frame"));
+        addRecipe(findItemStack("Three Phase Substation Recloser"),"I I","RRR","PCP",
+            'I',findItemStack("69 kV Line Insulator"),'R',findItemStack("Single Phase Substation Recloser"),
+            'P',"ingotSteel",'C',findItemStack("Three Phase Gang Substation Disconnect"));
+        addRecipe(findItemStack("Heavy Duty Substation Recloser"),"III","DCD","GFG",
+            'I',findItemStack("230 kV Line Insulator"),'D',Blocks.COPPER_BLOCK.weathering().unaffected(),
+            'C',findItemStack("Three Phase Substation Recloser"),'G',findItemStack("Steel Substation Gantry Section"),
+            'F',findItemStack("Transmission Gang Substation Disconnect"));
         addRecipe(findItemStack("120/240V Service Weatherhead"),"PPP"," C "," C ",'P',findItemStack("Iron Plate"),'C',findItemStack("Copper Cable"));
         int mastIndex=0;
         for(var mast: java.util.List.of(mods.eln.utility.ServiceMastStyle.COMPACT_SIDE,mods.eln.utility.ServiceMastStyle.THROUGH_ROOF,mods.eln.utility.ServiceMastStyle.GOOSENECK)) {

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:three_phase_gang_substation_disconnect",
+    "I": "eln:69_kv_line_insulator",
+    "P": "#c:ingots/steel",
+    "R": "eln:single_phase_substation_recloser"
+  },
+  "pattern": [
+    "I I",
+    "RRR",
+    "PCP"
+  ],
+  "result": {
+    "id": "eln:three_phase_substation_recloser"
+  }
+}

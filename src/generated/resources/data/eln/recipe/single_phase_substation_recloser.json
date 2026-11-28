@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:comparator",
+    "D": "eln:copper_cable",
+    "F": "#c:ingots/steel",
+    "I": "eln:12.5_kv_line_insulator",
+    "P": "eln:steel_equipment_support_frame",
+    "R": "eln:small_single_phase_substation_disconnect"
+  },
+  "pattern": [
+    "ICI",
+    "DRD",
+    "FPF"
+  ],
+  "result": {
+    "id": "eln:single_phase_substation_recloser"
+  }
+}

@@ -17,6 +17,7 @@ public final class ClientRenders {
         ElnRenders.transparent(mods.eln.utility.modular.SubstationSupportDescriptor.class,mods.eln.utility.modular.SubstationSupportRender::new);
         ElnRenders.transparent(mods.eln.utility.modular.ModularDisconnectDescriptor.class,mods.eln.utility.modular.ModularDisconnectRender::new);
         ElnRenders.transparent(mods.eln.utility.modular.ModularTransformerDescriptor.class,mods.eln.utility.modular.ModularTransformerRender::new);
+        ElnRenders.transparent(mods.eln.utility.modular.ModularRecloserDescriptor.class,mods.eln.utility.modular.ModularRecloserRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.kitchen.KitchenDescriptor.class,mods.eln.transparentnode.kitchen.KitchenRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.laundry.MatterMachineDescriptor.class,mods.eln.transparentnode.laundry.MatterMachineRender::new);
         ElnRenders.transparent(mods.eln.transparentnode.fan.FanDescriptor.class,mods.eln.transparentnode.fan.FanRender::new);

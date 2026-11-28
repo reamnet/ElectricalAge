@@ -5878,5 +5878,23 @@
   "display": "Configurable Transmission Transformer",
   "kind": "transparent_node",
   "name": "configurable_transmission_transformer"
+ },
+ "eln:transparent_node@14108": {
+  "descriptor": "ModularRecloserDescriptor",
+  "display": "Single Phase Substation Recloser",
+  "kind": "transparent_node",
+  "name": "single_phase_substation_recloser"
+ },
+ "eln:transparent_node@14109": {
+  "descriptor": "ModularRecloserDescriptor",
+  "display": "Three Phase Substation Recloser",
+  "kind": "transparent_node",
+  "name": "three_phase_substation_recloser"
+ },
+ "eln:transparent_node@14110": {
+  "descriptor": "ModularRecloserDescriptor",
+  "display": "Heavy Duty Substation Recloser",
+  "kind": "transparent_node",
+  "name": "heavy_duty_substation_recloser"
  }
 }

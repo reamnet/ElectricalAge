@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "eln:three_phase_substation_recloser",
+    "D": "minecraft:copper_block",
+    "F": "eln:transmission_gang_substation_disconnect",
+    "G": "eln:steel_substation_gantry_section",
+    "I": "eln:230_kv_line_insulator"
+  },
+  "pattern": [
+    "III",
+    "DCD",
+    "GFG"
+  ],
+  "result": {
+    "id": "eln:heavy_duty_substation_recloser"
+  }
+}

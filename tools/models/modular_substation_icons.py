@@ -128,8 +128,28 @@ def transformers():
             parts.append(((.08,-.13,width),(.26,.06,width+.024),(62,85,91)))
         write_sprite(name,parts,18)
 
+def reclosers():
+    for name,count,x,z in [("single_phase_substation_recloser",1,.48,.23),
+                           ("three_phase_substation_recloser",3,.57,.34),
+                           ("heavy_duty_substation_recloser",3,.68,.46)]:
+        parts=[((-x,-.44,-z-.10),(x,-.34,z+.10),(78,103,116))]
+        for phase in range(count):
+            lane=(phase-(count-1)/2)*z
+            parts.append(((-x*.61,-.09,lane-.112),(x*.61,.26,lane+.112),(92,126,144)))
+            for side in [-1,1]:
+                a,b=sorted([side*x*.58,side*x])
+                parts.append(((a,.03,lane-.052),(b,.15,lane+.052),(152,173,177)))
+                for fraction in [.70,.80,.90]:
+                    w=side*x*fraction
+                    parts.append(((w-.016,-.005,lane-.078),(w+.016,.196,lane+.078),(114,148,155)))
+                parts.append(((side*x-.03,.001,lane-.065),(side*x+.03,.177,lane+.065),(170,133,77)))
+        parts.extend([((-.23,-.39,z+.05),(.12,-.08,z+.18),(84,111,119)),
+                      ((-.18,-.25,z+.181),(-.08,-.15,z+.197),(69,190,128))])
+        write_sprite(name,parts,19)
+
 
 if __name__ == "__main__":
     busbars()
     steelwork()
     transformers()
+    reclosers()

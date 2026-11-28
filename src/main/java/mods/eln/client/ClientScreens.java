@@ -14,6 +14,7 @@ final class ClientScreens {
         ElnScreens.register(mods.eln.utility.GridSourceTransformerDescriptor.class,mods.eln.utility.GridSourceTransformerScreen::new);
         ElnScreens.register(mods.eln.utility.SubstationDescriptor.class,mods.eln.utility.SubstationScreen::new);
         ElnScreens.register(mods.eln.utility.modular.ModularTransformerDescriptor.class,mods.eln.utility.modular.ModularTransformerScreen::new);
+        ElnScreens.register(mods.eln.utility.modular.ModularRecloserDescriptor.class,mods.eln.utility.modular.ModularRecloserScreen::new);
         ElnScreens.register(mods.eln.transparentnode.kitchen.KitchenDescriptor.class,mods.eln.transparentnode.kitchen.KitchenScreen::new);
         ElnScreens.register(mods.eln.transparentnode.laundry.MatterMachineDescriptor.class,mods.eln.transparentnode.laundry.MatterMachineScreen::new);
         ElnScreens.register(mods.eln.transparentnode.fan.FanDescriptor.class,mods.eln.transparentnode.fan.FanScreen::new);
