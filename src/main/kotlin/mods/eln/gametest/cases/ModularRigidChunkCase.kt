@@ -34,6 +34,7 @@ class ModularRigidChunkCase : TestCase {
             val face = contact.approach.toEnumFacing().opposite
             bars += place(c, Busbars.FIRST_ID + 2, contact.cell.relative(face.opposite), face) as BusbarElement
         }
+        bars.forEach { paint(c, it, "Purple Brush") }
         source = VoltageSource("rigid bay chunk source", bars[0].load, null).apply { u = 3200.0 }
         load = Resistor(bars[1].load, null).apply { r = 1000.0 }
         Eln.simulator.addElectricalComponent(source)
@@ -74,7 +75,7 @@ class ModularRigidChunkCase : TestCase {
         c.checkValue("current passes through the 3.2 kV to 230 V rigid transformer bay", load.i, .232875)
         c.check("only the two phase-A rigid joints are present",
             device.node.nodeConnectionList.filterIsInstance<EquipmentJoint>().size == 2 &&
-                device.gridLinkList.isEmpty() && device.outputs.drop(1).all { kotlin.math.abs(it.u) < 1e-7 }, "")
+                device.gridLinkList.isEmpty() && bars.all { it.color == net.minecraft.world.item.DyeColor.PURPLE.id } && device.outputs.drop(1).all { kotlin.math.abs(it.u) < 1e-7 }, "")
     }
 
     private fun ticket(c: TestContext, enabled: Boolean) {

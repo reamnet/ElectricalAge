@@ -60,6 +60,7 @@ enum class BusbarSize(val label: String, val width: Double, val areaMm2: Double,
 internal object BusbarColor {
     const val BARE = -1
     private const val FIRST_LEGACY = 16
+    private val legacyMarkers = intArrayOf(0xd75246, 0xe7b842, 0x4a88cf)
 
     fun legacy(phase: Int) = FIRST_LEGACY + phase.coerceIn(0, 2)
     fun legacyPhase(color: Int) = (color - FIRST_LEGACY).takeIf { it in 0..2 }
@@ -76,7 +77,7 @@ internal object BusbarColor {
     }
 
     fun marker(color: Int): Int? = if (BusChannel.valid(color)) BusChannel.rgb(color)
-        else legacyPhase(color)?.let { intArrayOf(0xd75246, 0xe7b842, 0x4a88cf)[it] }
+        else legacyPhase(color)?.let { legacyMarkers[it] }
 }
 
 class BusbarDescriptor(
@@ -303,7 +304,17 @@ class BusbarElement(node: TransparentNode, descriptor: TransparentNodeDescriptor
     override fun multiMeterString(side: Direction) = Utils.plotUIP(load.u, load.i)
     override fun thermoMeterString(side: Direction) = Meters.celsius(heat.absoluteCelsius)
     override fun getWaila() = linkedMapOf(tr("Circuit color") to BusbarColor.label(color),
-        tr("Voltage") to Meters.volts(load.u), tr("Current") to Meters.amps(load.i))
+        tr("Voltage") to Meters.volts(load.u), tr("Current") to Meters.amps(load.i)).apply {
+        val sockets = node.nodeConnectionList.filterIsInstance<EquipmentJoint>().map { joint ->
+            val terms = joint.equipment.terms
+            val input = terms.bank(joint.terminal) == 0
+            val bank = if (joint.equipment is ModularTransformerElement) {
+                if (input) tr("Primary") else tr("Secondary")
+            } else if (input) tr("Input") else tr("Output")
+            if (terms.phases == 1) bank else "$bank ${"ABC"[requireNotNull(terms.phase(joint.terminal))]}"
+        }
+        if (sockets.isNotEmpty()) put(tr("Equipment terminal"), sockets.sorted().joinToString())
+    }
 
     override fun writeToNBT(tag: CompoundTag) {
         super.writeToNBT(tag)

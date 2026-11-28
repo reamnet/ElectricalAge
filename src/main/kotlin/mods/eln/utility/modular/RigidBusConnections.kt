@@ -168,7 +168,7 @@ object RigidBusConnections {
         (NodeManager.instance?.getNodeFromCoordonate(at) as? TransparentNode)?.element
 }
 
-internal class EquipmentJoint(val bar: BusbarElement, equipment: RigidEquipment, contact: RigidEquipment.Contact,
+internal class EquipmentJoint(val bar: BusbarElement, val equipment: RigidEquipment, contact: RigidEquipment.Contact,
                               link: ElectricalConnection) :
     NodeConnection(bar.node, contact.approach, LRDU.Down, equipment.node, contact.approach.inverse, LRDU.Down, link, null) {
     val terminal = contact.terminal
