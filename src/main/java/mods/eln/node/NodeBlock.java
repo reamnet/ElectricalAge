@@ -116,6 +116,9 @@ public abstract class NodeBlock extends Block implements EntityBlock {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
         if (mods.eln.misc.Utils.getItemObject(stack) instanceof mods.eln.transparentnode.cord.CordDescriptor)
             return mods.eln.transparentnode.cord.CordInteraction.use(stack, player, level, hit);
+        if (stack.getItem() instanceof mods.eln.node.transparent.TransparentNodeItem item
+            && (mods.eln.utility.modular.SubstationSupports.isStock(item.descriptor)
+                || mods.eln.utility.modular.SubstationSupports.isStock(state.getBlock()))) return InteractionResult.PASS;
         // a kit routes from and to devices' ports: the kit's use, not the device's (AdventurAgent). A utility pole's foot
         // too: its socket is the pole transformer's low side (nero 1573457386071527568: a cable kit there was refused as
         // if stringing a span; spans take Overhead Cable since 2026-11-09, and a kit on the pole's ghosts above still
