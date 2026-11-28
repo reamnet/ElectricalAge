@@ -1,4 +1,4 @@
-// 26.3	2026-11-27T21:33:55.185734425	Registries for Reloadable (eln[0]): [eln]
+// 26.3	2026-11-27T22:09:24.242606944	Registries for Reloadable (eln[0]): [eln]
 c099cbc695f11c5b54999d4aea588d06537ebcc6 data/eln/advancement/recipes/misc/100_a_pole_fuse.json
 4a61a8af0bf8f862a4813d9df3e0fc3acd7e1b3c data/eln/advancement/recipes/misc/100_a_vehicle_charging_lead.json
 3593a73e3130c36b75003dea04044ab60d88e1ee data/eln/advancement/recipes/misc/100_kw_pole_transformer.json
@@ -1256,10 +1256,10 @@ d7f8bdad98b05b6430a6362df244cd3a333ca6a5 data/eln/recipe/lamp_socket_a.json
 b90ec63e04d89ed1c2d7121a7a74ae912a6cc9f5 data/eln/recipe/lamp_socket_b_projector.json
 31b32598f2a28b91bcfd9dfec823966fb62504df data/eln/recipe/lamp_supply.json
 a132fd6e27ce06ec98637534e8002820305ef47b data/eln/recipe/lantern_cage_foyer_chandelier.json
-ef57ae3ed408bbb4327394577290c6c11e6b1832 data/eln/recipe/large_aluminum_busbar.json
+e0c97b3df90b6f67b4ee49bae77c54a3d526d916 data/eln/recipe/large_aluminum_busbar.json
 e9531c8d92c2b3f6d2d111840be81ea5a2f13055 data/eln/recipe/large_area_floodlight.json
 753a066f008b0ccbdc8bbc3cc500c5548c687766 data/eln/recipe/large_boiler.json
-b6ddca6caee098a0eaf3f35c5207acbf482a8b02 data/eln/recipe/large_copper_busbar.json
+910000049a8a5016058555de21eae8479c991938 data/eln/recipe/large_copper_busbar.json
 2847f54a37b679a49b9aae922051790372014996 data/eln/recipe/large_generator.json
 f85c8f50ce0422ca92a56a52d510ab5341f9ccb7 data/eln/recipe/large_rheostat.json
 11f469fe8f0f710945f0586f6f7d9e99e069eb32 data/eln/recipe/large_single_phase_substation_disconnect.json
@@ -1293,8 +1293,8 @@ d5f805910e688c02cc8ec7887d09bdb0385185cb data/eln/recipe/machine_booster.json
 e5563e26e89b0f375d849f941cbd8e2827d35aaa data/eln/recipe/magenta_brush.json
 0054f550510b95915e43b8883657131bc97220c9 data/eln/recipe/mains_step_down_unit.json
 d56b791349eb86cb46814bc8296936adcb2ff398 data/eln/recipe/marine_pier_bulkhead_light.json
-d066d03989eaf762cdc30d084524ba41bf879536 data/eln/recipe/medium_aluminum_busbar.json
-33b234b395f97d81639a6d902ac0f38901a417b8 data/eln/recipe/medium_copper_busbar.json
+3e47f31ead937025f69264cff7512738c53ff401 data/eln/recipe/medium_aluminum_busbar.json
+ff44b86e4396d19badd5bf05316464fb9176cc59 data/eln/recipe/medium_copper_busbar.json
 280b3ec28975365105f5587f9cd7e41c8aaba996 data/eln/recipe/medium_fuel_burner.json
 5c1b4d6392b77b416634a23d5285b8b82c33bd66 data/eln/recipe/medium_power_receiver_antenna.json
 e1573474fb9c89def650e1530e4eda654752e046 data/eln/recipe/medium_power_transmitter_antenna.json
@@ -1454,8 +1454,8 @@ d6cf5f6337426b85d291a8164064b16bcec566ce data/eln/recipe/small_48v_copper_heatin
 73cbdd1037772521a5802210e1b253770c9bd824 data/eln/recipe/small_48v_iron_heating_corp.json
 40e4ec9b3435dce6da3640dc44149cdda646af61 data/eln/recipe/small_48v_tungsten_heating_corp.json
 b55411774da0e06e85879b4b3445840eb24c93ea data/eln/recipe/small_active_thermal_dissipator.json
-3c016ec5c2fc84c42b069358eb869769004a11dc data/eln/recipe/small_aluminum_busbar.json
-d416b23cef163b39eb6bac38051237dfe623a5d2 data/eln/recipe/small_copper_busbar.json
+12a394fc15da0af474f7e5ca926d198d022137ce data/eln/recipe/small_aluminum_busbar.json
+8004e7209855d3ad4d3574bf574369cb312da564 data/eln/recipe/small_copper_busbar.json
 ff350989b46245a341761f6b7ec21606ed08fae3 data/eln/recipe/small_flashlight.json
 0b5e29483921f7cf47269f90a984c44a38af1413 data/eln/recipe/small_fuel_burner.json
 817114c9d7122415faafd35fe091ec574164bba4 data/eln/recipe/small_passive_thermal_dissipator.json

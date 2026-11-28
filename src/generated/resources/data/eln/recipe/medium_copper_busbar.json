@@ -1,11 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
+    "B": "eln:small_copper_busbar",
     "M": "minecraft:copper_ingot"
   },
   "pattern": [
-    "MMM",
-    "MMM"
+    " M ",
+    "MBM",
+    " M "
   ],
   "result": {
     "id": "eln:medium_copper_busbar"

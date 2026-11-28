@@ -1459,11 +1459,16 @@ public final class ElnRecipes extends ElnRecipesBase {
                 var ingot = metal == mods.eln.sixnode.electricalcable.UtilityCableMaterial.COPPER
                     ? Items.COPPER_INGOT : "ingotAluminum";
                 var title = grade + " " + metal.getLabel() + " Busbar";
-                if (size.ordinal() == 0) addRecipe(findItemStack(title), "MMM", 'M', ingot);
-                if (size.ordinal() == 1) addRecipe(findItemStack(title), "MMM", "MMM", 'M', ingot);
-                if (size.ordinal() == 2) addRecipe(findItemStack(title), "MMM", "MMM", "MMM", 'M', ingot);
-                if (size.ordinal() == 3) addRecipe(findItemStack(title), "III", "BBB", "III",
-                    'I', ingot, 'B', findItemStack("Large " + metal.getLabel() + " Busbar"));
+                String conductor = metal.getLabel() + " Busbar";
+                switch (size) {
+                    case SMALL -> addRecipe(findItemStack(title), "M  ", " M ", "  M", 'M', ingot);
+                    case MEDIUM -> addRecipe(findItemStack(title), " M ", "MBM", " M ",
+                        'M', ingot, 'B', findItemStack("Small " + conductor));
+                    case LARGE -> addRecipe(findItemStack(title), "M M", " B ", "M M",
+                        'M', ingot, 'B', findItemStack("Medium " + conductor));
+                    case TRANSMISSION -> addRecipe(findItemStack(title), "III", "BBB", "III",
+                        'I', ingot, 'B', findItemStack("Large " + conductor));
+                }
             }
         }
         addRecipe(findItemStack("Busbar Support Insulator")," I "," G ","III",'I',Items.IRON_INGOT,'G',Blocks.GLASS_PANE);

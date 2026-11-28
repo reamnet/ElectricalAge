@@ -4,7 +4,9 @@
     "M": "#c:ingots/aluminum"
   },
   "pattern": [
-    "MMM"
+    "M  ",
+    " M ",
+    "  M"
   ],
   "result": {
     "id": "eln:small_aluminum_busbar"

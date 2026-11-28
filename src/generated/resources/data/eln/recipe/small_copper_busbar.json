@@ -4,7 +4,9 @@
     "M": "minecraft:copper_ingot"
   },
   "pattern": [
-    "MMM"
+    "M  ",
+    " M ",
+    "  M"
   ],
   "result": {
     "id": "eln:small_copper_busbar"
