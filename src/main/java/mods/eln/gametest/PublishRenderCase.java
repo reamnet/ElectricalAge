@@ -136,7 +136,9 @@ public final class PublishRenderCase implements TestCase {
                 ctx.floor(p.below());
                 if (d instanceof mods.eln.oil.SubmersiblePumpDescriptor)   // (it goes in water)
                     ctx.level().setBlock(p, net.minecraft.world.level.block.Blocks.WATER.defaultBlockState(), 2);
-                if (d.mustHaveWallFrontInverse() || d.mustHaveWall()) {
+                boolean substationBracket = d instanceof mods.eln.utility.modular.SubstationSupportDescriptor support
+                    && support.getKind() == mods.eln.utility.modular.SubstationSupportKind.BRACKET;
+                if (d.mustHaveWallFrontInverse() || d.mustHaveWall() || substationBracket) {
                     // Source wall fixtures also include any-wall supports (e.g. festive String Lights).
                     ctx.floor(p.south()); ctx.floor(p.south().above());
                     ctx.floor(p.south().east()); ctx.floor(p.south().west());
