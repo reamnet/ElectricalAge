@@ -129,8 +129,8 @@ class ModularChunkCase : TestCase {
         val wire = UtilityCables.all.first { it.insulated && it.sizeLabel == "2 AWG" &&
             it.material == UtilityCableMaterial.COPPER && it.insulationVoltageRating == 20000.0 }
         val meters = ceil(a.coordonate().trueDistanceTo(b.coordonate())).toInt()
-        check(GridLink.addLink(a, b, from, to, wire, meters))
-        return a.gridLinkList.single { it.links(a, b) }
+        val spool = wire.newItemStack().also { wire.setRemainingLengthMeters(it, meters.toDouble()) }
+        return savedModularSpan(a, b, from, to, spool, wire.resistanceOhms(meters.toDouble()))
     }
 
     private fun chunk(pos: BlockPos) = ChunkPos(pos.x shr 4, pos.z shr 4)

@@ -65,6 +65,8 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.GridSelectionCases.cases());
         l.add(new mods.eln.gametest.cases.GridSpanAppearanceCase());
         l.add(new mods.eln.gametest.cases.ModularBusbarCase());
+        l.add(new mods.eln.gametest.cases.ModularConstructionCase());
+        l.addAll(mods.eln.gametest.cases.ModularRigidEquipmentCase.cases());
         l.add(new mods.eln.gametest.cases.ModularDirectFeedCase());
         l.add(new mods.eln.gametest.cases.ModularDisconnectCase());
         l.add(new mods.eln.gametest.cases.ModularTransformerCases(false));
@@ -74,6 +76,7 @@ public final class ElnGameTests {
         l.addAll(mods.eln.gametest.cases.ModularYardCases.cases());
         l.add(new mods.eln.gametest.cases.ModularBusbarBurnCase());
         l.add(new mods.eln.gametest.cases.ModularChunkCase());
+        l.add(new mods.eln.gametest.cases.ModularRigidChunkCase());
         l.add(new mods.eln.gametest.cases.ModularGangLinkCase());
         l.add(new mods.eln.gametest.cases.GridGhostRepairCase());
         l.addAll(mods.eln.gametest.cases.ForkPatchTransmissionLampCases.cases());

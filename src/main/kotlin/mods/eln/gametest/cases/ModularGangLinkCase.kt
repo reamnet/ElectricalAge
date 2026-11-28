@@ -3,6 +3,9 @@ package mods.eln.gametest.cases
 import mods.eln.gametest.TestCase
 import mods.eln.gametest.TestContext
 import mods.eln.ghost.GhostBlock
+import mods.eln.gridnode.GridElement
+import mods.eln.gridnode.GridLink
+import net.minecraft.nbt.CompoundTag
 import mods.eln.misc.Direction
 import mods.eln.sixnode.electricalcable.UtilityCableMaterial
 import mods.eln.sixnode.electricalcable.UtilityCables
@@ -16,7 +19,7 @@ import net.minecraft.world.phys.Vec3
 import kotlin.math.ceil
 
 class ModularGangLinkCase : TestCase {
-    override fun id()="modular_gang_clicks_pay_each_independent_wire"
+    override fun id()="modular_gang_refuses_new_spans_and_refunds_saved_wire"
     override fun width()=32
     override fun height()=28
     override fun depth()=16
@@ -41,13 +44,24 @@ class ModularGangLinkCase : TestCase {
         p.setItemInHand(InteractionHand.MAIN_HAND,spool)
         try { click(first,37);click(second,33) }
         finally { p.setShiftKeyDown(before);p.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY) }
-        val link=first.gridLinkList.single()
-        val cost=3*ceil(first.coordonate().trueDistanceTo(second.coordonate())).toInt()
-        c.check("the native placement connects three distinct circuits and uses the paid descriptor",
-            link.getTerminal(first)==53 && link.getTerminal(second)==52 &&
-                link.thermalLoads().size==3 && wire.getRemainingLengthMeters(spool)==100.0-cost,"")
+        c.check("normal overhead wire clicks are refused without charging any conductor",
+            first.gridLinkList.isEmpty() && second.gridLinkList.isEmpty() &&
+                wire.getRemainingLengthMeters(spool) == 100.0, "")
+        val cost = 3 * ceil(first.coordonate().trueDistanceTo(second.coordonate())).toInt()
+        val paid = wire.segment(spool, cost.toDouble())
+        val link = savedModularSpan(first, second, 53, 52, paid, wire.resistanceOhms(cost.toDouble() / 3))
+        c.check("saved gang links still expose three separate thermal conductors",
+            link.getTerminal(first) == 53 && link.getTerminal(second) == 52 &&
+                link.thermalLoads().size == 3 && link.connected, "")
         c.check("ganged removal refunds exactly three lengths once",
             wire.getRemainingLengthMeters(link.onBreakElement())==cost.toDouble() && link.onBreakElement().isEmpty,"")
     }
     override fun measure(c:TestContext) {}
+}
+
+/** Deserialize the previous version's paid span record to exercise save compatibility. */
+internal fun savedModularSpan(a: GridElement, b: GridElement, from: Int, to: Int, paid: ItemStack, ohms: Double): GridLink {
+    val record = CompoundTag()
+    GridLink(a.coordonate(), b.coordonate(), from, to, paid, ohms).writeToNBT(record, "")
+    return GridLink(record, "").also { check(it.connect()) }
 }

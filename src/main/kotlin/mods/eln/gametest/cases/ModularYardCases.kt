@@ -15,21 +15,27 @@ import mods.eln.utility.DistributionKind
 import mods.eln.utility.DistributionPoles
 import mods.eln.utility.TransmissionKind
 import mods.eln.utility.modular.*
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction as Face
 import kotlin.math.abs
 
 object ModularYardCases {
     @JvmStatic fun cases(): List<TestCase> = listOf(Yard(0),Yard(1),Yard(2),DoubleBus(),Yard(0,1),Yard(0,2))
 
     private abstract class Fixture : TestCase {
-        override fun width() = 32
+        override fun width() = 48
         override fun height() = 28
         override fun depth() = 32
-        override fun floorDepth() = 32
+        override fun floorDepth() = 48
         override fun ticks() = 135
         protected val components=ArrayList<Component>()
         fun put(c: TestContext,id: Int,x: Int,y: Int,z: Int) = c.placeTransparent(id,c.at(x,y,z)) as GridElement
         fun join(a: GridElement,b: GridElement,from: Int,to: Int) {
-            check(GridLink.addBareLink(a,b,from,to,OverheadCableItem.make(10,128))>0)
+            val spool = OverheadCableItem.make(10,128)
+            if (a is RigidEquipment || b is RigidEquipment) {
+                val span = kotlin.math.ceil(a.coordonate().trueDistanceTo(b.coordonate())).toInt()
+                savedModularSpan(a,b,from,to,OverheadCableItem.make(10,span),OverheadCableItem.rsPerBlock(spool)*span)
+            } else check(GridLink.addBareLink(a,b,from,to,spool)>0)
         }
         fun source(bus: mods.eln.sim.ElectricalLoad,volts: Double) {
             val component=VoltageSource("yard source",bus,null).apply { u=volts }
@@ -66,29 +72,51 @@ object ModularYardCases {
                 1->TransmissionKind.POLE_69.id
                 else->TransmissionKind.POLE_230.id
             }
-            val tower=put(c,poleId,6,1,8)
-            val rigid=put(c,Busbars.FIRST_ID+(tier+1)*2,13,10,8)
-            val type=Eln.transparentNodeItem.getDescriptor(listOf(8048,8050,8052)[tier])!!
-            val piece=type.newItemStack()
-            val feed=(piece.item as TransparentNodeItem).placeAt(piece,c.player(),c.level(),c.at(12,10,8),Direction.XP)!!.element as GridElement
-            check(rigid.node.nodeConnectionList.size==1)
-            val knife=put(c,listOf(ModularDisconnectKind.SMALL,ModularDisconnectKind.GANG,
-                ModularDisconnectKind.TRANSMISSION)[tier].id,19,1,8) as ModularDisconnectElement
-            transformer=put(c,ModularTransformerKind.entries[tier].id,26,1,8) as ModularTransformerElement
-            protection=put(c,ModularRecloserKind.entries[tier].id,26,1,21) as ModularRecloserElement
-            val outgoing=put(c,Busbars.FIRST_ID+2*tier,19,3,21) as BusbarElement
-            c.line("INFO yard anchors, tower=${tower.coordonate().pos()}, feed=${feed.coordonate().pos()}, " +
-                "switch=${knife.coordonate().pos()}, transformer=${transformer.coordonate().pos()}, recloser=${protection.coordonate().pos()}")
+            val tower=put(c,poleId,4,1,8)
+            val knife = c.placeByPlayer(listOf(ModularDisconnectKind.SMALL,ModularDisconnectKind.GANG,
+                ModularDisconnectKind.TRANSMISSION)[tier].id, c.at(16,1,8), 270f) as ModularDisconnectElement
+            transformer = c.placeByPlayer(ModularTransformerKind.entries[tier].id, c.at(24,1,8), 270f) as ModularTransformerElement
+            protection = c.placeByPlayer(ModularRecloserKind.entries[tier].id, c.at(33,1,8), 270f) as ModularRecloserElement
+            val highBar = Busbars.FIRST_ID + (tier + 1) * 2
+            val lowBar = Busbars.FIRST_ID + tier * 2
+            fun contact(e: RigidEquipment, terminal: Int) =
+                e.rigidContacts().first { it.terminal == terminal && !it.approach.isY }
+
+            fun first(port: RigidEquipment.Contact, id: Int): BusbarElement {
+                val face = port.approach.toEnumFacing().opposite
+                return place(c, id, port.cell.relative(face.opposite), face) as BusbarElement
+            }
+            fun run(start: RigidEquipment.Contact, end: BlockPos, id: Int): BusbarElement {
+                var last = first(start, id)
+                fun step(direction: Face) {
+                    last = place(c, id, last.coordonate().pos(), direction) as BusbarElement
+                }
+                val runAxis = if (end.x >= start.cell.x) Face.EAST else Face.WEST
+                step(runAxis)
+                while (last.coordonate().pos().y != end.y)
+                    step(if (last.coordonate().pos().y < end.y) Face.UP else Face.DOWN)
+                while (last.coordonate().pos().z != end.z)
+                    step(if (last.coordonate().pos().z < end.z) Face.SOUTH else Face.NORTH)
+                while (last.coordonate().pos().x != end.x) step(runAxis)
+                return last
+            }
+
+            val incoming = run(contact(knife,32), c.at(10,2,8), highBar)
+            val feed = place(c, listOf(8048,8050,8052)[tier], incoming.coordonate().pos(), Face.UP) as GridElement
             join(tower,feed,32,32)
-            join(rigid,knife,32,32)
-            join(knife,transformer,36,32)
-            join(transformer,protection,36,32)
-            join(protection,outgoing,36,32)
+            run(contact(knife,36),contact(transformer,32).cell,highBar)
+            run(contact(transformer,36),contact(protection,32).cell,lowBar)
+            val outgoing=first(contact(protection,36),lowBar)
+            c.check("internal bays use only native rigid terminals", listOf(knife,transformer,protection).all {
+                it.gridLinkList.isEmpty() && it.node.nodeConnectionList.filterIsInstance<EquipmentJoint>().size==2
+            }, "")
             check(knife.setClosed(true))
             check(protection.configure(if(fault==0)100.0 else 4.0,.15,1.0,2,true))
             check(protection.setClosed(true))
             source(tower.gridLoads(32).single(),input)
-            load=consume(outgoing.load,10000.0)
+            val finalFeed = place(c, listOf(8044,8048,8050)[tier], outgoing.coordonate().pos(),
+                Face.EAST) as GridElement
+            load=consume(finalFeed.gridLoads(32).single(),10000.0)
             c.after(22) {
                 c.checkValue("tower through a mounted feed, busbar, disconnect, transformer and recloser delivers rated voltage",out,outgoing.load.u)
                 c.check("other transformer windings are isolated",transformer.outputs.drop(1).all { abs(it.u)<1e-7 },"")
