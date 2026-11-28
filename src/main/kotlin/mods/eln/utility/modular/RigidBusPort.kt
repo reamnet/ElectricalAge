@@ -17,6 +17,7 @@ object RigidBusConnections {
         val left = (a as? TransparentNode)?.element
         val right = (b as? TransparentNode)?.element
         if (left !is BusbarElement && right !is BusbarElement) return true
+        if (left?.isBurnt == true || right?.isBurnt == true) return false
         if (left !is RigidBusPort || right !is RigidBusPort || edgeA != LRDU.Down || edgeB != LRDU.Down) return false
         if (a.coordonate.pos().relative(sideA.toEnumFacing()) != b.coordonate.pos() || sideB != sideA.inverse) return false
         val phase = left.rigidPhase(sideA) ?: return false

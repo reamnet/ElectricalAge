@@ -77,6 +77,8 @@ object ModularYardCases {
             transformer=put(c,ModularTransformerKind.entries[tier].id,26,1,8) as ModularTransformerElement
             protection=put(c,ModularRecloserKind.entries[tier].id,26,1,21) as ModularRecloserElement
             val outgoing=put(c,Busbars.FIRST_ID+2*tier,19,3,21) as BusbarElement
+            c.line("INFO yard anchors, tower=${tower.coordonate().pos()}, feed=${feed.coordonate().pos()}, " +
+                "switch=${knife.coordonate().pos()}, transformer=${transformer.coordonate().pos()}, recloser=${protection.coordonate().pos()}")
             join(tower,feed,32,32)
             join(rigid,knife,32,32)
             join(knife,transformer,36,32)

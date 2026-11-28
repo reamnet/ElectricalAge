@@ -4,6 +4,7 @@ import mods.eln.Eln
 import mods.eln.gl.GL11.*
 import mods.eln.gridnode.GridDescriptor
 import mods.eln.gridnode.GridElement
+import mods.eln.gridnode.GridLink
 import mods.eln.gridnode.GridRender
 import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
@@ -18,12 +19,16 @@ import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.registry.ElnDeviceRegistry
 import mods.eln.sim.IProcess
 import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.process.destruct.Failure
+import mods.eln.sim.process.destruct.FailureCause
 import mods.eln.sixnode.electricalcable.UtilityCableMaterial
 import mods.eln.sixnode.electricalcable.WirePhysics
 import mods.eln.sixnode.electricalcable.WireThermalLoad
 import mods.eln.sixnode.electricalcable.WireThermalPhysics
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
+import net.minecraft.server.TickTask
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.AABB
@@ -115,6 +120,7 @@ class BusbarElement(node: TransparentNode, descriptor: TransparentNodeDescriptor
     val heat = WireThermalLoad("rigidBusHeat", WireThermalPhysics(bar.material, bar.size.areaMm2))
     var phase = 0
         private set
+    private var failureQueued = false
 
     val supported: Boolean get() {
         if (node.coordonate == null) return false
@@ -136,10 +142,23 @@ class BusbarElement(node: TransparentNode, descriptor: TransparentNodeDescriptor
             val air = ambient + 20.0
             heat.updateProperties(air, air, false)
             load.rs = WirePhysics.resistance(bar.material, bar.size.areaMm2, .5, heat.absoluteCelsius)
+            if (heat.failed && !failureQueued) queueThermalFailure()
         })
         slowProcessList.add(NodePeriodicPublishProcess(node, 1.0, .5))
     }
 
+    private fun queueThermalFailure() {
+        val at = node.coordonate ?: return
+        val world = at.world() as? ServerLevel ?: return
+        failureQueued = true
+        world.server.schedule(TickTask(world.server.tickCount) {
+            failureQueued = false
+            if (GridLink.getElementFromCoordinate(at) === this && gridReady() && heat.failed)
+                burn(FailureCause.OVERHEAT,Failure.Kind.CABLE)
+        })
+    }
+
+    override fun allowsNewGridLinks() = !isBurnt
     override fun rigidPhase(side: Direction) = phase
     override fun getGridElectricalLoad(side: Direction) = load
     override fun selectedGridTerminal(side: Direction) = 32 + phase

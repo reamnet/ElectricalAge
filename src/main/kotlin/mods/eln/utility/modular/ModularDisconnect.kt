@@ -22,6 +22,7 @@ import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sound.SoundCommand
 import mods.eln.transparentnode.standby.TransferContact
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.player.Player
@@ -177,6 +178,10 @@ class ModularDisconnectElement(node: TransparentNode, descriptor: TransparentNod
         if(arcing) {
             wear=(wear+.10+current/kind.amps*.22).coerceAtMost(1.0)
             player?.sendOverlayMessage(Component.literal(tr("Disconnect opened under load. Contact damage: %1$%%", (100*wear).toInt())))
+            val phase = contacts.indices.maxBy { abs(contacts[it].current) }
+            val at = coordonate()
+            val tip = renderedGridCablePoint(36+phase,0).add(Vec3.atCenterOf(at.pos()))
+            (at.world() as? ServerLevel)?.sendParticles(ParticleTypes.ELECTRIC_SPARK,tip.x,tip.y,tip.z,14,.13,.10,.13,.065)
         }
         closed=requested
         contacts.forEach { it.closed=closed }
