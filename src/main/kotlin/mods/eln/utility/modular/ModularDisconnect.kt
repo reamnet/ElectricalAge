@@ -143,7 +143,7 @@ class ModularDisconnectDescriptor(val kind: ModularDisconnectKind) : GridDescrip
     override fun addInformation(stack: ItemStack,player: Player?,list: MutableList<String>,advanced: Boolean) {
         list.add(tr("%1$ V / %2$ A, %3$ phase conductors",kind.voltage,kind.amps,kind.phases))
         list.add(tr("Isolating switch. Opening under load wears the contacts."))
-        if(kind.phases==3) list.add(tr("Aim at a terminal bank for all phases. Sneak while targeting one phase."))
+        list.add(tr("Attach a rigid busbar of the matching phase beside or above each terminal."))
     }
 }
 

@@ -114,6 +114,7 @@ class ModularRecloserDescriptor(val kind: ModularRecloserKind) :
     override fun addInformation(stack: ItemStack,player: Player?,list: MutableList<String>,advanced: Boolean) {
         list.add(tr("Rated %1$ V, adjustable pickup to %2$ A",kind.voltage,kind.amps))
         list.add(tr("Interrupts overcurrent. Persistent faults lock out automatic closing."))
+        list.add(tr("Attach a rigid busbar of the matching phase beside or above each terminal."))
     }
 }
 
