@@ -141,7 +141,7 @@ class ModularTransformerDescriptor(val kind: ModularTransformerKind) :
     override fun addInformation(stack: ItemStack,player: Player?,list: MutableList<String>,advanced: Boolean) {
         list.add(tr("Up to %1$ V and %2$ kVA across the active windings",kind.highVolts,kind.kva))
         list.add(tr("Configurable step-up or step-down ratio, independent phase windings"))
-        list.add(tr("Set the winding count before fitting a voltage-rated busbar to each terminal."))
+        list.add(tr("Set the winding count, then fit rigid busbars to the marked sockets."))
     }
 }
 

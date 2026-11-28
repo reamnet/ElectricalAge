@@ -155,3 +155,7 @@ The registry fingerprints matched for all 959 original records and all 24 modula
 - `./gradlew build` passed. Root JUnit reported 1,423 passed and six skipped, including all 18 inventory model cases. The up-to-date CAD results were 18 passed. Fluidcore reported 102 passed and two skipped. `./gradlew runClientData` checked 4,511 generated files and wrote zero.
 - The packaged mod launched in a separate 26.3 client and reopened a copy of the saved test world. I checked the three-phase yard and brackets after startup and viewed the new icons in the creative and player inventories. The multiplayer publication paths were exercised by the render and persistence tests. A separate two-client session remains unverified.
 - The published branch is `fix/modular-substation-construction`. The production JAR and its SHA-256 sidecar are in `build/libs/`. The gameplay archive includes the native screenshots and four raw network reports. The regression archive provides the focused and full GameTest logs, Gradle build and datagen logs, and the packaged-client startup log. Both archives are under `tools/mctest/.state/corrective-substation/`.
+
+## Painted busbar circuits
+
+The [rigid busbar commissioning guide](docs/modular-substation-commissioning.md) covers the physical sockets, brush controls, ratings, old-world conversion and loaded commissioning measurements for the follow-up based on `1b5dd780d28f`.
