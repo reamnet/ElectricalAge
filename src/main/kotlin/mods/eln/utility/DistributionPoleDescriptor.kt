@@ -4,6 +4,7 @@ import mods.eln.gl.GL11
 import mods.eln.ghost.*
 import mods.eln.gridnode.GridDescriptor
 import mods.eln.gridnode.ServiceCableMount
+import mods.eln.gridnode.PoleSpanAlignment
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.registry.ElnDeviceRegistry
@@ -24,36 +25,58 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
     override fun rotationIsFixed()=true
     override fun hasItemDraw()=true
     override fun drawItem(entity: Boolean) { GL11.glPushMatrix();try { if(kind.underground) { GL11.glScaled(.48,.48,.48);GL11.glTranslated(0.0,-.9,0.0) } else { GL11.glScaled(.18,.18,.18);GL11.glTranslated(0.0,-2.8,0.0) };drawEquipment(Direction.XN) }finally { GL11.glPopMatrix() } }
-    fun drawEquipment(front: Direction,d: DistributionDisplay?=null) {
+    fun drawEquipment(front: Direction, d: DistributionDisplay? = null,
+                      primaryAngle: Float = PoleSpanAlignment.frontAngle(front),
+                      secondaryAngle: Float = PoleSpanAlignment.frontAngle(front)) {
         if(kind.underground) { UndergroundCabinetVisual.draw(kind,front,d);return }
         GL11.glPushMatrix();front.glRotateXnRef();GL11.glPushAttrib(0xFFFFF)
         try {
             GL11.glDisable(GL11.GL_TEXTURE_2D)
             fun p(name: String,r: Float,g: Float,b: Float) { GL11.glColor3f(r,g,b);model.getPart(name)?.drawNoBind() }
             p("main",.39f,.27f,.14f)
-            if(!kind.lvOnly) { p(if(kind.phases==1)"SingleArm" else "Crossarm",.36f,.25f,.13f);if(kind.phases==3)for(i in listOf(0,2))p("Pin$i",.57f,.66f,.68f);p("TopPin",.57f,.66f,.68f) }
+            val base = PoleSpanAlignment.frontAngle(front)
             GL11.glPushMatrix()
             try {
-                GL11.glRotatef(90f,0f,1f,0f);GL11.glTranslated(ServiceCableMount.MIN_REACH-.405,0.0,0.0)
+                GL11.glRotatef(primaryAngle-base,0f,1f,0f)
+                if(!kind.lvOnly) { p(if(kind.phases==1)"SingleArm" else "Crossarm",.36f,.25f,.13f);if(kind.phases==3)for(i in listOf(0,2))p("Pin$i",.57f,.66f,.68f);p("TopPin",.57f,.66f,.68f) }
+                if(kind.cutout || kind.regulator || kind.singlePhaseTap || kind.transformer)repeat(kind.fuseCount) { index->
+                    GL11.glPushMatrix()
+                    try {
+                    val branchZ=if(kind.transformer && kind.singlePhaseTap && index==1).65 else 0.0
+                    GL11.glTranslated(0.0,0.0,branchZ)
+                    val i=if(kind.phases==1 || kind.singlePhaseTap || kind.transformer)1 else index
+                    PoleCutoutVisual.draw(i,d?.fuseClosed?.getOrNull(index)!=false,d?.fuseBlown?.getOrNull(index)==true)
+                    val phase=if(kind.singlePhaseTap || kind.transformer)d?.phase ?: 0 else if(kind.phases==1)1 else index
+                    PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(0.0,if(phase==1)7.15 else 6.63,(if(kind.phases==1)0.0 else (phase-1)*.95)-branchZ),net.minecraft.world.phys.Vec3(-.68,6.40,(i-1)*.95))
+                    }finally { GL11.glPopMatrix() }
+                }
+                if(d?.arresterFitted==true)mods.eln.transparentnode.industrial.PoleArresterVisual.draw(kind.phases,d.arresterRemaining<=0)
+                if(kind.transformer && (d==null || d.transformerRating>0))PoleTransformerVisual.draw(d?.transformerRating ?: 10000, secondaryAngle-primaryAngle)
+                if(kind.primaryRiser)for(i in if(kind.singlePrimaryRiser)listOf(1) else listOf(0,1,2)) { p("Riser$i",.28f,.31f,.32f);p(if(kind.singlePrimaryRiser)"RiserFuseJumper" else "RiserJumper$i",.13f,.15f,.16f) }
+                if(kind.regulator)repeat(kind.phases) { val i=if(kind.phases==1)1 else it;p("Regulator$i",.64f,.66f,.63f);p("RegulatorPin$i",.44f,.48f,.38f);p("RegulatorLoadPin$i",.44f,.48f,.38f);p("RegulatorFeed$i",.13f,.15f,.16f) }
+                if(kind.capacitor) { p("CapacitorRack",.35f,.38f,.40f);repeat(3) { p("Capacitor$it",.76f,.77f,.72f);p("CapacitorPin$it",.4f,.45f,.35f);p("CapacitorFeed$it",.13f,.15f,.16f) } }
+                if(kind.recloser) { p("Recloser",.57f,.61f,.58f);p("Control",.60f,.63f,.61f) }
+                if(kind.recloser || kind==DistributionKind.AIR_BREAK_THREE) {
+                    repeat(3) { i->
+                        p("SwitchInsulator$i",.50f,.60f,.59f);p("SwitchFeed$i",.13f,.15f,.16f)
+                        GL11.glPushMatrix()
+                        try { if(if(kind.recloser)d?.closed==false else d?.gang==false) { GL11.glTranslated(-.35,6.51,(i-1)*.95);GL11.glRotated(-70.0,0.0,0.0,1.0);GL11.glTranslated(.35,-6.51,-(i-1)*.95) };p("Knife$i",.73f,.61f,.38f) }finally { GL11.glPopMatrix() }
+                    };p("Handle",.37f,.39f,.38f)
+                }
+            } finally { GL11.glPopMatrix() }
+            GL11.glPushMatrix()
+            try {
+                GL11.glRotatef(secondaryAngle-base+90f,0f,1f,0f);GL11.glTranslated(ServiceCableMount.MIN_REACH-.405,0.0,0.0)
                 p("SecondaryRack",.42f,.46f,.43f);for(i in 0..2)p("Secondary$i",.58f,.63f,.61f)
             }finally { GL11.glPopMatrix() }
-            for(y in listOf(4.45,5.55))PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(0.0,y,0.0),net.minecraft.world.phys.Vec3(0.0,y,-.78))
-            if(kind.cutout || kind.regulator || kind.singlePhaseTap || kind.transformer)repeat(kind.fuseCount) { index->
-                GL11.glPushMatrix()
-                try {
-                val branchZ=if(kind.transformer && kind.singlePhaseTap && index==1).65 else 0.0
-                GL11.glTranslated(0.0,0.0,branchZ)
-                val i=if(kind.phases==1 || kind.singlePhaseTap || kind.transformer)1 else index
-                PoleCutoutVisual.draw(i,d?.fuseClosed?.getOrNull(index)!=false,d?.fuseBlown?.getOrNull(index)==true)
-                val phase=if(kind.singlePhaseTap || kind.transformer)d?.phase ?: 0 else if(kind.phases==1)1 else index
-                PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(0.0,if(phase==1)7.15 else 6.63,(if(kind.phases==1)0.0 else (phase-1)*.95)-branchZ),net.minecraft.world.phys.Vec3(-.68,6.40,(i-1)*.95))
-                }finally { GL11.glPopMatrix() }
-            }
-            if(d?.arresterFitted==true)mods.eln.transparentnode.industrial.PoleArresterVisual.draw(kind.phases,d.arresterRemaining<=0)
-            if(kind.transformer && (d==null || d.transformerRating>0))PoleTransformerVisual.draw(d?.transformerRating ?: 10000)
-            if(kind.primaryRiser)for(i in if(kind.singlePrimaryRiser)listOf(1) else listOf(0,1,2)) { p("Riser$i",.28f,.31f,.32f);p(if(kind.singlePrimaryRiser)"RiserFuseJumper" else "RiserJumper$i",.13f,.15f,.16f) }
-            if(kind.regulator)repeat(kind.phases) { val i=if(kind.phases==1)1 else it;p("Regulator$i",.64f,.66f,.63f);p("RegulatorPin$i",.44f,.48f,.38f);p("RegulatorLoadPin$i",.44f,.48f,.38f);p("RegulatorFeed$i",.13f,.15f,.16f) }
-            if(kind.buriedSecondary) { p("SecondaryServiceRiser",.28f,.31f,.32f);for(i in 0..2)PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(.30,4.53,.27),ServiceCableMount.point(40+i,0)) }
+
+            GL11.glPushMatrix()
+            try {
+                GL11.glRotatef(secondaryAngle-base,0f,1f,0f)
+                for (y in listOf(4.45,5.55)) PoleLeadVisual.draw(
+                    net.minecraft.world.phys.Vec3(0.0,y,0.0), net.minecraft.world.phys.Vec3(0.0,y,-.78))
+                if(kind.buriedSecondary) { p("SecondaryServiceRiser",.28f,.31f,.32f);for(i in 0..2)PoleLeadVisual.draw(net.minecraft.world.phys.Vec3(.30,4.53,.27),ServiceCableMount.point(40+i,0)) }
+            } finally { GL11.glPopMatrix() }
             if(kind.light || d?.lampInstalled==true) {
                 GL11.glPushMatrix()
                 try {
@@ -69,15 +92,6 @@ class DistributionPoleDescriptor(val kind: DistributionKind): GridDescriptor(kin
                     lampPart("LampHousing",.26f,.29f,.31f)
                     if((d?.light ?: 0)>0) { mods.eln.misc.UtilsClient.disableLight();try { lampPart("LampLens",1f,.94f,.77f) }finally { mods.eln.misc.UtilsClient.enableLight() } } else lampPart("LampLens",.14f,.17f,.19f)
                 }finally { GL11.glPopMatrix() }
-            }
-            if(kind.capacitor) { p("CapacitorRack",.35f,.38f,.40f);repeat(3) { p("Capacitor$it",.76f,.77f,.72f);p("CapacitorPin$it",.4f,.45f,.35f);p("CapacitorFeed$it",.13f,.15f,.16f) } }
-            if(kind.recloser) { p("Recloser",.57f,.61f,.58f);p("Control",.60f,.63f,.61f) }
-            if(kind.recloser || kind==DistributionKind.AIR_BREAK_THREE) {
-                repeat(3) { i->
-                    p("SwitchInsulator$i",.50f,.60f,.59f);p("SwitchFeed$i",.13f,.15f,.16f)
-                    GL11.glPushMatrix()
-                    try { if(if(kind.recloser)d?.closed==false else d?.gang==false) { GL11.glTranslated(-.35,6.51,(i-1)*.95);GL11.glRotated(-70.0,0.0,0.0,1.0);GL11.glTranslated(.35,-6.51,-(i-1)*.95) };p("Knife$i",.73f,.61f,.38f) }finally { GL11.glPopMatrix() }
-                };p("Handle",.37f,.39f,.38f)
             }
         }finally { GL11.glPopAttrib();GL11.glPopMatrix() }
     }

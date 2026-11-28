@@ -91,10 +91,92 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
     }
     override fun phaseBusTerminals(t: Int)=if(kind.phases==1 && (t in 0..5 || t in listOf(32,36)))listOf(32,36).filter { gridLoads(it).isNotEmpty() } else listOf(t)
     override fun renderWireCount(t: Int)=if(t in listOf(50,52,53))3 else 1
+    private var localPrimaryAngle = 0f
+    var primaryAngle = 0f
+        private set
+    var secondaryAngle = 0f
+        private set
+
+    private fun alignsPrimary(terminal: Int) =
+        !kind.underground && !PoleSpanAlignment.secondary(terminal) &&
+            !(kind.singlePhaseTap && terminal == 36)
+
+    override fun updateIdealRenderAngle() {
+        super.updateIdealRenderAngle()
+        val base = PoleSpanAlignment.frontAngle(front)
+        fun spans(matches: (Int) -> Boolean) = gridLinkList.asSequence()
+            .filter { matches(it.getTerminal(this)) }
+            .map { it.b.subtract(it.a) }
+            .map { Vec3(it.x.toDouble(), 0.0, it.z.toDouble()) }
+            .map { if (it.z < 0 || (it.z == 0.0 && it.x < 0)) it.scale(-1.0) else it }
+            .distinct().toList()
+
+        if (kind.underground) {
+            primaryAngle = base
+            secondaryAngle = base
+            return
+        }
+        localPrimaryAngle = PoleSpanAlignment.angle(spans(::alignsPrimary), base)
+        secondaryAngle = PoleSpanAlignment.angle(spans(PoleSpanAlignment::secondary), base)
+        alignPrimaryRun()
+        val normal = Vec3(0.0, 0.0, -1.0)
+        val rack = normal.yRot(radians(secondaryAngle))
+        val installedCan = (unit.transformer?.ratedWatts ?: 0) > 0
+        val preferred = if (installedCan) Vec3(1.0, 0.0, 0.0).yRot(radians(primaryAngle))
+            else normal.yRot(radians(base))
+        if (rack.dot(preferred) < -1e-6) secondaryAngle += 180f
+    }
+
+    /** Walk this connected run only when a span changes. A stable root preserves phase order on the 180° seam. */
+    private fun alignPrimaryRun() {
+        val order = compareBy<DistributionPoleElement>({ it.coordonate().x }, { it.coordonate().y }, { it.coordonate().z })
+        val graph = linkedMapOf<DistributionPoleElement, List<DistributionPoleElement>>()
+        val queue = ArrayDeque<DistributionPoleElement>()
+        queue.add(this)
+        while (queue.isNotEmpty()) {
+            val pole = queue.removeFirst()
+            if (pole in graph) continue
+            val neighbours = pole.gridLinkList.mapNotNull { link ->
+                if (!pole.alignsPrimary(link.getTerminal(pole))) return@mapNotNull null
+                val other = link.getOtherElement(pole) as? DistributionPoleElement ?: return@mapNotNull null
+                other.takeIf { it.alignsPrimary(link.getTerminal(it)) && it.kind.phases == 3 && pole.kind.phases == 3 }
+            }.distinct().sortedWith(order)
+            graph[pole] = neighbours
+            neighbours.filterNot(graph::containsKey).forEach(queue::addLast)
+        }
+        val root = graph.keys.minWith(order)
+        val oriented = hashMapOf(root to root.localPrimaryAngle)
+        queue.add(root)
+        while (queue.isNotEmpty()) {
+            val pole = queue.removeFirst()
+            for (other in graph.getValue(pole)) {
+                if (other in oriented) continue
+                val offset = other.coordonate().subtract(pole.coordonate())
+                oriented[other] = PoleSpanAlignment.oriented(other.localPrimaryAngle, oriented.getValue(pole),
+                    Vec3(offset.x.toDouble(), 0.0, offset.z.toDouble()))
+                queue.add(other)
+            }
+        }
+        for ((pole, angle) in oriented) {
+            if (pole.primaryAngle == angle) continue
+            pole.primaryAngle = angle
+            pole.needPublish()
+            pole.gridLinkList.forEach { it.getOtherElement(pole)?.needPublish() }
+        }
+    }
+
+    private fun radians(angle: Float) = Math.toRadians(angle.toDouble()).toFloat()
+
+    override fun renderedGridCablePoint(terminal: Int, wire: Int): Vec3 {
+        if (kind.underground) return super.renderedGridCablePoint(terminal, wire)
+        val angle = if (PoleSpanAlignment.secondary(terminal)) secondaryAngle else primaryAngle
+        return gridCablePoint(terminal, wire).yRot(radians(angle))
+    }
+
     override fun gridCablePoint(t: Int,wire: Int): Vec3=when {
         t==52->gridCablePoint(32+wire,0);t==53->gridCablePoint(36+wire,0)
         t==50 || t in 40..42->ServiceCableMount.point(t,wire)
-        t==32 && kind.phases==1 || t==33 && kind.phases==3->Vec3(0.0,7.15,0.0)
+        (t==32 || t in 0..5) && kind.phases==1 || t==33 && kind.phases==3->Vec3(0.0,7.15,0.0)
         t==36 && kind.singlePhaseTap->Vec3(-.68,5.85,if(kind.transformer).65 else 0.0)
         t in 36..38 && kind.cutout->Vec3(-.68,5.85,phaseZ(t-36))
         t in 36..38 && kind.regulator->Vec3(.65,5.50,phaseZ(t-36)*.73)
@@ -165,7 +247,7 @@ class DistributionPoleElement(node: TransparentNode,d: TransparentNodeDescriptor
             if(old.hasCartridge)hardware.setItem(1,old.removeCartridge())
         }
     }
-    override fun networkSerialize(out: DataOutputStream) { super.networkSerialize(out);DistributionDisplay().apply { capture(this@DistributionPoleElement);write(out) } }
+    override fun networkSerialize(out: DataOutputStream) { super.networkSerialize(out);out.writeFloat(primaryAngle);out.writeFloat(secondaryAngle);DistributionDisplay().apply { capture(this@DistributionPoleElement);write(out) } }
     override fun networkUnserialize(s: DataInputStream): Byte {
         val id=super.networkUnserialize(s)
         try { when(id.toInt()) {

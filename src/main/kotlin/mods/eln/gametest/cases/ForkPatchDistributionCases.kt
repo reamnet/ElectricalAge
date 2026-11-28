@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.Blocks
 import java.io.*
 
 object ForkPatchDistributionCases {
-    @JvmStatic fun cases(): List<TestCase> = DistributionPoles.supported.map(::Power)+listOf(Phase(false),Phase(true),ThreePhase(),TapSelection(),TapSelection(DistributionKind.FUSED_TAP_LIGHT_THREE),TapSelection(DistributionKind.FUSED_TAP_TRANSFORMER_LIGHT_THREE),FuseInventory(),SavedControls(),Clearance(),Graphics(),ClickAliases(),Cycle())
+    @JvmStatic fun cases(): List<TestCase> = DistributionPoles.supported.map(::Power)+listOf(Phase(false),Phase(true),ThreePhase(),TapSelection(),TapSelection(DistributionKind.FUSED_TAP_LIGHT_THREE),TapSelection(DistributionKind.FUSED_TAP_TRANSFORMER_LIGHT_THREE),FuseInventory(),SavedControls(),Clearance(),Graphics(),ClickAliases(),Cycle(),SpanOrientation())
     private fun wire()=UtilityCables.all.first { it.material==UtilityCableMaterial.COPPER && it.sizeLabel=="2 AWG" && !it.insulated && !it.melted }
     private open class Base: TestCase {
         val parts=ArrayList<Component>()
@@ -176,6 +176,47 @@ object ForkPatchDistributionCases {
             c.check("distribution: a legacy terminal alias cannot disguise an explicit phase-A bus",rejected && a.gridPhase(0)==0 && a.gridLinkList.size==1,"")
         }
     }
+    private class SpanOrientation : Base() {
+        override fun id() = "forkpatch_distribution_primary_secondary_span_alignment"
+
+        override fun build(c: TestContext) {
+            val west = pole(c, DistributionKind.THREE, 4, 11)
+            val middle = pole(c, DistributionKind.THREE, 11, 11)
+            val north = pole(c, DistributionKind.THREE, 11, 4)
+            val south = pole(c, DistributionKind.SECONDARY, 11, 18)
+            val covered = UtilityCables.all.first { it.material == UtilityCableMaterial.COPPER &&
+                it.sizeLabel == "2 AWG" && it.insulated && it.insulationVoltageRating == 20000.0 }
+            val base = PoleSpanAlignment.frontAngle(middle.front)
+            check(GridLink.addLink(west, middle, 52, 52, covered, 21))
+            c.check("one east-west span aligns both primary arms", west.primaryAngle == 0f && middle.primaryAngle == 0f, "")
+            check(GridLink.addLink(middle, south, 40, 40, covered, 7))
+            c.check("the secondary rack follows its north-south span independently",
+                kotlin.math.abs(middle.secondaryAngle % 180f) == 90f && middle.primaryAngle == 0f, "")
+            check(GridLink.addLink(middle, north, 52, 52, covered, 21))
+            c.check("the corner bisects the two independent primary bearings",
+                kotlin.math.abs(middle.primaryAngle % 180f) in listOf(45f, 135f), "${middle.primaryAngle}")
+            for (terminal in listOf(32, 33, 34, 40, 41, 42)) {
+                val rotation = if (terminal in 40..42) middle.secondaryAngle else middle.primaryAngle
+                val expected = middle.gridCablePoint(terminal, 0).yRot(Math.toRadians(rotation.toDouble()).toFloat())
+                c.check("phase $terminal shares the rendered equipment angle",
+                    expected.distanceToSqr(middle.renderedGridCablePoint(terminal, 0)) < 1e-10, "")
+            }
+
+            val position = middle.coordonate().pos()
+            val angles = middle.primaryAngle to middle.secondaryAngle
+            Reload.node(c.level(), position)
+            val fresh = (c.nodeAt(position) as TransparentNode).element as DistributionPoleElement
+            c.check("reloaded poles derive the same angles from saved spans",
+                angles == (fresh.primaryAngle to fresh.secondaryAngle), "${fresh.primaryAngle}, ${fresh.secondaryAngle}")
+            fresh.gridLinkList.single { it.links(fresh, north) }.onBreakElement()
+            c.check("removing the corner span restores the through axis",
+                fresh.primaryAngle == 0f && fresh.secondaryAngle == angles.second, "")
+            fresh.gridLinkList.single { it.links(fresh, south) }.onBreakElement()
+            c.check("removing the last secondary span restores placement facing",
+                fresh.secondaryAngle == base, "${fresh.secondaryAngle} != $base")
+        }
+    }
+
     private class Cycle: Base() {
         lateinit var source: DistributionPoleElement;lateinit var other: DistributionPoleElement
         val run=ArrayList<DistributionPoleElement>()
