@@ -112,6 +112,9 @@ class ModularTransformerDescriptor(val kind: ModularTransformerKind) :
                     val clamp=terminals(phases).point(bank+i,0)
                     val y=clamp.y
                     val bottom=if(bank==32)tankTop*.54 else tankTop*.25
+                    val tankMount=if(clamp.x<0) -x*.62 else x*.62
+                    box(minOf(tankMount,clamp.x),bottom-.115,clamp.z-.092,
+                        maxOf(tankMount,clamp.x),bottom+.018,clamp.z+.092,0x53646b)
                     box(clamp.x-.118,bottom-.13,clamp.z-.126,clamp.x+.118,bottom+.052,clamp.z+.126,0x53646b)
                     box(clamp.x-.060,bottom,clamp.z-.060,clamp.x+.060,y,clamp.z+.060,0xb0bfb8)
                     val ribs=if(bank==32)7 else 4
