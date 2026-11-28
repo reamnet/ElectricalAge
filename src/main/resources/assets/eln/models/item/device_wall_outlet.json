@@ -1,0 +1,9 @@
+{
+  "parent": "eln:item/device_transparent",
+  "display": {
+    "gui": {
+      "rotation": [14, 24, 0],
+      "scale": [1.13, 1.13, 1.13]
+    }
+  }
+}

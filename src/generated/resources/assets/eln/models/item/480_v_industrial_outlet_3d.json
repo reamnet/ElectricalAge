@@ -1,6 +1,6 @@
 {
-  "parent": "eln:item/device_transparent",
+  "parent": "eln:item/device_wall_outlet",
   "textures": {
-    "particle": "eln:item/480_v_industrial_outlet"
+    "particle": "eln:block/equipment_finishes"
   }
 }

@@ -18,7 +18,13 @@ class OutletDescriptor(val rating: CordRating,val strip: Boolean=false): PowerCa
     private val body=requireNotNull(model.getPart("Case"));private val black=requireNotNull(model.getPart("Black"));private val trim=requireNotNull(model.getPart("Trim"));private val top=model.getPart("TopSocket")
     override fun wallBox(front: Direction)=OutletBlock.box(front,false,strip)
     override fun hasItemDraw()=true
-    override fun drawItem(entity: Boolean)=draw(Direction.ZP,false,0)
+    override fun drawItem(entity: Boolean) {
+        GL11.glPushMatrix()
+        try {
+            GL11.glTranslated(0.0, 0.0, .42)
+            draw(Direction.ZP, false, 0)
+        } finally { GL11.glPopMatrix() }
+    }
     fun draw(front: Direction,horizontal: Boolean,occupied: Int) {
         GL11.glPushMatrix();front.inverse.glRotateZnRef();if(horizontal)GL11.glRotatef(90f,0f,0f,1f)
         GL11.glPushAttrib(0xFFFF)

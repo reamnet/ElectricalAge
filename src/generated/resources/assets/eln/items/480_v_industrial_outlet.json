@@ -4,8 +4,12 @@
     "cases": [
       {
         "model": {
-          "type": "minecraft:model",
-          "model": "eln:item/480_v_industrial_outlet"
+          "type": "minecraft:special",
+          "base": "eln:item/480_v_industrial_outlet_3d",
+          "model": {
+            "type": "eln:device",
+            "context": "entity"
+          }
         },
         "when": "gui"
       },

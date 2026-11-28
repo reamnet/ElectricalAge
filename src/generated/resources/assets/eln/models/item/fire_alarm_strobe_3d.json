@@ -1,6 +1,6 @@
 {
-  "parent": "eln:item/device_transparent",
+  "parent": "eln:item/device_fire_alarm",
   "textures": {
-    "particle": "eln:item/fire_alarm_strobe"
+    "particle": "eln:block/equipment_finishes"
   }
 }

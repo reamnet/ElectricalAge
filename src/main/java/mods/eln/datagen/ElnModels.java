@@ -184,6 +184,8 @@ public class ElnModels implements DataProvider {
                 || d instanceof mods.eln.sixnode.wirelesssignal.source.WirelessSignalSourceDescriptor source && source.isWallControl();
             boolean gridGui = d instanceof mods.eln.utility.GridSourceTransformerDescriptor
                 || d instanceof mods.eln.utility.insulator.LineInsulatorDescriptor;
+            boolean alarmGui = d instanceof mods.eln.transparentnode.firealarm.AlarmDescriptor;
+            boolean outletGui = d instanceof mods.eln.transparentnode.cord.OutletDescriptor;
             String texture = itemTexture(name, item);
             if (item instanceof mods.eln.node.transparent.TransparentNodeItem ti && ti.descriptor instanceof mods.eln.transparentnode.energyconverter.EnergyConverterElnToOtherDescriptor) {
                 model = converterModel(name);
@@ -194,7 +196,7 @@ public class ElnModels implements DataProvider {
                     obj("layer0", "minecraft:item/egg")), assets.resolve("models/item/" + name + ".json")));
             } else if (item instanceof net.minecraft.world.item.BlockItem bi && bi.getBlock() instanceof mods.eln.ore.OreBlock) {
                 model = "eln:block/" + name;
-            } else if (!equipmentGui && !gridGui) {
+            } else if (!equipmentGui && !gridGui && !alarmGui && !outletGui) {
                 // the data-log print had an empty icon (1.12 drew the graph over it): vanilla paper in the GUI
                 String layer = switch(name) { case "data_logger_print" -> "minecraft:item/paper"; case "hot_water" -> "minecraft:item/potion"; case "fruit_smoothie" -> "minecraft:item/honey_bottle"; case "steamed_grains" -> "minecraft:item/mushroom_stew"; default -> itemMaterial(name, texture); };
                 out.add(DataProvider.saveStable(cache, obj("parent", HANDHELD.contains(name) ? "minecraft:item/handheld" : "minecraft:item/generated",
@@ -206,12 +208,14 @@ public class ElnModels implements DataProvider {
                 // the pose per context is the base model's display block (device_six / device_transparent)
                 String base = "eln:item/" + name + "_3d";
                 String parent = d instanceof mods.eln.node.six.SixNodeDescriptor ? "eln:item/device_six" : "eln:item/device_transparent";
-                String particle = equipmentGui ? itemMaterial(name, "block/equipment_finishes")
+                if (alarmGui) parent = "eln:item/device_fire_alarm";
+                if (outletGui) parent = "eln:item/device_wall_outlet";
+                String particle = equipmentGui || alarmGui || outletGui ? itemMaterial(name, "block/equipment_finishes")
                     : gridGui ? itemMaterial(name, "block/grid_converter_material") : itemMaterial(name, texture);
                 out.add(DataProvider.saveStable(cache, obj("parent", parent, "textures", obj("particle", particle)),
                     assets.resolve("models/item/" + name + "_3d.json")));
                 JsonArray cases = new JsonArray();
-                boolean sourceModelGui = equipmentGui || gridGui || d instanceof mods.eln.transparentnode.worklight.WorkLightDescriptor
+                boolean sourceModelGui = equipmentGui || gridGui || alarmGui || outletGui || d instanceof mods.eln.transparentnode.worklight.WorkLightDescriptor
                     || d instanceof mods.eln.transparentnode.festive.FairyLightsDescriptor;
                 cases.add(obj("when", "gui", "model", sourceModelGui
                     ? obj("type", "minecraft:special", "base", base, "model", obj("type", "eln:device", "context", "entity")) : flat));

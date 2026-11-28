@@ -1,6 +1,6 @@
 {
-  "parent": "eln:item/device_transparent",
+  "parent": "eln:item/device_wall_outlet",
   "textures": {
-    "particle": "eln:item/six_socket_power_strip"
+    "particle": "eln:block/equipment_finishes"
   }
 }
