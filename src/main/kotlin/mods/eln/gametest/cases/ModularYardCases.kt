@@ -72,7 +72,7 @@ object ModularYardCases {
                 1->TransmissionKind.POLE_69.id
                 else->TransmissionKind.POLE_230.id
             }
-            val tower=put(c,poleId,4,1,8)
+            val tower=put(c,poleId,6,1,16)
             val knife = c.placeByPlayer(listOf(ModularDisconnectKind.SMALL,ModularDisconnectKind.GANG,
                 ModularDisconnectKind.TRANSMISSION)[tier].id, c.at(12,1,8), 270f) as ModularDisconnectElement
             transformer = c.placeByPlayer(ModularTransformerKind.entries[tier].id, c.at(20,1,8), 270f) as ModularTransformerElement
