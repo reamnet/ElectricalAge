@@ -118,7 +118,7 @@ object ModularYardCases {
                 Face.EAST) as GridElement
             load=consume(finalFeed.gridLoads(32).single(),10000.0)
             c.after(22) {
-                c.checkValue("tower through a mounted feed, busbar, disconnect, transformer and recloser delivers rated voltage",out,outgoing.load.u)
+                c.checkValue("tower through a mounted feed, busbar, disconnect, transformer and recloser delivers rated voltage",outgoing.load.u,out)
                 c.check("other transformer windings are isolated",transformer.outputs.drop(1).all { abs(it.u)<1e-7 },"")
                 if(fault>0)load.r=50.0
             }
@@ -131,7 +131,7 @@ object ModularYardCases {
         override fun measure(c: TestContext) {
             try {
                 when(fault) {
-                    0->c.checkValue("operating yard supplies its external load",out/10000.0,load.i)
+                    0->c.checkValue("operating yard supplies its external load",load.i,out/10000.0)
                     1->c.check("cleared distribution fault restores powered service on the first attempt",
                         protection.control.closed && protection.control.attempts==1 && load.i>0,"")
                     2->c.check("persistent distribution fault leaves the outgoing bus locked out",

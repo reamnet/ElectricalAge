@@ -62,7 +62,7 @@ class ModularRigidEquipmentCase(private val variant: Int) : TestCase {
         c.after(20) {
             val ratio = (device as? ModularTransformerElement)?.ratio ?: 1.0
             loads.forEachIndexed { i, load ->
-                c.checkValue("phase $i passes only its own source through the two busbar banks", voltage[i] * ratio / 1000, load.i)
+                c.checkValue("phase $i passes only its own source through the two busbar banks", load.i, voltage[i] * ratio / 1000)
             }
             when (val stage = device) {
                 is ModularDisconnectElement -> check(stage.setClosed(false))
